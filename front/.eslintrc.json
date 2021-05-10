@@ -1,0 +1,11 @@
+{
+  "extends": ["react-app", "airbnb","plugin:jsx-a11y/recommended"],
+  "plugins": ["react","jsx-a11y"],
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "extensions": [".js", ".jsx"]
+      }
+    }
+  }
+}
