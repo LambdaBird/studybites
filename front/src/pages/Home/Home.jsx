@@ -5,7 +5,7 @@ const Home = () => {
   const { t } = useTranslation();
   return (
     <div className="App">
-      <h1>{t('Hello world')}</h1>
+      <h1>{t('general.hw')}</h1>
     </div>
   );
 };
