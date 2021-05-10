@@ -1,0 +1,42 @@
+version: '3.7'
+
+services:
+  postgres:
+    image: postgres
+    restart: always
+    ports:
+      - 5503:5432
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - '5432:5432'
+    volumes:
+      - studybites-db:/var/lib/postgresql/data
+      - ./docker_postgres_init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  studybites-api:
+    build: ./studybites-api
+    depends_on:
+      - postgres
+    volumes:
+      - ./studybites-api:/studybites-api
+      - /usr/src/studybites-api/node_modules/
+    environment:
+      DATABASE_URL: postgres://postgres:@postgres:5432/studybites
+      PORT: 3017
+    ports:
+      - '3017:3017'
+
+  studybites-front:
+    build: ./studybites-front
+    volumes:
+      - ./studybites-front:/studybites-front
+      - /studybites-front/node_modules
+    ports:
+      - 3018:3018
+    environment:
+      PORT: 3018
+      API_PORT: 3017
+
+volumes:
+  studybites-api:
