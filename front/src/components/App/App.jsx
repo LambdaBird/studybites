@@ -9,7 +9,7 @@ import Home from '../../pages/Home';
 const App = () => (
   <Router>
     <Switch>
-      <Route path="/">
+      <Route path="/asd">
         <Home />
       </Route>
     </Switch>
