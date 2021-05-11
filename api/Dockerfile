@@ -4,8 +4,7 @@ ENV DATABASE_URL=${DATABASE_URL}
 
 WORKDIR /api
 
-COPY package.json .
-COPY yarn.lock .
+COPY package.json yarn.lock ./
 RUN yarn install
 
 COPY . .
