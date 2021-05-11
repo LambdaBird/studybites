@@ -40,3 +40,4 @@ services:
 
 volumes:
   studybites-db:
+  api: {}

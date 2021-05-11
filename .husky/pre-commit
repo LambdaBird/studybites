@@ -1,0 +1,5 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+npx eslint ./api/src --ext .js --fix
+# npx eslint ./front/src --ext .js --ext .jsx --fix         <- uncomment this if front/.eslintrc.json was added
