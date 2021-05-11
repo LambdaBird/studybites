@@ -1,18 +1,12 @@
-FROM node:10
+FROM node:14-alpine
 
-# Create app directory
-WORKDIR /usr/src/studybites-front
+WORKDIR /front
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
 COPY package.json ./
+COPY yarn.lock ./
 
 RUN yarn
-# If you are building your code for production
-# RUN npm ci --only=production
 
-# Bundle app source
 COPY . .
 
 CMD ["yarn", "start"]

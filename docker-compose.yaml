@@ -20,7 +20,7 @@ services:
       - postgres
     volumes:
       - ./api:/api
-      - api:/api/node_modules/
+      - /api:/api/node_modules/
     environment:
       DATABASE_URL: postgres://postgres:@postgres:5432/studybites
       PORT: 3017
@@ -30,8 +30,8 @@ services:
   studybites-front:
     build: ./front
     volumes:
-      - ./front:/studybites-front
-      - /studybites-front/node_modules
+      - ./front:/front
+      - /front/node_modules
     ports:
       - 3018:3018
     environment:
