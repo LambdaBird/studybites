@@ -19,8 +19,8 @@ services:
     depends_on:
       - postgres
     volumes:
-      - ./api:/usr/src/studybites-api
-      - /usr/src/studybites-api/node_modules/
+      - ./api:/api
+      - /api:/api/node_modules/
     environment:
       DATABASE_URL: postgres://postgres:@postgres:5432/studybites
       PORT: 3017
@@ -30,8 +30,8 @@ services:
   studybites-front:
     build: ./front
     volumes:
-      - ./front:/usr/src/studybites-front
-      - /usr/src/studybites-front/node_modules
+      - ./front:/front
+      - /front/node_modules
     ports:
       - 3018:3018
     environment:
