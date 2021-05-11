@@ -15,12 +15,12 @@ services:
       - ./docker_postgres_init.sql:/docker-entrypoint-initdb.d/init.sql
 
   studybites-api:
-    build: ./studybites-api
+    build: ./api
     depends_on:
       - postgres
     volumes:
-      - ./studybites-api:/studybites-api
-      - /usr/src/studybites-api/node_modules/
+      - ./api:/api
+      - api:/api/node_modules/
     environment:
       DATABASE_URL: postgres://postgres:@postgres:5432/studybites
       PORT: 3017
@@ -28,9 +28,9 @@ services:
       - '3017:3017'
 
   studybites-front:
-    build: ./studybites-front
+    build: ./front
     volumes:
-      - ./studybites-front:/studybites-front
+      - ./front:/studybites-front
       - /studybites-front/node_modules
     ports:
       - 3018:3018
@@ -39,4 +39,5 @@ services:
       API_PORT: 3017
 
 volumes:
-  studybites-api:
+  studybites-db:
+  api: {}
