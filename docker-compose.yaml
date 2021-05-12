@@ -4,12 +4,10 @@ services:
   postgres:
     image: postgres
     restart: always
-    ports:
-      - 5503:5432
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
     ports:
-      - '5432:5432'
+      - '5503:5432'
     volumes:
       - studybites-db:/var/lib/postgresql/data
       - ./docker_postgres_init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -20,7 +18,7 @@ services:
       - postgres
     volumes:
       - ./api:/api
-      - /api:/api/node_modules/
+      - /api/node_modules
     environment:
       DATABASE_URL: postgres://postgres:@postgres:5432/studybites
       PORT: 3017
@@ -33,11 +31,10 @@ services:
       - ./front:/front
       - /front/node_modules
     ports:
-      - 3018:3018
+      - '3018:3018'
     environment:
       PORT: 3018
       API_PORT: 3017
 
 volumes:
   studybites-db:
-  api: {}
