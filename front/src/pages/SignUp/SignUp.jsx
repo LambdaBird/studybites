@@ -3,6 +3,8 @@ import {
   Button, Col, Form, Input, Row, Typography,
 } from 'antd';
 import { useTranslation } from 'react-i18next';
+import PasswordStrengthIndicator from '../../components/PasswordStrengthIndicator';
+import usePasswordInput from '../../hooks/usePasswordInput';
 
 const { Title } = Typography;
 
@@ -15,6 +17,8 @@ const SignUp = () => {
   const onFinishFailed = (errorInfo) => {
     console.log('Failed:', errorInfo);
   };
+
+  const [validateStatus, help, level, password, onChangePassword] = usePasswordInput();
 
   return (
     <Row type="flex" justify="center" align="middle" style={{ minHeight: '100vh' }}>
@@ -80,9 +84,35 @@ const SignUp = () => {
                 required: true,
                 message: t('sign_up.password.error'),
               },
+              /* {
+                validator: (rule, value, callback) => {
+                  if (value && value !== 'Secret') {
+                    callback('Error!');
+                  } else {
+                    callback('Error!');
+                  }
+                },
+              }, */
             ]}
+            validateStatus={validateStatus}
+            help={help}
           >
-            <Input.Password placeholder="*********" />
+            <Input.Password
+              value={password}
+              onChange={onChangePassword}
+              placeholder="*********"
+            />
+            <PasswordStrengthIndicator
+              level={level}
+              settings={{
+                colorScheme: {
+                  levels: ['#ff4033', '#ffd908', '#6ecc3a'],
+                  noLevel: 'lightgrey',
+                },
+                height: 4,
+                alwaysVisible: false,
+              }}
+            />
           </Form.Item>
 
           <Form.Item>
