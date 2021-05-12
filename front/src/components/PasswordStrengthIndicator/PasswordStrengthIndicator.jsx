@@ -14,7 +14,7 @@ const getIndicatorStyle = (color, height) => ({
 });
 
 const PasswordStrengthIndicator = ({ level, settings }) => {
-  if (!settings.alwaysVisible && level < 0) {
+  if (level < 0) {
     return null;
   }
 
@@ -38,7 +38,6 @@ PasswordStrengthIndicator.propTypes = {
       noLevel: PropTypes.string,
     },
     height: PropTypes.number,
-    alwaysVisible: PropTypes.bool,
   }).isRequired,
 };
 

@@ -5,10 +5,11 @@
 import { useState } from 'react';
 
 const usePasswordInput = () => {
-  const [help, setHelp] = useState('');
+  const [validateStatus, setValidateStatus] = useState();
+  const [help, setHelp] = useState();
   const [level, setLevel] = useState(-1);
-  const [validateStatus, setValidateStatus] = useState('');
   const [password, setPassword] = useState('');
+
   const rules = [
     (value) => {
       if (value.length > 5) {
@@ -30,13 +31,21 @@ const usePasswordInput = () => {
     },
   ];
 
+  const formValidator = ((_, value) => {
+    const r = rules.map((rule) => rule(value)).filter((x) => !!x);
+    if (r.length !== 0) {
+      return Promise.reject();
+    }
+    return Promise.resolve();
+  });
+
   const onChangePassword = (e) => {
     const { value } = e.target;
     setPassword(value);
     if (value.length === 0) {
-      console.log(value.length);
+      setHelp();
+      return;
     }
-
     const allErrors = rules.map((rule) => rule(value)).filter((x) => !!x);
     if (allErrors.length > 0) {
       const formattedMessage = allErrors.join(', ').toLocaleLowerCase();
@@ -57,7 +66,9 @@ const usePasswordInput = () => {
     }
   };
 
-  return [validateStatus, help, level, password, onChangePassword];
+  return {
+    validateStatus, help, level, password, onChangePassword, formValidator,
+  };
 };
 
 export default usePasswordInput;
