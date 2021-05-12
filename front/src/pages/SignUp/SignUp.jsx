@@ -24,7 +24,6 @@ const SignUp = () => {
         </Title>
         <SignUpForm handleSubmit={handleSubmit} handleSubmitFailed={handleSubmitFailed} />
       </Col>
-
     </Row>
 
   );

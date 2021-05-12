@@ -2,10 +2,12 @@ import React, { useMemo } from 'react';
 import { Button, Form, Input } from 'antd';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+import PasswordStrengthIndicator from '../PasswordStrengthIndicator';
+import usePasswordInput from '../../hooks/usePasswordInput';
 
 const SignUpForm = ({ handleSubmit, handleSubmitFailed }) => {
   const { t } = useTranslation();
-
+  const [validateStatus, help, level, password, onChangePassword] = usePasswordInput();
   const formRules = useMemo(() => ({
     firstName: [
       {
@@ -72,8 +74,25 @@ const SignUpForm = ({ handleSubmit, handleSubmitFailed }) => {
       <Form.Item
         name="password"
         rules={formRules.password}
+        validateStatus={validateStatus}
+        help={help}
       >
-        <Input.Password placeholder="*********" />
+        <Input.Password
+          value={password}
+          onChange={onChangePassword}
+          placeholder="*********"
+        />
+        <PasswordStrengthIndicator
+          level={level}
+          settings={{
+            colorScheme: {
+              levels: ['#ff4033', '#ffd908', '#6ecc3a'],
+              noLevel: 'lightgrey',
+            },
+            height: 4,
+            alwaysVisible: false,
+          }}
+        />
       </Form.Item>
 
       <Form.Item>
