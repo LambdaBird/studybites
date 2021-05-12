@@ -18,7 +18,9 @@ const SignUp = () => {
     console.log('Failed:', errorInfo);
   };
 
-  const [validateStatus, help, level, password, onChangePassword] = usePasswordInput();
+  const {
+    validateStatus, help, level, password, onChangePassword, formValidator,
+  } = usePasswordInput();
 
   return (
     <Row type="flex" justify="center" align="middle" style={{ minHeight: '100vh' }}>
@@ -36,6 +38,12 @@ const SignUp = () => {
           }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
+          fields={[
+            {
+              name: ['password'],
+              value: password,
+            },
+          ]}
         >
           <Form.Item
             name="firstName"
@@ -84,21 +92,14 @@ const SignUp = () => {
                 required: true,
                 message: t('sign_up.password.error'),
               },
-              /* {
-                validator: (rule, value, callback) => {
-                  if (value && value !== 'Secret') {
-                    callback('Error!');
-                  } else {
-                    callback('Error!');
-                  }
-                },
-              }, */
+              {
+                validator: formValidator,
+              },
             ]}
             validateStatus={validateStatus}
             help={help}
           >
             <Input.Password
-              value={password}
               onChange={onChangePassword}
               placeholder="*********"
             />
@@ -110,7 +111,6 @@ const SignUp = () => {
                   noLevel: 'lightgrey',
                 },
                 height: 4,
-                alwaysVisible: false,
               }}
             />
           </Form.Item>
