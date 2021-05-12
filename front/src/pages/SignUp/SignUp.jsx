@@ -2,10 +2,12 @@ import React from 'react';
 import {
   Button, Col, Form, Input, Row, Typography,
 } from 'antd';
+import { useTranslation } from 'react-i18next';
 
 const { Title } = Typography;
 
 const SignUp = () => {
+  const { t } = useTranslation();
   const onFinish = (values) => {
     console.log('Success:', values);
   };
@@ -18,7 +20,7 @@ const SignUp = () => {
     <Row type="flex" justify="center" align="middle" style={{ minHeight: '100vh' }}>
       <Col type="flex" align="middle">
         <Title level={2}>
-          Welcome
+          {t('general.welcome')}
         </Title>
         <Form
           style={{
@@ -36,11 +38,11 @@ const SignUp = () => {
             rules={[
               {
                 required: true,
-                message: 'Please input your first name!',
+                message: t('sign_up.first_name.error'),
               },
             ]}
           >
-            <Input placeholder="First name" />
+            <Input placeholder={t('sign_up.first_name.placeholder')} />
           </Form.Item>
 
           <Form.Item
@@ -48,11 +50,11 @@ const SignUp = () => {
             rules={[
               {
                 required: true,
-                message: 'Please input your last name!',
+                message: t('sign_up.last_name.error'),
               },
             ]}
           >
-            <Input placeholder="Last name" />
+            <Input placeholder={t('sign_up.last_name.placeholder')} />
           </Form.Item>
 
           <Form.Item
@@ -60,15 +62,15 @@ const SignUp = () => {
             rules={[
               {
                 required: true,
-                message: 'Please input your email!',
+                message: t('sign_up.email.error'),
               },
               {
                 type: 'email',
-                message: 'Incorrect email',
+                message: t('sign_up.email.validation'),
               },
             ]}
           >
-            <Input placeholder="Email" />
+            <Input placeholder={t('sign_up.email.placeholder')} />
           </Form.Item>
 
           <Form.Item
@@ -76,7 +78,7 @@ const SignUp = () => {
             rules={[
               {
                 required: true,
-                message: 'Please input your password!',
+                message: t('sign_up.password.error'),
               },
             ]}
           >
@@ -85,7 +87,7 @@ const SignUp = () => {
 
           <Form.Item>
             <Button style={{ width: '100%' }} type="primary" htmlType="submit">
-              SignUp
+              {t('sign_up.button')}
             </Button>
           </Form.Item>
         </Form>

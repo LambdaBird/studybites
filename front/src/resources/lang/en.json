@@ -1,5 +1,26 @@
 {
   "translation": {
-    "general.hw": "Helloworld"
+    "general": {
+      "welcome": "Welcome"
+    },
+    "sign_up": {
+      "first_name":{
+        "placeholder": "First name",
+        "error": "Please input your first name!"
+      },
+      "last_name":{
+        "placeholder": "Last name",
+        "error": "Please input your last name!"
+      },
+      "email":{
+        "placeholder": "Email",
+        "error": "Please input your email!",
+        "validation": "Incorrect email"
+      },
+      "password": {
+        "error": "Please input your password!"
+      },
+      "button": "SignUp"
+    }
   }
 }
