@@ -18,7 +18,10 @@
         "validation": "Incorrect email"
       },
       "password": {
-        "error": "Please input your password!"
+        "error": "Please input your password!",
+        "min_5_symbols": "Min 5 symbols",
+        "one_non_numerical": "At least one non numerical",
+        "one_numerical": "At least one numerical"
       },
       "button": "SignUp"
     }

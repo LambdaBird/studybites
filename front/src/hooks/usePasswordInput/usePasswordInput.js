@@ -1,10 +1,8 @@
-// MIN 5 SYMBOLS
-// AT LEAST ONE NON NUMERICAL
-// AT LEAST ONE NUMERICAL
-
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const usePasswordInput = () => {
+  const { t } = useTranslation();
   const [validateStatus, setValidateStatus] = useState();
   const [help, setHelp] = useState();
   const [level, setLevel] = useState(-1);
@@ -15,19 +13,19 @@ const usePasswordInput = () => {
       if (value.length > 5) {
         return null;
       }
-      return 'Min 5 symbols';
+      return t('sign_up.password.min_5_symbols');
     },
     (value) => {
       if (value.match(/\w*[a-zA-Z]\w*/)) {
         return null;
       }
-      return 'At least one non numerical';
+      return t('sign_up.password.one_non_numerical');
     },
     (value) => {
       if (value.match(/.*[0-9].*/)) {
         return null;
       }
-      return 'At least one numerical';
+      return t('sign_up.password.one_numerical');
     },
   ];
 

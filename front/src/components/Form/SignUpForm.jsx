@@ -7,7 +7,9 @@ import usePasswordInput from '../../hooks/usePasswordInput';
 
 const SignUpForm = ({ handleSubmit, handleSubmitFailed }) => {
   const { t } = useTranslation();
-  const [validateStatus, help, level, password, onChangePassword] = usePasswordInput();
+  const {
+    validateStatus, help, level, password, onChangePassword,
+  } = usePasswordInput();
   const formRules = useMemo(() => ({
     firstName: [
       {
