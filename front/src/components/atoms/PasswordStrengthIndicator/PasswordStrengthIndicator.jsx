@@ -1,18 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { getPasswordStrength } from '../../../utils';
-
-const getWrapperStyle = (height) => ({
-  lineHeight: `${height}px`,
-});
-
-const getIndicatorStyle = (color, height) => ({
-  display: 'inline-block',
-  width: '25%',
-  backgroundColor: color,
-  height: `${height}px`,
-  borderRadius: '2px',
-});
+import { IndicatorDiv, LineDiv } from './PasswordStrengthIndicator.styled';
 
 const PasswordStrengthIndicator = ({ value, settings }) => {
   const { levels, noLevel } = settings.colorScheme;
@@ -24,13 +13,14 @@ const PasswordStrengthIndicator = ({ value, settings }) => {
     .map((color, i) => (i <= level ? color : noLevel))
     .map((color, i) => (
       /*eslint-disable */
-      <div
+      <IndicatorDiv
         key={`${color}${i}`}
-        style={getIndicatorStyle(color, settings.height)}
+        color={color}
+        height={settings.height}
       />
       /* eslint-enable */
     ));
-  return <div style={getWrapperStyle(settings.height)}>{indicators}</div>;
+  return <LineDiv>{indicators}</LineDiv>;
 };
 
 PasswordStrengthIndicator.propTypes = {
