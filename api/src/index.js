@@ -2,6 +2,8 @@ const app = require('fastify')({ logger: true });
 
 const dbPlugin = require('./plugins/database');
 
+const userService = require('./services/user');
+
 (async () => {
   try {
     app.register(dbPlugin, {
@@ -17,8 +19,12 @@ const dbPlugin = require('./plugins/database');
       }
     });
 
+    app.register((instance) => userService(instance), {
+      prefix: '/api/v1/user',
+    });
+
     app.all('*', async (_, repl) => {
-      return repl.Status(404).Send('route not found');
+      return repl.status(404).send({ message: 'route not found' });
     });
 
     app.listen(process.env.PORT, '0.0.0.0');
