@@ -1,7 +1,7 @@
 import React from 'react';
 import { Col, Row, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
-import SignUpForm from '../../components/SignUpForm';
+import SignUpForm from './SignUpForm';
 
 const { Title } = Typography;
 

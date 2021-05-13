@@ -2,19 +2,13 @@ import React, { useMemo } from 'react';
 import { Button, Form, Input } from 'antd';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import PasswordStrengthIndicator from '../PasswordStrengthIndicator';
-import usePasswordInput from '../../hooks/usePasswordInput';
+import PasswordStrengthIndicator from '../../../components/atoms/PasswordStrengthIndicator';
+import usePasswordInput from '../../../hooks/usePasswordInput';
 
 const SignUpForm = ({ handleSubmit, handleSubmitFailed }) => {
   const { t } = useTranslation();
-  const {
-    validateStatus,
-    help,
-    level,
-    password,
-    onChangePassword,
-    formValidator,
-  } = usePasswordInput();
+  const { validateStatus, help, password, onChangePassword, formValidator } =
+    usePasswordInput();
   const formRules = useMemo(
     () => ({
       firstName: [
@@ -57,7 +51,6 @@ const SignUpForm = ({ handleSubmit, handleSubmitFailed }) => {
       style={{
         width: '250px',
       }}
-      name="basic"
       fields={[
         {
           name: ['password'],
@@ -88,13 +81,13 @@ const SignUpForm = ({ handleSubmit, handleSubmitFailed }) => {
         <Input.Password
           value={password}
           onChange={onChangePassword}
-          placeholder="*********"
+          placeholder="••••••••"
         />
         <PasswordStrengthIndicator
-          level={level}
+          value={password}
           settings={{
             colorScheme: {
-              levels: ['#ff4033', '#ffd908', '#6ecc3a'],
+              levels: ['#ff4033', '#fe940d', '#ffd908', '#6ecc3a'],
               noLevel: 'lightgrey',
             },
             height: 4,

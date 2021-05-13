@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { getPasswordStrength } from '../../../utils';
 
 const getWrapperStyle = (height) => ({
   lineHeight: `${height}px`,
@@ -7,41 +8,35 @@ const getWrapperStyle = (height) => ({
 
 const getIndicatorStyle = (color, height) => ({
   display: 'inline-block',
-  width: '33%',
+  width: '25%',
   backgroundColor: color,
   height: `${height}px`,
   borderRadius: '2px',
 });
 
-const PasswordStrengthIndicator = ({ level, settings }) => {
-  if (level < 0) {
-    return null;
+const PasswordStrengthIndicator = ({ value, settings }) => {
+  const { levels, noLevel } = settings.colorScheme;
+  let level = getPasswordStrength(value);
+  if (value.length === 0) {
+    level = -1;
   }
-
-  const indicators = [];
-
-  let color;
-  if (level === -1) {
-    color = settings.colorScheme.noLevel;
-  }
-
-  for (let i = 0; i < 3; i += 1) {
-    if (level !== -1) {
-      color = settings.colorScheme.levels[level];
-    }
-    indicators.push(
-      <div
-        key={`indicator-${i}`}
-        style={getIndicatorStyle(color, settings.height)}
-      />,
-    );
-  }
-
+  let j = 0;
+  const indicators = levels
+    .map((color, i) => (i <= level ? color : noLevel))
+    .map((color) => {
+      j += 1;
+      return (
+        <div
+          key={`${color}${j}`}
+          style={getIndicatorStyle(color, settings.height)}
+        />
+      );
+    });
   return <div style={getWrapperStyle(settings.height)}>{indicators}</div>;
 };
 
 PasswordStrengthIndicator.propTypes = {
-  level: PropTypes.number.isRequired,
+  value: PropTypes.string.isRequired,
   settings: PropTypes.exact({
     colorScheme: {
       levels: PropTypes.arrayOf(PropTypes.string),

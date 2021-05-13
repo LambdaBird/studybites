@@ -10,13 +10,13 @@
     "antd": "^4.15.5",
     "axios": "^0.21.1",
     "i18next": "^20.2.2",
-    "prettier": "^2.3.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-i18next": "^11.8.15",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
+    "styled-components": "^5.3.0",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
@@ -41,6 +41,9 @@
   },
   "devDependencies": {
     "eslint-config-airbnb": "^18.2.1",
-    "eslint-plugin-jsx-a11y": "^6.4.1"
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-prettier": "^3.4.0",
+    "prettier": "^2.3.0"
   }
 }
