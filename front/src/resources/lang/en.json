@@ -11,9 +11,9 @@
         "error": "Please input your last name!"
       },
       "email": {
-        "placeholder": "Email",
-        "error": "Please input your email!",
-        "validation": "Incorrect email"
+        "placeholder": "E-mail",
+        "error": "Please input your E-mail!",
+        "validation": "The input is not valid E-mail"
       },
       "password": {
         "error": "Please input your password!",

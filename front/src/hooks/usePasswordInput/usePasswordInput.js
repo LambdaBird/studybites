@@ -28,7 +28,10 @@ const usePasswordInput = () => {
     },
   ];
 
-  const formValidator = (_, value) => {
+  const passwordValidator = (_, value) => {
+    if (value.length === 0) {
+      setHelp(t('sign_up.password.error'));
+    }
     const r = rules.map((rule) => rule(value)).filter((x) => !!x);
     if (r.length !== 0) {
       return Promise.reject();
@@ -41,8 +44,8 @@ const usePasswordInput = () => {
     setPassword(value);
 
     if (value.length === 0) {
-      setValidateStatus();
-      setHelp();
+      setValidateStatus('error');
+      setHelp(t('sign_up.password.error'));
       return;
     }
     const allErrors = rules.map((rule) => rule(value)).filter((x) => !!x);
@@ -63,7 +66,7 @@ const usePasswordInput = () => {
     help,
     password,
     onChangePassword,
-    formValidator,
+    passwordValidator,
   };
 };
 

@@ -23,13 +23,17 @@ const SignUp = () => {
       align="middle"
       style={{ minHeight: '100vh' }}
     >
-      <Col type="flex" align="middle">
-        <Title level={2}>{t('sign_up.title')}</Title>
-        <SignUpForm
-          handleSubmit={handleSubmit}
-          handleSubmitFailed={handleSubmitFailed}
-        />
-      </Col>
+      <Row gutter={[0, 16]} justify="center">
+        <Col span={24} align="middle">
+          <Title level={1}>{t('sign_up.title')}</Title>
+        </Col>
+        <Col>
+          <SignUpForm
+            handleSubmit={handleSubmit}
+            handleSubmitFailed={handleSubmitFailed}
+          />
+        </Col>
+      </Row>
     </Row>
   );
 };

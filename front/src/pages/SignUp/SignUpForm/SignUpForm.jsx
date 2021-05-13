@@ -7,8 +7,13 @@ import usePasswordInput from '../../../hooks/usePasswordInput';
 
 const SignUpForm = ({ handleSubmit, handleSubmitFailed }) => {
   const { t } = useTranslation();
-  const { validateStatus, help, password, onChangePassword, formValidator } =
-    usePasswordInput();
+  const {
+    validateStatus,
+    help,
+    password,
+    onChangePassword,
+    passwordValidator,
+  } = usePasswordInput();
   const formRules = useMemo(
     () => ({
       firstName: [
@@ -39,17 +44,17 @@ const SignUpForm = ({ handleSubmit, handleSubmitFailed }) => {
           message: t('sign_up.password.error'),
         },
         {
-          validator: formValidator,
+          validator: passwordValidator,
         },
       ],
     }),
-    [t, formValidator],
+    [t, passwordValidator],
   );
 
   return (
     <Form
       style={{
-        width: '250px',
+        width: '300px',
       }}
       fields={[
         {
@@ -57,6 +62,7 @@ const SignUpForm = ({ handleSubmit, handleSubmitFailed }) => {
           value: password,
         },
       ]}
+      size="large"
       onFinish={handleSubmit}
       onFinishFailed={handleSubmitFailed}
     >
@@ -76,7 +82,11 @@ const SignUpForm = ({ handleSubmit, handleSubmitFailed }) => {
         name="password"
         rules={formRules.password}
         validateStatus={validateStatus}
-        help={help}
+        help={
+          <div className="alert" style={{ minHeight: '48px' }}>
+            {help}
+          </div>
+        }
       >
         <Input.Password
           value={password}
