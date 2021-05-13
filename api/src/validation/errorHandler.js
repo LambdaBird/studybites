@@ -1,6 +1,6 @@
 const errorArray = (m) => [].concat(m);
 
-module.exports = (err, repl) => {
+const errorHandler = (err, repl) => {
   switch (err.name) {
     case 'ValidationError':
       return repl.status(400).send({
@@ -19,3 +19,5 @@ module.exports = (err, repl) => {
       });
   }
 };
+
+export default errorHandler;

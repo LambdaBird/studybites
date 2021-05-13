@@ -1,9 +1,11 @@
-const app = require('fastify')({ logger: true });
-const objection = require('fastify-objectionjs');
+import fastify from 'fastify';
+import objection from 'fastify-objectionjs';
 
-const User = require('./models/User');
+import User from './models/User';
 
-const userService = require('./services/user');
+import userService from './services/user';
+
+const app = fastify({ logger: true });
 
 (async () => {
   try {
@@ -38,3 +40,5 @@ const userService = require('./services/user');
     process.exit(1);
   }
 })();
+
+export default app;

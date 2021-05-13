@@ -1,4 +1,4 @@
-const yup = require('yup');
+import yup from 'yup';
 
 const propertyTypeError = (key, property) => ({
   key: `${key}.errors.${property}_type_err`,
@@ -40,9 +40,11 @@ const secondNameValidator = yup
   .typeError(propertyTypeError('signup', 'secondName'))
   .required(requiredPropertyError('signup', 'secondName'));
 
-exports.SignupBodyValidator = yup.object({
+const SignupBodyValidator = yup.object({
   email: emailValidator,
   password: passwordValidator,
   firstName: firstNameValidator,
   secondName: secondNameValidator,
 });
+
+export default SignupBodyValidator;

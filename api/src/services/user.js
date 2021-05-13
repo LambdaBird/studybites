@@ -1,10 +1,10 @@
-const bcrypt = require('bcrypt');
+import bcrypt from 'bcrypt';
 
-const { SignupBodyValidator } = require('../validation/validators');
-const validationCompiler = require('../validation/validationCompiler');
-const errorHandler = require('../validation/errorHandler');
+import SignupBodyValidator from '../validation/validators';
+import validationCompiler from '../validation/validationCompiler';
+import errorHandler from '../validation/errorHandler';
 
-module.exports = async (instance) => {
+const user = async (instance) => {
   instance.route({
     method: 'POST',
     url: '/signup',
@@ -55,3 +55,5 @@ module.exports = async (instance) => {
     },
   });
 };
+
+export default user;
