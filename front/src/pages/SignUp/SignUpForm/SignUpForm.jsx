@@ -1,9 +1,10 @@
 import React, { useMemo } from 'react';
-import { Button, Form, Input } from 'antd';
+import { Form, Input } from 'antd';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import PasswordStrengthIndicator from '../../../components/atoms/PasswordStrengthIndicator';
 import usePasswordInput from '../../../hooks/usePasswordInput';
+import { HelpDiv, SignUpFormStyled, SubmitButton } from './SignUpForm.styled';
 
 const SignUpForm = ({ handleSubmit, handleSubmitFailed }) => {
   const { t } = useTranslation();
@@ -52,10 +53,8 @@ const SignUpForm = ({ handleSubmit, handleSubmitFailed }) => {
   );
 
   return (
-    <Form
-      style={{
-        width: '300px',
-      }}
+    <SignUpFormStyled
+      layout="vertical"
       fields={[
         {
           name: ['password'],
@@ -82,11 +81,7 @@ const SignUpForm = ({ handleSubmit, handleSubmitFailed }) => {
         name="password"
         rules={formRules.password}
         validateStatus={validateStatus}
-        help={
-          <div className="alert" style={{ minHeight: '48px' }}>
-            {help}
-          </div>
-        }
+        help={<HelpDiv className="alert">{help}</HelpDiv>}
       >
         <Input.Password
           value={password}
@@ -107,11 +102,11 @@ const SignUpForm = ({ handleSubmit, handleSubmitFailed }) => {
       </Form.Item>
 
       <Form.Item>
-        <Button style={{ width: '100%' }} type="primary" htmlType="submit">
+        <SubmitButton type="primary" htmlType="submit">
           {t('sign_up.button')}
-        </Button>
+        </SubmitButton>
       </Form.Item>
-    </Form>
+    </SignUpFormStyled>
   );
 };
 

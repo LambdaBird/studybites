@@ -2,6 +2,7 @@ import React from 'react';
 import { Col, Row, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
 import SignUpForm from './SignUpForm';
+import { MainRow } from './SignUp.styled';
 
 const { Title } = Typography;
 
@@ -17,12 +18,7 @@ const SignUp = () => {
   };
 
   return (
-    <Row
-      type="flex"
-      justify="center"
-      align="middle"
-      style={{ minHeight: '100vh' }}
-    >
+    <MainRow type="flex" justify="center" align="middle">
       <Row gutter={[0, 16]} justify="center">
         <Col span={24} align="middle">
           <Title level={1}>{t('sign_up.title')}</Title>
@@ -34,7 +30,7 @@ const SignUp = () => {
           />
         </Col>
       </Row>
-    </Row>
+    </MainRow>
   );
 };
 

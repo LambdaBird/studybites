@@ -20,18 +20,16 @@ const PasswordStrengthIndicator = ({ value, settings }) => {
   if (value.length === 0) {
     level = -1;
   }
-  let j = 0;
   const indicators = levels
     .map((color, i) => (i <= level ? color : noLevel))
-    .map((color) => {
-      j += 1;
-      return (
-        <div
-          key={`${color}${j}`}
-          style={getIndicatorStyle(color, settings.height)}
-        />
-      );
-    });
+    .map((color, i) => (
+      /*eslint-disable */
+      <div
+        key={`${color}${i}`}
+        style={getIndicatorStyle(color, settings.height)}
+      />
+      /* eslint-enable */
+    ));
   return <div style={getWrapperStyle(settings.height)}>{indicators}</div>;
 };
 
