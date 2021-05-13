@@ -13,7 +13,8 @@
     "fastify-jwt": "^2.4.0",
     "fastify-plugin": "^3.0.0",
     "knex": "^0.95.4",
-    "objection": "^2.2.15"
+    "objection": "^2.2.15",
+    "pg": "^8.6.0"
   },
   "devDependencies": {
     "eslint": "^7.26.0",
