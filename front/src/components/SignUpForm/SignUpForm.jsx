@@ -8,40 +8,49 @@ import usePasswordInput from '../../hooks/usePasswordInput';
 const SignUpForm = ({ handleSubmit, handleSubmitFailed }) => {
   const { t } = useTranslation();
   const {
-    validateStatus, help, level, password, onChangePassword, formValidator,
+    validateStatus,
+    help,
+    level,
+    password,
+    onChangePassword,
+    formValidator,
   } = usePasswordInput();
-  const formRules = useMemo(() => ({
-    firstName: [
-      {
-        required: true,
-        message: t('sign_up.first_name.error'),
-      }],
-    lastName: [
-      {
-        required: true,
-        message: t('sign_up.last_name.error'),
-      },
-    ],
-    email: [
-      {
-        required: true,
-        message: t('sign_up.email.error'),
-      },
-      {
-        type: 'email',
-        message: t('sign_up.email.validation'),
-      },
-    ],
-    password: [
-      {
-        required: true,
-        message: t('sign_up.password.error'),
-      },
-      {
-        validator: formValidator,
-      },
-    ],
-  }), [t, formValidator]);
+  const formRules = useMemo(
+    () => ({
+      firstName: [
+        {
+          required: true,
+          message: t('sign_up.first_name.error'),
+        },
+      ],
+      lastName: [
+        {
+          required: true,
+          message: t('sign_up.last_name.error'),
+        },
+      ],
+      email: [
+        {
+          required: true,
+          message: t('sign_up.email.error'),
+        },
+        {
+          type: 'email',
+          message: t('sign_up.email.validation'),
+        },
+      ],
+      password: [
+        {
+          required: true,
+          message: t('sign_up.password.error'),
+        },
+        {
+          validator: formValidator,
+        },
+      ],
+    }),
+    [t, formValidator],
+  );
 
   return (
     <Form
@@ -58,24 +67,15 @@ const SignUpForm = ({ handleSubmit, handleSubmitFailed }) => {
       onFinish={handleSubmit}
       onFinishFailed={handleSubmitFailed}
     >
-      <Form.Item
-        name="firstName"
-        rules={formRules.firstName}
-      >
+      <Form.Item name="firstName" rules={formRules.firstName}>
         <Input placeholder={t('sign_up.first_name.placeholder')} />
       </Form.Item>
 
-      <Form.Item
-        name="lastName"
-        rules={formRules.lastName}
-      >
+      <Form.Item name="lastName" rules={formRules.lastName}>
         <Input placeholder={t('sign_up.last_name.placeholder')} />
       </Form.Item>
 
-      <Form.Item
-        name="email"
-        rules={formRules.email}
-      >
+      <Form.Item name="email" rules={formRules.email}>
         <Input placeholder={t('sign_up.email.placeholder')} />
       </Form.Item>
 
@@ -84,7 +84,6 @@ const SignUpForm = ({ handleSubmit, handleSubmitFailed }) => {
         rules={formRules.password}
         validateStatus={validateStatus}
         help={help}
-
       >
         <Input.Password
           value={password}

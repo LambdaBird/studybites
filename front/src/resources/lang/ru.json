@@ -1,18 +1,16 @@
 {
   "translation": {
-    "general": {
-      "welcome": "Приветствуем"
-    },
     "sign_up": {
-      "first_name":{
+      "title": "Зарегистрируйтесь в своей учетной записи",
+      "first_name": {
         "placeholder": "Имя",
         "error": "Введите свое имя!"
       },
-      "last_name":{
+      "last_name": {
         "placeholder": "Фамилия",
         "error": "Введите свою фамилию!"
       },
-      "email":{
+      "email": {
         "placeholder": "Email",
         "error": "Введите свой email!",
         "validation": "Неправильный email"

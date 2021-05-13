@@ -1,7 +1,7 @@
 import React from 'react';
 import { Col, Row, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
-import SignUpForm from '../../components/Form';
+import SignUpForm from '../../components/SignUpForm';
 
 const { Title } = Typography;
 
@@ -17,15 +17,20 @@ const SignUp = () => {
   };
 
   return (
-    <Row type="flex" justify="center" align="middle" style={{ minHeight: '100vh' }}>
+    <Row
+      type="flex"
+      justify="center"
+      align="middle"
+      style={{ minHeight: '100vh' }}
+    >
       <Col type="flex" align="middle">
-        <Title level={2}>
-          {t('general.welcome')}
-        </Title>
-        <SignUpForm handleSubmit={handleSubmit} handleSubmitFailed={handleSubmitFailed} />
+        <Title level={2}>{t('sign_up.title')}</Title>
+        <SignUpForm
+          handleSubmit={handleSubmit}
+          handleSubmitFailed={handleSubmitFailed}
+        />
       </Col>
     </Row>
-
   );
 };
 

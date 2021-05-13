@@ -1,18 +1,16 @@
 {
   "translation": {
-    "general": {
-      "welcome": "Welcome"
-    },
     "sign_up": {
-      "first_name":{
+      "title": "Sign up to your account",
+      "first_name": {
         "placeholder": "First name",
         "error": "Please input your first name!"
       },
-      "last_name":{
+      "last_name": {
         "placeholder": "Last name",
         "error": "Please input your last name!"
       },
-      "email":{
+      "email": {
         "placeholder": "Email",
         "error": "Please input your email!",
         "validation": "Incorrect email"
@@ -23,7 +21,7 @@
         "one_non_numerical": "At least one non numerical",
         "one_numerical": "At least one numerical"
       },
-      "button": "SignUp"
+      "button": "Sign up"
     }
   }
 }

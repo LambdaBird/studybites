@@ -29,13 +29,13 @@ const usePasswordInput = () => {
     },
   ];
 
-  const formValidator = ((_, value) => {
+  const formValidator = (_, value) => {
     const r = rules.map((rule) => rule(value)).filter((x) => !!x);
     if (r.length !== 0) {
       return Promise.reject();
     }
     return Promise.resolve();
-  });
+  };
 
   const onChangePassword = (e) => {
     const { value } = e.target;
@@ -48,7 +48,9 @@ const usePasswordInput = () => {
     if (allErrors.length > 0) {
       const formattedMessage = allErrors.join(', ').toLocaleLowerCase();
       setValidateStatus('error');
-      setHelp(formattedMessage.charAt(0).toUpperCase() + formattedMessage.slice(1));
+      setHelp(
+        formattedMessage.charAt(0).toUpperCase() + formattedMessage.slice(1),
+      );
       let errorLevel = rules.length - allErrors.length - 1;
       if (errorLevel < 0) {
         errorLevel = 0;
@@ -65,7 +67,12 @@ const usePasswordInput = () => {
   };
 
   return {
-    validateStatus, help, level, password, onChangePassword, formValidator,
+    validateStatus,
+    help,
+    level,
+    password,
+    onChangePassword,
+    formValidator,
   };
 };
 

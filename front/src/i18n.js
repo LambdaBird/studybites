@@ -8,15 +8,13 @@ const resources = {
   ru,
 };
 
-i18n
-  .use(initReactI18next)
-  .init({
-    resources,
-    lng: 'en',
-    keySeparator: '.',
-    interpolation: {
-      escapeValue: false,
-    },
-  });
+i18n.use(initReactI18next).init({
+  resources,
+  lng: 'en',
+  keySeparator: '.',
+  interpolation: {
+    escapeValue: false,
+  },
+});
 
 export default i18n;

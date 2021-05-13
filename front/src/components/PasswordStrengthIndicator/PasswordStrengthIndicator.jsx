@@ -20,11 +20,21 @@ const PasswordStrengthIndicator = ({ level, settings }) => {
 
   const indicators = [];
 
+  let color;
+  if (level === -1) {
+    color = settings.colorScheme.noLevel;
+  }
+
   for (let i = 0; i < 3; i += 1) {
-    const color = i <= level
-      ? settings.colorScheme.levels[level]
-      : settings.colorScheme.noLevel;
-    indicators.push(<div key={`indicator-${i}`} style={getIndicatorStyle(color, settings.height)} />);
+    if (level !== -1) {
+      color = settings.colorScheme.levels[level];
+    }
+    indicators.push(
+      <div
+        key={`indicator-${i}`}
+        style={getIndicatorStyle(color, settings.height)}
+      />,
+    );
   }
 
   return <div style={getWrapperStyle(settings.height)}>{indicators}</div>;
