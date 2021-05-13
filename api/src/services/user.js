@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt';
 
-import SignupBodyValidator from '../validation/validators';
+import signupBodyValidator from '../validation/validators';
 import validationCompiler from '../validation/validationCompiler';
 import errorHandler from '../validation/errorHandler';
 
@@ -9,7 +9,7 @@ const user = async (instance) => {
     method: 'POST',
     url: '/signup',
     schema: {
-      body: SignupBodyValidator,
+      body: signupBodyValidator,
       response: {
         201: {
           type: 'object',

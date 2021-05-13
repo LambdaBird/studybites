@@ -1,10 +1,10 @@
 import yup from 'yup';
 
-const propertyTypeError = (key, property) => ({
+export const propertyTypeError = (key, property) => ({
   key: `${key}.errors.${property}_type_err`,
   message: `Property "${property}" must be a string`,
 });
-const requiredPropertyError = (key, property) => ({
+export const requiredPropertyError = (key, property) => ({
   key: `${key}.errors.${property}_req_err`,
   message: `Missing required property "${property}"`,
 });
@@ -40,11 +40,11 @@ const secondNameValidator = yup
   .typeError(propertyTypeError('signup', 'secondName'))
   .required(requiredPropertyError('signup', 'secondName'));
 
-const SignupBodyValidator = yup.object({
+const signupBodyValidator = yup.object({
   email: emailValidator,
   password: passwordValidator,
   firstName: firstNameValidator,
   secondName: secondNameValidator,
 });
 
-export default SignupBodyValidator;
+export default signupBodyValidator;
