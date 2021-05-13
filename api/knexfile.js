@@ -1,4 +1,4 @@
-module.exports = {
+const config = {
   development: {
     client: 'pg',
     connection: {
@@ -13,3 +13,5 @@ module.exports = {
     },
   },
 };
+
+export default config;

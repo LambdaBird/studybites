@@ -1,19 +1,26 @@
-const app = require('fastify')({ logger: true });
+import fastify from 'fastify';
+import objection from 'fastify-objectionjs';
 
-const dbPlugin = require('./plugins/database');
+import User from './models/User';
 
-const userService = require('./services/user');
+import userService from './services/user';
+
+const app = fastify({ logger: true });
 
 (async () => {
   try {
-    app.register(dbPlugin, {
-      client: 'pg',
-      connection: process.env.DATABASE_URL,
+    app.register(objection, {
+      knexConfig: {
+        client: 'pg',
+        connection: process.env.DATABASE_URL,
+      },
+      models: [User],
     });
 
     app.after(async () => {
       try {
-        await app.db.migrate.latest();
+        await app.objection.knex.migrate.latest();
+        app.log.info('successfully automigrated');
       } catch (err) {
         app.log.error(err);
       }
@@ -33,3 +40,5 @@ const userService = require('./services/user');
     process.exit(1);
   }
 })();
+
+export default app;

@@ -1,4 +1,4 @@
-const yup = require('yup');
+import yup from 'yup';
 
 const yupOptions = {
   strict: false,
@@ -7,7 +7,7 @@ const yupOptions = {
   recursive: true,
 };
 
-module.exports = (schema) => {
+const validationCompiler = (schema) => {
   return (data) => {
     try {
       if (!data) {
@@ -25,3 +25,5 @@ module.exports = (schema) => {
     }
   };
 };
+
+export default validationCompiler;

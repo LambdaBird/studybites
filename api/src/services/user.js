@@ -1,8 +1,10 @@
-const { SignupBodyValidator } = require('../validation/validators');
-const validationCompiler = require('../validation/validationCompiler');
-const errorHandler = require('../validation/errorHandler');
+import bcrypt from 'bcrypt';
 
-module.exports = async (instance) => {
+import SignupBodyValidator from '../validation/validators';
+import validationCompiler from '../validation/validationCompiler';
+import errorHandler from '../validation/errorHandler';
+
+const user = async (instance) => {
   instance.route({
     method: 'POST',
     url: '/signup',
@@ -12,6 +14,7 @@ module.exports = async (instance) => {
         201: {
           type: 'object',
           properties: {
+            key: { type: 'string' },
             message: { type: 'string' },
           },
         },
@@ -34,7 +37,23 @@ module.exports = async (instance) => {
     validatorCompiler: ({ schema }) => validationCompiler(schema),
     errorHandler: async (err, _, repl) => errorHandler(err, repl),
     handler: async (req, repl) => {
-      return repl.status(201).send({ message: 'success' });
+      const { email, password, firstName, secondName } = req.body;
+
+      const hash = await bcrypt.hash(password, 12);
+
+      await instance.objection.models.user.query().insert({
+        email,
+        password: hash,
+        firstName,
+        secondName,
+      });
+
+      return repl.status(201).send({
+        key: 'signup.action_success',
+        message: 'Successfully signed up',
+      });
     },
   });
 };
+
+export default user;
