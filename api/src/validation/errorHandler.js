@@ -7,6 +7,11 @@ module.exports = (err, repl) => {
         fallback: 'errors.validation_error',
         errors: errorArray(err.message),
       });
+    case 'UniqueViolationError':
+      return repl.status(409).send({
+        fallback: 'errors.unique_violation',
+        errors: Array.isArray(err.message) ? err.message : [err.message],
+      });
     default:
       return repl.status(500).send({
         fallback: 'errors.internal_error',
