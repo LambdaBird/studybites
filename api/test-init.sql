@@ -1,0 +1,2 @@
+CREATE DATABASE studybites;
+GRANT ALL PRIVILEGES ON DATABASE studybites TO postgres;
