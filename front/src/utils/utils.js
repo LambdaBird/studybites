@@ -1,6 +1,5 @@
 const escapeRegExp = (string) => string.replace(/[-.*+?^${}()|[\]\\]/g, '\\$&');
 
-// eslint-disable-next-line import/prefer-default-export
 export const getPasswordStrength = (password = '') => {
   if (password.length === 0) {
     return -1;
