@@ -41,12 +41,24 @@ const user = async (instance) => {
 
       const hash = await bcrypt.hash(password, 12);
 
-      await instance.objection.models.user.query().insert({
-        email,
-        password: hash,
-        firstName,
-        secondName,
-      });
+      try {
+        await instance.objection.models.user.query().insert({
+          email,
+          password: hash,
+          firstName,
+          secondName,
+        });
+      } catch (err) {
+        return repl.status(409).send({
+          fallback: 'errors.unique_violation',
+          errors: [
+            {
+              key: 'signup.email.already_registered',
+              message: 'This email was already registered',
+            },
+          ],
+        });
+      }
 
       return repl.status(201).send({
         key: 'signup.action_success',

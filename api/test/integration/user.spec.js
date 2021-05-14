@@ -19,13 +19,16 @@ const signupSuccess = {
 const signupConflict = {
   fallback: 'errors.unique_violation',
   errors: [
-    'insert into "users" ("email", "first_name", "password", "second_name") values ($1, $2, $3, $4) returning "id" - duplicate key value violates unique constraint "users_email_unique"'
+    {
+      key: 'signup.email.already_registered',
+      message: 'This email was already registered',
+    },
   ],
 };
 
 const signupMissingBody = {
   fallback: 'errors.validation_error',
-  errors: [ { key: 'errors.empty_body', message: 'Body must be an object' } ],
+  errors: [{ key: 'errors.empty_body', message: 'Body must be an object' }],
 };
 
 describe('Test user service:', () => {
