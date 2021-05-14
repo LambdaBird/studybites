@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { Form, Input } from 'antd';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { SubmitButton } from './SignUpForm.styled';
+import { SubmitButton, SignUpFormStyled } from './SignUpForm.styled';
 
 const SignUpForm = ({ handleSubmit, handleSubmitFailed }) => {
   const { t } = useTranslation();
@@ -41,7 +41,7 @@ const SignUpForm = ({ handleSubmit, handleSubmitFailed }) => {
   );
 
   return (
-    <Form
+    <SignUpFormStyled
       layout="vertical"
       size="large"
       onFinish={handleSubmit}
@@ -68,7 +68,7 @@ const SignUpForm = ({ handleSubmit, handleSubmitFailed }) => {
           {t('sign_up.button')}
         </SubmitButton>
       </Form.Item>
-    </Form>
+    </SignUpFormStyled>
   );
 };
 
