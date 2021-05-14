@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import PasswordStrengthIndicator from '../../../components/atoms/PasswordStrengthIndicator';
 import usePasswordInput from '../../../hooks/usePasswordInput';
-import { HelpDiv, SubmitButton, SignUpFormStyled } from './SignUpForm.styled';
+import { HelpDiv, SubmitButton } from './SignUpForm.styled';
 
 const SignUpForm = ({ handleSubmit, handleSubmitFailed }) => {
   const { t } = useTranslation();
@@ -53,7 +53,7 @@ const SignUpForm = ({ handleSubmit, handleSubmitFailed }) => {
   );
 
   return (
-    <SignUpFormStyled
+    <Form
       layout="vertical"
       fields={[
         {
@@ -96,7 +96,7 @@ const SignUpForm = ({ handleSubmit, handleSubmitFailed }) => {
           {t('sign_up.button')}
         </SubmitButton>
       </Form.Item>
-    </SignUpFormStyled>
+    </Form>
   );
 };
 
