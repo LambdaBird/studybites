@@ -8,3 +8,7 @@ export const SignUpFormStyled = styled(Form)`
 export const SubmitButton = styled(Button)`
   width: 100%;
 `;
+
+export const HelpDiv = styled.div`
+  min-height: 48px;
+`;
