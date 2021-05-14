@@ -22,16 +22,22 @@ const router = async (instance) => {
 
       const hash = await bcrypt.hash(password, 12);
 
-      await instance.objection.models.user.query().insert({
-        email,
-        password: hash,
-        firstName,
-        secondName,
-      });
+      const userData = await instance.objection.models.user
+        .query()
+        .insert({
+          email,
+          password: hash,
+          firstName,
+          secondName,
+        })
+        .returning('*');
+
+      const accessToken = createAccessToken(instance, userData);
+      const refreshToken = createRefreshToken(instance, userData);
 
       return repl.status(201).send({
-        key: 'signup.action_success',
-        message: 'Successfully signed up',
+        accessToken,
+        refreshToken,
       });
     },
   });
