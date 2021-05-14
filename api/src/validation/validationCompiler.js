@@ -1,6 +1,6 @@
 import yup from 'yup';
 
-const yupOptions = {
+export const options = {
   strict: false,
   abortEarly: false,
   stripUnknown: true,
@@ -16,7 +16,7 @@ const validationCompiler = (schema) => {
           message: 'Body must be an object',
         });
       }
-      return { value: schema.validateSync(data, yupOptions) };
+      return { value: schema.validateSync(data, options) };
     } catch (err) {
       if (err.errors) {
         err.message = err.errors;

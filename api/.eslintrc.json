@@ -11,5 +11,6 @@
   ],
   "rules": {
     "eol-last": ["error", "always"]
-  }
+  },
+  "ignorePatterns": ["test/"]
 }
