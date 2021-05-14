@@ -1,5 +1,6 @@
 import fastify from 'fastify';
 import objection from 'fastify-objectionjs';
+import jwt from 'fastify-jwt';
 
 import User from './models/User';
 
@@ -25,6 +26,8 @@ const app = fastify({ logger: true });
         app.log.error(err);
       }
     });
+
+    app.register(jwt, { secret: process.env.JWT_SECRET });
 
     app.register((instance) => userService(instance), {
       prefix: '/api/v1/user',

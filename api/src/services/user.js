@@ -67,7 +67,8 @@ const user = async (instance) => {
         200: {
           type: 'object',
           properties: {
-            message: { type: 'string' },
+            accessToken: { type: 'string' },
+            refreshToken: { type: 'string' },
           },
         },
         '4xx': {
@@ -117,7 +118,30 @@ const user = async (instance) => {
         });
       }
 
-      return repl.status(200).send({ message: 'success' });
+      const accessToken = instance.jwt.sign(
+        {
+          access: true,
+          id: userData.id,
+          isSuperAdmin: userData.isSuperAdmin,
+          isConfirmed: userData.isConfirmed,
+        },
+        { expiresIn: process.env.ACCESS_JWT_EXPIRES_IN }
+      );
+
+      const refreshToken = instance.jwt.sign(
+        {
+          access: false,
+          id: userData.id,
+          isSuperAdmin: userData.isSuperAdmin,
+          isConfirmed: userData.isConfirmed,
+        },
+        { expiresIn: process.env.REFRESH_JWT_EXPIRES_IN }
+      );
+
+      return repl.status(200).send({
+        accessToken,
+        refreshToken,
+      });
     },
   });
 };
