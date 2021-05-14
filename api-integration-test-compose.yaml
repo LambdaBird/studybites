@@ -1,0 +1,35 @@
+version: '3.7'
+
+services:
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - '5504:5432'
+    volumes:
+      - studybites-db:/var/lib/postgresql/data
+      - ./api/test-init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile_test
+    depends_on:
+      - postgres
+    volumes:
+      - ./api:/api
+      - /api/node_modules
+    environment:
+      DATABASE_URL: postgres://postgres:@postgres:5432/studybites
+      PORT: 3017
+      POSTGRES_HOST: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: studybites
+    ports:
+      - '3018:3017'
+
+volumes:
+  studybites-db:
