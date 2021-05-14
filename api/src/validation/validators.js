@@ -9,14 +9,19 @@ export const requiredPropertyError = (key, property) => ({
   message: `Missing required property "${property}"`,
 });
 
+export const INVALID_EMAIL = 'Property "email" is invalid';
+
 const emailValidator = yup
   .string()
   .typeError(propertyTypeError('signup', 'email'))
   .required(requiredPropertyError('signup', 'email'))
   .email({
     key: 'signup.errors.email_format_err',
-    message: 'Property "email" is invalid',
+    message: INVALID_EMAIL,
   });
+
+export const INVALID_PASSWORD =
+  'Property "password" must be longer than 5 characters and contain at least one number and one letter';
 
 const passwordValidator = yup
   .string()
@@ -25,8 +30,7 @@ const passwordValidator = yup
   .matches(/^(?=.*\d)(?=.*[a-zA-Z]).{5,}$/, {
     message: {
       key: 'signup.errors.password_regexp_err',
-      message:
-        'Property "password" must be longer than 5 characters and contain at least one number and one letter',
+      message: INVALID_PASSWORD,
     },
   });
 
