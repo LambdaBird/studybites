@@ -22,23 +22,35 @@ const router = async (instance) => {
 
       const hash = await bcrypt.hash(password, 12);
 
-      const userData = await instance.objection.models.user
-        .query()
-        .insert({
-          email,
-          password: hash,
-          firstName,
-          secondName,
-        })
-        .returning('*');
+      try {
+        const userData = await instance.objection.models.user
+          .query()
+          .insert({
+            email,
+            password: hash,
+            firstName,
+            secondName,
+          })
+          .returning('*');
 
-      const accessToken = createAccessToken(instance, userData);
-      const refreshToken = createRefreshToken(instance, userData);
+        const accessToken = createAccessToken(instance, userData);
+        const refreshToken = createRefreshToken(instance, userData);
 
-      return repl.status(201).send({
-        accessToken,
-        refreshToken,
-      });
+        return repl.status(201).send({
+          accessToken,
+          refreshToken,
+        });
+      } catch (err) {
+        return repl.status(409).send({
+          fallback: 'errors.unique_violation',
+          errors: [
+            {
+              key: 'sign_up.email.already_registered',
+              message: 'This email was already registered',
+            },
+          ],
+        });
+      }
     },
   });
 
