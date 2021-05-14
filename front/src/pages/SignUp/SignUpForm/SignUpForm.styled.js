@@ -1,10 +1,7 @@
 import styled from 'styled-components';
-import { Form, Button } from 'antd';
+import { Button } from 'antd';
 
-export const SignUpFormStyled = styled(Form)`
-  width: 300px;
-`;
-
+// eslint-disable-next-line import/prefer-default-export
 export const SubmitButton = styled(Button)`
   width: 100%;
 `;
