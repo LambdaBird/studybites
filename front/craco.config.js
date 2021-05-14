@@ -1,6 +1,6 @@
-const CracoLessPlugin = require('craco-less');
+const CracoAntDesignPlugin = require('craco-antd');
 
 module.exports = {
   reactScriptsVersion: 'react-scripts',
-  plugins: [{ plugin: CracoLessPlugin }],
+  plugins: [{ plugin: CracoAntDesignPlugin }],
 };
