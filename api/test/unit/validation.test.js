@@ -1,4 +1,4 @@
-import SignupBodyValidator, { propertyTypeError, requiredPropertyError } from '../../src/validation/validators';
+import { signupBodyValidator, propertyTypeError, requiredPropertyError } from '../../src/validation/validators';
 import { options } from '../../src/validation/validationCompiler';
 
 describe('Test signup body validation:', () => {
@@ -8,7 +8,7 @@ describe('Test signup body validation:', () => {
     ['firstName', { email: 'valid@test.io', password: 'valid3', secondName: 'Valid' }, requiredPropertyError('signup', 'firstName')],
     ['secondName', { email: 'valid@test.io', password: 'valid3', firstName: 'Valid' }, requiredPropertyError('signup', 'secondName')],
   ])('should return ValidationError for missing %s', (_, payload, expected) => {
-    SignupBodyValidator.validate(payload, options).catch((err) => {
+    signupBodyValidator.validate(payload, options).catch((err) => {
       expect(err.errors[0]).toMatchObject(expected);
     });
   });
@@ -19,7 +19,7 @@ describe('Test signup body validation:', () => {
     ['firstName', { email: 'valid@test.io', password: 'valid3', firstName: [123], secondName: 'Valid' }, propertyTypeError('signup', 'firstName')],
     ['secondName', { email: 'valid@test.io', password: 'valid3', firstName: 'Valid', secondName: [123] }, propertyTypeError('signup', 'secondName')],
   ])('should return ValidationError for invalid type of %s', (_, payload, expected) => {
-    SignupBodyValidator.validate(payload, options).catch((err) => {
+    signupBodyValidator.validate(payload, options).catch((err) => {
       expect(err.errors[0]).toMatchObject(expected);
     });
   });
@@ -32,7 +32,7 @@ describe('Test signup body validation:', () => {
       secondName: 'Valid',
     };
 
-    SignupBodyValidator.validate(data, options).catch((err) => {
+    signupBodyValidator.validate(data, options).catch((err) => {
       expect(err.errors[0]).toMatchObject({
         key: 'signup.errors.email_format_err',
         message: 'Property "email" is invalid',
@@ -48,11 +48,11 @@ describe('Test signup body validation:', () => {
       secondName: 'Valid',
     };
 
-    SignupBodyValidator.validate(data, options).catch((err) => {
+    signupBodyValidator.validate(data, options).catch((err) => {
       expect(err.errors[0]).toMatchObject({
         key: 'signup.errors.password_regexp_err',
         message:
-        'Property "password" must be longer than 5 characters and contain at least one number and one letter',
+          'Property "password" must be longer than 5 characters and contain at least one number and one letter',
       });
     });
   });
@@ -65,11 +65,11 @@ describe('Test signup body validation:', () => {
       secondName: 'Valid',
     };
 
-    SignupBodyValidator.validate(data, options).catch((err) => {
+    signupBodyValidator.validate(data, options).catch((err) => {
       expect(err.errors[0]).toMatchObject({
         key: 'signup.errors.password_regexp_err',
         message:
-        'Property "password" must be longer than 5 characters and contain at least one number and one letter',
+          'Property "password" must be longer than 5 characters and contain at least one number and one letter',
       });
     });
   });
@@ -82,11 +82,11 @@ describe('Test signup body validation:', () => {
       secondName: 'Valid',
     };
 
-    SignupBodyValidator.validate(data, options).catch((err) => {
+    signupBodyValidator.validate(data, options).catch((err) => {
       expect(err.errors[0]).toMatchObject({
         key: 'signup.errors.password_regexp_err',
         message:
-        'Property "password" must be longer than 5 characters and contain at least one number and one letter',
+          'Property "password" must be longer than 5 characters and contain at least one number and one letter',
       });
     });
   });

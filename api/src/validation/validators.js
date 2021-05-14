@@ -40,11 +40,14 @@ const secondNameValidator = yup
   .typeError(propertyTypeError('signup', 'secondName'))
   .required(requiredPropertyError('signup', 'secondName'));
 
-const signupBodyValidator = yup.object({
+export const signupBodyValidator = yup.object({
   email: emailValidator,
   password: passwordValidator,
   firstName: firstNameValidator,
   secondName: secondNameValidator,
 });
 
-export default signupBodyValidator;
+export const signinBodyValidator = yup.object({
+  email: emailValidator,
+  password: passwordValidator,
+});

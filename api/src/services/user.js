@@ -1,6 +1,9 @@
 import bcrypt from 'bcrypt';
 
-import signupBodyValidator from '../validation/validators';
+import {
+  signupBodyValidator,
+  signinBodyValidator,
+} from '../validation/validators';
 import validationCompiler from '../validation/validationCompiler';
 import errorHandler from '../validation/errorHandler';
 
@@ -52,6 +55,69 @@ const user = async (instance) => {
         key: 'signup.action_success',
         message: 'Successfully signed up',
       });
+    },
+  });
+
+  instance.route({
+    method: 'POST',
+    url: '/signin',
+    schema: {
+      body: signinBodyValidator,
+      response: {
+        200: {
+          type: 'object',
+          properties: {
+            message: { type: 'string' },
+          },
+        },
+        '4xx': {
+          type: 'object',
+          properties: {
+            fallback: { type: 'string' },
+            errors: { type: 'array' },
+          },
+        },
+        '5xx': {
+          type: 'object',
+          properties: {
+            fallback: { type: 'string' },
+            errors: { type: 'array' },
+          },
+        },
+      },
+    },
+    validatorCompiler: ({ schema }) => validationCompiler(schema),
+    errorHandler: async (err, _, repl) => errorHandler(err, repl),
+    handler: async (req, repl) => {
+      const { email, password } = req.body;
+
+      const userData = await instance.objection.models.user.query().findOne({
+        email,
+      });
+      if (!userData) {
+        return repl.status(401).send({
+          fallback: 'errors.unauthorized',
+          errors: [
+            {
+              message: 'Unauthorized',
+            },
+          ],
+        });
+      }
+
+      const compareResult = await bcrypt.compare(password, userData.password);
+      if (!compareResult) {
+        return repl.status(401).send({
+          fallback: 'errors.unauthorized',
+          errors: [
+            {
+              message: 'Unauthorized',
+            },
+          ],
+        });
+      }
+
+      return repl.status(200).send({ message: 'success' });
     },
   });
 };
