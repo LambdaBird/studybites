@@ -15,7 +15,7 @@ const SignUp = () => {
         <Col span={24} align="middle">
           <Title level={1}>{t('sign_up.title')}</Title>
         </Col>
-        <Col>
+        <Col span={12}>
           <SignUpForm />
         </Col>
       </MainForm>
