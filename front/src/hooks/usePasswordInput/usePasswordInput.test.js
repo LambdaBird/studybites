@@ -123,4 +123,71 @@ describe('Test usePasswordInput', () => {
       expect(mockSetStates[2]).toBeCalledWith('abcde5');
     });
   });
+
+  describe('Test passwordValidator', () => {
+    let getPasswordSuccess;
+
+    beforeEach(() => {
+      jest
+        .spyOn(React, 'useState')
+        .mockImplementation((initial) => [initial, jest.fn()]);
+      const obj = usePasswordInput();
+      const { passwordValidator } = obj;
+      getPasswordSuccess = async (password) => {
+        let success;
+        try {
+          await passwordValidator(null, password);
+          success = true;
+        } catch (e) {
+          success = false;
+        }
+        return success;
+      };
+    });
+
+    test('value with one letter', async () => {
+      const success = await getPasswordSuccess('a');
+      expect(success).toBe(false);
+    });
+
+    test('value with 1 number', async () => {
+      const success = await getPasswordSuccess('1');
+      expect(success).toBe(false);
+    });
+
+    test('value with 1 letter and number', async () => {
+      const success = await getPasswordSuccess('a1');
+      expect(success).toBe(false);
+    });
+
+    test('value with 6 letters ', async () => {
+      const success = await getPasswordSuccess('abcdef');
+      expect(success).toBe(false);
+    });
+
+    test('value with 6 numbers', async () => {
+      const success = await getPasswordSuccess('123456');
+      expect(success).toBe(false);
+    });
+
+    test('value with 6 symbols', async () => {
+      const success = await getPasswordSuccess('######');
+      expect(success).toBe(false);
+    });
+
+    test('value with 1 symbol', async () => {
+      const success = await getPasswordSuccess('#');
+      expect(success).toBe(false);
+    });
+
+    test('correct value', async () => {
+      const success = await getPasswordSuccess('abcde9');
+      expect(success).toBe(true);
+    });
+
+    test('empty value', async () => {
+      const success = await getPasswordSuccess('');
+      expect(success).toBe(false);
+    });
+  });
 });
