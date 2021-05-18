@@ -9,185 +9,88 @@ jest.mock('react-i18next', () => ({
 
 describe('Test usePasswordInput', () => {
   describe('Test onChangePassword', () => {
-    let onChangePassword;
     let mockSetStates = [];
-    beforeEach(() => {
-      jest.spyOn(React, 'useState').mockImplementation((initial) => {
-        const setState = jest.fn();
-        mockSetStates.push(setState);
-        return [initial, setState];
-      });
-      const obj = usePasswordInput();
-      onChangePassword = obj.onChangePassword;
-    });
 
     afterEach(() => {
       mockSetStates = [];
     });
 
-    test('value with 1 letter', () => {
-      onChangePassword({
-        target: {
-          value: 'a',
-        },
-      });
-      expect(mockSetStates[0]).toBeCalledWith('error');
-      expect(mockSetStates[1]).toBeCalledWith(
+    test.each([
+      [
+        '1 letter',
+        'a',
+        'error',
         'Sign_up.password.min_5_symbols, sign_up.password.one_numerical',
-      );
-      expect(mockSetStates[2]).toBeCalledWith('a');
-    });
-
-    test('value with 1 number', () => {
-      onChangePassword({
-        target: {
-          value: '1',
-        },
-      });
-      expect(mockSetStates[0]).toBeCalledWith('error');
-      expect(mockSetStates[1]).toBeCalledWith(
+      ],
+      [
+        '1 number',
+        '1',
+        'error',
         'Sign_up.password.min_5_symbols, sign_up.password.one_non_numerical',
-      );
-      expect(mockSetStates[2]).toBeCalledWith('1');
-    });
-
-    test('value with 1 letter and number', () => {
-      onChangePassword({
-        target: {
-          value: 'a1',
-        },
-      });
-      expect(mockSetStates[0]).toBeCalledWith('error');
-      expect(mockSetStates[1]).toBeCalledWith('Sign_up.password.min_5_symbols');
-      expect(mockSetStates[2]).toBeCalledWith('a1');
-    });
-
-    test('value with 6 letters', () => {
-      onChangePassword({
-        target: {
-          value: 'abcdefg',
-        },
-      });
-      expect(mockSetStates[0]).toBeCalledWith('error');
-      expect(mockSetStates[1]).toBeCalledWith('Sign_up.password.one_numerical');
-      expect(mockSetStates[2]).toBeCalledWith('abcdefg');
-    });
-
-    test('value with 6 numbers', () => {
-      onChangePassword({
-        target: {
-          value: '123456',
-        },
-      });
-      expect(mockSetStates[0]).toBeCalledWith('error');
-      expect(mockSetStates[1]).toBeCalledWith(
-        'Sign_up.password.one_non_numerical',
-      );
-      expect(mockSetStates[2]).toBeCalledWith('123456');
-    });
-
-    test('value with 6 symbols', () => {
-      onChangePassword({
-        target: {
-          value: '######',
-        },
-      });
-      expect(mockSetStates[0]).toBeCalledWith('error');
-      expect(mockSetStates[1]).toBeCalledWith(
+      ],
+      ['1 letter and number', 'a1', 'error', 'Sign_up.password.min_5_symbols'],
+      ['6 letters', 'abcdefg', 'error', 'Sign_up.password.one_numerical'],
+      ['6 numbers', '123456', 'error', 'Sign_up.password.one_non_numerical'],
+      [
+        '6 symbols',
+        '######',
+        'error',
         'Sign_up.password.one_non_numerical, sign_up.password.one_numerical',
-      );
-      expect(mockSetStates[2]).toBeCalledWith('######');
-    });
-
-    test('value with 1 symbol', () => {
-      onChangePassword({
-        target: {
-          value: '#',
-        },
-      });
-      expect(mockSetStates[0]).toBeCalledWith('error');
-      expect(mockSetStates[1]).toBeCalledWith(
+      ],
+      [
+        '1 symbol',
+        '#',
+        'error',
         'Sign_up.password.min_5_symbols, sign_up.password.one_non_numerical, sign_up.password.one_numerical',
-      );
-      expect(mockSetStates[2]).toBeCalledWith('#');
-    });
-
-    test('correct value', () => {
-      onChangePassword({
-        target: {
-          value: 'abcde5',
-        },
-      });
-      expect(mockSetStates[0]).toBeCalledWith('success');
-      expect(mockSetStates[1]).toBeCalledWith('');
-      expect(mockSetStates[2]).toBeCalledWith('abcde5');
-    });
+      ],
+      ['correct value', 'abcde5', 'success', ''],
+    ])(
+      'value with %s',
+      async (_, payload, expectedError, expectedErrorText) => {
+        jest.spyOn(React, 'useState').mockImplementation((initial) => {
+          const setState = jest.fn();
+          mockSetStates.push(setState);
+          return [initial, setState];
+        });
+        const { onChangePassword } = usePasswordInput();
+        onChangePassword({
+          target: {
+            value: payload,
+          },
+        });
+        expect(mockSetStates[0]).toBeCalledWith(expectedError);
+        expect(mockSetStates[1]).toBeCalledWith(expectedErrorText);
+        expect(mockSetStates[2]).toBeCalledWith(payload);
+      },
+    );
   });
 
   describe('Test passwordValidator', () => {
-    let getPasswordSuccess;
-
-    beforeEach(() => {
+    test.each([
+      ['one letter', 'a', false],
+      ['1 number', '1', false],
+      ['1 letter and number', 'a1', false],
+      ['6 letters', 'abcdef', false],
+      ['6 numbers', '123456', false],
+      ['6 symbols', '######', false],
+      ['1 symbol', '#', false],
+      ['empty value', '', false],
+      ['correct value', 'abcde9', true],
+    ])('value with %s', async (_, payload, expected) => {
       jest
         .spyOn(React, 'useState')
         .mockImplementation((initial) => [initial, jest.fn()]);
-      const obj = usePasswordInput();
-      const { passwordValidator } = obj;
-      getPasswordSuccess = async (password) => {
-        let success;
-        try {
-          await passwordValidator(null, password);
-          success = true;
-        } catch (e) {
-          success = false;
-        }
-        return success;
-      };
-    });
 
-    test('value with one letter', async () => {
-      const success = await getPasswordSuccess('a');
-      expect(success).toBe(false);
-    });
+      const { passwordValidator } = usePasswordInput();
+      let success;
+      try {
+        await passwordValidator(null, payload);
+        success = true;
+      } catch (e) {
+        success = false;
+      }
 
-    test('value with 1 number', async () => {
-      const success = await getPasswordSuccess('1');
-      expect(success).toBe(false);
-    });
-
-    test('value with 1 letter and number', async () => {
-      const success = await getPasswordSuccess('a1');
-      expect(success).toBe(false);
-    });
-
-    test('value with 6 letters ', async () => {
-      const success = await getPasswordSuccess('abcdef');
-      expect(success).toBe(false);
-    });
-
-    test('value with 6 numbers', async () => {
-      const success = await getPasswordSuccess('123456');
-      expect(success).toBe(false);
-    });
-
-    test('value with 6 symbols', async () => {
-      const success = await getPasswordSuccess('######');
-      expect(success).toBe(false);
-    });
-
-    test('value with 1 symbol', async () => {
-      const success = await getPasswordSuccess('#');
-      expect(success).toBe(false);
-    });
-
-    test('correct value', async () => {
-      const success = await getPasswordSuccess('abcde9');
-      expect(success).toBe(true);
-    });
-
-    test('empty value', async () => {
-      const success = await getPasswordSuccess('');
-      expect(success).toBe(false);
+      expect(success).toBe(expected);
     });
   });
 });
