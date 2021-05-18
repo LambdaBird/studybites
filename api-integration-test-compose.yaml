@@ -7,13 +7,15 @@ services:
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
     ports:
-      - '5503:5432'
+      - '5504:5432'
     volumes:
       - studybites-db:/var/lib/postgresql/data
-      - ./docker_postgres_init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./api/test-init.sql:/docker-entrypoint-initdb.d/init.sql
 
-  studybites-api:
-    build: ./api
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile_test
     depends_on:
       - postgres
     volumes:
@@ -27,18 +29,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: studybites
     ports:
-      - '3017:3017'
-
-  studybites-front:
-    build: ./front
-    volumes:
-      - ./front:/front
-      - /front/node_modules
-    ports:
-      - '3018:3018'
-    environment:
-      PORT: 3018
-      API_PORT: 3017
+      - '3018:3017'
 
 volumes:
   studybites-db:

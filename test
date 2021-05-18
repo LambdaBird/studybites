@@ -1,0 +1,5 @@
+#!/bin/bash
+
+docker-compose -p test -f api-integration-test-compose.yaml up -d --build
+docker logs test_api_1 -f
+docker-compose -p test down -v --remove-orphans
