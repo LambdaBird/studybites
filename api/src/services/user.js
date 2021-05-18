@@ -7,6 +7,8 @@ import {
 import validationCompiler from '../validation/validationCompiler';
 import errorHandler from '../validation/errorHandler';
 
+import { createAccessToken, createRefreshToken } from './utils';
+
 const user = async (instance) => {
   instance.route({
     method: 'POST',
@@ -118,25 +120,8 @@ const user = async (instance) => {
         });
       }
 
-      const accessToken = instance.jwt.sign(
-        {
-          access: true,
-          id: userData.id,
-          isSuperAdmin: userData.isSuperAdmin,
-          isConfirmed: userData.isConfirmed,
-        },
-        { expiresIn: process.env.ACCESS_JWT_EXPIRES_IN }
-      );
-
-      const refreshToken = instance.jwt.sign(
-        {
-          access: false,
-          id: userData.id,
-          isSuperAdmin: userData.isSuperAdmin,
-          isConfirmed: userData.isConfirmed,
-        },
-        { expiresIn: process.env.REFRESH_JWT_EXPIRES_IN }
-      );
+      const accessToken = createAccessToken(instance, userData);
+      const refreshToken = createRefreshToken(instance, userData);
 
       return repl.status(200).send({
         accessToken,
