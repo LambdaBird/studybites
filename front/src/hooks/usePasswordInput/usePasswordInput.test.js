@@ -1,10 +1,5 @@
+import React from 'react';
 import usePasswordInput from './usePasswordInput';
-
-const mockSetState = jest.fn();
-
-jest.mock('react', () => ({
-  useState: (initial) => [initial, mockSetState],
-}));
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -15,9 +10,19 @@ jest.mock('react-i18next', () => ({
 describe('Test usePasswordInput', () => {
   describe('Test onChangePassword', () => {
     let onChangePassword;
+    let mockSetStates = [];
     beforeEach(() => {
+      jest.spyOn(React, 'useState').mockImplementation((initial) => {
+        const setState = jest.fn();
+        mockSetStates.push(setState);
+        return [initial, setState];
+      });
       const obj = usePasswordInput();
       onChangePassword = obj.onChangePassword;
+    });
+
+    afterEach(() => {
+      mockSetStates = [];
     });
 
     test('value with 1 letter', () => {
@@ -26,11 +31,11 @@ describe('Test usePasswordInput', () => {
           value: 'a',
         },
       });
-      expect(mockSetState).toBeCalledWith('a');
-      expect(mockSetState).toBeCalledWith('error');
-      expect(mockSetState).toBeCalledWith(
+      expect(mockSetStates[0]).toBeCalledWith('error');
+      expect(mockSetStates[1]).toBeCalledWith(
         'Sign_up.password.min_5_symbols, sign_up.password.one_numerical',
       );
+      expect(mockSetStates[2]).toBeCalledWith('a');
     });
 
     test('value with 1 number', () => {
@@ -39,11 +44,11 @@ describe('Test usePasswordInput', () => {
           value: '1',
         },
       });
-      expect(mockSetState).toBeCalledWith('1');
-      expect(mockSetState).toBeCalledWith('error');
-      expect(mockSetState).toBeCalledWith(
+      expect(mockSetStates[0]).toBeCalledWith('error');
+      expect(mockSetStates[1]).toBeCalledWith(
         'Sign_up.password.min_5_symbols, sign_up.password.one_non_numerical',
       );
+      expect(mockSetStates[2]).toBeCalledWith('1');
     });
 
     test('value with 1 letter and number', () => {
@@ -52,9 +57,9 @@ describe('Test usePasswordInput', () => {
           value: 'a1',
         },
       });
-      expect(mockSetState).toBeCalledWith('a1');
-      expect(mockSetState).toBeCalledWith('error');
-      expect(mockSetState).toBeCalledWith('Sign_up.password.min_5_symbols');
+      expect(mockSetStates[0]).toBeCalledWith('error');
+      expect(mockSetStates[1]).toBeCalledWith('Sign_up.password.min_5_symbols');
+      expect(mockSetStates[2]).toBeCalledWith('a1');
     });
 
     test('value with 6 letters', () => {
@@ -63,9 +68,9 @@ describe('Test usePasswordInput', () => {
           value: 'abcdefg',
         },
       });
-      expect(mockSetState).toBeCalledWith('abcdefg');
-      expect(mockSetState).toBeCalledWith('error');
-      expect(mockSetState).toBeCalledWith('Sign_up.password.one_numerical');
+      expect(mockSetStates[0]).toBeCalledWith('error');
+      expect(mockSetStates[1]).toBeCalledWith('Sign_up.password.one_numerical');
+      expect(mockSetStates[2]).toBeCalledWith('abcdefg');
     });
 
     test('value with 6 numbers', () => {
@@ -74,9 +79,11 @@ describe('Test usePasswordInput', () => {
           value: '123456',
         },
       });
-      expect(mockSetState).toBeCalledWith('123456');
-      expect(mockSetState).toBeCalledWith('error');
-      expect(mockSetState).toBeCalledWith('Sign_up.password.one_non_numerical');
+      expect(mockSetStates[0]).toBeCalledWith('error');
+      expect(mockSetStates[1]).toBeCalledWith(
+        'Sign_up.password.one_non_numerical',
+      );
+      expect(mockSetStates[2]).toBeCalledWith('123456');
     });
 
     test('value with 6 symbols', () => {
@@ -85,11 +92,11 @@ describe('Test usePasswordInput', () => {
           value: '######',
         },
       });
-      expect(mockSetState).toBeCalledWith('######');
-      expect(mockSetState).toBeCalledWith('error');
-      expect(mockSetState).toBeCalledWith(
+      expect(mockSetStates[0]).toBeCalledWith('error');
+      expect(mockSetStates[1]).toBeCalledWith(
         'Sign_up.password.one_non_numerical, sign_up.password.one_numerical',
       );
+      expect(mockSetStates[2]).toBeCalledWith('######');
     });
 
     test('value with 1 symbol', () => {
@@ -98,11 +105,11 @@ describe('Test usePasswordInput', () => {
           value: '#',
         },
       });
-      expect(mockSetState).toBeCalledWith('#');
-      expect(mockSetState).toBeCalledWith('error');
-      expect(mockSetState).toBeCalledWith(
+      expect(mockSetStates[0]).toBeCalledWith('error');
+      expect(mockSetStates[1]).toBeCalledWith(
         'Sign_up.password.min_5_symbols, sign_up.password.one_non_numerical, sign_up.password.one_numerical',
       );
+      expect(mockSetStates[2]).toBeCalledWith('#');
     });
 
     test('correct value', () => {
@@ -111,9 +118,9 @@ describe('Test usePasswordInput', () => {
           value: 'abcde5',
         },
       });
-      expect(mockSetState).toBeCalledWith('abcde5');
-      expect(mockSetState).toBeCalledWith('success');
-      expect(mockSetState).toBeCalledWith('');
+      expect(mockSetStates[0]).toBeCalledWith('success');
+      expect(mockSetStates[1]).toBeCalledWith('');
+      expect(mockSetStates[2]).toBeCalledWith('abcde5');
     });
   });
 });
