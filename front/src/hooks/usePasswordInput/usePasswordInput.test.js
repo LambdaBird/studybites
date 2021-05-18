@@ -11,6 +11,14 @@ describe('Test usePasswordInput', () => {
   describe('Test onChangePassword', () => {
     let mockSetStates = [];
 
+    beforeEach(() => {
+      jest.spyOn(React, 'useState').mockImplementation((initial) => {
+        const setState = jest.fn();
+        mockSetStates.push(setState);
+        return [initial, setState];
+      });
+    });
+
     afterEach(() => {
       mockSetStates = [];
     });
@@ -47,11 +55,6 @@ describe('Test usePasswordInput', () => {
     ])(
       'value with %s',
       async (_, payload, expectedError, expectedErrorText) => {
-        jest.spyOn(React, 'useState').mockImplementation((initial) => {
-          const setState = jest.fn();
-          mockSetStates.push(setState);
-          return [initial, setState];
-        });
         const { onChangePassword } = usePasswordInput();
         onChangePassword({
           target: {
@@ -66,6 +69,12 @@ describe('Test usePasswordInput', () => {
   });
 
   describe('Test passwordValidator', () => {
+    beforeEach(() => {
+      jest
+        .spyOn(React, 'useState')
+        .mockImplementation((initial) => [initial, jest.fn()]);
+    });
+
     test.each([
       ['one letter', 'a', false],
       ['1 number', '1', false],
@@ -77,10 +86,6 @@ describe('Test usePasswordInput', () => {
       ['empty value', '', false],
       ['correct value', 'abcde9', true],
     ])('value with %s', async (_, payload, expected) => {
-      jest
-        .spyOn(React, 'useState')
-        .mockImplementation((initial) => [initial, jest.fn()]);
-
       const { passwordValidator } = usePasswordInput();
       let success;
       try {
