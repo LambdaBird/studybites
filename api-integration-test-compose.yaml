@@ -6,11 +6,11 @@ services:
     restart: always
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_DB: studybites
     ports:
       - '5504:5432'
     volumes:
       - studybites-db:/var/lib/postgresql/data
-      - ./api/test-init.sql:/docker-entrypoint-initdb.d/init.sql
 
   api:
     build:
