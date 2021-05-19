@@ -29,6 +29,7 @@ describe('Test useSignUp', () => {
     });
 
     test('server responses with unknown key', async () => {
+      const DEFAULT_MESSAGE = 'DEFAULT_MESSAGE';
       useTranslation.mockImplementation(() => ({
         t: (x) => x,
       }));
@@ -40,7 +41,7 @@ describe('Test useSignUp', () => {
           errors: [
             {
               key: 'unknown_key',
-              message: 'DEFAULT MESSAGE',
+              message: DEFAULT_MESSAGE,
             },
           ],
         },
@@ -53,15 +54,16 @@ describe('Test useSignUp', () => {
       });
 
       expect(mockSetStates[0]).toHaveBeenNthCalledWith(1, null);
-      expect(mockSetStates[0]).toHaveBeenNthCalledWith(2, 'DEFAULT MESSAGE');
+      expect(mockSetStates[0]).toHaveBeenNthCalledWith(2, DEFAULT_MESSAGE);
       expect(mockSetStates[1]).toHaveBeenNthCalledWith(1, true);
       expect(mockSetStates[1]).toHaveBeenNthCalledWith(2, false);
       expect(mockSetStates[2]).toBeCalledWith(null);
     });
 
     test('value with already user data', async () => {
+      const ALREADY_REGISTERED_TRANSLATION = 'ALREADY_REGISTERED_TRANSLATION';
       useTranslation.mockImplementation(() => ({
-        t: () => 'already_registered',
+        t: () => ALREADY_REGISTERED_TRANSLATION,
       }));
       const [auth] = await useSignUp();
       postSignUp.mockImplementation(() => ({
@@ -84,15 +86,19 @@ describe('Test useSignUp', () => {
       });
 
       expect(mockSetStates[0]).toHaveBeenNthCalledWith(1, null);
-      expect(mockSetStates[0]).toHaveBeenNthCalledWith(2, 'already_registered');
+      expect(mockSetStates[0]).toHaveBeenNthCalledWith(
+        2,
+        ALREADY_REGISTERED_TRANSLATION,
+      );
       expect(mockSetStates[1]).toHaveBeenNthCalledWith(1, true);
       expect(mockSetStates[1]).toHaveBeenNthCalledWith(2, false);
       expect(mockSetStates[2]).toBeCalledWith(null);
     });
 
     test('value with new user data', async () => {
+      const ACTION_SUCCESS_TRANSLATION = 'ACTION_SUCCESS_TRANSLATION';
       useTranslation.mockImplementation(() => ({
-        t: () => 'action_success',
+        t: () => ACTION_SUCCESS_TRANSLATION,
       }));
       const [auth] = await useSignUp();
       postSignUp.mockImplementation(() => ({
@@ -112,7 +118,10 @@ describe('Test useSignUp', () => {
       expect(mockSetStates[1]).toHaveBeenNthCalledWith(1, true);
       expect(mockSetStates[1]).toHaveBeenNthCalledWith(2, false);
       expect(mockSetStates[2]).toHaveBeenNthCalledWith(1, null);
-      expect(mockSetStates[2]).toHaveBeenNthCalledWith(2, 'action_success');
+      expect(mockSetStates[2]).toHaveBeenNthCalledWith(
+        2,
+        ACTION_SUCCESS_TRANSLATION,
+      );
     });
   });
 });
