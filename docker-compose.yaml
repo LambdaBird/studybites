@@ -22,6 +22,7 @@ services:
     environment:
       DATABASE_URL: postgres://postgres:@postgres:5432/studybites
       PORT: 3017
+      JWT_SECRET: tvXqYGduhyMw28EzyBxaGrFP8zQsmRG93GZHrmADmHsU9WwB7nbULUsJ98aAqWzM
       POSTGRES_HOST: postgres
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres

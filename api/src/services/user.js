@@ -7,6 +7,8 @@ import {
 import validationCompiler from '../validation/validationCompiler';
 import errorHandler from '../validation/errorHandler';
 
+import { createAccessToken, createRefreshToken } from './utils';
+
 const user = async (instance) => {
   instance.route({
     method: 'POST',
@@ -67,7 +69,8 @@ const user = async (instance) => {
         200: {
           type: 'object',
           properties: {
-            message: { type: 'string' },
+            accessToken: { type: 'string' },
+            refreshToken: { type: 'string' },
           },
         },
         '4xx': {
@@ -117,7 +120,13 @@ const user = async (instance) => {
         });
       }
 
-      return repl.status(200).send({ message: 'success' });
+      const accessToken = createAccessToken(instance, userData);
+      const refreshToken = createRefreshToken(instance, userData);
+
+      return repl.status(200).send({
+        accessToken,
+        refreshToken,
+      });
     },
   });
 };
