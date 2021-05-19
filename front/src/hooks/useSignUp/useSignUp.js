@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { signUp } from '../../utils/api/v1/user';
+import { postSignUp } from '../../utils/api/v1/user';
 
 const getTranslationFromMessageData = (t, data) => {
   const { key, message } = data;
-  let text = t(key);
+  const text = t(key);
   if (text === key) {
-    text = message;
+    return message;
   }
   return text;
 };
@@ -23,7 +23,7 @@ const useSignUp = () => {
     setMessage(null);
     setLoading(true);
 
-    const { status, data } = await signUp(formData);
+    const { status, data } = await postSignUp(formData);
     setLoading(false);
     if (status === 201) {
       const text = getTranslationFromMessageData(t, data);

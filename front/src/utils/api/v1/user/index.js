@@ -1,3 +1,3 @@
-import { signUp } from './user';
+import { postSignUp } from './user';
 
-export { signUp };
+export { postSignUp };

@@ -1,18 +1,12 @@
 import React, { useMemo } from 'react';
 import { Alert, Form, Input } from 'antd';
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import PasswordStrengthIndicator from '../../../components/atoms/PasswordStrengthIndicator';
 import usePasswordInput from '../../../hooks/usePasswordInput';
 import { HelpDiv, SubmitButton } from './SignUpForm.styled';
+import useSignUp from '../../../hooks/useSignUp';
 
-const SignUpForm = ({
-  error,
-  setError,
-  loading,
-  handleSubmit,
-  handleSubmitFailed,
-}) => {
+const SignUpForm = () => {
   const { t } = useTranslation();
   const {
     validateStatus,
@@ -21,6 +15,13 @@ const SignUpForm = ({
     onChangePassword,
     passwordValidator,
   } = usePasswordInput();
+
+  const [auth, error, setError, loading] = useSignUp();
+
+  const handleSubmit = (formData) => {
+    auth(formData);
+  };
+
   const formRules = useMemo(
     () => ({
       firstName: [
@@ -69,7 +70,6 @@ const SignUpForm = ({
       ]}
       size="large"
       onFinish={handleSubmit}
-      onFinishFailed={handleSubmitFailed}
     >
       {error && (
         <Form.Item>
@@ -116,22 +116,6 @@ const SignUpForm = ({
       </Form.Item>
     </Form>
   );
-};
-
-SignUpForm.defaultProps = {
-  error: null,
-  setError: null,
-  loading: null,
-  handleSubmit: () => {},
-  handleSubmitFailed: () => {},
-};
-
-SignUpForm.propTypes = {
-  error: PropTypes.string,
-  loading: PropTypes.bool,
-  setError: PropTypes.func,
-  handleSubmit: PropTypes.func,
-  handleSubmitFailed: PropTypes.func,
 };
 
 export default SignUpForm;
