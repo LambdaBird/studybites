@@ -1,12 +1,18 @@
 import React, { useMemo } from 'react';
-import { Form, Input } from 'antd';
+import { Alert, Form, Input } from 'antd';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import PasswordStrengthIndicator from '../../../components/atoms/PasswordStrengthIndicator';
 import usePasswordInput from '../../../hooks/usePasswordInput';
 import { HelpDiv, SubmitButton } from './SignUpForm.styled';
 
-const SignUpForm = ({ handleSubmit, handleSubmitFailed }) => {
+const SignUpForm = ({
+  error,
+  setError,
+  loading,
+  handleSubmit,
+  handleSubmitFailed,
+}) => {
   const { t } = useTranslation();
   const {
     validateStatus,
@@ -65,6 +71,18 @@ const SignUpForm = ({ handleSubmit, handleSubmitFailed }) => {
       onFinish={handleSubmit}
       onFinishFailed={handleSubmitFailed}
     >
+      {error && (
+        <Form.Item>
+          <Alert
+            onClose={() => setError(null)}
+            message={error}
+            type="error"
+            showIcon
+            closable
+          />
+        </Form.Item>
+      )}
+
       <Form.Item name="firstName" rules={formRules.firstName}>
         <Input placeholder={t('sign_up.first_name.placeholder')} />
       </Form.Item>
@@ -92,7 +110,7 @@ const SignUpForm = ({ handleSubmit, handleSubmitFailed }) => {
       </Form.Item>
 
       <Form.Item>
-        <SubmitButton type="primary" htmlType="submit">
+        <SubmitButton type="primary" loading={loading} htmlType="submit">
           {t('sign_up.button')}
         </SubmitButton>
       </Form.Item>
@@ -101,11 +119,17 @@ const SignUpForm = ({ handleSubmit, handleSubmitFailed }) => {
 };
 
 SignUpForm.defaultProps = {
+  error: null,
+  setError: null,
+  loading: null,
   handleSubmit: () => {},
   handleSubmitFailed: () => {},
 };
 
 SignUpForm.propTypes = {
+  error: PropTypes.string,
+  loading: PropTypes.bool,
+  setError: PropTypes.func,
   handleSubmit: PropTypes.func,
   handleSubmitFailed: PropTypes.func,
 };

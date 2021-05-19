@@ -1,6 +1,10 @@
 {
   "translation": {
     "sign_up": {
+      "action_success": "Successfully signed up",
+      "error": {
+        "no_internet": "Oops no internet connection"
+      },
       "title": "Sign up to your account",
       "first_name": {
         "placeholder": "First name",
@@ -13,7 +17,8 @@
       "email": {
         "placeholder": "E-mail",
         "error": "Please input your E-mail!",
-        "validation": "The input is not valid E-mail"
+        "validation": "The input is not valid E-mail",
+        "already_registered": "This email was already registered"
       },
       "password": {
         "error": "Please input your password!",
