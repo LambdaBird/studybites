@@ -29,7 +29,10 @@ const signupBodyWrongPassword = {
 const signupConflict = {
   fallback: 'errors.unique_violation',
   errors: [
-    'insert into "users" ("email", "first_name", "password", "second_name") values ($1, $2, $3, $4) returning * - duplicate key value violates unique constraint "users_email_unique"',
+    {
+      key: 'sign_up.email.already_registered',
+      message: 'This email was already registered',
+    },
   ],
 };
 
