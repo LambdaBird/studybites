@@ -1,28 +1,87 @@
-import { signupBodyValidator, propertyTypeError, requiredPropertyError } from '../../src/validation/validators';
+import {
+  propertyTypeError,
+  requiredPropertyError,
+} from '../../src/validation/helpers';
+import { signupBodyValidator } from '../../src/services/user/validators';
 import { options } from '../../src/validation/validationCompiler';
 
 describe('Test signup body validation:', () => {
   test.each([
-    ['email', { password: 'valid3', firstName: 'Valid', secondName: 'Valid' }, requiredPropertyError('signup', 'email')],
-    ['password', { email: 'valid@test.io', firstName: 'Valid', secondName: 'Valid' }, requiredPropertyError('signup', 'password')],
-    ['firstName', { email: 'valid@test.io', password: 'valid3', secondName: 'Valid' }, requiredPropertyError('signup', 'firstName')],
-    ['secondName', { email: 'valid@test.io', password: 'valid3', firstName: 'Valid' }, requiredPropertyError('signup', 'secondName')],
+    [
+      'email',
+      { password: 'valid3', firstName: 'Valid', secondName: 'Valid' },
+      requiredPropertyError('signup', 'email'),
+    ],
+    [
+      'password',
+      { email: 'valid@test.io', firstName: 'Valid', secondName: 'Valid' },
+      requiredPropertyError('signup', 'password'),
+    ],
+    [
+      'firstName',
+      { email: 'valid@test.io', password: 'valid3', secondName: 'Valid' },
+      requiredPropertyError('signup', 'firstName'),
+    ],
+    [
+      'secondName',
+      { email: 'valid@test.io', password: 'valid3', firstName: 'Valid' },
+      requiredPropertyError('signup', 'secondName'),
+    ],
   ])('should return ValidationError for missing %s', (_, payload, expected) => {
     signupBodyValidator.validate(payload, options).catch((err) => {
       expect(err.errors[0]).toMatchObject(expected);
     });
   });
-  
+
   test.each([
-    ['email', { email: [123], password: 'valid3', firstName: 'Valid', secondName: 'Valid' }, propertyTypeError('signup', 'email')],
-    ['password', { email: 'valid@test.io', password: [123], firstName: 'Valid', secondName: 'Valid' }, propertyTypeError('signup', 'password')],
-    ['firstName', { email: 'valid@test.io', password: 'valid3', firstName: [123], secondName: 'Valid' }, propertyTypeError('signup', 'firstName')],
-    ['secondName', { email: 'valid@test.io', password: 'valid3', firstName: 'Valid', secondName: [123] }, propertyTypeError('signup', 'secondName')],
-  ])('should return ValidationError for invalid type of %s', (_, payload, expected) => {
-    signupBodyValidator.validate(payload, options).catch((err) => {
-      expect(err.errors[0]).toMatchObject(expected);
-    });
-  });
+    [
+      'email',
+      {
+        email: [123],
+        password: 'valid3',
+        firstName: 'Valid',
+        secondName: 'Valid',
+      },
+      propertyTypeError('signup', 'email'),
+    ],
+    [
+      'password',
+      {
+        email: 'valid@test.io',
+        password: [123],
+        firstName: 'Valid',
+        secondName: 'Valid',
+      },
+      propertyTypeError('signup', 'password'),
+    ],
+    [
+      'firstName',
+      {
+        email: 'valid@test.io',
+        password: 'valid3',
+        firstName: [123],
+        secondName: 'Valid',
+      },
+      propertyTypeError('signup', 'firstName'),
+    ],
+    [
+      'secondName',
+      {
+        email: 'valid@test.io',
+        password: 'valid3',
+        firstName: 'Valid',
+        secondName: [123],
+      },
+      propertyTypeError('signup', 'secondName'),
+    ],
+  ])(
+    'should return ValidationError for invalid type of %s',
+    (_, payload, expected) => {
+      signupBodyValidator.validate(payload, options).catch((err) => {
+        expect(err.errors[0]).toMatchObject(expected);
+      });
+    }
+  );
 
   test('should return ValidationError for invalid email format', () => {
     const data = {
