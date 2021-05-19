@@ -1,4 +1,4 @@
-import config from '../../config.json';
+import config from '../../../config.json';
 
 export const createAccessToken = (instance, user) =>
   instance.jwt.sign(

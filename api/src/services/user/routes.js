@@ -1,46 +1,22 @@
 import bcrypt from 'bcrypt';
 
-import {
-  signupBodyValidator,
-  signinBodyValidator,
-} from '../validation/validators';
-import validationCompiler from '../validation/validationCompiler';
-import errorHandler from '../validation/errorHandler';
+import { signupBodyValidator, signinBodyValidator } from './validators';
+import errorResponse from '../../validation/schemas';
+import validatorCompiler from '../../validation/validatorCompiler';
+import errorHandler from '../../validation/errorHandler';
 
 import { createAccessToken, createRefreshToken } from './utils';
 
-const user = async (instance) => {
+const router = async (instance) => {
   instance.route({
     method: 'POST',
     url: '/signup',
     schema: {
       body: signupBodyValidator,
-      response: {
-        201: {
-          type: 'object',
-          properties: {
-            key: { type: 'string' },
-            message: { type: 'string' },
-          },
-        },
-        '4xx': {
-          type: 'object',
-          properties: {
-            fallback: { type: 'string' },
-            errors: { type: 'array' },
-          },
-        },
-        '5xx': {
-          type: 'object',
-          properties: {
-            fallback: { type: 'string' },
-            errors: { type: 'array' },
-          },
-        },
-      },
+      response: errorResponse,
     },
-    validatorCompiler: ({ schema }) => validationCompiler(schema),
-    errorHandler: async (err, _, repl) => errorHandler(err, repl),
+    validatorCompiler,
+    errorHandler,
     handler: async (req, repl) => {
       const { email, password, firstName, secondName } = req.body;
 
@@ -65,32 +41,10 @@ const user = async (instance) => {
     url: '/signin',
     schema: {
       body: signinBodyValidator,
-      response: {
-        200: {
-          type: 'object',
-          properties: {
-            accessToken: { type: 'string' },
-            refreshToken: { type: 'string' },
-          },
-        },
-        '4xx': {
-          type: 'object',
-          properties: {
-            fallback: { type: 'string' },
-            errors: { type: 'array' },
-          },
-        },
-        '5xx': {
-          type: 'object',
-          properties: {
-            fallback: { type: 'string' },
-            errors: { type: 'array' },
-          },
-        },
-      },
+      response: errorResponse,
     },
-    validatorCompiler: ({ schema }) => validationCompiler(schema),
-    errorHandler: async (err, _, repl) => errorHandler(err, repl),
+    validatorCompiler,
+    errorHandler,
     handler: async (req, repl) => {
       const { email, password } = req.body;
 
@@ -131,4 +85,4 @@ const user = async (instance) => {
   });
 };
 
-export default user;
+export default router;

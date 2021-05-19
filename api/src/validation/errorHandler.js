@@ -1,21 +1,21 @@
 const errorArray = (m) => [].concat(m);
 
-const errorHandler = (err, repl) => {
-  switch (err.name) {
+const errorHandler = (error, _, reply) => {
+  switch (error.name) {
     case 'ValidationError':
-      return repl.status(400).send({
+      return reply.status(400).send({
         fallback: 'errors.validation_error',
-        errors: errorArray(err.message),
+        errors: errorArray(error.message),
       });
     case 'UniqueViolationError':
-      return repl.status(409).send({
+      return reply.status(409).send({
         fallback: 'errors.unique_violation',
-        errors: Array.isArray(err.message) ? err.message : [err.message],
+        errors: Array.isArray(error.message) ? error.message : [error.message],
       });
     default:
-      return repl.status(500).send({
+      return reply.status(500).send({
         fallback: 'errors.internal_error',
-        errors: errorArray(err.message),
+        errors: errorArray(error.message),
       });
   }
 };
