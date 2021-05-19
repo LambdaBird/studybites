@@ -1,12 +1,12 @@
 import React, { useMemo } from 'react';
-import { Form, Input } from 'antd';
-import PropTypes from 'prop-types';
+import { Alert, Form, Input } from 'antd';
 import { useTranslation } from 'react-i18next';
 import PasswordStrengthIndicator from '../../../components/atoms/PasswordStrengthIndicator';
 import usePasswordInput from '../../../hooks/usePasswordInput';
 import { HelpDiv, SubmitButton } from './SignUpForm.styled';
+import useSignUp from '../../../hooks/useSignUp';
 
-const SignUpForm = ({ handleSubmit, handleSubmitFailed }) => {
+const SignUpForm = () => {
   const { t } = useTranslation();
   const {
     validateStatus,
@@ -15,6 +15,13 @@ const SignUpForm = ({ handleSubmit, handleSubmitFailed }) => {
     onChangePassword,
     passwordValidator,
   } = usePasswordInput();
+
+  const [auth, error, setError, loading] = useSignUp();
+
+  const handleSubmit = (formData) => {
+    auth(formData);
+  };
+
   const formRules = useMemo(
     () => ({
       firstName: [
@@ -63,8 +70,19 @@ const SignUpForm = ({ handleSubmit, handleSubmitFailed }) => {
       ]}
       size="large"
       onFinish={handleSubmit}
-      onFinishFailed={handleSubmitFailed}
     >
+      {error && (
+        <Form.Item>
+          <Alert
+            onClose={() => setError(null)}
+            message={error}
+            type="error"
+            showIcon
+            closable
+          />
+        </Form.Item>
+      )}
+
       <Form.Item name="firstName" rules={formRules.firstName}>
         <Input placeholder={t('sign_up.first_name.placeholder')} />
       </Form.Item>
@@ -92,22 +110,12 @@ const SignUpForm = ({ handleSubmit, handleSubmitFailed }) => {
       </Form.Item>
 
       <Form.Item>
-        <SubmitButton type="primary" htmlType="submit">
+        <SubmitButton type="primary" loading={loading} htmlType="submit">
           {t('sign_up.button')}
         </SubmitButton>
       </Form.Item>
     </Form>
   );
-};
-
-SignUpForm.defaultProps = {
-  handleSubmit: () => {},
-  handleSubmitFailed: () => {},
-};
-
-SignUpForm.propTypes = {
-  handleSubmit: PropTypes.func,
-  handleSubmitFailed: PropTypes.func,
 };
 
 export default SignUpForm;
