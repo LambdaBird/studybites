@@ -2,7 +2,7 @@ import bcrypt from 'bcrypt';
 
 import { signupBodyValidator, signinBodyValidator } from './validators';
 import errorResponse from '../../validation/schemas';
-import validationCompiler from '../../validation/validationCompiler';
+import validatorCompiler from '../../validation/validatorCompiler';
 import errorHandler from '../../validation/errorHandler';
 
 import { createAccessToken, createRefreshToken } from './utils';
@@ -15,8 +15,8 @@ const router = async (instance) => {
       body: signupBodyValidator,
       response: errorResponse,
     },
-    validatorCompiler: ({ schema }) => validationCompiler(schema),
-    errorHandler: async (err, _, repl) => errorHandler(err, repl),
+    validatorCompiler,
+    errorHandler,
     handler: async (req, repl) => {
       const { email, password, firstName, secondName } = req.body;
 
@@ -43,8 +43,8 @@ const router = async (instance) => {
       body: signinBodyValidator,
       response: errorResponse,
     },
-    validatorCompiler: ({ schema }) => validationCompiler(schema),
-    errorHandler: async (err, _, repl) => errorHandler(err, repl),
+    validatorCompiler,
+    errorHandler,
     handler: async (req, repl) => {
       const { email, password } = req.body;
 

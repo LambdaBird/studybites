@@ -26,7 +26,9 @@ const app = fastify({ logger: true });
       }
     });
 
-    app.register((instance, _, next) => userService(instance, next));
+    app.register((instance, _, next) => userService(instance, next), {
+      prefix: '/api/v1/user',
+    });
 
     app.all('*', async (_, repl) => {
       return repl.status(404).send({ message: 'route not found' });

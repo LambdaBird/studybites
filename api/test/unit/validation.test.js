@@ -3,7 +3,7 @@ import {
   requiredPropertyError,
 } from '../../src/validation/helpers';
 import { signupBodyValidator } from '../../src/services/user/validators';
-import { options } from '../../src/validation/validationCompiler';
+import { options } from '../../src/validation/validatorCompiler';
 
 describe('Test signup body validation:', () => {
   test.each([

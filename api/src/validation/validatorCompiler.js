@@ -7,7 +7,7 @@ export const options = {
   recursive: true,
 };
 
-const validationCompiler = (schema) => {
+const validatorCompiler = ({ schema }) => {
   return (data) => {
     try {
       if (!data) {
@@ -26,4 +26,4 @@ const validationCompiler = (schema) => {
   };
 };
 
-export default validationCompiler;
+export default validatorCompiler;

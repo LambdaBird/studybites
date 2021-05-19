@@ -7,11 +7,9 @@ import auth from './auth';
 const userService = fp((instance, next) => {
   instance.register(jwt, { secret: process.env.JWT_SECRET });
 
-  instance.decorate('auth', (fastify, done, req, repl) => {
-    auth(fastify, done, req, repl);
-  });
+  instance.decorate('auth', auth);
 
-  instance.register(router, { prefix: '/api/v1/user' });
+  instance.register(router);
 
   next();
 });
