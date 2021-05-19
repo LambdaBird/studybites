@@ -53,7 +53,7 @@ const user = async (instance) => {
           fallback: 'errors.unique_violation',
           errors: [
             {
-              key: 'signup.email.already_registered',
+              key: 'sign_up.email.already_registered',
               message: 'This email was already registered',
             },
           ],
@@ -61,7 +61,7 @@ const user = async (instance) => {
       }
 
       return repl.status(201).send({
-        key: 'signup.action_success',
+        key: 'sign_up.action_success',
         message: 'Successfully signed up',
       });
     },
