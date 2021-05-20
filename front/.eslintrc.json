@@ -1,6 +1,9 @@
 {
   "extends": ["react-app", "airbnb","plugin:jsx-a11y/recommended","prettier"],
   "plugins": ["react","jsx-a11y"],
+  "rules": {
+    "import/prefer-default-export": "off"
+  },
   "settings": {
     "import/resolver": {
       "node": {
