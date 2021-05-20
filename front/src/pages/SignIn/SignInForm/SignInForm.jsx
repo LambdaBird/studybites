@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { Form, Input } from 'antd';
+import { Alert, Form, Input } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
@@ -8,6 +8,7 @@ import {
   SubmitButton,
   TextLink,
 } from './SignInForm.styled';
+import useSignIn from '../../../hooks/useSignIn/useSignIn';
 
 const SignInForm = () => {
   const { t } = useTranslation();
@@ -33,13 +34,30 @@ const SignInForm = () => {
     }),
     [t],
   );
+  const [auth, error, setError, loading] = useSignIn();
 
   const onClickNoAccount = () => {
     history.push('/signUp');
   };
 
+  const handleSubmit = async (formData) => {
+    await auth(formData);
+  };
+
   return (
-    <Form layout="vertical" size="large">
+    <Form layout="vertical" size="large" onFinish={handleSubmit}>
+      {error && (
+        <Form.Item>
+          <Alert
+            onClose={() => setError(null)}
+            message={error}
+            type="error"
+            showIcon
+            closable
+          />
+        </Form.Item>
+      )}
+
       <Form.Item name="email" rules={formRules.email}>
         <Input placeholder={t('sign_in.email.placeholder')} />
       </Form.Item>
@@ -52,7 +70,7 @@ const SignInForm = () => {
         </TextLink>
       </FormItemAlignEnd>
       <Form.Item>
-        <SubmitButton type="primary" htmlType="submit">
+        <SubmitButton loading={loading} type="primary" htmlType="submit">
           {t('sign_in.button')}
         </SubmitButton>
       </Form.Item>
