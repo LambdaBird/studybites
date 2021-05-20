@@ -3,19 +3,17 @@ import { useTranslation } from 'react-i18next';
 
 const usePasswordInput = () => {
   const { t } = useTranslation();
-  const [validateStatus, setValidateStatus] = useState();
-  const [help, setHelp] = useState();
   const [password, setPassword] = useState('');
 
   const rules = [
     (value) => {
-      if (value.length > 5) {
+      if (value.length >= 5) {
         return null;
       }
       return t('sign_up.password.min_5_symbols');
     },
     (value) => {
-      if (value.match(/\w*[a-zA-Z]\w*/)) {
+      if (value.match(/\w*[a-zа-яґєёії]\w*/i)) {
         return null;
       }
       return t('sign_up.password.one_non_numerical');
@@ -29,43 +27,25 @@ const usePasswordInput = () => {
   ];
 
   const passwordValidator = (_, value) => {
-    if (value.length === 0) {
-      setHelp(t('sign_up.password.error'));
+    setPassword(value);
+    if (!value || value.length === 0) {
+      return Promise.resolve();
     }
-    const r = rules.map((rule) => rule(value)).filter((x) => !!x);
-    if (r.length !== 0) {
-      return Promise.reject();
+
+    const allErrors = rules.map((rule) => rule(value)).filter((x) => !!x);
+    if (allErrors.length !== 0) {
+      const formattedMessage = allErrors.join(', ').toLocaleLowerCase();
+      return Promise.reject(
+        new Error(
+          formattedMessage.charAt(0).toUpperCase() + formattedMessage.slice(1),
+        ),
+      );
     }
     return Promise.resolve();
   };
 
-  const onChangePassword = (e) => {
-    const { value } = e.target;
-    setPassword(value);
-
-    if (value.length === 0) {
-      setValidateStatus('error');
-      setHelp(t('sign_up.password.error'));
-      return;
-    }
-    const allErrors = rules.map((rule) => rule(value)).filter((x) => !!x);
-    if (allErrors.length > 0) {
-      const formattedMessage = allErrors.join(', ').toLocaleLowerCase();
-      setValidateStatus('error');
-      setHelp(
-        formattedMessage.charAt(0).toUpperCase() + formattedMessage.slice(1),
-      );
-    } else {
-      setValidateStatus('success');
-      setHelp('');
-    }
-  };
-
   return {
-    validateStatus,
-    help,
     password,
-    onChangePassword,
     passwordValidator,
   };
 };

@@ -1,11 +1,11 @@
 import styled from 'styled-components';
-import { Button } from 'antd';
+import { Button, Form } from 'antd';
 
 export const SubmitButton = styled(Button)`
   width: 100%;
 `;
 
-export const HelpDiv = styled.div`
-  min-height: 48px;
-  width: 100%;
+export const FormItemPassword = styled(Form.Item)`
+  margin-bottom: 0;
+  height: 100px;
 `;

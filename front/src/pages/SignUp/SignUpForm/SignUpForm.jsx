@@ -3,18 +3,12 @@ import { Alert, Form, Input } from 'antd';
 import { useTranslation } from 'react-i18next';
 import PasswordStrengthIndicator from '../../../components/atoms/PasswordStrengthIndicator';
 import usePasswordInput from '../../../hooks/usePasswordInput';
-import { HelpDiv, SubmitButton } from './SignUpForm.styled';
+import { FormItemPassword, SubmitButton } from './SignUpForm.styled';
 import useSignUp from '../../../hooks/useSignUp';
 
 const SignUpForm = () => {
   const { t } = useTranslation();
-  const {
-    validateStatus,
-    help,
-    password,
-    onChangePassword,
-    passwordValidator,
-  } = usePasswordInput();
+  const { password, passwordValidator } = usePasswordInput();
 
   const [auth, error, setError, loading] = useSignUp();
 
@@ -60,17 +54,7 @@ const SignUpForm = () => {
   );
 
   return (
-    <Form
-      layout="vertical"
-      fields={[
-        {
-          name: ['password'],
-          value: password,
-        },
-      ]}
-      size="large"
-      onFinish={handleSubmit}
-    >
+    <Form layout="vertical" size="large" onFinish={handleSubmit}>
       {error && (
         <Form.Item>
           <Alert
@@ -95,19 +79,16 @@ const SignUpForm = () => {
         <Input placeholder={t('sign_up.email.placeholder')} />
       </Form.Item>
 
-      <Form.Item
+      <FormItemPassword
         name="password"
         rules={formRules.password}
-        validateStatus={validateStatus}
-        help={<HelpDiv className="alert">{help}</HelpDiv>}
+        style={{ marginBottom: 0, height: '100px' }}
       >
-        <Input.Password
-          value={password}
-          onChange={onChangePassword}
-          placeholder="••••••••"
-        />
-        <PasswordStrengthIndicator value={password} />
-      </Form.Item>
+        <div>
+          <Input.Password placeholder="••••••••" />
+          <PasswordStrengthIndicator value={password} />
+        </div>
+      </FormItemPassword>
 
       <Form.Item>
         <SubmitButton type="primary" loading={loading} htmlType="submit">
