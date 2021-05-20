@@ -5,7 +5,7 @@ import {
   requiredPropertyError,
 } from '../../validation/helpers';
 
-const emailValidator = yup
+const emailValidatorSignup = yup
   .string()
   .typeError(propertyTypeError('signup', 'email'))
   .required(requiredPropertyError('signup', 'email'))
@@ -14,7 +14,7 @@ const emailValidator = yup
     message: 'Property "email" is invalid',
   });
 
-const passwordValidator = yup
+const passwordValidatorSignup = yup
   .string()
   .typeError(propertyTypeError('signup', 'password'))
   .required(requiredPropertyError('signup', 'password'))
@@ -26,24 +26,34 @@ const passwordValidator = yup
     },
   });
 
-const firstNameValidator = yup
+const firstNameValidatorSignup = yup
   .string()
   .typeError(propertyTypeError('signup', 'firstName'))
   .required(requiredPropertyError('signup', 'firstName'));
 
-const secondNameValidator = yup
+const secondNameValidatorSignup = yup
   .string()
   .typeError(propertyTypeError('signup', 'secondName'))
   .required(requiredPropertyError('signup', 'secondName'));
 
+const emailValidatorSignin = yup
+  .string()
+  .typeError(propertyTypeError('signup', 'email'))
+  .required(requiredPropertyError('signup', 'email'));
+
+const passwordValidatorSignin = yup
+  .string()
+  .typeError(propertyTypeError('signup', 'password'))
+  .required(requiredPropertyError('signup', 'password'));
+
 export const signupBodyValidator = yup.object({
-  email: emailValidator,
-  password: passwordValidator,
-  firstName: firstNameValidator,
-  secondName: secondNameValidator,
+  email: emailValidatorSignup,
+  password: passwordValidatorSignup,
+  firstName: firstNameValidatorSignup,
+  secondName: secondNameValidatorSignup,
 });
 
 export const signinBodyValidator = yup.object({
-  email: emailValidator,
-  password: passwordValidator,
+  email: emailValidatorSignin,
+  password: passwordValidatorSignin,
 });
