@@ -41,5 +41,5 @@
     "eslint-config-airbnb": "^18.2.1",
     "eslint-plugin-jsx-a11y": "^6.4.1"
   },
-  "proxy": "http://localhost:3017"
+  "proxy": "http://studybites-api:3017"
 }
