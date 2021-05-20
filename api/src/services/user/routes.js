@@ -101,6 +101,39 @@ const router = async (instance) => {
       });
     },
   });
+
+  instance.route({
+    method: 'GET',
+    url: '/',
+    schema: {
+      response: errorResponse,
+    },
+    validatorCompiler,
+    errorHandler,
+    onRequest: (req, repl, next) => {
+      instance.auth(instance, next, req, repl);
+    },
+    handler: async (req, repl) => {
+      const userData = await instance.objection.models.user
+        .query()
+        .findOne({
+          id: req.user.id,
+        })
+        .select(['id', 'email', 'firstName', 'secondName']);
+      if (!userData) {
+        return repl.status(401).send({
+          fallback: 'errors.unauthorized',
+          errors: [
+            {
+              message: 'Unauthorized',
+            },
+          ],
+        });
+      }
+
+      return repl.status(200).send({ data: userData });
+    },
+  });
 };
 
 export default router;

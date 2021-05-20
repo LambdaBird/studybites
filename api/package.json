@@ -7,8 +7,8 @@
   "license": "Apache License 2.0",
   "scripts": {
     "dev": "nodemon --es-module-specifier-resolution=node src/server.js",
-    "test:unit": "node --experimental-vm-modules node_modules/jest/bin/jest.js test/unit/",
-    "test:integration": "node --experimental-vm-modules node_modules/jest/bin/jest.js test/integration/"
+    "test:unit": "node --experimental-vm-modules node_modules/.bin/jest test/unit/",
+    "test:integration": "node --experimental-vm-modules node_modules/.bin/jest test/integration/"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
@@ -28,6 +28,7 @@
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-prettier": "^3.4.0",
     "jest": "^26.6.3",
+    "jest-mock": "^26.6.2",
     "nodemon": "^2.0.7",
     "prettier": "^2.3.0"
   }

@@ -6,11 +6,11 @@ services:
     restart: always
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_DB: studybites-test
     ports:
       - '5504:5432'
     volumes:
       - studybites-db:/var/lib/postgresql/data
-      - ./api/test-init.sql:/docker-entrypoint-initdb.d/init.sql
 
   api:
     build:
@@ -22,13 +22,13 @@ services:
       - ./api:/api
       - /api/node_modules
     environment:
-      DATABASE_URL: postgres://postgres:@postgres:5432/studybites
+      DATABASE_URL: postgres://postgres:@postgres:5432/studybites-test
       PORT: 3017
       JWT_SECRET: tvXqYGduhyMw28EzyBxaGrFP8zQsmRG93GZHrmADmHsU9WwB7nbULUsJ98aAqWzM
       POSTGRES_HOST: postgres
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: studybites
+      POSTGRES_DB: studybites-test
     ports:
       - '3018:3017'
 
