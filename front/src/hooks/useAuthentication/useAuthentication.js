@@ -1,7 +1,6 @@
 import { useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { postSignIn } from '../../utils/api/v1/user';
+import { useHistory } from 'react-router-dom';
 import { setJWT } from '../../utils/jwt/jwt';
 
 const getTranslationFromMessageData = (t, data) => {
@@ -13,7 +12,7 @@ const getTranslationFromMessageData = (t, data) => {
   return text;
 };
 
-const useSignUp = () => {
+const useAuthentication = (requestFunc) => {
   const { t } = useTranslation();
   const history = useHistory();
   const [error, setError] = useState(null);
@@ -22,7 +21,7 @@ const useSignUp = () => {
     setError(null);
     setLoading(true);
 
-    const { status, data } = await postSignIn(formData);
+    const { status, data } = await requestFunc(formData);
     setLoading(false);
     if (status === 200) {
       setJWT(data);
@@ -45,4 +44,4 @@ const useSignUp = () => {
   return [auth, error, setError, loading];
 };
 
-export default useSignUp;
+export default useAuthentication;
