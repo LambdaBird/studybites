@@ -1,16 +1,11 @@
 import jest from 'jest-mock';
+import build from '../../src/app';
 
-import app from '../../src/server';
+const app = build();
 
 afterAll(async () => {
   await app.close();
 });
-
-const tokens = {
-  access: null,
-  refresh: null,
-  malformed: 'malformedtoken',
-};
 
 const signupBodyValid = {
   email: 'valid@test.io',
@@ -58,17 +53,13 @@ const signinUnauthorized = {
   ],
 };
 
-describe('Test user service:', () => {
+describe('Test signup route:', () => {
   it('should return 201 for valid data', async () => {
     const response = await app.inject({
       method: 'POST',
       url: '/api/v1/user/signup',
       payload: signupBodyValid,
     });
-
-    const data = JSON.parse(response.payload);
-    tokens.access = data.accessToken;
-    tokens.refresh = data.refreshToken;
 
     expect(response.statusCode).toBe(201);
     expect(JSON.parse(response.payload)).toHaveProperty('accessToken');
@@ -95,7 +86,9 @@ describe('Test user service:', () => {
     expect(response.statusCode).toBe(400);
     expect(JSON.parse(response.payload)).toMatchObject(missingBody);
   });
+});
 
+describe('Test signin route:', () => {
   it('should return 200 for valid data', async () => {
     const response = await app.inject({
       method: 'POST',
@@ -138,6 +131,26 @@ describe('Test user service:', () => {
 
     expect(response.statusCode).toBe(400);
     expect(JSON.parse(response.payload)).toMatchObject(missingBody);
+  });
+});
+
+describe('Test user route:', () => {
+  const tokens = {
+    access: null,
+    refresh: null,
+    malformed: 'malformedtoken',
+  };
+
+  beforeAll(async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/v1/user/signin',
+      payload: signinBodyValid,
+    });
+
+    const data = JSON.parse(response.payload);
+    tokens.access = data.accessToken;
+    tokens.refresh = data.refreshToken;
   });
 
   it('should return 200 for a valid access token', async () => {
