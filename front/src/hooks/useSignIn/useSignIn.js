@@ -33,7 +33,7 @@ const useSignUp = () => {
         ?.map((errorData) => getTranslationFromMessageData(t, errorData))
         .join(', ');
       if (!textError) {
-        textError = fallback;
+        textError = t(fallback);
       }
       if (!fallback) {
         textError = t('sign_in.error.no_internet');
