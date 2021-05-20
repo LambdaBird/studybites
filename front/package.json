@@ -8,6 +8,7 @@
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "antd": "^4.15.5",
+    "axios": "^0.21.1",
     "i18next": "^20.2.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -39,5 +40,6 @@
   "devDependencies": {
     "eslint-config-airbnb": "^18.2.1",
     "eslint-plugin-jsx-a11y": "^6.4.1"
-  }
+  },
+  "proxy": "http://localhost:3017"
 }
