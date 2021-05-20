@@ -18,7 +18,7 @@
       "password": {
         "error": "Введите свой пароль!",
         "min_5_symbols": "Минимум 5 символов",
-        "one_non_numerical": "Хотя бы одна буква",
+        "one_non_numerical": "Хотя бы одна НЕ цифра",
         "one_numerical": "Хотя бы одна цифра"
       },
       "button": "Зарегистрироваться"

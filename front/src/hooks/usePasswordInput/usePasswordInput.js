@@ -13,7 +13,7 @@ const usePasswordInput = () => {
       return t('sign_up.password.min_5_symbols');
     },
     (value) => {
-      if (value.match(/\w*[a-zа-яґєёії]\w*/i)) {
+      if (value.match(/\D/)) {
         return null;
       }
       return t('sign_up.password.one_non_numerical');
