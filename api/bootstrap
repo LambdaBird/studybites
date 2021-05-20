@@ -1,0 +1,7 @@
+#!/bin/sh
+
+if node ./init.js $SB_ADMIN_EMAIL $SB_ADMIN_PASSWORD; then
+  nodemon --es-module-specifier-resolution=node src/server.js
+else
+  echo "failed to run init script"
+fi

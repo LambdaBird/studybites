@@ -16,15 +16,6 @@ const build = (options = {}) => {
     models: [User],
   });
 
-  app.after(async () => {
-    try {
-      await app.objection.knex.migrate.latest();
-      app.log.info('successfully automigrated');
-    } catch (err) {
-      app.log.error(err);
-    }
-  });
-
   app.register((instance, _, next) => userService(instance, next), {
     prefix: '/api/v1/user',
   });

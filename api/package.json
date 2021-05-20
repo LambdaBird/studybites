@@ -6,7 +6,7 @@
   "repository": "https://github.com/LambdaBird/studyBites",
   "license": "Apache License 2.0",
   "scripts": {
-    "dev": "nodemon --es-module-specifier-resolution=node src/server.js",
+    "dev": "./bootstrap",
     "test:unit": "node --experimental-vm-modules node_modules/.bin/jest test/unit/",
     "test:integration": "node --experimental-vm-modules node_modules/.bin/jest test/integration/"
   },
