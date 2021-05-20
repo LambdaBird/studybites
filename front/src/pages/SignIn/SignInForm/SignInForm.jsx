@@ -8,7 +8,8 @@ import {
   SubmitButton,
   TextLink,
 } from './SignInForm.styled';
-import useSignIn from '../../../hooks/useSignIn/useSignIn';
+import useAuthentication from '../../../hooks/useAuthentication';
+import { postSignIn } from '../../../utils/api/v1/user';
 
 const SignInForm = () => {
   const { t } = useTranslation();
@@ -34,7 +35,7 @@ const SignInForm = () => {
     }),
     [t],
   );
-  const [auth, error, setError, loading] = useSignIn();
+  const [auth, error, setError, loading] = useAuthentication(postSignIn);
 
   const onClickNoAccount = () => {
     history.push('/signUp');
