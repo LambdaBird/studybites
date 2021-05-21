@@ -4,11 +4,15 @@
   "private": true,
   "repository": "https://github.com/LambdaBird/studyBites",
   "dependencies": {
+    "@craco/craco": "^6.1.2",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "antd": "^4.15.5",
+    "axios": "^0.21.1",
+    "craco-antd": "^1.19.0",
     "i18next": "^20.2.2",
+    "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-i18next": "^11.8.15",
@@ -18,11 +22,12 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "yarn install && craco start",
+    "build": "yarn install && craco build",
+    "test": "craco test",
     "eject": "react-scripts eject",
-    "lint": "eslint \"src/**/*.{js,jsx}\""
+    "lint": "eslint \"src/**/*.{js,jsx}\"",
+    "prettier": "node_modules/.bin/prettier --write \"src/**/*.{js,jsx,json,css,scss,md}\""
   },
   "browserslist": {
     "production": [
@@ -38,6 +43,11 @@
   },
   "devDependencies": {
     "eslint-config-airbnb": "^18.2.1",
-    "eslint-plugin-jsx-a11y": "^6.4.1"
-  }
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-plugin-prettier": "^3.4.0",
+    "prettier": "^2.3.0",
+    "react-test-renderer": "^17.0.2"
+  },
+  "proxy": "http://studybites-api:3017"
 }

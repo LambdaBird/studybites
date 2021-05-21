@@ -1,6 +1,6 @@
-import { Model } from 'objection';
+import objection from 'objection';
 
-class User extends Model {
+class User extends objection.Model {
   static get tableName() {
     return 'users';
   }
