@@ -22,8 +22,8 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "craco start",
-    "build": "craco build",
+    "start": "yarn install && craco start",
+    "build": "yarn install && craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
     "lint": "eslint \"src/**/*.{js,jsx}\"",
@@ -46,8 +46,8 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-jsx-a11y": "^6.4.1",
     "eslint-plugin-prettier": "^3.4.0",
-    "react-test-renderer": "^3.4.0",
-    "prettier": "^2.3.0"
+    "prettier": "^2.3.0",
+    "react-test-renderer": "^17.0.2"
   },
   "proxy": "http://studybites-api:3017"
 }

@@ -6,7 +6,7 @@
   "repository": "https://github.com/LambdaBird/studyBites",
   "license": "Apache License 2.0",
   "scripts": {
-    "dev": "nodemon --es-module-specifier-resolution=node src/index.js",
+    "dev": "yarn install && nodemon --es-module-specifier-resolution=node src/index.js",
     "test:unit": "node --experimental-vm-modules node_modules/jest/bin/jest.js test/unit/",
     "test:integration": "node --experimental-vm-modules node_modules/jest/bin/jest.js test/integration/"
   },
