@@ -3,6 +3,8 @@ import {
   requiredPropertyError,
 } from '../../src/validation/helpers';
 import {
+  INVALID_EMAIL,
+  INVALID_PASSWORD,
   signupBodyValidator,
   signinBodyValidator,
 } from '../../src/services/user/validators';
@@ -83,7 +85,7 @@ describe('Test signup body validation:', () => {
       signupBodyValidator.validate(payload, options).catch((err) => {
         expect(err.errors[0]).toMatchObject(expected);
       });
-    }
+    },
   );
 
   test('should return ValidationError for invalid email format', () => {
@@ -97,7 +99,7 @@ describe('Test signup body validation:', () => {
     signupBodyValidator.validate(data, options).catch((err) => {
       expect(err.errors[0]).toMatchObject({
         key: 'signup.errors.email_format_err',
-        message: 'Property "email" is invalid',
+        message: INVALID_EMAIL,
       });
     });
   });
@@ -113,8 +115,7 @@ describe('Test signup body validation:', () => {
     signupBodyValidator.validate(data, options).catch((err) => {
       expect(err.errors[0]).toMatchObject({
         key: 'signup.errors.password_regexp_err',
-        message:
-          'Property "password" must be longer than 5 characters and contain at least one number and one letter',
+        message: INVALID_PASSWORD,
       });
     });
   });
@@ -130,8 +131,7 @@ describe('Test signup body validation:', () => {
     signupBodyValidator.validate(data, options).catch((err) => {
       expect(err.errors[0]).toMatchObject({
         key: 'signup.errors.password_regexp_err',
-        message:
-          'Property "password" must be longer than 5 characters and contain at least one number and one letter',
+        message: INVALID_PASSWORD,
       });
     });
   });
@@ -147,8 +147,7 @@ describe('Test signup body validation:', () => {
     signupBodyValidator.validate(data, options).catch((err) => {
       expect(err.errors[0]).toMatchObject({
         key: 'signup.errors.password_regexp_err',
-        message:
-          'Property "password" must be longer than 5 characters and contain at least one number and one letter',
+        message: INVALID_PASSWORD,
       });
     });
   });
@@ -199,6 +198,6 @@ describe('Test signin body validation:', () => {
       signinBodyValidator.validate(payload, options).catch((err) => {
         expect(err.errors[0]).toMatchObject(expected);
       });
-    }
+    },
   );
 });
