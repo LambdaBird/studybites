@@ -23,7 +23,7 @@ const useAuthentication = (requestFunc) => {
 
     const { status, data } = await requestFunc(formData);
     setLoading(false);
-    if (status === 200) {
+    if (status.toString().startsWith('2')) {
       setJWT(data);
       history.push('/');
     } else {
@@ -35,7 +35,7 @@ const useAuthentication = (requestFunc) => {
         textError = t(fallback);
       }
       if (!fallback) {
-        textError = t('sign_in.error.no_internet');
+        textError = t('errors.no_internet');
       }
       setError(textError);
     }
