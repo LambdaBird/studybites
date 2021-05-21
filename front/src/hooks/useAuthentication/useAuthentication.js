@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { setJWT } from '../../utils/jwt/jwt';
+import { setJWT } from '../../utils/jwt';
 
 const getTranslationFromMessageData = (t, data) => {
   const { key, message } = data;
