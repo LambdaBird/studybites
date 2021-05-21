@@ -7,7 +7,7 @@ const UNAUTHORIZED = {
   ],
 };
 
-const auth = async (instance, next, req, repl) => {
+const auth = async (instance, next, req, repl, admin = false) => {
   try {
     const decoded = await req.jwtVerify();
     req.userId = decoded.id;
@@ -22,6 +22,14 @@ const auth = async (instance, next, req, repl) => {
 
     if (!userData) {
       return repl.status(401).send(UNAUTHORIZED);
+    }
+
+    if (admin) {
+      if (!userData.isSuperAdmin) {
+        return repl.status(401).send(UNAUTHORIZED);
+      }
+
+      return next();
     }
 
     return next();
