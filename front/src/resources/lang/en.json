@@ -32,9 +32,6 @@
       "unauthorized": "Wrong credentials!"
     },
     "sign_in": {
-      "error": {
-        "no_internet": "Oops no internet connection"
-      },
       "no_account": "Don’t have an account? Sign up!",
       "forgot_password": "Forgot password?",
       "button": "Sign in",
