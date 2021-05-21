@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Redirect, Route } from 'react-router-dom';
-import { getJWT } from '../../../utils/jwt/jwt';
+import { getJWT } from '../../utils/jwt/jwt';
 
 const PrivateRoute = ({ children: Component, ...rest }) => {
   const isLoggedIn = !!getJWT()?.accessToken;
