@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "./bootstrap",
     "test:unit": "node --experimental-vm-modules node_modules/.bin/jest test/unit/",
-    "test:integration": "node --experimental-vm-modules node_modules/.bin/jest test/integration/"
+    "test:integration": "node ./init.js admin@test.io passwd3 && node --experimental-vm-modules node_modules/.bin/jest test/integration/"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
