@@ -20,6 +20,8 @@ services:
       - ./api:/api
       - /api/node_modules
     environment:
+      SB_ADMIN_EMAIL: ${SB_ADMIN_EMAIL}
+      SB_ADMIN_PASSWORD: ${SB_ADMIN_PASSWORD}
       DATABASE_URL: postgres://postgres:@postgres:5432/studybites
       PORT: 3017
       JWT_SECRET: tvXqYGduhyMw28EzyBxaGrFP8zQsmRG93GZHrmADmHsU9WwB7nbULUsJ98aAqWzM
