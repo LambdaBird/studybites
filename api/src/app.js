@@ -21,7 +21,15 @@ const build = (options = {}) => {
   });
 
   app.all('*', async (_, repl) => {
-    return repl.status(404).send({ message: 'route not found' });
+    return repl.status(404).send({
+      fallback: 'errors.not_found',
+      errors: [
+        {
+          key: 'resource.not_found',
+          message: 'Requested resource not found',
+        },
+      ],
+    });
   });
 
   return app;

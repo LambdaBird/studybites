@@ -1,11 +1,4 @@
-const UNAUTHORIZED = {
-  fallback: 'errors.unauthorized',
-  errors: [
-    {
-      message: 'Unauthorized',
-    },
-  ],
-};
+import { UNAUTHORIZED } from './constants';
 
 const auth = async (instance, next, req, repl, admin = false) => {
   try {

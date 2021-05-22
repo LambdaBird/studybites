@@ -1,5 +1,10 @@
 import jest from 'jest-mock';
 import build from '../../src/app';
+import {
+  UNAUTHORIZED,
+  USER_ALREADY_REGISTERED,
+} from '../../src/services/user/constants';
+import { EMPTY_BODY } from '../../src/validation/validatorCompiler';
 
 const app = build();
 
@@ -29,28 +34,9 @@ const signupBodyWrongPassword = {
   password: 'invalid3',
 };
 
-const signupConflict = {
-  fallback: 'errors.unique_violation',
-  errors: [
-    {
-      key: 'sign_up.email.already_registered',
-      message: 'This email was already registered',
-    },
-  ],
-};
-
 const missingBody = {
   fallback: 'errors.validation_error',
-  errors: [{ key: 'errors.empty_body', message: 'Body must be an object' }],
-};
-
-const signinUnauthorized = {
-  fallback: 'errors.unauthorized',
-  errors: [
-    {
-      message: 'Unauthorized',
-    },
-  ],
+  errors: [EMPTY_BODY],
 };
 
 describe('Test signup route:', () => {
@@ -74,7 +60,7 @@ describe('Test signup route:', () => {
     });
 
     expect(response.statusCode).toBe(409);
-    expect(JSON.parse(response.payload)).toMatchObject(signupConflict);
+    expect(JSON.parse(response.payload)).toMatchObject(USER_ALREADY_REGISTERED);
   });
 
   it('should return 400 for missing body', async () => {
@@ -109,7 +95,7 @@ describe('Test signin route:', () => {
     });
 
     expect(response.statusCode).toBe(401);
-    expect(JSON.parse(response.payload)).toMatchObject(signinUnauthorized);
+    expect(JSON.parse(response.payload)).toMatchObject(UNAUTHORIZED);
   });
 
   it('should return 401 for wrong password', async () => {
@@ -120,7 +106,7 @@ describe('Test signin route:', () => {
     });
 
     expect(response.statusCode).toBe(401);
-    expect(JSON.parse(response.payload)).toMatchObject(signinUnauthorized);
+    expect(JSON.parse(response.payload)).toMatchObject(UNAUTHORIZED);
   });
 
   it('should return 400 for missing body', async () => {
@@ -134,7 +120,7 @@ describe('Test signin route:', () => {
   });
 });
 
-describe('Test user route:', () => {
+describe('Test self route:', () => {
   const tokens = {
     access: null,
     refresh: null,
@@ -156,7 +142,7 @@ describe('Test user route:', () => {
   it('should return 200 for a valid access token', async () => {
     const response = await app.inject({
       method: 'GET',
-      url: '/api/v1/user',
+      url: '/api/v1/user/self',
       headers: {
         Authorization: `Bearer ${tokens.access}`,
       },
@@ -175,14 +161,14 @@ describe('Test user route:', () => {
 
     const response = await app.inject({
       method: 'GET',
-      url: '/api/v1/user',
+      url: '/api/v1/user/self',
       headers: {
         Authorization: `Bearer ${tokens[payload]}`,
       },
     });
 
     expect(response.statusCode).toBe(401);
-    expect(JSON.parse(response.payload)).toMatchObject(signinUnauthorized);
+    expect(JSON.parse(response.payload)).toMatchObject(UNAUTHORIZED);
 
     Date.now = jest.fn(() => Date.now);
   });

@@ -3,11 +3,13 @@ import {
   requiredPropertyError,
 } from '../../src/validation/helpers';
 import {
-  INVALID_EMAIL,
-  INVALID_PASSWORD,
   signupBodyValidator,
   signinBodyValidator,
 } from '../../src/services/user/validators';
+import {
+  INVALID_EMAIL,
+  INVALID_PASSWORD,
+} from '../../src/services/user/constants';
 import { options } from '../../src/validation/validatorCompiler';
 
 describe('Test signup body validation:', () => {
@@ -47,7 +49,7 @@ describe('Test signup body validation:', () => {
         firstName: 'Valid',
         secondName: 'Valid',
       },
-      propertyTypeError('signup', 'email'),
+      propertyTypeError('signup', 'email', 'string'),
     ],
     [
       'password',
@@ -57,7 +59,7 @@ describe('Test signup body validation:', () => {
         firstName: 'Valid',
         secondName: 'Valid',
       },
-      propertyTypeError('signup', 'password'),
+      propertyTypeError('signup', 'password', 'string'),
     ],
     [
       'firstName',
@@ -67,7 +69,7 @@ describe('Test signup body validation:', () => {
         firstName: [123],
         secondName: 'Valid',
       },
-      propertyTypeError('signup', 'firstName'),
+      propertyTypeError('signup', 'firstName', 'string'),
     ],
     [
       'secondName',
@@ -77,7 +79,7 @@ describe('Test signup body validation:', () => {
         firstName: 'Valid',
         secondName: [123],
       },
-      propertyTypeError('signup', 'secondName'),
+      propertyTypeError('signup', 'secondName', 'string'),
     ],
   ])(
     'should return ValidationError for invalid type of %s',
@@ -158,12 +160,12 @@ describe('Test signin body validation:', () => {
     [
       'email',
       { password: 'valid3', firstName: 'Valid', secondName: 'Valid' },
-      requiredPropertyError('signup', 'email'),
+      requiredPropertyError('signin', 'email'),
     ],
     [
       'password',
       { email: 'valid@test.io', firstName: 'Valid', secondName: 'Valid' },
-      requiredPropertyError('signup', 'password'),
+      requiredPropertyError('signin', 'password'),
     ],
   ])('should return ValidationError for missing %s', (_, payload, expected) => {
     signinBodyValidator.validate(payload, options).catch((err) => {
@@ -180,7 +182,7 @@ describe('Test signin body validation:', () => {
         firstName: 'Valid',
         secondName: 'Valid',
       },
-      propertyTypeError('signup', 'email'),
+      propertyTypeError('signin', 'email', 'string'),
     ],
     [
       'password',
@@ -190,7 +192,7 @@ describe('Test signin body validation:', () => {
         firstName: 'Valid',
         secondName: 'Valid',
       },
-      propertyTypeError('signup', 'password'),
+      propertyTypeError('signin', 'password', 'string'),
     ],
   ])(
     'should return ValidationError for invalid type of %s',
