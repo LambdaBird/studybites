@@ -18,6 +18,10 @@ import {
   USER_ADMIN_FIELDS,
   USER_DELETED,
   INVALID_PATCH,
+  ALTER_ROLE_SUCCESS,
+  ALTER_ROLE_FAIL,
+  USER_ROLE_NOT_FOUND,
+  USER_ROLE_DELETED,
 } from './constants';
 
 const router = async (instance) => {
@@ -204,7 +208,72 @@ const router = async (instance) => {
         return repl.status(404).send(USER_NOT_FOUND);
       }
 
-      return repl.status(204).send(USER_DELETED);
+      return repl.status(200).send(USER_DELETED);
+    },
+  });
+
+  instance.route({
+    method: 'POST',
+    url: '/appoint_teacher/:id',
+    schema: {
+      response: errorResponse,
+    },
+    validatorCompiler,
+    errorHandler,
+    onRequest: (req, repl, next) => {
+      instance.auth(instance, next, req, repl, true);
+    },
+    handler: async (req, repl) => {
+      const id = validateId(req, repl);
+
+      const check = await instance.objection.models.userRole.query().findOne({
+        userID: id,
+        roleID: 1,
+      });
+
+      if (check) {
+        return repl.status(400).send(ALTER_ROLE_FAIL);
+      }
+
+      await instance.objection.models.userRole
+        .query()
+        .insert({
+          userID: id,
+          roleID: 1,
+        })
+        .returning('*');
+
+      return repl.status(200).send(ALTER_ROLE_SUCCESS);
+    },
+  });
+
+  instance.route({
+    method: 'DELETE',
+    url: '/remove_teacher/:id',
+    schema: {
+      response: errorResponse,
+    },
+    validatorCompiler,
+    errorHandler,
+    onRequest: (req, repl, next) => {
+      instance.auth(instance, next, req, repl, true);
+    },
+    handler: async (req, repl) => {
+      const id = validateId(req, repl);
+
+      const result = await instance.objection.models.userRole
+        .query()
+        .delete()
+        .where({
+          userID: id,
+          roleID: 1,
+        });
+
+      if (!result) {
+        return repl.status(404).send(USER_ROLE_NOT_FOUND);
+      }
+
+      return repl.status(200).send(USER_ROLE_DELETED);
     },
   });
 };
