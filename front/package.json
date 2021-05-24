@@ -49,5 +49,5 @@
     "prettier": "^2.3.0",
     "react-test-renderer": "^17.0.2"
   },
-  "proxy": "http://studybites-api:3017"
+  "proxy": "http://localhost:3017"
 }
