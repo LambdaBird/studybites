@@ -139,7 +139,12 @@ const router = async (instance) => {
         .offset(req.query.offset || 0)
         .limit(req.query.limit || USER_SEARCH_LIMIT);
 
-      return repl.status(200).send({ data });
+      const total = await instance.objection.models.user
+        .query()
+        .count()
+        .whereNot({ id: req.user.id });
+
+      return repl.status(200).send({ total: total[0].count, data });
     },
   });
 
