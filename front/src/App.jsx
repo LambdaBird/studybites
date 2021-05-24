@@ -1,22 +1,22 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch } from 'react-router-dom';
 import Home from './pages/Home';
 import SignUp from './pages/SignUp';
 import SignIn from './pages/SignIn';
-import PrivateRoute from './components/atoms/PrivateRoute/PrivateRoute';
-import Header from './components/atoms/Header';
-import logoImg from './resources/img/logo.svg';
+import PrivateRoute from './components/PrivateRoute';
+import Header from './components/moleculas/Header';
+import AuthRoute from './components/AuthRoute/AuthRoute';
 
 const App = () => (
   <Router>
-    <Header logoImg={logoImg} logoTitle="StudyBites" />
+    <Header />
     <Switch>
-      <Route path="/signIn">
+      <AuthRoute path="/signIn">
         <SignIn />
-      </Route>
-      <Route path="/signUp">
+      </AuthRoute>
+      <AuthRoute path="/signUp">
         <SignUp />
-      </Route>
+      </AuthRoute>
       <PrivateRoute path="/">
         <Home />
       </PrivateRoute>

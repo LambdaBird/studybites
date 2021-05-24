@@ -1,49 +1,51 @@
-import React from 'react';
-import { Col, Row, Typography } from 'antd';
-import PropTypes from 'prop-types';
-import { getJWT } from '../../../utils/jwt/jwt';
+import React, { useState } from 'react';
+import { Col, Row } from 'antd';
+import { useHistory, useLocation } from 'react-router-dom';
+import { LogoText, ProfileText, RowMain, SignOutButton } from './Header.styled';
+import logoImg from '../../../resources/img/logo.svg';
 import profileImg from '../../../resources/img/profile.svg';
+import { clearJWT, getJWTAccessToken } from '../../../utils/jwt';
 
-const { Title, Text } = Typography;
+const Header = () => {
+  const logoTitle = 'StudyBites';
+  const history = useHistory();
+  const location = useLocation();
+  const [isAuth, setIsAuth] = useState(false);
 
-const Header = ({ logoImg, logoTitle }) => {
-  const isAuth = !!getJWT()?.accessToken;
+  React.useEffect(() => {
+    setIsAuth(!!getJWTAccessToken());
+  }, [location.pathname]);
+
+  const onClickSignOut = () => {
+    clearJWT();
+    history.push('/signIn');
+  };
 
   return (
     <header>
-      <Row
-        align="middle"
-        justify="space-between"
-        style={{
-          paddingLeft: '40px',
-          paddingRight: '40px',
-          height: '3.5rem',
-        }}
-      >
+      <RowMain align="middle" justify="space-between">
         <Col>
           <Row align="middle">
-            <img style={{ display: 'block' }} src={logoImg} alt="Logo" />{' '}
-            <Title style={{ marginLeft: '0.5rem', marginBottom: 0 }} level={5}>
+            <img src={logoImg} alt="Logo" />
+            <LogoText strong level={5}>
               {logoTitle}
-            </Title>
+            </LogoText>
           </Row>
         </Col>
         {isAuth && (
           <Col>
             <Row align="middle">
-              <Text style={{ marginRight: '0.5rem' }}>Admin</Text>
+              <SignOutButton type="danger" onClick={onClickSignOut}>
+                Sign out
+              </SignOutButton>
+              <ProfileText>Profile</ProfileText>
               <img height={32} width={32} src={profileImg} alt="Profile" />
             </Row>
           </Col>
         )}
-      </Row>
+      </RowMain>
     </header>
   );
-};
-
-Header.propTypes = {
-  logoImg: PropTypes.string.isRequired,
-  logoTitle: PropTypes.string.isRequired,
 };
 
 export default Header;
