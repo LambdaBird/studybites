@@ -2,6 +2,8 @@ import fastify from 'fastify';
 import objection from 'fastify-objectionjs';
 
 import User from './models/User';
+import Role from './models/Role';
+import UserRole from './models/UserRole';
 
 import userService from './services/user';
 
@@ -13,7 +15,7 @@ const build = (options = {}) => {
       client: 'pg',
       connection: process.env.DATABASE_URL,
     },
-    models: [User],
+    models: [User, Role, UserRole],
   });
 
   app.register((instance, _, next) => userService(instance, next), {
