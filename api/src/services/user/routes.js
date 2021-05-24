@@ -5,6 +5,7 @@ import {
   signinBodyValidator,
   patchBodyValidator,
   validateId,
+  validateSearch,
 } from './validators';
 import errorResponse from '../../validation/schemas';
 import validatorCompiler from '../../validation/validatorCompiler';
@@ -22,6 +23,7 @@ import {
   ALTER_ROLE_FAIL,
   USER_ROLE_NOT_FOUND,
   USER_ROLE_DELETED,
+  USER_SEARCH_LIMIT,
 } from './constants';
 
 const router = async (instance) => {
@@ -126,12 +128,18 @@ const router = async (instance) => {
       instance.auth(instance, next, req, repl, true);
     },
     handler: async (req, repl) => {
+      const query = validateSearch(req);
+
       const data = await instance.objection.models.user
         .query()
+        .skipUndefined()
         .select(USER_ADMIN_FIELDS)
+        .where(query.column, 'ilike', `%${query.search}%`)
         .whereNot({
           id: req.user.id,
-        });
+        })
+        .offset(req.query.offset || 0)
+        .limit(req.query.limit || USER_SEARCH_LIMIT);
 
       return repl.status(200).send({ data });
     },
