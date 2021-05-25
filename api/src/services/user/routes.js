@@ -94,9 +94,7 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: (req, repl, next) => {
-      instance.auth(instance, next, req, repl);
-    },
+    onRequest: instance.auth({ instance, isAdminOnly: false }),
     handler: async (req, repl) => {
       const data = await instance.objection.models.user
         .query()
@@ -118,9 +116,7 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: (req, repl, next) => {
-      instance.auth(instance, next, req, repl, true);
-    },
+    onRequest: instance.auth({ instance, isAdminOnly: true }),
     handler: async (req, repl) => {
       const data = await instance.objection.models.user
         .query()
@@ -141,11 +137,9 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: (req, repl, next) => {
-      instance.auth(instance, next, req, repl, true);
-    },
+    onRequest: instance.auth({ instance, isAdminOnly: true }),
     handler: async (req, repl) => {
-      const id = validateId(req, repl);
+      const id = validateId(req.params.id, req.user.id);
 
       const data = await instance.objection.models.user
         .query()
@@ -168,11 +162,9 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: (req, repl, next) => {
-      instance.auth(instance, next, req, repl, true);
-    },
+    onRequest: instance.auth({ instance, isAdminOnly: true }),
     handler: async (req, repl) => {
-      const id = validateId(req, repl);
+      const id = validateId(req.params.id, req.user.id);
 
       if (req.body.password) {
         req.body.password = await bcrypt.hash(req.body.password, 12);
@@ -200,11 +192,9 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: (req, repl, next) => {
-      instance.auth(instance, next, req, repl, true);
-    },
+    onRequest: instance.auth({ instance, isAdminOnly: true }),
     handler: async (req, repl) => {
-      const id = validateId(req, repl);
+      const id = validateId(req.params.id, req.user.id);
 
       const result = await instance.objection.models.user
         .query()

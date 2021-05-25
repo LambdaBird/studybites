@@ -13,13 +13,8 @@ export const UNAUTHORIZED = {
 };
 
 export const INVALID_ID = {
-  fallback: 'errors.bad_request',
-  errors: [
-    {
-      key: 'admin.user.invalid_id',
-      message: 'Invalid user id',
-    },
-  ],
+  key: 'admin.user.invalid_id',
+  message: 'Invalid user id',
 };
 
 export const USER_ALREADY_REGISTERED = {
