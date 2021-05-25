@@ -19,13 +19,18 @@ export const postSignUp = async (formData) => {
   }
 };
 
-const getUsersRequestMocked = async ({ offset, limit }) => {
-  const data = new Array(500).fill(1).map((x, i) => ({
+const getUsersRequestMocked = async ({ offset, limit, search }) => {
+  let data = new Array(500).fill(1).map((x, i) => ({
     key: i,
     fullName: `A${i + 1}`,
     email: `Email${i + 1}`,
     role: 'teacher',
   }));
+  if (search) {
+    data = data.filter(
+      (x) => x.email.includes(search) || x.fullName.includes(search),
+    );
+  }
   await sleep(500);
   return {
     status: 200,
