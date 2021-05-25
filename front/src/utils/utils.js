@@ -1,5 +1,12 @@
 const escapeRegExp = (string) => string.replace(/[-.*+?^${}()|[\]\\]/g, '\\$&');
 
+export const sleep = (ms) =>
+  new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, [ms]);
+  });
+
 export const getPasswordStrength = (password = '') => {
   if (password.length === 0) {
     return -1;
