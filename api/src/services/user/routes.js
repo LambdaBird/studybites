@@ -6,7 +6,6 @@ import {
   patchBodyValidator,
   validateId,
   roleBodyValidator,
-  validateSearch,
 } from './validators';
 import errorResponse from '../../validation/schemas';
 import validatorCompiler from '../../validation/validatorCompiler';
@@ -25,8 +24,9 @@ import {
   USER_ROLE_NOT_FOUND,
   USER_ROLE_DELETED,
   TEACHER_ROLE,
-  USER_SEARCH_LIMIT,
 } from './constants';
+
+import config from '../../../config.json';
 
 const router = async (instance) => {
   instance.route({
@@ -126,25 +126,29 @@ const router = async (instance) => {
     errorHandler,
     onRequest: instance.auth({ instance, isAdminOnly: true }),
     handler: async (req, repl) => {
-      const query = validateSearch(req);
+      const columns = {
+        email: 'email',
+        firstName: 'firstName',
+      };
+
+      if (!req.query.search) {
+        columns.email = undefined;
+        columns.firstName = undefined;
+      }
 
       const data = await instance.objection.models.user
         .query()
         .skipUndefined()
         .select(USER_ADMIN_FIELDS)
-        .where(query.column, 'ilike', `%${query.search}%`)
+        .where(columns.email, 'ilike', `%${req.query.search}%`)
+        .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
         .whereNot({
           id: req.user.id,
         })
         .offset(req.query.offset || 0)
-        .limit(req.query.limit || USER_SEARCH_LIMIT);
+        .limit(req.query.limit || config.USER_SEARCH_LIMIT);
 
-      const total = await instance.objection.models.user
-        .query()
-        .count()
-        .whereNot({ id: req.user.id });
-
-      return repl.status(200).send({ total: total[0].count, data });
+      return repl.status(200).send({ total: data.length, data });
     },
   });
 

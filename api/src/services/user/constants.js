@@ -92,4 +92,3 @@ export const USER_ROLE_DELETED = {
 };
 
 export const TEACHER_ROLE = 1;
-export const USER_SEARCH_LIMIT = 10;

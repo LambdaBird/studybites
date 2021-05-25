@@ -119,20 +119,3 @@ export const validateId = (paramId, userId) => {
 
   return id;
 };
-
-export const validateSearch = (req) => {
-  const { column, search } = req.query;
-
-  if (!search) {
-    return { column: undefined, search: undefined };
-  }
-
-  switch (column) {
-    case 'email':
-    case 'firstName':
-    case 'secondName':
-      return req.query;
-    default:
-      return { column: undefined, search: undefined };
-  }
-};
