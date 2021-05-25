@@ -5,6 +5,7 @@ import {
   signinBodyValidator,
   patchBodyValidator,
   validateId,
+  roleBodyValidator,
 } from './validators';
 import errorResponse from '../../validation/schemas';
 import validatorCompiler from '../../validation/validatorCompiler';
@@ -22,6 +23,7 @@ import {
   ALTER_ROLE_FAIL,
   USER_ROLE_NOT_FOUND,
   USER_ROLE_DELETED,
+  TEACHER_ROLE,
 } from './constants';
 
 const router = async (instance) => {
@@ -214,17 +216,16 @@ const router = async (instance) => {
 
   instance.route({
     method: 'POST',
-    url: '/appoint_teacher/:id',
+    url: '/appoint_teacher',
     schema: {
+      body: roleBodyValidator,
       response: errorResponse,
     },
     validatorCompiler,
     errorHandler,
-    onRequest: (req, repl, next) => {
-      instance.auth(instance, next, req, repl, true);
-    },
+    onRequest: instance.auth({ instance, isAdminOnly: true }),
     handler: async (req, repl) => {
-      const id = validateId(req, repl);
+      const id = validateId(req.body.id, req.user.id);
 
       const check = await instance.objection.models.userRole.query().findOne({
         userID: id,
@@ -239,7 +240,7 @@ const router = async (instance) => {
         .query()
         .insert({
           userID: id,
-          roleID: 1,
+          roleID: TEACHER_ROLE,
         })
         .returning('*');
 
@@ -248,25 +249,24 @@ const router = async (instance) => {
   });
 
   instance.route({
-    method: 'DELETE',
-    url: '/remove_teacher/:id',
+    method: 'POST',
+    url: '/remove_teacher',
     schema: {
+      body: roleBodyValidator,
       response: errorResponse,
     },
     validatorCompiler,
     errorHandler,
-    onRequest: (req, repl, next) => {
-      instance.auth(instance, next, req, repl, true);
-    },
+    onRequest: instance.auth({ instance, isAdminOnly: true }),
     handler: async (req, repl) => {
-      const id = validateId(req, repl);
+      const id = validateId(req.body.id, req.user.id);
 
       const result = await instance.objection.models.userRole
         .query()
         .delete()
         .where({
           userID: id,
-          roleID: 1,
+          roleID: TEACHER_ROLE,
         });
 
       if (!result) {

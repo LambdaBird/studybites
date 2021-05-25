@@ -7,6 +7,7 @@ import {
   signinBodyValidator,
   patchBodyValidator,
   validateId,
+  roleBodyValidator,
 } from '../../src/services/user/validators';
 import {
   INVALID_EMAIL,
@@ -351,5 +352,27 @@ describe('Test user patch body validation:', () => {
     } catch (err) {
       expect(err.errors[0]).toMatchObject(INVALID_ID);
     }
+  });
+});
+
+describe('Test role body validation:', () => {
+  test('should return ValidationError if id is missing', () => {
+    const data = {};
+
+    roleBodyValidator.validate(data, options).catch((err) => {
+      expect(err.errors[0]).toMatchObject(requiredPropertyError('role', 'id'));
+    });
+  });
+
+  test('should return ValidationError if id is invalid', () => {
+    const data = {
+      id: 'not a number',
+    };
+
+    roleBodyValidator.validate(data, options).catch((err) => {
+      expect(err.errors[0]).toMatchObject(
+        propertyTypeError('role', 'id', 'integer'),
+      );
+    });
   });
 });
