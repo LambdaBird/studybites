@@ -80,6 +80,11 @@ const isSuperAdminPatch = yup
   .bool()
   .typeError(propertyTypeError('patch', 'isSuperAdmin', 'bool'));
 
+const idRole = yup
+  .number()
+  .typeError(propertyTypeError('role', 'id', 'integer'))
+  .required(requiredPropertyError('role', 'id'));
+
 export const signupBodyValidator = yup.object({
   email: emailValidatorSignup,
   password: passwordValidatorSignup,
@@ -99,6 +104,10 @@ export const patchBodyValidator = yup.object({
   secondName: secondNameValidatorPatch,
   isConfirmed: isConfirmedPatch,
   isSuperAdmin: isSuperAdminPatch,
+});
+
+export const roleBodyValidator = yup.object({
+  id: idRole,
 });
 
 export const validateId = (paramId, userId) => {
