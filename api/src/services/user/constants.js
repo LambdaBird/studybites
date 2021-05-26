@@ -1,3 +1,5 @@
+import { EMPTY_BODY } from '../../validation/validatorCompiler';
+
 export const INVALID_EMAIL = 'Property "email" is invalid';
 
 export const INVALID_PASSWORD =
@@ -15,6 +17,15 @@ export const UNAUTHORIZED = {
 export const INVALID_ID = {
   key: 'admin.user.invalid_id',
   message: 'Invalid user id',
+};
+
+export const INVALID_ID_FULL = {
+  fallback: 'errors.validation_error',
+  errors: [
+    {
+      ...INVALID_ID,
+    },
+  ],
 };
 
 export const USER_ALREADY_REGISTERED = {
@@ -43,6 +54,15 @@ export const INVALID_PATCH = {
     {
       key: 'admin.user.invalid_patch',
       message: 'Invalid PATCH request',
+    },
+  ],
+};
+
+export const INVALID_EMPTY_BODY = {
+  fallback: 'errors.validation_error',
+  errors: [
+    {
+      ...EMPTY_BODY,
     },
   ],
 };
