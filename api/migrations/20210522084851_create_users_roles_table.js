@@ -5,7 +5,6 @@ export const up = (knex) =>
     table.string('resource_type');
     table.integer('resource_id');
     table.timestamp('created_at').defaultTo(knex.fn.now());
-    table.timestamp('updated_at').defaultTo(knex.fn.now());
     table.foreign('user_id').references('users.id');
     table.foreign('role_id').references('roles.id');
   });

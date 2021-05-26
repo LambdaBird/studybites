@@ -13,13 +13,8 @@ export const UNAUTHORIZED = {
 };
 
 export const INVALID_ID = {
-  fallback: 'errors.bad_request',
-  errors: [
-    {
-      key: 'admin.user.invalid_id',
-      message: 'Invalid user id',
-    },
-  ],
+  key: 'admin.user.invalid_id',
+  message: 'Invalid user id',
 };
 
 export const USER_ALREADY_REGISTERED = {
@@ -96,4 +91,4 @@ export const USER_ROLE_DELETED = {
   message: 'User`s role deleted successfully',
 };
 
-export const USER_SEARCH_LIMIT = 10;
+export const TEACHER_ROLE = 1;

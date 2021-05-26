@@ -5,7 +5,7 @@ import {
   signinBodyValidator,
   patchBodyValidator,
   validateId,
-  validateSearch,
+  roleBodyValidator,
 } from './validators';
 import errorResponse from '../../validation/schemas';
 import validatorCompiler from '../../validation/validatorCompiler';
@@ -23,8 +23,10 @@ import {
   ALTER_ROLE_FAIL,
   USER_ROLE_NOT_FOUND,
   USER_ROLE_DELETED,
-  USER_SEARCH_LIMIT,
+  TEACHER_ROLE,
 } from './constants';
+
+import config from '../../../config.json';
 
 const router = async (instance) => {
   instance.route({
@@ -100,9 +102,7 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: (req, repl, next) => {
-      instance.auth(instance, next, req, repl);
-    },
+    onRequest: instance.auth({ instance, isAdminOnly: false }),
     handler: async (req, repl) => {
       const data = await instance.objection.models.user
         .query()
@@ -124,24 +124,31 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: (req, repl, next) => {
-      instance.auth(instance, next, req, repl, true);
-    },
+    onRequest: instance.auth({ instance, isAdminOnly: true }),
     handler: async (req, repl) => {
-      const query = validateSearch(req);
+      const columns = {
+        email: 'email',
+        firstName: 'firstName',
+      };
+
+      if (!req.query.search) {
+        columns.email = undefined;
+        columns.firstName = undefined;
+      }
 
       const data = await instance.objection.models.user
         .query()
         .skipUndefined()
         .select(USER_ADMIN_FIELDS)
-        .where(query.column, 'ilike', `%${query.search}%`)
+        .where(columns.email, 'ilike', `%${req.query.search}%`)
+        .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
         .whereNot({
           id: req.user.id,
         })
         .offset(req.query.offset || 0)
-        .limit(req.query.limit || USER_SEARCH_LIMIT);
+        .limit(req.query.limit || config.USER_SEARCH_LIMIT);
 
-      return repl.status(200).send({ data });
+      return repl.status(200).send({ total: data.length, data });
     },
   });
 
@@ -153,11 +160,9 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: (req, repl, next) => {
-      instance.auth(instance, next, req, repl, true);
-    },
+    onRequest: instance.auth({ instance, isAdminOnly: true }),
     handler: async (req, repl) => {
-      const id = validateId(req, repl);
+      const id = validateId(req.params.id, req.user.id);
 
       const data = await instance.objection.models.user
         .query()
@@ -180,11 +185,9 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: (req, repl, next) => {
-      instance.auth(instance, next, req, repl, true);
-    },
+    onRequest: instance.auth({ instance, isAdminOnly: true }),
     handler: async (req, repl) => {
-      const id = validateId(req, repl);
+      const id = validateId(req.params.id, req.user.id);
 
       if (req.body.password) {
         req.body.password = await bcrypt.hash(req.body.password, 12);
@@ -212,11 +215,9 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: (req, repl, next) => {
-      instance.auth(instance, next, req, repl, true);
-    },
+    onRequest: instance.auth({ instance, isAdminOnly: true }),
     handler: async (req, repl) => {
-      const id = validateId(req, repl);
+      const id = validateId(req.params.id, req.user.id);
 
       const result = await instance.objection.models.user
         .query()
@@ -232,17 +233,16 @@ const router = async (instance) => {
 
   instance.route({
     method: 'POST',
-    url: '/appoint_teacher/:id',
+    url: '/appoint_teacher',
     schema: {
+      body: roleBodyValidator,
       response: errorResponse,
     },
     validatorCompiler,
     errorHandler,
-    onRequest: (req, repl, next) => {
-      instance.auth(instance, next, req, repl, true);
-    },
+    onRequest: instance.auth({ instance, isAdminOnly: true }),
     handler: async (req, repl) => {
-      const id = validateId(req, repl);
+      const id = validateId(req.body.id, req.user.id);
 
       const check = await instance.objection.models.userRole.query().findOne({
         userID: id,
@@ -257,7 +257,7 @@ const router = async (instance) => {
         .query()
         .insert({
           userID: id,
-          roleID: 1,
+          roleID: TEACHER_ROLE,
         })
         .returning('*');
 
@@ -266,25 +266,24 @@ const router = async (instance) => {
   });
 
   instance.route({
-    method: 'DELETE',
-    url: '/remove_teacher/:id',
+    method: 'POST',
+    url: '/remove_teacher',
     schema: {
+      body: roleBodyValidator,
       response: errorResponse,
     },
     validatorCompiler,
     errorHandler,
-    onRequest: (req, repl, next) => {
-      instance.auth(instance, next, req, repl, true);
-    },
+    onRequest: instance.auth({ instance, isAdminOnly: true }),
     handler: async (req, repl) => {
-      const id = validateId(req, repl);
+      const id = validateId(req.body.id, req.user.id);
 
       const result = await instance.objection.models.userRole
         .query()
         .delete()
         .where({
           userID: id,
-          roleID: 1,
+          roleID: TEACHER_ROLE,
         });
 
       if (!result) {
