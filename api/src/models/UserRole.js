@@ -1,6 +1,7 @@
 import objection, { Model } from 'objection';
 
 import Role from './Role';
+import Lesson from './Lesson';
 
 class UserRole extends objection.Model {
   static get tableName() {
@@ -29,6 +30,14 @@ class UserRole extends objection.Model {
         join: {
           from: 'users_roles.role_id',
           to: 'roles.id',
+        },
+      },
+      resourceID: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: Lesson,
+        join: {
+          from: 'users_roles.resource_id',
+          to: 'lessons.id',
         },
       },
     };
