@@ -19,7 +19,7 @@ const build = (options = {}) => {
     models: [User, Role, UserRole, Lesson],
   });
 
-  app.register((instance, _, next) => userService(instance, next), {
+  app.register(userService, {
     prefix: '/api/v1/user',
   });
 

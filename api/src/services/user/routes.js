@@ -102,7 +102,7 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: instance.auth({ instance, isAdminOnly: false }),
+    onRequest: instance.auth({ instance }),
     handler: async (req, repl) => {
       const data = await instance.objection.models.user
         .query()
