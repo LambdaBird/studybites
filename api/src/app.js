@@ -7,6 +7,7 @@ import UserRole from './models/UserRole';
 import Lesson from './models/Lesson';
 
 import userService from './services/user';
+import lessonService from './services/lesson';
 
 const build = (options = {}) => {
   const app = fastify(options);
@@ -21,6 +22,10 @@ const build = (options = {}) => {
 
   app.register(userService, {
     prefix: '/api/v1/user',
+  });
+
+  app.register(lessonService, {
+    prefix: '/api/v1/lesson',
   });
 
   app.all('*', async (_, repl) => {

@@ -32,7 +32,7 @@ class UserRole extends objection.Model {
           to: 'roles.id',
         },
       },
-      resourceID: {
+      lessons: {
         relation: Model.BelongsToOneRelation,
         modelClass: Lesson,
         join: {

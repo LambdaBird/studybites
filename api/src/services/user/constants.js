@@ -90,5 +90,3 @@ export const USER_ROLE_DELETED = {
   key: 'admin.user.role_deleted',
   message: 'User`s role deleted successfully',
 };
-
-export const TEACHER_ROLE = 1;
