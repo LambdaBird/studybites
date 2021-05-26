@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom';
 import Home from './pages/Home';
 import SignUp from './pages/SignUp';
+import UserInfo from './components/atoms/UserInfo';
 
 const App = () => (
   <Router>
@@ -13,8 +14,18 @@ const App = () => (
       <Route path="/signUp">
         <SignUp />
       </Route>
-      <Route path="/">
+      <Route exact path="/">
         <Home />
+      </Route>
+      <Route path="/info">
+        <UserInfo
+          username="MrH"
+          description="Very cool teacher | awesome"
+          avatar="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+          lessons={9}
+          students={8}
+          avgRating={4.5}
+        />
       </Route>
     </Switch>
   </Router>
