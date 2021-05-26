@@ -22,6 +22,17 @@
         "one_numerical": "Хотя бы одна цифра"
       },
       "button": "Зарегистрироваться"
+    },
+    "lesson_card": {
+      "edit": "Редактировать"
+    },
+    "user_info": {
+      "greeting": "Добрый день, ",
+      "wishes": ", хорошего дня!",
+      "lessons": "Уроки",
+			"students": "Студенты",
+			"avg_rating": "Сред. Рейтинг",
+      "avg_rating_suffix": "/5"
     }
   }
 }

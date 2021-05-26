@@ -27,6 +27,17 @@
         "one_numerical": "At least one numerical"
       },
       "button": "Sign up"
+    },
+    "lesson_card": {
+      "edit": "Edit"
+    },
+    "user_info": {
+      "greeting": "Good morning, ",
+      "wishes": ", have a great day!",
+      "lessons": "Lessons",
+			"students": "Students",
+			"avg_rating": "Avg. Rating",
+      "avg_rating_suffix": "/5"
     }
   }
 }
