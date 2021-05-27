@@ -6,9 +6,9 @@ export const up = (knex) =>
     })
     .then(() =>
       knex('roles').insert([
-        { name: 'Teacher' },
-        { name: 'Maintainer' },
-        { name: 'Student' },
+        { id: 1, name: 'Teacher' },
+        { id: 2, name: 'Maintainer' },
+        { id: 3, name: 'Student' },
       ]),
     );
 
