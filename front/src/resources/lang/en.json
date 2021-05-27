@@ -27,6 +27,15 @@
         "one_numerical": "At least one numerical"
       },
       "button": "Sign up"
+    },
+    "user_home": {
+      "title": "Open lessons",
+      "search": {
+        "placeholder": "Name or author"
+      },
+      "lessons": {
+        "not_found": "No open lessons yet"
+      }
     }
   }
 }
