@@ -51,6 +51,20 @@
       "title": "Мои студенты",
       "invite": "Пригласить сейчас",
       "no_students": "Еще нет студентов!"
+    },
+    "sign_in": {
+      "no_account": "Нет аккаунта? Зарегестрируйтесь!",
+      "forgot_password": "Забыли пароль?",
+      "button": "Ввойти",
+      "title": "Ввойти в свой акаунт",
+      "email": {
+        "placeholder": "Email",
+        "error": "Введите email",
+        "validation": "Email не валидный"
+      },
+      "password": {
+        "error": "Введите пароль"
+      }
     }
   }
 }

@@ -56,6 +56,20 @@
       "title": "My students",
       "invite": "Invite Now",
       "no_students": "No students yet!"
+    },
+    "sign_in": {
+      "no_account": "Don’t have an account? Sign up!",
+      "forgot_password": "Forgot password?",
+      "button": "Sign in",
+      "title": "Sign in to your account",
+      "email": {
+        "placeholder": "Email",
+        "error": "Please enter email",
+        "validation": "The input is not valid email"
+      },
+      "password": {
+        "error": "Please enter password"
+      }
     }
   }
 }
