@@ -1,3 +1,3 @@
-import { getPasswordStrength } from './utils';
+import { getPasswordStrength, sleep } from './utils';
 
-export { getPasswordStrength };
+export { getPasswordStrength, sleep };
