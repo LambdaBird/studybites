@@ -207,7 +207,7 @@ const router = async (instance) => {
         .findById(id)
         .where({ status: 'Public' })
         .whereNotExists(
-          instance.objection.models.userRole.query().select(1).where({
+          instance.objection.models.userRole.query().select().where({
             userID: req.user.id,
             roleID: config.roles.STUDENT_ROLE,
             resourceType: 'lesson',
@@ -230,6 +230,41 @@ const router = async (instance) => {
         .returning('*');
 
       return repl.status(200).send(ENROLL_SUCCESS);
+    },
+  });
+
+  instance.route({
+    method: 'GET',
+    url: '/enrolled/',
+    schema: {
+      response: errorResponse,
+    },
+    validatorCompiler,
+    errorHandler,
+    onRequest: instance.auth({ instance }),
+    handler: async (req, repl) => {
+      const columns = {
+        name: 'name',
+      };
+
+      if (!req.query.search) {
+        columns.name = undefined;
+      }
+
+      const data = await instance.objection.models.userRole
+        .relatedQuery('lessons')
+        .skipUndefined()
+        .for(
+          instance.objection.models.userRole.query().select().where({
+            userID: req.user.id,
+            roleID: config.roles.STUDENT_ROLE,
+          }),
+        )
+        .where(columns.name, 'ilike', `%${req.query.search}%`)
+        .offset(req.query.offset || 0)
+        .limit(req.query.limit || config.search.LESSON_SEARCH_LIMIT);
+
+      return repl.status(200).send({ data });
     },
   });
 };
