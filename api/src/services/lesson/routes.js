@@ -138,22 +138,31 @@ const router = async (instance) => {
     errorHandler,
     onRequest: instance.auth({ instance, isTeacherOnly: true }),
     handler: async (req, repl) => {
-      const data = await instance.objection.models.lesson
-        .query()
-        .insert(req.body)
-        .returning('*');
+      try {
+        const data = await instance.objection.models.lesson.transaction(
+          async (trx) => {
+            const lesson = await instance.objection.models.lesson
+              .query(trx)
+              .insert(req.body)
+              .returning('*');
 
-      await instance.objection.models.userRole
-        .query()
-        .insert({
-          userID: req.user.id,
-          roleID: config.roles.MAINTAINER_ROLE,
-          resourceType: 'lesson',
-          resourceId: data.id,
-        })
-        .returning('*');
+            await instance.objection.models.userRole
+              .query(trx)
+              .insert({
+                userID: req.user.id,
+                roleID: config.roles.MAINTAINER_ROLE,
+                resourceType: 'lesson',
+                resourceId: lesson.id,
+              })
+              .returning('*');
 
-      return repl.status(200).send({ data });
+            return lesson;
+          },
+        );
+        return repl.status(200).send({ data });
+      } catch (err) {
+        return err;
+      }
     },
   });
 
