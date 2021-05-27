@@ -146,7 +146,7 @@ const router = async (instance) => {
           id: req.user.id,
         })
         .offset(req.query.offset || 0)
-        .limit(req.query.limit || config.USER_SEARCH_LIMIT);
+        .limit(req.query.limit || config.search.USER_SEARCH_LIMIT);
 
       return repl.status(200).send({ total: data.length, data });
     },
