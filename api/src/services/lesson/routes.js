@@ -27,9 +27,18 @@ const router = async (instance) => {
         .select()
         .where({
           status: 'Public',
-        });
+        })
+        .offset(req.query.offset || 0)
+        .limit(req.query.limit || config.search.LESSON_SEARCH_LIMIT);
 
-      return repl.status(200).send({ data });
+      const count = await instance.objection.models.lesson
+        .query()
+        .where({
+          status: 'Public',
+        })
+        .count('*');
+
+      return repl.status(200).send({ total: +count[0].count, data });
     },
   });
 
@@ -91,9 +100,21 @@ const router = async (instance) => {
             userID: req.user.id,
             roleID: config.roles.MAINTAINER_ROLE,
           }),
-        );
+        )
+        .offset(req.query.offset || 0)
+        .limit(req.query.limit || config.search.LESSON_SEARCH_LIMIT);
 
-      return repl.status(200).send({ data });
+       const count = await instance.objection.models.userRole
+        .relatedQuery('lessons')
+        .for(
+          instance.objection.models.userRole.query().select().where({
+            userID: req.user.id,
+            roleID: config.roles.MAINTAINER_ROLE,
+          }),
+        )
+        .count('*');
+
+      return repl.status(200).send({ total: +count[0].count, data });
     },
   });
 
