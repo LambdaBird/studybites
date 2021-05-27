@@ -140,15 +140,25 @@ const router = async (instance) => {
         .query()
         .skipUndefined()
         .select(USER_ADMIN_FIELDS)
-        .where(columns.email, 'ilike', `%${req.query.search}%`)
-        .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
         .whereNot({
           id: req.user.id,
         })
+        .where(columns.email, 'ilike', `%${req.query.search}%`)
+        .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
         .offset(req.query.offset || 0)
         .limit(req.query.limit || config.search.USER_SEARCH_LIMIT);
 
-      return repl.status(200).send({ total: data.length, data });
+      const count = await instance.objection.models.user
+        .query()
+        .skipUndefined()
+        .whereNot({
+          id: req.user.id,
+        })
+        .where(columns.email, 'ilike', `%${req.query.search}%`)
+        .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
+        .count('*');
+
+      return repl.status(200).send({ total: +count[0].count, data });
     },
   });
 
