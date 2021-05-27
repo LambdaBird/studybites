@@ -28,16 +28,34 @@
       },
       "button": "Sign up"
     },
-    "lesson_card": {
-      "edit": "Edit"
+    "lesson_dashboard": {
+      "title": "My lessons",
+      "add_button": "Add lesson",
+      "card": {
+        "edit": "Edit",
+        "no_students": "No students"
+      },
+      "search": {
+        "placeholder": "Name"
+      },
+      "select": {
+        "status": "Status",
+        "draft": "Draft",
+        "archived": "Archived",
+        "public": "Public",
+        "private": "Private"
+      }
     },
-    "user_info": {
+    "teacher_info": {
       "greeting": "Good morning, ",
       "wishes": ", have a great day!",
       "lessons": "Lessons",
-			"students": "Students",
-			"avg_rating": "Avg. Rating",
-      "avg_rating_suffix": "/5"
+			"students": "Students"
+    },
+    "students_list": {
+      "title": "My students",
+      "invite": "Invite Now",
+      "no_students": "No students yet!"
     }
   }
 }

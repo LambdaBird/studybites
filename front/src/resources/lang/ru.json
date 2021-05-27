@@ -23,16 +23,34 @@
       },
       "button": "Зарегистрироваться"
     },
-    "lesson_card": {
-      "edit": "Редактировать"
+    "lesson_dashboard": {
+      "title": "Мои уроки",
+      "add_button": "Добавить урок",
+      "card": {
+        "edit": "Редактировать",
+        "no_students": "Нет студентов"
+      },
+      "search": {
+        "placeholder": "Название"
+      },
+      "select": {
+        "status": "Статус",
+        "draft": "Черновик",
+        "archived": "Архивированные",
+        "public": "Публичные",
+        "private": "Приватные"
+      }
     },
-    "user_info": {
+    "teacher_info": {
       "greeting": "Добрый день, ",
       "wishes": ", хорошего дня!",
       "lessons": "Уроки",
-			"students": "Студенты",
-			"avg_rating": "Сред. Рейтинг",
-      "avg_rating_suffix": "/5"
+			"students": "Студенты"
+    },
+    "students_list": {
+      "title": "Мои студенты",
+      "invite": "Пригласить сейчас",
+      "no_students": "Еще нет студентов!"
     }
   }
 }
