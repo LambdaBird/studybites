@@ -43,3 +43,10 @@ export const getPasswordStrength = (password = '') => {
     .sort((o1, o2) => o2.id - o1.id);
   return fulfilledOptions[0].id;
 };
+
+export const sleep = (ms) =>
+  new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, [ms]);
+  });

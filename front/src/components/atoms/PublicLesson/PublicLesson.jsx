@@ -14,19 +14,19 @@ import {
 const { Title } = Typography;
 
 const PublicLesson = ({ lesson }) => {
-  const { title, description, author } = lesson;
+  const { name, description, maintainer } = lesson;
   return (
     <MainSpace size="large" wrap={false}>
       <div>
         <img src={lessonImage} alt="Lesson" />
         <AuthorContainer>
-          <AuthorAvatar>{author?.[0]}</AuthorAvatar>
-          <AuthorName>{author}</AuthorName>
+          <AuthorAvatar>{maintainer?.[0]}</AuthorAvatar>
+          <AuthorName>{maintainer}</AuthorName>
         </AuthorContainer>
       </div>
       <div>
         <Row>
-          <Title level={3}>{title}</Title>
+          <Title level={3}>{name}</Title>
         </Row>
         <Row>
           <DescriptionText>{description}</DescriptionText>
@@ -44,8 +44,8 @@ const PublicLesson = ({ lesson }) => {
 PublicLesson.propTypes = {
   lesson: PropTypes.exact({
     id: PropTypes.number.isRequired,
-    author: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
+    maintainer: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
   }).isRequired,
 };
