@@ -1,3 +1,5 @@
+import config from '../../../config';
+
 export const INVALID_EMAIL = 'Property "email" is invalid';
 
 export const INVALID_PASSWORD =
@@ -91,4 +93,4 @@ export const USER_ROLE_DELETED = {
   message: 'User`s role deleted successfully',
 };
 
-export const TEACHER_ROLE = 1;
+export const TEACHER_ROLE = config.roles.TEACHER.id;

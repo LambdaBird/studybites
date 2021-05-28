@@ -1,3 +1,5 @@
+import config from '../config.js'; // eslint-disable-line import/extensions
+
 export const up = (knex) =>
   knex.schema
     .createTable('roles', (table) => {
@@ -6,9 +8,9 @@ export const up = (knex) =>
     })
     .then(() =>
       knex('roles').insert([
-        { id: 1, name: 'Teacher' },
-        { id: 2, name: 'Maintainer' },
-        { id: 3, name: 'Student' },
+        config.roles.TEACHER,
+        config.roles.MAINTAINER,
+        config.roles.STUDENT,
       ]),
     );
 
