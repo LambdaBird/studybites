@@ -3,10 +3,11 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import SignUp from './pages/SignUp';
 import UserHome from './pages/UserHome/UserHome';
-import './App.css';
+import { GlobalBody } from './resources/styles/Global.styled';
 
 const App = () => (
   <Router>
+    <GlobalBody />
     <Switch>
       <Route path="/user-home">
         <UserHome />
