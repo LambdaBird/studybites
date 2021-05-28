@@ -9,11 +9,12 @@ import Header from './components/molecules/Header';
 import AuthRoute from './components/AuthRoute';
 import UserHome from './pages/UserHome';
 import * as paths from './utils/paths';
-import './App.css';
+import { GlobalBody } from './resources/styles/Global.styled';
 
 const App = () => (
   <Router>
     <Header />
+    <GlobalBody/>
     <Switch>
       <AuthRoute path={paths.SIGN_IN}>
         <SignIn />

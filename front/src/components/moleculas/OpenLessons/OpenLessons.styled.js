@@ -1,6 +1,12 @@
 import styled from 'styled-components';
-import { Row } from 'antd';
+import { Row, Typography } from 'antd';
+
+const { Title } = Typography;
 
 export const LessonsHeader = styled(Row)`
   margin-bottom: 1rem;
+`;
+
+export const OpenLessonsTitle = styled(Title)`
+  margin-bottom: 0 !important;
 `;

@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { Col, Row, Space, Typography } from 'antd';
+import { Col, Row, Space } from 'antd';
 import { useTranslation } from 'react-i18next';
 import DebouncedSearch from '../../atoms/DebounedSearch';
 import LessonsMain from './LessonsMain';
-import { LessonsHeader } from './OpenLessons.styled';
-
-const { Title } = Typography;
+import { LessonsHeader, OpenLessonsTitle } from './OpenLessons.styled';
 
 const OpenLessons = () => {
   const { t } = useTranslation();
@@ -22,7 +20,9 @@ const OpenLessons = () => {
         <Col>
           <Row justify="center" align="middle">
             <Space size="large">
-              <Title level={2}>{t('user_home.title')}</Title>
+              <OpenLessonsTitle level={3}>
+                {t('user_home.title')}
+              </OpenLessonsTitle>
               <DebouncedSearch
                 delay={500}
                 placeholder={t('user_home.search.placeholder')}

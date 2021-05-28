@@ -1,10 +1,16 @@
 import styled from 'styled-components';
 import { Avatar, Col, Row, Typography } from 'antd';
+import {
+  DESCRIPTION_COLOR,
+  VOLCANO_2,
+  VOLCANO_6,
+  WHITE_COLOR,
+} from '../../../resources/styles/Global.styled';
 
 const { Text } = Typography;
 
 export const MainSpace = styled(Row)`
-  background-color: white; // TODO COOR;
+  background-color: ${WHITE_COLOR};
   padding: 1rem;
   height: 10rem;
 `;
@@ -25,14 +31,14 @@ export const LessonImg = styled.img`
 
 export const DescriptionText = styled(Text)`
   text-align: justify;
-  color: rgba(0, 0, 0, 0.45); // TODO COLOR
+  color: ${DESCRIPTION_COLOR};
 `;
 
 export const AuthorContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  background-color: white; // TODO COLOR
+  background-color: ${WHITE_COLOR};
   height: 2.5rem;
   position: absolute;
   left: 0.5rem;
@@ -42,8 +48,8 @@ export const AuthorContainer = styled.div`
 `;
 
 export const AuthorAvatar = styled(Avatar)`
-  color: #fa541c; // TODO COLOR
-  background-color: #ffd8bf; // TODO COLOR
+  color: ${VOLCANO_6};
+  background-color: ${VOLCANO_2};
 `;
 
 export const AuthorName = styled(Typography.Link)`
