@@ -1,4 +1,4 @@
-import objection, { Model } from 'objection';
+import objection from 'objection';
 
 import Role from './Role';
 
@@ -24,7 +24,7 @@ class UserRole extends objection.Model {
   static relationMappings() {
     return {
       roleId: {
-        relation: Model.BelongsToOneRelation,
+        relation: objection.Model.BelongsToOneRelation,
         modelClass: Role,
         join: {
           from: 'users_roles.role_id',

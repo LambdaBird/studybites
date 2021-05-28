@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import {
   Button,
   Col,
@@ -9,30 +9,42 @@ import {
   Table,
   Typography,
 } from 'antd';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { FullSelect, MainDiv, TableHeader } from './AdminHome.styled';
+import { getUsers } from '../../utils/api/v1/user/user';
+import useTableRequest from '../../hooks/useTableRequest';
 
 const { Option } = Select;
 const { Search } = Input;
 const { Title } = Typography;
 
-const data = [
-  {
-    key: '1',
-    fullName: 'Alex Froloff',
-    email: 'alex.fr@gmail.com',
-    role: 'teacher',
-  },
-  {
-    key: '2',
-    fullName: 'Stephan Roberta',
-    email: 'sp@roberta.org',
-    role: 'student',
-  },
-];
-
 const AdminHome = () => {
+  const query = new URLSearchParams(useLocation().search);
   const { t } = useTranslation();
+  const history = useHistory();
+
+  const onChangePage = (current) => {
+    history.push({
+      search: `?page=${current}`,
+    });
+  };
+
+  const { loading, dataSource, pagination, handleTableChange } =
+    useTableRequest({
+      requestFunc: getUsers,
+      onChangePage,
+    });
+
+  useEffect(() => {
+    const page = parseInt(query.get('page'), 10) || 1;
+
+    handleTableChange({
+      current: page < 0 ? 1 : page,
+      pageSize: 10,
+    });
+  }, []);
+
   const columns = useMemo(
     () => [
       {
@@ -95,7 +107,13 @@ const AdminHome = () => {
           <Button disabled>{t('admin_home.buttons.add_user')}</Button>
         </Col>
       </TableHeader>
-      <Table columns={columns} dataSource={data} pagination={false} />
+      <Table
+        columns={columns}
+        dataSource={dataSource}
+        pagination={pagination}
+        onChange={handleTableChange}
+        loading={loading}
+      />
     </MainDiv>
   );
 };
