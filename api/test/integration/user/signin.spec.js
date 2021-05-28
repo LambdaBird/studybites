@@ -1,18 +1,24 @@
-import {
-  UNAUTHORIZED,
-  USER_ADMIN_FIELDS,
-} from '../../../src/services/user/constants';
+import { UNAUTHORIZED } from '../../../src/services/user/constants';
 import build from '../../../src/app';
 import {
   missingBody,
-  signinBodyValid,
-  signupBodyValid,
   signupBodyWrongEmail,
   signupBodyWrongPassword,
 } from './constants';
 
 describe('Test signin route:', () => {
   let app;
+
+  const signupBodyValid = {
+    email: 'valid3@test.io',
+    password: 'valid3',
+    firstName: 'Valid3',
+    secondName: 'Valid3',
+  };
+  const signinBodyValid = {
+    email: 'valid3@test.io',
+    password: 'valid3',
+  };
 
   beforeAll(async () => {
     app = build();
@@ -25,14 +31,6 @@ describe('Test signin route:', () => {
   });
 
   afterAll(async () => {
-    await app.objection.models.user
-      .query()
-      .select(USER_ADMIN_FIELDS)
-      .whereNot({
-        isSuperAdmin: true,
-      })
-      .del();
-
     await app.close();
   });
 

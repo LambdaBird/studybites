@@ -3,7 +3,6 @@ import {
   INVALID_ID_FULL,
   INVALID_PATCH,
   UNAUTHORIZED,
-  USER_ADMIN_FIELDS,
   USER_DELETED,
   USER_NOT_FOUND,
 } from '../../../src/services/user/constants';
@@ -12,6 +11,16 @@ import { signinBodyAdmin, signinBodyValid, signupBodyValid } from './constants';
 
 describe('Test admin route:', () => {
   let app;
+  const signupBodyValid = {
+    email: 'valid4@test.io',
+    password: 'valid3',
+    firstName: 'Valid4',
+    secondName: 'Valid4',
+  };
+  const signinBodyValid = {
+    email: 'valid4@test.io',
+    password: 'valid3',
+  };
   const tokensAdmin = {
     access: null,
     refresh: null,
@@ -52,13 +61,6 @@ describe('Test admin route:', () => {
   });
 
   afterAll(async () => {
-    await app.objection.models.user
-      .query()
-      .select(USER_ADMIN_FIELDS)
-      .whereNot({
-        isSuperAdmin: true,
-      })
-      .del();
     await app.close();
   });
 

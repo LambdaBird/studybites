@@ -1,13 +1,19 @@
 import jest from 'jest-mock';
-import {
-  UNAUTHORIZED,
-  USER_ADMIN_FIELDS,
-} from '../../../src/services/user/constants';
+import { UNAUTHORIZED } from '../../../src/services/user/constants';
 import build from '../../../src/app';
-import { signinBodyValid, signupBodyValid } from './constants';
 
 describe('Test user (self) route:', () => {
   let app;
+  const signupBodyValid = {
+    email: 'valid5@test.io',
+    password: 'valid3',
+    firstName: 'Valid',
+    secondName: 'Valid',
+  };
+  const signinBodyValid = {
+    email: 'valid5@test.io',
+    password: 'valid3',
+  };
   const tokens = {
     access: null,
     refresh: null,
@@ -35,13 +41,6 @@ describe('Test user (self) route:', () => {
   });
 
   afterAll(async () => {
-    const res = await app.objection.models.user
-      .query()
-      .select(USER_ADMIN_FIELDS)
-      .whereNot({
-        isSuperAdmin: true,
-      })
-      .del();
     await app.close();
   });
 

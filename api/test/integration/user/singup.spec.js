@@ -1,12 +1,16 @@
-import {
-  USER_ADMIN_FIELDS,
-  USER_ALREADY_REGISTERED,
-} from '../../../src/services/user/constants';
+import { USER_ALREADY_REGISTERED } from '../../../src/services/user/constants';
 import build from '../../../src/app';
-import { missingBody, signupBodyValid } from './constants';
+import { missingBody } from './constants';
 
 describe('Test signup route:', () => {
   let app;
+
+  const signupBodyValid = {
+    email: 'valid2@test.io',
+    password: 'valid4',
+    firstName: 'Valid1',
+    secondName: 'Valid1',
+  };
 
   beforeAll(async () => {
     app = build();
@@ -14,13 +18,6 @@ describe('Test signup route:', () => {
   });
 
   afterAll(async () => {
-    await app.objection.models.user
-      .query()
-      .select(USER_ADMIN_FIELDS)
-      .whereNot({
-        isSuperAdmin: true,
-      })
-      .del();
     await app.close();
   });
 
