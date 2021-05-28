@@ -26,6 +26,8 @@ import {
   TEACHER_ROLE,
 } from './constants';
 
+import config from '../../../config.json';
+
 const router = async (instance) => {
   instance.route({
     method: 'POST',
@@ -124,14 +126,39 @@ const router = async (instance) => {
     errorHandler,
     onRequest: instance.auth({ instance, isAdminOnly: true }),
     handler: async (req, repl) => {
+      const columns = {
+        email: 'email',
+        firstName: 'firstName',
+      };
+
+      if (!req.query.search) {
+        columns.email = undefined;
+        columns.firstName = undefined;
+      }
+
       const data = await instance.objection.models.user
         .query()
+        .skipUndefined()
         .select(USER_ADMIN_FIELDS)
         .whereNot({
           id: req.user.id,
-        });
+        })
+        .where(columns.email, 'ilike', `%${req.query.search}%`)
+        .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
+        .offset(req.query.offset || 0)
+        .limit(req.query.limit || config.search.USER_SEARCH_LIMIT);
 
-      return repl.status(200).send({ data });
+      const count = await instance.objection.models.user
+        .query()
+        .skipUndefined()
+        .whereNot({
+          id: req.user.id,
+        })
+        .where(columns.email, 'ilike', `%${req.query.search}%`)
+        .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
+        .count('*');
+
+      return repl.status(200).send({ total: +count[0].count, data });
     },
   });
 
