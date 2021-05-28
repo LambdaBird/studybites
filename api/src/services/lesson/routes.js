@@ -281,6 +281,60 @@ const router = async (instance) => {
       return repl.status(200).send({ total: +count[0].count, data });
     },
   });
+
+  instance.route({
+    method: 'GET',
+    url: '/enrolled/:id',
+    schema: {
+      response: errorResponse,
+    },
+    validatorCompiler,
+    errorHandler,
+    onRequest: instance.auth({ instance, isTeacherOnly: true }),
+    handler: async (req, repl) => {
+      const id = validateId(req.params.id);
+
+      const columns = {
+        email: 'email',
+        firstName: 'firstName',
+      };
+
+      if (!req.query.search) {
+        columns.email = undefined;
+        columns.firstName = undefined;
+      }
+
+      const data = await instance.objection.models.userRole
+        .relatedQuery('users')
+        .skipUndefined()
+        .for(
+          instance.objection.models.userRole.query().select('user_id').where({
+            roleID: config.roles.STUDENT_ROLE,
+            resourceId: id,
+          }),
+        )
+        .select('id', 'email', 'firstName', 'secondName')
+        .where(columns.email, 'ilike', `%${req.query.search}%`)
+        .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
+        .offset(req.query.offset || 0)
+        .limit(req.query.limit || config.search.USER_SEARCH_LIMIT);
+
+      const count = await instance.objection.models.userRole
+        .relatedQuery('users')
+        .skipUndefined()
+        .for(
+          instance.objection.models.userRole.query().select('user_id').where({
+            roleID: config.roles.STUDENT_ROLE,
+            resourceId: id,
+          }),
+        )
+        .where(columns.email, 'ilike', `%${req.query.search}%`)
+        .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
+        .count('*');
+
+      return repl.status(200).send({ total: +count[0].count, data });
+    },
+  });
 };
 
 export default router;
