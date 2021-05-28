@@ -54,5 +54,6 @@ export const AuthorAvatar = styled(Avatar)`
 `;
 
 export const AuthorName = styled(Typography.Link)`
+  margin-left: 1rem;
   white-space: nowrap;
 `;
