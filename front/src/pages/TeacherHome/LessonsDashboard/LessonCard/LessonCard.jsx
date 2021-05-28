@@ -8,27 +8,26 @@ const { Title, Text } = Typography;
 
 const LessonCard = ({ cover, title, students }) => {
   const { t } = useTranslation();
-  // eslint-disable-next-line
-  console.log('cover:', cover, 'title:', title, 'students:', students);
-    return (
-      <S.Wrapper justify="center" align="center">
-        <S.ImageCol span={8} >
-          <S.CardImage
-            src={cover}
-          />
-        </S.ImageCol>
-        <S.CardDescription span={16} >
-          <S.CardText>
-            <Title level={4}>{title}</Title>
-            {!students.length
-              ? <Text type="secondary">{t('lesson_dashboard.card.no_students')}</Text>
-              : null
-            }
-          </S.CardText>
-          <S.CardButton>{t('lesson_dashboard.card.edit')}</S.CardButton>
-        </S.CardDescription>
-      </S.Wrapper>
-    );
+    
+  return (
+    <S.Wrapper justify="center" align="center">
+      <S.ImageCol span={8} >
+        <S.CardImage
+          src={cover}
+        />
+      </S.ImageCol>
+      <S.CardDescription span={16} >
+        <S.CardText>
+          <Title level={4}>{title}</Title>
+          {!students.length
+            ? <Text type="secondary">{t('lesson_dashboard.card.no_students')}</Text>
+            : null
+          }
+        </S.CardText>
+        <S.CardButton>{t('lesson_dashboard.card.edit')}</S.CardButton>
+      </S.CardDescription>
+    </S.Wrapper>
+  );
 };
 
 LessonCard.propTypes = {

@@ -10,13 +10,11 @@ export const getStudents = async () => {
     // const { status, data } = await axios.post(`${PATH}/maintain`, {
     // });
     // return { status, data };
-    const fakeData = [...new Array(FakeDataNumber)].map((el, index) => {
-      return {
-        id: index,
-        name: `Student ${index}`,
-        cover: "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
-      };
-    });
+    const fakeData = [...new Array(FakeDataNumber)].map((el, index) => ({
+      id: index,
+      name: `Student ${index}`,
+      cover: "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
+    }));
 
     const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
 

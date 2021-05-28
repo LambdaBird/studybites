@@ -10,7 +10,9 @@ import addButtonIcon from '../../../resources/img/add_button.svg'
 const { Title } = Typography;
 const { Search } = Input;
 const { Option } = Select;
-const itemPerGage = [...new Array(8)];
+const itemPerPage = [...new Array(8)].map((index) => ({
+  id: index,
+}));
 
 const LessonsDashboard = ({ lessons, loading }) => {
   const { t } = useTranslation();
@@ -33,20 +35,19 @@ const LessonsDashboard = ({ lessons, loading }) => {
       </S.DashboardControls>
       <S.DashboardLessons gutter={[32, 32]}>
         {lessons ? lessons.map((item) => (
-            <S.CardCol span={12}>
+            <S.CardCol key={item.id} span={12}>
               <LessonCard
-                key={item.id}
                 cover={item.cover}
                 title={item.name}
               />
             </S.CardCol>
-          )) : itemPerGage.map(() => (
-            <S.CardCol span={12}>
+          )) : itemPerPage.map((el) => (
+            <S.CardCol key={el.id} span={12}>
               <Skeleton loading={loading} active avatar paragraph={{ rows: 4 }} />
             </S.CardCol>
           ))
         }
-        {(lessons && lessons.length) < itemPerGage ? (
+        {(lessons && lessons.length) < itemPerPage ? (
             <S.CardCol span={12}>
               <AddCard />
             </S.CardCol>

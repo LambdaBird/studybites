@@ -4,15 +4,17 @@ import TeacherInfo from './TeacherInfo';
 import StudentsList from './StudentsList';
 import LessonsDashboard from './LessonsDashboard';
 import useGetLessons from '../../hooks/useGetLessons';
-
+import useGetStudents from '../../hooks/useGetStudents';
 import * as S from './TeacherHome.styled';
 
 const TeacherHome = () => {
   const { getLessonsRequest, lessonsData, isLoading } = useGetLessons();
+  const { getStudentsRequest, studentsData, isLoading: studentsIsLoading } = useGetStudents();
 
   useEffect(() => {
     getLessonsRequest();
-  }, [getLessonsRequest]);
+    getStudentsRequest();
+  }, [getLessonsRequest, getStudentsRequest]);
 
   return (
     <S.Page>
@@ -28,7 +30,7 @@ const TeacherHome = () => {
           <LessonsDashboard lessons={lessonsData} loading={isLoading} />
         </Col>
         <Col span={7}>
-          <StudentsList />
+          <StudentsList students={studentsData} loading={studentsIsLoading} />
         </Col>
       </S.Wrapper>
     </S.Page>

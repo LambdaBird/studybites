@@ -13,7 +13,7 @@ const StudentsList = ({ students }) => {
   return (
     <S.Wrapper>
       <S.ListTitle level={4}>{t('students_list.title')}</S.ListTitle>
-      {!students.length 
+      {(students && !students.length) 
         ? <S.EmptyList
             image={emptyImage}
             imageStyle={{
@@ -32,9 +32,9 @@ const StudentsList = ({ students }) => {
 
 StudentsList.propTypes = {
   students: PropTypes.arrayOf(PropTypes.shape({
-    avatar: PropTypes.string.isRequired,
+    cover: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    surname: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
   })),
 };
 
