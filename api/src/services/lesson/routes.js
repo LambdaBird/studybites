@@ -264,7 +264,21 @@ const router = async (instance) => {
         .offset(req.query.offset || 0)
         .limit(req.query.limit || config.search.LESSON_SEARCH_LIMIT);
 
-      return repl.status(200).send({ data });
+      const count = await instance.objection.models.userRole
+        .relatedQuery('lessons')
+        .skipUndefined()
+        .for(
+          instance.objection.models.userRole.query().select().where({
+            userID: req.user.id,
+            roleID: config.roles.STUDENT_ROLE,
+          }),
+        )
+        .where(columns.name, 'ilike', `%${req.query.search}%`)
+        .offset(req.query.offset || 0)
+        .limit(req.query.limit || config.search.LESSON_SEARCH_LIMIT)
+        .count('*');
+
+      return repl.status(200).send({ total: +count[0].count, data });
     },
   });
 };
