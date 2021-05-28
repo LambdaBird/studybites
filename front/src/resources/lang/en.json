@@ -29,12 +29,16 @@
       "button": "Sign up"
     },
     "user_home": {
-      "title": "Open lessons",
-      "search": {
-        "placeholder": "Name or author"
+      "open_lessons": {
+        "title": "Open lessons",
+        "not_found": "No open lessons yet",
+        "search": "Name or author",
+        "enroll_button": "Enroll"
       },
-      "lessons": {
-        "not_found": "No open lessons yet"
+      "ongoing_lessons": {
+        "title": "Ongoing lessons",
+        "view_all_lessons": "View all lessons",
+        "continue_button": "Continue"
       }
     }
   }

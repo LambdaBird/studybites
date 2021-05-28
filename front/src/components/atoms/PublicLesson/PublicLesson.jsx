@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Row, Typography } from 'antd';
 
+import { useTranslation } from 'react-i18next';
 import lessonImage from '../../../resources/img/lesson.jpg';
 import {
   AuthorAvatar,
@@ -14,6 +15,7 @@ import {
 const { Title } = Typography;
 
 const PublicLesson = ({ lesson }) => {
+  const { t } = useTranslation();
   const { name, description, maintainer } = lesson;
   return (
     <MainSpace size="large" wrap={false}>
@@ -33,7 +35,7 @@ const PublicLesson = ({ lesson }) => {
         </Row>
         <Row justify="end">
           <Button size="medium" type="secondary">
-            Enroll
+            {t('user_home.open_lessons.enroll_button')}
           </Button>
         </Row>
       </div>

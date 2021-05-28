@@ -109,7 +109,7 @@ const LessonsMain = ({ searchLessons }) => {
     <LessonsMainDiv>
       <LessonsEmpty
         image={emptyImg}
-        description={t('user_home.lessons.not_found')}
+        description={t('user_home.open_lessons.not_found')}
       />
     </LessonsMainDiv>
   );
