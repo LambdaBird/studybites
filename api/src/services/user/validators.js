@@ -1,4 +1,4 @@
-import yup, { ValidationError } from 'yup';
+import yup from 'yup';
 
 import {
   propertyTypeError,
@@ -80,6 +80,11 @@ const isSuperAdminPatch = yup
   .bool()
   .typeError(propertyTypeError('patch', 'isSuperAdmin', 'bool'));
 
+const idRole = yup
+  .number()
+  .typeError(propertyTypeError('role', 'id', 'integer'))
+  .required(requiredPropertyError('role', 'id'));
+
 export const signupBodyValidator = yup.object({
   email: emailValidatorSignup,
   password: passwordValidatorSignup,
@@ -101,11 +106,15 @@ export const patchBodyValidator = yup.object({
   isSuperAdmin: isSuperAdminPatch,
 });
 
+export const roleBodyValidator = yup.object({
+  id: idRole,
+});
+
 export const validateId = (paramId, userId) => {
   const id = parseInt(paramId, 10);
 
   if (!id || id === userId) {
-    throw new ValidationError(INVALID_ID);
+    throw new yup.ValidationError(INVALID_ID);
   }
 
   return id;

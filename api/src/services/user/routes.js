@@ -5,6 +5,7 @@ import {
   signinBodyValidator,
   patchBodyValidator,
   validateId,
+  roleBodyValidator,
 } from './validators';
 import errorResponse from '../../validation/schemas';
 import validatorCompiler from '../../validation/validatorCompiler';
@@ -18,6 +19,11 @@ import {
   USER_ADMIN_FIELDS,
   USER_DELETED,
   INVALID_PATCH,
+  ALTER_ROLE_SUCCESS,
+  ALTER_ROLE_FAIL,
+  USER_ROLE_NOT_FOUND,
+  USER_ROLE_DELETED,
+  TEACHER_ROLE,
 } from './constants';
 
 const router = async (instance) => {
@@ -204,7 +210,70 @@ const router = async (instance) => {
         return repl.status(404).send(USER_NOT_FOUND);
       }
 
-      return repl.status(204).send(USER_DELETED);
+      return repl.status(200).send(USER_DELETED);
+    },
+  });
+
+  instance.route({
+    method: 'POST',
+    url: '/appoint_teacher',
+    schema: {
+      body: roleBodyValidator,
+      response: errorResponse,
+    },
+    validatorCompiler,
+    errorHandler,
+    onRequest: instance.auth({ instance, isAdminOnly: true }),
+    handler: async (req, repl) => {
+      const id = validateId(req.body.id, req.user.id);
+
+      const check = await instance.objection.models.userRole.query().findOne({
+        userID: id,
+        roleID: TEACHER_ROLE,
+      });
+
+      if (check) {
+        return repl.status(400).send(ALTER_ROLE_FAIL);
+      }
+
+      await instance.objection.models.userRole
+        .query()
+        .insert({
+          userID: id,
+          roleID: TEACHER_ROLE,
+        })
+        .returning('*');
+
+      return repl.status(200).send(ALTER_ROLE_SUCCESS);
+    },
+  });
+
+  instance.route({
+    method: 'POST',
+    url: '/remove_teacher',
+    schema: {
+      body: roleBodyValidator,
+      response: errorResponse,
+    },
+    validatorCompiler,
+    errorHandler,
+    onRequest: instance.auth({ instance, isAdminOnly: true }),
+    handler: async (req, repl) => {
+      const id = validateId(req.body.id, req.user.id);
+
+      const result = await instance.objection.models.userRole
+        .query()
+        .delete()
+        .where({
+          userID: id,
+          roleID: TEACHER_ROLE,
+        });
+
+      if (!result) {
+        return repl.status(404).send(USER_ROLE_NOT_FOUND);
+      }
+
+      return repl.status(200).send(USER_ROLE_DELETED);
     },
   });
 };
