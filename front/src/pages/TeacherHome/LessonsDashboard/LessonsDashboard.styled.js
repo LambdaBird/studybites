@@ -7,7 +7,7 @@ export const Wrapper = styled(Row)`
 `;
 
 export const CardCol = styled(Col)`
-  min-height: 100%;
+  height: 22%;
 `;
 
 export const DashboardControls = styled(Row)`
@@ -15,8 +15,8 @@ export const DashboardControls = styled(Row)`
 `;
 
 export const DashboardLessons = styled(Row)`
-  height: 100%;
-  min-height: 60vh;
+  max-height: 70vh;
+  overflow: hidden;
 `;
 
 export const IconImage = styled(Image)`

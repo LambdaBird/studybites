@@ -4,7 +4,7 @@ import { Row, Typography } from 'antd';
 const { Title } = Typography
 
 export const Wrapper = styled(Row)`
-  padding: 3.6rem;
+  height: 100%;
   box-shadow: 0px 2px 8px 0px #00000026;
   background: rgba(255, 255, 255, 1);
 `;

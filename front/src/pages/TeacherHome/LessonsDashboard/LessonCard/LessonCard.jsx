@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { Col, Image, Typography } from 'antd';
+import { Typography } from 'antd';
 import * as S from './LessonCard.styled';
 
 const { Title, Text } = Typography;
@@ -12,12 +12,11 @@ const LessonCard = ({ cover, title, students }) => {
   console.log('cover:', cover, 'title:', title, 'students:', students);
     return (
       <S.Wrapper justify="center" align="center">
-        <Col span={8} >
-          <Image
+        <S.ImageCol span={8} >
+          <S.CardImage
             src={cover}
-            preview={false}
           />
-        </Col>
+        </S.ImageCol>
         <S.CardDescription span={16} >
           <S.CardText>
             <Title level={4}>{title}</Title>
