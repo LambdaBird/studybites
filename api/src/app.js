@@ -1,5 +1,6 @@
 import fastify from 'fastify';
-import objection from 'fastify-objectionjs';
+
+import objectionModel from './plugins/objectionModel';
 
 import User from './models/User';
 
@@ -8,11 +9,8 @@ import userService from './services/user';
 const build = (options = {}) => {
   const app = fastify(options);
 
-  app.register(objection, {
-    knexConfig: {
-      client: 'pg',
-      connection: process.env.DATABASE_URL,
-    },
+  app.register(objectionModel, {
+    connection: process.env.DATABASE_URL,
     models: [User],
   });
 
