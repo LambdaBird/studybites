@@ -1,15 +1,21 @@
 import bcrypt from 'bcrypt';
 
+import errorResponse from '../../validation/schemas';
+import validatorCompiler from '../../validation/validatorCompiler';
+import errorHandler from '../../validation/errorHandler';
+import {
+  AuthorizationError,
+  BadRequestError,
+  NotFoundError,
+  UniqueViolationError,
+} from '../../validation/errors';
+
 import {
   signupBodyValidator,
   signinBodyValidator,
   patchBodyValidator,
   validateId,
 } from './validators';
-import errorResponse from '../../validation/schemas';
-import validatorCompiler from '../../validation/validatorCompiler';
-import errorHandler from '../../validation/errorHandler';
-
 import { createAccessToken, createRefreshToken } from './utils';
 import {
   UNAUTHORIZED,
@@ -18,6 +24,7 @@ import {
   USER_ADMIN_FIELDS,
   USER_DELETED,
   INVALID_PATCH,
+  USER_FIELDS,
 } from './constants';
 
 const router = async (instance) => {
@@ -47,7 +54,7 @@ const router = async (instance) => {
           refreshToken,
         });
       } catch (err) {
-        return repl.status(409).send(USER_ALREADY_REGISTERED);
+        throw new UniqueViolationError(USER_ALREADY_REGISTERED);
       }
     },
   });
@@ -68,12 +75,12 @@ const router = async (instance) => {
         email,
       });
       if (!userData) {
-        return repl.status(401).send(UNAUTHORIZED);
+        throw new AuthorizationError(UNAUTHORIZED);
       }
 
       const compareResult = await bcrypt.compare(password, userData.password);
       if (!compareResult) {
-        return repl.status(401).send(UNAUTHORIZED);
+        throw new AuthorizationError(UNAUTHORIZED);
       }
 
       const accessToken = createAccessToken(instance, userData);
@@ -94,14 +101,14 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: instance.auth({ instance, isAdminOnly: false }),
+    onRequest: instance.auth({ instance }),
     handler: async (req, repl) => {
       const data = await instance.objection.models.user
         .query()
         .findById(req.user.id)
-        .select(['id', 'email', 'firstName', 'secondName']);
+        .select(USER_FIELDS);
       if (!data) {
-        return repl.status(401).send(UNAUTHORIZED);
+        throw new AuthorizationError(UNAUTHORIZED);
       }
 
       return repl.status(200).send({ data });
@@ -146,7 +153,7 @@ const router = async (instance) => {
         .findById(id)
         .select(USER_ADMIN_FIELDS);
       if (!data) {
-        return repl.status(404).send(USER_NOT_FOUND);
+        throw new NotFoundError(USER_NOT_FOUND);
       }
 
       return repl.status(200).send({ data });
@@ -175,8 +182,9 @@ const router = async (instance) => {
         .patch(req.body)
         .findById(id)
         .returning(USER_ADMIN_FIELDS);
+
       if (!data) {
-        return repl.status(400).send(INVALID_PATCH);
+        throw new BadRequestError(INVALID_PATCH);
       }
 
       return repl.status(200).send({ data });
@@ -200,10 +208,10 @@ const router = async (instance) => {
         .deleteById(id);
 
       if (!result) {
-        return repl.status(404).send(USER_NOT_FOUND);
+        throw new NotFoundError(USER_NOT_FOUND);
       }
 
-      return repl.status(204).send(USER_DELETED);
+      return repl.status(200).send(USER_DELETED);
     },
   });
 };

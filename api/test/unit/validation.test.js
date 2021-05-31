@@ -102,10 +102,7 @@ describe('Test signup body validation:', () => {
     };
 
     signupBodyValidator.validate(data, options).catch((err) => {
-      expect(err.errors[0]).toMatchObject({
-        key: 'signup.errors.email_format_err',
-        message: INVALID_EMAIL,
-      });
+      expect(err.errors[0]).toMatchObject(INVALID_EMAIL);
     });
   });
 
@@ -118,10 +115,7 @@ describe('Test signup body validation:', () => {
     };
 
     signupBodyValidator.validate(data, options).catch((err) => {
-      expect(err.errors[0]).toMatchObject({
-        key: 'signup.errors.password_regexp_err',
-        message: INVALID_PASSWORD,
-      });
+      expect(err.errors[0]).toMatchObject(INVALID_PASSWORD);
     });
   });
 
@@ -134,10 +128,7 @@ describe('Test signup body validation:', () => {
     };
 
     signupBodyValidator.validate(data, options).catch((err) => {
-      expect(err.errors[0]).toMatchObject({
-        key: 'signup.errors.password_regexp_err',
-        message: INVALID_PASSWORD,
-      });
+      expect(err.errors[0]).toMatchObject(INVALID_PASSWORD);
     });
   });
 
@@ -150,10 +141,7 @@ describe('Test signup body validation:', () => {
     };
 
     signupBodyValidator.validate(data, options).catch((err) => {
-      expect(err.errors[0]).toMatchObject({
-        key: 'signup.errors.password_regexp_err',
-        message: INVALID_PASSWORD,
-      });
+      expect(err.errors[0]).toMatchObject(INVALID_PASSWORD);
     });
   });
 });
@@ -287,10 +275,7 @@ describe('Test user patch body validation:', () => {
     };
 
     patchBodyValidator.validate(data, options).catch((err) => {
-      expect(err.errors[0]).toMatchObject({
-        key: 'patch.errors.email_format_err',
-        message: INVALID_EMAIL,
-      });
+      expect(err.errors[0]).toMatchObject(INVALID_EMAIL);
     });
   });
 
@@ -303,10 +288,7 @@ describe('Test user patch body validation:', () => {
     };
 
     patchBodyValidator.validate(data, options).catch((err) => {
-      expect(err.errors[0]).toMatchObject({
-        key: 'patch.errors.password_regexp_err',
-        message: INVALID_PASSWORD,
-      });
+      expect(err.errors[0]).toMatchObject(INVALID_PASSWORD);
     });
   });
 
@@ -319,10 +301,7 @@ describe('Test user patch body validation:', () => {
     };
 
     patchBodyValidator.validate(data, options).catch((err) => {
-      expect(err.errors[0]).toMatchObject({
-        key: 'patch.errors.password_regexp_err',
-        message: INVALID_PASSWORD,
-      });
+      expect(err.errors[0]).toMatchObject(INVALID_PASSWORD);
     });
   });
 
@@ -335,10 +314,7 @@ describe('Test user patch body validation:', () => {
     };
 
     patchBodyValidator.validate(data, options).catch((err) => {
-      expect(err.errors[0]).toMatchObject({
-        key: 'patch.errors.password_regexp_err',
-        message: INVALID_PASSWORD,
-      });
+      expect(err.errors[0]).toMatchObject(INVALID_PASSWORD);
     });
   });
 

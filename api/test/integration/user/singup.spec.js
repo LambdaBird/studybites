@@ -1,6 +1,6 @@
-import { USER_ALREADY_REGISTERED } from '../../../src/services/user/constants';
 import build from '../../../src/app';
-import { missingBody } from './constants';
+import { USER_ALREADY_REGISTERED } from '../../../src/services/user/constants';
+import { EMPTY_BODY } from '../../../src/validation/validatorCompiler';
 
 describe('Test signup route:', () => {
   let app;
@@ -14,6 +14,7 @@ describe('Test signup route:', () => {
 
   beforeAll(async () => {
     app = build();
+
     await app.ready();
   });
 
@@ -41,7 +42,9 @@ describe('Test signup route:', () => {
     });
 
     expect(response.statusCode).toBe(409);
-    expect(JSON.parse(response.payload)).toMatchObject(USER_ALREADY_REGISTERED);
+    expect(JSON.parse(response.payload).errors[0]).toMatchObject(
+      USER_ALREADY_REGISTERED,
+    );
   });
 
   it('should return 400 for missing body', async () => {
@@ -51,6 +54,6 @@ describe('Test signup route:', () => {
     });
 
     expect(response.statusCode).toBe(400);
-    expect(JSON.parse(response.payload)).toMatchObject(missingBody);
+    expect(JSON.parse(response.payload).errors[0]).toMatchObject(EMPTY_BODY);
   });
 });

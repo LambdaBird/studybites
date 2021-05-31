@@ -1,10 +1,8 @@
-import { UNAUTHORIZED } from '../../../src/services/user/constants';
 import build from '../../../src/app';
-import {
-  missingBody,
-  signupBodyWrongEmail,
-  signupBodyWrongPassword,
-} from './constants';
+import { UNAUTHORIZED } from '../../../src/services/user/constants';
+import { EMPTY_BODY } from '../../../src/validation/validatorCompiler';
+
+import { signupBodyWrongEmail, signupBodyWrongPassword } from './constants';
 
 describe('Test signin route:', () => {
   let app;
@@ -15,6 +13,7 @@ describe('Test signin route:', () => {
     firstName: 'Valid3',
     secondName: 'Valid3',
   };
+
   const signinBodyValid = {
     email: 'valid3@test.io',
     password: 'valid3',
@@ -22,7 +21,9 @@ describe('Test signin route:', () => {
 
   beforeAll(async () => {
     app = build();
+
     await app.ready();
+
     await app.inject({
       method: 'POST',
       url: '/api/v1/user/signup',
@@ -54,7 +55,7 @@ describe('Test signin route:', () => {
     });
 
     expect(response.statusCode).toBe(401);
-    expect(JSON.parse(response.payload)).toMatchObject(UNAUTHORIZED);
+    expect(JSON.parse(response.payload).errors[0]).toMatchObject(UNAUTHORIZED);
   });
 
   it('should return 401 for wrong password', async () => {
@@ -65,7 +66,7 @@ describe('Test signin route:', () => {
     });
 
     expect(response.statusCode).toBe(401);
-    expect(JSON.parse(response.payload)).toMatchObject(UNAUTHORIZED);
+    expect(JSON.parse(response.payload).errors[0]).toMatchObject(UNAUTHORIZED);
   });
 
   it('should return 400 for missing body', async () => {
@@ -75,6 +76,6 @@ describe('Test signin route:', () => {
     });
 
     expect(response.statusCode).toBe(400);
-    expect(JSON.parse(response.payload)).toMatchObject(missingBody);
+    expect(JSON.parse(response.payload).errors[0]).toMatchObject(EMPTY_BODY);
   });
 });
