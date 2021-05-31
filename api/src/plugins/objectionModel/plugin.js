@@ -4,7 +4,7 @@ import objection from 'objection';
 
 import { ERROR_MISSING_FIELDS, ERROR_INVALID_ARRAY } from './errors';
 
-const plugin = (instance, options, next) => {
+const objectionModel = (instance, options, next) => {
   if (!options.connection || !options.models) {
     next(new Error(ERROR_MISSING_FIELDS));
     return;
@@ -21,17 +21,16 @@ const plugin = (instance, options, next) => {
     ...objection.knexSnakeCaseMappers(),
   });
 
-  const db = {
-    knex: connection,
-  };
+  const models = {};
 
   objection.Model.knex(connection);
 
   options.models.forEach((model) => {
-    db[model.name] = model;
+    models[model.name] = model;
   });
 
-  instance.decorate('db', db);
+  instance.decorate('models', models);
+  instance.decorate('knex', connection);
 
   instance.addHook('onClose', (_, done) => {
     connection.destroy();
@@ -41,4 +40,4 @@ const plugin = (instance, options, next) => {
   next();
 };
 
-export default fp(plugin);
+export default fp(objectionModel);

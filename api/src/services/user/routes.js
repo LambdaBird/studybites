@@ -8,6 +8,8 @@ import errorHandler from '../../validation/errorHandler';
 import { createAccessToken, createRefreshToken } from './utils';
 
 const router = async (instance) => {
+  const { User } = instance.models;
+
   instance.route({
     method: 'POST',
     url: '/signup',
@@ -23,8 +25,7 @@ const router = async (instance) => {
       const hash = await bcrypt.hash(password, 12);
 
       try {
-        const userData = await instance.objection.models.user
-          .query()
+        const userData = await User.query()
           .insert({
             email,
             password: hash,
@@ -66,7 +67,7 @@ const router = async (instance) => {
     handler: async (req, repl) => {
       const { email, password } = req.body;
 
-      const userData = await instance.objection.models.user.query().findOne({
+      const userData = await User.query().findOne({
         email,
       });
       if (!userData) {
@@ -114,8 +115,7 @@ const router = async (instance) => {
       instance.auth(instance, next, req, repl);
     },
     handler: async (req, repl) => {
-      const userData = await instance.objection.models.user
-        .query()
+      const userData = await User.query()
         .findOne({
           id: req.user.id,
         })
