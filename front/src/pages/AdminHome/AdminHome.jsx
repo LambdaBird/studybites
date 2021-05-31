@@ -1,22 +1,13 @@
-import React, { useEffect, useMemo } from 'react';
-import {
-  Button,
-  Col,
-  Input,
-  Row,
-  Select,
-  Space,
-  Table,
-  Typography,
-} from 'antd';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import { Button, Col, Row, Select, Space, Table, Typography } from 'antd';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { FullSelect, MainDiv, TableHeader } from './AdminHome.styled';
 import { getUsers } from '../../utils/api/v1/user/user';
 import useTableRequest from '../../hooks/useTableRequest';
+import DebouncedSearch from '../../components/atoms/DebouncedSearch';
 
 const { Option } = Select;
-const { Search } = Input;
 const { Title } = Typography;
 
 const AdminHome = () => {
@@ -24,11 +15,11 @@ const AdminHome = () => {
   const { t } = useTranslation();
   const history = useHistory();
 
-  const onChangePage = (current) => {
+  const onChangePage = useCallback((current) => {
     history.push({
       search: `?page=${current}`,
     });
-  };
+  }, []);
 
   const { loading, dataSource, pagination, handleTableChange } =
     useTableRequest({
@@ -36,9 +27,14 @@ const AdminHome = () => {
       onChangePage,
     });
 
+  const handleSearchChange = (data) => {
+    handleTableChange({
+      search: data,
+    });
+  };
+
   useEffect(() => {
     const page = parseInt(query.get('page'), 10) || 1;
-
     handleTableChange({
       current: page < 0 ? 1 : page,
       pageSize: 10,
@@ -96,9 +92,11 @@ const AdminHome = () => {
           <Row>
             <Space size="large">
               <Title level={2}>{t('admin_home.title')}</Title>
-              <Search
+              <DebouncedSearch
+                delay={500}
                 placeholder={t('admin_home.search.placeholder')}
                 allowClear
+                onChange={handleSearchChange}
               />
             </Space>
           </Row>
