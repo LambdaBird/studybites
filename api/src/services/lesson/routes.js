@@ -22,20 +22,32 @@ const router = async (instance) => {
     errorHandler,
     onRequest: instance.auth({ instance }),
     handler: async (req, repl) => {
+      const columns = {
+        name: 'name',
+      };
+
+      if (!req.query.search) {
+        columns.name = undefined;
+      }
+
       const data = await instance.objection.models.lesson
         .query()
         .select()
+        .skipUndefined()
         .where({
           status: 'Public',
         })
+        .where(columns.name, 'ilike', `%${req.query.search}%`)
         .offset(req.query.offset || 0)
         .limit(req.query.limit || config.search.LESSON_SEARCH_LIMIT);
 
       const count = await instance.objection.models.lesson
         .query()
+        .skipUndefined()
         .where({
           status: 'Public',
         })
+        .where(columns.name, 'ilike', `%${req.query.search}%`)
         .count('*');
 
       return repl.status(200).send({ total: +count[0].count, data });
@@ -99,25 +111,37 @@ const router = async (instance) => {
       }),
     ],
     handler: async (req, repl) => {
+      const columns = {
+        name: 'name',
+      };
+
+      if (!req.query.search) {
+        columns.name = undefined;
+      }
+
       const data = await instance.objection.models.userRole
         .relatedQuery('lessons')
+        .skipUndefined()
         .for(
           instance.objection.models.userRole.query().select().where({
             userID: req.user.id,
             roleID: config.roles.MAINTAINER_ROLE,
           }),
         )
+        .where(columns.name, 'ilike', `%${req.query.search}%`)
         .offset(req.query.offset || 0)
         .limit(req.query.limit || config.search.LESSON_SEARCH_LIMIT);
 
       const count = await instance.objection.models.userRole
         .relatedQuery('lessons')
+        .skipUndefined()
         .for(
           instance.objection.models.userRole.query().select().where({
             userID: req.user.id,
             roleID: config.roles.MAINTAINER_ROLE,
           }),
         )
+        .where(columns.name, 'ilike', `%${req.query.search}%`)
         .count('*');
 
       return repl.status(200).send({ total: +count[0].count, data });
