@@ -8,7 +8,10 @@ import {
   AuthorContainer,
   AuthorName,
   DescriptionText,
+  EnrollRow,
+  LeftContent,
   MainSpace,
+  RightContent,
 } from './PublicLesson.styled';
 
 const { Title } = Typography;
@@ -17,26 +20,26 @@ const PublicLesson = ({ lesson }) => {
   const { name, description, maintainer } = lesson;
   return (
     <MainSpace size="large" wrap={false}>
-      <div>
+      <LeftContent>
         <img src={lessonImage} alt="Lesson" />
         <AuthorContainer>
           <AuthorAvatar>{maintainer?.[0]}</AuthorAvatar>
           <AuthorName>{maintainer}</AuthorName>
         </AuthorContainer>
-      </div>
-      <div>
+      </LeftContent>
+      <RightContent>
         <Row>
           <Title level={3}>{name}</Title>
         </Row>
         <Row>
           <DescriptionText>{description}</DescriptionText>
         </Row>
-        <Row justify="end">
+        <EnrollRow justify="end">
           <Button size="medium" type="secondary">
             Enroll
           </Button>
-        </Row>
-      </div>
+        </EnrollRow>
+      </RightContent>
     </MainSpace>
   );
 };

@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Avatar, Space, Typography } from 'antd';
+import { Avatar, Row, Typography } from 'antd';
 import {
   DESCRIPTION_COLOR,
   VOLCANO_2,
@@ -9,9 +9,24 @@ import {
 
 const { Text } = Typography;
 
-export const MainSpace = styled(Space)`
+export const MainSpace = styled.div`
+  display: flex;
   background-color: ${WHITE_COLOR};
   padding: 1rem;
+`;
+
+export const LeftContent = styled.div`
+  margin-right: 1.5rem;
+`;
+
+export const RightContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`;
+
+export const EnrollRow = styled(Row)`
+  margin-top: auto;
 `;
 
 export const DescriptionText = styled(Text)`

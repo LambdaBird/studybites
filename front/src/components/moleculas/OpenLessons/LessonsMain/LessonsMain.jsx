@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
 import emptyImg from '../../../../resources/img/empty.svg';
 import {
+  LessonsColumn,
   LessonsEmpty,
   LessonsMainDiv,
   LessonsPagination,
@@ -83,9 +84,13 @@ const LessonsMain = ({ searchLessons }) => {
           <>
             <Row gutter={[16, 16]}>
               {dataSource.map((lesson) => (
-                <Col key={lesson.id} lg={{ span: 12 }} md={{ span: 24 }}>
+                <LessonsColumn
+                  key={lesson.id}
+                  lg={{ span: 12 }}
+                  md={{ span: 24 }}
+                >
                   <PublicLesson lesson={lesson} />
-                </Col>
+                </LessonsColumn>
               ))}
             </Row>
             <Row justify="end">

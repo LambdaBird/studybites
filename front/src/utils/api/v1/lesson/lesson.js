@@ -1,4 +1,8 @@
+import axios from 'axios';
 import { sleep } from '../../../utils';
+import { getJWTAccessToken } from '../../../jwt';
+
+const PATH = '/api/v1/lesson';
 
 const getLessonsMocked = async ({ offset, limit, search }) => {
   let data = new Array(100).fill(1).map((x, i) => ({
@@ -22,14 +26,17 @@ const getLessonsMocked = async ({ offset, limit, search }) => {
   };
 };
 
+console.log(getLessonsMocked?.status);
+
 export const getLessons = async (paramsData) => {
   try {
-    /*
     const { status, data } = await axios.get(`${PATH}/`, {
+      headers: {
+        Authorization: `Bearer ${getJWTAccessToken()}`,
+      },
       params: paramsData,
     });
-     */
-    return await getLessonsMocked(paramsData);
+    return { status, data }; // await getLessonsMocked(paramsData);
   } catch (e) {
     const { status, data } = e.response;
     return {
