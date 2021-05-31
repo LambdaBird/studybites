@@ -13,11 +13,14 @@ export const TextLink = styled(Text)`
   }
 `;
 
-export const DivAlignCenter = styled.div`
-  text-align: center;
+export const FormItemBottomEmpty = styled(Form.Item)`
+  margin-bottom: 0;
 `;
 
-export const FormItemPassword = styled(Form.Item)`
-  margin-bottom: 0;
-  height: 100px;
+export const FormItemAlignEnd = styled(Form.Item)`
+  text-align: end;
+`;
+
+export const DivAlignCenter = styled.div`
+  text-align: center;
 `;

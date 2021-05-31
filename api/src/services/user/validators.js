@@ -1,17 +1,13 @@
 import yup from 'yup';
 
-export const propertyTypeError = (key, property) => ({
-  key: `${key}.errors.${property}_type_err`,
-  message: `Property "${property}" must be a string`,
-});
-export const requiredPropertyError = (key, property) => ({
-  key: `${key}.errors.${property}_req_err`,
-  message: `Missing required property "${property}"`,
-});
+import {
+  propertyTypeError,
+  requiredPropertyError,
+} from '../../validation/helpers';
 
 export const INVALID_EMAIL = 'Property "email" is invalid';
 
-const emailValidator = yup
+const emailValidatorSignup = yup
   .string()
   .typeError(propertyTypeError('signup', 'email'))
   .required(requiredPropertyError('signup', 'email'))
@@ -23,7 +19,7 @@ const emailValidator = yup
 export const INVALID_PASSWORD =
   'Property "password" must be longer than 5 characters and contain at least one number and one letter';
 
-const passwordValidator = yup
+const passwordValidatorSignup = yup
   .string()
   .typeError(propertyTypeError('signup', 'password'))
   .required(requiredPropertyError('signup', 'password'))
@@ -34,21 +30,34 @@ const passwordValidator = yup
     },
   });
 
-const firstNameValidator = yup
+const firstNameValidatorSignup = yup
   .string()
   .typeError(propertyTypeError('signup', 'firstName'))
   .required(requiredPropertyError('signup', 'firstName'));
 
-const secondNameValidator = yup
+const secondNameValidatorSignup = yup
   .string()
   .typeError(propertyTypeError('signup', 'secondName'))
   .required(requiredPropertyError('signup', 'secondName'));
 
-const signupBodyValidator = yup.object({
-  email: emailValidator,
-  password: passwordValidator,
-  firstName: firstNameValidator,
-  secondName: secondNameValidator,
+const emailValidatorSignin = yup
+  .string()
+  .typeError(propertyTypeError('signup', 'email'))
+  .required(requiredPropertyError('signup', 'email'));
+
+const passwordValidatorSignin = yup
+  .string()
+  .typeError(propertyTypeError('signup', 'password'))
+  .required(requiredPropertyError('signup', 'password'));
+
+export const signupBodyValidator = yup.object({
+  email: emailValidatorSignup,
+  password: passwordValidatorSignup,
+  firstName: firstNameValidatorSignup,
+  secondName: secondNameValidatorSignup,
 });
 
-export default signupBodyValidator;
+export const signinBodyValidator = yup.object({
+  email: emailValidatorSignin,
+  password: passwordValidatorSignin,
+});

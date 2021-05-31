@@ -1,10 +1,7 @@
 {
   "translation": {
     "sign_up": {
-      "action_success": "Successfully signed up",
-      "error": {
-        "no_internet": "Oops no internet connection"
-      },
+      "have_account": "Already have an account? Sign in!",
       "title": "Sign up to your account",
       "first_name": {
         "placeholder": "First name",
@@ -27,6 +24,24 @@
         "one_numerical": "At least one numerical"
       },
       "button": "Sign up"
+    },
+    "errors": {
+      "unauthorized": "Wrong credentials!",
+      "no_internet": "Oops no internet connection"
+    },
+    "sign_in": {
+      "no_account": "Don’t have an account? Sign up!",
+      "forgot_password": "Forgot password?",
+      "button": "Sign in",
+      "title": "Sign in to your account",
+      "email": {
+        "placeholder": "Email",
+        "error": "Please enter email",
+        "validation": "The input is not valid email"
+      },
+      "password": {
+        "error": "Please enter password"
+      }
     },
     "user_home": {
       "title": "Open lessons",

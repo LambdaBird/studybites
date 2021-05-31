@@ -1,10 +1,14 @@
-import SignupBodyValidator, {
+import {
   propertyTypeError,
   requiredPropertyError,
+} from '../../src/validation/helpers';
+import {
   INVALID_EMAIL,
   INVALID_PASSWORD,
-} from '../../src/validation/validators';
-import { options } from '../../src/validation/validationCompiler';
+  signupBodyValidator,
+  signinBodyValidator,
+} from '../../src/services/user/validators';
+import { options } from '../../src/validation/validatorCompiler';
 
 describe('Test signup body validation:', () => {
   test.each([
@@ -29,7 +33,7 @@ describe('Test signup body validation:', () => {
       requiredPropertyError('signup', 'secondName'),
     ],
   ])('should return ValidationError for missing %s', (_, payload, expected) => {
-    SignupBodyValidator.validate(payload, options).catch((err) => {
+    signupBodyValidator.validate(payload, options).catch((err) => {
       expect(err.errors[0]).toMatchObject(expected);
     });
   });
@@ -78,10 +82,10 @@ describe('Test signup body validation:', () => {
   ])(
     'should return ValidationError for invalid type of %s',
     (_, payload, expected) => {
-      SignupBodyValidator.validate(payload, options).catch((err) => {
+      signupBodyValidator.validate(payload, options).catch((err) => {
         expect(err.errors[0]).toMatchObject(expected);
       });
-    }
+    },
   );
 
   test('should return ValidationError for invalid email format', () => {
@@ -92,7 +96,7 @@ describe('Test signup body validation:', () => {
       secondName: 'Valid',
     };
 
-    SignupBodyValidator.validate(data, options).catch((err) => {
+    signupBodyValidator.validate(data, options).catch((err) => {
       expect(err.errors[0]).toMatchObject({
         key: 'signup.errors.email_format_err',
         message: INVALID_EMAIL,
@@ -108,7 +112,7 @@ describe('Test signup body validation:', () => {
       secondName: 'Valid',
     };
 
-    SignupBodyValidator.validate(data, options).catch((err) => {
+    signupBodyValidator.validate(data, options).catch((err) => {
       expect(err.errors[0]).toMatchObject({
         key: 'signup.errors.password_regexp_err',
         message: INVALID_PASSWORD,
@@ -124,7 +128,7 @@ describe('Test signup body validation:', () => {
       secondName: 'Valid',
     };
 
-    SignupBodyValidator.validate(data, options).catch((err) => {
+    signupBodyValidator.validate(data, options).catch((err) => {
       expect(err.errors[0]).toMatchObject({
         key: 'signup.errors.password_regexp_err',
         message: INVALID_PASSWORD,
@@ -140,11 +144,60 @@ describe('Test signup body validation:', () => {
       secondName: 'Valid',
     };
 
-    SignupBodyValidator.validate(data, options).catch((err) => {
+    signupBodyValidator.validate(data, options).catch((err) => {
       expect(err.errors[0]).toMatchObject({
         key: 'signup.errors.password_regexp_err',
         message: INVALID_PASSWORD,
       });
     });
   });
+});
+
+describe('Test signin body validation:', () => {
+  test.each([
+    [
+      'email',
+      { password: 'valid3', firstName: 'Valid', secondName: 'Valid' },
+      requiredPropertyError('signup', 'email'),
+    ],
+    [
+      'password',
+      { email: 'valid@test.io', firstName: 'Valid', secondName: 'Valid' },
+      requiredPropertyError('signup', 'password'),
+    ],
+  ])('should return ValidationError for missing %s', (_, payload, expected) => {
+    signinBodyValidator.validate(payload, options).catch((err) => {
+      expect(err.errors[0]).toMatchObject(expected);
+    });
+  });
+
+  test.each([
+    [
+      'email',
+      {
+        email: [123],
+        password: 'valid3',
+        firstName: 'Valid',
+        secondName: 'Valid',
+      },
+      propertyTypeError('signup', 'email'),
+    ],
+    [
+      'password',
+      {
+        email: 'valid@test.io',
+        password: [123],
+        firstName: 'Valid',
+        secondName: 'Valid',
+      },
+      propertyTypeError('signup', 'password'),
+    ],
+  ])(
+    'should return ValidationError for invalid type of %s',
+    (_, payload, expected) => {
+      signinBodyValidator.validate(payload, options).catch((err) => {
+        expect(err.errors[0]).toMatchObject(expected);
+      });
+    },
+  );
 });
