@@ -23,7 +23,7 @@ const passwordValidatorSignup = yup
   .string()
   .typeError(propertyTypeError('signup', 'password'))
   .required(requiredPropertyError('signup', 'password'))
-  .matches(/^(?=.*\d)(?=.*[a-zA-Z]).{5,}$/, {
+  .matches(/^(?=.*\d)(?=.*\D).{5,}$/, {
     message: {
       key: 'signup.errors.password_regexp_err',
       message: INVALID_PASSWORD,
