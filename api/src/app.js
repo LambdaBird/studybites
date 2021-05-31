@@ -11,7 +11,6 @@ import lessonService from './services/lesson';
 
 const build = (options = {}) => {
   const app = fastify(options);
-
   app.register(objection, {
     knexConfig: {
       client: 'pg',
@@ -19,7 +18,6 @@ const build = (options = {}) => {
     },
     models: [User, Role, UserRole, Lesson],
   });
-
   app.register(userService, {
     prefix: '/api/v1/user',
   });
