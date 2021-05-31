@@ -4,14 +4,14 @@ import jwt from 'fastify-jwt';
 import router from './routes';
 import auth from './auth';
 
-const userService = fp((instance, next) => {
+const userService = (instance, opts, next) => {
   instance.register(jwt, { secret: process.env.JWT_SECRET });
 
   instance.decorate('auth', auth);
 
-  instance.register(router);
+  instance.register(router, opts);
 
   next();
-});
+};
 
-export default userService;
+export default fp(userService);
