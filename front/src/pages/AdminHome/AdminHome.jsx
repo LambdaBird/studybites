@@ -27,7 +27,7 @@ const AdminHome = () => {
       onChangePage,
     });
 
-  const onSearchChange = (data) => {
+  const handleSearchChange = (data) => {
     handleTableChange({
       search: data,
     });
@@ -96,8 +96,8 @@ const AdminHome = () => {
                 delay={500}
                 placeholder={t('admin_home.search.placeholder')}
                 allowClear
-                onSearch={onSearchChange}
-                onChange={onSearchChange}
+                onSearch={handleSearchChange}
+                onChange={handleSearchChange}
               />
             </Space>
           </Row>

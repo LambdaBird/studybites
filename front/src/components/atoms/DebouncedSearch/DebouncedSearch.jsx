@@ -17,11 +17,7 @@ const DebouncedSearch = ({ delay, onChange, onSearch, ...props }) => {
   return (
     <Search
       {...props}
-      onSearch={(value) => {
-        if (value) {
-          onSearch(value);
-        }
-      }}
+      onSearch={(value) => value && onSearch(value)}
       onChange={(e) => setSearchInput(e.target.value)}
     />
   );
@@ -30,12 +26,13 @@ const DebouncedSearch = ({ delay, onChange, onSearch, ...props }) => {
 DebouncedSearch.defaultProps = {
   onChange: () => {},
   onSearch: () => {},
+  delay: 500,
 };
 
 DebouncedSearch.propTypes = {
   onChange: PropTypes.func,
   onSearch: PropTypes.func,
-  delay: PropTypes.number.isRequired,
+  delay: PropTypes.number,
 };
 
 export default DebouncedSearch;
