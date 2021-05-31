@@ -96,7 +96,6 @@ const AdminHome = () => {
                 delay={500}
                 placeholder={t('admin_home.search.placeholder')}
                 allowClear
-                onSearch={handleSearchChange}
                 onChange={handleSearchChange}
               />
             </Space>

@@ -3,9 +3,7 @@ import PropTypes from 'prop-types';
 import { Input } from 'antd';
 import useDebounce from '../../../hooks/useDebounce';
 
-const { Search } = Input;
-
-const DebouncedSearch = ({ delay, onChange, onSearch, ...props }) => {
+const DebouncedSearch = ({ delay, onChange, ...props }) => {
   const [searchInput, setSearchInput] = useState(null);
   const debouncedValue = useDebounce(searchInput, delay);
   useEffect(() => {
@@ -14,24 +12,15 @@ const DebouncedSearch = ({ delay, onChange, onSearch, ...props }) => {
     }
   }, [debouncedValue]);
 
-  return (
-    <Search
-      {...props}
-      onSearch={(value) => value && onSearch(value)}
-      onChange={(e) => setSearchInput(e.target.value)}
-    />
-  );
+  return <Input {...props} onChange={(e) => setSearchInput(e.target.value)} />;
 };
 
 DebouncedSearch.defaultProps = {
-  onChange: () => {},
-  onSearch: () => {},
   delay: 500,
 };
 
 DebouncedSearch.propTypes = {
-  onChange: PropTypes.func,
-  onSearch: PropTypes.func,
+  onChange: PropTypes.func.isRequired,
   delay: PropTypes.number,
 };
 
