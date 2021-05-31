@@ -10,5 +10,8 @@
   "roles": {
     "TEACHER_ROLE": 1,
     "MAINTAINER_ROLE": 2
+  },
+  "resources": {
+    "LESSON": "lesson"
   }
 }

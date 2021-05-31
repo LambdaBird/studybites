@@ -91,7 +91,13 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: instance.auth({ instance, isTeacherOnly: true }),
+    onRequest: [
+      instance.auth({ instance }),
+      instance.access({
+        instance,
+        role: config.roles.MAINTAINER_ROLE,
+      }),
+    ],
     handler: async (req, repl) => {
       const data = await instance.objection.models.userRole
         .relatedQuery('lessons')
@@ -104,7 +110,7 @@ const router = async (instance) => {
         .offset(req.query.offset || 0)
         .limit(req.query.limit || config.search.LESSON_SEARCH_LIMIT);
 
-       const count = await instance.objection.models.userRole
+      const count = await instance.objection.models.userRole
         .relatedQuery('lessons')
         .for(
           instance.objection.models.userRole.query().select().where({
@@ -126,7 +132,13 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: instance.auth({ instance, isTeacherOnly: true }),
+    onRequest: [
+      instance.auth({ instance }),
+      instance.access({
+        instance,
+        role: config.roles.MAINTAINER_ROLE,
+      }),
+    ],
     handler: async (req, repl) => {
       const id = validateId(req.params.id);
 
@@ -157,7 +169,13 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: instance.auth({ instance, isTeacherOnly: true }),
+    onRequest: [
+      instance.auth({ instance }),
+      instance.access({
+        instance,
+        role: config.roles.MAINTAINER_ROLE,
+      }),
+    ],
     handler: async (req, repl) => {
       try {
         const data = await instance.objection.models.lesson.transaction(
@@ -196,7 +214,13 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: instance.auth({ instance, isTeacherOnly: true }),
+    onRequest: [
+      instance.auth({ instance }),
+      instance.access({
+        instance,
+        role: config.roles.MAINTAINER_ROLE,
+      }),
+    ],
     handler: async (req, repl) => {
       const id = validateId(req.params.id);
 
