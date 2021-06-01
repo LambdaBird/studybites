@@ -33,13 +33,14 @@
       "add_button": "Add lesson",
       "card": {
         "edit": "Edit",
-        "no_students": "No students"
+        "no_students": "No students",
+        "students": "students"
       },
       "search": {
         "placeholder": "Name"
       },
       "select": {
-        "status": "Status",
+        "all": "All statuses",
         "draft": "Draft",
         "archived": "Archived",
         "public": "Public",
@@ -50,12 +51,13 @@
       "greeting": "Good morning, ",
       "wishes": ", have a great day!",
       "lessons": "Lessons",
-			"students": "Students"
+      "students": "Students"
     },
     "students_list": {
       "title": "My students",
       "invite": "Invite Now",
-      "no_students": "No students yet!"
+      "no_students": "No students yet!",
+      "all": "View all"
     },
     "sign_in": {
       "no_account": "Don’t have an account? Sign up!",
