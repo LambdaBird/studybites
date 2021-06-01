@@ -1,6 +1,7 @@
-import objection, { Model } from 'objection';
+/* eslint-disable import/no-cycle */
+import objection from 'objection';
 
-import Role from './Role';
+import User from './User';
 import Lesson from './Lesson';
 
 class UserRole extends objection.Model {
@@ -24,16 +25,16 @@ class UserRole extends objection.Model {
 
   static relationMappings() {
     return {
-      roleId: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: Role,
+      users: {
+        relation: objection.Model.BelongsToOneRelation,
+        modelClass: User,
         join: {
-          from: 'users_roles.role_id',
-          to: 'roles.id',
+          from: 'users_roles.user_id',
+          to: 'users.id',
         },
       },
       lessons: {
-        relation: Model.BelongsToOneRelation,
+        relation: objection.Model.BelongsToOneRelation,
         modelClass: Lesson,
         join: {
           from: 'users_roles.resource_id',
