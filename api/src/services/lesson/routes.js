@@ -107,6 +107,7 @@ const router = async (instance) => {
       instance.auth({ instance }),
       instance.access({
         instance,
+        type: config.resources.LESSON,
         role: config.roles.MAINTAINER_ROLE,
       }),
     ],
@@ -160,6 +161,7 @@ const router = async (instance) => {
       instance.auth({ instance }),
       instance.access({
         instance,
+        type: config.resources.LESSON,
         role: config.roles.MAINTAINER_ROLE,
       }),
     ],
@@ -242,6 +244,7 @@ const router = async (instance) => {
       instance.auth({ instance }),
       instance.access({
         instance,
+        type: config.resources.LESSON,
         role: config.roles.MAINTAINER_ROLE,
       }),
     ],
