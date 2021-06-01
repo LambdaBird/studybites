@@ -18,7 +18,7 @@ export const TextCol = styled(Col)`
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  padding-left: 24px; 
+  padding-left: 24px;
 `;
 
 export const StatisticCol = styled(Col)`
@@ -28,7 +28,7 @@ export const StatisticCol = styled(Col)`
 `;
 
 export const StatisticCell = styled(Statistic)`
-  padding-left: 32px; 
+  padding-left: 32px;
 `;
 
 export const StatisticDivider = styled(Divider)`

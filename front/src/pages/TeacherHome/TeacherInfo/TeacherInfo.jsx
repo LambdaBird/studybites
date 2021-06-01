@@ -20,20 +20,19 @@ const TeacherInfo = ({ avatar, username, description, lessons, students }) => {
       title: <Text type="secondary">{t('teacher_info.students')}</Text>,
       value: students,
       suffix: '',
-    }
+    },
   ];
 
   return (
     <S.Wrapper justify="center" align="center">
       <S.AvatarCol span={2}>
-        <Avatar
-          size={64}
-          src={<Image src={avatar} preview={false} />}	
-        />
+        <Avatar size={64} src={<Image src={avatar} preview={false} />} />
       </S.AvatarCol>
       <S.TextCol span={14}>
         <Title level={4}>
-          {`${t('teacher_info.greeting')}${username}${t('teacher_info.wishes')}`}
+          {`${t('teacher_info.greeting')}${username}${t(
+            'teacher_info.wishes',
+          )}`}
         </Title>
         <Text type="secondary">{description}</Text>
       </S.TextCol>
@@ -44,13 +43,11 @@ const TeacherInfo = ({ avatar, username, description, lessons, students }) => {
               title={column.title}
               value={column.value}
               suffix={column.suffix}
-              valueStyle={{ textAlign: "right" }}
+              valueStyle={{ textAlign: 'right' }}
             />
-            <S.StatisticDivider
-              type="vertical"
-              style={{ height: "50%" }}
-            />
-          </React.Fragment>))}
+            <S.StatisticDivider type="vertical" style={{ height: '50%' }} />
+          </React.Fragment>
+        ))}
       </S.StatisticCol>
     </S.Wrapper>
   );
