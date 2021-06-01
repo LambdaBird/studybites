@@ -2,7 +2,7 @@
 
 // const PATH = '/api/v1/lesson';
 
-const FakeDataNumber = 6;
+const FakeDataNumber = 0;
 const statusSuccess = 200;
 
 export const getStudents = async () => {
