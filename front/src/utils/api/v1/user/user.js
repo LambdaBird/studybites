@@ -18,6 +18,21 @@ export const postSignUp = async (formData) => {
     };
   }
 };
+  
+export const postSignIn = async (formData) => {
+  try {
+    const { status, data } = await axios.post(`${PATH}/signin`, {
+      ...formData,
+    });
+    return { status, data };
+  } catch (e) {
+    const { status, data } = e.response;
+    return {
+      status,
+      data,
+    };
+  }
+};
 
 const getUsersRequestMocked = async ({ offset, limit, search }) => {
   let data = new Array(500).fill(1).map((x, i) => ({
@@ -41,6 +56,8 @@ const getUsersRequestMocked = async ({ offset, limit, search }) => {
   };
 };
 
+
+
 export const getUsers = async (paramsData) => {
   try {
     /*
@@ -49,7 +66,7 @@ export const getUsers = async (paramsData) => {
     });
      */
     return await getUsersRequestMocked(paramsData);
-  } catch (e) {
+   } catch (e) {
     const { status, data } = e.response;
     return {
       status,
@@ -57,3 +74,4 @@ export const getUsers = async (paramsData) => {
     };
   }
 };
+

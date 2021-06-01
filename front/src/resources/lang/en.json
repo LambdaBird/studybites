@@ -1,10 +1,7 @@
 {
   "translation": {
     "sign_up": {
-      "action_success": "Successfully signed up",
-      "error": {
-        "no_internet": "Oops no internet connection"
-      },
+      "have_account": "Already have an account? Sign in!",
       "title": "Sign up to your account",
       "first_name": {
         "placeholder": "First name",
@@ -27,6 +24,10 @@
         "one_numerical": "At least one numerical"
       },
       "button": "Sign up"
+    },
+    "errors": {
+      "unauthorized": "Wrong credentials!",
+      "no_internet": "Oops no internet connection"
     },
     "sign_in": {
       "no_account": "Don’t have an account? Sign up!",

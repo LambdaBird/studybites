@@ -35,16 +35,16 @@ import bcrypt from 'bcrypt';
 
     if (
       !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(
-        email
+        email,
       )
     ) {
       console.log('provide a valid email');
       process.exit(1);
     }
 
-    if (!/^(?=.*\d)(?=.*[a-zA-Z]).{5,}$/.test(password)) {
+    if (!/^(?=.*\d)(?=.*\D).{5,}$/.test(password)) {
       console.log(
-        'password must be longer than 5 characters and contain at least one number and one letter'
+        'password must be longer than 5 characters and contain at least one number and one letter',
       );
       process.exit(1);
     }

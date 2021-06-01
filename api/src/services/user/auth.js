@@ -5,6 +5,8 @@ const auth =
   // eslint-disable-next-line consistent-return
   async (req, repl) => {
     try {
+      const { User } = instance.models;
+
       const decoded = await req.jwtVerify();
       req.userId = decoded.id;
 
@@ -12,7 +14,7 @@ const auth =
         return repl.status(401).send(UNAUTHORIZED);
       }
 
-      const userData = await instance.objection.models.user.query().findOne({
+      const userData = await User.query().findOne({
         id: decoded.id,
       });
 

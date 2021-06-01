@@ -1,21 +1,28 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Switch } from 'react-router-dom';
 import Home from './pages/Home';
 import SignUp from './pages/SignUp';
-import AdminHome from './pages/AdminHome';
+import SignIn from './pages/SignIn';
+import PrivateRoute from './components/PrivateRoute';
+import Header from './components/moleculas/Header';
+import AuthRoute from './components/AuthRoute/AuthRoute';
 
 const App = () => (
   <Router>
+    <Header />
     <Switch>
-      <Route path="/admin-home">
-        <AdminHome />
-      </Route>
-      <Route path="/signUp">
+      <AuthRoute path="/signIn">
+        <SignIn />
+      </AuthRoute>
+      <AuthRoute path="/signUp">
         <SignUp />
-      </Route>
-      <Route path="/">
+      </AuthRoute>
+      <PrivateRoute path="/">
         <Home />
-      </Route>
+      </PrivateRoute>
+      <PrivateRoute path="/admin-home">
+        <AdminHome />
+      </PrivateRoute>
     </Switch>
   </Router>
 );

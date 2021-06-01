@@ -29,6 +29,8 @@ import {
 import config from '../../../config.json';
 
 const router = async (instance) => {
+  const { User, UserRole } = instance.models;
+
   instance.route({
     method: 'POST',
     url: '/signup',
@@ -42,8 +44,7 @@ const router = async (instance) => {
       req.body.password = await bcrypt.hash(req.body.password, 12);
 
       try {
-        const userData = await instance.objection.models.user
-          .query()
+        const userData = await User.query()
           .insert(req.body)
           .returning('*');
 
@@ -72,7 +73,7 @@ const router = async (instance) => {
     handler: async (req, repl) => {
       const { email, password } = req.body;
 
-      const userData = await instance.objection.models.user.query().findOne({
+      const userData = await User.query().findOne({
         email,
       });
       if (!userData) {
@@ -104,7 +105,7 @@ const router = async (instance) => {
     errorHandler,
     onRequest: instance.auth({ instance, isAdminOnly: false }),
     handler: async (req, repl) => {
-      const data = await instance.objection.models.user
+      const data = await User
         .query()
         .findById(req.user.id)
         .select(['id', 'email', 'firstName', 'secondName']);
@@ -136,29 +137,28 @@ const router = async (instance) => {
         columns.firstName = undefined;
       }
 
-      const data = await instance.objection.models.user
+      const data = await User
         .query()
         .skipUndefined()
         .select(USER_ADMIN_FIELDS)
         .whereNot({
           id: req.user.id,
         })
-        .where(columns.email, 'ilike', `%${req.query.search}%`)
-        .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
+        .where(columns.email, 'ilike', %${req.query.search}%)
+        .orWhere(columns.firstName, 'ilike', %${req.query.search}%)
         .offset(req.query.offset || 0)
         .limit(req.query.limit || config.search.USER_SEARCH_LIMIT);
 
-      const count = await instance.objection.models.user
+      const count = await User
         .query()
         .skipUndefined()
         .whereNot({
           id: req.user.id,
         })
-        .where(columns.email, 'ilike', `%${req.query.search}%`)
-        .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
+        .where(columns.email, 'ilike', %${req.query.search}%)
+        .orWhere(columns.firstName, 'ilike', %${req.query.search}%)
         .count('*');
-
-      return repl.status(200).send({ total: +count[0].count, data });
+       return repl.status(200).send({ total: +count[0].count, data });
     },
   });
 
@@ -174,7 +174,7 @@ const router = async (instance) => {
     handler: async (req, repl) => {
       const id = validateId(req.params.id, req.user.id);
 
-      const data = await instance.objection.models.user
+      const data = await User
         .query()
         .findById(id)
         .select(USER_ADMIN_FIELDS);
@@ -203,7 +203,7 @@ const router = async (instance) => {
         req.body.password = await bcrypt.hash(req.body.password, 12);
       }
 
-      const data = await instance.objection.models.user
+      const data = await User
         .query()
         .patch(req.body)
         .findById(id)
@@ -228,7 +228,7 @@ const router = async (instance) => {
     handler: async (req, repl) => {
       const id = validateId(req.params.id, req.user.id);
 
-      const result = await instance.objection.models.user
+      const result = await User
         .query()
         .deleteById(id);
 
@@ -253,7 +253,7 @@ const router = async (instance) => {
     handler: async (req, repl) => {
       const id = validateId(req.body.id, req.user.id);
 
-      const check = await instance.objection.models.userRole.query().findOne({
+      const check = await UserRole.query().findOne({
         userID: id,
         roleID: TEACHER_ROLE,
       });
@@ -262,7 +262,7 @@ const router = async (instance) => {
         return repl.status(400).send(ALTER_ROLE_FAIL);
       }
 
-      await instance.objection.models.userRole
+      await UserRole
         .query()
         .insert({
           userID: id,
@@ -287,7 +287,7 @@ const router = async (instance) => {
     handler: async (req, repl) => {
       const id = validateId(req.body.id, req.user.id);
 
-      const result = await instance.objection.models.userRole
+      const result = await UserRole
         .query()
         .delete()
         .where({
