@@ -7,9 +7,17 @@ import useGetLessons from '../../hooks/useGetLessons';
 import useGetStudents from '../../hooks/useGetStudents';
 import * as S from './TeacherHome.styled';
 
+const pageLessonsLimit = 8;
+const initialPage = 1;
+
 const TeacherHome = () => {
-  const { getLessonsRequest, lessonsData, isLoading } = useGetLessons();
-  const { getStudentsRequest, studentsData, isLoading: studentsIsLoading } = useGetStudents();
+  const { getLessonsRequest, lessonsData, isLoading, pagination, actions } =
+    useGetLessons(pageLessonsLimit, initialPage);
+  const {
+    getStudentsRequest,
+    studentsData,
+    isLoading: studentsIsLoading,
+  } = useGetStudents(pageLessonsLimit);
 
   useEffect(() => {
     getLessonsRequest();
@@ -18,7 +26,7 @@ const TeacherHome = () => {
 
   return (
     <S.Page>
-      <S.Wrapper gutter={[32, 32]} justify="center" align="top">
+      <S.Wrapper gutter={[32, 32]} justify="center" align="center">
         <Col span={17} align="middle">
           <TeacherInfo
             username="MrH"
@@ -27,14 +35,19 @@ const TeacherHome = () => {
             lessons={9}
             students={8}
           />
-          <LessonsDashboard lessons={lessonsData} loading={isLoading} />
+          <LessonsDashboard
+            lessons={lessonsData}
+            loading={isLoading}
+            pagination={pagination}
+            actions={actions}
+          />
         </Col>
         <Col span={7}>
           <StudentsList students={studentsData} loading={studentsIsLoading} />
         </Col>
       </S.Wrapper>
     </S.Page>
-  )
+  );
 };
 
 export default TeacherHome;
