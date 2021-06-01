@@ -208,7 +208,6 @@ const router = async (instance) => {
         .patch(req.body)
         .findById(id)
         .returning(USER_ADMIN_FIELDS);
-
       if (!data) {
         return repl.status(400).send(INVALID_PATCH);
       }
