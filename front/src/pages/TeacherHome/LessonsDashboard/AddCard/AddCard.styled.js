@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { Row, Typography } from 'antd';
 
-const { Title } = Typography
+const { Title } = Typography;
 
 export const Wrapper = styled(Row)`
   height: 100%;

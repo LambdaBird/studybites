@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Image, Space } from 'antd';
 import * as S from './AddCard.styled';
-import AddCardIcon from '../../../../resources/img/add_card.svg'
+import AddCardIcon from '../../../../resources/img/add_card.svg';
 
 const AddCard = () => {
   const { t } = useTranslation();
