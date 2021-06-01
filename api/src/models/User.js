@@ -1,5 +1,7 @@
 import objection from 'objection';
 
+import UserRole from './UserRole';
+
 class User extends objection.Model {
   static get tableName() {
     return 'users';
@@ -19,6 +21,19 @@ class User extends objection.Model {
         isConfirmed: { type: 'boolean' },
         createdAt: { type: 'string' },
         updatedAt: { type: 'string' },
+      },
+    };
+  }
+
+  static relationMappings() {
+    return {
+      id: {
+        relation: objection.Model.HasManyRelation,
+        modelClass: UserRole,
+        join: {
+          from: 'users.id',
+          to: 'users_roles.user_id',
+        },
       },
     };
   }

@@ -36,6 +36,23 @@
       "password": {
         "error": "Введите пароль"
       }
+    },
+    "admin_home": {
+      "title": "Все пользователи",
+      "table": {
+        "full_name": "Полное имя",
+        "email": "Email",
+        "role": "Роль",
+        "select_teacher": "Учитель",
+        "select_student": "Студент",
+        "edit": "Изменить"
+      },
+      "search": {
+        "placeholder": "Email или имя"
+      },
+      "buttons": {
+        "add_user": "Добавить пользователя"
+      }
     }
   }
 }
