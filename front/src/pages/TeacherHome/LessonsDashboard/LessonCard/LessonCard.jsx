@@ -32,8 +32,8 @@ const LessonCard = ({ cover, title, students, status }) => {
             </Text>
           ) : (
             <Space>
-              <Avatar.Group maxCount={3}>
-                {students.map((el) => (
+              <Avatar.Group>
+                {students.slice(0, 3).map((el) => (
                   <Tooltip key={el.id} title={el.name} placement="top">
                     <Avatar src={el.avatar} />
                   </Tooltip>
