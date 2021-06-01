@@ -13,10 +13,10 @@ export const getStudents = async () => {
     const fakeData = [...new Array(FakeDataNumber)].map((el, index) => ({
       id: index,
       name: `Student ${index}`,
-      cover: "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png",
+      cover: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
     }));
 
-    const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
     await sleep(1000);
 
