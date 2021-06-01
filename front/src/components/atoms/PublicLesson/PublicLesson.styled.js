@@ -40,12 +40,11 @@ export const AuthorContainer = styled.div`
   justify-content: space-around;
   background-color: ${WHITE_COLOR}; /
   height: 2.5rem;
-  width: 8rem;
   position: absolute;
   left: 2rem;
   bottom: 15%;
   border-radius: 5px;
-  padding: 0.5rem 0;
+  padding: 0.5rem 1rem;
 `;
 
 export const AuthorAvatar = styled(Avatar)`

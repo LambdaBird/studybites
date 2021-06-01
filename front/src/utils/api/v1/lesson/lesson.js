@@ -9,11 +9,11 @@ const getLessonsMocked = async ({ offset, limit, search }) => {
     id: i,
     name: `Lesson${i + 1}`,
     description: `Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci dignissimos eaque, hic magnam nemo officiis porro quidem recusandae repellat repellendus.`,
-    maintainer: `John Doe${i + 1}`,
+    author: `John Doe${i + 1}`,
   }));
   if (search) {
     data = data.filter(
-      (x) => x.name.includes(search) || x.maintainer.includes(search),
+      (x) => x.name.includes(search) || x.author.includes(search),
     );
   }
   await sleep(500);
