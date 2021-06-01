@@ -1,11 +1,20 @@
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { Button } from 'antd';
+import { useHistory } from 'react-router-dom';
+import { clearJWT } from '../../utils/jwt';
 
 const Home = () => {
-  const { t } = useTranslation();
+  const history = useHistory();
   return (
     <div className="App">
-      <h1>{t('general.hw')}</h1>
+      <Button
+        onClick={() => {
+          clearJWT();
+          history.push('/');
+        }}
+      >
+        Test clear JWT
+      </Button>
     </div>
   );
 };
