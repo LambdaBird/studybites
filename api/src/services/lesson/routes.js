@@ -52,14 +52,41 @@ const router = async (instance) => {
           status: 'Public',
         })
         .where(columns.name, 'ilike', `%${req.query.search}%`)
+        // eslint-disable-next-line func-names
+        .whereNot(function () {
+          this.whereIn(
+            'id',
+            instance.objection.models.userRole
+              .query()
+              .select('resourceId')
+              .where({
+                userID: req.user.id,
+                roleID: config.roles.STUDENT_ROLE,
+              }),
+          );
+        })
         .offset(req.query.offset || 0)
-        .limit(req.query.limit || config.search.LESSON_SEARCH_LIMIT);
+        .limit(req.query.limit || config.search.LESSON_SEARCH_LIMIT)
+        .debug();
 
       const count = await instance.objection.models.lesson
         .query()
         .skipUndefined()
         .where({
           status: 'Public',
+        })
+        // eslint-disable-next-line func-names
+        .whereNot(function () {
+          this.whereIn(
+            'id',
+            instance.objection.models.userRole
+              .query()
+              .select('resourceId')
+              .where({
+                userID: req.user.id,
+                roleID: config.roles.STUDENT_ROLE,
+              }),
+          );
         })
         .where(columns.name, 'ilike', `%${req.query.search}%`)
         .count('*');
