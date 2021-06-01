@@ -17,7 +17,4 @@ export default {
       name: 'Student',
     },
   },
-  search: {
-    USER_SEARCH_LIMIT: 10,
-  }
 };

@@ -20,6 +20,9 @@ const App = () => (
       <PrivateRoute path="/">
         <Home />
       </PrivateRoute>
+      <PrivateRoute path="/admin-home">
+        <AdminHome />
+      </PrivateRoute>
     </Switch>
   </Router>
 );

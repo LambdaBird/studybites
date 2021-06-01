@@ -42,6 +42,23 @@
       "password": {
         "error": "Please enter password"
       }
+    },
+    "admin_home": {
+      "title": "All users",
+      "table": {
+        "full_name": "Full Name",
+        "email": "Email",
+        "role": "Role",
+        "select_teacher": "Teacher",
+        "select_student": "Student",
+        "edit": "Edit"
+      },
+      "search": {
+        "placeholder": "Email or name"
+      },
+      "buttons": {
+        "add_user": "Add user"
+      }
     }
   }
 }

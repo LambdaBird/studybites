@@ -1,35 +1,35 @@
-const UNAUTHORIZED = {
-  fallback: 'errors.unauthorized',
-  errors: [
-    {
-      message: 'Unauthorized',
-    },
-  ],
-};
+import { UNAUTHORIZED } from './constants';
 
-const auth = async (instance, next, req, repl) => {
-  try {
-    const { User } = instance.models;
+const auth =
+  ({ instance, isAdminOnly = false }) =>
+  // eslint-disable-next-line consistent-return
+  async (req, repl) => {
+    try {
+      const { User } = instance.models;
 
-    const decoded = await req.jwtVerify();
-    req.userId = decoded.id;
+      const decoded = await req.jwtVerify();
+      req.userId = decoded.id;
 
-    if (!decoded.access) {
+      if (!decoded.access) {
+        return repl.status(401).send(UNAUTHORIZED);
+      }
+
+      const userData = await User.query().findOne({
+        id: decoded.id,
+      });
+
+      if (!userData) {
+        return repl.status(401).send(UNAUTHORIZED);
+      }
+
+      if (isAdminOnly) {
+        if (!userData.isSuperAdmin) {
+          return repl.status(401).send(UNAUTHORIZED);
+        }
+      }
+    } catch (err) {
       return repl.status(401).send(UNAUTHORIZED);
     }
-
-    const userData = await User.query().findOne({
-      id: decoded.id,
-    });
-
-    if (!userData) {
-      return repl.status(401).send(UNAUTHORIZED);
-    }
-
-    return next();
-  } catch (err) {
-    return repl.status(401).send(UNAUTHORIZED);
-  }
-};
+  };
 
 export default auth;

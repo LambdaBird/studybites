@@ -7,14 +7,16 @@ export const options = {
   recursive: true,
 };
 
+export const EMPTY_BODY = {
+  key: 'errors.empty_body',
+  message: 'Body must be an object',
+};
+
 const validatorCompiler = ({ schema }) => {
   return (data) => {
     try {
       if (!data) {
-        throw new yup.ValidationError({
-          key: 'errors.empty_body',
-          message: 'Body must be an object',
-        });
+        throw new yup.ValidationError(EMPTY_BODY);
       }
       return { value: schema.validateSync(data, options) };
     } catch (err) {
