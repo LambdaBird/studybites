@@ -1,9 +1,11 @@
+import { AuthorizationError } from '../../validation/errors';
+
 import { UNAUTHORIZED } from './constants';
 
 const auth =
   ({ instance, isAdminOnly = false }) =>
   // eslint-disable-next-line consistent-return
-  async (req, repl) => {
+  async (req) => {
     try {
       const { User } = instance.models;
 
@@ -11,7 +13,7 @@ const auth =
       req.userId = decoded.id;
 
       if (!decoded.access) {
-        return repl.status(401).send(UNAUTHORIZED);
+        throw new AuthorizationError(UNAUTHORIZED);
       }
 
       const userData = await User.query().findOne({
@@ -19,16 +21,16 @@ const auth =
       });
 
       if (!userData) {
-        return repl.status(401).send(UNAUTHORIZED);
+        throw new AuthorizationError(UNAUTHORIZED);
       }
 
       if (isAdminOnly) {
         if (!userData.isSuperAdmin) {
-          return repl.status(401).send(UNAUTHORIZED);
+          throw new AuthorizationError(UNAUTHORIZED);
         }
       }
     } catch (err) {
-      return repl.status(401).send(UNAUTHORIZED);
+      throw new AuthorizationError(UNAUTHORIZED);
     }
   };
 

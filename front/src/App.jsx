@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch } from 'react-router-dom';
 import Home from './pages/Home';
 import SignUp from './pages/SignUp';
 import SignIn from './pages/SignIn';
+import AdminHome from './pages/AdminHome';
 import PrivateRoute from './components/PrivateRoute';
 import Header from './components/moleculas/Header';
 import AuthRoute from './components/AuthRoute/AuthRoute';

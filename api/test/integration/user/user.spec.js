@@ -1,26 +1,32 @@
 import jest from 'jest-mock';
-import { UNAUTHORIZED } from '../../../src/services/user/constants';
+
 import build from '../../../src/app';
+import { UNAUTHORIZED } from '../../../src/services/user/constants';
 
 describe('Test user (self) route:', () => {
   let app;
+
   const signupBodyValid = {
     email: 'valid5@test.io',
     password: 'valid3',
     firstName: 'Valid',
     secondName: 'Valid',
   };
+
   const signinBodyValid = {
     email: 'valid5@test.io',
     password: 'valid3',
   };
+
   const tokens = {
     access: null,
     refresh: null,
     malformed: 'malformedtoken',
   };
+
   beforeAll(async () => {
     app = build();
+
     await app.ready();
 
     await app.inject({
@@ -36,6 +42,7 @@ describe('Test user (self) route:', () => {
     });
 
     const data = JSON.parse(response.payload);
+
     tokens.access = data.accessToken;
     tokens.refresh = data.refreshToken;
   });
@@ -63,6 +70,7 @@ describe('Test user (self) route:', () => {
     ['a malformed token', 'malformed'],
   ])('should return 401 for %s', async (_, payload) => {
     const originDateNow = Date.now;
+
     Date.now = jest.fn(() => 2687076708000);
 
     const response = await app.inject({
@@ -74,7 +82,7 @@ describe('Test user (self) route:', () => {
     });
 
     expect(response.statusCode).toBe(401);
-    expect(JSON.parse(response.payload)).toMatchObject(UNAUTHORIZED);
+    expect(JSON.parse(response.payload).errors[0]).toMatchObject(UNAUTHORIZED);
 
     Date.now = originDateNow;
   });

@@ -7,8 +7,8 @@
   "license": "Apache License 2.0",
   "scripts": {
     "dev": "./bootstrap",
-    "test:unit": "node --experimental-vm-modules node_modules/.bin/jest test/unit/",
-    "test:integration": "node ./init.js admin@test.io passwd3 && node --experimental-vm-modules node_modules/.bin/jest test/integration/"
+    "test:unit": "node --experimental-vm-modules --no-warnings node_modules/.bin/jest test/unit/",
+    "test:integration": "node ./init.js admin@test.io passwd3 && node --experimental-vm-modules --no-warnings node_modules/.bin/jest test/integration/"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",

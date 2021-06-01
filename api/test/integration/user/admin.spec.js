@@ -1,30 +1,35 @@
+import build from '../../../src/app';
 import {
-  INVALID_EMPTY_BODY,
-  INVALID_ID_FULL,
+  INVALID_ID,
   INVALID_PATCH,
   UNAUTHORIZED,
   USER_DELETED,
   USER_NOT_FOUND,
 } from '../../../src/services/user/constants';
-import build from '../../../src/app';
-import { signinBodyAdmin, signinBodyValid, signupBodyValid } from './constants';
+import { EMPTY_BODY } from '../../../src/validation/validatorCompiler';
+
+import { signinBodyAdmin } from './constants';
 
 describe('Test admin route:', () => {
   let app;
+
   const signupBodyValid = {
     email: 'valid4@test.io',
     password: 'valid3',
     firstName: 'Valid4',
     secondName: 'Valid4',
   };
+
   const signinBodyValid = {
     email: 'valid4@test.io',
     password: 'valid3',
   };
+
   const tokensAdmin = {
     access: null,
     refresh: null,
   };
+
   const tokensUser = {
     access: null,
     refresh: null,
@@ -32,7 +37,9 @@ describe('Test admin route:', () => {
 
   beforeAll(async () => {
     app = build();
+
     await app.ready();
+
     await app.inject({
       method: 'POST',
       url: '/api/v1/user/signup',
@@ -46,6 +53,7 @@ describe('Test admin route:', () => {
     });
 
     const adminData = JSON.parse(adminResponse.payload);
+
     tokensAdmin.access = adminData.accessToken;
     tokensAdmin.refresh = adminData.refreshToken;
 
@@ -56,6 +64,7 @@ describe('Test admin route:', () => {
     });
 
     const userData = JSON.parse(userResponse.payload);
+
     tokensUser.access = userData.accessToken;
     tokensUser.refresh = userData.refreshToken;
   });
@@ -88,13 +97,15 @@ describe('Test admin route:', () => {
       });
 
       expect(response.statusCode).toBe(401);
-      expect(JSON.parse(response.payload)).toMatchObject(UNAUTHORIZED);
+      expect(JSON.parse(response.payload).errors[0]).toMatchObject(
+        UNAUTHORIZED,
+      );
     });
   });
 
   describe('Test GET /:id route:', () => {
     it.each([
-      ['400 for user id that is admin', '1', 'admin', 400, INVALID_ID_FULL],
+      ['400 for user id that is admin', '1', 'admin', 400, INVALID_ID],
       ['401 for no admin', '1', 'user', 401, UNAUTHORIZED],
       ['404 for user that not exists', '999', 'admin', 404, USER_NOT_FOUND],
     ])('should return %s', async (_, userId, role, code, payload) => {
@@ -107,8 +118,9 @@ describe('Test admin route:', () => {
           }`,
         },
       });
+
       expect(response.statusCode).toBe(code);
-      expect(JSON.parse(response.payload)).toMatchObject(payload);
+      expect(JSON.parse(response.payload).errors[0]).toMatchObject(payload);
     });
 
     it('should return 200 for user that exists', async () => {
@@ -119,6 +131,7 @@ describe('Test admin route:', () => {
           Authorization: `Bearer ${tokensAdmin['access']}`,
         },
       });
+
       expect(response.statusCode).toBe(200);
       expect(JSON.parse(response.payload)).toHaveProperty('data');
     });
@@ -133,7 +146,7 @@ describe('Test admin route:', () => {
         { firstName: 'Test' },
         'admin',
         400,
-        INVALID_ID_FULL,
+        INVALID_ID,
       ],
       [
         '400 for user that not exists',
@@ -143,7 +156,7 @@ describe('Test admin route:', () => {
         400,
         INVALID_PATCH,
       ],
-      ['400 for empty body', '999', null, 'admin', 400, INVALID_EMPTY_BODY],
+      ['400 for empty body', '999', null, 'admin', 400, EMPTY_BODY],
     ])('should return %s', async (_, userId, body, role, code, payload) => {
       const response = await app.inject({
         method: 'PATCH',
@@ -157,7 +170,7 @@ describe('Test admin route:', () => {
       });
 
       expect(response.statusCode).toBe(code);
-      expect(JSON.parse(response.payload)).toMatchObject(payload);
+      expect(JSON.parse(response.payload).errors[0]).toMatchObject(payload);
     });
 
     it('should return 200 for valid data', async () => {
@@ -172,6 +185,7 @@ describe('Test admin route:', () => {
           firstName: NEW_FIRSTNAME,
         },
       });
+
       expect(response.statusCode).toBe(200);
       expect(JSON.parse(response.payload).data).toMatchObject({
         firstName: NEW_FIRSTNAME,
@@ -182,9 +196,8 @@ describe('Test admin route:', () => {
   describe('Test DELETE /:id route:', () => {
     it.each([
       ['401 for no admin', '1', 'user', 401, UNAUTHORIZED],
-      ['400 for user id that is admin', '1', 'admin', 400, INVALID_ID_FULL],
+      ['400 for user id that is admin', '1', 'admin', 400, INVALID_ID],
       ['404 for user that not exists', '999', 'admin', 404, USER_NOT_FOUND],
-      ['204 for valid data', '2', 'admin', 204, USER_DELETED],
     ])('should return %s', async (_, userId, role, code, payload) => {
       const response = await app.inject({
         method: 'DELETE',
@@ -195,8 +208,22 @@ describe('Test admin route:', () => {
           }`,
         },
       });
+
       expect(response.statusCode).toBe(code);
-      expect(JSON.parse(response.payload)).toMatchObject(payload);
+      expect(JSON.parse(response.payload).errors[0]).toMatchObject(payload);
     });
+  });
+
+  it('should return 200 for valid data', async () => {
+    const response = await app.inject({
+      method: 'DELETE',
+      url: '/api/v1/user/2',
+      headers: {
+        Authorization: `Bearer ${tokensAdmin['access']}`,
+      },
+    });
+
+    expect(response.statusCode).toBe(200);
+    expect(JSON.parse(response.payload)).toMatchObject(USER_DELETED);
   });
 });
