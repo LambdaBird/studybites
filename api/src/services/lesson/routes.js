@@ -1,3 +1,5 @@
+import objection from 'objection';
+
 import errorResponse from '../../validation/schemas';
 import validatorCompiler from '../../validation/validatorCompiler';
 import errorHandler from '../../validation/errorHandler';
@@ -32,7 +34,19 @@ const router = async (instance) => {
 
       const data = await instance.objection.models.lesson
         .query()
-        .select()
+        .select(
+          'lessons.*',
+          instance.objection.models.userRole
+            .relatedQuery('users')
+            .select(objection.raw(`concat_ws(' ', first_name, second_name)`))
+            .from('users')
+            .for(
+              instance.objection.models.lesson
+                .relatedQuery('users_roles')
+                .select('user_id'),
+            )
+            .as('author'),
+        )
         .skipUndefined()
         .where({
           status: 'Public',
@@ -69,6 +83,19 @@ const router = async (instance) => {
       const data = await instance.objection.models.lesson
         .query()
         .findById(id)
+        .select(
+          'lessons.*',
+          instance.objection.models.userRole
+            .relatedQuery('users')
+            .select(objection.raw(`concat_ws(' ', first_name, second_name)`))
+            .from('users')
+            .for(
+              instance.objection.models.lesson
+                .relatedQuery('users_roles')
+                .select('user_id'),
+            )
+            .as('author'),
+        )
         .where({
           status: 'Public',
         });
@@ -199,7 +226,7 @@ const router = async (instance) => {
       instance.auth({ instance }),
       instance.access({
         instance,
-        role: config.roles.MAINTAINER_ROLE,
+        role: config.roles.TEACHER_ROLE,
       }),
     ],
     handler: async (req, repl) => {
