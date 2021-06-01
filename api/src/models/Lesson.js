@@ -1,4 +1,7 @@
+/* eslint-disable import/no-cycle */
 import objection from 'objection';
+
+import UserRole from './UserRole';
 
 class Lesson extends objection.Model {
   static get tableName() {
@@ -19,6 +22,19 @@ class Lesson extends objection.Model {
         },
         createdAt: { type: 'string' },
         updatedAt: { type: 'string' },
+      },
+    };
+  }
+
+  static relationMappings() {
+    return {
+      users_roles: {
+        relation: objection.Model.HasManyRelation,
+        modelClass: UserRole,
+        join: {
+          from: 'lessons.id',
+          to: 'users_roles.resource_id',
+        },
       },
     };
   }

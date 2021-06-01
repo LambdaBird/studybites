@@ -1,3 +1,5 @@
+import objection from 'objection';
+
 import errorResponse from '../../validation/schemas';
 import validatorCompiler from '../../validation/validatorCompiler';
 import errorHandler from '../../validation/errorHandler';
@@ -22,14 +24,47 @@ const router = async (instance) => {
     errorHandler,
     onRequest: instance.auth({ instance }),
     handler: async (req, repl) => {
+      const columns = {
+        name: 'name',
+      };
+
+      if (!req.query.search) {
+        columns.name = undefined;
+      }
+
       const data = await instance.objection.models.lesson
         .query()
-        .select()
+        .select(
+          'lessons.*',
+          instance.objection.models.userRole
+            .relatedQuery('users')
+            .select(objection.raw(`concat_ws(' ', first_name, second_name)`))
+            .from('users')
+            .for(
+              instance.objection.models.lesson
+                .relatedQuery('users_roles')
+                .select('user_id'),
+            )
+            .as('author'),
+        )
+        .skipUndefined()
         .where({
           status: 'Public',
-        });
+        })
+        .where(columns.name, 'ilike', `%${req.query.search}%`)
+        .offset(req.query.offset || 0)
+        .limit(req.query.limit || config.search.LESSON_SEARCH_LIMIT);
 
-      return repl.status(200).send({ data });
+      const count = await instance.objection.models.lesson
+        .query()
+        .skipUndefined()
+        .where({
+          status: 'Public',
+        })
+        .where(columns.name, 'ilike', `%${req.query.search}%`)
+        .count('*');
+
+      return repl.status(200).send({ total: +count[0].count, data });
     },
   });
 
@@ -48,6 +83,19 @@ const router = async (instance) => {
       const data = await instance.objection.models.lesson
         .query()
         .findById(id)
+        .select(
+          'lessons.*',
+          instance.objection.models.userRole
+            .relatedQuery('users')
+            .select(objection.raw(`concat_ws(' ', first_name, second_name)`))
+            .from('users')
+            .for(
+              instance.objection.models.lesson
+                .relatedQuery('users_roles')
+                .select('user_id'),
+            )
+            .as('author'),
+        )
         .where({
           status: 'Public',
         });
@@ -82,18 +130,49 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: instance.auth({ instance, isTeacherOnly: true }),
+    onRequest: [
+      instance.auth({ instance }),
+      instance.access({
+        instance,
+        type: config.resources.LESSON,
+        role: config.roles.MAINTAINER_ROLE,
+      }),
+    ],
     handler: async (req, repl) => {
+      const columns = {
+        name: 'name',
+      };
+
+      if (!req.query.search) {
+        columns.name = undefined;
+      }
+
       const data = await instance.objection.models.userRole
         .relatedQuery('lessons')
+        .skipUndefined()
         .for(
           instance.objection.models.userRole.query().select().where({
             userID: req.user.id,
             roleID: config.roles.MAINTAINER_ROLE,
           }),
-        );
+        )
+        .where(columns.name, 'ilike', `%${req.query.search}%`)
+        .offset(req.query.offset || 0)
+        .limit(req.query.limit || config.search.LESSON_SEARCH_LIMIT);
 
-      return repl.status(200).send({ data });
+      const count = await instance.objection.models.userRole
+        .relatedQuery('lessons')
+        .skipUndefined()
+        .for(
+          instance.objection.models.userRole.query().select().where({
+            userID: req.user.id,
+            roleID: config.roles.MAINTAINER_ROLE,
+          }),
+        )
+        .where(columns.name, 'ilike', `%${req.query.search}%`)
+        .count('*');
+
+      return repl.status(200).send({ total: +count[0].count, data });
     },
   });
 
@@ -105,7 +184,14 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: instance.auth({ instance, isTeacherOnly: true }),
+    onRequest: [
+      instance.auth({ instance }),
+      instance.access({
+        instance,
+        type: config.resources.LESSON,
+        role: config.roles.MAINTAINER_ROLE,
+      }),
+    ],
     handler: async (req, repl) => {
       const id = validateId(req.params.id);
 
@@ -136,24 +222,39 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: instance.auth({ instance, isTeacherOnly: true }),
+    onRequest: [
+      instance.auth({ instance }),
+      instance.access({
+        instance,
+        role: config.roles.TEACHER_ROLE,
+      }),
+    ],
     handler: async (req, repl) => {
-      const data = await instance.objection.models.lesson
-        .query()
-        .insert(req.body)
-        .returning('*');
+      try {
+        const data = await instance.objection.models.lesson.transaction(
+          async (trx) => {
+            const lesson = await instance.objection.models.lesson
+              .query(trx)
+              .insert(req.body)
+              .returning('*');
 
-      await instance.objection.models.userRole
-        .query()
-        .insert({
-          userID: req.user.id,
-          roleID: config.roles.MAINTAINER_ROLE,
-          resourceType: 'lesson',
-          resourceId: data.id,
-        })
-        .returning('*');
+            await instance.objection.models.userRole
+              .query(trx)
+              .insert({
+                userID: req.user.id,
+                roleID: config.roles.MAINTAINER_ROLE,
+                resourceType: 'lesson',
+                resourceId: lesson.id,
+              })
+              .returning('*');
 
-      return repl.status(200).send({ data });
+            return lesson;
+          },
+        );
+        return repl.status(200).send({ data });
+      } catch (err) {
+        return err;
+      }
     },
   });
 
@@ -166,7 +267,14 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: instance.auth({ instance, isTeacherOnly: true }),
+    onRequest: [
+      instance.auth({ instance }),
+      instance.access({
+        instance,
+        type: config.resources.LESSON,
+        role: config.roles.MAINTAINER_ROLE,
+      }),
+    ],
     handler: async (req, repl) => {
       const id = validateId(req.params.id);
 
