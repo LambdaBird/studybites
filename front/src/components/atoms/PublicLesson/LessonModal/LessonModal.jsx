@@ -20,11 +20,18 @@ import {
   RightColumn,
   StartButton,
 } from './LessonModal.styled';
+import { postEnroll } from '../../../../utils/api/v1/lesson/lesson';
 
 const { Title, Text } = Typography;
 
 const LessonModal = ({ visible, setVisible, lesson }) => {
-  const { author, name, description } = lesson;
+  const { id, author, name, description } = lesson;
+
+  const onClickStartEnroll = async () => {
+    await postEnroll(id);
+    setVisible(false);
+  };
+
   return (
     <Modal
       centered
@@ -73,7 +80,7 @@ const LessonModal = ({ visible, setVisible, lesson }) => {
           <Divider />
         </ReviewBody>
         <ReviewFooter>
-          <StartButton size="large" type="primary">
+          <StartButton onClick={onClickStartEnroll} size="large" type="primary">
             Start
           </StartButton>
         </ReviewFooter>
