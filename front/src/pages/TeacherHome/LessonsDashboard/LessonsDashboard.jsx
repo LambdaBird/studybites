@@ -93,6 +93,7 @@ const LessonsDashboard = ({
                   cover={item.cover}
                   title={item.name}
                   students={item.students}
+                  status={item.status}
                 />
               </S.CardCol>
             ))

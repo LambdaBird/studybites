@@ -6,12 +6,21 @@ import * as S from './LessonCard.styled';
 
 const { Title, Text } = Typography;
 
-const LessonCard = ({ cover, title, students }) => {
+const LessonCard = ({ cover, title, students, status }) => {
   const { t } = useTranslation();
 
   return (
-    <S.Wrapper justify="center" align="center">
+    <S.Wrapper justify="center" align="middle">   
       <S.ImageCol span={8}>
+        {status === 'Draft'
+          ? (<S.ImageBlock>
+              <S.CardBadge>
+                <Text>
+                  {status}
+                </Text>
+              </S.CardBadge>
+            </S.ImageBlock>)
+          : null}   
         <S.CardImage src={cover} />
       </S.ImageCol>
       <S.CardDescription span={16}>
@@ -45,6 +54,7 @@ const LessonCard = ({ cover, title, students }) => {
 LessonCard.propTypes = {
   cover: PropTypes.string,
   title: PropTypes.string,
+  status: PropTypes.string,
   students: PropTypes.arrayOf(
     PropTypes.shape({
       avatar: PropTypes.string.isRequired,
@@ -57,6 +67,7 @@ LessonCard.defaultProps = {
   cover: '',
   title: '',
   students: [],
+  status: '',
 };
 
 export default LessonCard;
