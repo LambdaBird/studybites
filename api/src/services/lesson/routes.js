@@ -130,14 +130,11 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: [
-      instance.auth({ instance }),
-      instance.access({
-        instance,
-        type: config.resources.LESSON,
-        role: config.roles.MAINTAINER_ROLE,
-      }),
-    ],
+    onRequest: instance.auth({ instance }),
+    preHandler: instance.access({
+      instance,
+      role: config.roles.TEACHER_ROLE,
+    }),
     handler: async (req, repl) => {
       const columns = {
         name: 'name',
@@ -184,14 +181,13 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: [
-      instance.auth({ instance }),
-      instance.access({
-        instance,
-        type: config.resources.LESSON,
-        role: config.roles.MAINTAINER_ROLE,
-      }),
-    ],
+    onRequest: [instance.auth({ instance })],
+    preHandler: instance.access({
+      instance,
+      type: config.resources.LESSON,
+      role: config.roles.MAINTAINER_ROLE,
+      getId: (req) => req.params.id,
+    }),
     handler: async (req, repl) => {
       const id = validateId(req.params.id);
 
@@ -222,13 +218,11 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: [
-      instance.auth({ instance }),
-      instance.access({
-        instance,
-        role: config.roles.TEACHER_ROLE,
-      }),
-    ],
+    onRequest: instance.auth({ instance }),
+    preHandler: instance.access({
+      instance,
+      role: config.roles.TEACHER_ROLE,
+    }),
     handler: async (req, repl) => {
       try {
         const data = await instance.objection.models.lesson.transaction(
@@ -267,14 +261,13 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: [
-      instance.auth({ instance }),
-      instance.access({
-        instance,
-        type: config.resources.LESSON,
-        role: config.roles.MAINTAINER_ROLE,
-      }),
-    ],
+    onRequest: instance.auth({ instance }),
+    preHandler: instance.access({
+      instance,
+      type: config.resources.LESSON,
+      role: config.roles.MAINTAINER_ROLE,
+      getId: (req) => req.params.id,
+    }),
     handler: async (req, repl) => {
       const id = validateId(req.params.id);
 

@@ -11,7 +11,7 @@ export const MISSING_ROLE = {
 };
 
 const access =
-  ({ instance, type, role }) =>
+  ({ instance, type, role, getId = () => undefined }) =>
   // eslint-disable-next-line consistent-return
   async (req, repl) => {
     try {
@@ -19,7 +19,7 @@ const access =
         return repl.status(400).send(MISSING_ROLE);
       }
 
-      const id = parseInt(req.params.id || req.query.id, 10);
+      const id = getId(req);
 
       const data = await instance.objection.models.userRole
         .query()
@@ -28,8 +28,8 @@ const access =
         .where({
           userID: req.user.id,
           roleID: role,
-          resourceId: id || undefined,
           resourceType: type,
+          resourceId: id,
         });
 
       if (!data.length) {
