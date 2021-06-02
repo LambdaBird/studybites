@@ -404,8 +404,6 @@ const router = async (instance) => {
           }),
         )
         .where(columns.name, 'ilike', `%${req.query.search}%`)
-        .offset(req.query.offset || 0)
-        .limit(req.query.limit || config.search.LESSON_SEARCH_LIMIT)
         .count('*');
 
       return repl.status(200).send({ total: +count[0].count, data });
