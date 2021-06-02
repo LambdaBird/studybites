@@ -6,8 +6,8 @@ export const LessonsHeader = styled(Row)`
   width: 100%;
 `;
 
-export const LessonsMain = styled(Row)`
-  margin-bottom: 3rem;
-  margin-left: 0;
-  margin-right: 0;
+export const LessonsMainDiv = styled.div`
+  align-self: center;
+  height: 100%;
+  width: 100%;
 `;

@@ -45,3 +45,21 @@ export const getLessons = async (paramsData) => {
     };
   }
 };
+
+export const getEnrolledLessons = async (paramsData) => {
+  try {
+    const { status, data } = await axios.get(`${PATH}/enrolled/`, {
+      headers: {
+        Authorization: `Bearer ${getJWTAccessToken()}`,
+      },
+      params: paramsData,
+    });
+    return { status, data };
+  } catch (e) {
+    const { status, data } = e.response;
+    return {
+      status,
+      data,
+    };
+  }
+};
