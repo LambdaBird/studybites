@@ -4,7 +4,7 @@ import { Row, Typography, Empty } from 'antd';
 const { Title } = Typography;
 
 export const Wrapper = styled(Row)`
-  min-height: 90vh;
+  min-height: 52rem;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;

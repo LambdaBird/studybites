@@ -64,7 +64,7 @@ LessonCard.propTypes = {
 };
 
 LessonCard.defaultProps = {
-  cover: '',
+  cover: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
   title: '',
   students: [],
   status: '',

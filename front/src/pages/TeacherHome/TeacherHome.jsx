@@ -26,8 +26,8 @@ const TeacherHome = () => {
 
   return (
     <S.Page>
-      <S.Wrapper gutter={[32, 32]} justify="center" align="center">
-        <Col span={17} align="middle">
+      <S.Wrapper gutter={[32, 32]} justify="center" align="top" wrap={false}>
+        <Col span={17}>
           <TeacherInfo
             username="MrH"
             description="Very cool teacher | awesome"

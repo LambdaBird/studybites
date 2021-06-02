@@ -5,23 +5,16 @@ const { Title } = Typography;
 
 export const Wrapper = styled(Row)`
   margin-top: 48px;
-  display: flex;
-  flex-direction: column;
-  justify-items: center;
-  alignitems: center;
 `;
 
 export const CardCol = styled(Col)`
-  height: 22%;
+  height: 8rem;
   width: 100%;
 `;
 
 export const DashboardControls = styled(Row)`
   width: 100%;
-`;
-
-export const DashboardLessons = styled(Row)`
-  height: 65vh;
+  padding: 0 16px;
 `;
 
 export const IconImage = styled(Image)`
@@ -30,6 +23,14 @@ export const IconImage = styled(Image)`
 
 export const DashboardPagination = styled(Pagination)`
   align-self: flex-end;
+`;
+
+export const PaginationWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0 16px;
 `;
 
 export const DashboardTitle = styled(Title)`

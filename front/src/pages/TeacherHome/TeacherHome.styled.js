@@ -10,6 +10,6 @@ export const Wrapper = styled(Row)`
   width: 100%;
   min-height: 100vh;
   max-width: 1424px;
-  padding: 32px 16px 0 16px;
+  padding: 32px 16px 16px 16px;
   background: rgba(245, 245, 245, 1);
 `;

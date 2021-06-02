@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { Select, Space, Input, Button, Skeleton, Image } from 'antd';
+import { Row, Select, Space, Input, Button, Skeleton, Image } from 'antd';
 import useDebounce from '../../../hooks/useDebounce';
 import LessonCard from './LessonCard';
 import AddCard from './AddCard';
@@ -47,8 +47,8 @@ const LessonsDashboard = ({
   };
 
   return (
-    <S.Wrapper gutter={[0, 32]} justify="center" align="center">
-      <S.DashboardControls justify="space-between">
+    <Row gutter={[32, 32]} style={{ paddingTop: "3rem" }}>
+      <S.DashboardControls justify="space-between" align="middle">
         <Space size="middle">
           <S.DashboardTitle level={4}>
             {t('lesson_dashboard.title')}
@@ -85,18 +85,28 @@ const LessonsDashboard = ({
           {t('lesson_dashboard.add_button')}
         </Button>
       </S.DashboardControls>
-      <S.DashboardLessons gutter={[32, 32]} justify="start" align="center">
         {lessons
-          ? lessons.map((item) => (
-              <S.CardCol key={item.id} span={12}>
-                <LessonCard
-                  cover={item.cover}
-                  title={item.name}
-                  students={item.students}
-                  status={item.status}
-                />
-              </S.CardCol>
-            ))
+          ? <>
+              {lessons.map((item, index) => (
+                <S.CardCol key={item.id} span={12}>
+                  <LessonCard
+                    cover={lessons[index].cover}
+                    title={lessons[index].name}
+                    students={lessons[index].students}
+                    status={lessons[index].status}
+                  />
+                </S.CardCol>))}
+              {lessons.length < itemPerPage.length
+                ? <>
+                    <S.CardCol span={12}>
+                      <AddCard onClick={() => {}} />
+                    </S.CardCol>
+                    {itemPerPage.slice(0, lessons.length).map((el) => (
+                      <S.CardCol key={el.id} span={12} />
+                      ))}
+                  </>
+                : null}
+            </>
           : itemPerPage.map((el) => (
               <S.CardCol key={el.id} span={12}>
                 <Skeleton
@@ -107,33 +117,35 @@ const LessonsDashboard = ({
                 />
               </S.CardCol>
             ))}
-        {(lessons && lessons.length) < itemPerPage ? (
-          <S.CardCol span={12}>
-            <AddCard onClick={() => {}} />
-          </S.CardCol>
-        ) : null}
-      </S.DashboardLessons>
       {!loading ? (
-        <S.DashboardPagination
-          current={pagination.currentPage}
-          total={pagination.totalPage}
-          pageSize={pagination.pageLimit}
-          onChange={handlePaginationChange}
-          showSizeChanger={false}
-          size="small"
-        />
+        <S.PaginationWrapper>
+          <S.DashboardPagination
+            current={pagination.currentPage}
+            total={pagination.totalPage}
+            pageSize={pagination.pageLimit}
+            onChange={handlePaginationChange}
+            showSizeChanger={false}
+            size="small"
+          />
+        </S.PaginationWrapper>
       ) : null}
-    </S.Wrapper>
+    </Row>
   );
 };
 
 LessonsDashboard.propTypes = {
   lessons: PropTypes.arrayOf(
     PropTypes.shape({
-      cover: PropTypes.string.isRequired,
+      cover: PropTypes.string,
       name: PropTypes.string.isRequired,
       status: PropTypes.string.isRequired,
       id: PropTypes.number.isRequired,
+      students: PropTypes.arrayOf(
+        PropTypes.shape({
+          avatar: PropTypes.string.isRequired,
+          name: PropTypes.string.isRequired,
+        }),
+      ),
     }),
   ),
   loading: PropTypes.bool,
