@@ -1,5 +1,3 @@
-import objection from 'objection';
-
 import errorResponse from '../../validation/schemas';
 import validatorCompiler from '../../validation/validatorCompiler';
 import errorHandler from '../../validation/errorHandler';
@@ -34,19 +32,10 @@ const router = async (instance) => {
 
       const data = await instance.objection.models.lesson
         .query()
-        .select(
-          'lessons.*',
-          instance.objection.models.userRole
-            .relatedQuery('users')
-            .select(objection.raw(`concat_ws(' ', first_name, second_name)`))
-            .from('users')
-            .for(
-              instance.objection.models.lesson
-                .relatedQuery('users_roles')
-                .select('user_id'),
-            )
-            .as('author'),
-        )
+        .join('users_roles', 'lessons.id', '=', 'users_roles.resource_id')
+        .where('users_roles.role_id', config.roles.MAINTAINER_ROLE)
+        .join('users', 'users_roles.user_id', '=', 'users.id')
+        .select('lessons.*', 'users.first_name', 'users.second_name')
         .skipUndefined()
         .where({
           status: 'Public',
@@ -83,19 +72,10 @@ const router = async (instance) => {
       const data = await instance.objection.models.lesson
         .query()
         .findById(id)
-        .select(
-          'lessons.*',
-          instance.objection.models.userRole
-            .relatedQuery('users')
-            .select(objection.raw(`concat_ws(' ', first_name, second_name)`))
-            .from('users')
-            .for(
-              instance.objection.models.lesson
-                .relatedQuery('users_roles')
-                .select('user_id'),
-            )
-            .as('author'),
-        )
+        .join('users_roles', 'lessons.id', '=', 'users_roles.resource_id')
+        .where('users_roles.role_id', config.roles.MAINTAINER_ROLE)
+        .join('users', 'users_roles.user_id', '=', 'users.id')
+        .select('lessons.*', 'users.first_name', 'users.second_name')
         .where({
           status: 'Public',
         });
