@@ -8,7 +8,7 @@ import Header from './components/moleculas/Header';
 import AuthRoute from './components/AuthRoute/AuthRoute';
 import UserHome from './pages/UserHome/UserHome';
 import { GlobalBody } from './resources/styles/Global.styled';
-
+import UserLessons from './pages/UserLessons';
 
 const App = () => (
   <Router>
@@ -23,6 +23,9 @@ const App = () => (
       </AuthRoute>
       <PrivateRoute path="/user-home">
         <UserHome />
+      </PrivateRoute>
+      <PrivateRoute path="/user-lessons">
+        <UserLessons />
       </PrivateRoute>
       <PrivateRoute path="/">
         <Home />

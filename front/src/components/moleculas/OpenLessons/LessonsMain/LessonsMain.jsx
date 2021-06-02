@@ -12,9 +12,13 @@ import {
 } from './LessonsMain.styled';
 import PublicLesson from '../../../atoms/PublicLesson';
 import useTableRequest from '../../../../hooks/useTableRequest';
-import { getLessons } from '../../../../utils/api/v1/lesson/lesson';
+import {
+  getEnrolledLessons,
+  getLessons,
+} from '../../../../utils/api/v1/lesson/lesson';
+import OngoingLesson from '../../../atoms/OngoingLesson';
 
-const LessonsMain = ({ searchLessons }) => {
+const LessonsMain = ({ searchLessons, isOngoingLesson }) => {
   const { t } = useTranslation();
 
   const query = new URLSearchParams(useLocation().search);
@@ -30,7 +34,7 @@ const LessonsMain = ({ searchLessons }) => {
 
   const { loading, dataSource, pagination, handleTableChange } =
     useTableRequest({
-      requestFunc: getLessons,
+      requestFunc: isOngoingLesson ? getEnrolledLessons : getLessons,
       onChangePage: onChangeLessonPage,
       defaultPagination: {
         showSizeChanger: false,
@@ -89,7 +93,11 @@ const LessonsMain = ({ searchLessons }) => {
                   lg={{ span: 12 }}
                   md={{ span: 24 }}
                 >
-                  <PublicLesson lesson={lesson} />
+                  {isOngoingLesson ? (
+                    <OngoingLesson lesson={lesson} />
+                  ) : (
+                    <PublicLesson lesson={lesson} />
+                  )}
                 </LessonsColumn>
               ))}
             </Row>
@@ -122,10 +130,12 @@ const LessonsMain = ({ searchLessons }) => {
 
 LessonsMain.defaultProps = {
   searchLessons: null,
+  isOngoingLesson: false,
 };
 
 LessonsMain.propTypes = {
   searchLessons: PropTypes.string,
+  isOngoingLesson: PropTypes.bool,
 };
 
 export default LessonsMain;

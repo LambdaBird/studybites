@@ -54,6 +54,7 @@ export const getEnrolledLessons = async (paramsData) => {
       },
       params: paramsData,
     });
+
     return { status, data };
   } catch (e) {
     const { status, data } = e.response;
