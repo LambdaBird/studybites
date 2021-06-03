@@ -359,8 +359,21 @@ const router = async (instance) => {
         columns.name = undefined;
       }
 
-      const data = await instance.objection.models.userRole
-        .relatedQuery('lessons')
+      const data = await instance.objection.models.lesson
+        .query()
+        .select(
+          'lessons.*',
+          instance.objection.models.userRole
+            .relatedQuery('users')
+            .select(objection.raw(`concat_ws(' ', first_name, second_name)`))
+            .from('users')
+            .for(
+              instance.objection.models.lesson
+                .relatedQuery('users_roles')
+                .select('user_id'),
+            )
+            .as('author'),
+        )
         .skipUndefined()
         .for(
           instance.objection.models.userRole.query().select().where({

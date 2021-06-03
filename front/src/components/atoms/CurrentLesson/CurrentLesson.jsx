@@ -17,6 +17,7 @@ const { Title } = Typography;
 const CurrentLesson = ({ lesson }) => {
   const { t } = useTranslation();
   const { name, author } = lesson;
+
   return (
     <MainSpace>
       <LeftColumn span={8}>
