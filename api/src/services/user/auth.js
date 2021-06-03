@@ -1,36 +1,32 @@
-import { AuthorizationError } from '../../validation/errors';
-
 import { UNAUTHORIZED } from './constants';
 
 const auth =
   ({ instance, isAdminOnly = false }) =>
   // eslint-disable-next-line consistent-return
-  async (req) => {
+  async (req, repl) => {
     try {
-      const { User } = instance.models;
-
       const decoded = await req.jwtVerify();
       req.userId = decoded.id;
 
       if (!decoded.access) {
-        throw new AuthorizationError(UNAUTHORIZED);
+        return repl.status(401).send(UNAUTHORIZED);
       }
 
-      const userData = await User.query().findOne({
+      const userData = await instance.objection.models.user.query().findOne({
         id: decoded.id,
       });
 
       if (!userData) {
-        throw new AuthorizationError(UNAUTHORIZED);
+        return repl.status(401).send(UNAUTHORIZED);
       }
 
       if (isAdminOnly) {
         if (!userData.isSuperAdmin) {
-          throw new AuthorizationError(UNAUTHORIZED);
+          return repl.status(401).send(UNAUTHORIZED);
         }
       }
     } catch (err) {
-      throw new AuthorizationError(UNAUTHORIZED);
+      return repl.status(401).send(UNAUTHORIZED);
     }
   };
 

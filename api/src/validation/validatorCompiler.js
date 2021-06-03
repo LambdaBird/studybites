@@ -20,6 +20,9 @@ const validatorCompiler = ({ schema }) => {
       }
       return { value: schema.validateSync(data, options) };
     } catch (err) {
+      if (err.errors) {
+        err.message = err.errors;
+      }
       return { error: err };
     }
   };

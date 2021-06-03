@@ -3,9 +3,9 @@ import objection from 'objection';
 
 import UserRole from './UserRole';
 
-class User extends objection.Model {
+class Lesson extends objection.Model {
   static get tableName() {
-    return 'users';
+    return 'lessons';
   }
 
   static get jsonSchema() {
@@ -13,13 +13,13 @@ class User extends objection.Model {
       type: 'object',
       properties: {
         id: { type: 'integer' },
-        email: { type: 'string' },
-        password: { type: 'string' },
-        firstName: { type: 'string' },
-        secondName: { type: 'string' },
-        isSuperAdmin: { type: 'boolean' },
+        name: { type: 'string' },
         description: { type: 'string' },
-        isConfirmed: { type: 'boolean' },
+        status: {
+          type: 'string',
+          enum: ['Draft', 'Public', 'Private', 'Archived'],
+          default: 'Draft',
+        },
         createdAt: { type: 'string' },
         updatedAt: { type: 'string' },
       },
@@ -32,12 +32,12 @@ class User extends objection.Model {
         relation: objection.Model.HasManyRelation,
         modelClass: UserRole,
         join: {
-          from: 'users.id',
-          to: 'users_roles.user_id',
+          from: 'lessons.id',
+          to: 'users_roles.resource_id',
         },
       },
     };
   }
 }
 
-export default User;
+export default Lesson;
