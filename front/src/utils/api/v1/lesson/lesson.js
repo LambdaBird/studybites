@@ -45,3 +45,31 @@ export const getLessons = async (paramsData) => {
     };
   }
 };
+
+// learn lesson block
+
+export const getLessonToLearn = async (paramsData) => {
+  const { id } = paramsData;
+  try {
+    const { status, data } = await axios.get(`${PATH}/${id}`, {
+      headers: {
+        Authorization: `Bearer ${getJWTAccessToken()}`,
+      },
+    });
+
+    // mock block number, author and progress
+    const blocks = 6;
+    const progress = 3;
+    data.data.blocks = blocks;
+    data.data.progress = progress;
+    data.data.author = 'Author';
+
+    return { status, data };
+  } catch (e) {
+    const { status, data } = e.response;
+    return {
+      status,
+      data,
+    };
+  }
+};
