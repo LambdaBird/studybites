@@ -7,6 +7,7 @@ import PrivateRoute from './components/PrivateRoute';
 import Header from './components/moleculas/Header';
 import AuthRoute from './components/AuthRoute/AuthRoute';
 import UserHome from './pages/UserHome/UserHome';
+import LessonPage from './pages/LessonPage';
 import { GlobalBody } from './resources/styles/Global.styled';
 
 
@@ -23,6 +24,9 @@ const App = () => (
       </AuthRoute>
       <PrivateRoute path="/user-home">
         <UserHome />
+      </PrivateRoute>
+      <PrivateRoute path="/learn/:id">
+        <LessonPage />
       </PrivateRoute>
       <PrivateRoute path="/">
         <Home />
