@@ -51,6 +51,13 @@
       "lessons": {
         "not_found": "No open lessons yet"
       }
+    },
+    "lesson": {
+      "errors": {
+        "not_found": "Lesson not found"
+      },
+      "by": "By",
+      "blocks": "blocks"
     }
   }
 }
