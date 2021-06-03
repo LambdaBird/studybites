@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Avatar, Row, Typography } from 'antd';
+import { Avatar, Col, Row, Typography } from 'antd';
 import {
   DESCRIPTION_COLOR,
   VOLCANO_2,
@@ -9,17 +9,18 @@ import {
 
 const { Text } = Typography;
 
-export const MainSpace = styled.div`
+export const MainSpace = styled(Row)`
   display: flex;
   background-color: ${WHITE_COLOR};
   padding: 1rem;
+  height: 10rem;
 `;
 
-export const LeftContent = styled.div`
+export const LeftContent = styled(Col)`
   margin-right: 1.5rem;
 `;
 
-export const RightContent = styled.div`
+export const RightContent = styled(Col)`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -40,12 +41,15 @@ export const AuthorContainer = styled.div`
   justify-content: space-around;
   background-color: ${WHITE_COLOR}; /
   height: 2.5rem;
-  width: 8rem;
   position: absolute;
-  left: 2rem;
-  bottom: 15%;
+  left: 0.5rem;
+  bottom: 0.5rem;
   border-radius: 5px;
-  padding: 0.5rem 0;
+  padding: 0.5rem 0.5rem;
+`;
+
+export const LessonImg = styled.img`
+  height: 8rem;
 `;
 
 export const AuthorAvatar = styled(Avatar)`
@@ -54,6 +58,6 @@ export const AuthorAvatar = styled(Avatar)`
 `;
 
 export const AuthorName = styled(Typography.Link)`
-  margin-left: 1rem;
+  margin-left: 0.5rem;
   white-space: nowrap;
 `;
