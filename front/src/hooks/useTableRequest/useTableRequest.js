@@ -1,9 +1,13 @@
 import { useCallback, useState } from 'react';
 
-const useTableRequest = ({ requestFunc, onChangePage = () => {} }) => {
+const useTableRequest = ({
+  requestFunc,
+  onChangePage = () => {},
+  defaultPagination,
+}) => {
   const [dataSource, setDataSource] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [pagination, setPagination] = useState();
+  const [pagination, setPagination] = useState(defaultPagination);
   const [currentSearch, setCurrentSearch] = useState();
   const [currentPage, setCurrentPage] = useState();
   const [currentPageSize, setCurrentPageSize] = useState();
@@ -31,19 +35,25 @@ const useTableRequest = ({ requestFunc, onChangePage = () => {} }) => {
       setLoading(false);
       onChangePage(current);
       if (status === 200) {
+        if (data.total <= pageSize) {
+          setPagination(false);
+        } else {
+          setPagination({
+            showSizeChanger: false,
+            current,
+            pageSize,
+            total: data.total,
+          });
+        }
+
         setDataSource(data.data);
-        setPagination({
-          showSizeChanger: false,
-          current,
-          pageSize,
-          total: data.total,
-        });
       }
     },
     [currentPage, currentPageSize, currentSearch, onChangePage, requestFunc],
   );
 
   return {
+    currentPage,
     loading,
     dataSource,
     handleTableChange,

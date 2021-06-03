@@ -43,21 +43,17 @@
         "error": "Please enter password"
       }
     },
-    "admin_home": {
-      "title": "All users",
-      "table": {
-        "full_name": "Full Name",
-        "email": "Email",
-        "role": "Role",
-        "select_teacher": "Teacher",
-        "select_student": "Student",
-        "edit": "Edit"
+    "user_home": {
+      "open_lessons": {
+        "title": "Open lessons",
+        "not_found": "No open lessons yet",
+        "search": "Name or author",
+        "enroll_button": "Enroll"
       },
-      "search": {
-        "placeholder": "Email or name"
-      },
-      "buttons": {
-        "add_user": "Add user"
+      "ongoing_lessons": {
+        "title": "Ongoing lessons",
+        "view_all_lessons": "View all lessons",
+        "continue_button": "Continue"
       }
     }
   }

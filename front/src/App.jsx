@@ -7,9 +7,12 @@ import AdminHome from './pages/AdminHome';
 import PrivateRoute from './components/PrivateRoute';
 import Header from './components/moleculas/Header';
 import AuthRoute from './components/AuthRoute/AuthRoute';
+import UserHome from './pages/UserHome';
+import { GlobalBody } from './resources/styles/Global.styled';
 
 const App = () => (
   <Router>
+    <GlobalBody />
     <Header />
     <Switch>
       <AuthRoute path="/signIn">
@@ -18,6 +21,9 @@ const App = () => (
       <AuthRoute path="/signUp">
         <SignUp />
       </AuthRoute>
+      <PrivateRoute path="/user-home">
+        <UserHome />
+      </PrivateRoute>
       <PrivateRoute path="/">
         <Home />
       </PrivateRoute>
