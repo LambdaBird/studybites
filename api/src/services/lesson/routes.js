@@ -383,16 +383,7 @@ const router = async (instance) => {
         )
         .where(columns.name, 'ilike', `%${req.query.search}%`)
         .offset(req.query.offset || 0)
-        .limit(req.query.limit || config.search.LESSON_SEARCH_LIMIT)
-        .select('lessons.*')
-        .select(
-          'user_id',
-          instance.objection.knex.raw(
-            "json_build_object('firstName', first_name, 'secondName', second_name) as author",
-          ),
-        )
-        .join('users_roles', 'lessons.id', 'resource_id')
-        .join('users', 'user_id', 'users.id');
+        .limit(req.query.limit || config.search.LESSON_SEARCH_LIMIT);
 
       const count = await instance.objection.models.userRole
         .relatedQuery('lessons')

@@ -2,19 +2,20 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Col, Progress, Row, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
-import lessonImage from '../../../resources/img/lesson.jpg';
+import lessonImage from '../../../resources/img/lesson.svg';
 import {
-  AuthorContainer,
+  MainSpaced,
   MoreIconImg,
   ProgressBarCol,
 } from './OngoingLesson.styled';
 import {
   AuthorAvatar,
+  AuthorContainer,
   AuthorName,
   DescriptionText,
   EnrollRow,
   LeftContent,
-  MainSpace,
+  LessonImg,
   RightContent,
 } from '../PublicLesson/PublicLesson.styled';
 
@@ -26,21 +27,25 @@ const OngoingLesson = ({ lesson }) => {
   const { t } = useTranslation();
   const { name, description, author } = lesson;
   return (
-    <MainSpace size="large" wrap={false}>
+    <MainSpaced size="large" wrap={false}>
       <LeftContent>
-        <Col span={24}>
-          <img height="100%" src={lessonImage} alt="Lesson" />
-          <AuthorContainer>
-            <AuthorAvatar>{author?.[0]}</AuthorAvatar>
-            <AuthorName>{author}</AuthorName>
-          </AuthorContainer>
-        </Col>
-        <ProgressBarCol span={24}>
-          <Progress percent={50} />
-        </ProgressBarCol>
+        <Row>
+          <Col span={24}>
+            <div>
+              <LessonImg src={lessonImage} alt="Lesson" />
+              <AuthorContainer>
+                <AuthorAvatar>{author?.[0]}</AuthorAvatar>
+                <AuthorName>{author}</AuthorName>
+              </AuthorContainer>
+            </div>
+          </Col>
+          <ProgressBarCol span={24}>
+            <Progress percent={50} />
+          </ProgressBarCol>
+        </Row>
       </LeftContent>
       <RightContent>
-        <Row justify="space-between" align="flex-start">
+        <Row justify="space-between" align="top">
           <Title level={3}>{name}</Title>
           <MoreIconImg src={moreIcon} alt="more" />
         </Row>
@@ -53,7 +58,7 @@ const OngoingLesson = ({ lesson }) => {
           </Button>
         </EnrollRow>
       </RightContent>
-    </MainSpace>
+    </MainSpaced>
   );
 };
 
