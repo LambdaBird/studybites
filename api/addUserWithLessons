@@ -1,0 +1,4 @@
+#!/bin/sh
+export JWT_SECRET=tvXqYGduhyMw28EzyBxaGrFP8zQsmRG93GZHrmADmHsU9WwB7nbULUsJ98aAqWzM
+export DATABASE_URL=postgres://postgres:@localhost:5503/studybites
+yarn install && nodemon --es-module-specifier-resolution=node utils/addUserWithLessons.js
