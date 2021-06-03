@@ -57,7 +57,8 @@
         "not_found": "Lesson not found"
       },
       "by": "By",
-      "blocks": "blocks"
+      "blocks": "blocks",
+      "start": "Start"
     }
   }
 }
