@@ -6,12 +6,8 @@ import PasswordStrengthIndicator from '../../../components/atoms/PasswordStrengt
 import usePasswordInput from '../../../hooks/usePasswordInput';
 import useAuthentication from '../../../hooks/useAuthentication';
 import { postSignUp } from '../../../utils/api/v1/user';
-import {
-  DivAlignCenter,
-  FormItemPassword,
-  SubmitButton,
-  TextLink,
-} from './SignUpForm.styled';
+import { DivAlignCenter, SubmitButton, LinkButton } from './SignUpForm.styled';
+import { SIGN_IN } from '../../../utils/paths';
 
 const SignUpForm = () => {
   const { t } = useTranslation();
@@ -63,7 +59,7 @@ const SignUpForm = () => {
   );
 
   const onClickHaveAccount = () => {
-    history.push('/signIn');
+    history.push(SIGN_IN);
   };
 
   return (
@@ -92,22 +88,20 @@ const SignUpForm = () => {
         <Input placeholder={t('sign_up.email.placeholder')} />
       </Form.Item>
 
-      <FormItemPassword name="password" rules={formRules.password}>
+      <Form.Item name="password" rules={formRules.password}>
         <div>
-          <Input.Password placeholder="••••••••" />
+          <Input.Password placeholder={t('sign_up.password.placeholder')} />
           <PasswordStrengthIndicator value={password} />
         </div>
-      </FormItemPassword>
-
-      <Form.Item>
-        <SubmitButton type="primary" loading={loading} htmlType="submit">
-          {t('sign_up.button')}
-        </SubmitButton>
       </Form.Item>
+
+      <SubmitButton type="primary" loading={loading} htmlType="submit">
+        {t('sign_up.button')}
+      </SubmitButton>
       <DivAlignCenter>
-        <TextLink onClick={onClickHaveAccount} underline strong>
+        <LinkButton onClick={onClickHaveAccount}>
           {t('sign_up.have_account')}
-        </TextLink>
+        </LinkButton>
       </DivAlignCenter>
     </Form>
   );

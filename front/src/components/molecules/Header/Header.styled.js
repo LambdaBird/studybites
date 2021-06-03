@@ -4,13 +4,10 @@ import { Button, Row, Typography } from 'antd';
 const { Text } = Typography;
 
 export const RowMain = styled(Row)`
-  padding-left: 2.5rem;
-  padding-right: 2.5rem;
-  height: 3.5rem;
-`;
-
-export const LogoText = styled(Text)`
-  margin-left: 0.5rem;
+  padding: 1rem;
+  img {
+    height: 32px;
+  }
 `;
 
 export const ProfileText = styled(Text)`

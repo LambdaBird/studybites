@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { Col, Row } from 'antd';
 import { useHistory, useLocation } from 'react-router-dom';
-import { LogoText, ProfileText, RowMain, SignOutButton } from './Header.styled';
+import { ProfileText, RowMain, SignOutButton } from './Header.styled';
 import logoImg from '../../../resources/img/logo.svg';
 import profileImg from '../../../resources/img/profile.svg';
 import { clearJWT, getJWTAccessToken } from '../../../utils/jwt';
 
 const Header = () => {
-  const logoTitle = 'StudyBites';
   const history = useHistory();
   const location = useLocation();
   const [isAuth, setIsAuth] = useState(false);
@@ -27,9 +26,6 @@ const Header = () => {
         <Col>
           <Row align="middle">
             <img src={logoImg} alt="Logo" />
-            <LogoText strong level={5}>
-              {logoTitle}
-            </LogoText>
           </Row>
         </Col>
         {isAuth && (
