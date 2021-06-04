@@ -1,4 +1,5 @@
 /* eslint-disable */
+const path = require("path");
 const CracoAntDesignPlugin = require('craco-antd');
 
 module.exports = {
@@ -20,7 +21,12 @@ module.exports = {
         },
       },
     },
-  ],
+  ], 
+  webpack: {
+    alias: {
+      '@sb-ui': path.resolve(__dirname, 'src/'),
+    },
+  },
   babel: {
     plugins: ['babel-plugin-styled-components'],
   },

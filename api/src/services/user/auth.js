@@ -1,4 +1,4 @@
-import { AuthorizationError } from '../../validation/errors';
+import { AuthorizationError } from '@sb-api/validation/errors';
 
 import { UNAUTHORIZED } from './constants';
 

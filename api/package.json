@@ -7,6 +7,7 @@
   "license": "Apache License 2.0",
   "scripts": {
     "dev": "./bootstrap",
+    "postinstall": "link-module-alias",
     "test:unit": "node --experimental-vm-modules --no-warnings node_modules/.bin/jest test/unit/",
     "test:integration": "node ./init.js admin@test.io passwd3 && node --experimental-vm-modules --no-warnings node_modules/.bin/jest test/integration/"
   },
@@ -28,7 +29,12 @@
     "eslint-plugin-prettier": "^3.4.0",
     "jest": "^26.6.3",
     "jest-mock": "^26.6.2",
+    "link-module-alias": "^1.2.0",
     "nodemon": "^2.0.7",
     "prettier": "^2.3.0"
-  }
+  },
+  "_moduleAliases": {
+    "@sb-api": "./src/"
+  },
+  "_moduleAliasIgnoreWarning": "true"
 }
