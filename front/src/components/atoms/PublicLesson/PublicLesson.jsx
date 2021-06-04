@@ -7,25 +7,30 @@ import {
   AuthorContainer,
   AuthorName,
   DescriptionText,
+  LeftContent,
+  LessonImg,
   MainSpace,
+  RightContent,
 } from './PublicLesson.styled';
 
 const { Title } = Typography;
 
 const PublicLesson = ({ lesson }) => {
-  const { title, description, author } = lesson;
+  const { name, description, author } = lesson;
   return (
     <MainSpace size="large" wrap={false}>
-      <div>
-        <img src={lessonImage} alt="Lesson" />
-        <AuthorContainer>
-          <AuthorAvatar>{author?.[0]}</AuthorAvatar>
-          <AuthorName>{author}</AuthorName>
-        </AuthorContainer>
-      </div>
-      <div>
+      <LeftContent>
+        <div>
+          <LessonImg src={lessonImage} alt="Lesson" />
+          <AuthorContainer>
+            <AuthorAvatar>{author?.[0]}</AuthorAvatar>
+            <AuthorName>{author}</AuthorName>
+          </AuthorContainer>
+        </div>
+      </LeftContent>
+      <RightContent>
         <Row>
-          <Title level={3}>{title}</Title>
+          <Title level={3}>{name}</Title>
         </Row>
         <Row>
           <DescriptionText>{description}</DescriptionText>
@@ -35,7 +40,7 @@ const PublicLesson = ({ lesson }) => {
             Enroll
           </Button>
         </Row>
-      </div>
+      </RightContent>
     </MainSpace>
   );
 };
@@ -44,7 +49,7 @@ PublicLesson.propTypes = {
   lesson: PropTypes.exact({
     id: PropTypes.number.isRequired,
     author: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
   }).isRequired,
 };
