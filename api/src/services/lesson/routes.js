@@ -34,24 +34,27 @@ const router = async (instance) => {
 
       const data = await instance.objection.models.lesson
         .query()
-        .select(
-          'lessons.*',
-          instance.objection.models.userRole
-            .relatedQuery('users')
-            .select(objection.raw(`concat_ws(' ', first_name, second_name)`))
-            .from('users')
-            .for(
-              instance.objection.models.lesson
-                .relatedQuery('users_roles')
-                .select('user_id'),
-            )
-            .as('author'),
-        )
         .skipUndefined()
         .where({
           status: 'Public',
         })
         .where(columns.name, 'ilike', `%${req.query.search}%`)
+        .join('users_roles', 'lessons.id', '=', 'users_roles.resource_id')
+        .where('users_roles.role_id', config.roles.MAINTAINER_ROLE)
+        .join('users', 'users_roles.user_id', '=', 'users.id')
+        .select(
+          'lessons.*',
+          'users.first_name',
+          'users.second_name',
+          instance.objection.models.lesson
+            .relatedQuery('users_roles')
+            .select('roleID')
+            .where({
+              userID: req.user.id,
+              roleID: config.roles.STUDENT_ROLE,
+            })
+            .as('is_enrolled'),
+        )
         .offset(req.query.offset || 0)
         .limit(req.query.limit || config.search.LESSON_SEARCH_LIMIT);
 
