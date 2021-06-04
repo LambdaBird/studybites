@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { sleep } from '../../../utils';
+import { sleep } from '@sb-ui/utils';
 
 const PATH = '/api/v1/user';
 
