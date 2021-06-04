@@ -19,7 +19,7 @@ const App = () => (
       <AuthRoute path={paths.SIGN_UP}>
         <SignUp />
       </AuthRoute>
-      <PrivateRoute path={paths.HOME}>
+      <PrivateRoute exact path={paths.HOME}>
         <Home />
       </PrivateRoute>
       <PrivateRoute path={paths.ADMIN_HOME}>
