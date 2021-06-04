@@ -5,7 +5,7 @@
       "title": "Sign up to your account",
       "first_name": {
         "placeholder": "First name",
-        "error": "Please input your first name"
+        "error": "Please input your first name!"
       },
       "last_name": {
         "placeholder": "Last name",
@@ -60,6 +60,15 @@
       },
       "buttons": {
         "add_user": "Add user"
+      }
+    },
+    "user_home": {
+      "title": "Open lessons",
+      "search": {
+        "placeholder": "Name or author"
+      },
+      "lessons": {
+        "not_found": "No open lessons yet"
       }
     }
   }
