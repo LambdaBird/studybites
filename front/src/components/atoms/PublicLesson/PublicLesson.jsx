@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, Row, Typography } from 'antd';
 
-import lessonImage from '../../../resources/img/lesson.jpg';
+import lessonImage from '../../../resources/img/lesson.svg';
 import {
   AuthorAvatar,
   AuthorContainer,
@@ -10,6 +10,7 @@ import {
   DescriptionText,
   EnrollRow,
   LeftContent,
+  LessonImg,
   MainSpace,
   RightContent,
 } from './PublicLesson.styled';
@@ -17,15 +18,17 @@ import {
 const { Title } = Typography;
 
 const PublicLesson = ({ lesson }) => {
-  const { name, description, maintainer } = lesson;
+  const { name, description, author } = lesson;
   return (
     <MainSpace size="large" wrap={false}>
       <LeftContent>
-        <img src={lessonImage} alt="Lesson" />
-        <AuthorContainer>
-          <AuthorAvatar>{maintainer?.[0]}</AuthorAvatar>
-          <AuthorName>{maintainer}</AuthorName>
-        </AuthorContainer>
+        <div>
+          <LessonImg src={lessonImage} alt="Lesson" />
+          <AuthorContainer>
+            <AuthorAvatar>{author?.[0]}</AuthorAvatar>
+            <AuthorName>{author}</AuthorName>
+          </AuthorContainer>
+        </div>
       </LeftContent>
       <RightContent>
         <Row>
@@ -47,7 +50,7 @@ const PublicLesson = ({ lesson }) => {
 PublicLesson.propTypes = {
   lesson: PropTypes.exact({
     id: PropTypes.number.isRequired,
-    maintainer: PropTypes.string.isRequired,
+    author: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
   }).isRequired,

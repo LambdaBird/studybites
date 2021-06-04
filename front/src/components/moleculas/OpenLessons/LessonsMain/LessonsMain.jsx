@@ -68,16 +68,16 @@ const LessonsMain = ({ searchLessons }) => {
         {loading ? (
           <Row gutter={[16, 16]}>
             <Col lg={{ span: 12 }} md={{ span: 24 }}>
-              <Skeleton avatar paragraph={{}} />
+              <Skeleton avatar />
             </Col>
             <Col lg={{ span: 12 }} md={{ span: 24 }}>
-              <Skeleton avatar paragraph={{}} />
+              <Skeleton avatar />
             </Col>
             <Col lg={{ span: 12 }} md={{ span: 24 }}>
-              <Skeleton avatar paragraph={{}} />
+              <Skeleton avatar />
             </Col>
             <Col lg={{ span: 12 }} md={{ span: 24 }}>
-              <Skeleton avatar paragraph={{}} />
+              <Skeleton avatar />
             </Col>
           </Row>
         ) : (
