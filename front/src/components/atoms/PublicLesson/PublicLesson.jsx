@@ -7,6 +7,7 @@ import {
   AuthorContainer,
   AuthorName,
   DescriptionText,
+  EnrollRow,
   LeftContent,
   LessonImg,
   MainSpace,
@@ -16,7 +17,9 @@ import {
 const { Title } = Typography;
 
 const PublicLesson = ({ lesson }) => {
-  const { name, description, author } = lesson;
+  const { name, description, firstName, secondName } = lesson;
+  const author = `${firstName} ${secondName}`;
+
   return (
     <MainSpace size="large" wrap={false}>
       <LeftContent>
@@ -35,11 +38,11 @@ const PublicLesson = ({ lesson }) => {
         <Row>
           <DescriptionText>{description}</DescriptionText>
         </Row>
-        <Row justify="end">
+        <EnrollRow justify="end">
           <Button size="medium" type="secondary">
             Enroll
           </Button>
-        </Row>
+        </EnrollRow>
       </RightContent>
     </MainSpace>
   );
@@ -48,7 +51,8 @@ const PublicLesson = ({ lesson }) => {
 PublicLesson.propTypes = {
   lesson: PropTypes.exact({
     id: PropTypes.number.isRequired,
-    author: PropTypes.string.isRequired,
+    firstName: PropTypes.string.isRequired,
+    secondName: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
   }).isRequired,

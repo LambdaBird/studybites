@@ -56,3 +56,7 @@ export const AuthorName = styled(Typography.Link)`
   margin-left: 0.5rem;
   white-space: nowrap;
 `;
+
+export const EnrollRow = styled(Row)`
+  margin-top: auto;
+`;

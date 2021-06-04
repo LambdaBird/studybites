@@ -1,5 +1,9 @@
 import styled from 'styled-components';
-import { Empty, Pagination } from 'antd';
+import { Col, Empty, Pagination } from 'antd';
+
+export const LessonsColumn = styled(Col)`
+  width: 100%;
+`;
 
 export const LessonsMainDiv = styled.div`
   align-self: center;
