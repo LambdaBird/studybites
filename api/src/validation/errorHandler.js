@@ -1,22 +1,25 @@
 const errorArray = (m) => [].concat(m);
 
+const sendReply = (repl, status, fallback, errors) =>
+  repl.status(status).send({
+    fallback,
+    errors: errorArray(errors),
+  });
+
 const errorHandler = (error, _, reply) => {
   switch (error.name) {
     case 'ValidationError':
-      return reply.status(400).send({
-        fallback: 'errors.validation_error',
-        errors: errorArray(error.message),
-      });
+      return sendReply(reply, 400, 'errors.validation', error.errors);
+    case 'BadRequestError':
+      return sendReply(reply, 400, 'errors.bad_request', error.errors);
+    case 'AuthorizationError':
+      return sendReply(reply, 401, 'errors.authorization', error.errors);
+    case 'NotFoundError':
+      return sendReply(reply, 404, 'errors.not_found', error.errors);
     case 'UniqueViolationError':
-      return reply.status(409).send({
-        fallback: 'errors.unique_violation',
-        errors: Array.isArray(error.message) ? error.message : [error.message],
-      });
+      return sendReply(reply, 409, 'errors.unique_violation', error.errors);
     default:
-      return reply.status(500).send({
-        fallback: 'errors.internal_error',
-        errors: errorArray(error.message),
-      });
+      return sendReply(reply, 500, 'errors.internal', error.message);
   }
 };
 

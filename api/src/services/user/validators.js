@@ -1,29 +1,24 @@
-import yup, { ValidationError } from 'yup';
+import yup from 'yup';
 
 import {
   propertyTypeError,
   requiredPropertyError,
 } from '../../validation/helpers';
+
 import { INVALID_EMAIL, INVALID_PASSWORD, INVALID_ID } from './constants';
 
 const emailValidatorSignup = yup
   .string()
   .typeError(propertyTypeError('signup', 'email', 'string'))
   .required(requiredPropertyError('signup', 'email'))
-  .email({
-    key: 'signup.errors.email_format_err',
-    message: INVALID_EMAIL,
-  });
+  .email(INVALID_EMAIL);
 
 const passwordValidatorSignup = yup
   .string()
   .typeError(propertyTypeError('signup', 'password', 'string'))
   .required(requiredPropertyError('signup', 'password'))
-  .matches(/^(?=.*\d)(?=.*[a-zA-Z]).{5,}$/, {
-    message: {
-      key: 'signup.errors.password_regexp_err',
-      message: INVALID_PASSWORD,
-    },
+  .matches(/^(?=.*\d)(?=.*\D).{5,}$/, {
+    message: INVALID_PASSWORD,
   });
 
 const firstNameValidatorSignup = yup
@@ -49,19 +44,13 @@ const passwordValidatorSignin = yup
 const emailValidatorPatch = yup
   .string()
   .typeError(propertyTypeError('patch', 'email', 'string'))
-  .email({
-    key: 'patch.errors.email_format_err',
-    message: INVALID_EMAIL,
-  });
+  .email(INVALID_EMAIL);
 
 const passwordValidatorPatch = yup
   .string()
   .typeError(propertyTypeError('patch', 'password', 'string'))
   .matches(/^(?=.*\d)(?=.*[a-zA-Z]).{5,}$/, {
-    message: {
-      key: 'patch.errors.password_regexp_err',
-      message: INVALID_PASSWORD,
-    },
+    message: INVALID_PASSWORD,
   });
 
 const firstNameValidatorPatch = yup
@@ -114,7 +103,7 @@ export const validateId = (paramId, userId) => {
   const id = parseInt(paramId, 10);
 
   if (!id || id === userId) {
-    throw new ValidationError(INVALID_ID);
+    throw new yup.ValidationError(INVALID_ID);
   }
 
   return id;
