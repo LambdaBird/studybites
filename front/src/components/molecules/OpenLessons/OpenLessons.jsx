@@ -21,11 +21,11 @@ const OpenLessons = () => {
           <Row justify="center" align="middle">
             <Space size="large">
               <OpenLessonsTitle level={3}>
-                {t('user_home.title')}
+                {t('user_home.open_lessons.title')}
               </OpenLessonsTitle>
               <DebouncedSearch
                 delay={500}
-                placeholder={t('user_home.search.placeholder')}
+                placeholder={t('user_home.open_lessons.search')}
                 allowClear
                 onSearch={onSearchChange}
                 onChange={onSearchChange}
