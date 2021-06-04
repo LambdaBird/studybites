@@ -36,16 +36,5 @@
   "_moduleAliases": {
     "@sb-api": "./src/"
   },
-  "compilerOptions": {
-    "baseUrl": "src",
-    "paths": {
-      "@sb-api/*": [
-        "./*"
-      ]
-    }
-  },
-  "exclude": [
-    "node_modules",
-    "**/node_modules/*"
-  ]
+  "_moduleAliasIgnoreWarning": "true"
 }
