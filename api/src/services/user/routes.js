@@ -1,5 +1,7 @@
 import bcrypt from 'bcrypt';
 
+import config from '../../../config';
+
 import errorResponse from '../../validation/schemas';
 import validatorCompiler from '../../validation/validatorCompiler';
 import errorHandler from '../../validation/errorHandler';
@@ -28,11 +30,9 @@ import {
   ALTER_ROLE_SUCCESS,
   ALTER_ROLE_FAIL,
   USER_ROLE_NOT_FOUND,
-  USER_ROLE_DELETED,
   USER_FIELDS,
+  USER_ROLE_DELETED,
 } from './constants';
-
-import config from '../../../config';
 
 const router = async (instance) => {
   const { User, UserRole } = instance.models;
@@ -290,69 +290,6 @@ const router = async (instance) => {
 
       if (!result) {
         throw new NotFoundError(USER_ROLE_NOT_FOUND);
-      }
-
-      return repl.status(200).send(USER_DELETED);
-    },
-  });
-
-  instance.route({
-    method: 'POST',
-    url: '/appoint_teacher',
-    schema: {
-      body: roleBodyValidator,
-      response: errorResponse,
-    },
-    validatorCompiler,
-    errorHandler,
-    onRequest: instance.auth({ instance, isAdminOnly: true }),
-    handler: async (req, repl) => {
-      const id = validateId(req.body.id, req.user.id);
-
-      const check = await instance.objection.models.userRole.query().findOne({
-        userID: id,
-        roleID: 1,
-      });
-
-      if (check) {
-        return repl.status(400).send(ALTER_ROLE_FAIL);
-      }
-
-      await instance.objection.models.userRole
-        .query()
-        .insert({
-          userID: id,
-          roleID: config.roles.TEACHER_ROLE,
-        })
-        .returning('*');
-
-      return repl.status(200).send(ALTER_ROLE_SUCCESS);
-    },
-  });
-
-  instance.route({
-    method: 'POST',
-    url: '/remove_teacher',
-    schema: {
-      body: roleBodyValidator,
-      response: errorResponse,
-    },
-    validatorCompiler,
-    errorHandler,
-    onRequest: instance.auth({ instance, isAdminOnly: true }),
-    handler: async (req, repl) => {
-      const id = validateId(req.body.id, req.user.id);
-
-      const result = await instance.objection.models.userRole
-        .query()
-        .delete()
-        .where({
-          userID: id,
-          roleID: config.roles.TEACHER_ROLE,
-        });
-
-      if (!result) {
-        return repl.status(404).send(USER_ROLE_NOT_FOUND);
       }
 
       return repl.status(200).send(USER_ROLE_DELETED);

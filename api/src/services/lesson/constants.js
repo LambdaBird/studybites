@@ -4,13 +4,8 @@ export const INVALID_ID = {
 };
 
 export const NOT_FOUND = {
-  fallback: 'errors.not_found',
-  errors: [
-    {
-      key: 'lesson.errors.not_found',
-      message: 'Lesson not found',
-    },
-  ],
+  key: 'lesson.errors.not_found',
+  message: 'Lesson not found',
 };
 
 export const INVALID_STATUS = {

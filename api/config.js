@@ -19,5 +19,9 @@ export default {
   },
   search: {
     USER_SEARCH_LIMIT: 10,
+    LESSON_SEARCH_LIMIT: 10,
+  },
+  resources: {
+    LESSON: 'lesson',
   },
 };
