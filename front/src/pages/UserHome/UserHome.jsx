@@ -1,7 +1,7 @@
 import React from 'react';
 import { MainDiv } from './UserHome.styled';
-import OpenLessons from '../../components/moleculas/OpenLessons';
-import OngoingLessons from '../../components/moleculas/OngoingLessons';
+import OpenLessons from '../../components/molecules/OpenLessons';
+import OngoingLessons from '../../components/molecules/OngoingLessons';
 
 const UserHome = () => (
   <MainDiv>

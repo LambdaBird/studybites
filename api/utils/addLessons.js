@@ -27,9 +27,8 @@ const addLessons = async ({ name, description, status, userId }) => {
 };
 
 addLessons({
-  name: 'How to use Studybites',
-  description:
-    'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Adipisci dignissimos eaque, hic magnam nemo officiis porro quidem recusandae repellat repellendus.',
+  name: 'One more lesson',
+  description: 'Hello 444',
   status: 'Public',
   userId: 2,
 });
