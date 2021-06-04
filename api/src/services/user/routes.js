@@ -131,11 +131,13 @@ const router = async (instance) => {
       const columns = {
         email: 'email',
         firstName: 'firstName',
+        secondName: 'secondName',
       };
 
       if (!req.query.search) {
         columns.email = undefined;
         columns.firstName = undefined;
+        columns.secondName = undefined;
       }
 
       const data = await User.query()
@@ -146,6 +148,7 @@ const router = async (instance) => {
         })
         .where(columns.email, 'ilike', `%${req.query.search}%`)
         .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
+        .orWhere(columns.secondName, 'ilike', `%${req.query.search}%`)
         .offset(req.query.offset || 0)
         .limit(req.query.limit || config.search.USER_SEARCH_LIMIT);
 
@@ -156,6 +159,7 @@ const router = async (instance) => {
         })
         .where(columns.email, 'ilike', `%${req.query.search}%`)
         .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
+        .orWhere(columns.secondName, 'ilike', `%${req.query.search}%`)
         .count('*');
 
       return repl.status(200).send({ total: +count[0].count, data });
