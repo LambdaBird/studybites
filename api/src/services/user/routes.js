@@ -1,5 +1,7 @@
 import bcrypt from 'bcrypt';
 
+import config from '../../../config';
+
 import errorResponse from '../../validation/schemas';
 import validatorCompiler from '../../validation/validatorCompiler';
 import errorHandler from '../../validation/errorHandler';
@@ -28,11 +30,9 @@ import {
   ALTER_ROLE_SUCCESS,
   ALTER_ROLE_FAIL,
   USER_ROLE_NOT_FOUND,
-  USER_ROLE_DELETED,
   USER_FIELDS,
+  USER_ROLE_DELETED,
 } from './constants';
-
-import config from '../../../config';
 
 const router = async (instance) => {
   const { User, UserRole } = instance.models;
@@ -131,21 +131,26 @@ const router = async (instance) => {
       const columns = {
         email: 'email',
         firstName: 'firstName',
+        secondName: 'secondName',
       };
 
       if (!req.query.search) {
         columns.email = undefined;
         columns.firstName = undefined;
+        columns.secondName = undefined;
       }
 
       const data = await User.query()
         .skipUndefined()
         .select(USER_ADMIN_FIELDS)
+        .where(columns.email, 'ilike', `%${req.query.search}%`)
+        .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
         .whereNot({
           id: req.user.id,
         })
         .where(columns.email, 'ilike', `%${req.query.search}%`)
         .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
+        .orWhere(columns.secondName, 'ilike', `%${req.query.search}%`)
         .offset(req.query.offset || 0)
         .limit(req.query.limit || config.search.USER_SEARCH_LIMIT);
 
@@ -156,6 +161,7 @@ const router = async (instance) => {
         })
         .where(columns.email, 'ilike', `%${req.query.search}%`)
         .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
+        .orWhere(columns.secondName, 'ilike', `%${req.query.search}%`)
         .count('*');
 
       return repl.status(200).send({ total: +count[0].count, data });

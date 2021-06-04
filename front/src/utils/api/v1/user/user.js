@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { sleep } from '@sb-ui/utils';
+import { getJWTAccessToken } from '../../../jwt';
 
 const PATH = '/api/v1/user';
 
@@ -18,7 +18,7 @@ export const postSignUp = async (formData) => {
     };
   }
 };
-  
+
 export const postSignIn = async (formData) => {
   try {
     const { status, data } = await axios.post(`${PATH}/signin`, {
@@ -34,39 +34,25 @@ export const postSignIn = async (formData) => {
   }
 };
 
-const getUsersRequestMocked = async ({ offset, limit, search }) => {
-  let data = new Array(500).fill(1).map((x, i) => ({
-    key: i,
-    fullName: `A${i + 1}`,
-    email: `Email${i + 1}`,
-    role: 'teacher',
-  }));
-  if (search) {
-    data = data.filter(
-      (x) => x.email.includes(search) || x.fullName.includes(search),
-    );
-  }
-  await sleep(500);
-  return {
-    status: 200,
-    data: {
-      total: data.length,
-      data: data.slice(offset, offset + limit),
-    },
-  };
-};
-
-
-
 export const getUsers = async (paramsData) => {
   try {
-    /*
     const { status, data } = await axios.get(`${PATH}/`, {
+      headers: {
+        Authorization: `Bearer ${getJWTAccessToken()}`,
+      },
       params: paramsData,
     });
-     */
-    return await getUsersRequestMocked(paramsData);
-   } catch (e) {
+    return {
+      status,
+      data: {
+        ...data,
+        data: data.data.map((x) => ({
+          ...x,
+          fullName: `${x.firstName} ${x.secondName}`,
+        })),
+      },
+    };
+  } catch (e) {
     const { status, data } = e.response;
     return {
       status,
@@ -74,4 +60,3 @@ export const getUsers = async (paramsData) => {
     };
   }
 };
-

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect, Route } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { getJWTAccessToken } from '../../utils/jwt';
+import { getJWTAccessToken } from '../utils/jwt';
 
 const AuthRoute = ({ children: Component, ...rest }) => {
   const isLoggedIn = getJWTAccessToken();

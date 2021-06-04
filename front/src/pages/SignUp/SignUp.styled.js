@@ -1,10 +1,22 @@
 import styled from 'styled-components';
-import { Row } from 'antd';
+import { Typography } from 'antd';
 
-export const MainRow = styled(Row)`
-  padding-top: 4rem;
-  align-content: flex-start;
-  @media (max-width: 576px) {
-    padding-top: 0;
-  }
+const { Title } = Typography;
+
+export const StyledTitle = styled(Title)`
+  margin-bottom: 2rem !important;
+`;
+
+export const Container = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  margin-bottom: 16rem;
+`;
+
+export const SignUpFormContainer = styled.div`
+  width: 90%;
 `;

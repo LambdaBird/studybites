@@ -15,11 +15,14 @@ const AdminHome = () => {
   const { t } = useTranslation();
   const history = useHistory();
 
-  const onChangePage = useCallback((current) => {
-    history.push({
-      search: `?page=${current}`,
-    });
-  }, []);
+  const onChangePage = useCallback(
+    (current) => {
+      history.push({
+        search: `?page=${current}`,
+      });
+    },
+    [history],
+  );
 
   const { loading, dataSource, pagination, handleTableChange } =
     useTableRequest({

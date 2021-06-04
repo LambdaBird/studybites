@@ -6,7 +6,7 @@ import { setJWT, getJWTAccessToken, clearJWT } from '../utils/jwt';
 import '../i18n';
 import './mocks/matchMedia';
 import SignIn from '../pages/SignIn';
-import Header from '../components/moleculas/Header';
+import Header from '../components/molecules/Header';
 
 jest.mock('react-router-dom');
 jest.mock('../utils/jwt');
