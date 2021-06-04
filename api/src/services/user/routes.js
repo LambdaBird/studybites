@@ -23,7 +23,6 @@ import {
   ALTER_ROLE_FAIL,
   USER_ROLE_NOT_FOUND,
   USER_ROLE_DELETED,
-  TEACHER_ROLE,
 } from './constants';
 
 import config from '../../../config.json';
@@ -102,7 +101,7 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: instance.auth({ instance, isAdminOnly: false }),
+    onRequest: instance.auth({ instance }),
     handler: async (req, repl) => {
       const data = await instance.objection.models.user
         .query()
@@ -257,7 +256,7 @@ const router = async (instance) => {
         .query()
         .insert({
           userID: id,
-          roleID: TEACHER_ROLE,
+          roleID: config.roles.TEACHER_ROLE,
         })
         .returning('*');
 
@@ -283,7 +282,7 @@ const router = async (instance) => {
         .delete()
         .where({
           userID: id,
-          roleID: TEACHER_ROLE,
+          roleID: config.roles.TEACHER_ROLE,
         });
 
       if (!result) {
