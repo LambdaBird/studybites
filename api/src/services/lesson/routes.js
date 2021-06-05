@@ -50,8 +50,7 @@ const router = async (instance) => {
           'lessons.*',
           'users.first_name',
           'users.second_name',
-          instance.objection.models.lesson
-            .relatedQuery('users_roles')
+          Lesson.relatedQuery('users_roles')
             .select('roleID')
             .where({
               userID: req.user.id,
@@ -291,12 +290,11 @@ const router = async (instance) => {
     handler: async (req, repl) => {
       const id = validateId(req.params.id);
 
-      const lesson = await instance.objection.models.lesson
-        .query()
+      const lesson = await Lesson.query()
         .findById(id)
         .where({ status: 'Public' })
         .whereNotExists(
-          instance.objection.models.userRole.query().select().where({
+          UserRole.query().select().where({
             userID: req.user.id,
             roleID: config.roles.STUDENT_ROLE,
             resourceType: 'lesson',
@@ -308,8 +306,7 @@ const router = async (instance) => {
         return repl.status(400).send(INVALID_ENROLL);
       }
 
-      await instance.objection.models.userRole
-        .query()
+      await UserRole.query()
         .insert({
           userID: req.user.id,
           roleID: config.roles.STUDENT_ROLE,
@@ -340,11 +337,10 @@ const router = async (instance) => {
         columns.name = undefined;
       }
 
-      const data = await instance.objection.models.userRole
-        .relatedQuery('lessons')
+      const data = await UserRole.relatedQuery('lessons')
         .skipUndefined()
         .for(
-          instance.objection.models.userRole.query().select().where({
+          UserRole.query().select().where({
             userID: req.user.id,
             roleID: config.roles.STUDENT_ROLE,
           }),
@@ -353,11 +349,10 @@ const router = async (instance) => {
         .offset(req.query.offset || 0)
         .limit(req.query.limit || config.search.LESSON_SEARCH_LIMIT);
 
-      const count = await instance.objection.models.userRole
-        .relatedQuery('lessons')
+      const count = await UserRole.relatedQuery('lessons')
         .skipUndefined()
         .for(
-          instance.objection.models.userRole.query().select().where({
+          UserRole.query().select().where({
             userID: req.user.id,
             roleID: config.roles.STUDENT_ROLE,
           }),
@@ -379,7 +374,11 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: instance.auth({ instance, isTeacherOnly: true }),
+    onRequest: [instance.auth({ instance })],
+    preHandler: instance.access({
+      instance,
+      role: config.roles.TEACHER.id,
+    }),
     handler: async (req, repl) => {
       const id = validateId(req.params.id);
 
@@ -393,11 +392,10 @@ const router = async (instance) => {
         columns.firstName = undefined;
       }
 
-      const data = await instance.objection.models.userRole
-        .relatedQuery('users')
+      const data = await UserRole.relatedQuery('users')
         .skipUndefined()
         .for(
-          instance.objection.models.userRole.query().select('user_id').where({
+          UserRole.query().select('user_id').where({
             roleID: config.roles.STUDENT_ROLE,
             resourceId: id,
           }),
@@ -408,11 +406,10 @@ const router = async (instance) => {
         .offset(req.query.offset || 0)
         .limit(req.query.limit || config.search.USER_SEARCH_LIMIT);
 
-      const count = await instance.objection.models.userRole
-        .relatedQuery('users')
+      const count = await UserRole.relatedQuery('users')
         .skipUndefined()
         .for(
-          instance.objection.models.userRole.query().select('user_id').where({
+          UserRole.query().select('user_id').where({
             roleID: config.roles.STUDENT_ROLE,
             resourceId: id,
           }),
