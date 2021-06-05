@@ -1,5 +1,17 @@
 import bcrypt from 'bcrypt';
 
+import config from '../../../config';
+
+import errorResponse from '../../validation/schemas';
+import validatorCompiler from '../../validation/validatorCompiler';
+import errorHandler from '../../validation/errorHandler';
+import {
+  AuthorizationError,
+  BadRequestError,
+  NotFoundError,
+  UniqueViolationError,
+} from '../../validation/errors';
+
 import {
   signupBodyValidator,
   signinBodyValidator,
@@ -7,10 +19,6 @@ import {
   validateId,
   roleBodyValidator,
 } from './validators';
-import errorResponse from '../../validation/schemas';
-import validatorCompiler from '../../validation/validatorCompiler';
-import errorHandler from '../../validation/errorHandler';
-
 import { createAccessToken, createRefreshToken } from './utils';
 import {
   UNAUTHORIZED,
@@ -22,12 +30,13 @@ import {
   ALTER_ROLE_SUCCESS,
   ALTER_ROLE_FAIL,
   USER_ROLE_NOT_FOUND,
+  USER_FIELDS,
   USER_ROLE_DELETED,
 } from './constants';
 
-import config from '../../../config.json';
-
 const router = async (instance) => {
+  const { User, UserRole } = instance.models;
+
   instance.route({
     method: 'POST',
     url: '/signup',
@@ -41,10 +50,7 @@ const router = async (instance) => {
       req.body.password = await bcrypt.hash(req.body.password, 12);
 
       try {
-        const userData = await instance.objection.models.user
-          .query()
-          .insert(req.body)
-          .returning('*');
+        const userData = await User.query().insert(req.body).returning('*');
 
         const accessToken = createAccessToken(instance, userData);
         const refreshToken = createRefreshToken(instance, userData);
@@ -54,7 +60,7 @@ const router = async (instance) => {
           refreshToken,
         });
       } catch (err) {
-        return repl.status(409).send(USER_ALREADY_REGISTERED);
+        throw new UniqueViolationError(USER_ALREADY_REGISTERED);
       }
     },
   });
@@ -71,16 +77,16 @@ const router = async (instance) => {
     handler: async (req, repl) => {
       const { email, password } = req.body;
 
-      const userData = await instance.objection.models.user.query().findOne({
+      const userData = await User.query().findOne({
         email,
       });
       if (!userData) {
-        return repl.status(401).send(UNAUTHORIZED);
+        throw new AuthorizationError(UNAUTHORIZED);
       }
 
       const compareResult = await bcrypt.compare(password, userData.password);
       if (!compareResult) {
-        return repl.status(401).send(UNAUTHORIZED);
+        throw new AuthorizationError(UNAUTHORIZED);
       }
 
       const accessToken = createAccessToken(instance, userData);
@@ -103,12 +109,9 @@ const router = async (instance) => {
     errorHandler,
     onRequest: instance.auth({ instance }),
     handler: async (req, repl) => {
-      const data = await instance.objection.models.user
-        .query()
-        .findById(req.user.id)
-        .select(['id', 'email', 'firstName', 'secondName']);
+      const data = await User.query().findById(req.user.id).select(USER_FIELDS);
       if (!data) {
-        return repl.status(401).send(UNAUTHORIZED);
+        throw new AuthorizationError(UNAUTHORIZED);
       }
 
       return repl.status(200).send({ data });
@@ -128,15 +131,16 @@ const router = async (instance) => {
       const columns = {
         email: 'email',
         firstName: 'firstName',
+        secondName: 'secondName',
       };
 
       if (!req.query.search) {
         columns.email = undefined;
         columns.firstName = undefined;
+        columns.secondName = undefined;
       }
 
-      const data = await instance.objection.models.user
-        .query()
+      const data = await User.query()
         .skipUndefined()
         .select(USER_ADMIN_FIELDS)
         .where(columns.email, 'ilike', `%${req.query.search}%`)
@@ -144,10 +148,23 @@ const router = async (instance) => {
         .whereNot({
           id: req.user.id,
         })
+        .where(columns.email, 'ilike', `%${req.query.search}%`)
+        .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
+        .orWhere(columns.secondName, 'ilike', `%${req.query.search}%`)
         .offset(req.query.offset || 0)
-        .limit(req.query.limit || config.USER_SEARCH_LIMIT);
+        .limit(req.query.limit || config.search.USER_SEARCH_LIMIT);
 
-      return repl.status(200).send({ total: data.length, data });
+      const count = await User.query()
+        .skipUndefined()
+        .whereNot({
+          id: req.user.id,
+        })
+        .where(columns.email, 'ilike', `%${req.query.search}%`)
+        .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
+        .orWhere(columns.secondName, 'ilike', `%${req.query.search}%`)
+        .count('*');
+
+      return repl.status(200).send({ total: +count[0].count, data });
     },
   });
 
@@ -163,12 +180,9 @@ const router = async (instance) => {
     handler: async (req, repl) => {
       const id = validateId(req.params.id, req.user.id);
 
-      const data = await instance.objection.models.user
-        .query()
-        .findById(id)
-        .select(USER_ADMIN_FIELDS);
+      const data = await User.query().findById(id).select(USER_ADMIN_FIELDS);
       if (!data) {
-        return repl.status(404).send(USER_NOT_FOUND);
+        throw new NotFoundError(USER_NOT_FOUND);
       }
 
       return repl.status(200).send({ data });
@@ -192,14 +206,13 @@ const router = async (instance) => {
         req.body.password = await bcrypt.hash(req.body.password, 12);
       }
 
-      const data = await instance.objection.models.user
-        .query()
+      const data = await User.query()
         .patch(req.body)
         .findById(id)
         .returning(USER_ADMIN_FIELDS);
 
       if (!data) {
-        return repl.status(400).send(INVALID_PATCH);
+        throw new BadRequestError(INVALID_PATCH);
       }
 
       return repl.status(200).send({ data });
@@ -218,12 +231,10 @@ const router = async (instance) => {
     handler: async (req, repl) => {
       const id = validateId(req.params.id, req.user.id);
 
-      const result = await instance.objection.models.user
-        .query()
-        .deleteById(id);
+      const result = await User.query().deleteById(id);
 
       if (!result) {
-        return repl.status(404).send(USER_NOT_FOUND);
+        throw new NotFoundError(USER_NOT_FOUND);
       }
 
       return repl.status(200).send(USER_DELETED);
@@ -243,20 +254,19 @@ const router = async (instance) => {
     handler: async (req, repl) => {
       const id = validateId(req.body.id, req.user.id);
 
-      const check = await instance.objection.models.userRole.query().findOne({
+      const check = await UserRole.query().findOne({
         userID: id,
-        roleID: 1,
+        roleID: config.roles.TEACHER.id,
       });
 
       if (check) {
-        return repl.status(400).send(ALTER_ROLE_FAIL);
+        throw new BadRequestError(ALTER_ROLE_FAIL);
       }
 
-      await instance.objection.models.userRole
-        .query()
+      await UserRole.query()
         .insert({
           userID: id,
-          roleID: config.roles.TEACHER_ROLE,
+          roleID: config.roles.TEACHER.id,
         })
         .returning('*');
 
@@ -277,16 +287,13 @@ const router = async (instance) => {
     handler: async (req, repl) => {
       const id = validateId(req.body.id, req.user.id);
 
-      const result = await instance.objection.models.userRole
-        .query()
-        .delete()
-        .where({
-          userID: id,
-          roleID: config.roles.TEACHER_ROLE,
-        });
+      const result = await UserRole.query().delete().where({
+        userID: id,
+        roleID: config.roles.TEACHER.id,
+      });
 
       if (!result) {
-        return repl.status(404).send(USER_ROLE_NOT_FOUND);
+        throw new NotFoundError(USER_ROLE_NOT_FOUND);
       }
 
       return repl.status(200).send(USER_ROLE_DELETED);

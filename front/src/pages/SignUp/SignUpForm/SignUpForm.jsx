@@ -1,19 +1,24 @@
 import React, { useMemo } from 'react';
 import { Alert, Form, Input } from 'antd';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 import PasswordStrengthIndicator from '../../../components/atoms/PasswordStrengthIndicator';
 import usePasswordInput from '../../../hooks/usePasswordInput';
-import { FormItemPassword, SubmitButton } from './SignUpForm.styled';
-import useSignUp from '../../../hooks/useSignUp';
+import useAuthentication from '../../../hooks/useAuthentication';
+import { postSignUp } from '../../../utils/api/v1/user';
+import { DivAlignCenter, SubmitButton, LinkButton } from './SignUpForm.styled';
+import { SIGN_IN } from '../../../utils/paths';
 
 const SignUpForm = () => {
   const { t } = useTranslation();
+  const history = useHistory();
+
   const { password, passwordValidator } = usePasswordInput();
 
-  const [auth, error, setError, loading] = useSignUp();
+  const [auth, error, setError, loading] = useAuthentication(postSignUp);
 
-  const handleSubmit = (formData) => {
-    auth(formData);
+  const handleSubmit = async (formData) => {
+    await auth(formData);
   };
 
   const formRules = useMemo(
@@ -53,6 +58,10 @@ const SignUpForm = () => {
     [t, passwordValidator],
   );
 
+  const onClickHaveAccount = () => {
+    history.push(SIGN_IN);
+  };
+
   return (
     <Form layout="vertical" size="large" onFinish={handleSubmit}>
       {error && (
@@ -79,22 +88,21 @@ const SignUpForm = () => {
         <Input placeholder={t('sign_up.email.placeholder')} />
       </Form.Item>
 
-      <FormItemPassword
-        name="password"
-        rules={formRules.password}
-        style={{ marginBottom: 0, height: '100px' }}
-      >
+      <Form.Item name="password" rules={formRules.password}>
         <div>
-          <Input.Password placeholder="••••••••" />
+          <Input.Password placeholder={t('sign_up.password.placeholder')} />
           <PasswordStrengthIndicator value={password} />
         </div>
-      </FormItemPassword>
-
-      <Form.Item>
-        <SubmitButton type="primary" loading={loading} htmlType="submit">
-          {t('sign_up.button')}
-        </SubmitButton>
       </Form.Item>
+
+      <SubmitButton type="primary" loading={loading} htmlType="submit">
+        {t('sign_up.button')}
+      </SubmitButton>
+      <DivAlignCenter>
+        <LinkButton onClick={onClickHaveAccount}>
+          {t('sign_up.have_account')}
+        </LinkButton>
+      </DivAlignCenter>
     </Form>
   );
 };

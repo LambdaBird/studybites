@@ -1,4 +1,4 @@
-import yup, { ValidationError } from 'yup';
+import yup from 'yup';
 
 import {
   propertyTypeError,
@@ -40,7 +40,7 @@ export const validateId = (paramId) => {
   const id = parseInt(paramId, 10);
 
   if (!id) {
-    throw new ValidationError(INVALID_ID);
+    throw new yup.ValidationError(INVALID_ID);
   }
 
   return id;
