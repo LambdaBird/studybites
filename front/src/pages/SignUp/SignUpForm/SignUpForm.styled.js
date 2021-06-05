@@ -1,11 +1,20 @@
 import styled from 'styled-components';
-import { Button, Form } from 'antd';
+import { Button } from 'antd';
+import variables from '../../../theme/variables';
 
 export const SubmitButton = styled(Button)`
   width: 100%;
+  margin-top: 1rem;
 `;
 
-export const FormItemPassword = styled(Form.Item)`
-  margin-bottom: 0;
-  height: 100px;
+export const LinkButton = styled(Button).attrs({ type: 'link', size: 'small' })`
+  padding: 0;
+  margin-top: 0.5rem;
+  color: ${variables['text-color']};
+  & > span {
+    text-decoration: underline;
+  }
+`;
+export const DivAlignCenter = styled.div`
+  text-align: center;
 `;

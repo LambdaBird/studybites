@@ -1,8 +1,9 @@
-import objection from 'objection';
+import config from '../../../config';
 
 import errorResponse from '../../validation/schemas';
 import validatorCompiler from '../../validation/validatorCompiler';
 import errorHandler from '../../validation/errorHandler';
+import { NotFoundError } from '../../validation/errors';
 
 import {
   patchBodyValidator,
@@ -11,9 +12,9 @@ import {
 } from './validators';
 import { NOT_FOUND, INVALID_ENROLL, ENROLL_SUCCESS } from './constants';
 
-import config from '../../../config.json';
-
 const router = async (instance) => {
+  const { Lesson, UserRole } = instance.models;
+
   instance.route({
     method: 'GET',
     url: '/',
@@ -32,8 +33,11 @@ const router = async (instance) => {
         columns.name = undefined;
       }
 
-      const data = await instance.objection.models.lesson
-        .query()
+      const data = await Lesson.query()
+        .join('users_roles', 'lessons.id', '=', 'users_roles.resource_id')
+        .where('users_roles.role_id', config.roles.MAINTAINER.id)
+        .join('users', 'users_roles.user_id', '=', 'users.id')
+        .select('lessons.*', 'users.first_name', 'users.second_name')
         .skipUndefined()
         .where({
           status: 'Public',
@@ -58,8 +62,7 @@ const router = async (instance) => {
         .offset(req.query.offset || 0)
         .limit(req.query.limit || config.search.LESSON_SEARCH_LIMIT);
 
-      const count = await instance.objection.models.lesson
-        .query()
+      const count = await Lesson.query()
         .skipUndefined()
         .where({
           status: 'Public',
@@ -83,28 +86,18 @@ const router = async (instance) => {
     handler: async (req, repl) => {
       const id = validateId(req.params.id);
 
-      const data = await instance.objection.models.lesson
-        .query()
+      const data = await Lesson.query()
         .findById(id)
-        .select(
-          'lessons.*',
-          instance.objection.models.userRole
-            .relatedQuery('users')
-            .select(objection.raw(`concat_ws(' ', first_name, second_name)`))
-            .from('users')
-            .for(
-              instance.objection.models.lesson
-                .relatedQuery('users_roles')
-                .select('user_id'),
-            )
-            .as('author'),
-        )
+        .join('users_roles', 'lessons.id', '=', 'users_roles.resource_id')
+        .where('users_roles.role_id', config.roles.MAINTAINER.id)
+        .join('users', 'users_roles.user_id', '=', 'users.id')
+        .select('lessons.*', 'users.first_name', 'users.second_name')
         .where({
           status: 'Public',
         });
 
       if (!data) {
-        return repl.status(404).send(NOT_FOUND);
+        throw new NotFoundError(NOT_FOUND);
       }
 
       return repl.status(200).send({ data });
@@ -133,14 +126,11 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: [
-      instance.auth({ instance }),
-      instance.access({
-        instance,
-        type: config.resources.LESSON,
-        role: config.roles.MAINTAINER_ROLE,
-      }),
-    ],
+    onRequest: instance.auth({ instance }),
+    preHandler: instance.access({
+      instance,
+      role: config.roles.TEACHER.id,
+    }),
     handler: async (req, repl) => {
       const columns = {
         name: 'name',
@@ -150,26 +140,24 @@ const router = async (instance) => {
         columns.name = undefined;
       }
 
-      const data = await instance.objection.models.userRole
-        .relatedQuery('lessons')
+      const data = await UserRole.relatedQuery('lessons')
         .skipUndefined()
         .for(
-          instance.objection.models.userRole.query().select().where({
+          UserRole.query().select().where({
             userID: req.user.id,
-            roleID: config.roles.MAINTAINER_ROLE,
+            roleID: config.roles.MAINTAINER.id,
           }),
         )
         .where(columns.name, 'ilike', `%${req.query.search}%`)
         .offset(req.query.offset || 0)
         .limit(req.query.limit || config.search.LESSON_SEARCH_LIMIT);
 
-      const count = await instance.objection.models.userRole
-        .relatedQuery('lessons')
+      const count = await UserRole.relatedQuery('lessons')
         .skipUndefined()
         .for(
-          instance.objection.models.userRole.query().select().where({
+          UserRole.query().select().where({
             userID: req.user.id,
-            roleID: config.roles.MAINTAINER_ROLE,
+            roleID: config.roles.MAINTAINER.id,
           }),
         )
         .where(columns.name, 'ilike', `%${req.query.search}%`)
@@ -187,29 +175,27 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: [
-      instance.auth({ instance }),
-      instance.access({
-        instance,
-        type: config.resources.LESSON,
-        role: config.roles.MAINTAINER_ROLE,
-      }),
-    ],
+    onRequest: [instance.auth({ instance })],
+    preHandler: instance.access({
+      instance,
+      type: config.resources.LESSON,
+      role: config.roles.MAINTAINER.id,
+      getId: (req) => req.params.id,
+    }),
     handler: async (req, repl) => {
       const id = validateId(req.params.id);
 
-      const data = await instance.objection.models.userRole
-        .relatedQuery('lessons')
+      const data = await UserRole.relatedQuery('lessons')
         .for(
-          instance.objection.models.userRole.query().select().where({
+          UserRole.query().select().where({
             userID: req.user.id,
-            roleID: config.roles.MAINTAINER_ROLE,
+            roleID: config.roles.MAINTAINER.id,
           }),
         )
         .where('id', id);
 
       if (!data) {
-        return repl.status(404).send(NOT_FOUND);
+        throw new NotFoundError(NOT_FOUND);
       }
 
       return repl.status(200).send({ data });
@@ -225,38 +211,32 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: [
-      instance.auth({ instance }),
-      instance.access({
-        instance,
-        role: config.roles.TEACHER_ROLE,
-      }),
-    ],
+    onRequest: instance.auth({ instance }),
+    preHandler: instance.access({
+      instance,
+      role: config.roles.TEACHER.id,
+    }),
     handler: async (req, repl) => {
       try {
-        const data = await instance.objection.models.lesson.transaction(
-          async (trx) => {
-            const lesson = await instance.objection.models.lesson
-              .query(trx)
-              .insert(req.body)
-              .returning('*');
+        const data = await Lesson.transaction(async (trx) => {
+          const lesson = await Lesson.query(trx)
+            .insert(req.body)
+            .returning('*');
 
-            await instance.objection.models.userRole
-              .query(trx)
-              .insert({
-                userID: req.user.id,
-                roleID: config.roles.MAINTAINER_ROLE,
-                resourceType: 'lesson',
-                resourceId: lesson.id,
-              })
-              .returning('*');
+          await UserRole.query(trx)
+            .insert({
+              userID: req.user.id,
+              roleID: config.roles.MAINTAINER.id,
+              resourceType: config.resources.LESSON,
+              resourceId: lesson.id,
+            })
+            .returning('*');
 
-            return lesson;
-          },
-        );
+          return lesson;
+        });
         return repl.status(200).send({ data });
       } catch (err) {
-        return err;
+        throw new Error(err);
       }
     },
   });
@@ -270,23 +250,21 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: [
-      instance.auth({ instance }),
-      instance.access({
-        instance,
-        type: config.resources.LESSON,
-        role: config.roles.MAINTAINER_ROLE,
-      }),
-    ],
+    onRequest: instance.auth({ instance }),
+    preHandler: instance.access({
+      instance,
+      type: config.resources.LESSON,
+      role: config.roles.MAINTAINER.id,
+      getId: (req) => req.params.id,
+    }),
     handler: async (req, repl) => {
       const id = validateId(req.params.id);
 
-      const data = await instance.objection.models.userRole
-        .relatedQuery('lessons')
+      const data = await UserRole.relatedQuery('lessons')
         .for(
-          instance.objection.models.userRole.query().select().where({
+          UserRole.query().select().where({
             userID: req.user.id,
-            roleID: config.roles.MAINTAINER_ROLE,
+            roleID: config.roles.MAINTAINER.id,
             resourceId: id,
           }),
         )
@@ -294,7 +272,7 @@ const router = async (instance) => {
         .returning('*');
 
       if (!data) {
-        return repl.status(400).send(NOT_FOUND);
+        throw new NotFoundError(NOT_FOUND);
       }
 
       return repl.status(200).send({ data });

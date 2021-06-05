@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { postSignUp } from '../../utils/api/v1/user';
+import { useHistory } from 'react-router-dom';
+import { setJWT } from '../../utils/jwt';
 
 const getTranslationFromMessageData = (t, data) => {
   const { key, message } = data;
@@ -12,39 +12,36 @@ const getTranslationFromMessageData = (t, data) => {
   return text;
 };
 
-const useSignUp = () => {
+const useAuthentication = (requestFunc) => {
   const { t } = useTranslation();
   const history = useHistory();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState(null);
   const auth = async (formData) => {
     setError(null);
-    setMessage(null);
     setLoading(true);
 
-    const { status, data } = await postSignUp(formData);
+    const { status, data } = await requestFunc(formData);
     setLoading(false);
-    if (status === 201) {
-      const text = getTranslationFromMessageData(t, data);
+    if (status.toString().startsWith('2')) {
+      setJWT(data);
       history.push('/');
-      setMessage(text);
     } else {
       const { errors, fallback } = data;
       let textError = errors
         ?.map((errorData) => getTranslationFromMessageData(t, errorData))
         .join(', ');
       if (!textError) {
-        textError = fallback;
+        textError = t(fallback);
       }
       if (!fallback) {
-        textError = t('sign_up.error.no_internet');
+        textError = t('errors.no_internet');
       }
       setError(textError);
     }
   };
 
-  return [auth, error, setError, loading, message];
+  return [auth, error, setError, loading];
 };
 
-export default useSignUp;
+export default useAuthentication;
