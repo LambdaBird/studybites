@@ -87,7 +87,7 @@ const router = async (instance) => {
 
       const lesson = await await Lesson.query()
         .findById(id)
-        .withGraphFetched('[authors, students]');
+        .withGraphFetched('authors');
 
       if (!lesson) {
         throw new NotFoundError(NOT_FOUND);
@@ -106,8 +106,8 @@ const router = async (instance) => {
     validatorCompiler,
     errorHandler,
     onRequest: instance.auth({ instance }),
-    handler: async (req, repl) => {
-      return repl.status(200).send(['Draft', 'Public', 'Private', 'Archived']);
+    handler: async (_, repl) => {
+      return repl.status(200).send(Lesson.jsonSchema);
     },
   });
 
