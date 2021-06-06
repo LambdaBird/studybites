@@ -2,13 +2,7 @@
   "compilerOptions": {
     "module": "commonjs",
     "target": "esnext",
-    "baseUrl": "src",
-    "paths": {
-      "@sb-api/*": ["./*"]
-    }
+    "baseUrl": "src"
   },
-  "exclude": [
-    "node_modules",
-    "**/node_modules/*"
-  ]
+  "exclude": ["node_modules", "**/node_modules/*"]
 }

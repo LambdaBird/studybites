@@ -39,7 +39,7 @@ export const INVALID_PASSWORD = {
 
 export const USER_ROLE_NOT_FOUND = {
   key: 'admin.user.role_not_found',
-  message: 'User`s role not found',
+  message: "User's role not found",
 };
 
 export const ALTER_ROLE_FAIL = {
@@ -63,7 +63,7 @@ export const ALTER_ROLE_SUCCESS = {
 
 export const USER_ROLE_DELETED = {
   key: 'admin.user.role_deleted',
-  message: 'User`s role deleted successfully',
+  message: 'Role deleted successfully',
 };
 
 /**

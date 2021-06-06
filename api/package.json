@@ -1,10 +1,10 @@
 {
-  "name": "StudyBites-api",
+  "name": "studybites-api",
   "version": "0.0.1",
+  "private": true,
   "main": "server.js",
   "type": "module",
   "repository": "https://github.com/LambdaBird/studyBites",
-  "license": "Apache License 2.0",
   "scripts": {
     "dev": "./bootstrap",
     "test:unit": "node --experimental-vm-modules --no-warnings node_modules/.bin/jest test/unit/",

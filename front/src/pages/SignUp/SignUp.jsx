@@ -1,4 +1,3 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Container, SignUpFormContainer, StyledTitle } from './SignUp.styled';
 import SignUpForm from './SignUpForm';

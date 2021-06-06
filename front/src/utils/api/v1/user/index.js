@@ -1,3 +1,1 @@
-import { postSignUp, postSignIn } from './user';
-
-export { postSignUp, postSignIn };
+export * from './user';

@@ -60,3 +60,66 @@ export const getUsers = async (paramsData) => {
     };
   }
 };
+
+export const appointTeacher = async (id) => {
+  try {
+    const { status, data } = await axios.post(
+      `${PATH}/appoint_teacher`,
+      { id },
+      {
+        headers: {
+          Authorization: `Bearer ${getJWTAccessToken()}`,
+        },
+      },
+    );
+    return { status, data };
+  } catch (e) {
+    const { status, data } = e.response;
+    return {
+      status,
+      data,
+    };
+  }
+};
+
+export const removeTeacher = async (id) => {
+  try {
+    const { status, data } = await axios.post(
+      `${PATH}/remove_teacher`,
+      { id },
+      {
+        headers: {
+          Authorization: `Bearer ${getJWTAccessToken()}`,
+        },
+      },
+    );
+    return { status, data };
+  } catch (e) {
+    const { status, data } = e.response;
+    return {
+      status,
+      data,
+    };
+  }
+};
+
+export const getUser = async () => {
+  try {
+    const { status, data } = await axios.get(`${PATH}/self`, {
+      headers: {
+        Authorization: `Bearer ${getJWTAccessToken()}`,
+      },
+    });
+
+    return {
+      status,
+      data,
+    };
+  } catch (e) {
+    const { status, data } = e.response;
+    return {
+      status,
+      data,
+    };
+  }
+};
