@@ -4,6 +4,8 @@ import objection from 'objection';
 import User from './User';
 import UserRole from './UserRole';
 
+import config from '../../config';
+
 class Lesson extends objection.Model {
   static get tableName() {
     return 'lessons';
@@ -29,10 +31,30 @@ class Lesson extends objection.Model {
 
   static relationMappings() {
     return {
-      users: {
+      students: {
         relation: objection.Model.ManyToManyRelation,
         modelClass: User,
-        filter: (query) => query.select('id', 'first_name', 'second_name'),
+        join: {
+          from: 'lessons.id',
+          through: {
+            modelClass: UserRole,
+            from: 'users_roles.resource_id',
+            to: 'users_roles.user_id',
+          },
+          to: 'users.id',
+        },
+        modify: (query) => {
+          return query
+            .where({
+              resource_type: 'lesson',
+              role_id: config.roles.STUDENT.id,
+            })
+            .select('id', 'first_name', 'last_name');
+        },
+      },
+      authors: {
+        relation: objection.Model.ManyToManyRelation,
+        modelClass: User,
         join: {
           from: 'lessons.id',
           through: {
@@ -41,13 +63,13 @@ class Lesson extends objection.Model {
           },
           to: 'users.id',
         },
-      },
-      users_roles: {
-        relation: objection.Model.HasManyRelation,
-        modelClass: UserRole,
-        join: {
-          from: 'lessons.id',
-          to: 'users_roles.resource_id',
+        modify: (query) => {
+          return query
+            .where({
+              resource_type: 'lesson',
+            })
+            .whereIn('role_id', [config.roles.MAINTAINER.id])
+            .select('id', 'first_name', 'last_name', 'role_id');
         },
       },
     };
