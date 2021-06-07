@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Col, Divider, Modal, Rate, Typography } from 'antd';
 import PropTypes from 'prop-types';
+import { postEnroll } from '@sb-ui/utils/api/v1/lesson/lesson';
 import lessonImg from '../../../../resources/img/lesson.svg';
 import {
   AuthorAvatar,
@@ -22,9 +23,16 @@ import {
 
 const { Title, Text } = Typography;
 
-const LessonModal = ({ visible, setVisible, lesson }) => {
-  const { firstName, lastName, name, description } = lesson;
+const LessonModal = ({ onStartEnroll, visible, setVisible, lesson }) => {
+  const { id, firstName, lastName, name, description } = lesson;
   const author = `${firstName} ${lastName}`;
+
+  const onClickStartEnroll = useCallback(async () => {
+    await postEnroll(id);
+    setVisible(false);
+    onStartEnroll();
+  }, [onStartEnroll, setVisible, id]);
+
   return (
     <Modal
       centered
@@ -73,7 +81,7 @@ const LessonModal = ({ visible, setVisible, lesson }) => {
           <Divider />
         </ReviewBody>
         <ReviewFooter>
-          <StartButton size="large" type="primary">
+          <StartButton onClick={onClickStartEnroll} size="large" type="primary">
             Start
           </StartButton>
         </ReviewFooter>
@@ -83,6 +91,7 @@ const LessonModal = ({ visible, setVisible, lesson }) => {
 };
 
 LessonModal.propTypes = {
+  onStartEnroll: PropTypes.func.isRequired,
   lesson: PropTypes.exact({
     id: PropTypes.number.isRequired,
     firstName: PropTypes.string.isRequired,
