@@ -1,4 +1,3 @@
-import React from 'react';
 import { render, fireEvent, screen, waitFor } from '@testing-library/react';
 import reactRouterDom from 'react-router-dom';
 import { postSignIn } from '../utils/api/v1/user';
