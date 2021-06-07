@@ -47,7 +47,7 @@ export const getUsers = async (paramsData) => {
         ...data,
         data: data.data.map((x) => ({
           ...x,
-          fullName: `${x.firstName} ${x.secondName}`,
+          fullName: `${x.firstName} ${x.lastName}`,
         })),
       },
     };

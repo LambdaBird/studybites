@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 import { Col, Divider, Modal, Rate, Typography } from 'antd';
 import PropTypes from 'prop-types';
 import { postEnroll } from '@sb-ui/utils/api/v1/lesson/lesson';
