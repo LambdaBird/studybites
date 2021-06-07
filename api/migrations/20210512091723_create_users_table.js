@@ -4,7 +4,7 @@ export const up = (knex) =>
     table.string('email').unique().notNullable();
     table.string('password').notNullable();
     table.string('first_name').notNullable();
-    table.string('second_name').notNullable();
+    table.string('last_name').notNullable();
     table.boolean('is_super_admin').defaultTo(false);
     table.text('description');
     table.boolean('is_confirmed').defaultTo(false);

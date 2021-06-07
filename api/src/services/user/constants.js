@@ -3,6 +3,7 @@
  */
 
 export const UNAUTHORIZED = {
+  key: 'errors.unauthorized',
   message: 'Unauthorized',
 };
 
@@ -70,13 +71,13 @@ export const USER_ROLE_DELETED = {
  * Enums
  */
 
-export const USER_FIELDS = ['id', 'email', 'firstName', 'secondName'];
+export const USER_FIELDS = ['id', 'email', 'firstName', 'lastName'];
 
 export const USER_ADMIN_FIELDS = [
   'id',
   'email',
   'firstName',
-  'secondName',
+  'lastName',
   'isConfirmed',
   'isSuperAdmin',
 ];

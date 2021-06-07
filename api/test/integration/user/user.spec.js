@@ -10,7 +10,7 @@ describe('Test user (self) route:', () => {
     email: 'valid5@test.io',
     password: 'valid3',
     firstName: 'Valid',
-    secondName: 'Valid',
+    lastName: 'Valid',
   };
 
   const signinBodyValid = {

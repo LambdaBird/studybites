@@ -20,3 +20,24 @@ export const getLessons = async (paramsData) => {
     };
   }
 };
+
+export const postEnroll = async (id) => {
+  try {
+    const { status, data } = await axios.post(
+      `${PATH}/enroll/${id}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${getJWTAccessToken()}`,
+        },
+      },
+    );
+    return { status, data };
+  } catch (e) {
+    const { status, data } = e.response;
+    return {
+      status,
+      data,
+    };
+  }
+};

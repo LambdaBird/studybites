@@ -148,13 +148,13 @@ const router = async (instance) => {
       const columns = {
         email: 'email',
         firstName: 'firstName',
-        secondName: 'secondName',
+        lastName: 'lastName',
       };
 
       if (!req.query.search) {
         columns.email = undefined;
         columns.firstName = undefined;
-        columns.secondName = undefined;
+        columns.lastName = undefined;
       }
 
       const data = await User.query()
