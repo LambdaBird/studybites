@@ -74,6 +74,12 @@
         "view_all_lessons": "View all lessons",
         "continue_button": "Continue"
       }
+    },
+    "user_lessons": {
+      "ongoing_lessons":{
+        "continue_button": "Continue",
+        "title": "Ongoing lessons"
+      }
     }
   }
 }
