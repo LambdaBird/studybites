@@ -16,8 +16,10 @@ const { Title } = Typography;
 
 const CurrentLesson = ({ lesson }) => {
   const { t } = useTranslation();
-  const { title, maintainer } = lesson;
+  const { name, firstName, lastName } = lesson;
 
+  let author = `${firstName} ${lastName}`;
+  author = 'test test'; // TODO REMOVE
   return (
     <MainSpace>
       <LeftColumn span={8}>
@@ -25,11 +27,11 @@ const CurrentLesson = ({ lesson }) => {
         <ProgressBar percent={50} />
       </LeftColumn>
       <RightColumn span={14}>
-        <Title level={4}>{title}</Title>
+        <Title level={4}>{name}</Title>
         <Row justify="space-between" align="between">
           <Col>
-            <AuthorAvatar>{maintainer?.[0]}</AuthorAvatar>
-            <AuthorName>{maintainer}</AuthorName>
+            <AuthorAvatar>{author?.[0]}</AuthorAvatar>
+            <AuthorName>{author}</AuthorName>
           </Col>
           <Col>
             <Button type="primary">
@@ -45,8 +47,11 @@ const CurrentLesson = ({ lesson }) => {
 CurrentLesson.propTypes = {
   lesson: PropTypes.exact({
     id: PropTypes.number.isRequired,
-    title: PropTypes.string.isRequired,
-    maintainer: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
+    author: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
   }).isRequired,
 };
 
