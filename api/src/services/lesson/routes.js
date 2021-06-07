@@ -85,21 +85,15 @@ const router = async (instance) => {
     handler: async (req, repl) => {
       const id = validateId(req.params.id);
 
-      const data = await Lesson.query()
+      const lesson = await await Lesson.query()
         .findById(id)
-        .join('users_roles', 'lessons.id', '=', 'users_roles.resource_id')
-        .where('users_roles.role_id', config.roles.MAINTAINER.id)
-        .join('users', 'users_roles.user_id', '=', 'users.id')
-        .select('lessons.*', 'users.first_name', 'users.second_name')
-        .where({
-          status: 'Public',
-        });
+        .withGraphFetched('authors');
 
-      if (!data) {
+      if (!lesson) {
         throw new NotFoundError(NOT_FOUND);
       }
 
-      return repl.status(200).send({ data });
+      return repl.status(200).send({ data: lesson });
     },
   });
 
@@ -112,8 +106,8 @@ const router = async (instance) => {
     validatorCompiler,
     errorHandler,
     onRequest: instance.auth({ instance }),
-    handler: async (req, repl) => {
-      return repl.status(200).send(['Draft', 'Public', 'Private', 'Archived']);
+    handler: async (_, repl) => {
+      return repl.status(200).send(Lesson.jsonSchema);
     },
   });
 
