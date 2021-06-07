@@ -3,7 +3,7 @@ import config from '../../../config';
 import errorResponse from '../../validation/schemas';
 import validatorCompiler from '../../validation/validatorCompiler';
 import errorHandler from '../../validation/errorHandler';
-import { NotFoundError } from '../../validation/errors';
+import { BadRequestError, NotFoundError } from '../../validation/errors';
 
 import {
   patchBodyValidator,
@@ -33,41 +33,8 @@ const router = async (instance) => {
         columns.name = undefined;
       }
 
-      const data = await Lesson.query()
-        .join('users_roles', 'lessons.id', '=', 'users_roles.resource_id')
-        .where('users_roles.role_id', config.roles.MAINTAINER.id)
-        .join('users', 'users_roles.user_id', '=', 'users.id')
-        .select('lessons.*', 'users.first_name', 'users.second_name')
-        .skipUndefined()
-        .where({
-          status: 'Public',
-        })
-        .where(columns.name, 'ilike', `%${req.query.search}%`)
-        .join('users_roles', 'lessons.id', '=', 'users_roles.resource_id')
-        .where('users_roles.role_id', config.roles.MAINTAINER_ROLE)
-        .join('users', 'users_roles.user_id', '=', 'users.id')
-        .select(
-          'lessons.*',
-          'users.first_name',
-          'users.second_name',
-          Lesson.relatedQuery('users_roles')
-            .select('roleID')
-            .where({
-              userID: req.user.id,
-              roleID: config.roles.STUDENT_ROLE,
-            })
-            .as('is_enrolled'),
-        )
-        .offset(req.query.offset || 0)
-        .limit(req.query.limit || config.search.LESSON_SEARCH_LIMIT);
-
-      const count = await Lesson.query()
-        .skipUndefined()
-        .where({
-          status: 'Public',
-        })
-        .where(columns.name, 'ilike', `%${req.query.search}%`)
-        .count('*');
+      const data = await Lesson.query().getAllPublic(columns, req);
+      const count = await Lesson.query().countAllPublic(columns, req);
 
       return repl.status(200).send({ total: +count[0].count, data });
     },
@@ -290,20 +257,20 @@ const router = async (instance) => {
         .whereNotExists(
           UserRole.query().select().where({
             userID: req.user.id,
-            roleID: config.roles.STUDENT_ROLE,
+            roleID: config.roles.STUDENT.id,
             resourceType: 'lesson',
             resourceId: id,
           }),
         );
 
       if (!lesson) {
-        return repl.status(400).send(INVALID_ENROLL);
+        throw new BadRequestError(INVALID_ENROLL);
       }
 
       await UserRole.query()
         .insert({
           userID: req.user.id,
-          roleID: config.roles.STUDENT_ROLE,
+          roleID: config.roles.STUDENT.id,
           resourceType: 'lesson',
           resourceId: lesson.id,
         })
@@ -336,7 +303,7 @@ const router = async (instance) => {
         .for(
           UserRole.query().select().where({
             userID: req.user.id,
-            roleID: config.roles.STUDENT_ROLE,
+            roleID: config.roles.STUDENT.id,
           }),
         )
         .where(columns.name, 'ilike', `%${req.query.search}%`)
@@ -348,7 +315,7 @@ const router = async (instance) => {
         .for(
           UserRole.query().select().where({
             userID: req.user.id,
-            roleID: config.roles.STUDENT_ROLE,
+            roleID: config.roles.STUDENT.id,
           }),
         )
         .where(columns.name, 'ilike', `%${req.query.search}%`)
@@ -390,11 +357,11 @@ const router = async (instance) => {
         .skipUndefined()
         .for(
           UserRole.query().select('user_id').where({
-            roleID: config.roles.STUDENT_ROLE,
+            roleID: config.roles.STUDENT.id,
             resourceId: id,
           }),
         )
-        .select('id', 'email', 'firstName', 'secondName')
+        .select('id', 'email', 'firstName', 'lastName')
         .where(columns.email, 'ilike', `%${req.query.search}%`)
         .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
         .offset(req.query.offset || 0)
@@ -404,7 +371,7 @@ const router = async (instance) => {
         .skipUndefined()
         .for(
           UserRole.query().select('user_id').where({
-            roleID: config.roles.STUDENT_ROLE,
+            roleID: config.roles.STUDENT.id,
             resourceId: id,
           }),
         )

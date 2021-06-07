@@ -26,10 +26,10 @@ const firstNameValidatorSignup = yup
   .typeError(propertyTypeError('signup', 'firstName', 'string'))
   .required(requiredPropertyError('signup', 'firstName'));
 
-const secondNameValidatorSignup = yup
+const lastNameValidatorSignup = yup
   .string()
-  .typeError(propertyTypeError('signup', 'secondName', 'string'))
-  .required(requiredPropertyError('signup', 'secondName'));
+  .typeError(propertyTypeError('signup', 'lastName', 'string'))
+  .required(requiredPropertyError('signup', 'lastName'));
 
 const emailValidatorSignin = yup
   .string()
@@ -57,9 +57,9 @@ const firstNameValidatorPatch = yup
   .string()
   .typeError(propertyTypeError('patch', 'firstName', 'string'));
 
-const secondNameValidatorPatch = yup
+const lastNameValidatorPatch = yup
   .string()
-  .typeError(propertyTypeError('patch', 'secondName', 'string'));
+  .typeError(propertyTypeError('patch', 'lastName', 'string'));
 
 const isConfirmedPatch = yup
   .bool()
@@ -78,7 +78,7 @@ export const signupBodyValidator = yup.object({
   email: emailValidatorSignup,
   password: passwordValidatorSignup,
   firstName: firstNameValidatorSignup,
-  secondName: secondNameValidatorSignup,
+  lastName: lastNameValidatorSignup,
 });
 
 export const signinBodyValidator = yup.object({
@@ -90,7 +90,7 @@ export const patchBodyValidator = yup.object({
   email: emailValidatorPatch,
   password: passwordValidatorPatch,
   firstName: firstNameValidatorPatch,
-  secondName: secondNameValidatorPatch,
+  lastName: lastNameValidatorPatch,
   isConfirmed: isConfirmedPatch,
   isSuperAdmin: isSuperAdminPatch,
 });

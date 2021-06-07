@@ -17,7 +17,7 @@ describe('Test admin route:', () => {
     email: 'valid4@test.io',
     password: 'valid3',
     firstName: 'Valid4',
-    secondName: 'Valid4',
+    lastName: 'Valid4',
   };
 
   const signinBodyValid = {

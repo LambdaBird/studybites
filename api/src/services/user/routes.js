@@ -131,38 +131,17 @@ const router = async (instance) => {
       const columns = {
         email: 'email',
         firstName: 'firstName',
-        secondName: 'secondName',
+        lastName: 'lastName',
       };
 
       if (!req.query.search) {
         columns.email = undefined;
         columns.firstName = undefined;
-        columns.secondName = undefined;
+        columns.lastName = undefined;
       }
 
-      const data = await User.query()
-        .skipUndefined()
-        .select(USER_ADMIN_FIELDS)
-        .where(columns.email, 'ilike', `%${req.query.search}%`)
-        .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
-        .whereNot({
-          id: req.user.id,
-        })
-        .where(columns.email, 'ilike', `%${req.query.search}%`)
-        .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
-        .orWhere(columns.secondName, 'ilike', `%${req.query.search}%`)
-        .offset(req.query.offset || 0)
-        .limit(req.query.limit || config.search.USER_SEARCH_LIMIT);
-
-      const count = await User.query()
-        .skipUndefined()
-        .whereNot({
-          id: req.user.id,
-        })
-        .where(columns.email, 'ilike', `%${req.query.search}%`)
-        .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
-        .orWhere(columns.secondName, 'ilike', `%${req.query.search}%`)
-        .count('*');
+      const data = await User.query().getAll(columns, req);
+      const count = await User.query().countAll(columns, req);
 
       return repl.status(200).send({ total: +count[0].count, data });
     },

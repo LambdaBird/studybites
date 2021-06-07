@@ -2,7 +2,7 @@ export const signupBodyValid = {
   email: 'valid@test.io',
   password: 'valid3',
   firstName: 'Valid',
-  secondName: 'Valid',
+  lastName: 'Valid',
 };
 
 export const signinBodyValid = {

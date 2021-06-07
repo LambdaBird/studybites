@@ -19,8 +19,8 @@ const { Title } = Typography;
 
 const PublicLesson = ({ lesson }) => {
   const { t } = useTranslation();
-  const { name, description, firstName, secondName } = lesson;
-  const author = `${firstName} ${secondName}`;
+  const { name, description, firstName, lastName } = lesson;
+  const author = `${firstName} ${lastName}`;
 
   return (
     <MainSpace size="large" wrap={false}>
@@ -54,7 +54,7 @@ PublicLesson.propTypes = {
   lesson: PropTypes.exact({
     id: PropTypes.number.isRequired,
     firstName: PropTypes.string.isRequired,
-    secondName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
   }).isRequired,
