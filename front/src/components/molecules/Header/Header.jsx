@@ -47,7 +47,7 @@ const Header = () => {
 
         <Col>
           <Dropdown overlay={menu} trigger={['click']}>
-            <Profile>
+            <Profile data-testid="profile">
               <StyledAvatar>T</StyledAvatar>
               <DownOutlined />
             </Profile>
