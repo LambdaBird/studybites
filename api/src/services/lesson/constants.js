@@ -14,13 +14,8 @@ export const INVALID_STATUS = {
 };
 
 export const INVALID_ENROLL = {
-  fallback: 'errors.not_found',
-  errors: [
-    {
-      key: 'lesson.errors.invalid_enroll',
-      message: 'Requested lesson is not public or you have already enrolled',
-    },
-  ],
+  key: 'lesson.errors.invalid_enroll',
+  message: 'Requested lesson is not public or you have already enrolled',
 };
 
 export const ENROLL_SUCCESS = {

@@ -7,7 +7,6 @@ export const postSignUp = async (formData) => {
   try {
     const { status, data } = await axios.post(`${PATH}/signup`, {
       ...formData,
-      secondName: formData.lastName,
     });
     return { status, data };
   } catch (e) {

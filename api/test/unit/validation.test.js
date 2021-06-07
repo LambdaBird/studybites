@@ -20,23 +20,23 @@ describe('Test signup body validation:', () => {
   test.each([
     [
       'email',
-      { password: 'valid3', firstName: 'Valid', secondName: 'Valid' },
+      { password: 'valid3', firstName: 'Valid', lastName: 'Valid' },
       requiredPropertyError('signup', 'email'),
     ],
     [
       'password',
-      { email: 'valid@test.io', firstName: 'Valid', secondName: 'Valid' },
+      { email: 'valid@test.io', firstName: 'Valid', lastName: 'Valid' },
       requiredPropertyError('signup', 'password'),
     ],
     [
       'firstName',
-      { email: 'valid@test.io', password: 'valid3', secondName: 'Valid' },
+      { email: 'valid@test.io', password: 'valid3', lastName: 'Valid' },
       requiredPropertyError('signup', 'firstName'),
     ],
     [
-      'secondName',
-      { email: 'valid@test.io', password: 'valid3', firstName: 'Valid' },
-      requiredPropertyError('signup', 'secondName'),
+      'lastName',
+      { email: 'valid@test.io', password: 'valid3', lastName: 'Valid' },
+      requiredPropertyError('signup', 'lastName'),
     ],
   ])('should return ValidationError for missing %s', (_, payload, expected) => {
     signupBodyValidator.validate(payload, options).catch((err) => {
@@ -51,7 +51,7 @@ describe('Test signup body validation:', () => {
         email: [123],
         password: 'valid3',
         firstName: 'Valid',
-        secondName: 'Valid',
+        lastName: 'Valid',
       },
       propertyTypeError('signup', 'email', 'string'),
     ],
@@ -61,7 +61,7 @@ describe('Test signup body validation:', () => {
         email: 'valid@test.io',
         password: [123],
         firstName: 'Valid',
-        secondName: 'Valid',
+        lastName: 'Valid',
       },
       propertyTypeError('signup', 'password', 'string'),
     ],
@@ -71,19 +71,19 @@ describe('Test signup body validation:', () => {
         email: 'valid@test.io',
         password: 'valid3',
         firstName: [123],
-        secondName: 'Valid',
+        lastName: 'Valid',
       },
       propertyTypeError('signup', 'firstName', 'string'),
     ],
     [
-      'secondName',
+      'lastName',
       {
         email: 'valid@test.io',
         password: 'valid3',
         firstName: 'Valid',
-        secondName: [123],
+        lastName: [123],
       },
-      propertyTypeError('signup', 'secondName', 'string'),
+      propertyTypeError('signup', 'lastName', 'string'),
     ],
   ])(
     'should return ValidationError for invalid type of %s',
@@ -99,7 +99,7 @@ describe('Test signup body validation:', () => {
       email: 'invalid@test',
       password: 'valid3',
       firstName: 'Valid',
-      secondName: 'Valid',
+      lastName: 'Valid',
     };
 
     signupBodyValidator.validate(data, options).catch((err) => {
@@ -112,7 +112,7 @@ describe('Test signup body validation:', () => {
       email: 'valid@test.io',
       password: 'inv3',
       firstName: 'Valid',
-      secondName: 'Valid',
+      lastName: 'Valid',
     };
 
     signupBodyValidator.validate(data, options).catch((err) => {
@@ -125,7 +125,7 @@ describe('Test signup body validation:', () => {
       email: 'valid@test.io',
       password: 'invalid',
       firstName: 'Valid',
-      secondName: 'Valid',
+      lastName: 'Valid',
     };
 
     signupBodyValidator.validate(data, options).catch((err) => {
@@ -138,7 +138,7 @@ describe('Test signup body validation:', () => {
       email: 'valid@test.io',
       password: '12345',
       firstName: 'Valid',
-      secondName: 'Valid',
+      lastName: 'Valid',
     };
 
     signupBodyValidator.validate(data, options).catch((err) => {
@@ -151,12 +151,12 @@ describe('Test signin body validation:', () => {
   test.each([
     [
       'email',
-      { password: 'valid3', firstName: 'Valid', secondName: 'Valid' },
+      { password: 'valid3', firstName: 'Valid', lastName: 'Valid' },
       requiredPropertyError('signin', 'email'),
     ],
     [
       'password',
-      { email: 'valid@test.io', firstName: 'Valid', secondName: 'Valid' },
+      { email: 'valid@test.io', firstName: 'Valid', lastName: 'Valid' },
       requiredPropertyError('signin', 'password'),
     ],
   ])('should return ValidationError for missing %s', (_, payload, expected) => {
@@ -172,7 +172,7 @@ describe('Test signin body validation:', () => {
         email: [123],
         password: 'valid3',
         firstName: 'Valid',
-        secondName: 'Valid',
+        lastName: 'Valid',
       },
       propertyTypeError('signin', 'email', 'string'),
     ],
@@ -182,7 +182,7 @@ describe('Test signin body validation:', () => {
         email: 'valid@test.io',
         password: [123],
         firstName: 'Valid',
-        secondName: 'Valid',
+        lastName: 'Valid',
       },
       propertyTypeError('signin', 'password', 'string'),
     ],
@@ -204,7 +204,7 @@ describe('Test user patch body validation:', () => {
         email: [123],
         password: 'valid3',
         firstName: 'Valid',
-        secondName: 'Valid',
+        lastName: 'Valid',
       },
       propertyTypeError('patch', 'email', 'string'),
     ],
@@ -214,7 +214,7 @@ describe('Test user patch body validation:', () => {
         email: 'valid@test.io',
         password: [123],
         firstName: 'Valid',
-        secondName: 'Valid',
+        lastName: 'Valid',
       },
       propertyTypeError('patch', 'password', 'string'),
     ],
@@ -224,19 +224,19 @@ describe('Test user patch body validation:', () => {
         email: 'valid@test.io',
         password: 'valid3',
         firstName: [123],
-        secondName: 'Valid',
+        lastName: 'Valid',
       },
       propertyTypeError('patch', 'firstName', 'string'),
     ],
     [
-      'secondName',
+      'lastName',
       {
         email: 'valid@test.io',
         password: 'valid3',
         firstName: 'Valid',
-        secondName: [123],
+        lastName: [123],
       },
-      propertyTypeError('patch', 'secondName', 'string'),
+      propertyTypeError('patch', 'lastName', 'string'),
     ],
     [
       'isConfirmed',
@@ -272,7 +272,7 @@ describe('Test user patch body validation:', () => {
       email: 'invalid@test',
       password: 'valid3',
       firstName: 'Valid',
-      secondName: 'Valid',
+      lastName: 'Valid',
     };
 
     patchBodyValidator.validate(data, options).catch((err) => {
@@ -285,7 +285,7 @@ describe('Test user patch body validation:', () => {
       email: 'valid@test.io',
       password: 'inv3',
       firstName: 'Valid',
-      secondName: 'Valid',
+      lastName: 'Valid',
     };
 
     patchBodyValidator.validate(data, options).catch((err) => {
@@ -298,7 +298,7 @@ describe('Test user patch body validation:', () => {
       email: 'valid@test.io',
       password: 'invalid',
       firstName: 'Valid',
-      secondName: 'Valid',
+      lastName: 'Valid',
     };
 
     patchBodyValidator.validate(data, options).catch((err) => {
@@ -311,7 +311,7 @@ describe('Test user patch body validation:', () => {
       email: 'valid@test.io',
       password: '12345',
       firstName: 'Valid',
-      secondName: 'Valid',
+      lastName: 'Valid',
     };
 
     patchBodyValidator.validate(data, options).catch((err) => {

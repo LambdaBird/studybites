@@ -9,7 +9,7 @@ describe('Test signup route:', () => {
     email: 'valid2@test.io',
     password: 'valid4',
     firstName: 'Valid1',
-    secondName: 'Valid1',
+    lastName: 'Valid1',
   };
 
   beforeAll(async () => {

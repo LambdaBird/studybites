@@ -60,7 +60,7 @@ import bcrypt from 'bcrypt';
       email,
       password: hash,
       first_name: 'Super',
-      second_name: 'Admin',
+      last_name: 'Admin',
       is_super_admin: true,
       is_confirmed: true,
     });
