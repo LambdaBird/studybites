@@ -18,16 +18,21 @@ import LessonModal from './LessonModal';
 
 const { Title } = Typography;
 
-const PublicLesson = ({ lesson }) => {
+const PublicLesson = ({ getLessons, lesson }) => {
   const { t } = useTranslation();
-  const { name, description, firstName, lastName } = lesson;
+  const { isEnrolled, name, description, firstName, lastName } = lesson;
   const author = `${firstName} ${lastName}`;
 
   const [visible, setVisible] = useState(false);
 
   return (
     <MainSpace size="large" wrap={false}>
-      <LessonModal visible={visible} setVisible={setVisible} lesson={lesson} />
+      <LessonModal
+        onStartEnroll={getLessons}
+        visible={visible}
+        setVisible={setVisible}
+        lesson={lesson}
+      />
       <LeftContent>
         <div>
           <LessonImg src={lessonImage} alt="Lesson" />
@@ -45,13 +50,19 @@ const PublicLesson = ({ lesson }) => {
           <DescriptionText>{description}</DescriptionText>
         </Row>
         <EnrollRow justify="end">
-          <Button
-            size="medium"
-            type="secondary"
-            onClick={() => setVisible(true)}
-          >
-            {t('user_home.open_lessons.enroll_button')}
-          </Button>
+          {isEnrolled ? (
+            <Button type="primary">
+              {t('user_home.ongoing_lessons.continue_button')}
+            </Button>
+          ) : (
+            <Button
+              size="medium"
+              type="secondary"
+              onClick={() => setVisible(true)}
+            >
+              {t('user_home.open_lessons.enroll_button')}
+            </Button>
+          )}
         </EnrollRow>
       </RightContent>
     </MainSpace>
@@ -59,8 +70,10 @@ const PublicLesson = ({ lesson }) => {
 };
 
 PublicLesson.propTypes = {
+  getLessons: PropTypes.func.isRequired,
   lesson: PropTypes.exact({
     id: PropTypes.number.isRequired,
+    isEnrolled: PropTypes.bool.isRequired,
     firstName: PropTypes.string.isRequired,
     lastName: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,

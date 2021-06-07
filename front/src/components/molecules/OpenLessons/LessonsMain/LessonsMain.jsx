@@ -89,7 +89,12 @@ const LessonsMain = ({ searchLessons }) => {
                   lg={{ span: 12 }}
                   md={{ span: 24 }}
                 >
-                  <PublicLesson lesson={lesson} />
+                  <PublicLesson
+                    getLessons={() =>
+                      onChangeLessonsPagination(pagination.current)
+                    }
+                    lesson={lesson}
+                  />
                 </LessonsColumn>
               ))}
             </Row>
