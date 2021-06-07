@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import { raw } from 'objection';
 
 import config from '../../../config';
 
@@ -31,7 +32,6 @@ import {
   ALTER_ROLE_FAIL,
   USER_ROLE_NOT_FOUND,
   USER_FIELDS,
-  USER_ROLE_DELETED,
 } from './constants';
 
 const router = async (instance) => {
@@ -109,12 +109,29 @@ const router = async (instance) => {
     errorHandler,
     onRequest: instance.auth({ instance }),
     handler: async (req, repl) => {
-      const data = await User.query().findById(req.user.id).select(USER_FIELDS);
-      if (!data) {
+      const userData = await User.query()
+        .findById(req.user.id)
+        .select([...USER_FIELDS, 'isSuperAdmin']);
+
+      if (!userData) {
         throw new AuthorizationError(UNAUTHORIZED);
       }
 
-      return repl.status(200).send({ data });
+      const { isSuperAdmin, ...user } = userData;
+
+      const rolesData = await UserRole.relatedQuery('role')
+        .for(UserRole.query().where('user_id', req.user.id))
+        .select('name');
+
+      const roles = rolesData.map((role) => role.name);
+
+      if (isSuperAdmin) {
+        roles.push('SuperAdmin');
+      }
+
+      const userWithRoles = { ...user, roles };
+
+      return repl.status(200).send({ data: userWithRoles });
     },
   });
 
@@ -140,8 +157,37 @@ const router = async (instance) => {
         columns.lastName = undefined;
       }
 
-      const data = await User.query().getAll(columns, req);
-      const count = await User.query().countAll(columns, req);
+      const data = await User.query()
+        .skipUndefined()
+        .select(
+          USER_ADMIN_FIELDS,
+          User.relatedQuery('users_roles')
+            .where('role_id', config.roles.TEACHER.id)
+            .select(
+              raw(`CAST(CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END AS INT)`),
+            )
+            .as('isTeacher'),
+        )
+        .where(columns.email, 'ilike', `%${req.query.search}%`)
+        .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
+        .whereNot({
+          id: req.user.id,
+        })
+        .where(columns.email, 'ilike', `%${req.query.search}%`)
+        .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
+        .orWhere(columns.lastName, 'ilike', `%${req.query.search}%`)
+        .offset(req.query.offset || 0)
+        .limit(req.query.limit || config.search.USER_SEARCH_LIMIT);
+
+      const count = await User.query()
+        .skipUndefined()
+        .whereNot({
+          id: req.user.id,
+        })
+        .where(columns.email, 'ilike', `%${req.query.search}%`)
+        .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
+        .orWhere(columns.lastName, 'ilike', `%${req.query.search}%`)
+        .count('*');
 
       return repl.status(200).send({ total: +count[0].count, data });
     },
@@ -275,7 +321,7 @@ const router = async (instance) => {
         throw new NotFoundError(USER_ROLE_NOT_FOUND);
       }
 
-      return repl.status(200).send(USER_ROLE_DELETED);
+      return repl.status(200).send(ALTER_ROLE_SUCCESS);
     },
   });
 };

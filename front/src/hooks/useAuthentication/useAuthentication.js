@@ -1,3 +1,4 @@
+import { HOME } from '@sb-ui/utils/paths';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -25,7 +26,7 @@ const useAuthentication = (requestFunc) => {
     setLoading(false);
     if (status.toString().startsWith('2')) {
       setJWT(data);
-      history.push('/');
+      history.push(HOME);
     } else {
       const { errors, fallback } = data;
       let textError = errors
