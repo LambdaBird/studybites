@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Row, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +14,7 @@ import {
   MainSpace,
   RightContent,
 } from './PublicLesson.styled';
+import LessonModal from './LessonModal';
 
 const { Title } = Typography;
 
@@ -22,8 +23,11 @@ const PublicLesson = ({ lesson }) => {
   const { name, description, firstName, lastName } = lesson;
   const author = `${firstName} ${lastName}`;
 
+  const [visible, setVisible] = useState(false);
+
   return (
     <MainSpace size="large" wrap={false}>
+      <LessonModal visible={visible} setVisible={setVisible} lesson={lesson} />
       <LeftContent>
         <div>
           <LessonImg src={lessonImage} alt="Lesson" />
@@ -41,7 +45,11 @@ const PublicLesson = ({ lesson }) => {
           <DescriptionText>{description}</DescriptionText>
         </Row>
         <EnrollRow justify="end">
-          <Button size="medium" type="secondary">
+          <Button
+            size="medium"
+            type="secondary"
+            onClick={() => setVisible(true)}
+          >
             {t('user_home.open_lessons.enroll_button')}
           </Button>
         </EnrollRow>
