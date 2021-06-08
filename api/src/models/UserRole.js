@@ -1,10 +1,5 @@
-/* eslint-disable import/no-cycle */
 import objection from 'objection';
-
-import User from './User';
-import Lesson from './Lesson';
-
-import Role from './Role';
+import path from 'path';
 
 class UserRole extends objection.Model {
   static get tableName() {
@@ -29,7 +24,7 @@ class UserRole extends objection.Model {
     return {
       users: {
         relation: objection.Model.BelongsToOneRelation,
-        modelClass: User,
+        modelClass: path.join(__dirname, 'User'),
         join: {
           from: 'users_roles.user_id',
           to: 'users.id',
@@ -37,7 +32,7 @@ class UserRole extends objection.Model {
       },
       lessons: {
         relation: objection.Model.BelongsToOneRelation,
-        modelClass: Lesson,
+        modelClass: path.join(__dirname, 'Lesson'),
         join: {
           from: 'users_roles.resource_id',
           to: 'lessons.id',
@@ -45,7 +40,7 @@ class UserRole extends objection.Model {
       },
       role: {
         relation: objection.Model.BelongsToOneRelation,
-        modelClass: Role,
+        modelClass: path.join(__dirname, 'Role'),
         join: {
           from: 'users_roles.role_id',
           to: 'roles.id',
