@@ -25,18 +25,15 @@ const router = async (instance) => {
     errorHandler,
     onRequest: instance.auth({ instance }),
     handler: async (req, repl) => {
-      const columns = {
-        name: 'name',
-      };
+      const lessons = await Lesson.query()
+        .withSearch('name', req.query.search)
+        .withPagination(req.query, config.search.LESSON_SEARCH_LIMIT)
+        .withTotal()
+        .withAuthor()
+        .withEnrollmentStatus()
+        .andWhere('lessons.status', 'Public');
 
-      if (!req.query.search) {
-        columns.name = undefined;
-      }
-
-      const data = await Lesson.query().getAllPublic(columns, req);
-      const count = await Lesson.query().countAllPublic(columns, req);
-
-      return repl.status(200).send({ total: +count[0].count, data });
+      return repl.status(200).send({ data: lessons });
     },
   });
 
@@ -52,10 +49,7 @@ const router = async (instance) => {
     handler: async (req, repl) => {
       const id = validateId(req.params.id);
 
-      const lesson = await await Lesson.query()
-        .findById(id)
-        .withGraphFetched('authors');
-
+      const lesson = await await Lesson.query().findById(id).withAuthor();
       if (!lesson) {
         throw new NotFoundError(NOT_FOUND);
       }
@@ -92,38 +86,13 @@ const router = async (instance) => {
       role: config.roles.TEACHER.id,
     }),
     handler: async (req, repl) => {
-      const columns = {
-        name: 'name',
-      };
+      const lessons = await Lesson.query()
+        .withSearch('name', req.query.search)
+        .withPagination(req.query, config.search.LESSON_SEARCH_LIMIT)
+        .withTotal()
+        .withRole(req.user.id, config.roles.MAINTAINER.id);
 
-      if (!req.query.search) {
-        columns.name = undefined;
-      }
-
-      const data = await UserRole.relatedQuery('lessons')
-        .skipUndefined()
-        .for(
-          UserRole.query().select().where({
-            userID: req.user.id,
-            roleID: config.roles.MAINTAINER.id,
-          }),
-        )
-        .where(columns.name, 'ilike', `%${req.query.search}%`)
-        .offset(req.query.offset || 0)
-        .limit(req.query.limit || config.search.LESSON_SEARCH_LIMIT);
-
-      const count = await UserRole.relatedQuery('lessons')
-        .skipUndefined()
-        .for(
-          UserRole.query().select().where({
-            userID: req.user.id,
-            roleID: config.roles.MAINTAINER.id,
-          }),
-        )
-        .where(columns.name, 'ilike', `%${req.query.search}%`)
-        .count('*');
-
-      return repl.status(200).send({ total: +count[0].count, data });
+      return repl.status(200).send({ data: lessons });
     },
   });
 
@@ -153,7 +122,6 @@ const router = async (instance) => {
           }),
         )
         .where('id', id);
-
       if (!data) {
         throw new NotFoundError(NOT_FOUND);
       }
@@ -290,40 +258,13 @@ const router = async (instance) => {
     errorHandler,
     onRequest: instance.auth({ instance }),
     handler: async (req, repl) => {
-      const columns = {
-        name: 'name',
-      };
+      const lessons = await Lesson.query()
+        .withSearch('name', req.query.search)
+        .withPagination(req.query, config.search.LESSON_SEARCH_LIMIT)
+        .withTotal()
+        .withRole(req.user.id, config.roles.STUDENT.id);
 
-      if (!req.query.search) {
-        columns.name = undefined;
-      }
-
-      const data = await UserRole.relatedQuery('lessons')
-        .skipUndefined()
-        .for(
-          UserRole.query().select().where({
-            userID: req.user.id,
-            roleID: config.roles.STUDENT.id,
-          }),
-        )
-        .where(columns.name, 'ilike', `%${req.query.search}%`)
-        .offset(req.query.offset || 0)
-        .limit(req.query.limit || config.search.LESSON_SEARCH_LIMIT);
-
-      const count = await UserRole.relatedQuery('lessons')
-        .skipUndefined()
-        .for(
-          UserRole.query().select().where({
-            userID: req.user.id,
-            roleID: config.roles.STUDENT.id,
-          }),
-        )
-        .where(columns.name, 'ilike', `%${req.query.search}%`)
-        .offset(req.query.offset || 0)
-        .limit(req.query.limit || config.search.LESSON_SEARCH_LIMIT)
-        .count('*');
-
-      return repl.status(200).send({ total: +count[0].count, data });
+      return repl.status(200).send({ data: lessons });
     },
   });
 

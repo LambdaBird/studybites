@@ -2,43 +2,42 @@
 /* eslint-disable import/no-cycle */
 import objection from 'objection';
 
+import BaseQueryBuilder from './BaseQueryBuilder';
 import User from './User';
 import UserRole from './UserRole';
 
 import config from '../../config';
 
-class LessonQueryBuilder extends objection.QueryBuilder {
-  getAllPublic(columns, req) {
-    this.skipUndefined()
-      .where(columns.name, 'ilike', `%${req.query.search}%`)
-      .where({
-        status: 'Public',
-      })
-      .select(
-        objection.raw(
-          `lessons.*, users.first_name, users.last_name, case when (
-            select role_id from users_roles where role_id = ? and user_id = ? and resource_id = lessons.id
-            ) is null then false else true end as is_enrolled`,
-          [config.roles.STUDENT.id, req.user.id],
-        ),
-      )
-      .join('users_roles', 'lessons.id', '=', 'users_roles.resource_id')
-      .where('users_roles.role_id', config.roles.MAINTAINER.id)
-      .join('users', 'users_roles.user_id', '=', 'users.id')
-      .offset(req.query.offset || 0)
-      .limit(req.query.limit || config.search.LESSON_SEARCH_LIMIT);
-
+class LessonQueryBuilder extends BaseQueryBuilder {
+  withAuthor() {
+    this.select('lessons.*', 'users.first_name', 'users.last_name')
+      .innerJoin('users_roles', 'users_roles.resource_id', 'lessons.id')
+      .innerJoin('users', 'users.id', 'users_roles.user_id')
+      .where('users_roles.role_id', config.roles.MAINTAINER.id);
     return this;
   }
 
-  countAllPublic(columns, req) {
-    this.skipUndefined()
-      .where(columns.name, 'ilike', `%${req.query.search}%`)
-      .where({
-        status: 'Public',
-      })
-      .count('*');
+  withEnrollmentStatus() {
+    this.select(
+      objection.raw(
+        `case when (select users_roles.role_id from users_roles where
+          users_roles.role_id = 3 and users_roles.user_id = 3 and
+          users_roles.resource_id = lessons.id) is null then false
+          else true end as is_enrolled`,
+      ),
+    );
+    return this;
+  }
 
+  withRole(userID, roleID) {
+    this.select('lessons.*').whereIn(
+      'lessons.id',
+      UserRole.query().select('users_roles.resource_id').where({
+        userID,
+        roleID,
+        resourceType: 'lesson',
+      }),
+    );
     return this;
   }
 }
