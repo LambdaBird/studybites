@@ -14,5 +14,8 @@
       "prettier --config ./.prettierrc",
       "eslint --fix"
     ]
+  },
+  "scripts": {
+    "prepare": "husky install"
   }
 }

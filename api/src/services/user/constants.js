@@ -7,6 +7,11 @@ export const UNAUTHORIZED = {
   message: 'Unauthorized',
 };
 
+export const REFRESH_TOKEN_EXPIRED = {
+  key: 'errors.refresh_token_expired',
+  message: 'Refresh token expired',
+};
+
 export const INVALID_ID = {
   key: 'admin.user.invalid_id',
   message: 'Invalid user id',

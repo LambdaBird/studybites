@@ -19,6 +19,7 @@ import {
   patchBodyValidator,
   validateId,
   roleBodyValidator,
+  refreshBodyValidator,
 } from './validators';
 import { createAccessToken, createRefreshToken } from './utils';
 import {
@@ -32,6 +33,7 @@ import {
   ALTER_ROLE_FAIL,
   USER_ROLE_NOT_FOUND,
   USER_FIELDS,
+  REFRESH_TOKEN_EXPIRED,
 } from './constants';
 
 const router = async (instance) => {
@@ -95,6 +97,40 @@ const router = async (instance) => {
       return repl.status(200).send({
         accessToken,
         refreshToken,
+      });
+    },
+  });
+
+  instance.route({
+    method: 'POST',
+    url: '/refresh_token',
+    schema: {
+      body: refreshBodyValidator,
+      response: errorResponse,
+    },
+    validatorCompiler,
+    errorHandler,
+    handler: async (req, repl) => {
+      const { refreshToken } = req.body;
+
+      const decoded = await instance.jwt.decode(refreshToken);
+
+      if (Date.now() >= decoded.exp * 1000) {
+        throw new AuthorizationError(REFRESH_TOKEN_EXPIRED);
+      }
+
+      const userData = await User.query().findById(decoded.id);
+
+      if (!userData) {
+        throw new AuthorizationError(UNAUTHORIZED);
+      }
+
+      const newAccessToken = createAccessToken(instance, userData);
+      const newRefreshToken = createRefreshToken(instance, userData);
+
+      return repl.status(200).send({
+        accessToken: newAccessToken,
+        refreshToken: newRefreshToken,
       });
     },
   });

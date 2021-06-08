@@ -1,7 +1,7 @@
 export default {
   jwt: {
-    ACCESS_JWT_EXPIRES_IN: 1000 * 60,
-    REFRESH_JWT_EXPIRES_IN: 1000 * 60,
+    ACCESS_JWT_EXPIRES_IN: 60 * 5,
+    REFRESH_JWT_EXPIRES_IN: 60 * 60 * 24 * 7,
   },
   roles: {
     TEACHER: {
