@@ -2,7 +2,12 @@
 /* eslint-disable no-underscore-dangle */
 
 import axios from 'axios';
-import { getJWTAccessToken, getJWTRefreshToken } from '../jwt';
+import {
+  clearJWT,
+  getJWTAccessToken,
+  getJWTRefreshToken,
+  setJWT,
+} from '../jwt';
 
 export const api = axios.create();
 
@@ -38,13 +43,14 @@ api.interceptors.response.use(
         });
 
         if (res.status === 200) {
-          localStorage.setItem('accessToken', res.data.accessToken);
-          localStorage.setItem('refreshToken', res.data.refreshToken);
+          setJWT({
+            accessToken: res.data.accessToken,
+            refreshToken: res.data.refreshToken,
+          });
           return api(originalRequest);
         }
       } catch (e) {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
+        clearJWT();
       }
     }
     return Promise.reject(error);
