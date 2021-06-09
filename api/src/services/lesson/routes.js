@@ -33,10 +33,16 @@ const router = async (instance) => {
         columns.name = undefined;
       }
 
-      const data = await Lesson.query().getAllPublic(columns, req);
-      const count = await Lesson.query().countAllPublic(columns, req);
+      const { total, results } = await Lesson.getAllPublicLessons({
+        ...req.query,
+        userId: req.userId,
+      });
+      const count = await Lesson.countAllPublic({
+        ...req.query,
+        userId: req.userId,
+      });
 
-      return repl.status(200).send({ total: +count[0].count, data });
+      return repl.status(200).send({ total, data: results });
     },
   });
 
@@ -280,6 +286,9 @@ const router = async (instance) => {
     },
   });
 
+  /*
+   * Get all lessons which user are enrolled
+   * */
   instance.route({
     method: 'GET',
     url: '/enrolled/',
@@ -292,38 +301,27 @@ const router = async (instance) => {
     handler: async (req, repl) => {
       const columns = {
         name: 'name',
+        firstName: 'maintainer:userInfo.first_name',
+        lastName: 'maintainer:userInfo.last_name',
       };
 
       if (!req.query.search) {
         columns.name = undefined;
+        columns.firstName = undefined;
+        columns.lastName = undefined;
       }
 
-      const data = await UserRole.relatedQuery('lessons')
-        .skipUndefined()
-        .for(
-          UserRole.query().select().where({
-            userID: req.user.id,
-            roleID: config.roles.STUDENT.id,
-          }),
-        )
-        .where(columns.name, 'ilike', `%${req.query.search}%`)
-        .offset(req.query.offset || 0)
-        .limit(req.query.limit || config.search.LESSON_SEARCH_LIMIT);
+      const firstIndex = req.query.offset || 0;
+      const lastIndex =
+        firstIndex + (req.query.limit || config.search.LESSON_SEARCH_LIMIT) - 1;
 
-      const count = await UserRole.relatedQuery('lessons')
-        .skipUndefined()
-        .for(
-          UserRole.query().select().where({
-            userID: req.user.id,
-            roleID: config.roles.STUDENT.id,
-          }),
-        )
-        .where(columns.name, 'ilike', `%${req.query.search}%`)
-        .offset(req.query.offset || 0)
-        .limit(req.query.limit || config.search.LESSON_SEARCH_LIMIT)
-        .count('*');
+      const { total, results } = await Lesson.getAllEnrolled({
+        columns,
+        userId: req.user.id,
+        search: req.query.search,
+      }).range(firstIndex, lastIndex);
 
-      return repl.status(200).send({ total: +count[0].count, data });
+      return repl.status(200).send({ total, data: results });
     },
   });
 
