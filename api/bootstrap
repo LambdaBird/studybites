@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if node ./init.js $SB_ADMIN_EMAIL $SB_ADMIN_PASSWORD; then
+if babel-node ./init.js $SB_ADMIN_EMAIL $SB_ADMIN_PASSWORD; then
   yarn install && nodemon --exec babel-node src/server.js
 else
   echo "failed to run init script"
