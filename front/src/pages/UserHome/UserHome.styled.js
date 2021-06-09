@@ -6,4 +6,7 @@ export const MainDiv = styled.div`
   align-items: flex-start;
   height: 100%;
   padding: 3rem;
+  @media (max-width: 767px) {
+    padding: 1rem;
+  }
 `;

@@ -7,7 +7,7 @@ import {
   AuthorAvatar,
   AuthorName,
   DescriptionText,
-} from '../PublicLesson.styled';
+} from '../PublicLessonDesktop.styled';
 import {
   AuthorContainer,
   LeftColumn,

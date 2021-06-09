@@ -9,7 +9,7 @@ import {
 } from './CurrentLesson.styled';
 
 import lessonImg from '../../../resources/img/lesson.svg';
-import { AuthorAvatar, AuthorName } from '../PublicLesson/PublicLesson.styled';
+import { AuthorAvatar, AuthorName } from '../PublicLesson/PublicLessonDesktop.styled';
 
 const { Title } = Typography;
 

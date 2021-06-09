@@ -1,6 +1,7 @@
+import OpenLessons from '@sb-ui/components/molecules/OpenLessons';
+import OngoingLessons from '@sb-ui/components/molecules/OngoingLessons';
+
 import { MainDiv } from './UserHome.styled';
-import OpenLessons from '../../components/molecules/OpenLessons';
-import OngoingLessons from '../../components/molecules/OngoingLessons';
 
 const UserHome = () => (
   <MainDiv>
