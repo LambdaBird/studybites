@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-const usePasswordInput = () => {
+export const usePasswordInput = () => {
   const { t } = useTranslation();
   const [password, setPassword] = useState('');
 
@@ -49,5 +49,3 @@ const usePasswordInput = () => {
     passwordValidator,
   };
 };
-
-export default usePasswordInput;

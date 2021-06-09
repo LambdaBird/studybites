@@ -3,9 +3,10 @@ import { Button, Col, Row, Select, Space, Table, Typography } from 'antd';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
+import { useTableRequest } from '@sb-ui/hooks/useTableRequest';
 import { FullSelect, MainDiv, TableHeader } from './AdminHome.styled';
+
 import { getUsers } from '../../utils/api/v1/user/user';
-import useTableRequest from '../../hooks/useTableRequest';
 
 const { Option } = Select;
 const { Title } = Typography;

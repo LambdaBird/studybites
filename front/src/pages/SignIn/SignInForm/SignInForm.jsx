@@ -2,13 +2,13 @@ import React, { useMemo } from 'react';
 import { Alert, Form, Input } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useAuthentication } from '@sb-ui/hooks/useAuthentication';
 import {
   DivAlignCenter,
   SubmitButton,
   LinkButton,
   FormItemAlignEnd,
 } from './SignInForm.styled';
-import useAuthentication from '../../../hooks/useAuthentication';
 import { postSignIn } from '../../../utils/api/v1/user';
 import { SIGN_UP } from '../../../utils/paths';
 

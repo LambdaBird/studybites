@@ -3,6 +3,8 @@ import { Col, Row, Skeleton } from 'antd';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
+import { useTableRequest } from '../../../../hooks/useTableRequest';
+
 import emptyImg from '../../../../resources/img/empty.svg';
 import {
   LessonsColumn,
@@ -11,7 +13,6 @@ import {
   LessonsPagination,
 } from './LessonsMain.styled';
 import PublicLesson from '../../../atoms/PublicLesson';
-import useTableRequest from '../../../../hooks/useTableRequest';
 import { getLessons } from '../../../../utils/api/v1/lesson/lesson';
 
 const LessonsMain = ({ searchLessons }) => {
