@@ -1,5 +1,6 @@
 import { Col, Row, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { LessonsHeader, LessonsMainDiv } from './OngoingLessons.styled';
 import LessonsMain from './LessonsMain';
 
@@ -17,9 +18,9 @@ const OngoingLessons = () => {
           </Row>
         </Col>
         <Col>
-          <Typography.Link>
+          <Link to="/user-lessons">
             {t('user_home.ongoing_lessons.view_all_lessons')}
-          </Typography.Link>
+          </Link>
         </Col>
       </LessonsHeader>
       <LessonsMainDiv>
