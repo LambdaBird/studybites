@@ -1,5 +1,5 @@
 import React from 'react';
-import usePasswordInput from './usePasswordInput';
+import { usePasswordInput } from './usePasswordInput';
 
 jest.mock('react-i18next', () => ({
   useTranslation: () => ({

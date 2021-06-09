@@ -4,7 +4,6 @@ import { Row, Typography } from 'antd';
 const { Title } = Typography;
 
 export const LessonsHeader = styled(Row)`
-  margin-top: 1rem;
   margin-bottom: 1rem;
 `;
 

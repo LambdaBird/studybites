@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Input } from 'antd';
-import useDebounce from '../../../hooks/useDebounce';
+
+import { useDebounce } from '@sb-ui/hooks/useDebounce';
 
 const DebouncedSearch = ({ delay, onChange, ...props }) => {
   const [searchInput, setSearchInput] = useState(null);
