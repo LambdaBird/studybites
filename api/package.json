@@ -1,14 +1,13 @@
 {
-  "name": "StudyBites-api",
+  "name": "studybites-api",
   "version": "0.0.1",
+  "private": true,
   "main": "server.js",
-  "type": "module",
   "repository": "https://github.com/LambdaBird/studyBites",
-  "license": "Apache License 2.0",
   "scripts": {
     "dev": "./bootstrap",
-    "test:unit": "node --experimental-vm-modules --no-warnings node_modules/.bin/jest test/unit/",
-    "test:integration": "node ./init.js admin@test.io passwd3 && node --experimental-vm-modules --no-warnings node_modules/.bin/jest test/integration/"
+    "test:unit": "babel-node node_modules/.bin/jest test/unit/",
+    "test:integration": "babel-node ./init.js admin@test.io passwd3 && babel-node node_modules/.bin/jest test/integration/"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
@@ -21,6 +20,9 @@
     "yup": "^0.32.9"
   },
   "devDependencies": {
+    "@babel/core": "^7.14.3",
+    "@babel/node": "^7.14.2",
+    "@babel/preset-env": "^7.14.4",
     "eslint": "^7.26.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^8.3.0",

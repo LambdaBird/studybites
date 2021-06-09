@@ -1,4 +1,3 @@
-import React from 'react';
 import { Col, Row, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { LessonsHeader, LessonsMainDiv } from './OngoingLessons.styled';

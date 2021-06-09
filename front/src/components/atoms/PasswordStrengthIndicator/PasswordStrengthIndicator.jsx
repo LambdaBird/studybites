@@ -1,4 +1,3 @@
-import React from 'react';
 import PropTypes from 'prop-types';
 import { getPasswordStrength } from '../../../utils';
 import { IndicatorDiv, LineDiv } from './PasswordStrengthIndicator.styled';
