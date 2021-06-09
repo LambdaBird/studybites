@@ -1,7 +1,8 @@
+import { HOME } from '@sb-ui/utils/paths';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { setJWT } from '../../utils/jwt';
+import { setJWT } from '../utils/jwt';
 
 const getTranslationFromMessageData = (t, data) => {
   const { key, message } = data;
@@ -12,7 +13,7 @@ const getTranslationFromMessageData = (t, data) => {
   return text;
 };
 
-const useAuthentication = (requestFunc) => {
+export const useAuthentication = (requestFunc) => {
   const { t } = useTranslation();
   const history = useHistory();
   const [error, setError] = useState(null);
@@ -25,7 +26,7 @@ const useAuthentication = (requestFunc) => {
     setLoading(false);
     if (status.toString().startsWith('2')) {
       setJWT(data);
-      history.push('/');
+      history.push(HOME);
     } else {
       const { errors, fallback } = data;
       let textError = errors
@@ -43,5 +44,3 @@ const useAuthentication = (requestFunc) => {
 
   return [auth, error, setError, loading];
 };
-
-export default useAuthentication;

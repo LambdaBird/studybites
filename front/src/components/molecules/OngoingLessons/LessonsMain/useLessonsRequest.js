@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { getEnrolledLessons } from '../../utils/api/v1/lesson/lesson';
+import { getEnrolledLessons } from '../../../../utils/api/v1/lesson/lesson';
 
-const useLessonsRequest = () => {
+export const useLessonsRequest = () => {
   const [loading, setLoading] = useState(false);
   const [lessons, setLessons] = useState([]);
 
@@ -24,5 +24,3 @@ const useLessonsRequest = () => {
 
   return { loading, lessons };
 };
-
-export default useLessonsRequest;

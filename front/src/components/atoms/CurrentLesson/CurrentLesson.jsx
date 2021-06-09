@@ -1,4 +1,3 @@
-import React from 'react';
 import { Button, Col, Row, Typography } from 'antd';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
@@ -16,10 +15,9 @@ const { Title } = Typography;
 
 const CurrentLesson = ({ lesson }) => {
   const { t } = useTranslation();
-  const { name, firstName, lastName } = lesson;
-
-  let author = `${firstName} ${lastName}`;
-  author = 'test test'; // TODO REMOVE
+  const { name, maintainer } = lesson;
+  const { firstName, lastName } = maintainer?.userInfo;
+  const author = `${firstName} ${lastName}`;
   return (
     <MainSpace>
       <LeftColumn span={8}>
@@ -48,9 +46,7 @@ CurrentLesson.propTypes = {
   lesson: PropTypes.exact({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
-    firstName: PropTypes.string.isRequired,
-    lastName: PropTypes.string.isRequired,
-    author: PropTypes.string.isRequired,
+    maintainer: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
   }).isRequired,
 };

@@ -1,19 +1,32 @@
 import styled from 'styled-components';
-import { Button, Row, Typography } from 'antd';
+import { Avatar, Button, Row } from 'antd';
 
-const { Text } = Typography;
-
-export const RowMain = styled(Row)`
-  padding: 1rem;
-  img {
-    height: 32px;
-  }
+export const Container = styled.header`
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
+  background: white;
+  height: 56px;
 `;
 
-export const ProfileText = styled(Text)`
-  margin-right: 0.5rem;
+export const RowMain = styled(Row)`
+  padding: 0 2rem;
+  height: 100%;
+`;
+
+export const Logo = styled.img`
+  height: 1.75rem;
+  cursor: pointer;
 `;
 
 export const SignOutButton = styled(Button)`
   margin-right: 0.5rem;
+`;
+
+export const StyledAvatar = styled(Avatar)`
+  color: #f56a00;
+  background-color: #fde3cf;
+  margin-right: 0.5rem;
+`;
+
+export const Profile = styled.div`
+  cursor: pointer;
 `;

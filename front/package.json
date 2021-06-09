@@ -13,6 +13,7 @@
     "prettier": "node_modules/.bin/prettier --write \"src/**/*.{js,jsx,json,css,scss,md}\""
   },
   "dependencies": {
+    "@ant-design/icons": "^4.6.2",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -52,5 +53,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "^@sb-ui/(.*)$": "<rootDir>/src/$1"
+    }
   }
 }

@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react';
 
-const useTableRequest = ({
+export const useTableRequest = ({
   requestFunc,
   onChangePage = () => {},
   defaultPagination,
@@ -60,5 +60,3 @@ const useTableRequest = ({
     pagination,
   };
 };
-
-export default useTableRequest;

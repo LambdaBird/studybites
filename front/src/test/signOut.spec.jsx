@@ -1,6 +1,6 @@
-import React from 'react';
 import { render, fireEvent, screen, waitFor } from '@testing-library/react';
 import reactRouterDom from 'react-router-dom';
+import { HOME, SIGN_IN } from '@sb-ui/utils/paths';
 import { postSignIn } from '../utils/api/v1/user';
 import { setJWT, getJWTAccessToken, clearJWT } from '../utils/jwt';
 import '../i18n';
@@ -34,7 +34,7 @@ describe('Sign out test', () => {
     fireEvent.change(screen.getByPlaceholderText('Email'), {
       target: { value: 'test@gmail.com' },
     });
-    fireEvent.change(screen.getByPlaceholderText('••••••••'), {
+    fireEvent.change(screen.getByPlaceholderText('Password'), {
       target: { value: 'asd123' },
     });
     fireEvent.click(screen.getByText('Sign in'));
@@ -47,22 +47,23 @@ describe('Sign out test', () => {
     expect(pushMocked).toBeCalledWith('/');
   });
 
-  it('must clear jwt from storage and redirect to "/signIn" route ', async () => {
+  it('must clear jwt from storage and redirect to "/sign-in" route ', async () => {
     const clearJWTMocked = jest.fn();
     const pushMocked = jest.fn();
     const getJWTAccessTokenMocked = jest.fn().mockReturnValue(ACCESS_TOKEN);
     reactRouterDom.useHistory = jest.fn().mockReturnValue({ push: pushMocked });
     reactRouterDom.useLocation = jest.fn().mockReturnValue({
-      pathname: '/',
+      pathname: HOME,
     });
     getJWTAccessToken.mockImplementation(getJWTAccessTokenMocked);
     clearJWT.mockImplementation(clearJWTMocked);
     render(<Header />);
+    fireEvent.click(screen.getByTestId('profile'));
     const SIGN_OUT_BUTTON_TEXT = 'Sign out';
     await waitFor(() => screen.getByText(SIGN_OUT_BUTTON_TEXT));
     fireEvent.click(screen.getByText(SIGN_OUT_BUTTON_TEXT));
 
-    expect(pushMocked).toBeCalledWith('/signIn');
+    expect(pushMocked).toBeCalledWith(SIGN_IN);
     expect(clearJWTMocked).toBeCalled();
   });
 });

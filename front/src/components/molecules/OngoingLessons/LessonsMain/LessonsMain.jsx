@@ -3,7 +3,8 @@ import { Col, Empty, Skeleton } from 'antd';
 import { useTranslation } from 'react-i18next';
 import emptyImg from '../../../../resources/img/empty.svg';
 import CurrentLesson from '../../../atoms/CurrentLesson';
-import useLessonsRequest from '../../../../hooks/useLessonsRequest';
+import { useLessonsRequest } from './useLessonsRequest';
+
 import {
   LessonsColumn,
   LessonsMainEmpty,

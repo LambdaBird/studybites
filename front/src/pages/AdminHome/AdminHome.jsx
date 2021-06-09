@@ -1,19 +1,31 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
-import { Button, Col, Row, Select, Space, Table, Typography } from 'antd';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import {
+  Button,
+  Checkbox,
+  Col,
+  message,
+  Row,
+  Space,
+  Table,
+  Typography,
+} from 'antd';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
-import { FullSelect, MainDiv, TableHeader } from './AdminHome.styled';
-import { getUsers } from '../../utils/api/v1/user/user';
-import useTableRequest from '../../hooks/useTableRequest';
+import { useTableRequest } from '@sb-ui/hooks/useTableRequest';
+import { appointTeacher } from '@sb-ui/utils/api/v1/user';
+import { MainDiv, TableHeader } from './AdminHome.styled';
+import { getUsers, removeTeacher } from '../../utils/api/v1/user/user';
 
-const { Option } = Select;
 const { Title } = Typography;
+
+const messageKey = 'teacherStateLoading';
 
 const AdminHome = () => {
   const query = new URLSearchParams(useLocation().search);
   const { t } = useTranslation();
   const history = useHistory();
+  const [teacherRoleState, setTeacherRoleState] = useState({});
 
   const onChangePage = useCallback(
     (current) => {
@@ -44,6 +56,46 @@ const AdminHome = () => {
     });
   }, []);
 
+  const handleTeacherRoleChange = useCallback(
+    ({ isTeacher, userId }) =>
+      async () => {
+        setTeacherRoleState({
+          ...teacherRoleState,
+          [userId]: !isTeacher,
+        });
+
+        message.loading({ content: 'Loading...', key: messageKey });
+
+        const requestFunc = isTeacher ? removeTeacher : appointTeacher;
+        const response = await requestFunc(userId);
+
+        if (response.status === 200) {
+          const successMessage = t(response.data.key);
+
+          message.success({
+            content: successMessage,
+            key: messageKey,
+            duration: 2,
+          });
+        } else {
+          const errorMessage = response.data?.errors?.[0]?.key
+            ? t(response.data?.errors?.[0]?.key)
+            : 'Error';
+
+          message.error({
+            content: errorMessage,
+            key: messageKey,
+            duration: 2,
+          });
+          setTeacherRoleState({
+            ...teacherRoleState,
+            [userId]: !!isTeacher,
+          });
+        }
+      },
+    [teacherRoleState, t],
+  );
+
   const columns = useMemo(
     () => [
       {
@@ -60,18 +112,20 @@ const AdminHome = () => {
       },
       {
         title: t('admin_home.table.role'),
-        dataIndex: 'role',
-        key: 'role',
-        render: (role) => (
-          <FullSelect defaultValue={role}>
-            <Option value="teacher">
-              {t('admin_home.table.select_teacher')}
-            </Option>
-            <Option value="student">
-              {t('admin_home.table.select_student')}
-            </Option>
-          </FullSelect>
-        ),
+        dataIndex: 'isTeacher',
+        key: 'isTeacher',
+        render: (isTeacherDefault, user) => {
+          const isTeacher =
+            teacherRoleState[user.id] !== undefined
+              ? teacherRoleState[user.id]
+              : isTeacherDefault;
+          return (
+            <Checkbox
+              checked={isTeacher}
+              onChange={handleTeacherRoleChange({ isTeacher, userId: user.id })}
+            />
+          );
+        },
         width: '20%',
       },
       {
@@ -85,7 +139,7 @@ const AdminHome = () => {
         width: '10%',
       },
     ],
-    [t],
+    [t, teacherRoleState, handleTeacherRoleChange],
   );
 
   return (
