@@ -74,6 +74,11 @@ const idRole = yup
   .typeError(propertyTypeError('role', 'id', 'integer'))
   .required(requiredPropertyError('role', 'id'));
 
+const tokenValidatorRefresh = yup
+  .string()
+  .typeError(propertyTypeError('user', 'refreshToken', 'valid'))
+  .required(requiredPropertyError('user', 'refreshToken'));
+
 export const signupBodyValidator = yup.object({
   email: emailValidatorSignup,
   password: passwordValidatorSignup,
@@ -97,6 +102,10 @@ export const patchBodyValidator = yup.object({
 
 export const roleBodyValidator = yup.object({
   id: idRole,
+});
+
+export const refreshBodyValidator = yup.object({
+  refreshToken: tokenValidatorRefresh,
 });
 
 export const validateId = (paramId, userId) => {

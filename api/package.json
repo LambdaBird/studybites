@@ -6,6 +6,7 @@
   "repository": "https://github.com/LambdaBird/studyBites",
   "scripts": {
     "dev": "./bootstrap",
+    "seed:run": "./seeds/run",
     "test:unit": "babel-node node_modules/.bin/jest test/unit/",
     "test:integration": "babel-node ./init.js admin@test.io passwd3 && babel-node node_modules/.bin/jest test/integration/"
   },

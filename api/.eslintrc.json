@@ -10,7 +10,8 @@
     "plugin:import/warnings"
   ],
   "rules": {
-    "eol-last": ["error", "always"]
+    "eol-last": ["error", "always"],
+    "import/prefer-default-export": "off"
   },
   "ignorePatterns": ["test/"]
 }

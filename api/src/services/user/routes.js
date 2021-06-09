@@ -1,4 +1,3 @@
-import bcrypt from 'bcrypt';
 import { raw } from 'objection';
 
 import config from '../../../config';
@@ -19,6 +18,7 @@ import {
   patchBodyValidator,
   validateId,
   roleBodyValidator,
+  refreshBodyValidator,
 } from './validators';
 import { createAccessToken, createRefreshToken } from './utils';
 import {
@@ -32,7 +32,9 @@ import {
   ALTER_ROLE_FAIL,
   USER_ROLE_NOT_FOUND,
   USER_FIELDS,
+  REFRESH_TOKEN_EXPIRED,
 } from './constants';
+import { hashPassword, comparePasswords } from '../../../utils/salt';
 
 const router = async (instance) => {
   const { User, UserRole } = instance.models;
@@ -47,7 +49,7 @@ const router = async (instance) => {
     validatorCompiler,
     errorHandler,
     handler: async (req, repl) => {
-      req.body.password = await bcrypt.hash(req.body.password, 12);
+      req.body.password = await hashPassword(req.body.password);
 
       try {
         const userData = await User.query().insert(req.body).returning('*');
@@ -84,7 +86,7 @@ const router = async (instance) => {
         throw new AuthorizationError(UNAUTHORIZED);
       }
 
-      const compareResult = await bcrypt.compare(password, userData.password);
+      const compareResult = await comparePasswords(password, userData.password);
       if (!compareResult) {
         throw new AuthorizationError(UNAUTHORIZED);
       }
@@ -95,6 +97,40 @@ const router = async (instance) => {
       return repl.status(200).send({
         accessToken,
         refreshToken,
+      });
+    },
+  });
+
+  instance.route({
+    method: 'POST',
+    url: '/refresh_token',
+    schema: {
+      body: refreshBodyValidator,
+      response: errorResponse,
+    },
+    validatorCompiler,
+    errorHandler,
+    handler: async (req, repl) => {
+      const { refreshToken } = req.body;
+
+      const decoded = await instance.jwt.decode(refreshToken);
+
+      if (Date.now() >= decoded.exp * 1000) {
+        throw new AuthorizationError(REFRESH_TOKEN_EXPIRED);
+      }
+
+      const userData = await User.query().findById(decoded.id);
+
+      if (!userData) {
+        throw new AuthorizationError(UNAUTHORIZED);
+      }
+
+      const newAccessToken = createAccessToken(instance, userData);
+      const newRefreshToken = createRefreshToken(instance, userData);
+
+      return repl.status(200).send({
+        accessToken: newAccessToken,
+        refreshToken: newRefreshToken,
       });
     },
   });
@@ -228,7 +264,7 @@ const router = async (instance) => {
       const id = validateId(req.params.id, req.user.id);
 
       if (req.body.password) {
-        req.body.password = await bcrypt.hash(req.body.password, 12);
+        req.body.password = await hashPassword(req.body.password);
       }
 
       const data = await User.query()
