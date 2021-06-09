@@ -1,4 +1,3 @@
-import bcrypt from 'bcrypt';
 import { raw } from 'objection';
 
 import config from '../../../config';
@@ -35,6 +34,7 @@ import {
   USER_FIELDS,
   REFRESH_TOKEN_EXPIRED,
 } from './constants';
+import { hashPassword, comparePasswords } from '../../../utils/salt';
 
 const router = async (instance) => {
   const { User, UserRole } = instance.models;
@@ -49,7 +49,7 @@ const router = async (instance) => {
     validatorCompiler,
     errorHandler,
     handler: async (req, repl) => {
-      req.body.password = await bcrypt.hash(req.body.password, 12);
+      req.body.password = await hashPassword(req.body.password);
 
       try {
         const userData = await User.query().insert(req.body).returning('*');
@@ -86,7 +86,7 @@ const router = async (instance) => {
         throw new AuthorizationError(UNAUTHORIZED);
       }
 
-      const compareResult = await bcrypt.compare(password, userData.password);
+      const compareResult = await comparePasswords(password, userData.password);
       if (!compareResult) {
         throw new AuthorizationError(UNAUTHORIZED);
       }
@@ -264,7 +264,7 @@ const router = async (instance) => {
       const id = validateId(req.params.id, req.user.id);
 
       if (req.body.password) {
-        req.body.password = await bcrypt.hash(req.body.password, 12);
+        req.body.password = await hashPassword(req.body.password);
       }
 
       const data = await User.query()

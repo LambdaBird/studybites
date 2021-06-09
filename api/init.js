@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import knex from 'knex';
-import bcrypt from 'bcrypt';
+import { hashPassword } from './utils/salt';
 
 (async () => {
   try {
@@ -49,7 +49,7 @@ import bcrypt from 'bcrypt';
       process.exit(1);
     }
 
-    const hash = await bcrypt.hash(password, 12);
+    const hash = await hashPassword(password);
 
     if (!hash) {
       console.log('Something went wrong');
