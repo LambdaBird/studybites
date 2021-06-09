@@ -1,10 +1,9 @@
 /* eslint-disable max-classes-per-file */
-/* eslint-disable import/no-cycle */
+
 import objection from 'objection';
+import path from 'path';
 
 import config from '../../config';
-
-import UserRole from './UserRole';
 
 class UserQueryBuilder extends objection.QueryBuilder {
   getAll(columns, req) {
@@ -76,7 +75,7 @@ class User extends objection.Model {
     return {
       users_roles: {
         relation: objection.Model.HasManyRelation,
-        modelClass: UserRole,
+        modelClass: path.join(__dirname, 'UserRole'),
         join: {
           from: 'users.id',
           to: 'users_roles.user_id',

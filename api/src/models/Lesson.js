@@ -1,9 +1,6 @@
 /* eslint-disable max-classes-per-file */
-/* eslint-disable import/no-cycle */
 import objection from 'objection';
-
-import User from './User';
-import UserRole from './UserRole';
+import path from 'path';
 
 import config from '../../config';
 
@@ -74,11 +71,11 @@ class Lesson extends objection.Model {
     return {
       students: {
         relation: objection.Model.ManyToManyRelation,
-        modelClass: User,
+        modelClass: path.join(__dirname, 'User'),
         join: {
           from: 'lessons.id',
           through: {
-            modelClass: UserRole,
+            modelClass: path.join(__dirname, 'UserRole'),
             from: 'users_roles.resource_id',
             to: 'users_roles.user_id',
           },
@@ -95,7 +92,7 @@ class Lesson extends objection.Model {
       },
       authors: {
         relation: objection.Model.ManyToManyRelation,
-        modelClass: User,
+        modelClass: path.join(__dirname, 'User'),
         join: {
           from: 'lessons.id',
           through: {

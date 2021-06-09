@@ -35,7 +35,7 @@ describe('Test signup body validation:', () => {
     ],
     [
       'lastName',
-      { email: 'valid@test.io', password: 'valid3', lastName: 'Valid' },
+      { email: 'valid@test.io', password: 'valid3', firstName: 'Valid' },
       requiredPropertyError('signup', 'lastName'),
     ],
   ])('should return ValidationError for missing %s', (_, payload, expected) => {
