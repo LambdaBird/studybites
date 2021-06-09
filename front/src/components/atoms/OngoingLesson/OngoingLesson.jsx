@@ -25,9 +25,9 @@ const { Title } = Typography;
 
 const OngoingLesson = ({ lesson }) => {
   const { t } = useTranslation();
-  const { name, description, firstName, lastName } = lesson;
-  let author = `${firstName} ${lastName}`;
-  author = 'test test'; // TODO REMOVE
+  const { description, name, maintainer } = lesson;
+  const { firstName, lastName } = maintainer?.userInfo;
+  const author = `${firstName} ${lastName}`;
 
   return (
     <MainSpaced size="large" wrap={false}>
@@ -68,8 +68,7 @@ const OngoingLesson = ({ lesson }) => {
 OngoingLesson.propTypes = {
   lesson: PropTypes.exact({
     id: PropTypes.number.isRequired,
-    firstName: PropTypes.string.isRequired,
-    lastName: PropTypes.string.isRequired,
+    maintainer: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
   }).isRequired,
