@@ -12,10 +12,10 @@ import {
 import { useHistory, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
+import { useTableRequest } from '@sb-ui/hooks/useTableRequest';
 import { appointTeacher } from '@sb-ui/utils/api/v1/user';
 import { MainDiv, TableHeader } from './AdminHome.styled';
 import { getUsers, removeTeacher } from '../../utils/api/v1/user/user';
-import useTableRequest from '../../hooks/useTableRequest';
 
 const { Title } = Typography;
 
