@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { Col, Row } from 'antd';
+import { Col, Row, Menu, Dropdown } from 'antd';
 import { useHistory, useLocation } from 'react-router-dom';
-import { LogoText, ProfileText, RowMain, SignOutButton } from './Header.styled';
+import { isBrowser, isMobile } from 'react-device-detect';
+import { LogoText, ProfileText, RowMain, SignOutButton, MenuIcon } from './Header.styled';
 import logoImg from '../../../resources/img/logo.svg';
 import profileImg from '../../../resources/img/profile.svg';
 import { clearJWT, getJWTAccessToken } from '../../../utils/jwt';
+import menuImg from '../../../resources/img/menu.svg';
 
 const Header = () => {
   const logoTitle = 'StudyBites';
@@ -21,6 +23,16 @@ const Header = () => {
     history.push('/signIn');
   };
 
+  const menu = (
+    <Menu>
+      <Menu.Item key="0">
+        <SignOutButton type="danger" onClick={onClickSignOut}>
+          Sign out
+        </SignOutButton>
+      </Menu.Item>
+    </Menu>
+  );
+
   return (
     <header>
       <RowMain align="middle" justify="space-between">
@@ -35,11 +47,25 @@ const Header = () => {
         {isAuth && (
           <Col>
             <Row align="middle">
-              <SignOutButton type="danger" onClick={onClickSignOut}>
-                Sign out
-              </SignOutButton>
+              {isBrowser
+                ? <SignOutButton type="danger" onClick={onClickSignOut}>
+                    Sign out
+                  </SignOutButton>
+                : null
+              }
               <ProfileText>Profile</ProfileText>
               <img height={32} width={32} src={profileImg} alt="Profile" />
+              {isMobile
+                ? <Dropdown overlay={menu} trigger={['click']}>
+                    <MenuIcon
+                      height={32}
+                      width={32}
+                      src={menuImg}
+                      alt="Menu"
+                    />
+                  </Dropdown> 
+                : null
+              }
             </Row>
           </Col>
         )}

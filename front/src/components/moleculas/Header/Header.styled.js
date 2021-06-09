@@ -20,3 +20,7 @@ export const ProfileText = styled(Text)`
 export const SignOutButton = styled(Button)`
   margin-right: 0.5rem;
 `;
+
+export const MenuIcon = styled.img`
+  margin-left: 1rem; 
+`;
