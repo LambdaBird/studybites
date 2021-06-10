@@ -9,9 +9,14 @@ import PublicLesson from '@sb-ui/components/atoms/PublicLesson';
 import useTableRequest from '@sb-ui/hooks/useTableRequest';
 import { getLessons } from '@sb-ui/utils/api/v1/lesson/lesson';
 
-import * as S from './LessonsMainMobile.styled';
+import {
+  LessonsColumn,
+  LessonsEmpty,
+  LessonsMainDiv,
+  LessonsPagination,
+} from './LessonsMain.desktop.styled';
 
-const LessonsMainMobile = ({ searchLessons }) => {
+const LessonsMainDesktop = ({ searchLessons }) => {
   const { t } = useTranslation();
 
   const query = new URLSearchParams(useLocation().search);
@@ -61,28 +66,30 @@ const LessonsMainMobile = ({ searchLessons }) => {
 
   if (loading || dataSource?.length > 0) {
     return (
-      <>
+      <LessonsMainDiv>
         {loading ? (
-          <S.Main gutter={[32, 16]}>
-            <Col>
+          <Row gutter={[16, 16]}>
+            <Col lg={{ span: 12 }} md={{ span: 24 }}>
               <Skeleton avatar paragraph={{}} />
             </Col>
-            <Col>
+            <Col lg={{ span: 12 }} md={{ span: 24 }}>
               <Skeleton avatar paragraph={{}} />
             </Col>
-            <Col>
+            <Col lg={{ span: 12 }} md={{ span: 24 }}>
               <Skeleton avatar paragraph={{}} />
             </Col>
-            <Col>
+            <Col lg={{ span: 12 }} md={{ span: 24 }}>
               <Skeleton avatar paragraph={{}} />
             </Col>
-          </S.Main>
+          </Row>
         ) : (
           <>
-            <S.Main gutter={[32, 16]}>
+            <Row gutter={[16, 16]}>
               {dataSource.map((lesson) => (
-                <S.Column
+                <LessonsColumn
                   key={lesson.id}
+                  lg={{ span: 12 }}
+                  md={{ span: 24 }}
                 >
                   <PublicLesson
                     getLessons={() =>
@@ -90,12 +97,12 @@ const LessonsMainMobile = ({ searchLessons }) => {
                     }
                     lesson={lesson}
                   />
-                </S.Column>
+                </LessonsColumn>
               ))}
-            </S.Main>
+            </Row>
             <Row justify="end">
               {pagination && (
-                <S.Pages
+                <LessonsPagination
                   current={pagination?.current}
                   total={pagination?.total}
                   pageSize={pagination?.pageSize}
@@ -106,26 +113,26 @@ const LessonsMainMobile = ({ searchLessons }) => {
             </Row>
           </>
         )}
-      </>
+      </LessonsMainDiv>
     );
   }
 
   return (
-    <S.Main>
-      <S.Container
+    <LessonsMainDiv>
+      <LessonsEmpty
         image={emptyImg}
         description={t('user_home.open_lessons.not_found')}
       />
-    </S.Main>
+    </LessonsMainDiv>
   );
 };
 
-LessonsMainMobile.defaultProps = {
+LessonsMainDesktop.defaultProps = {
   searchLessons: null,
 };
 
-LessonsMainMobile.propTypes = {
+LessonsMainDesktop.propTypes = {
   searchLessons: PropTypes.string,
 };
 
-export default LessonsMainMobile;
+export default LessonsMainDesktop;

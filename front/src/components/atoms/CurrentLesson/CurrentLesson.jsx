@@ -1,44 +1,19 @@
-import { Button, Col, Row, Typography } from 'antd';
+import { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { useTranslation } from 'react-i18next';
-import {
-  LeftColumn,
-  MainSpace,
-  ProgressBar,
-  RightColumn,
-} from './CurrentLesson.styled';
 
-import lessonImg from '../../../resources/img/lesson.svg';
-import { AuthorAvatar, AuthorName } from '../PublicLesson/PublicLessonDesktop.styled';
+import MobileContext from '@sb-ui/contexts/MobileContext';
 
-const { Title } = Typography;
+import CurrentLessonMobile from './CurrentLesson.mobile';
+import CurrentLessonDesktop from './CurrentLesson.desktop';
 
 const CurrentLesson = ({ lesson }) => {
-  const { t } = useTranslation();
-  const { title, maintainer } = lesson;
+  const isMobile = useContext(MobileContext);
 
-  return (
-    <MainSpace>
-      <LeftColumn span={8}>
-        <img height={100} src={lessonImg} alt="Lesson" />
-        <ProgressBar percent={50} />
-      </LeftColumn>
-      <RightColumn span={14}>
-        <Title level={4}>{title}</Title>
-        <Row justify="space-between" align="between">
-          <Col>
-            <AuthorAvatar>{maintainer?.[0]}</AuthorAvatar>
-            <AuthorName>{maintainer}</AuthorName>
-          </Col>
-          <Col>
-            <Button type="primary">
-              {t('user_home.ongoing_lessons.continue_button')}
-            </Button>
-          </Col>
-        </Row>
-      </RightColumn>
-    </MainSpace>
-  );
+  if (isMobile) {
+    return <CurrentLessonMobile lesson={lesson} />
+  }
+
+  return <CurrentLessonDesktop lesson={lesson} />
 };
 
 CurrentLesson.propTypes = {

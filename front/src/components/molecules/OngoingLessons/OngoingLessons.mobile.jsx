@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import CurrentLesson from '@sb-ui/components/atoms/CurrentLesson';
 
-import * as S from './OngoingLessonsMobile.styled';
+import * as S from './OngoingLessons.mobile.styled';
 
 const lessonExample = {
   title: 'How to use StudyBites. ',

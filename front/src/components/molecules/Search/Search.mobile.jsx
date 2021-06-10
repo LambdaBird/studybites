@@ -1,18 +1,16 @@
 import { useState } from 'react';
-import { Row, Button } from 'antd';
-import { FilterOutlined, SearchOutlined } from '@ant-design/icons';
+import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+import { Button } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
 
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
 
-import LessonsMain from './LessonsMain';
+import * as S from './Search.mobile.styled';
 
-import * as S from './OpenLessonsMobile.styled';
-
-const OpenLessonsMobile = () => {
+const SearchMobile = ({ setSearchText }) => {
   const { t } = useTranslation();
 
-  const [searchText, setSearchText] = useState(null);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
 
   const onSearchChange = (data) => {
@@ -29,20 +27,7 @@ const OpenLessonsMobile = () => {
 
   return (
     <>
-      <S.Header justify="space-between" align="middle">
-        <S.Column>
-          <Row justify="space-between" align="middle">
-              <S.HeaderTitle level={3}>
-                {t('user_home.open_lessons.title')}
-              </S.HeaderTitle>
-              <div>
-                <S.ButtonFilter shape="circle" icon={<FilterOutlined />} size="large" />
-                <Button shape="circle" icon={<SearchOutlined />} size="large" onClick={showSearch} />
-              </div>
-          </Row>
-        </S.Column>
-      </S.Header>
-      <LessonsMain searchLessons={searchText} />
+      <Button shape="circle" icon={<SearchOutlined />} size="large" onClick={showSearch} />
       {
         isSearchVisible 
           ?  (
@@ -62,7 +47,15 @@ const OpenLessonsMobile = () => {
         />
       </S.SearchModal>
     </>
-  );
+  )
 };
 
-export default OpenLessonsMobile;
+SearchMobile.defaultProps = {
+  setSearchText: () => {},
+};
+
+SearchMobile.propTypes = {
+  setSearchText: PropTypes.func,
+};
+
+export default SearchMobile;

@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 
 import MobileContext from '@sb-ui/contexts/MobileContext';
 
-import LessonsMainMobile from './LessonsMainMobile';
-import LessonsMainDesktop from './LessonsMainDesktop';
+import LessonsMainMobile from './LessonsMain.mobile';
+import LessonsMainDesktop from './LessonsMain.desktop';
 
 const LessonsMain = ({ searchLessons }) => {
   const isMobile = useContext(MobileContext);

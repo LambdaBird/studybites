@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import CurrentLesson from '@sb-ui/components/atoms/CurrentLesson';
 
-import { LessonsHeader, LessonsMainDiv } from './OngoingLessonsDesktop.styled';
+import { LessonsHeader, LessonsMainDiv } from './OngoingLessons.desktop.styled';
 
 const { Title } = Typography;
 
