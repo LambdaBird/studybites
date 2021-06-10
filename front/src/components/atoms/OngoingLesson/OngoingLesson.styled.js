@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Col } from 'antd';
-import { MainSpace } from '../PublicLesson/PublicLessonDesktop.styled';
+import { MainSpace } from '../PublicLesson/PublicLesson.desktop.styled';
 
 export const MainSpaced = styled(MainSpace)`
   height: 12rem;

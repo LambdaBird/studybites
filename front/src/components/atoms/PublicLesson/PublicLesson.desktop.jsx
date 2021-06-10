@@ -13,7 +13,7 @@ import {
   LessonImg,
   MainSpace,
   RightContent,
-} from './PublicLessonDesktop.styled';
+} from './PublicLesson.desktop.styled';
 import LessonModal from './LessonModal';
 
 const { Title } = Typography;

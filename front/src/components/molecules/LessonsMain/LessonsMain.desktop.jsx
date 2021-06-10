@@ -134,14 +134,14 @@ const LessonsMainDesktop = ({ searchLessons, isOngoingLesson }) => {
   );
 };
 
-LessonsMain.defaultProps = {
+LessonsMainDesktop.defaultProps = {
   searchLessons: null,
   isOngoingLesson: false,
 };
 
-LessonsMain.propTypes = {
+LessonsMainDesktop.propTypes = {
   searchLessons: PropTypes.string,
   isOngoingLesson: PropTypes.bool,
 };
 
-export default LessonsMain;
+export default LessonsMainDesktop;

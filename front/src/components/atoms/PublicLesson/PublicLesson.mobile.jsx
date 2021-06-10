@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
 import LessonModal from './LessonModal';
 
-import * as S from './PublicLessonMobile.styled';
+import * as S from './PublicLesson.mobile.styled';
 
 const PublicLessonMobile = ({ getLessons, lesson }) => {
   const { t } = useTranslation();
