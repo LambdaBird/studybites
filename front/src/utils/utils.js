@@ -7,6 +7,14 @@ export const sleep = (ms) =>
     }, [ms]);
   });
 
+export const normalizeQueryPage = (params) => {
+  const pageNumber = parseInt(new URLSearchParams(params).get('page'), 10) || 1;
+  if (pageNumber < 0) {
+    return 1;
+  }
+  return pageNumber;
+};
+
 export const getPasswordStrength = (password = '') => {
   if (password.length === 0) {
     return -1;

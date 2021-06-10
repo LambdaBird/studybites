@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
 import { useTableRequest } from '@sb-ui/hooks/useTableRequest';
 import { appointTeacher } from '@sb-ui/utils/api/v1/user';
+import { normalizeQueryPage } from '@sb-ui/utils/utils';
 import { MainDiv, TableHeader } from './AdminHome.styled';
 import { getUsers, removeTeacher } from '../../utils/api/v1/user/user';
 
@@ -22,16 +23,23 @@ const { Title } = Typography;
 const messageKey = 'teacherStateLoading';
 
 const AdminHome = () => {
-  const query = new URLSearchParams(useLocation().search);
+  const PAGE_SIZE = 2;
+  const page = normalizeQueryPage(useLocation().search);
   const { t } = useTranslation();
   const history = useHistory();
   const [teacherRoleState, setTeacherRoleState] = useState({});
-
   const onChangePage = useCallback(
-    (current) => {
-      history.push({
-        search: `?page=${current}`,
-      });
+    (current, wrongPage) => {
+      const pageParam = normalizeQueryPage(history.location.search);
+      if (wrongPage || current === 1) {
+        history.replace({
+          search: ``,
+        });
+      } else if (pageParam !== current) {
+        history.push({
+          search: `?page=${current}`,
+        });
+      }
     },
     [history],
   );
@@ -49,12 +57,12 @@ const AdminHome = () => {
   };
 
   useEffect(() => {
-    const page = parseInt(query.get('page'), 10) || 1;
     handleTableChange({
-      current: page < 0 ? 1 : page,
-      pageSize: 10,
+      current: page,
+      pageSize: PAGE_SIZE,
+      firstTime: true,
     });
-  }, []);
+  }, [page]);
 
   const handleTeacherRoleChange = useCallback(
     ({ isTeacher, userId }) =>

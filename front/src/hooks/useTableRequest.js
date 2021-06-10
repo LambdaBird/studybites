@@ -20,27 +20,44 @@ export const useTableRequest = ({
     }) => {
       setLoading(true);
       setCurrentPageSize(pageSize);
-      if (search !== currentSearch) {
+      const isSearch = search !== currentSearch;
+      if (isSearch) {
         setCurrentPage(1);
       } else {
         setCurrentPage(current);
       }
       setCurrentSearch(search);
 
-      const { status, data } = await requestFunc({
-        offset: (current - 1) * pageSize,
+      let { status, data } = await requestFunc({
+        offset: isSearch ? 0 : (current - 1) * pageSize,
         limit: pageSize,
         search,
       });
+      const wrongPage = data?.total !== 0 && data?.data?.length === 0;
+      if (wrongPage) {
+        const response = await requestFunc({
+          offset: 0,
+          limit: pageSize,
+          search,
+        });
+        status = response.status;
+        data = response.data;
+      }
       setLoading(false);
-      onChangePage(current);
+
+      if (search !== currentSearch) {
+        onChangePage(1);
+      } else {
+        onChangePage(current, wrongPage);
+      }
+
       if (status === 200) {
         if (data.total <= pageSize) {
           setPagination(false);
         } else {
           setPagination({
             showSizeChanger: false,
-            current,
+            current: isSearch || wrongPage ? 1 : current,
             pageSize,
             total: data.total,
           });
