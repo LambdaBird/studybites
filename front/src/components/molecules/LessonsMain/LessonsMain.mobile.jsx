@@ -6,8 +6,8 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 import emptyImg from '@sb-ui/resources/img/empty.svg';
 import PublicLesson from '@sb-ui/components/atoms/PublicLesson';
-import useTableRequest from '@sb-ui/hooks/useTableRequest';
 import { getLessons } from '@sb-ui/utils/api/v1/lesson/lesson';
+import { useTableRequest } from '../../../hooks/useTableRequest';
 
 import * as S from './LessonsMain.mobile.styled';
 
@@ -81,9 +81,7 @@ const LessonsMainMobile = ({ searchLessons }) => {
           <>
             <S.Main gutter={[32, 16]}>
               {dataSource.map((lesson) => (
-                <S.Column
-                  key={lesson.id}
-                >
+                <S.Column key={lesson.id}>
                   <PublicLesson
                     getLessons={() =>
                       onChangeLessonsPagination(pagination.current)

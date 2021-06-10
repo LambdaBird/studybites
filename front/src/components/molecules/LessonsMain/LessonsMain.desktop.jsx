@@ -3,11 +3,14 @@ import { Col, Row, Skeleton } from 'antd';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
-
 import emptyImg from '@sb-ui/resources/img/empty.svg';
 import PublicLesson from '@sb-ui/components/atoms/PublicLesson';
-import useTableRequest from '@sb-ui/hooks/useTableRequest';
-import { getLessons } from '@sb-ui/utils/api/v1/lesson/lesson';
+import OngoingLesson from '@sb-ui/components/atoms/OngoingLesson';
+import {
+  getLessons,
+  getEnrolledLessons,
+} from '@sb-ui/utils/api/v1/lesson/lesson';
+import { useTableRequest } from '../../../hooks/useTableRequest';
 
 import {
   LessonsColumn,
@@ -16,7 +19,7 @@ import {
   LessonsPagination,
 } from './LessonsMain.desktop.styled';
 
-const LessonsMainDesktop = ({ searchLessons }) => {
+const LessonsMainDesktop = ({ searchLessons, isOngoingLesson }) => {
   const { t } = useTranslation();
 
   const query = new URLSearchParams(useLocation().search);
@@ -32,7 +35,7 @@ const LessonsMainDesktop = ({ searchLessons }) => {
 
   const { loading, dataSource, pagination, handleTableChange } =
     useTableRequest({
-      requestFunc: getLessons,
+      requestFunc: isOngoingLesson ? getEnrolledLessons : getLessons,
       onChangePage: onChangeLessonPage,
       defaultPagination: {
         showSizeChanger: false,
@@ -91,12 +94,16 @@ const LessonsMainDesktop = ({ searchLessons }) => {
                   lg={{ span: 12 }}
                   md={{ span: 24 }}
                 >
-                  <PublicLesson
-                    getLessons={() =>
-                      onChangeLessonsPagination(pagination.current)
-                    }
-                    lesson={lesson}
-                  />
+                  {isOngoingLesson ? (
+                    <OngoingLesson lesson={lesson} />
+                  ) : (
+                    <PublicLesson
+                      getLessons={() =>
+                        onChangeLessonsPagination(pagination.current)
+                      }
+                      lesson={lesson}
+                    />
+                  )}
                 </LessonsColumn>
               ))}
             </Row>
@@ -127,12 +134,14 @@ const LessonsMainDesktop = ({ searchLessons }) => {
   );
 };
 
-LessonsMainDesktop.defaultProps = {
+LessonsMain.defaultProps = {
   searchLessons: null,
+  isOngoingLesson: false,
 };
 
-LessonsMainDesktop.propTypes = {
+LessonsMain.propTypes = {
   searchLessons: PropTypes.string,
+  isOngoingLesson: PropTypes.bool,
 };
 
-export default LessonsMainDesktop;
+export default LessonsMain;

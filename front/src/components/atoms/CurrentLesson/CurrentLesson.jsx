@@ -19,8 +19,9 @@ const CurrentLesson = ({ lesson }) => {
 CurrentLesson.propTypes = {
   lesson: PropTypes.exact({
     id: PropTypes.number.isRequired,
-    title: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
     maintainer: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
   }).isRequired,
 };
 

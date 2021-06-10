@@ -1,11 +1,10 @@
-import axios from 'axios';
-import { getJWTAccessToken } from '../../../jwt';
+import api from '@sb-ui/utils/api';
 
 const PATH = '/api/v1/user';
 
 export const postSignUp = async (formData) => {
   try {
-    const { status, data } = await axios.post(`${PATH}/signup`, {
+    const { status, data } = await api.post(`${PATH}/signup`, {
       ...formData,
     });
     return { status, data };
@@ -20,7 +19,7 @@ export const postSignUp = async (formData) => {
 
 export const postSignIn = async (formData) => {
   try {
-    const { status, data } = await axios.post(`${PATH}/signin`, {
+    const { status, data } = await api.post(`${PATH}/signin`, {
       ...formData,
     });
     return { status, data };
@@ -35,10 +34,7 @@ export const postSignIn = async (formData) => {
 
 export const getUsers = async (paramsData) => {
   try {
-    const { status, data } = await axios.get(`${PATH}/`, {
-      headers: {
-        Authorization: `Bearer ${getJWTAccessToken()}`,
-      },
+    const { status, data } = await api.get(`${PATH}/`, {
       params: paramsData,
     });
     return {
@@ -62,15 +58,7 @@ export const getUsers = async (paramsData) => {
 
 export const appointTeacher = async (id) => {
   try {
-    const { status, data } = await axios.post(
-      `${PATH}/appoint_teacher`,
-      { id },
-      {
-        headers: {
-          Authorization: `Bearer ${getJWTAccessToken()}`,
-        },
-      },
-    );
+    const { status, data } = await api.post(`${PATH}/appoint_teacher`, { id });
     return { status, data };
   } catch (e) {
     const { status, data } = e.response;
@@ -83,15 +71,7 @@ export const appointTeacher = async (id) => {
 
 export const removeTeacher = async (id) => {
   try {
-    const { status, data } = await axios.post(
-      `${PATH}/remove_teacher`,
-      { id },
-      {
-        headers: {
-          Authorization: `Bearer ${getJWTAccessToken()}`,
-        },
-      },
-    );
+    const { status, data } = await api.post(`${PATH}/remove_teacher`, { id });
     return { status, data };
   } catch (e) {
     const { status, data } = e.response;
@@ -104,11 +84,7 @@ export const removeTeacher = async (id) => {
 
 export const getUser = async () => {
   try {
-    const { status, data } = await axios.get(`${PATH}/self`, {
-      headers: {
-        Authorization: `Bearer ${getJWTAccessToken()}`,
-      },
-    });
+    const { status, data } = await api.get(`${PATH}/self`);
 
     return {
       status,
