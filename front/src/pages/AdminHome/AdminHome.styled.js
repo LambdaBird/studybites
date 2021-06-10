@@ -1,5 +1,11 @@
 import styled from 'styled-components';
-import { Row } from 'antd';
+import { Row, Typography } from 'antd';
+
+const { Title } = Typography;
+
+export const TitleHeader = styled(Title)`
+  margin-bottom: 0 !important;
+`;
 
 export const MainDiv = styled.div`
   padding: 50px;
