@@ -49,6 +49,7 @@ class Lesson extends objection.Model {
             .select('id', 'first_name', 'last_name');
         },
       },
+
       maintainer: {
         relation: objection.Model.HasOneRelation,
         modelClass: path.join(__dirname, 'UserRole'),
@@ -73,6 +74,20 @@ class Lesson extends objection.Model {
         },
         modify: (query) => {
           return query.select('id', 'first_name', 'last_name');
+        },
+      },
+
+      blocks: {
+        relation: objection.Model.HasManyRelation,
+        modelClass: path.join(__dirname, 'Block'),
+        join: {
+          from: 'lessons.id',
+          through: {
+            modelClass: path.join(__dirname, 'LessonBlockStructure'),
+            from: 'lesson_block_structure.lesson_id',
+            to: 'lesson_block_structure.block_id',
+          },
+          to: 'blocks.block_id',
         },
       },
     };
