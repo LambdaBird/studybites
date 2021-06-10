@@ -58,9 +58,11 @@
         "full_name": "Full Name",
         "email": "Email",
         "role": "Teacher",
+        "action": "Action",
         "select_teacher": "Teacher",
         "select_student": "Student",
-        "edit": "Edit"
+        "edit": "Edit",
+        "no_data": "No data"
       },
       "search": {
         "placeholder": "Email or name"

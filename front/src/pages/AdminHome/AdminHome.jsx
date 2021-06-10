@@ -3,6 +3,7 @@ import {
   Button,
   Checkbox,
   Col,
+  Empty,
   message,
   Row,
   Space,
@@ -14,10 +15,8 @@ import { useTranslation } from 'react-i18next';
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
 import { useTableRequest } from '@sb-ui/hooks/useTableRequest';
 import { appointTeacher } from '@sb-ui/utils/api/v1/user';
-import { MainDiv, TableHeader } from './AdminHome.styled';
+import { MainDiv, TableHeader, TitleHeader } from './AdminHome.styled';
 import { getUsers, removeTeacher } from '../../utils/api/v1/user/user';
-
-const { Title } = Typography;
 
 const messageKey = 'teacherStateLoading';
 
@@ -129,7 +128,7 @@ const AdminHome = () => {
         width: '20%',
       },
       {
-        title: 'Action',
+        title: t('admin_home.table.action'),
         key: 'action',
         render: () => (
           <Space size="middle">
@@ -148,7 +147,7 @@ const AdminHome = () => {
         <Col>
           <Row>
             <Space size="large">
-              <Title level={2}>{t('admin_home.title')}</Title>
+              <TitleHeader level={3}>{t('admin_home.title')}</TitleHeader>
               <DebouncedSearch
                 delay={500}
                 placeholder={t('admin_home.search.placeholder')}
@@ -168,6 +167,14 @@ const AdminHome = () => {
         pagination={pagination}
         onChange={handleTableChange}
         loading={loading}
+        locale={{
+          emptyText: (
+            <Empty
+              image={Empty.PRESENTED_IMAGE_SIMPLE}
+              description={t('admin_home.table.no_data')}
+            />
+          ),
+        }}
       />
     </MainDiv>
   );
