@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { Col, Row, Skeleton } from 'antd';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
@@ -14,7 +14,10 @@ import {
 } from './LessonsMain.styled';
 import PublicLesson from '../../../atoms/PublicLesson';
 import OngoingLesson from '../../../atoms/OngoingLesson';
-import { getEnrolledLessons, getLessons } from '../../../../utils/api/v1/lesson/lesson';
+import {
+  getEnrolledLessons,
+  getLessons,
+} from '../../../../utils/api/v1/lesson/lesson';
 
 const LessonsMain = ({ searchLessons, isOngoingLesson }) => {
   const { t } = useTranslation();

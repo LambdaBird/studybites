@@ -1,4 +1,3 @@
-import React from 'react';
 import { Col, Empty, Skeleton } from 'antd';
 import { useTranslation } from 'react-i18next';
 import emptyImg from '../../../../resources/img/empty.svg';
