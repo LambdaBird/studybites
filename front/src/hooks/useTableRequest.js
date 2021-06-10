@@ -1,79 +1,96 @@
-import { useCallback, useState } from 'react';
+/* eslint-disable */
+import { useCallback, useEffect, useState } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
+import { getQueryPage } from '@sb-ui/utils/utils';
 
-export const useTableRequest = ({
-  requestFunc,
-  onChangePage = () => {},
-  defaultPagination,
-}) => {
+export const useTableRequest = ({ requestFunc, pageSize }) => {
+  const queryPage = useLocation().search;
+  const history = useHistory();
+
   const [dataSource, setDataSource] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [pagination, setPagination] = useState(defaultPagination);
-  const [currentSearch, setCurrentSearch] = useState();
-  const [currentPage, setCurrentPage] = useState();
-  const [currentPageSize, setCurrentPageSize] = useState();
+  const [loading, setLoading] = useState(false);
+  const [pagination, setPagination] = useState();
+  const [search, setSearch] = useState(null);
 
-  const handleTableChange = useCallback(
-    async ({
-      current = currentPage,
-      pageSize = currentPageSize,
-      search = currentSearch,
-    }) => {
-      setLoading(true);
-      setCurrentPageSize(pageSize);
-      const isSearch = search !== currentSearch;
-      if (isSearch) {
-        setCurrentPage(1);
-      } else {
-        setCurrentPage(current);
-      }
-      setCurrentSearch(search);
+  const getData = async (page = 1) => {
+    setLoading(true);
+    const { status, data } = await requestFunc({
+      offset: (page - 1) * pageSize,
+      limit: pageSize,
+      search,
+    });
+    setLoading(false);
+    if (status === 200) {
+      return {
+        total: data?.total,
+        data: data?.data,
+      };
+    } else {
+      return {
+        total: 0,
+        data: [],
+      };
+    }
+  };
 
-      let { status, data } = await requestFunc({
-        offset: isSearch ? 0 : (current - 1) * pageSize,
-        limit: pageSize,
-        search,
+  const handleTableChange = async ({ current = 1 }) => {
+    const { total, data } = await getData(current);
+    if (total !== 0 && data.length === 0) {
+      history.replace({
+        search: '',
       });
-      const wrongPage = data?.total !== 0 && data?.data?.length === 0;
-      if (wrongPage) {
-        const response = await requestFunc({
-          offset: 0,
-          limit: pageSize,
-          search,
+    }
+    const { page } = getQueryPage(queryPage);
+    if (page !== current) {
+      if (current === 1) {
+        history.push({
+          search: ``,
         });
-        status = response.status;
-        data = response.data;
-      }
-      setLoading(false);
-
-      if (search !== currentSearch) {
-        onChangePage(1);
       } else {
-        onChangePage(current, wrongPage);
+        history.push({
+          search: `?page=${current}`,
+        });
       }
+    }
+    if (total <= pageSize) {
+      setPagination(false);
+    } else {
+      setPagination({
+        showSizeChanger: false,
+        current: current,
+        pageSize,
+        total,
+      });
+    }
+    setDataSource(data);
+  };
 
-      if (status === 200) {
-        if (data.total <= pageSize) {
-          setPagination(false);
-        } else {
-          setPagination({
-            showSizeChanger: false,
-            current: isSearch || wrongPage ? 1 : current,
-            pageSize,
-            total: data.total,
-          });
-        }
+  const handleTableSearch = (value) => {
+    setSearch(value);
+  };
 
-        setDataSource(data.data);
-      }
-    },
-    [currentPage, currentPageSize, currentSearch, onChangePage, requestFunc],
-  );
+  useEffect(() => {
+    if (search !== null) {
+      handleTableChange({});
+    }
+  }, [search]);
+
+  useEffect(() => {
+    const { incorrect, page } = getQueryPage(queryPage);
+    if (incorrect) {
+      history.replace({
+        search: '',
+      });
+    }
+    setSearch(null);
+    handleTableChange({ current: page });
+  }, [queryPage]);
 
   return {
-    currentPage,
     loading,
     dataSource,
-    handleTableChange,
     pagination,
+    handleTableChange,
+    handleTableSearch,
   };
 };

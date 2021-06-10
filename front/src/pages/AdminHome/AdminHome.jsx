@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Button,
@@ -9,12 +10,11 @@ import {
   Table,
   Typography,
 } from 'antd';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
 import { useTableRequest } from '@sb-ui/hooks/useTableRequest';
 import { appointTeacher } from '@sb-ui/utils/api/v1/user';
-import { normalizeQueryPage } from '@sb-ui/utils/utils';
 import { MainDiv, TableHeader } from './AdminHome.styled';
 import { getUsers, removeTeacher } from '../../utils/api/v1/user/user';
 
@@ -24,45 +24,19 @@ const messageKey = 'teacherStateLoading';
 
 const AdminHome = () => {
   const PAGE_SIZE = 2;
-  const page = normalizeQueryPage(useLocation().search);
   const { t } = useTranslation();
-  const history = useHistory();
   const [teacherRoleState, setTeacherRoleState] = useState({});
-  const onChangePage = useCallback(
-    (current, wrongPage) => {
-      const pageParam = normalizeQueryPage(history.location.search);
-      if (wrongPage || current === 1) {
-        history.replace({
-          search: ``,
-        });
-      } else if (pageParam !== current) {
-        history.push({
-          search: `?page=${current}`,
-        });
-      }
-    },
-    [history],
-  );
 
-  const { loading, dataSource, pagination, handleTableChange } =
-    useTableRequest({
-      requestFunc: getUsers,
-      onChangePage,
-    });
-
-  const handleSearchChange = (data) => {
-    handleTableChange({
-      search: data,
-    });
-  };
-
-  useEffect(() => {
-    handleTableChange({
-      current: page,
-      pageSize: PAGE_SIZE,
-      firstTime: true,
-    });
-  }, [page]);
+  const {
+    loading,
+    dataSource,
+    pagination,
+    handleTableSearch,
+    handleTableChange,
+  } = useTableRequest({
+    requestFunc: getUsers,
+    pageSize: PAGE_SIZE,
+  });
 
   const handleTeacherRoleChange = useCallback(
     ({ isTeacher, userId }) =>
@@ -161,7 +135,7 @@ const AdminHome = () => {
                 delay={500}
                 placeholder={t('admin_home.search.placeholder')}
                 allowClear
-                onChange={handleSearchChange}
+                onChange={handleTableSearch}
               />
             </Space>
           </Row>
