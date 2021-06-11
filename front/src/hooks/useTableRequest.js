@@ -1,62 +1,95 @@
-import { useCallback, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
+import { getQueryPage } from '@sb-ui/utils/utils';
 
-export const useTableRequest = ({
-  requestFunc,
-  onChangePage = () => {},
-  defaultPagination,
-}) => {
+export const useTableRequest = ({ requestFunc, pageSize }) => {
+  const location = useLocation();
+  const queryPage = useMemo(() => location.search, [location]);
+  const history = useHistory();
+
   const [dataSource, setDataSource] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [pagination, setPagination] = useState(defaultPagination);
-  const [currentSearch, setCurrentSearch] = useState();
-  const [currentPage, setCurrentPage] = useState();
-  const [currentPageSize, setCurrentPageSize] = useState();
+  const [loading, setLoading] = useState(false);
+  const [pagination, setPagination] = useState();
+  const [search, setSearch] = useState(null);
 
-  const handleTableChange = useCallback(
-    async ({
-      current = currentPage,
-      pageSize = currentPageSize,
-      search = currentSearch,
-    }) => {
-      setLoading(true);
-      setCurrentPageSize(pageSize);
-      if (search !== currentSearch) {
-        setCurrentPage(1);
-      } else {
-        setCurrentPage(current);
-      }
-      setCurrentSearch(search);
+  const getData = async (page = 1) => {
+    setLoading(true);
+    const { status, data } = await requestFunc({
+      offset: (page - 1) * pageSize,
+      limit: pageSize,
+      search,
+    });
+    setLoading(false);
+    if (status === 200) {
+      return {
+        total: data?.total,
+        data: data?.data,
+      };
+    }
+    return {
+      total: 0,
+      data: [],
+    };
+  };
 
-      const { status, data } = await requestFunc({
-        offset: (current - 1) * pageSize,
-        limit: pageSize,
-        search,
+  const handleTableChange = async ({ current = 1 }) => {
+    const { total, data } = await getData(current);
+    if (total !== 0 && data.length === 0) {
+      history.replace({
+        search: '',
       });
-      setLoading(false);
-      onChangePage(current);
-      if (status === 200) {
-        if (data.total <= pageSize) {
-          setPagination(false);
-        } else {
-          setPagination({
-            showSizeChanger: false,
-            current,
-            pageSize,
-            total: data.total,
-          });
-        }
-
-        setDataSource(data.data);
+    }
+    const { page } = getQueryPage(queryPage);
+    if (page !== current) {
+      if (current === 1) {
+        history.push({
+          search: ``,
+        });
+      } else {
+        history.push({
+          search: `?page=${current}`,
+        });
       }
-    },
-    [currentPage, currentPageSize, currentSearch, onChangePage, requestFunc],
-  );
+    }
+    if (total <= pageSize) {
+      setPagination(false);
+    } else {
+      setPagination({
+        showSizeChanger: false,
+        current,
+        pageSize,
+        total,
+      });
+    }
+    setDataSource(data);
+  };
+
+  const handleTableSearch = (value) => {
+    setSearch(value);
+  };
+
+  useEffect(() => {
+    if (search !== null) {
+      handleTableChange({});
+    }
+  }, [search]);
+
+  useEffect(() => {
+    const { incorrect, page } = getQueryPage(queryPage);
+    if (incorrect) {
+      history.replace({
+        search: '',
+      });
+    }
+    setSearch(null);
+    handleTableChange({ current: page });
+  }, [queryPage]);
 
   return {
-    currentPage,
     loading,
     dataSource,
-    handleTableChange,
     pagination,
+    handleTableChange,
+    handleTableSearch,
   };
 };

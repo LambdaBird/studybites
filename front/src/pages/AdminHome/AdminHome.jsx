@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
   Button,
   Checkbox,
@@ -10,7 +10,6 @@ import {
   Table,
   Typography,
 } from 'antd';
-import { useHistory, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
 import { useTableRequest } from '@sb-ui/hooks/useTableRequest';
@@ -20,40 +19,22 @@ import { getUsers, removeTeacher } from '../../utils/api/v1/user/user';
 
 const messageKey = 'teacherStateLoading';
 
+const PAGE_SIZE = 10;
+
 const AdminHome = () => {
-  const query = new URLSearchParams(useLocation().search);
   const { t } = useTranslation();
-  const history = useHistory();
   const [teacherRoleState, setTeacherRoleState] = useState({});
 
-  const onChangePage = useCallback(
-    (current) => {
-      history.push({
-        search: `?page=${current}`,
-      });
-    },
-    [history],
-  );
-
-  const { loading, dataSource, pagination, handleTableChange } =
-    useTableRequest({
-      requestFunc: getUsers,
-      onChangePage,
-    });
-
-  const handleSearchChange = (data) => {
-    handleTableChange({
-      search: data,
-    });
-  };
-
-  useEffect(() => {
-    const page = parseInt(query.get('page'), 10) || 1;
-    handleTableChange({
-      current: page < 0 ? 1 : page,
-      pageSize: 10,
-    });
-  }, []);
+  const {
+    loading,
+    dataSource,
+    pagination,
+    handleTableSearch,
+    handleTableChange,
+  } = useTableRequest({
+    requestFunc: getUsers,
+    pageSize: PAGE_SIZE,
+  });
 
   const handleTeacherRoleChange = useCallback(
     ({ isTeacher, userId }) =>
@@ -152,7 +133,7 @@ const AdminHome = () => {
                 delay={500}
                 placeholder={t('admin_home.search.placeholder')}
                 allowClear
-                onChange={handleSearchChange}
+                onChange={handleTableSearch}
               />
             </Space>
           </Row>

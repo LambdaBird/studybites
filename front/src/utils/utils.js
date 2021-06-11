@@ -7,6 +7,23 @@ export const sleep = (ms) =>
     }, [ms]);
   });
 
+export const getQueryPage = (params) => {
+  let incorrect = false;
+  let pageNumber = parseInt(new URLSearchParams(params).get('page'), 10);
+  if (!pageNumber) {
+    pageNumber = 1;
+    incorrect = true;
+  }
+  if (pageNumber < 0) {
+    pageNumber = 1;
+    incorrect = true;
+  }
+  return {
+    page: pageNumber,
+    incorrect,
+  };
+};
+
 export const getPasswordStrength = (password = '') => {
   if (password.length === 0) {
     return -1;
