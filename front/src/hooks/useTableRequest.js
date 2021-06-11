@@ -1,10 +1,10 @@
-/* eslint-disable */
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { getQueryPage } from '@sb-ui/utils/utils';
 
 export const useTableRequest = ({ requestFunc, pageSize }) => {
-  const queryPage = useLocation().search;
+  const location = useLocation();
+  const queryPage = useMemo(() => location.search, [location]);
   const history = useHistory();
 
   const [dataSource, setDataSource] = useState([]);
@@ -25,12 +25,11 @@ export const useTableRequest = ({ requestFunc, pageSize }) => {
         total: data?.total,
         data: data?.data,
       };
-    } else {
-      return {
-        total: 0,
-        data: [],
-      };
     }
+    return {
+      total: 0,
+      data: [],
+    };
   };
 
   const handleTableChange = async ({ current = 1 }) => {
@@ -57,7 +56,7 @@ export const useTableRequest = ({ requestFunc, pageSize }) => {
     } else {
       setPagination({
         showSizeChanger: false,
-        current: current,
+        current,
         pageSize,
         total,
       });

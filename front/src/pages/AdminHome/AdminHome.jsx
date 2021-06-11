@@ -1,5 +1,4 @@
-/* eslint-disable */
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
   Button,
   Checkbox,
@@ -10,7 +9,6 @@ import {
   Table,
   Typography,
 } from 'antd';
-import { useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
 import { useTableRequest } from '@sb-ui/hooks/useTableRequest';
@@ -22,8 +20,9 @@ const { Title } = Typography;
 
 const messageKey = 'teacherStateLoading';
 
+const PAGE_SIZE = 10;
+
 const AdminHome = () => {
-  const PAGE_SIZE = 2;
   const { t } = useTranslation();
   const [teacherRoleState, setTeacherRoleState] = useState({});
 
