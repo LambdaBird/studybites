@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Col, Row, Space } from 'antd';
 import { useTranslation } from 'react-i18next';
-import DebouncedSearch from '../../atoms/DebounedSearch';
+import DebouncedSearch from '../../atoms/DebouncedSearch';
 import { LessonsHeader, OpenLessonsTitle } from './OngoingLessonsFull.styled';
 import LessonsMain from '../OpenLessons/LessonsMain';
 

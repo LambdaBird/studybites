@@ -14,7 +14,7 @@ const { Title } = Typography;
 
 const CurrentLessonMobile = ({ lesson }) => {
   const { t } = useTranslation();
-  const { title } = lesson;
+  const { name } = lesson;
 
   return (
     <MainSpace>
@@ -23,7 +23,7 @@ const CurrentLessonMobile = ({ lesson }) => {
         <ProgressBar percent={50} />
       </LeftColumn>
       <RightColumn span={14}>
-        <Title level={4}>{title}</Title>
+        <Title level={4}>{name}</Title>
         <Row justify="end" align="between">
           <Col>
             <Button type="primary">
@@ -39,7 +39,7 @@ const CurrentLessonMobile = ({ lesson }) => {
 CurrentLessonMobile.propTypes = {
   lesson: PropTypes.exact({
     id: PropTypes.number.isRequired,
-    title: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
     maintainer: PropTypes.string.isRequired,
   }).isRequired,
 };

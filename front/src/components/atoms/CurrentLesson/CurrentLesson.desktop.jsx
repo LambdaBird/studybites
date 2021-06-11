@@ -9,13 +9,18 @@ import {
 } from './CurrentLesson.styled';
 
 import lessonImg from '../../../resources/img/lesson.svg';
-import { AuthorAvatar, AuthorName } from '../PublicLesson/PublicLesson.desktop.styled';
+import {
+  AuthorAvatar,
+  AuthorName,
+} from '../PublicLesson/PublicLesson.desktop.styled';
 
 const { Title } = Typography;
 
 const CurrentLessonDesktop = ({ lesson }) => {
   const { t } = useTranslation();
-  const { title, maintainer } = lesson;
+  const { name, maintainer } = lesson;
+  const { firstName, lastName } = maintainer?.userInfo;
+  const author = `${firstName} ${lastName}`;
 
   return (
     <MainSpace>
@@ -24,11 +29,11 @@ const CurrentLessonDesktop = ({ lesson }) => {
         <ProgressBar percent={50} />
       </LeftColumn>
       <RightColumn span={14}>
-        <Title level={4}>{title}</Title>
+        <Title level={4}>{name}</Title>
         <Row justify="space-between" align="between">
           <Col>
-            <AuthorAvatar>{maintainer?.[0]}</AuthorAvatar>
-            <AuthorName>{maintainer}</AuthorName>
+            <AuthorAvatar>{author?.[0]}</AuthorAvatar>
+            <AuthorName>{author}</AuthorName>
           </Col>
           <Col>
             <Button type="primary">
@@ -44,8 +49,9 @@ const CurrentLessonDesktop = ({ lesson }) => {
 CurrentLessonDesktop.propTypes = {
   lesson: PropTypes.exact({
     id: PropTypes.number.isRequired,
-    title: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
     maintainer: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
   }).isRequired,
 };
 
