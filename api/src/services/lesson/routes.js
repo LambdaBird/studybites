@@ -36,11 +36,9 @@ const router = async (instance) => {
       const { total, results } = await Lesson.getAllPublicLessons({
         ...req.query,
         userId: req.userId,
-      });
-      const count = await Lesson.countAllPublic({
-        ...req.query,
-        userId: req.userId,
-      });
+      })
+        .withGraphFetched('latestBlocks')
+        .debug();
 
       return repl.status(200).send({ total, data: results });
     },

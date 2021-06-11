@@ -78,7 +78,7 @@ class Lesson extends objection.Model {
       },
 
       blocks: {
-        relation: objection.Model.HasManyRelation,
+        relation: objection.Model.ManyToManyRelation,
         modelClass: path.join(__dirname, 'Block'),
         join: {
           from: 'lessons.id',
@@ -88,6 +88,34 @@ class Lesson extends objection.Model {
             to: 'lesson_block_structure.block_id',
           },
           to: 'blocks.block_id',
+        },
+      },
+
+      latestBlocks: {
+        relation: objection.Model.ManyToManyRelation,
+        modelClass: path.join(__dirname, 'Block'),
+        join: {
+          from: 'lessons.id',
+          through: {
+            modelClass: path.join(__dirname, 'LessonBlockStructure'),
+            from: 'lesson_block_structure.lesson_id',
+            to: 'lesson_block_structure.block_id',
+          },
+          to: 'blocks.block_id',
+        },
+        modify: (query) => {
+          return query
+            .select('b.*')
+            .from(
+              objection.raw(
+                `(select block_id, MAX(created_at) as created_at from blocks group by block_id) as blocks`,
+              ),
+            )
+            .join(
+              objection.raw(
+                `blocks as b on b.block_id = blocks.block_id and b.created_at = blocks.created_at`,
+              ),
+            );
         },
       },
     };
