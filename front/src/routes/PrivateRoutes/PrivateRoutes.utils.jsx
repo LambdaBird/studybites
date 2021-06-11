@@ -1,6 +1,7 @@
 import * as paths from '@sb-ui/utils/paths';
 import UserHome from '@sb-ui/pages/UserHome';
 import AdminHome from '@sb-ui/pages/AdminHome';
+import UserLessons from '@sb-ui/pages/UserLessons';
 import { Roles } from '@sb-ui/utils/constants';
 
 export const checkPermission = (roles, permissions) => {
@@ -20,6 +21,10 @@ export const PRIVATE_ROUTES = [
   {
     component: UserHome,
     path: paths.USER_HOME,
+  },
+  {
+    component: UserLessons,
+    path: paths.USER_LESSONS,
   },
   {
     component: () => <h1>Teacher</h1>,
