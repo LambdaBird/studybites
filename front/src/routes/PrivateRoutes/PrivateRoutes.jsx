@@ -33,9 +33,11 @@ const PrivateRoutes = () => {
           {getMainPage(user.roles)}
         </Route>
         {allowedRoutes.map((route) => (
-          <Route key={route.path} path={route.path}>
-            {route.component}
-          </Route>
+          <Route
+            key={route.path}
+            path={route.path}
+            component={route.component}
+          />
         ))}
         <Route path="*">
           <h1>Not Found</h1>

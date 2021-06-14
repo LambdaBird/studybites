@@ -30,19 +30,14 @@ export const postEnroll = async (id) => {
   }
 };
 
-export const getEnrolledLessons = async (paramsData) => {
-  try {
-    const { status, data } = await api.get(`${PATH}/enrolled/`, {
-      params: paramsData,
-    });
-    return { status, data };
-  } catch (e) {
-    const { status, data } = e.response;
-    return {
-      status,
-      data,
-    };
-  }
+export const getEnrolledLessons = async ({ queryKey }) => {
+  const [, paramsData] = queryKey;
+
+  const { data } = await api.get(`${PATH}/enrolled/`, {
+    params: paramsData,
+  });
+
+  return data;
 };
 
 export const createLesson = async (values) => {
@@ -59,6 +54,16 @@ export const getTeacherLessons = async ({ queryKey }) => {
   const [, paramsData] = queryKey;
 
   const { data } = await api.get(`${PATH}/maintain/`, {
+    params: paramsData,
+  });
+
+  return data;
+};
+
+export const getPublicLessons = async ({ queryKey }) => {
+  const [, paramsData] = queryKey;
+
+  const { data } = await api.get(`${PATH}/`, {
     params: paramsData,
   });
 
