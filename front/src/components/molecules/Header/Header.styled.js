@@ -9,7 +9,7 @@ export const Container = styled.header`
 
 export const RowMain = styled(Row)`
   padding: 0 2rem;
-  height: 100%;
+  height: 56px;
 `;
 
 export const Logo = styled.img`

@@ -16,7 +16,7 @@ import {
   LeftContent,
   LessonImg,
   RightContent,
-} from '../PublicLesson/PublicLesson.styled';
+} from '../PublicLesson/PublicLesson.desktop.styled';
 
 import moreIcon from '../../../resources/icons/moreIcon.svg';
 

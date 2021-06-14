@@ -84,7 +84,7 @@ class Lesson extends objection.Model {
       firstIndex + (limit || config.search.LESSON_SEARCH_LIMIT) - 1;
     return this.query()
       .skipUndefined()
-      .where(search && 'name', 'ilike', `%${search}%`)
+      .where(search ? 'name' : undefined, 'ilike', `%${search}%`)
       .where({
         status: 'Public',
       })
@@ -117,8 +117,7 @@ class Lesson extends objection.Model {
   static countAllPublic({ search }) {
     return this.query()
       .skipUndefined()
-      .where(search && 'name', 'ilike', `%${search}%`)
-
+      .where(search ? 'name' : undefined, 'ilike', `%${search}%`)
       .where({
         status: 'Public',
       })

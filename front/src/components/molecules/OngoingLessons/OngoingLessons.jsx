@@ -1,31 +1,20 @@
-import { Col, Row, Typography } from 'antd';
-import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
-import { LessonsHeader, LessonsMainDiv } from './OngoingLessons.styled';
-import LessonsMain from './LessonsMain';
+import { useContext } from 'react';
 
-const { Title } = Typography;
+import MobileContext from '@sb-ui/contexts/MobileContext';
+
+import OngoingLessonsMobile from './OngoingLessons.mobile';
+import OngoingLessonsDesktop from './OngoingLessons.desktop';
 
 const OngoingLessons = () => {
-  const { t } = useTranslation();
+  const isMobile = useContext(MobileContext);
 
   return (
     <>
-      <LessonsHeader justify="space-between" align="middle">
-        <Col>
-          <Row justify="center" align="middle">
-            <Title level={3}>{t('user_home.ongoing_lessons.title')}</Title>
-          </Row>
-        </Col>
-        <Col>
-          <Link to="/user-lessons">
-            {t('user_home.ongoing_lessons.view_all_lessons')}
-          </Link>
-        </Col>
-      </LessonsHeader>
-      <LessonsMainDiv>
-        <LessonsMain />
-      </LessonsMainDiv>
+      {
+        isMobile 
+          ? <OngoingLessonsMobile />
+          : <OngoingLessonsDesktop />
+      }
     </>
   );
 };

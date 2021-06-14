@@ -3,23 +3,15 @@ import { Col, Row, Skeleton } from 'antd';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
-import { useTableRequest } from '../../../../hooks/useTableRequest';
 
-import emptyImg from '../../../../resources/img/empty.svg';
-import {
-  LessonsColumn,
-  LessonsEmpty,
-  LessonsMainDiv,
-  LessonsPagination,
-} from './LessonsMain.styled';
-import PublicLesson from '../../../atoms/PublicLesson';
-import OngoingLesson from '../../../atoms/OngoingLesson';
-import {
-  getEnrolledLessons,
-  getLessons,
-} from '../../../../utils/api/v1/lesson/lesson';
+import emptyImg from '@sb-ui/resources/img/empty.svg';
+import PublicLesson from '@sb-ui/components/atoms/PublicLesson';
+import { getLessons } from '@sb-ui/utils/api/v1/lesson/lesson';
+import { useTableRequest } from '../../../hooks/useTableRequest';
 
-const LessonsMain = ({ searchLessons, isOngoingLesson }) => {
+import * as S from './LessonsMain.mobile.styled';
+
+const LessonsMainMobile = ({ searchLessons }) => {
   const { t } = useTranslation();
 
   const query = new URLSearchParams(useLocation().search);
@@ -35,14 +27,13 @@ const LessonsMain = ({ searchLessons, isOngoingLesson }) => {
 
   const { loading, dataSource, pagination, handleTableChange } =
     useTableRequest({
-      requestFunc: isOngoingLesson ? getEnrolledLessons : getLessons,
+      requestFunc: getLessons,
       onChangePage: onChangeLessonPage,
       defaultPagination: {
         showSizeChanger: false,
         current: 1,
         pageSize: PAGE_SIZE,
       },
-      pageSize: PAGE_SIZE,
     });
 
   const onChangeLessonsPagination = (page) => {
@@ -70,47 +61,39 @@ const LessonsMain = ({ searchLessons, isOngoingLesson }) => {
 
   if (loading || dataSource?.length > 0) {
     return (
-      <LessonsMainDiv>
+      <>
         {loading ? (
-          <Row gutter={[16, 16]}>
-            <Col lg={{ span: 12 }} md={{ span: 24 }}>
+          <S.Main gutter={[32, 16]}>
+            <Col>
               <Skeleton avatar paragraph={{}} />
             </Col>
-            <Col lg={{ span: 12 }} md={{ span: 24 }}>
+            <Col>
               <Skeleton avatar paragraph={{}} />
             </Col>
-            <Col lg={{ span: 12 }} md={{ span: 24 }}>
+            <Col>
               <Skeleton avatar paragraph={{}} />
             </Col>
-            <Col lg={{ span: 12 }} md={{ span: 24 }}>
+            <Col>
               <Skeleton avatar paragraph={{}} />
             </Col>
-          </Row>
+          </S.Main>
         ) : (
           <>
-            <Row gutter={[16, 16]}>
+            <S.Main gutter={[32, 16]}>
               {dataSource.map((lesson) => (
-                <LessonsColumn
-                  key={lesson.id}
-                  lg={{ span: 12 }}
-                  md={{ span: 24 }}
-                >
-                  {isOngoingLesson ? (
-                    <OngoingLesson lesson={lesson} />
-                  ) : (
-                    <PublicLesson
-                      getLessons={() =>
-                        onChangeLessonsPagination(pagination.current)
-                      }
-                      lesson={lesson}
-                    />
-                  )}
-                </LessonsColumn>
+                <S.Column key={lesson.id}>
+                  <PublicLesson
+                    getLessons={() =>
+                      onChangeLessonsPagination(pagination.current)
+                    }
+                    lesson={lesson}
+                  />
+                </S.Column>
               ))}
-            </Row>
+            </S.Main>
             <Row justify="end">
               {pagination && (
-                <LessonsPagination
+                <S.Pages
                   current={pagination?.current}
                   total={pagination?.total}
                   pageSize={pagination?.pageSize}
@@ -121,28 +104,26 @@ const LessonsMain = ({ searchLessons, isOngoingLesson }) => {
             </Row>
           </>
         )}
-      </LessonsMainDiv>
+      </>
     );
   }
 
   return (
-    <LessonsMainDiv>
-      <LessonsEmpty
+    <S.Main>
+      <S.Container
         image={emptyImg}
         description={t('user_home.open_lessons.not_found')}
       />
-    </LessonsMainDiv>
+    </S.Main>
   );
 };
 
-LessonsMain.defaultProps = {
+LessonsMainMobile.defaultProps = {
   searchLessons: null,
-  isOngoingLesson: false,
 };
 
-LessonsMain.propTypes = {
+LessonsMainMobile.propTypes = {
   searchLessons: PropTypes.string,
-  isOngoingLesson: PropTypes.bool,
 };
 
-export default LessonsMain;
+export default LessonsMainMobile;
