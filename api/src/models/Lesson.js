@@ -79,9 +79,11 @@ class Lesson extends objection.Model {
   }
 
   static getAllPublicLessons({ offset, limit, search, userId }) {
-    const firstIndex = offset || 0;
+    const firstIndex = parseInt(offset, 10) || 0;
     const lastIndex =
-      firstIndex + (limit || config.search.LESSON_SEARCH_LIMIT) - 1;
+      firstIndex +
+      (parseInt(limit, 10) || config.search.LESSON_SEARCH_LIMIT) -
+      1;
     return this.query()
       .skipUndefined()
       .where(search ? 'name' : undefined, 'ilike', `%${search}%`)

@@ -306,9 +306,11 @@ const router = async (instance) => {
         columns.lastName = undefined;
       }
 
-      const firstIndex = req.query.offset || 0;
+      const firstIndex = parseInt(req.query.offset, 10) || 0;
       const lastIndex =
-        firstIndex + (req.query.limit || config.search.LESSON_SEARCH_LIMIT) - 1;
+        firstIndex +
+        (parseInt(req.query.limit, 10) || config.search.LESSON_SEARCH_LIMIT) -
+        1;
 
       const { total, results } = await Lesson.getAllEnrolled({
         columns,
