@@ -9,7 +9,6 @@ export const MISSING_ROLE = {
 
 const access =
   ({ instance, type, role, getId = () => undefined }) =>
-  // eslint-disable-next-line consistent-return
   async (req) => {
     try {
       const { UserRole } = instance.models;

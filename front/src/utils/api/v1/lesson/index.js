@@ -1,3 +1,1 @@
-import { getLessons } from './lesson';
-
-export { getLessons };
+export * from './lesson';
