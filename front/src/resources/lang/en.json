@@ -76,7 +76,8 @@
         "title": "Open lessons",
         "not_found": "No open lessons yet",
         "search": "Name or author",
-        "enroll_button": "Enroll"
+        "enroll_button": "Enroll",
+        "start_button": "Start"
       },
       "ongoing_lessons": {
         "title": "Ongoing lessons",
@@ -120,6 +121,13 @@
       "invite": "Invite Now",
       "no_students": "No students yet!",
       "all": "View all"
+    },
+    "enroll_modal": {
+      "review": {
+        "header": "Reviews",
+        "empty": "No reviews yet",
+        "be_first": "Be first to rate a lesson"
+      }
     }
   }
 }

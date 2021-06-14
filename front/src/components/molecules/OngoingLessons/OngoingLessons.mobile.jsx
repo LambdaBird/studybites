@@ -1,7 +1,9 @@
-import { Col, Row, Typography } from 'antd';
+import { Col, Row } from 'antd';
 import { useTranslation } from 'react-i18next';
 
 import LessonsMain from '@sb-ui/components/molecules/OngoingLessons/LessonsMain';
+import { Link } from 'react-router-dom';
+import { USER_LESSONS } from '@sb-ui/utils/paths';
 import * as S from './OngoingLessons.mobile.styled';
 
 const OngoingLessonsMobile = () => {
@@ -24,9 +26,9 @@ const OngoingLessonsMobile = () => {
 
       <S.Footer>
         <Col>
-          <Typography.Link>
+          <Link to={USER_LESSONS}>
             {t('user_home.ongoing_lessons.view_all_lessons')}
-          </Typography.Link>
+          </Link>
         </Col>
       </S.Footer>
     </>

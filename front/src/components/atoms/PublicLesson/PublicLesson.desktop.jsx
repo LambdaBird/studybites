@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useMemo } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Button, Row, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
@@ -14,63 +15,64 @@ import {
   MainSpace,
   RightContent,
 } from './PublicLesson.desktop.styled';
-import LessonModal from './LessonModal';
 
 const { Title } = Typography;
 
-const PublicLessonDesktop = ({ getLessons, lesson }) => {
+const PublicLessonDesktop = ({ lesson }) => {
+  const location = useLocation();
+  const query = useMemo(() => location.search, [location]);
+
   const { t } = useTranslation();
-  const { isEnrolled, name, description, firstName, lastName } = lesson;
+  const history = useHistory();
+  const { id, isEnrolled, name, description, firstName, lastName } = lesson;
   const author = `${firstName} ${lastName}`;
 
-  const [visible, setVisible] = useState(false);
-
   return (
-    <MainSpace size="large" wrap={false}>
-      <LessonModal
-        onStartEnroll={getLessons}
-        visible={visible}
-        setVisible={setVisible}
-        lesson={lesson}
-      />
-      <LeftContent>
-        <div>
-          <LessonImg src={lessonImage} alt="Lesson" />
-          <AuthorContainer>
-            <AuthorAvatar>{author?.[0]}</AuthorAvatar>
-            <AuthorName>{author}</AuthorName>
-          </AuthorContainer>
-        </div>
-      </LeftContent>
-      <RightContent>
-        <Row>
-          <Title level={3}>{name}</Title>
-        </Row>
-        <Row>
-          <DescriptionText>{description}</DescriptionText>
-        </Row>
-        <EnrollRow justify="end">
-          {isEnrolled ? (
-            <Button type="primary">
-              {t('user_home.ongoing_lessons.continue_button')}
-            </Button>
-          ) : (
-            <Button
-              size="medium"
-              type="secondary"
-              onClick={() => setVisible(true)}
-            >
-              {t('user_home.open_lessons.enroll_button')}
-            </Button>
-          )}
-        </EnrollRow>
-      </RightContent>
-    </MainSpace>
+    <>
+      <MainSpace size="large" wrap={false}>
+        <LeftContent>
+          <div>
+            <LessonImg src={lessonImage} alt="Lesson" />
+            <AuthorContainer>
+              <AuthorAvatar>{author?.[0]}</AuthorAvatar>
+              <AuthorName>{author}</AuthorName>
+            </AuthorContainer>
+          </div>
+        </LeftContent>
+        <RightContent>
+          <Row>
+            <Title level={3}>{name}</Title>
+          </Row>
+          <Row>
+            <DescriptionText>{description}</DescriptionText>
+          </Row>
+          <EnrollRow justify="end">
+            {isEnrolled ? (
+              <Button type="primary">
+                {t('user_home.ongoing_lessons.continue_button')}
+              </Button>
+            ) : (
+              <Button
+                size="medium"
+                type="secondary"
+                onClick={() => {
+                  history.push({
+                    search: query,
+                    pathname: `/user/enroll/${id}`,
+                  });
+                }}
+              >
+                {t('user_home.open_lessons.enroll_button')}
+              </Button>
+            )}
+          </EnrollRow>
+        </RightContent>
+      </MainSpace>
+    </>
   );
 };
 
 PublicLessonDesktop.propTypes = {
-  getLessons: PropTypes.func.isRequired,
   lesson: PropTypes.exact({
     id: PropTypes.number.isRequired,
     isEnrolled: PropTypes.bool.isRequired,

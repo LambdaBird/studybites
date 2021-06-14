@@ -1,19 +1,18 @@
-import { useState } from 'react';
+import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Row } from 'antd';
 import { useTranslation } from 'react-i18next';
-
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
-import LessonModal from './LessonModal';
-
+import { useHistory, useLocation } from 'react-router-dom';
 import * as S from './PublicLesson.mobile.styled';
 
-const PublicLessonMobile = ({ getLessons, lesson }) => {
+const PublicLessonMobile = ({ lesson }) => {
+  const location = useLocation();
+  const query = useMemo(() => location.search, [location]);
   const { t } = useTranslation();
-  const { isEnrolled, name, description, firstName, lastName } = lesson;
+  const history = useHistory();
+  const { id, isEnrolled, name, description, firstName, lastName } = lesson;
   const author = `${firstName} ${lastName}`;
-
-  const [visible, setVisible] = useState(false);
 
   return (
     <S.Main size="large" wrap={false}>
@@ -35,7 +34,12 @@ const PublicLessonMobile = ({ getLessons, lesson }) => {
           <S.Enroll
             size="medium"
             type="secondary"
-            onClick={() => setVisible(true)}
+            onClick={() => {
+              history.push({
+                search: query,
+                pathname: `/user/enroll/${id}`,
+              });
+            }}
           >
             {t('user_home.open_lessons.enroll_button')}
           </S.Enroll>
@@ -45,18 +49,11 @@ const PublicLessonMobile = ({ getLessons, lesson }) => {
         <S.AuthorAvatar>{author?.[0]}</S.AuthorAvatar>
         <S.AuthorName>{author}</S.AuthorName>
       </S.AuthorContainer>
-       <LessonModal
-        onStartEnroll={getLessons}
-        visible={visible}
-        setVisible={setVisible}
-        lesson={lesson}
-      />
     </S.Main>
   );
 };
 
 PublicLessonMobile.propTypes = {
-  getLessons: PropTypes.func.isRequired,
   lesson: PropTypes.exact({
     id: PropTypes.number.isRequired,
     isEnrolled: PropTypes.bool.isRequired,

@@ -1,7 +1,12 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { Col, Divider, Modal, Rate, Typography } from 'antd';
+import { useQuery } from 'react-query';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { postEnroll } from '@sb-ui/utils/api/v1/lesson/lesson';
+import { getLessonById, postEnroll } from '@sb-ui/utils/api/v1/lesson/lesson';
+import { USER_HOME } from '@sb-ui/utils/paths';
+import { USER_LESSON_MODAL_BASE_KEY } from '@sb-ui/components/atoms/PublicLesson/LessonModal/constants';
+import { useTranslation } from 'react-i18next';
 import lessonImg from '../../../../resources/img/lesson.svg';
 import {
   AuthorAvatar,
@@ -23,22 +28,56 @@ import {
 
 const { Title, Text } = Typography;
 
-const LessonModal = ({ onStartEnroll, visible, setVisible, lesson }) => {
-  const { id, firstName, lastName, name, description } = lesson;
+const LessonModal = ({ onStartEnroll }) => {
+  const { t } = useTranslation();
+  const location = useLocation();
+  const query = useMemo(() => location.search, [location]);
+  const history = useHistory();
+  const { id } = useParams();
+
+  const historyPushBack = () => {
+    history.push({
+      search: query,
+      pathname: USER_HOME,
+    });
+  };
+
+  const { data: responseData } = useQuery(
+    [
+      USER_LESSON_MODAL_BASE_KEY,
+      {
+        id,
+      },
+    ],
+    getLessonById,
+    { keepPreviousData: true },
+  );
+  const { name, authors, description } = responseData?.data || {
+    authors: [
+      {
+        firstName: '',
+        lastName: '',
+      },
+    ],
+    name: '',
+    description: '',
+  };
+
+  const { firstName, lastName } = authors?.[0];
   const author = `${firstName} ${lastName}`;
 
   const onClickStartEnroll = useCallback(async () => {
     await postEnroll(id);
-    setVisible(false);
+    historyPushBack();
     onStartEnroll();
-  }, [onStartEnroll, setVisible, id]);
+  }, [id, historyPushBack, onStartEnroll]);
 
   return (
     <Modal
       centered
-      visible={visible}
-      onOk={() => setVisible(false)}
-      onCancel={() => setVisible(false)}
+      visible
+      onOk={historyPushBack}
+      onCancel={historyPushBack}
       footer={null}
       width="50%"
       bodyStyle={{
@@ -63,7 +102,7 @@ const LessonModal = ({ onStartEnroll, visible, setVisible, lesson }) => {
       <RightColumn>
         <ReviewHeader>
           <ReviewHeaderSpace>
-            <Text>Reviews</Text>
+            <Text>{t('enroll_modal.review.header')}</Text>
             <Rate />
             <DescriptionText>(0)</DescriptionText>
           </ReviewHeaderSpace>
@@ -72,10 +111,14 @@ const LessonModal = ({ onStartEnroll, visible, setVisible, lesson }) => {
         <ReviewBody>
           <ReviewBodyText>
             <div>
-              <DescriptionText>No reviews yet</DescriptionText>
+              <DescriptionText>
+                {t('enroll_modal.review.empty')}
+              </DescriptionText>
             </div>
             <div>
-              <Typography.Link>Be first to rate a lesson</Typography.Link>
+              <Typography.Link>
+                {t('enroll_modal.review.be_first')}
+              </Typography.Link>
             </div>
           </ReviewBodyText>
           <Divider />
@@ -92,15 +135,6 @@ const LessonModal = ({ onStartEnroll, visible, setVisible, lesson }) => {
 
 LessonModal.propTypes = {
   onStartEnroll: PropTypes.func.isRequired,
-  lesson: PropTypes.exact({
-    id: PropTypes.number.isRequired,
-    firstName: PropTypes.string.isRequired,
-    lastName: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-  }).isRequired,
-  visible: PropTypes.bool.isRequired,
-  setVisible: PropTypes.func.isRequired,
 };
 
 export default LessonModal;

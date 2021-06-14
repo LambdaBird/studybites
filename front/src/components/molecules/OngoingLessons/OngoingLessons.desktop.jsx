@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { Link } from 'react-router-dom';
 import LessonsMain from '@sb-ui/components/molecules/OngoingLessons/LessonsMain';
+import { USER_LESSONS } from '@sb-ui/utils/paths';
 import { LessonsHeader, LessonsMainDiv } from './OngoingLessons.desktop.styled';
 
 const { Title } = Typography;
@@ -19,7 +20,7 @@ const OngoingLessonsDesktop = () => {
           </Row>
         </Col>
         <Col>
-          <Link to="/user-lessons">
+          <Link to={USER_LESSONS}>
             {t('user_home.ongoing_lessons.view_all_lessons')}
           </Link>
         </Col>
