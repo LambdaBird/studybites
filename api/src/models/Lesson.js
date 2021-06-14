@@ -77,7 +77,7 @@ class Lesson extends objection.Model {
         },
       },
 
-      blocks: {
+      blocksRevisions: {
         relation: objection.Model.ManyToManyRelation,
         modelClass: path.join(__dirname, 'Block'),
         join: {
@@ -91,7 +91,7 @@ class Lesson extends objection.Model {
         },
       },
 
-      latestBlocks: {
+      blocks: {
         relation: objection.Model.ManyToManyRelation,
         modelClass: path.join(__dirname, 'Block'),
         join: {

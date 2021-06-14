@@ -6,6 +6,8 @@ import User from './models/User';
 import Role from './models/Role';
 import UserRole from './models/UserRole';
 import Lesson from './models/Lesson';
+import Block from './models/Block';
+import LessonBlockStructure from './models/LessonBlockStructure';
 
 import userService from './services/user';
 import lessonService from './services/lesson';
@@ -25,7 +27,7 @@ const build = (options = {}) => {
 
   app.register(objectionModel, {
     connection: process.env.DATABASE_URL,
-    models: [User, Role, UserRole, Lesson],
+    models: [User, Role, UserRole, Lesson, Block, LessonBlockStructure],
   });
 
   app.register(userService, {

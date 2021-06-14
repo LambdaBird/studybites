@@ -36,9 +36,7 @@ const router = async (instance) => {
       const { total, results } = await Lesson.getAllPublicLessons({
         ...req.query,
         userId: req.userId,
-      })
-        .withGraphFetched('latestBlocks')
-        .debug();
+      }).withGraphFetched('blocks');
 
       return repl.status(200).send({ total, data: results });
     },

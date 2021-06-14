@@ -4,10 +4,7 @@ export const up = (knex) =>
       .uuid('block_id')
       .notNullable()
       .defaultTo(knex.raw('gen_random_uuid()'));
-    table
-      .uuid('revision_id')
-      .primary()
-      .defaultTo(knex.raw('gen_random_uuid()'));
+    table.uuid('revision_id').primary();
     table.json('content');
     table.string('type');
     table.json('answer');
