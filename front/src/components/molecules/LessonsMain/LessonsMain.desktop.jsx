@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from 'react';
 import { Col, Row, Skeleton } from 'antd';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
@@ -5,7 +6,6 @@ import { useHistory, useLocation } from 'react-router-dom';
 import emptyImg from '@sb-ui/resources/img/empty.svg';
 import PublicLesson from '@sb-ui/components/atoms/PublicLesson';
 import OngoingLesson from '@sb-ui/components/atoms/OngoingLesson';
-import { useEffect, useMemo, useState } from 'react';
 import { useQuery } from 'react-query';
 import {
   getEnrolledLessons,
