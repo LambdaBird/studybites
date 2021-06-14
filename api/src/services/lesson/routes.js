@@ -54,7 +54,7 @@ const router = async (instance) => {
     handler: async (req, repl) => {
       const id = validateId(req.params.id);
 
-      const lesson = await await Lesson.query()
+      const lesson = await Lesson.query()
         .findById(id)
         .withGraphFetched('authors');
 

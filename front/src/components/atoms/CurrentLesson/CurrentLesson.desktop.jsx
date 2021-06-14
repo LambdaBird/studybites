@@ -1,6 +1,8 @@
 import { Button, Col, Row, Typography } from 'antd';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
+import { LESSON_PAGE } from '@sb-ui/utils/paths';
 import {
   LeftColumn,
   MainSpace,
@@ -18,9 +20,15 @@ const { Title } = Typography;
 
 const CurrentLessonDesktop = ({ lesson }) => {
   const { t } = useTranslation();
-  const { name, maintainer } = lesson;
+  const history = useHistory();
+
+  const { name, maintainer, id } = lesson;
   const { firstName, lastName } = maintainer?.userInfo;
   const author = `${firstName} ${lastName}`;
+
+  const handleContinueLesson = () => {
+    history.push(LESSON_PAGE.replace(':id', id));
+  };
 
   return (
     <MainSpace>
@@ -36,7 +44,7 @@ const CurrentLessonDesktop = ({ lesson }) => {
             <AuthorName>{author}</AuthorName>
           </Col>
           <Col>
-            <Button type="primary">
+            <Button type="primary" onClick={handleContinueLesson}>
               {t('user_home.ongoing_lessons.continue_button')}
             </Button>
           </Col>

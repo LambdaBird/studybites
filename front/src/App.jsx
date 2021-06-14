@@ -17,7 +17,7 @@ const App = () => {
         <ReactQueryDevtools initialIsOpen={false} />
       </MobileContext.Provider>
     </QueryClientProvider>
-  )
+  );
 };
 
 export default App;

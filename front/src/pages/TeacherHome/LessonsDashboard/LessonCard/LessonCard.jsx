@@ -11,9 +11,31 @@ import { TEACHER_LESSONS_BASE_KEY, Statuses } from '../constants';
 
 const { Title, Text } = Typography;
 
+const menuItems = {
+  [Statuses.DRAFT]: [
+    { key: 'publishLesson', labelKey: 'lesson_dashboard.menu.publish' },
+    {
+      key: 'archiveLesson',
+      labelKey: 'lesson_dashboard.menu.archive',
+      isDanger: true,
+    },
+  ],
+  [Statuses.PUBLIC]: [
+    { key: 'draftLesson', labelKey: 'lesson_dashboard.menu.draft' },
+    {
+      key: 'archiveLesson',
+      labelKey: 'lesson_dashboard.menu.archive',
+      isDanger: true,
+    },
+  ],
+  [Statuses.ARCHIVED]: [
+    { key: 'restoreLesson', labelKey: 'lesson_dashboard.menu.restore' },
+  ],
+};
+
 const LessonCard = ({ title, id, students, status }) => {
   const { t } = useTranslation();
-  const archiveMutation = useMutation(archiveLesson, {
+  const patchMutation = useMutation(archiveLesson, {
     onSuccess: () => {
       queryClient.invalidateQueries(TEACHER_LESSONS_BASE_KEY);
     },
@@ -21,35 +43,39 @@ const LessonCard = ({ title, id, students, status }) => {
 
   const handleMenuClick = ({ key }) => {
     if (key === 'archiveLesson') {
-      archiveMutation.mutate({ id, status: Statuses.ARCHIVED });
+      patchMutation.mutate({ id, status: Statuses.ARCHIVED });
+    }
+    if (key === 'publishLesson') {
+      patchMutation.mutate({ id, status: Statuses.PUBLIC });
+    }
+    if (key === 'restoreLesson') {
+      patchMutation.mutate({ id, status: Statuses.DRAFT });
+    }
+    if (key === 'draftLesson') {
+      patchMutation.mutate({ id, status: Statuses.DRAFT });
     }
   };
 
-  const menu = (
+  const menu = () => (
     <Menu onClick={handleMenuClick}>
-      <Menu.Item danger key="archiveLesson">
-        Archive lesson
-      </Menu.Item>
+      {menuItems[status].map((menuItem) => (
+        <Menu.Item danger={menuItem.isDanger} key={menuItem.key}>
+          {t(menuItem.labelKey)}
+        </Menu.Item>
+      ))}
     </Menu>
   );
 
   return (
     <S.Wrapper justify="center" align="middle">
       <S.ImageCol span={8}>
-        {status === Statuses.DRAFT ? (
-          <S.BadgeWrapper>
-            <S.CardBadge>
-              <S.StatusText>{status}</S.StatusText>
-            </S.CardBadge>
-          </S.BadgeWrapper>
-        ) : null}
-        {status === Statuses.ARCHIVED ? (
-          <S.BadgeWrapper>
-            <S.CardBadge>
-              <S.StatusText>{status}</S.StatusText>
-            </S.CardBadge>
-          </S.BadgeWrapper>
-        ) : null}
+        <S.BadgeWrapper>
+          <S.CardBadge>
+            <S.StatusText>
+              {t(`lesson_dashboard.status.${status.toLocaleLowerCase()}`)}
+            </S.StatusText>
+          </S.CardBadge>
+        </S.BadgeWrapper>
         <S.CardImage src={lesson} />
       </S.ImageCol>
       <S.CardDescription span={16}>
@@ -75,17 +101,9 @@ const LessonCard = ({ title, id, students, status }) => {
           )}
         </S.CardText>
         <S.ActionsWrapper>
-          {status !== Statuses.ARCHIVED ? (
-            <Dropdown
-              overlay={menu}
-              trigger={['click']}
-              placement="bottomRight"
-            >
-              <EllipsisOutlined />
-            </Dropdown>
-          ) : (
-            <div />
-          )}
+          <Dropdown overlay={menu} trigger={['click']} placement="bottomRight">
+            <EllipsisOutlined />
+          </Dropdown>
           <S.CardButton>{t('lesson_dashboard.card.edit')}</S.CardButton>
         </S.ActionsWrapper>
       </S.CardDescription>
@@ -94,15 +112,10 @@ const LessonCard = ({ title, id, students, status }) => {
 };
 
 LessonCard.propTypes = {
-  title: PropTypes.string.isRequired,
   status: PropTypes.string.isRequired,
-  students: PropTypes.arrayOf(
-    PropTypes.shape({
-      avatar: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-    }),
-  ),
+  title: PropTypes.string.isRequired,
   id: PropTypes.number.isRequired,
+  students: PropTypes.arrayOf(PropTypes.shape({})),
 };
 
 LessonCard.defaultProps = {
