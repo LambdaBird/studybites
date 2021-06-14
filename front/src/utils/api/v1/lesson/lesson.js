@@ -1,5 +1,4 @@
 import api from '@sb-ui/utils/api';
-import { getJWTAccessToken } from '@sb-ui/utils/jwt';
 
 const PATH = '/api/v1/lesson';
 
@@ -34,12 +33,8 @@ export const postEnroll = async (id) => {
 export const getEnrolledLessons = async (paramsData) => {
   try {
     const { status, data } = await api.get(`${PATH}/enrolled/`, {
-      headers: {
-        Authorization: `Bearer ${getJWTAccessToken()}`,
-      },
       params: paramsData,
     });
-
     return { status, data };
   } catch (e) {
     const { status, data } = e.response;
@@ -48,4 +43,24 @@ export const getEnrolledLessons = async (paramsData) => {
       data,
     };
   }
+};
+
+export const createLesson = async (values) => {
+  const { data } = await api.post(`${PATH}/maintain/`, values);
+  return data;
+};
+
+export const archiveLesson = async ({ status, id }) => {
+  const { data } = await api.patch(`${PATH}/maintain/${id}`, { status });
+  return data;
+};
+
+export const getTeacherLessons = async ({ queryKey }) => {
+  const [, paramsData] = queryKey;
+
+  const { data } = await api.get(`${PATH}/maintain/`, {
+    params: paramsData,
+  });
+
+  return data;
 };

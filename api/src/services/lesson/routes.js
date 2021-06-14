@@ -82,17 +82,13 @@ const router = async (instance) => {
 
   instance.route({
     method: 'GET',
-    url: '/maintain',
+    url: '/maintain/',
     schema: {
       response: errorResponse,
     },
     validatorCompiler,
     errorHandler,
     onRequest: instance.auth({ instance }),
-    preHandler: instance.access({
-      instance,
-      role: config.roles.TEACHER.id,
-    }),
     handler: async (req, repl) => {
       const columns = {
         name: 'name',
@@ -111,8 +107,10 @@ const router = async (instance) => {
           }),
         )
         .where(columns.name, 'ilike', `%${req.query.search}%`)
+        .where({ status: req.query.status })
         .offset(req.query.offset || 0)
-        .limit(req.query.limit || config.search.LESSON_SEARCH_LIMIT);
+        .limit(req.query.limit || config.search.LESSON_SEARCH_LIMIT)
+        .orderBy('updatedAt', 'desc');
 
       const count = await UserRole.relatedQuery('lessons')
         .skipUndefined()
@@ -123,6 +121,7 @@ const router = async (instance) => {
           }),
         )
         .where(columns.name, 'ilike', `%${req.query.search}%`)
+        .where({ status: req.query.status })
         .count('*');
 
       return repl.status(200).send({ total: +count[0].count, data });
@@ -166,7 +165,7 @@ const router = async (instance) => {
 
   instance.route({
     method: 'POST',
-    url: '/maintain',
+    url: '/maintain/',
     schema: {
       body: postBodyValidator,
       response: errorResponse,

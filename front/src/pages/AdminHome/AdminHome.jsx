@@ -1,60 +1,40 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import {
   Button,
   Checkbox,
   Col,
+  Empty,
   message,
   Row,
   Space,
   Table,
   Typography,
 } from 'antd';
-import { useHistory, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
 import { useTableRequest } from '@sb-ui/hooks/useTableRequest';
 import { appointTeacher } from '@sb-ui/utils/api/v1/user';
-import { MainDiv, TableHeader } from './AdminHome.styled';
+import { MainDiv, TableHeader, TitleHeader } from './AdminHome.styled';
 import { getUsers, removeTeacher } from '../../utils/api/v1/user/user';
-
-const { Title } = Typography;
 
 const messageKey = 'teacherStateLoading';
 
+const PAGE_SIZE = 10;
+
 const AdminHome = () => {
-  const query = new URLSearchParams(useLocation().search);
   const { t } = useTranslation();
-  const history = useHistory();
   const [teacherRoleState, setTeacherRoleState] = useState({});
 
-  const onChangePage = useCallback(
-    (current) => {
-      history.push({
-        search: `?page=${current}`,
-      });
-    },
-    [history],
-  );
-
-  const { loading, dataSource, pagination, handleTableChange } =
-    useTableRequest({
-      requestFunc: getUsers,
-      onChangePage,
-    });
-
-  const handleSearchChange = (data) => {
-    handleTableChange({
-      search: data,
-    });
-  };
-
-  useEffect(() => {
-    const page = parseInt(query.get('page'), 10) || 1;
-    handleTableChange({
-      current: page < 0 ? 1 : page,
-      pageSize: 10,
-    });
-  }, []);
+  const {
+    loading,
+    dataSource,
+    pagination,
+    handleTableSearch,
+    handleTableChange,
+  } = useTableRequest({
+    requestFunc: getUsers,
+    pageSize: PAGE_SIZE,
+  });
 
   const handleTeacherRoleChange = useCallback(
     ({ isTeacher, userId }) =>
@@ -129,7 +109,7 @@ const AdminHome = () => {
         width: '20%',
       },
       {
-        title: 'Action',
+        title: t('admin_home.table.action'),
         key: 'action',
         render: () => (
           <Space size="middle">
@@ -148,12 +128,12 @@ const AdminHome = () => {
         <Col>
           <Row>
             <Space size="large">
-              <Title level={2}>{t('admin_home.title')}</Title>
+              <TitleHeader level={3}>{t('admin_home.title')}</TitleHeader>
               <DebouncedSearch
                 delay={500}
                 placeholder={t('admin_home.search.placeholder')}
                 allowClear
-                onChange={handleSearchChange}
+                onChange={handleTableSearch}
               />
             </Space>
           </Row>
@@ -168,6 +148,14 @@ const AdminHome = () => {
         pagination={pagination}
         onChange={handleTableChange}
         loading={loading}
+        locale={{
+          emptyText: (
+            <Empty
+              image={Empty.PRESENTED_IMAGE_SIMPLE}
+              description={t('admin_home.table.no_data')}
+            />
+          ),
+        }}
       />
     </MainDiv>
   );
