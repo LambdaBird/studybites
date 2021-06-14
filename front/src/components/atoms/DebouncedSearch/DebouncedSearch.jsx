@@ -11,7 +11,7 @@ const DebouncedSearch = ({ delay, onChange, ...props }) => {
     if (debouncedValue !== null) {
       onChange(debouncedValue);
     }
-  }, [debouncedValue]);
+  }, [debouncedValue, onChange]);
 
   return <Input {...props} onChange={(e) => setSearchInput(e.target.value)} />;
 };

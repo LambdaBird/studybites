@@ -42,6 +42,7 @@ const LessonsMainDesktop = ({ searchLessons, isOngoingLesson }) => {
         current: 1,
         pageSize: PAGE_SIZE,
       },
+      pageSize: PAGE_SIZE,
     });
 
   const onChangeLessonsPagination = (page) => {

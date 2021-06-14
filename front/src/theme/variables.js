@@ -1,6 +1,7 @@
 const variables = {
-  'primary-color': '#0A8D8D',
+  'primary-color': '#098C8C',
   'text-color': 'rgba(0, 0, 0, 0.85)',
+  'secondary-text-color': '#595959',
 };
 
 module.exports = variables;

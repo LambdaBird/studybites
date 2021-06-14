@@ -57,9 +57,11 @@
         "full_name": "Полное имя",
         "email": "Email",
         "role": "Учитель",
+        "action": "Действие",
         "select_teacher": "Учитель",
         "select_student": "Студент",
-        "edit": "Изменить"
+        "edit": "Изменить",
+        "no_data": "Нет данных"
       },
       "search": {
         "placeholder": "Email или имя"
@@ -67,6 +69,37 @@
       "buttons": {
         "add_user": "Добавить пользователя"
       }
+    },
+    "lesson_dashboard": {
+      "title": "Мои уроки",
+      "add_button": "Добавить урок",
+      "card": {
+        "edit": "Редактировать",
+        "no_students": "Нет студентов",
+        "students": "студентов"
+      },
+      "search": {
+        "placeholder": "Название"
+      },
+      "select": {
+        "all": "Все статусы",
+        "draft": "Черновик",
+        "archived": "Архивированные",
+        "public": "Публичные",
+        "private": "Приватные"
+      }
+    },
+    "teacher_info": {
+      "greeting": "Добрый день, ",
+      "wishes": ", хорошего дня!",
+      "lessons": "Уроки",
+      "students": "Студенты"
+    },
+    "students_list": {
+      "title": "Мои студенты",
+      "invite": "Пригласить сейчас",
+      "no_students": "Еще нет студентов!",
+      "all": "Показать всех"
     }
   }
 }

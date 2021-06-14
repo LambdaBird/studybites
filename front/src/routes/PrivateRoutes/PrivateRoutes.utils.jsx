@@ -1,6 +1,7 @@
 import * as paths from '@sb-ui/utils/paths';
 import UserHome from '@sb-ui/pages/UserHome';
 import AdminHome from '@sb-ui/pages/AdminHome';
+import TeacherHome from '@sb-ui/pages/TeacherHome';
 import UserLessons from '@sb-ui/pages/UserLessons';
 import { Roles } from '@sb-ui/utils/constants';
 
@@ -27,7 +28,7 @@ export const PRIVATE_ROUTES = [
     path: paths.USER_LESSONS,
   },
   {
-    component: () => <h1>Teacher</h1>,
+    component: TeacherHome,
     path: paths.TEACHER_HOME,
     permissions: [Roles.TEACHER],
   },
@@ -38,7 +39,7 @@ export const getMainPage = (roles) => {
     return <AdminHome />;
   }
   if (roles.includes(Roles.TEACHER)) {
-    return <h1>Teacher</h1>;
+    return <TeacherHome />;
   }
   return <UserHome />;
 };
