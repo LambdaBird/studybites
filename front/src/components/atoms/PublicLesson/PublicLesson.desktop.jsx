@@ -3,6 +3,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Button, Row, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
+import { USER_ENROLL, USER_HOME } from '@sb-ui/utils/paths';
 import lessonImage from '../../../resources/img/lesson.svg';
 import {
   AuthorAvatar,
@@ -26,6 +27,13 @@ const PublicLessonDesktop = ({ lesson }) => {
   const history = useHistory();
   const { id, isEnrolled, name, description, firstName, lastName } = lesson;
   const author = `${firstName} ${lastName}`;
+
+  const handleEnroll = () => {
+    history.push({
+      search: query,
+      pathname: `${USER_HOME}${USER_ENROLL}/${id}`,
+    });
+  };
 
   return (
     <>
@@ -52,16 +60,7 @@ const PublicLessonDesktop = ({ lesson }) => {
                 {t('user_home.ongoing_lessons.continue_button')}
               </Button>
             ) : (
-              <Button
-                size="medium"
-                type="secondary"
-                onClick={() => {
-                  history.push({
-                    search: query,
-                    pathname: `/user/enroll/${id}`,
-                  });
-                }}
-              >
+              <Button size="medium" type="secondary" onClick={handleEnroll}>
                 {t('user_home.open_lessons.enroll_button')}
               </Button>
             )}

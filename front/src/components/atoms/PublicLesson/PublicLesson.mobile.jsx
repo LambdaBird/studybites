@@ -4,6 +4,7 @@ import { Row } from 'antd';
 import { useTranslation } from 'react-i18next';
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
 import { useHistory, useLocation } from 'react-router-dom';
+import { USER_ENROLL, USER_HOME } from '@sb-ui/utils/paths';
 import * as S from './PublicLesson.mobile.styled';
 
 const PublicLessonMobile = ({ lesson }) => {
@@ -13,6 +14,13 @@ const PublicLessonMobile = ({ lesson }) => {
   const history = useHistory();
   const { id, isEnrolled, name, description, firstName, lastName } = lesson;
   const author = `${firstName} ${lastName}`;
+
+  const handleEnroll = () => {
+    history.push({
+      search: query,
+      pathname: `${USER_HOME}${USER_ENROLL}/${id}`,
+    });
+  };
 
   return (
     <S.Main size="large" wrap={false}>
@@ -31,16 +39,7 @@ const PublicLessonMobile = ({ lesson }) => {
             {t('user_home.ongoing_lessons.continue_button')}
           </S.Enroll>
         ) : (
-          <S.Enroll
-            size="medium"
-            type="secondary"
-            onClick={() => {
-              history.push({
-                search: query,
-                pathname: `/user/enroll/${id}`,
-              });
-            }}
-          >
+          <S.Enroll size="medium" type="secondary" onClick={handleEnroll}>
             {t('user_home.open_lessons.enroll_button')}
           </S.Enroll>
         )}

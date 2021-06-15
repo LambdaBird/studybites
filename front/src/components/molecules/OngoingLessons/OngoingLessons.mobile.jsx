@@ -1,8 +1,7 @@
 import { Col, Row } from 'antd';
-import { useTranslation } from 'react-i18next';
-
-import LessonsMain from '@sb-ui/components/molecules/OngoingLessons/LessonsMain';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import LessonsMain from '@sb-ui/components/molecules/OngoingLessons/LessonsMain';
 import { USER_LESSONS } from '@sb-ui/utils/paths';
 import * as S from './OngoingLessons.mobile.styled';
 

@@ -23,6 +23,7 @@ import {
   USER_ENROLLED_LESSONS_BASE_KEY,
   USER_PUBLIC_LESSONS_BASE_KEY,
 } from '@sb-ui/components/molecules/LessonsMain/constants';
+import { USER_ENROLL } from '@sb-ui/utils/paths';
 import {
   LessonsColumn,
   LessonsEmpty,
@@ -122,7 +123,7 @@ const LessonsMainDesktop = ({ searchLessons, isOngoingLesson }) => {
       ) : (
         <>
           <Route
-            path={`${path}/enroll/:id`}
+            path={`${path}${USER_ENROLL}/:id`}
             component={() => <LessonModal lessons={data} />}
           />
           <Row gutter={[16, 16]}>

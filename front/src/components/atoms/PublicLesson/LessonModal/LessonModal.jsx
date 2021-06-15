@@ -1,12 +1,12 @@
 import { useCallback, useMemo } from 'react';
-import { Col, Divider, Modal, Rate, Typography } from 'antd';
-import { useQuery } from 'react-query';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { useQuery } from 'react-query';
+import { useTranslation } from 'react-i18next';
+import { Col, Divider, Modal, Rate, Typography } from 'antd';
 import { getLessonById, postEnroll } from '@sb-ui/utils/api/v1/lesson/lesson';
 import { USER_HOME } from '@sb-ui/utils/paths';
 import { USER_LESSON_MODAL_BASE_KEY } from '@sb-ui/components/atoms/PublicLesson/LessonModal/constants';
-import { useTranslation } from 'react-i18next';
 import lessonImg from '../../../../resources/img/lesson.svg';
 import {
   AuthorAvatar,
@@ -50,7 +50,6 @@ const LessonModal = ({ onStartEnroll }) => {
       },
     ],
     getLessonById,
-    { keepPreviousData: true },
   );
   const { name, authors, description } = responseData?.data || {
     authors: [

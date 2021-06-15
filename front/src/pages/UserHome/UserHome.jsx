@@ -1,13 +1,12 @@
 import { useState } from 'react';
+import { Route, useLocation, useRouteMatch } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-
 import Search from '@sb-ui/components/molecules/Search';
 import OngoingLessons from '@sb-ui/components/molecules/OngoingLessons';
 import LessonsMain from '@sb-ui/components/molecules/LessonsMain';
-
 import useMobile from '@sb-ui/hooks/useMobile';
 import UserEnrollModal from '@sb-ui/pages/UserEnrollModal';
-import { Route, useLocation, useRouteMatch } from 'react-router-dom';
+import { USER_ENROLL } from '@sb-ui/utils/paths';
 import * as S from './UserHome.styled';
 
 const UserHome = () => {
@@ -18,8 +17,10 @@ const UserHome = () => {
   const { path } = useRouteMatch();
   const [searchText, setSearchText] = useState(null);
 
-  if (isMobile && location.pathname.startsWith(`${path}/enroll/`)) {
-    return <Route path={`${path}/enroll/:id`} component={UserEnrollModal} />;
+  if (isMobile && location.pathname.startsWith(`${path}${USER_ENROLL}/`)) {
+    return (
+      <Route path={`${path}${USER_ENROLL}/:id`} component={UserEnrollModal} />
+    );
   }
 
   return (

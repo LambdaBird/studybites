@@ -2,12 +2,12 @@ import { useMemo } from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { Comment, List, Rate, Row, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
+import { useQuery } from 'react-query';
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
 import { DescriptionText } from '@sb-ui/components/atoms/PublicLesson/PublicLesson.desktop.styled';
 import { getLessonById, postEnroll } from '@sb-ui/utils/api/v1/lesson/lesson';
 import { ReviewBodyText } from '@sb-ui/components/atoms/PublicLesson/LessonModal/LessonModal.styled';
 import { USER_HOME } from '@sb-ui/utils/paths';
-import { useQuery } from 'react-query';
 import { USER_LESSON_MODAL_BASE_KEY } from '@sb-ui/components/atoms/PublicLesson/LessonModal/constants';
 import * as S from './UserEnrollModal.styled';
 
