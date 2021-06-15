@@ -4,16 +4,23 @@ import { Row } from 'antd';
 import { useTranslation } from 'react-i18next';
 
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
+import { useHistory } from 'react-router-dom';
+import { LESSON_PAGE } from '@sb-ui/utils/paths';
 import LessonModal from './LessonModal';
 
 import * as S from './PublicLesson.mobile.styled';
 
 const PublicLessonMobile = ({ getLessons, lesson }) => {
   const { t } = useTranslation();
-  const { isEnrolled, name, description, firstName, lastName } = lesson;
+  const history = useHistory();
+  const { isEnrolled, name, description, firstName, lastName, id } = lesson;
   const author = `${firstName} ${lastName}`;
 
   const [visible, setVisible] = useState(false);
+
+  const handleContinueLesson = () => {
+    history.push(LESSON_PAGE.replace(':id', id));
+  };
 
   return (
     <S.Main size="large" wrap={false}>
@@ -28,7 +35,7 @@ const PublicLessonMobile = ({ getLessons, lesson }) => {
       </Row>
       <S.EnrollRow>
         {isEnrolled ? (
-          <S.Enroll type="primary">
+          <S.Enroll type="primary" onClick={handleContinueLesson}>
             {t('user_home.ongoing_lessons.continue_button')}
           </S.Enroll>
         ) : (
@@ -45,7 +52,7 @@ const PublicLessonMobile = ({ getLessons, lesson }) => {
         <S.AuthorAvatar>{author?.[0]}</S.AuthorAvatar>
         <S.AuthorName>{author}</S.AuthorName>
       </S.AuthorContainer>
-       <LessonModal
+      <LessonModal
         onStartEnroll={getLessons}
         visible={visible}
         setVisible={setVisible}

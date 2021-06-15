@@ -36,7 +36,7 @@ const PrivateRoutes = () => {
           <Route
             key={route.path}
             path={route.path}
-            component={route.component}
+            render={(props) => <route.component {...props} />}
           />
         ))}
         <Route path="*">

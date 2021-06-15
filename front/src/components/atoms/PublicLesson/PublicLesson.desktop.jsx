@@ -2,6 +2,8 @@ import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Button, Row, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
+import { LESSON_PAGE } from '@sb-ui/utils/paths';
 import lessonImage from '../../../resources/img/lesson.svg';
 import {
   AuthorAvatar,
@@ -20,10 +22,15 @@ const { Title } = Typography;
 
 const PublicLessonDesktop = ({ getLessons, lesson }) => {
   const { t } = useTranslation();
-  const { isEnrolled, name, description, firstName, lastName } = lesson;
+  const history = useHistory();
+  const { isEnrolled, name, description, firstName, lastName, id } = lesson;
   const author = `${firstName} ${lastName}`;
 
   const [visible, setVisible] = useState(false);
+
+  const handleContinueLesson = () => {
+    history.push(LESSON_PAGE.replace(':id', id));
+  };
 
   return (
     <MainSpace size="large" wrap={false}>
@@ -51,7 +58,7 @@ const PublicLessonDesktop = ({ getLessons, lesson }) => {
         </Row>
         <EnrollRow justify="end">
           {isEnrolled ? (
-            <Button type="primary">
+            <Button type="primary" onClick={handleContinueLesson}>
               {t('user_home.ongoing_lessons.continue_button')}
             </Button>
           ) : (
