@@ -1,22 +1,26 @@
-import { useState } from 'react';
+import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Row } from 'antd';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
-import { useHistory } from 'react-router-dom';
-import { LESSON_PAGE } from '@sb-ui/utils/paths';
-import LessonModal from './LessonModal';
-
+import {LESSON_PAGE, USER_ENROLL, USER_HOME } from '@sb-ui/utils/paths';
 import * as S from './PublicLesson.mobile.styled';
 
-const PublicLessonMobile = ({ getLessons, lesson }) => {
+const PublicLessonMobile = ({ lesson }) => {
+  const location = useLocation();
+  const query = useMemo(() => location.search, [location]);
   const { t } = useTranslation();
   const history = useHistory();
-  const { isEnrolled, name, description, firstName, lastName, id } = lesson;
+  const { id, isEnrolled, name, description, firstName, lastName } = lesson;
   const author = `${firstName} ${lastName}`;
 
-  const [visible, setVisible] = useState(false);
+  const handleEnroll = () => {
+    history.push({
+      search: query,
+      pathname: `${USER_HOME}${USER_ENROLL}/${id}`,
+    });
+  };
 
   const handleContinueLesson = () => {
     history.push(LESSON_PAGE.replace(':id', id));
@@ -39,11 +43,7 @@ const PublicLessonMobile = ({ getLessons, lesson }) => {
             {t('user_home.ongoing_lessons.continue_button')}
           </S.Enroll>
         ) : (
-          <S.Enroll
-            size="medium"
-            type="secondary"
-            onClick={() => setVisible(true)}
-          >
+          <S.Enroll size="medium" type="secondary" onClick={handleEnroll}>
             {t('user_home.open_lessons.enroll_button')}
           </S.Enroll>
         )}
@@ -52,18 +52,11 @@ const PublicLessonMobile = ({ getLessons, lesson }) => {
         <S.AuthorAvatar>{author?.[0]}</S.AuthorAvatar>
         <S.AuthorName>{author}</S.AuthorName>
       </S.AuthorContainer>
-      <LessonModal
-        onStartEnroll={getLessons}
-        visible={visible}
-        setVisible={setVisible}
-        lesson={lesson}
-      />
     </S.Main>
   );
 };
 
 PublicLessonMobile.propTypes = {
-  getLessons: PropTypes.func.isRequired,
   lesson: PropTypes.exact({
     id: PropTypes.number.isRequired,
     isEnrolled: PropTypes.bool.isRequired,
