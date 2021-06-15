@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Row } from 'antd';
+import { useHistory, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
-import { useHistory, useLocation } from 'react-router-dom';
-import { USER_ENROLL, USER_HOME } from '@sb-ui/utils/paths';
+import {LESSON_PAGE, USER_ENROLL, USER_HOME } from '@sb-ui/utils/paths';
 import * as S from './PublicLesson.mobile.styled';
 
 const PublicLessonMobile = ({ lesson }) => {
@@ -22,6 +22,10 @@ const PublicLessonMobile = ({ lesson }) => {
     });
   };
 
+  const handleContinueLesson = () => {
+    history.push(LESSON_PAGE.replace(':id', id));
+  };
+
   return (
     <S.Main size="large" wrap={false}>
       <div style={{ height: '9rem' }}>
@@ -35,7 +39,7 @@ const PublicLessonMobile = ({ lesson }) => {
       </Row>
       <S.EnrollRow>
         {isEnrolled ? (
-          <S.Enroll type="primary">
+          <S.Enroll type="primary" onClick={handleContinueLesson}>
             {t('user_home.ongoing_lessons.continue_button')}
           </S.Enroll>
         ) : (

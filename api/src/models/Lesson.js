@@ -72,7 +72,9 @@ class Lesson extends objection.Model {
           to: 'users.id',
         },
         modify: (query) => {
-          return query.select('id', 'first_name', 'last_name');
+          return query
+            .select('id', 'first_name', 'last_name')
+            .where({ role_id: config.roles.MAINTAINER.id });
         },
       },
     };

@@ -1,9 +1,9 @@
+import PropTypes from 'prop-types';
 import { useMemo } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import { Button, Row, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { USER_ENROLL, USER_HOME } from '@sb-ui/utils/paths';
+import { LESSON_PAGE, USER_ENROLL, USER_HOME } from '@sb-ui/utils/paths';
 import lessonImage from '../../../resources/img/lesson.svg';
 import {
   AuthorAvatar,
@@ -35,6 +35,10 @@ const PublicLessonDesktop = ({ lesson }) => {
     });
   };
 
+  const handleContinueLesson = () => {
+    history.push(LESSON_PAGE.replace(':id', id));
+  };
+
   return (
     <>
       <MainSpace size="large" wrap={false}>
@@ -56,8 +60,8 @@ const PublicLessonDesktop = ({ lesson }) => {
           </Row>
           <EnrollRow justify="end">
             {isEnrolled ? (
-              <Button type="primary">
-                {t('user_home.ongoing_lessons.continue_button')}
+              <Button type="primary" onClick={handleContinueLesson}>
+                >{t('user_home.ongoing_lessons.continue_button')}
               </Button>
             ) : (
               <Button size="medium" type="secondary" onClick={handleEnroll}>

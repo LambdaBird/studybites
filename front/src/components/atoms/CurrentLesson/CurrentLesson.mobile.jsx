@@ -1,6 +1,8 @@
 import { Button, Col, Row, Typography } from 'antd';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
+import { LESSON_PAGE } from '@sb-ui/utils/paths';
 import {
   LeftColumn,
   MainSpace,
@@ -14,7 +16,12 @@ const { Title } = Typography;
 
 const CurrentLessonMobile = ({ lesson }) => {
   const { t } = useTranslation();
-  const { name } = lesson;
+  const history = useHistory();
+  const { name, id } = lesson;
+
+  const handleContinueLesson = () => {
+    history.push(LESSON_PAGE.replace(':id', id));
+  };
 
   return (
     <MainSpace>
@@ -26,7 +33,7 @@ const CurrentLessonMobile = ({ lesson }) => {
         <Title level={4}>{name}</Title>
         <Row justify="end" align="between">
           <Col>
-            <Button type="primary">
+            <Button type="primary" onClick={handleContinueLesson}>
               {t('user_home.ongoing_lessons.continue_button')}
             </Button>
           </Col>

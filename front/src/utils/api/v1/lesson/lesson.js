@@ -80,3 +80,11 @@ export const getPublicLessons = async ({ queryKey }) => {
 
   return data;
 };
+
+export const getUserLesson = async ({ queryKey }) => {
+  const [, id] = queryKey;
+
+  const { data } = await api.get(`${PATH}/${id}`);
+
+  return data;
+};

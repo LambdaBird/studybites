@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import { Button, Col, Progress, Row, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
+import { LESSON_PAGE } from '@sb-ui/utils/paths';
+import { useHistory } from 'react-router-dom';
 import lessonImage from '../../../resources/img/lesson.svg';
 import {
   MainSpaced,
@@ -24,9 +26,14 @@ const { Title } = Typography;
 
 const OngoingLesson = ({ lesson }) => {
   const { t } = useTranslation();
-  const { description, name, maintainer } = lesson;
+  const history = useHistory();
+  const { description, name, maintainer, id } = lesson;
   const { firstName, lastName } = maintainer?.userInfo;
   const author = `${firstName} ${lastName}`;
+
+  const handleContinueLesson = () => {
+    history.push(LESSON_PAGE.replace(':id', id));
+  };
 
   return (
     <MainSpaced size="large" wrap={false}>
@@ -55,7 +62,7 @@ const OngoingLesson = ({ lesson }) => {
           <DescriptionText>{description}</DescriptionText>
         </Row>
         <EnrollRow justify="end">
-          <Button size="medium" type="primary">
+          <Button size="medium" type="primary" onClick={handleContinueLesson}>
             {t('user_lessons.ongoing_lessons.continue_button')}
           </Button>
         </EnrollRow>

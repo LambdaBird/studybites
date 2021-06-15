@@ -102,12 +102,24 @@
       "search": {
         "placeholder": "Name"
       },
-      "select": {
+      "status": {
+        "draft": "Draft",
+        "archived": "Archived",
+        "public": "Public",
+        "private": "Private"
+      },
+      "status_select": {
         "all": "All statuses",
         "draft": "Draft",
         "archived": "Archived",
         "public": "Public",
         "private": "Private"
+      },
+      "menu": {
+        "archive": "Archive Lesson",
+        "publish": "Publish Lesson",
+        "restore": "Restore Lesson",
+        "draft": "Move to Draft"
       }
     },
     "teacher_info": {
@@ -121,6 +133,14 @@
       "invite": "Invite Now",
       "no_students": "No students yet!",
       "all": "View all"
+    },
+    "lesson": {
+      "errors": {
+        "not_found": "Lesson not found"
+      },
+      "by": "By",
+      "blocks": "blocks",
+      "start": "Start"
     },
     "enroll_modal": {
       "review": {

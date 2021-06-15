@@ -81,12 +81,24 @@
       "search": {
         "placeholder": "Название"
       },
-      "select": {
+      "status": {
+        "draft": "Черновик",
+        "archived": "Архивирован",
+        "public": "Публичный",
+        "private": "Приватный"
+      },
+      "status_select": {
         "all": "Все статусы",
         "draft": "Черновик",
         "archived": "Архивированные",
         "public": "Публичные",
         "private": "Приватные"
+      },
+      "menu": {
+        "archive": "Архивировать урок",
+        "publish": "Опубликовать урок",
+        "restore": "Восстановить урок",
+        "draft": "Переместить в черновики"
       }
     },
     "teacher_info": {
@@ -100,6 +112,14 @@
       "invite": "Пригласить сейчас",
       "no_students": "Еще нет студентов!",
       "all": "Показать всех"
+    },
+    "lesson": {
+      "errors": {
+        "not_found": "Урок не найден"
+      },
+      "by": "От",
+      "blocks": "блоков",
+      "start": "Начать"
     },
     "enroll_modal": {
       "review": {
