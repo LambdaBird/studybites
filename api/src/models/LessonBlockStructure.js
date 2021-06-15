@@ -13,8 +13,8 @@ class LessonBlockStructure extends objection.Model {
         id: { type: 'string' },
         lessonId: { type: 'number' },
         blockId: { type: 'string' },
-        childId: { type: 'string' },
-        parentId: { type: 'string' },
+        childId: { type: ['string', 'null'] },
+        parentId: { type: ['string', 'null'] },
       },
     };
   }

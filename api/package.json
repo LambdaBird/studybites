@@ -18,6 +18,7 @@
     "knex": "^0.95.4",
     "objection": "^2.2.15",
     "pg": "^8.6.0",
+    "uuid": "^8.3.2",
     "yup": "^0.32.9"
   },
   "devDependencies": {
