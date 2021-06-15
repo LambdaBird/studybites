@@ -1,3 +1,5 @@
+import { v4 } from 'uuid';
+
 import config from '../../../config';
 
 import errorResponse from '../../validation/schemas';
@@ -13,7 +15,7 @@ import {
 import { NOT_FOUND, INVALID_ENROLL, ENROLL_SUCCESS } from './constants';
 
 const router = async (instance) => {
-  const { Lesson, UserRole } = instance.models;
+  const { Lesson, UserRole, Block, LessonBlockStructure } = instance.models;
 
   instance.route({
     method: 'GET',
@@ -36,7 +38,7 @@ const router = async (instance) => {
       const { total, results } = await Lesson.getAllPublicLessons({
         ...req.query,
         userId: req.userId,
-      });
+      }).withGraphFetched('blocks');
 
       return repl.status(200).send({ total, data: results });
     },
@@ -192,6 +194,30 @@ const router = async (instance) => {
               resourceId: lesson.id,
             })
             .returning('*');
+
+          if (req.body.blocks) {
+            const blocksData = await Block.query(trx)
+              .insert(req.body.blocks)
+              .returning('blockId');
+
+            const blockStructure = [];
+
+            for (let i = 0, n = blocksData.length; i < n; i += 1) {
+              blockStructure.push({
+                id: v4(),
+                lessonId: lesson.id,
+                blockId: blocksData[i].blockId,
+              });
+            }
+
+            for (let i = 0, n = blockStructure.length; i < n; i += 1) {
+              blockStructure[i].parentId = !i ? null : blockStructure[i - 1].id;
+              blockStructure[i].childId =
+                i === n - 1 ? null : blockStructure[i + 1].id;
+            }
+
+            await LessonBlockStructure.query(trx).insert(blockStructure);
+          }
 
           return lesson;
         });
