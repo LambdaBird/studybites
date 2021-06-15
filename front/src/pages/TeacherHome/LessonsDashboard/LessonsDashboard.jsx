@@ -1,15 +1,15 @@
 import { useState } from 'react';
-import { useQuery, useMutation } from 'react-query';
+import { useQuery } from 'react-query';
 import { useTranslation } from 'react-i18next';
 import { Row, Select, Space, Button, Skeleton, Alert } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import { useHistory } from 'react-router-dom';
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
-import { createLesson, getTeacherLessons } from '@sb-ui/utils/api/v1/lesson';
-import { queryClient } from '@sb-ui/query';
+import { getTeacherLessons } from '@sb-ui/utils/api/v1/lesson';
+import { LESSON_EDIT } from '@sb-ui/utils/paths';
 import * as S from './LessonsDashboard.styled';
 import LessonsList from './LessonsList';
 import {
-  DEFAULT_LESSON_NAME,
   itemPerPage,
   pageLimit,
   TEACHER_LESSONS_BASE_KEY,
@@ -20,15 +20,11 @@ const { Option } = Select;
 
 const LessonsDashboard = () => {
   const { t } = useTranslation();
+  const history = useHistory();
 
   const [selectedStatus, setSelectedStatus] = useState(null);
   const [search, setSearch] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const mutation = useMutation(createLesson, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(TEACHER_LESSONS_BASE_KEY);
-    },
-  });
   const {
     data: responseData,
     isLoading,
@@ -49,10 +45,8 @@ const LessonsDashboard = () => {
 
   const { data, total } = responseData || {};
 
-  const handleCreateLesson = async () => {
-    mutation.mutate({
-      name: DEFAULT_LESSON_NAME,
-    });
+  const handleCreateLesson = () => {
+    history.push(LESSON_EDIT);
   };
 
   return (

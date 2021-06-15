@@ -39,7 +39,7 @@ const LessonEdit = () => {
               defaultValue={t('lesson_edit.title.default')}
             />
           </S.LeftCol>
-          <S.RightCol span={7}>
+          <S.RightCol span={12}>
             <RowStyled gutter={[32, 32]}>
               <Col span={24}>
                 <SaveButton icon={<SaveOutlined />} type="primary" size="large">

@@ -1,15 +1,20 @@
-import { Switch, Redirect, Route } from 'react-router-dom';
+import { Switch, Redirect, Route, useLocation } from 'react-router-dom';
 import * as paths from '@sb-ui/utils/paths';
 import { getJWTAccessToken } from '@sb-ui/utils/jwt';
 import Header from '@sb-ui/components/molecules/Header';
 import useUser from '@sb-ui/hooks/useUser/useUser';
+import { LESSON_EDIT } from '@sb-ui/utils/paths';
 import {
   PRIVATE_ROUTES,
   checkPermission,
   getMainPage,
 } from './PrivateRoutes.utils';
 
+const SKIP_HEADER = [LESSON_EDIT];
+
 const PrivateRoutes = () => {
+  const location = useLocation();
+
   const isLoggedIn = getJWTAccessToken();
   const { isUserLoading, user } = useUser();
 
@@ -27,7 +32,7 @@ const PrivateRoutes = () => {
 
   return (
     <>
-      <Header />
+      {!SKIP_HEADER.includes(location.pathname) && <Header />}
       <Switch>
         <Route path={paths.HOME} exact>
           {getMainPage(user.roles)}

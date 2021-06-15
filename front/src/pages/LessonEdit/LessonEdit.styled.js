@@ -16,7 +16,7 @@ export const StyledRow = styled(Row)`
 `;
 
 export const LeftCol = styled(Col)`
-  height: 500%; // TODO HEIGHT TEST SCROLL DEFAULT 100%
+  height: 120%;
   width: 650px;
   margin-left: 12rem;
   padding: 2rem;
@@ -27,9 +27,8 @@ export const LeftCol = styled(Col)`
 
 export const RightCol = styled(Col)`
   height: 100%;
-  width: 360px;
   position: fixed;
-  right: 8rem;
+  right: 12rem;
   padding: 2rem;
   margin-left: 2rem;
 `;

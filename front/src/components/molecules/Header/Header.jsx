@@ -1,7 +1,8 @@
 import { Col, Dropdown, Menu } from 'antd';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { DownOutlined } from '@ant-design/icons';
-import { HOME, LESSON_EDIT, SIGN_IN } from '@sb-ui/utils/paths';
+import { HOME, SIGN_IN } from '@sb-ui/utils/paths';
 import logo from '@sb-ui/resources/img/logo.svg';
 import { clearJWT } from '@sb-ui/utils/jwt';
 import {
@@ -12,12 +13,8 @@ import {
   StyledAvatar,
 } from './Header.styled';
 
-const SKIP_HEADER = [LESSON_EDIT];
-
-// eslint-disable-next-line no-unused-vars,react/prop-types
 const Header = ({ children }) => {
   const history = useHistory();
-  const location = useLocation();
 
   const handleSignOut = () => {
     clearJWT();
@@ -42,10 +39,6 @@ const Header = ({ children }) => {
     </Menu>
   );
 
-  if (SKIP_HEADER.includes(location.pathname) && !children) {
-    return null;
-  }
-
   return (
     <Container>
       <RowMain align="middle" justify="space-between">
@@ -64,6 +57,10 @@ const Header = ({ children }) => {
       </RowMain>
     </Container>
   );
+};
+
+Header.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export default Header;
