@@ -61,7 +61,7 @@ const PublicLessonDesktop = ({ lesson }) => {
           <EnrollRow justify="end">
             {isEnrolled ? (
               <Button type="primary" onClick={handleContinueLesson}>
-                >{t('user_home.ongoing_lessons.continue_button')}
+                {t('user_home.ongoing_lessons.continue_button')}
               </Button>
             ) : (
               <Button size="medium" type="secondary" onClick={handleEnroll}>
