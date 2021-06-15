@@ -10,11 +10,11 @@ class LessonBlockStructure extends objection.Model {
     return {
       type: 'object',
       properties: {
-        id: { type: 'number' },
-        lessonID: { type: 'number' },
-        blockID: { type: 'string' },
-        childID: { type: 'number' },
-        parentID: { type: 'number' },
+        id: { type: 'string' },
+        lessonId: { type: 'number' },
+        blockId: { type: 'string' },
+        childId: { type: 'string' },
+        parentId: { type: 'string' },
       },
     };
   }

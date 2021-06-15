@@ -9,12 +9,14 @@ class Block extends objection.Model {
     return {
       type: 'object',
       properties: {
-        blockID: { type: 'string' },
-        revisionID: { type: 'string' },
+        blockId: { type: 'string' },
+        revisionId: { type: 'string' },
         content: { type: 'object' },
         type: { type: 'string' },
         answer: { type: 'object' },
         weight: { type: 'number' },
+        createdAt: { type: 'string' },
+        updatedAt: { type: 'string' },
       },
     };
   }
