@@ -200,23 +200,23 @@ const router = async (instance) => {
               .insert(req.body.blocks)
               .returning('blockId');
 
-            const lessonBlock = [];
+            const blockStructure = [];
 
             for (let i = 0, n = blocksData.length; i < n; i += 1) {
-              lessonBlock.push({
+              blockStructure.push({
                 id: v4(),
                 lessonId: lesson.id,
                 blockId: blocksData[i].blockId,
               });
             }
 
-            for (let i = 0, n = lessonBlock.length; i < n; i += 1) {
-              lessonBlock[i].parentId = !i ? null : lessonBlock[i - 1].id;
-              lessonBlock[i].childId =
-                i === n - 1 ? null : lessonBlock[i + 1].id;
+            for (let i = 0, n = blockStructure.length; i < n; i += 1) {
+              blockStructure[i].parentId = !i ? null : blockStructure[i - 1].id;
+              blockStructure[i].childId =
+                i === n - 1 ? null : blockStructure[i + 1].id;
             }
 
-            await LessonBlockStructure.query(trx).insert(lessonBlock);
+            await LessonBlockStructure.query(trx).insert(blockStructure);
           }
 
           return lesson;

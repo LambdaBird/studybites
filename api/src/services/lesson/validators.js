@@ -31,7 +31,26 @@ const blocksValidator = yup
         .required(requiredPropertyError('lesson', 'revisionId')),
       content: yup
         .object()
-        .typeError(propertyTypeError('lesson', 'content', 'object')),
+        .typeError(propertyTypeError('lesson', 'content', 'object'))
+        .shape({
+          type: yup
+            .string()
+            .typeError(propertyTypeError('lesson', 'type', 'string')),
+          data: yup
+            .object()
+            .typeError(propertyTypeError('lesson', 'data', 'object'))
+            .shape({
+              text: yup
+                .string()
+                .typeError(propertyTypeError('lesson', 'text', 'string')),
+              level: yup
+                .number()
+                .typeError(propertyTypeError('lesson', 'level', 'number')),
+              style: yup
+                .string()
+                .typeError(propertyTypeError('lesson', 'style', 'string')),
+            }),
+        }),
       type: yup
         .string()
         .typeError(propertyTypeError('lesson', 'type', 'string')),
