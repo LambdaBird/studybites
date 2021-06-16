@@ -302,7 +302,9 @@ const router = async (instance) => {
               }
             }
 
-            await Block.query(trx).insert(blocksToInsert).returning('*');
+            if (blocksToInsert.length) {
+              await Block.query(trx).insert(blocksToInsert).returning('*');
+            }
 
             const blockStructure = [];
 
