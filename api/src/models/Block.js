@@ -10,7 +10,7 @@ class Block extends objection.Model {
       type: 'object',
       properties: {
         blockId: { type: 'string' },
-        revisionId: { type: 'string' },
+        revision: { type: 'string' },
         content: { type: 'object' },
         type: { type: 'string' },
         answer: { type: 'object' },

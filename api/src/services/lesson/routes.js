@@ -1,5 +1,4 @@
 import { v4 } from 'uuid';
-
 import config from '../../../config';
 
 import errorResponse from '../../validation/schemas';
@@ -197,7 +196,19 @@ const router = async (instance) => {
 
           if (req.body.blocks) {
             const blocksData = await Block.query(trx)
-              .insert(req.body.blocks)
+              .insert(
+                req.body.blocks.map(
+                  ({ id, type, data: blockData, revision }) => ({
+                    type,
+                    revision,
+                    content: {
+                      id,
+                      type,
+                      data: blockData,
+                    },
+                  }),
+                ),
+              )
               .returning('blockId');
 
             const blockStructure = [];
