@@ -22,3 +22,8 @@ export const ENROLL_SUCCESS = {
   key: 'lesson.enroll_success',
   message: 'Successfully enrolled',
 };
+
+export const UPDATE_SUCCESS = {
+  key: 'lesson.update_success',
+  message: 'Lesson successfully updated',
+};

@@ -9,11 +9,16 @@ import errorHandler from '../../validation/errorHandler';
 import { BadRequestError, NotFoundError } from '../../validation/errors';
 
 import {
-  // patchBodyValidator,
+  patchBodyValidator,
   postBodyValidator,
   validateId,
 } from './validators';
-import { NOT_FOUND, INVALID_ENROLL, ENROLL_SUCCESS } from './constants';
+import {
+  NOT_FOUND,
+  INVALID_ENROLL,
+  ENROLL_SUCCESS,
+  UPDATE_SUCCESS,
+} from './constants';
 
 const router = async (instance) => {
   const { Lesson, UserRole, Block, LessonBlockStructure } = instance.models;
@@ -230,10 +235,10 @@ const router = async (instance) => {
   });
 
   instance.route({
-    method: 'PATCH', // put
+    method: 'PUT',
     url: '/maintain/:id',
     schema: {
-      // body: patchBodyValidator,
+      body: patchBodyValidator,
       response: errorResponse,
     },
     validatorCompiler,
@@ -246,12 +251,12 @@ const router = async (instance) => {
       getId: (req) => req.params.id,
     }),
     handler: async (req, repl) => {
+      const id = validateId(req.params.id);
+
+      const { lesson, blocks } = req.body;
+
       try {
         await Lesson.transaction(async (trx) => {
-          const id = validateId(req.params.id);
-
-          const { lesson, blocks } = req.body;
-
           if (lesson) {
             await UserRole.relatedQuery('lessons')
               .for(
@@ -261,7 +266,7 @@ const router = async (instance) => {
                   resourceId: id,
                 }),
               )
-              .patch(req.body)
+              .patch(lesson)
               .returning('*');
           }
 
@@ -322,7 +327,7 @@ const router = async (instance) => {
           }
         });
 
-        return repl.status(200).send({ status: 'ok' });
+        return repl.status(200).send(UPDATE_SUCCESS);
       } catch (err) {
         throw new Error(err);
       }
