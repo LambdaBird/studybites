@@ -148,6 +148,26 @@
         "empty": "No reviews yet",
         "be_first": "Be first to rate a lesson"
       }
+    },
+    "lesson_edit": {
+      "buttons": {
+        "publish": "Publish",
+        "save": "Save",
+        "back": "Back",
+        "forward": "Forward",
+        "preview": "Preview"
+      },
+      "title": {
+        "default":"How to use StudyBites - For Teachers",
+        "placeholder": "Title"
+      },
+      "links": {
+        "invite": "Invite Collaborators",
+        "students": "Students",
+        "analytics": "Analytics",
+        "archive": "Archive"
+      },
+      "description": "Description"
     }
   }
 }

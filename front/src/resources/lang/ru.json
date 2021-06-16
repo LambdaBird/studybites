@@ -127,6 +127,26 @@
         "empty": "Отзывов еще нет",
         "be_first": "Оцените урок первым"
       }
+    },
+    "lesson_edit": {
+      "buttons": {
+        "publish": "Опубликовать",
+        "save": "Сохранить",
+        "back": "Назад",
+        "forward": "Вперед",
+        "preview": "Предпросмотр"
+      },
+      "title": {
+        "default":"How to use StudyBites - For Teachers",
+        "placeholder": "Название"
+      },
+      "links": {
+        "invite": "Пригласить соавторов",
+        "students": "Студенты",
+        "analytics": "Аналитика",
+        "archive": "Архив"
+      },
+      "description": "Описание"
     }
   }
 }

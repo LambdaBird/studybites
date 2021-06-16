@@ -1,5 +1,6 @@
 import { Col, Dropdown, Menu } from 'antd';
 import { useHistory } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import { DownOutlined } from '@ant-design/icons';
 import { HOME, SIGN_IN } from '@sb-ui/utils/paths';
 import logo from '@sb-ui/resources/img/logo.svg';
@@ -12,7 +13,7 @@ import {
   StyledAvatar,
 } from './Header.styled';
 
-const Header = () => {
+const Header = ({ children }) => {
   const history = useHistory();
 
   const handleSignOut = () => {
@@ -44,7 +45,7 @@ const Header = () => {
         <Col>
           <Logo onClick={handleHome} src={logo} alt="Logo" />
         </Col>
-
+        {children}
         <Col>
           <Dropdown overlay={menu} trigger={['click']}>
             <Profile data-testid="profile">
@@ -56,6 +57,10 @@ const Header = () => {
       </RowMain>
     </Container>
   );
+};
+
+Header.propTypes = {
+  children: PropTypes.node.isRequired,
 };
 
 export default Header;
