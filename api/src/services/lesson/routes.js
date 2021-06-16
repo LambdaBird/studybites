@@ -44,7 +44,7 @@ const router = async (instance) => {
       const { total, results } = await Lesson.getAllPublicLessons({
         ...req.query,
         userId: req.userId,
-      }).withGraphFetched('blocks');
+      });
 
       return repl.status(200).send({ total, data: results });
     },
@@ -62,15 +62,20 @@ const router = async (instance) => {
     handler: async (req, repl) => {
       const id = validateId(req.params.id);
 
-      const lesson = await await Lesson.query()
+      const lesson = await Lesson.query()
         .findById(id)
         .withGraphFetched('authors');
 
-      if (!lesson) {
-        throw new NotFoundError(NOT_FOUND);
+      const lessonBlocks = await Lesson.relatedQuery('lessonBlocks')
+        .for(id)
+        .withGraphJoined('blocks');
+
+      for (let i = 0, n = lessonBlocks.length; i < n; i += 1) {
+        const [block] = lessonBlocks[i].blocks;
+        lessonBlocks[i] = block;
       }
 
-      return repl.status(200).send({ data: lesson });
+      return repl.status(200).send({ lesson, lessonBlocks });
     },
   });
 
