@@ -31,6 +31,12 @@ export const RightCol = styled(Col)`
   right: 12rem;
   padding: 2rem;
   margin-left: 2rem;
+  @media (max-width: 1600px) {
+    right: 6rem;
+  }
+  @media (max-width: 1350px) {
+    right: 3rem;
+  }
 `;
 
 export const InputTitle = styled.input`
