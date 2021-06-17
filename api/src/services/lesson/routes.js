@@ -64,40 +64,13 @@ const router = async (instance) => {
 
       const lesson = await Lesson.query()
         .findById(id)
-        .withGraphFetched('authors')
-        .withGraphFetched('blocks');
+        .withGraphFetched('authors');
 
       if (!lesson) {
         throw new NotFoundError(NOT_FOUND);
       }
 
-      try {
-        const { parent } = await LessonBlockStructure.query()
-          .first()
-          .select('id as parent')
-          .where({ lessonId: id })
-          .whereNull('parentId');
-
-        const { rows: blocksOrder } = await LessonBlockStructure.knex().raw(
-          `select a.block_id from connectby('lesson_block_structure', 'id', 'parent_id', '${parent}', 0, '~') 
-          as t(id uuid, parent_id uuid, level int, branch text) join lesson_block_structure a on t.id = a.id`,
-        );
-
-        const blocks = [];
-
-        for (let i = 0, n = blocksOrder.length; i < n; i += 1) {
-          const block = lesson.blocks.find(
-            (el) => el.blockId === blocksOrder[i].block_id,
-          );
-          blocks.push(block);
-        }
-
-        lesson.blocks = blocks;
-      } catch (err) {
-        return { lesson };
-      }
-
-      return { lesson };
+      return { data: lesson };
     },
   });
 
