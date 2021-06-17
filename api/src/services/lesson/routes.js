@@ -59,23 +59,45 @@ const router = async (instance) => {
     validatorCompiler,
     errorHandler,
     onRequest: instance.auth({ instance }),
-    handler: async (req, repl) => {
-      const id = validateId(req.params.id);
+    handler: async ({ params }) => {
+      const id = validateId(params.id);
 
       const lesson = await Lesson.query()
         .findById(id)
-        .withGraphFetched('authors');
+        .withGraphFetched('authors')
+        .withGraphFetched('blocks');
 
-      const lessonBlocks = await Lesson.relatedQuery('lessonBlocks')
-        .for(id)
-        .withGraphJoined('blocks');
-
-      for (let i = 0, n = lessonBlocks.length; i < n; i += 1) {
-        const [block] = lessonBlocks[i].blocks;
-        lessonBlocks[i] = block;
+      if (!lesson) {
+        throw new NotFoundError(NOT_FOUND);
       }
 
-      return repl.status(200).send({ lesson, lessonBlocks });
+      try {
+        const { parent } = await LessonBlockStructure.query()
+          .first()
+          .select('id as parent')
+          .where({ lessonId: id })
+          .whereNull('parentId');
+
+        const { rows: blocksOrder } = await LessonBlockStructure.knex().raw(
+          `select a.block_id from connectby('lesson_block_structure', 'id', 'parent_id', '${parent}', 0, '~') 
+          as t(id uuid, parent_id uuid, level int, branch text) join lesson_block_structure a on t.id = a.id`,
+        );
+
+        const blocks = [];
+
+        for (let i = 0, n = blocksOrder.length; i < n; i += 1) {
+          const block = lesson.blocks.find(
+            (el) => el.blockId === blocksOrder[i].block_id,
+          );
+          blocks.push(block);
+        }
+
+        lesson.blocks = blocks;
+      } catch (err) {
+        return { lesson };
+      }
+
+      return { lesson };
     },
   });
 
@@ -156,23 +178,44 @@ const router = async (instance) => {
       role: config.roles.MAINTAINER.id,
       getId: (req) => req.params.id,
     }),
-    handler: async (req, repl) => {
-      const id = validateId(req.params.id);
+    handler: async ({ params }) => {
+      const id = validateId(params.id);
 
-      const data = await UserRole.relatedQuery('lessons')
-        .for(
-          UserRole.query().select().where({
-            userID: req.user.id,
-            roleID: config.roles.MAINTAINER.id,
-          }),
-        )
-        .where('id', id);
+      const lesson = await Lesson.query()
+        .findById(id)
+        .withGraphFetched('blocks');
 
-      if (!data) {
+      if (!lesson) {
         throw new NotFoundError(NOT_FOUND);
       }
 
-      return repl.status(200).send({ data });
+      try {
+        const { parent } = await LessonBlockStructure.query()
+          .first()
+          .select('id as parent')
+          .where({ lessonId: id })
+          .whereNull('parentId');
+
+        const { rows: blocksOrder } = await LessonBlockStructure.knex().raw(
+          `select a.block_id from connectby('lesson_block_structure', 'id', 'parent_id', '${parent}', 0, '~') 
+          as t(id uuid, parent_id uuid, level int, branch text) join lesson_block_structure a on t.id = a.id`,
+        );
+
+        const blocks = [];
+
+        for (let i = 0, n = blocksOrder.length; i < n; i += 1) {
+          const block = lesson.blocks.find(
+            (el) => el.blockId === blocksOrder[i].block_id,
+          );
+          blocks.push(block);
+        }
+
+        lesson.blocks = blocks;
+      } catch (err) {
+        return { lesson };
+      }
+
+      return { lesson };
     },
   });
 

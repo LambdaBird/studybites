@@ -115,12 +115,6 @@ class Lesson extends objection.Model {
               objection.raw(
                 `blocks as b on b.block_id = blocks.block_id and b.created_at = blocks.created_at`,
               ),
-            )
-            .orderBy(
-              objection.raw(
-                `case when lesson_block_structure.parent_id is null then 0 else 1 end, 
-                case when lesson_block_structure.child_id is null then 1 else 0 end`,
-              ),
             );
         },
       },
