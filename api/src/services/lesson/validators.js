@@ -39,6 +39,7 @@ export const patchBodyValidator = yup.object({
   name: nameValidatorPatch,
   description: descriptionValidator,
   status: statusValidator,
+  blocks: blocksValidator,
 });
 
 export const validateId = (paramId) => {

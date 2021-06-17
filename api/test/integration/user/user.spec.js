@@ -1,5 +1,3 @@
-import jest from 'jest-mock';
-
 import build from '../../../src/app';
 import { UNAUTHORIZED } from '../../../src/services/user/constants';
 
