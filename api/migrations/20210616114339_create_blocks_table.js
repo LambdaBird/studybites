@@ -6,4 +6,9 @@ export const up = (knex) =>
     table.primary(['revision', 'block_id']);
   });
 
-export const down = (knex) => knex.schema.dropTable('blocks');
+export const down = (knex) =>
+  knex.schema.alterTable('blocks', (table) => {
+    table.dropPrimary('blocks_pkey');
+    table.dropColumn('revision');
+    table.uuid('revision_id').primary();
+  });

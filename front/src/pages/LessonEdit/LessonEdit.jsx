@@ -71,14 +71,6 @@ const LessonEdit = () => {
     }
   };
 
-  const handleRedo = () => {
-    document.execCommand('redo', false, null);
-  };
-
-  const handleUndo = () => {
-    document.execCommand('undo', false, null);
-  };
-
   return (
     <>
       <Header>
@@ -113,20 +105,12 @@ const LessonEdit = () => {
                 </SaveButton>
               </Col>
               <Col span={12}>
-                <MoveButton
-                  onClick={handleUndo}
-                  icon={<UndoOutlined />}
-                  size="medium"
-                >
+                <MoveButton icon={<UndoOutlined />} size="medium">
                   {t('lesson_edit.buttons.back')}
                 </MoveButton>
               </Col>
               <Col span={12}>
-                <MoveButton
-                  onClick={handleRedo}
-                  icon={<RedoOutlined />}
-                  size="medium"
-                >
+                <MoveButton icon={<RedoOutlined />} size="medium">
                   {t('lesson_edit.buttons.forward')}
                 </MoveButton>
               </Col>

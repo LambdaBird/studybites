@@ -194,21 +194,21 @@ const router = async (instance) => {
             })
             .returning('*');
 
-          if (req.body.blocks) {
+          const blocks = req.body.blocks.map(
+            ({ id, type, data: blockData, revision }) => ({
+              type,
+              revision,
+              content: {
+                id,
+                type,
+                data: blockData,
+              },
+            }),
+          );
+
+          if (blocks) {
             const blocksData = await Block.query(trx)
-              .insert(
-                req.body.blocks.map(
-                  ({ id, type, data: blockData, revision }) => ({
-                    type,
-                    revision,
-                    content: {
-                      id,
-                      type,
-                      data: blockData,
-                    },
-                  }),
-                ),
-              )
+              .insert(blocks)
               .returning('blockId');
 
             const blockStructure = [];
