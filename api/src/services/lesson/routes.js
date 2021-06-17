@@ -1,4 +1,5 @@
 import { v4 } from 'uuid';
+import objection from 'objection';
 
 import config from '../../../config';
 
@@ -12,7 +13,12 @@ import {
   postBodyValidator,
   validateId,
 } from './validators';
-import { NOT_FOUND, INVALID_ENROLL, ENROLL_SUCCESS } from './constants';
+import {
+  NOT_FOUND,
+  INVALID_ENROLL,
+  ENROLL_SUCCESS,
+  UPDATE_SUCCESS,
+} from './constants';
 
 const router = async (instance) => {
   const { Lesson, UserRole, Block, LessonBlockStructure } = instance.models;
@@ -229,7 +235,7 @@ const router = async (instance) => {
   });
 
   instance.route({
-    method: 'PATCH',
+    method: 'PUT',
     url: '/maintain/:id',
     schema: {
       body: patchBodyValidator,
@@ -247,22 +253,86 @@ const router = async (instance) => {
     handler: async (req, repl) => {
       const id = validateId(req.params.id);
 
-      const data = await UserRole.relatedQuery('lessons')
-        .for(
-          UserRole.query().select().where({
-            userID: req.user.id,
-            roleID: config.roles.MAINTAINER.id,
-            resourceId: id,
-          }),
-        )
-        .patch(req.body)
-        .returning('*');
+      const { lesson, blocks } = req.body;
 
-      if (!data) {
-        throw new NotFoundError(NOT_FOUND);
+      try {
+        await Lesson.transaction(async (trx) => {
+          if (lesson) {
+            await UserRole.relatedQuery('lessons')
+              .for(
+                UserRole.query().select().where({
+                  userID: req.user.id,
+                  roleID: config.roles.MAINTAINER.id,
+                  resourceId: id,
+                }),
+              )
+              .patch(lesson)
+              .returning('*');
+          }
+
+          if (blocks) {
+            const revisions = await Block.query(trx)
+              .select(
+                objection.raw(
+                  `json_object_agg(x.block_id, x.revisions) as values`,
+                ),
+              )
+              .from(
+                objection.raw(
+                  `(select block_id, array_agg(revision_id) as revisions from blocks group by block_id) as x`,
+                ),
+              );
+
+            const { values } = revisions[0];
+
+            const blocksToInsert = [];
+
+            for (let i = 0, n = blocks.length; i < n; i += 1) {
+              const { revisionId, blockId } = blocks[i];
+
+              if (revisionId && !blockId) {
+                blocks[i].blockId = v4();
+                blocksToInsert.push(blocks[i]);
+              }
+
+              if (revisionId && blockId) {
+                if (values[blockId] && !values[blockId].includes(revisionId)) {
+                  blocksToInsert.push(blocks[i]);
+                }
+              }
+            }
+
+            if (blocksToInsert.length) {
+              await Block.query(trx).insert(blocksToInsert).returning('*');
+            }
+
+            const blockStructure = [];
+
+            for (let i = 0, n = blocks.length; i < n; i += 1) {
+              blockStructure.push({
+                id: v4(),
+                lessonId: id,
+                blockId: blocks[i].blockId,
+              });
+            }
+
+            for (let i = 0, n = blockStructure.length; i < n; i += 1) {
+              blockStructure[i].parentId = !i ? null : blockStructure[i - 1].id;
+              blockStructure[i].childId =
+                i === n - 1 ? null : blockStructure[i + 1].id;
+            }
+
+            await LessonBlockStructure.query(trx)
+              .delete()
+              .where({ lessonId: id });
+            await LessonBlockStructure.query(trx).insert(blockStructure);
+          }
+        });
+
+        return repl.status(200).send(UPDATE_SUCCESS);
+      } catch (err) {
+        throw new Error(err);
       }
-
-      return repl.status(200).send({ data });
     },
   });
 
