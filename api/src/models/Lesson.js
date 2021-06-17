@@ -120,6 +120,18 @@ class Lesson extends objection.Model {
             );
         },
       },
+
+      lessonBlocks: {
+        relation: objection.Model.HasOneRelation,
+        modelClass: path.join(__dirname, 'LessonBlockStructure'),
+        join: {
+          from: 'lessons.id',
+          to: 'lesson_block_structure.lesson_id',
+        },
+        modify: (query) => {
+          return query.select('blocks');
+        },
+      },
     };
   }
 
