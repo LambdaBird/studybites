@@ -37,7 +37,12 @@ export const PRIVATE_ROUTES = [
   },
   {
     component: LessonEdit,
-    path: paths.LESSON_EDIT,
+    path: paths.LESSONS_EDIT_NEW,
+    permissions: [Roles.TEACHER],
+  },
+  {
+    component: LessonEdit,
+    path: paths.LESSONS_EDIT,
     permissions: [Roles.TEACHER],
   },
 ];

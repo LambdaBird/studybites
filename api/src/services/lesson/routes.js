@@ -207,6 +207,7 @@ const router = async (instance) => {
     }),
     handler: async (req, repl) => {
       try {
+        const { blocks } = req.body;
         const data = await Lesson.transaction(async (trx) => {
           const lesson = await Lesson.query(trx)
             .insert(req.body)
@@ -220,18 +221,6 @@ const router = async (instance) => {
               resourceId: lesson.id,
             })
             .returning('*');
-
-          const blocks = req.body.blocks.map(
-            ({ id, type, data: blockData, revision }) => ({
-              type,
-              revision,
-              content: {
-                id,
-                type,
-                data: blockData,
-              },
-            }),
-          );
 
           if (blocks) {
             const blocksData = await Block.query(trx)
@@ -311,7 +300,7 @@ const router = async (instance) => {
               )
               .from(
                 objection.raw(
-                  `(select block_id, array_agg(revision_id) as revisions from blocks group by block_id) as x`,
+                  `(select block_id, array_agg(revision) as revisions from blocks group by block_id) as x`,
                 ),
               );
 
@@ -320,15 +309,15 @@ const router = async (instance) => {
             const blocksToInsert = [];
 
             for (let i = 0, n = blocks.length; i < n; i += 1) {
-              const { revisionId, blockId } = blocks[i];
+              const { revision, blockId } = blocks[i];
 
-              if (revisionId && !blockId) {
+              if (revision && !blockId) {
                 blocks[i].blockId = v4();
                 blocksToInsert.push(blocks[i]);
               }
 
-              if (revisionId && blockId) {
-                if (values[blockId] && !values[blockId].includes(revisionId)) {
+              if (revision && blockId) {
+                if (values[blockId] && !values[blockId].includes(revision)) {
                   blocksToInsert.push(blocks[i]);
                 }
               }

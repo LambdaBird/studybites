@@ -7,4 +7,5 @@ export const TEACHER_HOME = '/teacher';
 export const USER_LESSONS = `${USER_HOME}/lessons`;
 export const LESSON_PAGE = `${USER_LESSONS}/:id`;
 export const USER_ENROLL = '/enroll';
-export const LESSON_EDIT = '/lesson-edit';
+export const LESSONS_EDIT_NEW = '/lessons/new';
+export const LESSONS_EDIT = '/lessons/:id';

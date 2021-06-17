@@ -51,6 +51,18 @@ export const getEnrolledLessons = async ({ queryKey }) => {
   return data;
 };
 
+export const getLesson = async ({ queryKey }) => {
+  const [, { id }] = queryKey;
+
+  const { data } = await api.get(`${PATH}/maintain/${id}`);
+  return data;
+};
+
+export const putLesson = async (params) => {
+  const { data } = await api.put(`${PATH}/maintain/${params.id}`, params);
+  return data;
+};
+
 export const createLesson = async (values) => {
   const { data } = await api.post(`${PATH}/maintain/`, values);
   return data;

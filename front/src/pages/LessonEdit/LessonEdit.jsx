@@ -5,11 +5,13 @@ import { useTranslation } from 'react-i18next';
 import EditorJS from '@editorjs/editorjs';
 import DragDrop from 'editorjs-drag-drop';
 import Undo from 'editorjs-undo';
-import { useMutation } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { RedoOutlined, SaveOutlined, UndoOutlined } from '@ant-design/icons';
 import Header from '@sb-ui/components/molecules/Header';
-import { createLesson } from '@sb-ui/utils/api/v1/lesson';
+import { createLesson, getLesson, putLesson } from '@sb-ui/utils/api/v1/lesson';
 import { Statuses } from '@sb-ui/pages/TeacherHome/LessonsDashboard/constants';
+import { LESSONS_EDIT } from '@sb-ui/utils/paths';
+import { useHistory, useParams } from 'react-router-dom';
 import * as S from './LessonEdit.styled';
 import {
   HeaderButtons,
@@ -26,10 +28,18 @@ const { TextArea } = Input;
 
 let editorJS;
 
+const GET_LESSON_BASE_QUERY = 'getLesson';
+
 const LessonEdit = () => {
   const { t } = useTranslation();
+  const { id: lessonId } = useParams();
+  const isEditLesson = !!lessonId;
+  const history = useHistory();
   const [name, setName] = useState(t('lesson_edit.title.default'));
   const [description, setDescription] = useState('');
+  const [editorData, setEditorData] = useState(null);
+  const [editorReady, setEditorReady] = useState(false);
+
   useEffect(() => {
     editorJS = new EditorJS({
       holder: 'editorjs',
@@ -39,12 +49,56 @@ const LessonEdit = () => {
         new Undo({ editor: editorJS });
         // eslint-disable-next-line no-new
         new DragDrop(editorJS);
+        setEditorReady(true);
       },
       plugins: [],
     });
   }, []);
 
+  useEffect(() => {
+    if (editorReady && editorData) {
+      const {
+        lesson: { blocks },
+      } = editorData;
+      editorJS.render?.({
+        blocks: blocks.map(({ content }) => content),
+      });
+    }
+  }, [editorReady, editorData]);
+
+  useQuery(
+    [
+      GET_LESSON_BASE_QUERY,
+      {
+        id: lessonId,
+      },
+    ],
+    getLesson,
+    {
+      onSuccess: (data) => {
+        setEditorData(data);
+      },
+    },
+  );
+
   const { mutate } = useMutation(createLesson, {
+    onSuccess: (data) => {
+      const { id } = data?.data;
+      history.push(LESSONS_EDIT.replace(':id', id));
+    },
+    onError: (e) => {
+      message.error({
+        content: e.message,
+        key: e.key,
+        duration: 2,
+      });
+    },
+  });
+
+  const { mutate: updateLesson } = useMutation(putLesson, {
+    onSuccess: (data) => {
+      console.log(data); // TODO NEED UPDATE EDITOR JS
+    },
     onError: (e) => {
       message.error({
         content: e.message,
@@ -57,15 +111,26 @@ const LessonEdit = () => {
   const handleSave = async () => {
     try {
       const { blocks } = await editorJS.save();
-      mutate({
+      const params = {
+        id: lessonId,
         name,
         description,
         status: Statuses.DRAFT,
-        blocks: blocks.map((block) => ({
-          ...block,
-          revision: hash(block),
-        })),
-      });
+        blocks: blocks.map((block) => {
+          const { id, type, data } = block;
+          return {
+            type,
+            revision: hash(block),
+            content: {
+              id,
+              type,
+              data,
+            },
+          };
+        }),
+      };
+      // eslint-disable-next-line no-unused-expressions
+      isEditLesson ? updateLesson(params) : mutate(params);
     } catch (e) {
       console.error('Editor JS error: ', e);
     }

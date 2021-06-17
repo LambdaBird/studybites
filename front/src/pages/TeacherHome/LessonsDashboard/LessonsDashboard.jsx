@@ -6,7 +6,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
 import { getTeacherLessons } from '@sb-ui/utils/api/v1/lesson';
-import { LESSON_EDIT } from '@sb-ui/utils/paths';
+import { LESSONS_EDIT_NEW } from '@sb-ui/utils/paths';
 import * as S from './LessonsDashboard.styled';
 import LessonsList from './LessonsList';
 import {
@@ -46,7 +46,7 @@ const LessonsDashboard = () => {
   const { data, total } = responseData || {};
 
   const handleCreateLesson = () => {
-    history.push(LESSON_EDIT);
+    history.push(LESSONS_EDIT_NEW);
   };
 
   return (
