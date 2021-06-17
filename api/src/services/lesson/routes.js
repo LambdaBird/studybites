@@ -83,6 +83,47 @@ const router = async (instance) => {
 
   instance.route({
     method: 'GET',
+    url: '/maintain/students',
+    schema: {
+      response: errorResponse,
+    },
+    validatorCompiler,
+    errorHandler,
+    onRequest: instance.auth({ instance }),
+    handler: async (req, repl) => {
+      const columns = {
+        email: 'email',
+        firstName: 'first_name',
+        lastName: 'last_name',
+      };
+
+      if (!req.query.search) {
+        columns.email = undefined;
+        columns.firstName = undefined;
+        columns.lastName = undefined;
+      }
+
+      const firstIndex = parseInt(req.query.offset, 10) || 0;
+      const lastIndex =
+        firstIndex +
+        (parseInt(req.query.limit, 10) || config.search.LESSON_SEARCH_LIMIT) -
+        1;
+
+      const { total, results } = await UserRole.getAllTeacherStudents({
+        columns,
+        userId: req.user.id,
+        search: req.query.search,
+      }).range(firstIndex, lastIndex);
+
+      return repl.status(200).send({
+        total,
+        data: results,
+      });
+    },
+  });
+
+  instance.route({
+    method: 'GET',
     url: '/maintain/',
     schema: {
       response: errorResponse,

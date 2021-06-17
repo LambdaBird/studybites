@@ -71,13 +71,23 @@ export const getTeacherLessons = async ({ queryKey }) => {
   return data;
 };
 
+export const getTeacherStudents = async ( {queryKey})=>{
+  const [, paramsData] = queryKey;
+
+  const { data } = await api.get(`${PATH}/maintain/students`, {
+    params: paramsData,
+  });
+
+  return data;
+}
+
 export const getPublicLessons = async ({ queryKey }) => {
   const [, paramsData] = queryKey;
+
 
   const { data } = await api.get(`${PATH}/`, {
     params: paramsData,
   });
-
   return data;
 };
 

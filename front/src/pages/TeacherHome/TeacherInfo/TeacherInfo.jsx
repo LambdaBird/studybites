@@ -1,11 +1,17 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { Avatar, Typography } from 'antd';
-import { getTeacherLessons } from '@sb-ui/utils/api/v1/lesson';
+import {
+  getTeacherLessons,
+  getTeacherStudents,
+} from '@sb-ui/utils/api/v1/lesson';
 import * as S from './TeacherInfo.styled';
-import { TEACHER_LESSONS_BASE_KEY } from '../LessonsDashboard/constants';
+import {
+  TEACHER_LESSONS_BASE_KEY,
+  TEACHER_STUDENTS_BASE_KEY,
+} from '../LessonsDashboard/constants';
 
 const { Title, Text } = Typography;
 
@@ -16,6 +22,15 @@ const TeacherInfo = ({ username, description }) => {
     [TEACHER_LESSONS_BASE_KEY],
     getTeacherLessons,
   );
+
+  const { data: studentsResponseData } = useQuery(
+    [TEACHER_STUDENTS_BASE_KEY],
+    getTeacherStudents,
+  );
+
+  useEffect(() => {
+    console.log(studentsResponseData); // TODO NEED CONNECT FRONT
+  }, [studentsResponseData]);
 
   const statisticColumns = [
     {

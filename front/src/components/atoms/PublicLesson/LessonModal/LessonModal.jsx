@@ -67,8 +67,8 @@ const LessonModal = ({ onStartEnroll }) => {
 
   const onClickStartEnroll = useCallback(async () => {
     await postEnroll(id);
-    historyPushBack();
-    onStartEnroll();
+    historyPushBack?.();
+    onStartEnroll?.();
   }, [id, historyPushBack, onStartEnroll]);
 
   return (
