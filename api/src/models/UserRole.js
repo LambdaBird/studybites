@@ -49,41 +49,6 @@ class UserRole extends objection.Model {
       },
     };
   }
-
-  static getAllTeacherStudents({ columns, search, userId }) {
-    return this.query()
-      .skipUndefined()
-      .select('users.id', 'users.email', 'users.first_name', 'users.last_name')
-      .innerJoin('users_roles as students', (builder) => {
-        builder
-          .on(
-            'students.role_id',
-            '=',
-            objection.raw('?', [config.roles.STUDENT.id]),
-          )
-          .andOn('users_roles.user_id', '=', objection.raw('?', [userId]))
-          .andOn(
-            'users_roles.role_id',
-            '=',
-            objection.raw('?', [config.roles.MAINTAINER.id]),
-          )
-          .andOn(
-            'users_roles.resource_type',
-            '=',
-            objection.raw('?', [config.resources.LESSON]),
-          );
-      })
-      .innerJoin('users', (builder) => {
-        builder.on('users.id', '=', 'students.user_id');
-      })
-      .where(function () {
-        this.skipUndefined()
-          .where(columns.email, 'ilike', `%${search}%`)
-          .orWhere(columns.firstName, 'ilike', `%${search}%`)
-          .orWhere(columns.lastName, 'ilike', `%${search}%`);
-      })
-      .groupBy('users.id');
-  }
 }
 
 export default UserRole;
