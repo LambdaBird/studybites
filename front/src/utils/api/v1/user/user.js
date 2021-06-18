@@ -32,28 +32,20 @@ export const postSignIn = async (formData) => {
   }
 };
 
-export const getUsers = async (paramsData) => {
-  try {
-    const { status, data } = await api.get(`${PATH}/`, {
-      params: paramsData,
-    });
-    return {
-      status,
-      data: {
-        ...data,
-        data: data.data.map((x) => ({
-          ...x,
-          fullName: `${x.firstName} ${x.lastName}`,
-        })),
-      },
-    };
-  } catch (e) {
-    const { status, data } = e.response;
-    return {
-      status,
-      data,
-    };
-  }
+export const getUsers = async ({ queryKey }) => {
+  const [, paramsData] = queryKey;
+
+  const { data } = await api.get(`${PATH}/`, {
+    params: paramsData,
+  });
+
+  return {
+    ...data,
+    data: data.data.map((x) => ({
+      ...x,
+      fullName: `${x.firstName} ${x.lastName}`,
+    })),
+  };
 };
 
 export const appointTeacher = async (id) => {

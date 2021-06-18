@@ -204,14 +204,15 @@ const router = async (instance) => {
             )
             .as('isTeacher'),
         )
-        .where(columns.email, 'ilike', `%${req.query.search}%`)
-        .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
-        .whereNot({
+        .where(function () {
+          this.skipUndefined()
+            .where(columns.email, 'ilike', `%${req.query.search}%`)
+            .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
+            .orWhere(columns.lastName, 'ilike', `%${req.query.search}%`);
+        })
+        .andWhereNot({
           id: req.user.id,
         })
-        .where(columns.email, 'ilike', `%${req.query.search}%`)
-        .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
-        .orWhere(columns.lastName, 'ilike', `%${req.query.search}%`)
         .offset(req.query.offset || 0)
         .limit(req.query.limit || config.search.USER_SEARCH_LIMIT);
 
