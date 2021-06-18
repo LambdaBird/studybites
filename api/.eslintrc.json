@@ -9,6 +9,7 @@
     "plugin:import/errors",
     "plugin:import/warnings"
   ],
+  "parser": "@babel/eslint-parser",
   "rules": {
     "eol-last": ["error", "always"],
     "import/prefer-default-export": "off"

@@ -187,12 +187,15 @@ const router = async (instance) => {
         lastName: 'lastName',
       };
 
-      if (!req.query.search) {
+      const { search } = req.query;
+
+      if (!search) {
         columns.email = undefined;
         columns.firstName = undefined;
         columns.lastName = undefined;
       }
 
+      const [firstName, lastName] = search?.trim()?.split(' ') || [];
       const data = await User.query()
         .skipUndefined()
         .select(
@@ -206,9 +209,16 @@ const router = async (instance) => {
         )
         .where(function () {
           this.skipUndefined()
-            .where(columns.email, 'ilike', `%${req.query.search}%`)
-            .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
-            .orWhere(columns.lastName, 'ilike', `%${req.query.search}%`);
+            .where(columns.email, 'ilike', `%${search}%`)
+            .orWhere(columns.firstName, 'ilike', `%${search}%`)
+            .orWhere(columns.lastName, 'ilike', `%${search}%`);
+        })
+        .orWhere(function () {
+          if (firstName && lastName) {
+            this.skipUndefined()
+              .where(columns.firstName, 'ilike', `%${firstName}%`)
+              .andWhere(columns.lastName, 'ilike', `%${lastName}%`);
+          }
         })
         .andWhereNot({
           id: req.user.id,
@@ -217,13 +227,24 @@ const router = async (instance) => {
         .limit(req.query.limit || config.search.USER_SEARCH_LIMIT);
 
       const count = await User.query()
+
         .skipUndefined()
-        .whereNot({
+        .where(function () {
+          this.skipUndefined()
+            .where(columns.email, 'ilike', `%${search}%`)
+            .orWhere(columns.firstName, 'ilike', `%${search}%`)
+            .orWhere(columns.lastName, 'ilike', `%${search}%`);
+        })
+        .orWhere(function () {
+          if (firstName && lastName) {
+            this.skipUndefined()
+              .where(columns.firstName, 'ilike', `%${firstName}%`)
+              .andWhere(columns.lastName, 'ilike', `%${lastName}%`);
+          }
+        })
+        .andWhereNot({
           id: req.user.id,
         })
-        .where(columns.email, 'ilike', `%${req.query.search}%`)
-        .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
-        .orWhere(columns.lastName, 'ilike', `%${req.query.search}%`)
         .count('*');
 
       return repl.status(200).send({ total: +count[0].count, data });
