@@ -130,6 +130,7 @@ const router = async (instance) => {
               }
             : undefined,
         )
+        .groupBy('id')
         .range(firstIndex, lastIndex);
 
       return { total, students: results };
