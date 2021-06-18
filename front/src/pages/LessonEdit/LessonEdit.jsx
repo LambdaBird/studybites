@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button, Col, Input, Row, Typography, message } from 'antd';
 import hash from 'object-hash';
 import { useTranslation } from 'react-i18next';
@@ -41,10 +41,11 @@ const LessonEdit = () => {
   const [editorData, setEditorData] = useState(null);
   const [editorReady, setEditorReady] = useState(false);
 
+  const inputTitle = useRef(null);
+
   useEffect(() => {
     editorJS = new EditorJS({
       holder: 'editorjs',
-      autofocus: true,
       onReady: () => {
         // eslint-disable-next-line no-new
         undo = new Undo({ editor: editorJS });
@@ -54,6 +55,7 @@ const LessonEdit = () => {
       },
       plugins: [],
     });
+    inputTitle.current.focus();
   }, []);
 
   useEffect(() => {
@@ -62,7 +64,7 @@ const LessonEdit = () => {
         lesson: { blocks },
       } = editorData;
       const editorToRender = {
-        blocks: blocks.filter((x) => !!x).map(({ content }) => content),
+        blocks: blocks.map(({ content }) => content),
       };
 
       if (editorToRender.blocks.length === 0) {
@@ -83,6 +85,7 @@ const LessonEdit = () => {
     ],
     getLesson,
     {
+      enabled: !!lessonId,
       onSuccess: (data) => {
         setEditorData(data);
       },
@@ -160,6 +163,7 @@ const LessonEdit = () => {
         <S.StyledRow align="top">
           <S.LeftCol span={12}>
             <InputTitle
+              ref={inputTitle}
               type="text"
               placeholder={t('lesson_edit.title.placeholder')}
               value={name}

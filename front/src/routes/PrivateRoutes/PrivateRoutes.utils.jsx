@@ -1,3 +1,4 @@
+import { matchPath } from 'react-router-dom';
 import * as paths from '@sb-ui/utils/paths';
 import { Roles } from '@sb-ui/utils/constants';
 import UserHome from '@sb-ui/pages/UserHome';
@@ -6,6 +7,9 @@ import TeacherHome from '@sb-ui/pages/TeacherHome';
 import UserLessons from '@sb-ui/pages/UserLessons';
 import LessonEdit from '@sb-ui/pages/LessonEdit';
 import LessonPage from '@sb-ui/pages/LessonPage';
+import { LESSONS_EDIT, LESSONS_NEW } from '@sb-ui/utils/paths';
+
+const SKIP_HEADER = [LESSONS_NEW, LESSONS_EDIT];
 
 export const checkPermission = (roles, permissions) => {
   if (!permissions) return true;
@@ -37,7 +41,7 @@ export const PRIVATE_ROUTES = [
   },
   {
     component: LessonEdit,
-    path: paths.LESSONS_EDIT_NEW,
+    path: paths.LESSONS_NEW,
     permissions: [Roles.TEACHER],
   },
   {
@@ -46,6 +50,14 @@ export const PRIVATE_ROUTES = [
     permissions: [Roles.TEACHER],
   },
 ];
+
+export const getPagesWithSkippedHeader = (pathname) =>
+  SKIP_HEADER.map((header) =>
+    matchPath(pathname, {
+      path: header,
+      exact: true,
+    }),
+  ).some((x) => !!x);
 
 export const getMainPage = (roles) => {
   if (roles.includes(Roles.SUPER_ADMIN)) {
