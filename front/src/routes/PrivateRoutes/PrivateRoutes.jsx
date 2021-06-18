@@ -3,14 +3,12 @@ import * as paths from '@sb-ui/utils/paths';
 import { getJWTAccessToken } from '@sb-ui/utils/jwt';
 import Header from '@sb-ui/components/molecules/Header';
 import useUser from '@sb-ui/hooks/useUser/useUser';
-import { LESSON_EDIT } from '@sb-ui/utils/paths';
 import {
   PRIVATE_ROUTES,
   checkPermission,
   getMainPage,
+  getPagesWithSkippedHeader,
 } from './PrivateRoutes.utils';
-
-const SKIP_HEADER = [LESSON_EDIT];
 
 const PrivateRoutes = () => {
   const location = useLocation();
@@ -32,7 +30,7 @@ const PrivateRoutes = () => {
 
   return (
     <>
-      {!SKIP_HEADER.includes(location.pathname) && <Header />}
+      {getPagesWithSkippedHeader(location.pathname) || <Header />}
       <Switch>
         <Route path={paths.HOME} exact>
           {getMainPage(user.roles)}
