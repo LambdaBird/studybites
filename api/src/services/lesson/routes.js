@@ -1,3 +1,4 @@
+/* eslint-disable func-names */
 import { v4 } from 'uuid';
 import objection from 'objection';
 import config from '../../../config';
@@ -20,7 +21,8 @@ import {
 } from './constants';
 
 const router = async (instance) => {
-  const { Lesson, UserRole, Block, LessonBlockStructure } = instance.models;
+  const { Lesson, UserRole, Block, LessonBlockStructure, User } =
+    instance.models;
 
   instance.route({
     method: 'GET',
@@ -84,6 +86,53 @@ const router = async (instance) => {
     onRequest: instance.auth({ instance }),
     handler: async (_, repl) => {
       return repl.status(200).send(Lesson.jsonSchema);
+    },
+  });
+
+  instance.route({
+    method: 'GET',
+    url: '/maintain/students',
+    schema: {
+      response: errorResponse,
+    },
+    validatorCompiler,
+    errorHandler,
+    onRequest: instance.auth({ instance }),
+    preHandler: instance.access({
+      instance,
+      role: config.roles.TEACHER.id,
+    }),
+    handler: async ({ user, query }) => {
+      const firstIndex = parseInt(query.offset, 10) || 0;
+      const lastIndex =
+        firstIndex +
+        (parseInt(query.limit, 10) || config.search.LESSON_SEARCH_LIMIT) -
+        1;
+
+      const { total, results } = await User.query()
+        .skipUndefined()
+        .select('id', 'email', 'first_name', 'last_name')
+        .join('users_roles', 'users.id', '=', 'users_roles.user_id')
+        .whereIn(
+          'users_roles.resource_id',
+          UserRole.query()
+            .select('resource_id')
+            .where('user_id', user.id)
+            .andWhere('role_id', config.roles.MAINTAINER.id),
+        )
+        .andWhere('users_roles.role_id', config.roles.STUDENT.id)
+        .andWhere(
+          query.search
+            ? function () {
+                this.where('email', 'ilike', `%${query.search}%`)
+                  .orWhere('first_name', 'ilike', `%${query.search}%`)
+                  .orWhere('last_name', 'ilike', `%${query.search}%`);
+              }
+            : undefined,
+        )
+        .range(firstIndex, lastIndex);
+
+      return { total, students: results };
     },
   });
 

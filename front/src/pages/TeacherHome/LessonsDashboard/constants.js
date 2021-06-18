@@ -29,6 +29,7 @@ export const statusesOptions = [
 ];
 
 export const TEACHER_LESSONS_BASE_KEY = 'teacherLessons';
+export const TEACHER_STUDENTS_BASE_KEY = 'teacherStudents';
 
 export const pageLimit = 8;
 

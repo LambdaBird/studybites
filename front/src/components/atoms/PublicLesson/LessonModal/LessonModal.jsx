@@ -28,7 +28,7 @@ import {
 
 const { Title, Text } = Typography;
 
-const LessonModal = ({ onStartEnroll }) => {
+const LessonModal = ({ onStartEnroll = () => {} }) => {
   const { t } = useTranslation();
   const location = useLocation();
   const query = useMemo(() => location.search, [location]);
