@@ -167,12 +167,13 @@ const router = async (instance) => {
 
         const blocks = [];
 
-        for (let i = 0, n = blocksOrder.length; i < n; i += 1) {
-          const block = lesson.blocks.find(
-            (el) => el.blockId === blocksOrder[i].block_id,
-          );
-          blocks.push(block);
-        }
+        const dictionary = lesson.blocks.reduce((result, filter) => {
+          // eslint-disable-next-line no-param-reassign
+          result[filter.blockId] = filter;
+          return result;
+        }, {});
+
+        blocksOrder.map((block) => blocks.push(dictionary[block.block_id]));
 
         lesson.blocks = blocks;
       } catch (err) {
