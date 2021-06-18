@@ -83,7 +83,7 @@ const LessonEdit = () => {
 
   const { mutate } = useMutation(createLesson, {
     onSuccess: (data) => {
-      const { id } = data?.data;
+      const { id } = data?.lesson;
       history.push(LESSONS_EDIT.replace(':id', id));
     },
     onError: (e) => {
@@ -112,10 +112,12 @@ const LessonEdit = () => {
     try {
       const { blocks } = await editorJS.save();
       const params = {
-        id: lessonId,
-        name,
-        description,
-        status: Statuses.DRAFT,
+        lesson: {
+          id: lessonId,
+          name,
+          description,
+          status: Statuses.DRAFT,
+        },
         blocks: blocks.map((block) => {
           const { id, type, data } = block;
           return {

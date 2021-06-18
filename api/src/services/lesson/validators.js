@@ -20,25 +20,40 @@ const statusValidator = yup
   .typeError(propertyTypeError('lesson', 'status', 'string'))
   .oneOf(['Draft', 'Public', 'Private', 'Archived'], INVALID_STATUS);
 
+const lessonValidatorPost = yup
+  .object()
+  .typeError(propertyTypeError('lesson', 'lesson', 'object'))
+  .required(requiredPropertyError('lesson', 'lesson'))
+  .shape({
+    name: nameValidatorPost,
+    description: descriptionValidator,
+    status: statusValidator,
+  });
+
 const blocksValidator = yup
   .array()
   .typeError(propertyTypeError('lesson', 'blocks', 'array'));
 
-const nameValidatorPatch = yup
+const nameValidatorPut = yup
   .string()
   .typeError(propertyTypeError('lesson', 'name', 'string'));
 
+const lessonValidatorPut = yup
+  .object()
+  .typeError(propertyTypeError('lesson', 'lesson', 'object'))
+  .shape({
+    name: nameValidatorPut,
+    description: descriptionValidator,
+    status: statusValidator,
+  });
+
 export const postBodyValidator = yup.object({
-  name: nameValidatorPost,
-  description: descriptionValidator,
-  status: statusValidator,
+  lesson: lessonValidatorPost,
   blocks: blocksValidator,
 });
 
-export const patchBodyValidator = yup.object({
-  name: nameValidatorPatch,
-  description: descriptionValidator,
-  status: statusValidator,
+export const putBodyValidator = yup.object({
+  lesson: lessonValidatorPut,
   blocks: blocksValidator,
 });
 

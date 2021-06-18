@@ -59,7 +59,10 @@ export const getLesson = async ({ queryKey }) => {
 };
 
 export const putLesson = async (params) => {
-  const { data } = await api.put(`${PATH}/maintain/${params.id}`, params);
+  const { data } = await api.put(
+    `${PATH}/maintain/${params.lesson.id}`,
+    params,
+  );
   return data;
 };
 

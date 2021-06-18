@@ -1,5 +1,6 @@
 import { v4 } from 'uuid';
 import objection from 'objection';
+
 import config from '../../../config';
 
 import errorResponse from '../../validation/schemas';
@@ -7,17 +8,8 @@ import validatorCompiler from '../../validation/validatorCompiler';
 import errorHandler from '../../validation/errorHandler';
 import { BadRequestError, NotFoundError } from '../../validation/errors';
 
-import {
-  patchBodyValidator,
-  postBodyValidator,
-  validateId,
-} from './validators';
-import {
-  NOT_FOUND,
-  INVALID_ENROLL,
-  ENROLL_SUCCESS,
-  UPDATE_SUCCESS,
-} from './constants';
+import { putBodyValidator, postBodyValidator, validateId } from './validators';
+import { NOT_FOUND, INVALID_ENROLL, ENROLL_SUCCESS } from './constants';
 
 const router = async (instance) => {
   const { Lesson, UserRole, Block, LessonBlockStructure } = instance.models;
@@ -169,8 +161,8 @@ const router = async (instance) => {
           .whereNull('parentId');
 
         const { rows: blocksOrder } = await LessonBlockStructure.knex().raw(
-          `select a.block_id from connectby('lesson_block_structure', 'id', 'parent_id', '${parent}', 0, '~') 
-          as t(id uuid, parent_id uuid, level int, branch text) join lesson_block_structure a on t.id = a.id`,
+          `select lesson_block_structure.block_id from connectby('lesson_block_structure', 'id', 'parent_id', '${parent}', 0, '~') 
+          as temporary(id uuid, parent_id uuid, level int, branch text) join lesson_block_structure on temporary.id = lesson_block_structure.id`,
         );
 
         const blocks = [];
@@ -205,34 +197,37 @@ const router = async (instance) => {
       instance,
       role: config.roles.TEACHER.id,
     }),
-    handler: async (req, repl) => {
+    handler: async ({ body, user }) => {
       try {
-        const { blocks } = req.body;
+        const { lesson, blocks } = body;
+
         const data = await Lesson.transaction(async (trx) => {
-          const lesson = await Lesson.query(trx)
-            .insert(req.body)
+          const lessonData = await Lesson.query(trx)
+            .insert(lesson)
             .returning('*');
 
           await UserRole.query(trx)
             .insert({
-              userID: req.user.id,
+              userID: user.id,
               roleID: config.roles.MAINTAINER.id,
               resourceType: config.resources.LESSON,
-              resourceId: lesson.id,
+              resourceId: lessonData.id,
             })
             .returning('*');
 
-          if (blocks) {
+          if (blocks.length) {
             const blocksData = await Block.query(trx)
               .insert(blocks)
-              .returning('blockId');
+              .returning('*');
+
+            lessonData.blocks = blocksData;
 
             const blockStructure = [];
 
             for (let i = 0, n = blocksData.length; i < n; i += 1) {
               blockStructure.push({
                 id: v4(),
-                lessonId: lesson.id,
+                lessonId: lessonData.id,
                 blockId: blocksData[i].blockId,
               });
             }
@@ -246,9 +241,10 @@ const router = async (instance) => {
             await LessonBlockStructure.query(trx).insert(blockStructure);
           }
 
-          return lesson;
+          return lessonData;
         });
-        return repl.status(200).send({ data });
+
+        return { lesson: data };
       } catch (err) {
         throw new Error(err);
       }
@@ -259,7 +255,7 @@ const router = async (instance) => {
     method: 'PUT',
     url: '/maintain/:id',
     schema: {
-      body: patchBodyValidator,
+      body: putBodyValidator,
       response: errorResponse,
     },
     validatorCompiler,
@@ -271,36 +267,36 @@ const router = async (instance) => {
       role: config.roles.MAINTAINER.id,
       getId: (req) => req.params.id,
     }),
-    handler: async (req, repl) => {
-      const id = validateId(req.params.id);
+    handler: async ({ body, params, user }) => {
+      const id = validateId(params.id);
 
-      const { lesson, blocks } = req.body;
+      const { lesson, blocks } = body;
 
       try {
-        await Lesson.transaction(async (trx) => {
-          if (lesson) {
-            await UserRole.relatedQuery('lessons')
-              .for(
-                UserRole.query().select().where({
-                  userID: req.user.id,
-                  roleID: config.roles.MAINTAINER.id,
-                  resourceId: id,
-                }),
-              )
-              .patch(lesson)
-              .returning('*');
-          }
+        const data = await Lesson.transaction(async (trx) => {
+          await UserRole.relatedQuery('lessons')
+            .for(
+              UserRole.query().select().where({
+                userID: user.id,
+                roleID: config.roles.MAINTAINER.id,
+                resourceId: id,
+              }),
+            )
+            .patch(lesson)
+            .returning('*');
 
-          if (blocks) {
+          const lessonData = await Lesson.query().findById(id);
+
+          if (blocks.length) {
             const revisions = await Block.query(trx)
               .select(
                 objection.raw(
-                  `json_object_agg(x.block_id, x.revisions) as values`,
+                  `json_object_agg(grouped.block_id, grouped.revisions) as values`,
                 ),
               )
               .from(
                 objection.raw(
-                  `(select block_id, array_agg(revision) as revisions from blocks group by block_id) as x`,
+                  `(select block_id, array_agg(revision) as revisions from blocks group by block_id) as grouped`,
                 ),
               );
 
@@ -324,7 +320,11 @@ const router = async (instance) => {
             }
 
             if (blocksToInsert.length) {
-              await Block.query(trx).insert(blocksToInsert).returning('*');
+              const blocksData = await Block.query(trx)
+                .insert(blocksToInsert)
+                .returning('*');
+
+              lessonData.blocks = blocksData;
             }
 
             const blockStructure = [];
@@ -348,9 +348,11 @@ const router = async (instance) => {
               .where({ lessonId: id });
             await LessonBlockStructure.query(trx).insert(blockStructure);
           }
+
+          return lessonData;
         });
 
-        return repl.status(200).send(UPDATE_SUCCESS);
+        return { lesson: data };
       } catch (err) {
         throw new Error(err);
       }
