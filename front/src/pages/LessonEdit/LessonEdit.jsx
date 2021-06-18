@@ -27,6 +27,7 @@ import {
 const { TextArea } = Input;
 
 let editorJS;
+let undo;
 
 const GET_LESSON_BASE_QUERY = 'getLesson';
 
@@ -46,7 +47,7 @@ const LessonEdit = () => {
       autofocus: true,
       onReady: () => {
         // eslint-disable-next-line no-new
-        new Undo({ editor: editorJS });
+        undo = new Undo({ editor: editorJS });
         // eslint-disable-next-line no-new
         new DragDrop(editorJS);
         setEditorReady(true);
@@ -60,9 +61,16 @@ const LessonEdit = () => {
       const {
         lesson: { blocks },
       } = editorData;
-      editorJS.render?.({
-        blocks: blocks.map(({ content }) => content),
-      });
+      const editorToRender = {
+        blocks: blocks.filter((x) => !!x).map(({ content }) => content),
+      };
+
+      if (editorToRender.blocks.length === 0) {
+        editorJS.clear();
+      } else {
+        editorJS.render?.(editorToRender);
+      }
+      undo.initialize(editorToRender);
     }
   }, [editorReady, editorData]);
 
@@ -97,7 +105,7 @@ const LessonEdit = () => {
 
   const { mutate: updateLesson } = useMutation(putLesson, {
     onSuccess: (data) => {
-      console.log(data); // TODO NEED UPDATE EDITOR JS
+      setEditorData(data);
     },
     onError: (e) => {
       message.error({
