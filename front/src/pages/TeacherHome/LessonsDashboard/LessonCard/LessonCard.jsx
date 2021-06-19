@@ -6,6 +6,8 @@ import { EllipsisOutlined } from '@ant-design/icons';
 import lesson from '@sb-ui/resources/img/lesson.svg';
 import { archiveLesson } from '@sb-ui/utils/api/v1/lesson';
 import { queryClient } from '@sb-ui/query';
+import { LESSONS_EDIT } from '@sb-ui/utils/paths';
+import { useHistory } from 'react-router-dom';
 import * as S from './LessonCard.styled';
 import { TEACHER_LESSONS_BASE_KEY, Statuses } from '../constants';
 
@@ -34,6 +36,7 @@ const menuItems = {
 };
 
 const LessonCard = ({ title, id, students, status }) => {
+  const history = useHistory();
   const { t } = useTranslation();
   const patchMutation = useMutation(archiveLesson, {
     onSuccess: () => {
@@ -54,6 +57,10 @@ const LessonCard = ({ title, id, students, status }) => {
     if (key === 'draftLesson') {
       patchMutation.mutate({ id, status: Statuses.DRAFT });
     }
+  };
+
+  const handleEdit = () => {
+    history.push(LESSONS_EDIT.replace(':id', id));
   };
 
   const menu = () => (
@@ -104,7 +111,9 @@ const LessonCard = ({ title, id, students, status }) => {
           <Dropdown overlay={menu} trigger={['click']} placement="bottomRight">
             <EllipsisOutlined />
           </Dropdown>
-          <S.CardButton>{t('lesson_dashboard.card.edit')}</S.CardButton>
+          <S.CardButton onClick={handleEdit}>
+            {t('lesson_dashboard.card.edit')}
+          </S.CardButton>
         </S.ActionsWrapper>
       </S.CardDescription>
     </S.Wrapper>

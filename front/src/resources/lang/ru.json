@@ -137,8 +137,7 @@
         "preview": "Предпросмотр"
       },
       "title": {
-        "default":"How to use StudyBites - For Teachers",
-        "placeholder": "Название"
+        "placeholder": "Название урока"
       },
       "links": {
         "invite": "Пригласить соавторов",

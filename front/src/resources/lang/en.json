@@ -158,8 +158,7 @@
         "preview": "Preview"
       },
       "title": {
-        "default":"How to use StudyBites - For Teachers",
-        "placeholder": "Title"
+        "placeholder": "Lesson title"
       },
       "links": {
         "invite": "Invite Collaborators",

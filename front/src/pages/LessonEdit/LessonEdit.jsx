@@ -5,24 +5,14 @@ import { useTranslation } from 'react-i18next';
 import EditorJS from '@editorjs/editorjs';
 import DragDrop from 'editorjs-drag-drop';
 import Undo from 'editorjs-undo';
+import { useHistory, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from 'react-query';
 import { RedoOutlined, SaveOutlined, UndoOutlined } from '@ant-design/icons';
 import Header from '@sb-ui/components/molecules/Header';
 import { createLesson, getLesson, putLesson } from '@sb-ui/utils/api/v1/lesson';
 import { Statuses } from '@sb-ui/pages/TeacherHome/LessonsDashboard/constants';
 import { LESSONS_EDIT } from '@sb-ui/utils/paths';
-import { useHistory, useParams } from 'react-router-dom';
 import * as S from './LessonEdit.styled';
-import {
-  HeaderButtons,
-  InputTitle,
-  MoveButton,
-  PublishButton,
-  RowStyled,
-  SaveButton,
-  StudentsCount,
-  TextLink,
-} from './LessonEdit.styled';
 
 const { TextArea } = Input;
 
@@ -36,7 +26,7 @@ const LessonEdit = () => {
   const { id: lessonId } = useParams();
   const isEditLesson = !!lessonId;
   const history = useHistory();
-  const [name, setName] = useState(t('lesson_edit.title.default'));
+  const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [editorData, setEditorData] = useState(null);
   const [editorReady, setEditorReady] = useState(false);
@@ -145,74 +135,88 @@ const LessonEdit = () => {
       // eslint-disable-next-line no-unused-expressions
       isEditLesson ? updateLesson(params) : mutate(params);
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.error('Editor JS error: ', e);
+    }
+  };
+
+  const handleNextLine = (e) => {
+    if (e.key === 'Enter') {
+      editorJS.focus();
     }
   };
 
   return (
     <>
       <Header>
-        <HeaderButtons>
+        <S.HeaderButtons>
           <Button>{t('lesson_edit.buttons.preview')}</Button>
-          <PublishButton type="primary">
+          <S.PublishButton type="primary">
             {t('lesson_edit.buttons.publish')}
-          </PublishButton>
-        </HeaderButtons>
+          </S.PublishButton>
+        </S.HeaderButtons>
       </Header>
       <S.Page>
         <S.StyledRow align="top">
-          <S.LeftCol span={12}>
-            <InputTitle
-              ref={inputTitle}
-              type="text"
-              placeholder={t('lesson_edit.title.placeholder')}
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
-            <div id="editorjs" />
+          <S.LeftCol sm={12} md={14} lg={16} xl={18}>
+            <S.EditorWrapper>
+              <S.InputTitle
+                ref={inputTitle}
+                type="text"
+                placeholder={t('lesson_edit.title.placeholder')}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                onKeyDown={handleNextLine}
+              />
+              <div id="editorjs" />
+            </S.EditorWrapper>
           </S.LeftCol>
-          <S.RightCol span={12}>
-            <RowStyled gutter={[32, 32]}>
+          <S.RightCol sm={12} md={10} lg={8} xl={6}>
+            <S.RowStyled gutter={[32, 32]}>
               <Col span={24}>
-                <SaveButton
+                <S.SaveButton
                   onClick={handleSave}
                   icon={<SaveOutlined />}
                   type="primary"
                   size="large"
                 >
                   {t('lesson_edit.buttons.save')}
-                </SaveButton>
+                </S.SaveButton>
               </Col>
               <Col span={12}>
-                <MoveButton icon={<UndoOutlined />} size="medium">
+                <S.MoveButton icon={<UndoOutlined />} size="medium">
                   {t('lesson_edit.buttons.back')}
-                </MoveButton>
+                </S.MoveButton>
               </Col>
               <Col span={12}>
-                <MoveButton icon={<RedoOutlined />} size="medium">
+                <S.MoveButton icon={<RedoOutlined />} size="medium">
                   {t('lesson_edit.buttons.forward')}
-                </MoveButton>
+                </S.MoveButton>
               </Col>
-            </RowStyled>
-            <RowStyled gutter={[0, 10]}>
+            </S.RowStyled>
+            <S.RowStyled gutter={[0, 10]}>
               <Col span={24}>
-                <TextLink underline>{t('lesson_edit.links.invite')}</TextLink>
-              </Col>
-              <Col span={24}>
-                <TextLink underline>{t('lesson_edit.links.students')}</TextLink>
-                <StudentsCount showZero count={4} />
+                <S.TextLink underline>
+                  {t('lesson_edit.links.invite')}
+                </S.TextLink>
               </Col>
               <Col span={24}>
-                <TextLink underline>
+                <S.TextLink underline>
+                  {t('lesson_edit.links.students')}
+                </S.TextLink>
+                <S.StudentsCount showZero count={4} />
+              </Col>
+              <Col span={24}>
+                <S.TextLink underline>
                   {t('lesson_edit.links.analytics')}
-                </TextLink>
+                </S.TextLink>
               </Col>
               <Col span={24}>
                 <Typography.Link type="danger" underline>
                   {t('lesson_edit.links.archive')}
                 </Typography.Link>
               </Col>
-            </RowStyled>
+            </S.RowStyled>
             <Row gutter={[0, 16]}>
               <Col span={24}>{t('lesson_edit.description')}</Col>
               <Col span={24}>
