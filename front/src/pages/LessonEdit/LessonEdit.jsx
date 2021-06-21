@@ -4,7 +4,6 @@ import hash from 'object-hash';
 import { useTranslation } from 'react-i18next';
 import EditorJS from '@editorjs/editorjs';
 import DragDrop from 'editorjs-drag-drop';
-import Undo from 'editorjs-undo';
 import { useHistory, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from 'react-query';
 import { RedoOutlined, SaveOutlined, UndoOutlined } from '@ant-design/icons';
@@ -12,12 +11,10 @@ import Header from '@sb-ui/components/molecules/Header';
 import { createLesson, getLesson, putLesson } from '@sb-ui/utils/api/v1/lesson';
 import { Statuses } from '@sb-ui/pages/TeacherHome/LessonsDashboard/constants';
 import { LESSONS_EDIT } from '@sb-ui/utils/paths';
+import Undo from '@sb-ui/utils/undo-plugin';
 import * as S from './LessonEdit.styled';
 
 const { TextArea } = Input;
-
-let editorJS;
-let undo;
 
 const GET_LESSON_BASE_QUERY = 'getLesson';
 
@@ -28,45 +25,13 @@ const LessonEdit = () => {
   const history = useHistory();
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [editorData, setEditorData] = useState(null);
   const [editorReady, setEditorReady] = useState(false);
+  const editorJSref = useRef(null);
+  const undoPluginRef = useRef(null);
 
   const inputTitle = useRef(null);
 
-  useEffect(() => {
-    editorJS = new EditorJS({
-      holder: 'editorjs',
-      onReady: () => {
-        // eslint-disable-next-line no-new
-        undo = new Undo({ editor: editorJS });
-        // eslint-disable-next-line no-new
-        new DragDrop(editorJS);
-        setEditorReady(true);
-      },
-      plugins: [],
-    });
-    inputTitle.current.focus();
-  }, []);
-
-  useEffect(() => {
-    if (editorReady && editorData) {
-      const {
-        lesson: { blocks },
-      } = editorData;
-      const editorToRender = {
-        blocks: blocks.map(({ content }) => content),
-      };
-
-      if (editorToRender.blocks.length === 0) {
-        editorJS.clear();
-      } else {
-        editorJS.render?.(editorToRender);
-      }
-      undo.initialize(editorToRender);
-    }
-  }, [editorReady, editorData]);
-
-  useQuery(
+  const { data: lessonData, isLoading } = useQuery(
     [
       GET_LESSON_BASE_QUERY,
       {
@@ -76,11 +41,55 @@ const LessonEdit = () => {
     getLesson,
     {
       enabled: !!lessonId,
-      onSuccess: (data) => {
-        setEditorData(data);
-      },
     },
   );
+
+  useEffect(() => {
+    editorJSref.current = new EditorJS({
+      holder: 'editorjs',
+      onReady: () => {
+        // eslint-disable-next-line no-new
+        undoPluginRef.current = new Undo({
+          editor: editorJSref.current,
+          redoButton: 'redo-button',
+          undoButton: 'undo-button',
+        });
+        // eslint-disable-next-line no-new
+        new DragDrop(editorJSref.current);
+        setEditorReady(true);
+      },
+      plugins: [],
+    });
+  }, []);
+
+  useEffect(() => {
+    if (inputTitle.current && !isLoading && !lessonData?.lesson.name) {
+      setTimeout(() => {
+        inputTitle.current.focus();
+      }, 0);
+    }
+  }, [inputTitle, isLoading, lessonData?.lesson.name]);
+
+  useEffect(() => {
+    if (lessonData?.lesson.name) {
+      setName(lessonData.lesson.name);
+    }
+  }, [lessonData?.lesson.name]);
+
+  useEffect(() => {
+    if (editorReady && lessonData) {
+      const editorToRender = {
+        blocks: lessonData.lesson.blocks.map(({ content }) => content),
+      };
+
+      if (editorToRender.blocks.length === 0) {
+        editorJSref.current.clear();
+      } else {
+        editorJSref.current.render?.(editorToRender);
+      }
+      undoPluginRef.current.initialize(editorToRender);
+    }
+  }, [editorReady, lessonData]);
 
   const { mutate } = useMutation(createLesson, {
     onSuccess: (data) => {
@@ -97,9 +106,6 @@ const LessonEdit = () => {
   });
 
   const { mutate: updateLesson } = useMutation(putLesson, {
-    onSuccess: (data) => {
-      setEditorData(data);
-    },
     onError: (e) => {
       message.error({
         content: e.message,
@@ -111,7 +117,7 @@ const LessonEdit = () => {
 
   const handleSave = async () => {
     try {
-      const { blocks } = await editorJS.save();
+      const { blocks } = await editorJSref.current.save();
       const params = {
         lesson: {
           id: lessonId,
@@ -142,7 +148,7 @@ const LessonEdit = () => {
 
   const handleNextLine = (e) => {
     if (e.key === 'Enter') {
-      editorJS.focus();
+      editorJSref.current.focus();
     }
   };
 
@@ -184,12 +190,20 @@ const LessonEdit = () => {
                 </S.SaveButton>
               </Col>
               <Col span={12}>
-                <S.MoveButton icon={<UndoOutlined />} size="medium">
+                <S.MoveButton
+                  id="undo-button"
+                  icon={<UndoOutlined />}
+                  size="medium"
+                >
                   {t('lesson_edit.buttons.back')}
                 </S.MoveButton>
               </Col>
               <Col span={12}>
-                <S.MoveButton icon={<RedoOutlined />} size="medium">
+                <S.MoveButton
+                  id="redo-button"
+                  icon={<RedoOutlined />}
+                  size="medium"
+                >
                   {t('lesson_edit.buttons.forward')}
                 </S.MoveButton>
               </Col>
