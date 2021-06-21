@@ -338,7 +338,7 @@ const router = async (instance) => {
 
           const lessonData = await Lesson.query().findById(id);
 
-          if (blocks.length) {
+          if (blocks) {
             const revisions = await Block.query(trx)
               .select(
                 objection.raw(
@@ -397,7 +397,10 @@ const router = async (instance) => {
             await LessonBlockStructure.query(trx)
               .delete()
               .where({ lessonId: id });
-            await LessonBlockStructure.query(trx).insert(blockStructure);
+
+            if (blockStructure.length) {
+              await LessonBlockStructure.query(trx).insert(blockStructure);
+            }
           }
 
           return lessonData;
