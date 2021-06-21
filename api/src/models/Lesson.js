@@ -141,7 +141,7 @@ class Lesson extends objection.Model {
       firstIndex +
       (parseInt(limit, 10) || config.search.LESSON_SEARCH_LIMIT) -
       1;
-    const [firstName, lastName] = search?.trim()?.split(' ') || [];
+    const [firstName, lastName] = search?.split(' ') || [];
     return this.query()
       .skipUndefined()
       .where(
@@ -153,17 +153,15 @@ class Lesson extends objection.Model {
             }
           : undefined,
       )
-      .orWhere(
-        firstName && lastName
-          ? function () {
-              this.where('firstName', 'ilike', `%${firstName}%`).andWhere(
-                'lastName',
-                'ilike',
-                `%${lastName}%`,
-              );
-            }
-          : undefined,
-      )
+      .modify((queryBuilder) => {
+        if (firstName && lastName) {
+          queryBuilder.orWhere(
+            objection.raw(`concat(first_name,' ',last_name)`),
+            'ilike',
+            `%${firstName}% %${lastName}%`,
+          );
+        }
+      })
       .where({
         status: 'Public',
       })
@@ -193,38 +191,8 @@ class Lesson extends objection.Model {
       .range(firstIndex, lastIndex);
   }
 
-  static countAllPublic({ search }) {
-    const [firstName, lastName] = search?.trim()?.split(' ') || [];
-    return this.query()
-      .skipUndefined()
-      .where(
-        search
-          ? function () {
-              this.where('name', 'ilike', `%${search}%`)
-                .orWhere('firstName', 'ilike', `%${search}%`)
-                .orWhere('lastName', 'ilike', `%${search}%`);
-            }
-          : undefined,
-      )
-      .orWhere(
-        firstName && lastName
-          ? function () {
-              this.where('firstName', 'ilike', `%${firstName}%`).andWhere(
-                'lastName',
-                'ilike',
-                `%${lastName}%`,
-              );
-            }
-          : undefined,
-      )
-      .where({
-        status: 'Public',
-      })
-      .count('*');
-  }
-
   static getAllEnrolled({ columns, search, userId }) {
-    const [firstName, lastName] = search?.trim()?.split(' ') || [];
+    const [firstName, lastName] = search?.split(' ') || [];
     return this.query()
       .skipUndefined()
       .select(
@@ -256,10 +224,14 @@ class Lesson extends objection.Model {
             .where(columns.name, 'ilike', `%${search}%`)
             .orWhere(columns.firstName, 'ilike', `%${search}%`)
             .orWhere(columns.lastName, 'ilike', `%${search}%`);
-        }).orWhere(function () {
-          this.skipUndefined()
-            .where(columns.firstName, 'ilike', `%${firstName}%`)
-            .andWhere(columns.lastName, 'ilike', `%${lastName}%`);
+        }).modify((queryBuilder) => {
+          if (firstName && lastName) {
+            queryBuilder.orWhere(
+              objection.raw(`concat(first_name,' ',last_name)`),
+              'ilike',
+              `%${firstName}% %${lastName}%`,
+            );
+          }
         });
       });
   }

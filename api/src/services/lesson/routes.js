@@ -42,6 +42,7 @@ const router = async (instance) => {
 
       const { total, results } = await Lesson.getAllPublicLessons({
         ...req.query,
+        search: req.query?.search?.trim(),
         userId: req.userId,
       });
 
@@ -443,7 +444,7 @@ const router = async (instance) => {
       const { total, results } = await Lesson.getAllEnrolled({
         columns,
         userId: req.user.id,
-        search: req.query.search,
+        search: req.query?.search?.trim(),
       }).range(firstIndex, lastIndex);
 
       return repl.status(200).send({ total, data: results });
