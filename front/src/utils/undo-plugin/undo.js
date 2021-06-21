@@ -222,9 +222,6 @@ export default class Undo {
 
     const buttonKey = /(Mac)/i.test(navigator.platform) ? 'metaKey' : 'ctrlKey';
 
-    let key1Pressed;
-    let key2Pressed;
-
     const handleUndo = (e) => {
       e.preventDefault();
       this.undo();
@@ -235,30 +232,23 @@ export default class Undo {
       this.redo();
     };
 
-    const resetKeys = () => {
-      key1Pressed = false;
-      key2Pressed = false;
-    };
-
     const handleAction = (e) => {
-      if (e[buttonKey] && e.key === 'z') key1Pressed = true;
-      if (e[buttonKey] && e.key === 'Shift') key2Pressed = true;
-      if (key1Pressed && key2Pressed) {
-        handleRedo(e);
-      } else if (e[buttonKey] && e.key === 'z') {
-        handleUndo(e);
+      if (e.code === 'KeyZ') {
+        if (e[buttonKey] && !e.shiftKey) {
+          handleUndo(e);
+        } else if (e[buttonKey] && e.shiftKey) {
+          handleRedo(e);
+        }
       }
     };
 
     const handleDestroy = () => {
       holderElement.removeEventListener('keydown', handleAction);
-      holderElement.removeEventListener('keyup', resetKeys);
       undoButtonElement.removeEventListener('click', handleUndo);
       redoButtonElement.removeEventListener('click', handleRedo);
     };
 
     holderElement.addEventListener('keydown', handleAction);
-    holderElement.addEventListener('keyup', resetKeys);
 
     undoButtonElement.addEventListener('click', handleUndo);
     redoButtonElement.addEventListener('click', handleRedo);
