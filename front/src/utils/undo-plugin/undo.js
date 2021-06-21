@@ -146,9 +146,13 @@ export default class Undo {
       const { index, state } = this.stack[(this.position -= 1)];
       this.onUpdate();
 
-      this.editor.blocks
-        .render({ blocks: state })
-        .then(() => this.editor.caret.setToBlock(index, 'end'));
+      if (state.length === 0) {
+        this.editor.clear();
+      } else {
+        this.editor.blocks
+          .render({ blocks: state })
+          .then(() => this.editor.caret.setToBlock(index, 'end'));
+      }
     }
   }
 
@@ -161,9 +165,13 @@ export default class Undo {
       const { index, state } = this.stack[(this.position += 1)];
       this.onUpdate();
 
-      this.editor.blocks
-        .render({ blocks: state })
-        .then(() => this.editor.caret.setToBlock(index, 'end'));
+      if (state.length === 0) {
+        this.editor.clear();
+      } else {
+        this.editor.blocks
+          .render({ blocks: state })
+          .then(() => this.editor.caret.setToBlock(index, 'end'));
+      }
     }
   }
 
@@ -235,7 +243,6 @@ export default class Undo {
     const handleAction = (e) => {
       if (e[buttonKey] && e.key === 'z') key1Pressed = true;
       if (e[buttonKey] && e.key === 'Shift') key2Pressed = true;
-
       if (key1Pressed && key2Pressed) {
         handleRedo(e);
       } else if (e[buttonKey] && e.key === 'z') {
