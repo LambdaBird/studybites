@@ -11,7 +11,8 @@ import Header from '@sb-ui/components/molecules/Header';
 import { createLesson, getLesson, putLesson } from '@sb-ui/utils/api/v1/lesson';
 import { Statuses } from '@sb-ui/pages/TeacherHome/LessonsDashboard/constants';
 import { LESSONS_EDIT } from '@sb-ui/utils/paths';
-import Undo from '@sb-ui/utils/undo-plugin';
+import Next from '@sb-ui/utils/editorjs/next-plugin';
+import Undo from '@sb-ui/utils/editorjs/undo-plugin';
 import * as S from './LessonEdit.styled';
 
 const { TextArea } = Input;
@@ -58,9 +59,27 @@ const LessonEdit = () => {
         new DragDrop(editorJSref.current);
         setEditorReady(true);
       },
+      tools: {
+        next: Next,
+      },
+      i18n: {
+        messages: {
+          ui: {
+            toolbar: {
+              toolbox: {
+                Add: t('editor_js.toolbar.toolbox_add'),
+              },
+            },
+          },
+          toolNames: {
+            Text: t('editor_js.tool_names.text'),
+            Next: t('editor_js.tool_names.next'),
+          },
+        },
+      },
       plugins: [],
     });
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     if (inputTitle.current && !isLoading && !lessonData?.lesson.name) {

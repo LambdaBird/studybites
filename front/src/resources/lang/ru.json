@@ -146,6 +146,15 @@
         "archive": "Архив"
       },
       "description": "Описание"
+    },
+    "editor_js": {
+      "tool_names": {
+        "text": "Текст",
+        "next": "Следующий"
+      },
+      "toolbar": {
+        "toolbox_add": "Добавить"
+      }
     }
   }
 }

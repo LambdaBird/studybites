@@ -167,6 +167,15 @@
         "archive": "Archive"
       },
       "description": "Description"
+    },
+    "editor_js": {
+      "tool_names": {
+        "text": "Text",
+        "next": "Next"
+      },
+      "toolbar": {
+        "toolbox_add": "Add"
+      }
     }
   }
 }
