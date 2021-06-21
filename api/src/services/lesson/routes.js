@@ -36,6 +36,7 @@ const router = async (instance) => {
 
       const { total, results } = await Lesson.getAllPublicLessons({
         ...req.query,
+        search: req.query?.search?.trim(),
         userId: req.userId,
       });
 
@@ -337,7 +338,7 @@ const router = async (instance) => {
 
           const lessonData = await Lesson.query().findById(id);
 
-          if (blocks.length) {
+          if (blocks) {
             const revisions = await Block.query(trx)
               .select(
                 objection.raw(
@@ -396,7 +397,10 @@ const router = async (instance) => {
             await LessonBlockStructure.query(trx)
               .delete()
               .where({ lessonId: id });
-            await LessonBlockStructure.query(trx).insert(blockStructure);
+
+            if (blockStructure.length) {
+              await LessonBlockStructure.query(trx).insert(blockStructure);
+            }
           }
 
           return lessonData;
@@ -484,7 +488,7 @@ const router = async (instance) => {
       const { total, results } = await Lesson.getAllEnrolled({
         columns,
         userId: req.user.id,
-        search: req.query.search,
+        search: req.query?.search?.trim(),
       }).range(firstIndex, lastIndex);
 
       return repl.status(200).send({ total, data: results });

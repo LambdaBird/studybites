@@ -24,4 +24,5 @@ export default {
   resources: {
     LESSON: 'lesson',
   },
+  interactiveBlocks: ['next'],
 };
