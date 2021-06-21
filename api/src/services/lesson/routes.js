@@ -13,7 +13,7 @@ import { putBodyValidator, postBodyValidator, validateId } from './validators';
 import { NOT_FOUND, INVALID_ENROLL, ENROLL_SUCCESS } from './constants';
 
 const router = async (instance) => {
-  const { Lesson, UserRole, Block, LessonBlockStructure, User } =
+  const { Lesson, UserRole, Block, LessonBlockStructure, User, Result } =
     instance.models;
 
   instance.route({
@@ -544,6 +544,81 @@ const router = async (instance) => {
         .count('*');
 
       return repl.status(200).send({ total: +count[0].count, data });
+    },
+  });
+
+  instance.route({
+    method: 'POST',
+    url: '/:lesson_id/learn',
+    schema: {
+      // body
+      response: errorResponse,
+    },
+    validatorCompiler,
+    errorHandler,
+    onRequest: instance.auth({ instance }),
+    preHandler: instance.access({
+      instance,
+      type: config.resources.LESSON,
+      role: config.roles.STUDENT.id,
+      getId: (req) => req.params.lesson_id,
+    }),
+    handler: async ({ params, body, user }) => {
+      const id = validateId(params.lesson_id);
+
+      await Result.query().insert({ ...body, lessonId: id, userId: user.id });
+
+      const lesson = await Lesson.query()
+        .findById(id)
+        .withGraphFetched('blocks');
+
+      if (!lesson) {
+        throw new NotFoundError(NOT_FOUND);
+      }
+
+      try {
+        const { parent } = await LessonBlockStructure.query()
+          .first()
+          .select('id as parent')
+          .where({ lessonId: id })
+          .whereNull('parentId');
+
+        const { rows: blocksOrder } = await LessonBlockStructure.knex().raw(
+          `select lesson_block_structure.block_id from connectby('lesson_block_structure', 'id', 'parent_id', '${
+            body.cursor || parent
+          }', 0, '~')
+          as temporary(id uuid, parent_id uuid, level int, branch text) join lesson_block_structure on temporary.id = lesson_block_structure.id`,
+        );
+
+        const blocks = [];
+
+        const dictionary = lesson.blocks.reduce((result, filter) => {
+          // eslint-disable-next-line no-param-reassign
+          result[filter.blockId] = filter;
+          return result;
+        }, {});
+
+        for (let i = 0, n = blocksOrder.length; i < n; i += 1) {
+          delete dictionary[blocksOrder[i].block_id].answer;
+          delete dictionary[blocksOrder[i].block_id].weight;
+
+          blocks.push(dictionary[blocksOrder[i].block_id]);
+
+          if (
+            config.interactiveBlocks.includes(
+              dictionary[blocksOrder[i].block_id].type,
+            )
+          ) {
+            break;
+          }
+        }
+
+        lesson.blocks = blocks;
+      } catch (err) {
+        return { lesson };
+      }
+
+      return { lesson };
     },
   });
 };
