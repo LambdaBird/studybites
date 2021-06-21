@@ -63,7 +63,7 @@ const LessonEdit = () => {
   }, []);
 
   useEffect(() => {
-    if (inputTitle.current && !isLoading && !lessonData.lesson.name) {
+    if (inputTitle.current && !isLoading && !lessonData?.lesson.name) {
       setTimeout(() => {
         inputTitle.current.focus();
       }, 0);
