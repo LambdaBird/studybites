@@ -1,4 +1,4 @@
-import { raw } from 'objection';
+import objection, { raw } from 'objection';
 
 import config from '../../../config';
 
@@ -187,7 +187,8 @@ const router = async (instance) => {
         lastName: 'lastName',
       };
 
-      const { search } = req.query;
+      const { search: searchRaw } = req.query;
+      const search = searchRaw.trim();
 
       if (!search) {
         columns.email = undefined;
@@ -195,7 +196,8 @@ const router = async (instance) => {
         columns.lastName = undefined;
       }
 
-      const [firstName, lastName] = search?.trim()?.split(' ') || [];
+      const [firstName, lastName] = search?.split(' ') || [];
+
       const data = await User.query()
         .skipUndefined()
         .select(
@@ -207,11 +209,21 @@ const router = async (instance) => {
             )
             .as('isTeacher'),
         )
+
         .where(function () {
           this.skipUndefined()
             .where(columns.email, 'ilike', `%${search}%`)
             .orWhere(columns.firstName, 'ilike', `%${search}%`)
-            .orWhere(columns.lastName, 'ilike', `%${search}%`);
+            .orWhere(columns.lastName, 'ilike', `%${search}%`)
+            .modify((queryBuilder) => {
+              if (firstName && lastName) {
+                queryBuilder.orWhere(
+                  objection.raw(`concat(first_name,' ',last_name)`),
+                  'ilike',
+                  `%${firstName}% %${lastName}%`,
+                );
+              }
+            });
         })
         .orWhere(function () {
           if (firstName && lastName) {
@@ -235,11 +247,13 @@ const router = async (instance) => {
             .orWhere(columns.firstName, 'ilike', `%${search}%`)
             .orWhere(columns.lastName, 'ilike', `%${search}%`);
         })
-        .orWhere(function () {
+        .modify((queryBuilder) => {
           if (firstName && lastName) {
-            this.skipUndefined()
-              .where(columns.firstName, 'ilike', `%${firstName}%`)
-              .andWhere(columns.lastName, 'ilike', `%${lastName}%`);
+            queryBuilder.orWhere(
+              objection.raw(`concat(first_name,' ',last_name)`),
+              'ilike',
+              `%${firstName}% %${lastName}%`,
+            );
           }
         })
         .andWhereNot({
