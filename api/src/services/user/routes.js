@@ -167,7 +167,7 @@ const router = async (instance) => {
 
       const userWithRoles = { ...user, roles };
 
-      return repl.status(200).send({ data: userWithRoles });
+      return repl.status(200).send(userWithRoles);
     },
   });
 

@@ -8,7 +8,7 @@ import { DescriptionText } from '@sb-ui/components/atoms/PublicLesson/PublicLess
 import { getLessonById, postEnroll } from '@sb-ui/utils/api/v1/lesson/lesson';
 import { ReviewBodyText } from '@sb-ui/components/atoms/PublicLesson/LessonModal/LessonModal.styled';
 import { USER_HOME } from '@sb-ui/utils/paths';
-import { USER_LESSON_MODAL_BASE_KEY } from '@sb-ui/components/atoms/PublicLesson/LessonModal/constants';
+import { USER_LESSON_MODAL_BASE_KEY } from '@sb-ui/utils/queries';
 import * as S from './UserEnrollModal.styled';
 
 const { Title } = Typography;

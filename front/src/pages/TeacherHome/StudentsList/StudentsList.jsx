@@ -7,8 +7,8 @@ import { getTeacherStudents } from '@sb-ui/utils/api/v1/lesson';
 import {
   itemPerPage,
   MAX_STUDENTS_IN_LIST,
-  TEACHER_STUDENTS_BASE_KEY,
 } from '@sb-ui/pages/TeacherHome/StudentsList/constants';
+import { TEACHER_STUDENTS_BASE_KEY } from '@sb-ui/utils/queries';
 import * as S from './StudentsList.styled';
 
 const { Text } = Typography;
@@ -17,7 +17,7 @@ const StudentsList = () => {
   const { t } = useTranslation();
   const [students, setStudents] = useState([]);
   const { data: studentsResponseData, isLoading } = useQuery(
-    [TEACHER_STUDENTS_BASE_KEY],
+    TEACHER_STUDENTS_BASE_KEY,
     getTeacherStudents,
   );
 

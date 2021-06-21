@@ -2,12 +2,10 @@ import { Col, Empty, Skeleton } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { getEnrolledLessons } from '@sb-ui/utils/api/v1/lesson';
-import {
-  PAGE_SHORT_SIZE,
-  USER_ENROLLED_SHORT_LESSONS_BASE_KEY,
-} from '@sb-ui/components/molecules/LessonsMain/constants';
-import emptyImg from '../../../../resources/img/empty.svg';
-import CurrentLesson from '../../../atoms/CurrentLesson';
+import { PAGE_SHORT_SIZE } from '@sb-ui/components/molecules/LessonsMain/constants';
+import { USER_ENROLLED_SHORT_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
+import CurrentLesson from '@sb-ui/components/atoms/CurrentLesson/CurrentLesson';
+import emptyImg from '@sb-ui/resources/img/empty.svg';
 
 import {
   LessonsColumn,

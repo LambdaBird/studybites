@@ -2,14 +2,15 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { Typography, Space, Avatar, Tooltip, Menu, Dropdown } from 'antd';
 import { useMutation } from 'react-query';
+import { useHistory } from 'react-router-dom';
 import { EllipsisOutlined } from '@ant-design/icons';
 import lesson from '@sb-ui/resources/img/lesson.svg';
-import { archiveLesson } from '@sb-ui/utils/api/v1/lesson';
+import { updateLessonStatus } from '@sb-ui/utils/api/v1/lesson';
 import { queryClient } from '@sb-ui/query';
 import { LESSONS_EDIT } from '@sb-ui/utils/paths';
-import { useHistory } from 'react-router-dom';
+import { TEACHER_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
 import * as S from './LessonCard.styled';
-import { TEACHER_LESSONS_BASE_KEY, Statuses } from '../constants';
+import { Statuses } from '../constants';
 
 const { Title, Text } = Typography;
 
@@ -38,7 +39,7 @@ const menuItems = {
 const LessonCard = ({ title, id, students, status }) => {
   const history = useHistory();
   const { t } = useTranslation();
-  const patchMutation = useMutation(archiveLesson, {
+  const updateLessonMutation = useMutation(updateLessonStatus, {
     onSuccess: () => {
       queryClient.invalidateQueries(TEACHER_LESSONS_BASE_KEY);
     },
@@ -46,16 +47,16 @@ const LessonCard = ({ title, id, students, status }) => {
 
   const handleMenuClick = ({ key }) => {
     if (key === 'archiveLesson') {
-      patchMutation.mutate({ id, status: Statuses.ARCHIVED });
+      updateLessonMutation.mutate({ id, status: Statuses.ARCHIVED });
     }
     if (key === 'publishLesson') {
-      patchMutation.mutate({ id, status: Statuses.PUBLIC });
+      updateLessonMutation.mutate({ id, status: Statuses.PUBLIC });
     }
     if (key === 'restoreLesson') {
-      patchMutation.mutate({ id, status: Statuses.DRAFT });
+      updateLessonMutation.mutate({ id, status: Statuses.DRAFT });
     }
     if (key === 'draftLesson') {
-      patchMutation.mutate({ id, status: Statuses.DRAFT });
+      updateLessonMutation.mutate({ id, status: Statuses.DRAFT });
     }
   };
 

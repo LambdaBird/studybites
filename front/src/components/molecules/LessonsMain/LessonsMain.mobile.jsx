@@ -13,12 +13,12 @@ import {
 import OngoingLesson from '@sb-ui/components/atoms/OngoingLesson';
 
 import { useQuery } from 'react-query';
+import { PAGE_SIZE } from '@sb-ui/components/molecules/LessonsMain/constants';
+import { getQueryPage } from '@sb-ui/utils/utils';
 import {
-  PAGE_SIZE,
   USER_ENROLLED_LESSONS_BASE_KEY,
   USER_PUBLIC_LESSONS_BASE_KEY,
-} from '@sb-ui/components/molecules/LessonsMain/constants';
-import { getQueryPage } from '@sb-ui/utils/utils';
+} from '@sb-ui/utils/queries';
 import * as S from './LessonsMain.mobile.styled';
 
 const LessonsMainMobile = ({ searchLessons, isOngoingLesson }) => {

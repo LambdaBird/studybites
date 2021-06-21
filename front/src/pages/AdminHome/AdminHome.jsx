@@ -17,14 +17,13 @@ import { useQuery } from 'react-query';
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
 import { appointTeacher } from '@sb-ui/utils/api/v1/user';
 import { getQueryPage } from '@sb-ui/utils/utils';
+import { ADMIN_USERS_BASE_KEY } from '@sb-ui/utils/queries';
 import { getUsers, removeTeacher } from '../../utils/api/v1/user/user';
 import { MainDiv, TableHeader, TitleHeader } from './AdminHome.styled';
 
 const messageKey = 'teacherStateLoading';
 
 const PAGE_SIZE = 10;
-
-export const ADMIN_USERS_BASE_KEY = 'adminUsers';
 
 const AdminHome = () => {
   const { t } = useTranslation();

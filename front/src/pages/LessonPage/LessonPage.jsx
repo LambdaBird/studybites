@@ -4,10 +4,9 @@ import { Progress } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { getUserLesson } from '@sb-ui/utils/api/v1/lesson';
+import { LESSON_BASE_QUERY } from '@sb-ui/utils/queries';
 import InfoBlock from './InfoBlock';
 import * as S from './LessonPage.styled';
-
-const LESSON_BASE_QUERY = 'userLesson';
 
 const LessonPage = () => {
   const { t } = useTranslation();

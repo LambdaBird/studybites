@@ -18,12 +18,12 @@ import {
   getPublicLessons,
 } from '@sb-ui/utils/api/v1/lesson';
 import { getQueryPage } from '@sb-ui/utils/utils';
+import { PAGE_SIZE } from '@sb-ui/components/molecules/LessonsMain/constants';
+import { USER_ENROLL } from '@sb-ui/utils/paths';
 import {
-  PAGE_SIZE,
   USER_ENROLLED_LESSONS_BASE_KEY,
   USER_PUBLIC_LESSONS_BASE_KEY,
-} from '@sb-ui/components/molecules/LessonsMain/constants';
-import { USER_ENROLL } from '@sb-ui/utils/paths';
+} from '@sb-ui/utils/queries';
 import {
   LessonsColumn,
   LessonsEmpty,

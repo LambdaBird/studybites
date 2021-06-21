@@ -186,7 +186,7 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: [instance.auth({ instance })],
+    onRequest: instance.auth({ instance }),
     preHandler: instance.access({
       instance,
       type: config.resources.LESSON,

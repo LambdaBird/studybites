@@ -1,8 +1,10 @@
 import { Switch, Redirect, Route, useLocation } from 'react-router-dom';
+import { useQuery } from 'react-query';
 import * as paths from '@sb-ui/utils/paths';
 import { getJWTAccessToken } from '@sb-ui/utils/jwt';
 import Header from '@sb-ui/components/molecules/Header';
-import useUser from '@sb-ui/hooks/useUser/useUser';
+import { getUser } from '@sb-ui/utils/api/v1/user';
+import { USER_BASE_QUERY } from '@sb-ui/utils/queries';
 import {
   PRIVATE_ROUTES,
   checkPermission,
@@ -14,7 +16,11 @@ const PrivateRoutes = () => {
   const location = useLocation();
 
   const isLoggedIn = getJWTAccessToken();
-  const { isUserLoading, user } = useUser();
+  const { data: userResponse, isLoading: isUserLoading } = useQuery(
+    USER_BASE_QUERY,
+    getUser,
+  );
+  const user = userResponse?.data;
 
   if (!isLoggedIn) {
     return <Redirect to={paths.SIGN_IN} />;

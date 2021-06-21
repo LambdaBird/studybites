@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Col, Divider, Modal, Rate, Typography } from 'antd';
 import { getLessonById, postEnroll } from '@sb-ui/utils/api/v1/lesson/lesson';
 import { USER_HOME } from '@sb-ui/utils/paths';
-import { USER_LESSON_MODAL_BASE_KEY } from '@sb-ui/components/atoms/PublicLesson/LessonModal/constants';
+import { USER_LESSON_MODAL_BASE_KEY } from '@sb-ui/utils/queries';
 import lessonImg from '../../../../resources/img/lesson.svg';
 import {
   AuthorAvatar,
@@ -35,12 +35,12 @@ const LessonModal = ({ onStartEnroll = () => {} }) => {
   const history = useHistory();
   const { id } = useParams();
 
-  const historyPushBack = () => {
+  const historyPushBack = useCallback(() => {
     history.push({
       search: query,
       pathname: USER_HOME,
     });
-  };
+  }, [query, history]);
 
   const { data: responseData } = useQuery(
     [
