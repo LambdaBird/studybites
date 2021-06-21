@@ -145,13 +145,13 @@ export default class Undo {
       this.shouldSaveHistory = false;
       const { index, state } = this.stack[(this.position -= 1)];
       this.onUpdate();
-
       if (state.length === 0) {
         this.editor.clear();
       } else {
-        this.editor.blocks
-          .render({ blocks: state })
-          .then(() => this.editor.caret.setToBlock(index, 'end'));
+        this.editor.blocks.render({ blocks: state }).then(() => {
+          this.editor.caret.setToBlock(index, 'end');
+          this.editor.caret.focus(true);
+        });
       }
     }
   }
@@ -164,13 +164,13 @@ export default class Undo {
       this.shouldSaveHistory = false;
       const { index, state } = this.stack[(this.position += 1)];
       this.onUpdate();
-
       if (state.length === 0) {
         this.editor.clear();
       } else {
-        this.editor.blocks
-          .render({ blocks: state })
-          .then(() => this.editor.caret.setToBlock(index, 'end'));
+        this.editor.blocks.render({ blocks: state }).then(() => {
+          this.editor.caret.setToBlock(index, 'end');
+          this.editor.caret.focus(true);
+        });
       }
     }
   }
@@ -239,6 +239,8 @@ export default class Undo {
         } else if (e[buttonKey] && e.shiftKey) {
           handleRedo(e);
         }
+
+        this.editor.caret.focus();
       }
     };
 
