@@ -125,7 +125,8 @@
       },
       "by": "От",
       "blocks": "блоков",
-      "start": "Начать"
+      "start": "Начать",
+      "next": "Дальше"
     },
     "enroll_modal": {
       "review": {

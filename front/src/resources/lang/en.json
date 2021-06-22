@@ -146,7 +146,8 @@
       },
       "by": "By",
       "blocks": "blocks",
-      "start": "Start"
+      "start": "Start",
+      "next": "Next"
     },
     "enroll_modal": {
       "review": {
