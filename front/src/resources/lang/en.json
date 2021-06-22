@@ -1,5 +1,11 @@
 {
   "translation": {
+    "header": {
+      "profile": "Profile",
+      "sign_out": "Sign out",
+      "switch_teacher": "Switch to teacher view",
+      "switch_student": "Switch to student view"
+    },
     "sign_up": {
       "have_account": "Already have an account? Sign in!",
       "title": "Sign up to your account",

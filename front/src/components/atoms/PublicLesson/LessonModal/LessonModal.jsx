@@ -7,7 +7,7 @@ import { Col, Divider, Modal, Rate, Typography } from 'antd';
 import { getLessonById, postEnroll } from '@sb-ui/utils/api/v1/lesson/lesson';
 import { USER_HOME } from '@sb-ui/utils/paths';
 import { USER_LESSON_MODAL_BASE_KEY } from '@sb-ui/utils/queries';
-import lessonImg from '../../../../resources/img/lesson.svg';
+import lessonImg from '@sb-ui/resources/img/lesson.svg';
 import {
   AuthorAvatar,
   AuthorName,

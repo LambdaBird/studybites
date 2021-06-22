@@ -2,13 +2,13 @@ import { Col, Row, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
-import LessonsMain from '@sb-ui/components/molecules/OngoingLessons/LessonsMain';
 import { USER_LESSONS } from '@sb-ui/utils/paths';
 import { LessonsHeader, LessonsMainDiv } from './OngoingLessons.desktop.styled';
+import LessonsList from './LessonsList';
 
 const { Title } = Typography;
 
-const OngoingLessonsDesktop = () => {
+const OngoingLessonsDesktop = (props) => {
   const { t } = useTranslation();
 
   return (
@@ -26,7 +26,7 @@ const OngoingLessonsDesktop = () => {
         </Col>
       </LessonsHeader>
       <LessonsMainDiv>
-        <LessonsMain />
+        <LessonsList {...props} />
       </LessonsMainDiv>
     </>
   );

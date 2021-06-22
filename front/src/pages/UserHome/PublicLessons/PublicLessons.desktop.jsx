@@ -2,38 +2,30 @@ import { useEffect, useMemo, useState } from 'react';
 import { Col, Row, Skeleton } from 'antd';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import {
-  Route,
-  useHistory,
-  useLocation,
-  useRouteMatch,
-} from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import emptyImg from '@sb-ui/resources/img/empty.svg';
 import PublicLesson from '@sb-ui/components/atoms/PublicLesson';
 import OngoingLesson from '@sb-ui/components/atoms/OngoingLesson';
 import { useQuery } from 'react-query';
-import LessonModal from '@sb-ui/components/atoms/PublicLesson/LessonModal';
 import {
   getEnrolledLessons,
   getPublicLessons,
 } from '@sb-ui/utils/api/v1/lesson';
 import { getQueryPage } from '@sb-ui/utils/utils';
-import { PAGE_SIZE } from '@sb-ui/components/molecules/LessonsMain/constants';
-import { USER_ENROLL } from '@sb-ui/utils/paths';
 import {
   USER_ENROLLED_LESSONS_BASE_KEY,
   USER_PUBLIC_LESSONS_BASE_KEY,
 } from '@sb-ui/utils/queries';
+import { PAGE_SIZE } from './constants';
 import {
   LessonsColumn,
   LessonsEmpty,
   LessonsMainDiv,
   LessonsPagination,
-} from './LessonsMain.desktop.styled';
+} from './PublicLessons.desktop.styled';
 
 const LessonsMainDesktop = ({ searchLessons, isOngoingLesson }) => {
   const { t } = useTranslation();
-  const { path } = useRouteMatch();
   const location = useLocation();
   const queryPage = useMemo(() => location.search, [location]);
   const history = useHistory();
@@ -122,10 +114,10 @@ const LessonsMainDesktop = ({ searchLessons, isOngoingLesson }) => {
         </Row>
       ) : (
         <>
-          <Route
-            path={`${path}${USER_ENROLL}/:id`}
+          {/* <Route
+            path={`${USER_ENROLL}`}
             component={() => <LessonModal lessons={data} />}
-          />
+          /> */}
           <Row gutter={[16, 16]}>
             {data?.map((lesson) => (
               <LessonsColumn

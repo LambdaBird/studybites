@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
 
-const SearchDesktop = ({ setSearchText }) => {
+const SearchDesktop = ({ setSearchText, className = '' }) => {
   const { t } = useTranslation();
 
   const onSearchChange = (data) => {
@@ -15,10 +15,11 @@ const SearchDesktop = ({ setSearchText }) => {
       delay={500}
       placeholder={t('user_home.open_lessons.search')}
       allowClear
-      style={{ width: 200, marginLeft: '1rem' }}
       onChange={onSearchChange}
+      size="large"
+      className={className}
     />
-  )
+  );
 };
 
 SearchDesktop.defaultProps = {
@@ -27,6 +28,7 @@ SearchDesktop.defaultProps = {
 
 SearchDesktop.propTypes = {
   setSearchText: PropTypes.func,
+  className: PropTypes.string,
 };
 
 export default SearchDesktop;
