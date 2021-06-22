@@ -188,7 +188,7 @@ const router = async (instance) => {
       };
 
       const { search: searchRaw } = req.query;
-      const search = searchRaw.trim();
+      const search = searchRaw?.trim();
 
       if (!search) {
         columns.email = undefined;

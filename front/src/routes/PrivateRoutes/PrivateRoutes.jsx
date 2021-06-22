@@ -5,15 +5,40 @@ import { getJWTAccessToken } from '@sb-ui/utils/jwt';
 import Header from '@sb-ui/components/molecules/Header';
 import { getUser } from '@sb-ui/utils/api/v1/user';
 import { USER_BASE_QUERY } from '@sb-ui/utils/queries';
+import MobileContext from '@sb-ui/contexts/MobileContext';
+import { useContext } from 'react';
 import {
-  PRIVATE_ROUTES,
+  getPrivateRoutes,
   checkPermission,
   getMainPage,
   getPagesWithSkippedHeader,
 } from './PrivateRoutes.utils';
 
+const renderRoutes = (routes) =>
+  routes.map((route) =>
+    route.children ? (
+      <Route
+        key={route.path}
+        path={route.path}
+        render={(props) => (
+          <route.component {...props}>
+            {renderRoutes(route.children)}
+          </route.component>
+        )}
+      />
+    ) : (
+      <Route
+        exact={route.exact}
+        key={route.path}
+        path={route.path}
+        render={(props) => <route.component {...props} />}
+      />
+    ),
+  );
+
 const PrivateRoutes = () => {
   const location = useLocation();
+  const isMobile = useContext(MobileContext);
 
   const isLoggedIn = getJWTAccessToken();
   const { data: userResponse, isLoading: isUserLoading } = useQuery(
@@ -30,7 +55,7 @@ const PrivateRoutes = () => {
     return null;
   }
 
-  const allowedRoutes = PRIVATE_ROUTES.filter((route) =>
+  const allowedRoutes = getPrivateRoutes({ isMobile }).filter((route) =>
     checkPermission(user.roles, route.permissions),
   );
 
@@ -41,13 +66,7 @@ const PrivateRoutes = () => {
         <Route path={paths.HOME} exact>
           {getMainPage(user.roles)}
         </Route>
-        {allowedRoutes.map((route) => (
-          <Route
-            key={route.path}
-            path={route.path}
-            render={(props) => <route.component {...props} />}
-          />
-        ))}
+        {renderRoutes(allowedRoutes)}
         <Route path="*">
           <h1>Not Found</h1>
         </Route>

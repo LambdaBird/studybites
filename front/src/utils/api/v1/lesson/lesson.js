@@ -71,11 +71,6 @@ export const createLesson = async (values) => {
   return data;
 };
 
-export const updateLessonStatus = async ({ status, id }) => {
-  const { data } = await api.put(`${PATH}/maintain/${id}`, { status });
-  return data;
-};
-
 export const getTeacherLessons = async ({ queryKey }) => {
   const [, paramsData] = queryKey;
 

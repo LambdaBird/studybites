@@ -5,7 +5,7 @@ import { useMutation } from 'react-query';
 import { useHistory } from 'react-router-dom';
 import { EllipsisOutlined } from '@ant-design/icons';
 import lesson from '@sb-ui/resources/img/lesson.svg';
-import { updateLessonStatus } from '@sb-ui/utils/api/v1/lesson';
+import { putLesson } from '@sb-ui/utils/api/v1/lesson';
 import { queryClient } from '@sb-ui/query';
 import { LESSONS_EDIT } from '@sb-ui/utils/paths';
 import { TEACHER_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
@@ -39,7 +39,7 @@ const menuItems = {
 const LessonCard = ({ title, id, students, status }) => {
   const history = useHistory();
   const { t } = useTranslation();
-  const updateLessonMutation = useMutation(updateLessonStatus, {
+  const updateLessonMutation = useMutation(putLesson, {
     onSuccess: () => {
       queryClient.invalidateQueries(TEACHER_LESSONS_BASE_KEY);
     },
@@ -47,16 +47,18 @@ const LessonCard = ({ title, id, students, status }) => {
 
   const handleMenuClick = ({ key }) => {
     if (key === 'archiveLesson') {
-      updateLessonMutation.mutate({ id, status: Statuses.ARCHIVED });
+      updateLessonMutation.mutate({
+        lesson: { id, status: Statuses.ARCHIVED },
+      });
     }
     if (key === 'publishLesson') {
-      updateLessonMutation.mutate({ id, status: Statuses.PUBLIC });
+      updateLessonMutation.mutate({ lesson: { id, status: Statuses.PUBLIC } });
     }
     if (key === 'restoreLesson') {
-      updateLessonMutation.mutate({ id, status: Statuses.DRAFT });
+      updateLessonMutation.mutate({ lesson: { id, status: Statuses.DRAFT } });
     }
     if (key === 'draftLesson') {
-      updateLessonMutation.mutate({ id, status: Statuses.DRAFT });
+      updateLessonMutation.mutate({ lesson: { id, status: Statuses.DRAFT } });
     }
   };
 
@@ -122,10 +124,10 @@ const LessonCard = ({ title, id, students, status }) => {
 };
 
 LessonCard.propTypes = {
-  status: PropTypes.string.isRequired,
+  students: PropTypes.arrayOf(PropTypes.shape({})),
+  status: PropTypes.oneOf(Object.values(Statuses)).isRequired,
   title: PropTypes.string.isRequired,
   id: PropTypes.number.isRequired,
-  students: PropTypes.arrayOf(PropTypes.shape({})),
 };
 
 LessonCard.defaultProps = {

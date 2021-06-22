@@ -3,6 +3,7 @@ import { Col, Row, Skeleton } from 'antd';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
+import { useQuery } from 'react-query';
 
 import emptyImg from '@sb-ui/resources/img/empty.svg';
 import PublicLesson from '@sb-ui/components/atoms/PublicLesson';
@@ -11,15 +12,13 @@ import {
   getPublicLessons,
 } from '@sb-ui/utils/api/v1/lesson/lesson';
 import OngoingLesson from '@sb-ui/components/atoms/OngoingLesson';
-
-import { useQuery } from 'react-query';
-import { PAGE_SIZE } from '@sb-ui/components/molecules/LessonsMain/constants';
 import { getQueryPage } from '@sb-ui/utils/utils';
 import {
   USER_ENROLLED_LESSONS_BASE_KEY,
   USER_PUBLIC_LESSONS_BASE_KEY,
 } from '@sb-ui/utils/queries';
-import * as S from './LessonsMain.mobile.styled';
+import * as S from './PublicLessons.mobile.styled';
+import { PAGE_SIZE } from './constants';
 
 const LessonsMainMobile = ({ searchLessons, isOngoingLesson }) => {
   const { t } = useTranslation();
