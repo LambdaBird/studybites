@@ -59,25 +59,195 @@ const router = async (instance) => {
 
   instance.route({
     method: 'GET',
-    url: '/:id',
+    url: '/:lesson_id',
     schema: {
       response: errorResponse,
     },
     validatorCompiler,
     errorHandler,
     onRequest: instance.auth({ instance }),
-    handler: async ({ params }) => {
-      const id = validateId(params.id);
+    preHandler: instance.access({
+      instance,
+      type: config.resources.LESSON,
+      role: config.roles.STUDENT.id,
+      getId: (req) => req.params.lesson_id,
+    }),
+    handler: async ({ params, user }) => {
+      const id = validateId(params.lesson_id);
+
+      const status = {};
+
+      const checkStatus = await Result.query()
+        .where({
+          userId: user.id,
+          lessonId: id,
+        })
+        .andWhere(function () {
+          this.where({ action: 'start' }).orWhere({ action: 'finish' });
+        });
+
+      checkStatus.forEach((entry) => {
+        status[entry.action] = true;
+      });
+
+      if (status.finish) {
+        const lesson = await Lesson.query()
+          .findById(id)
+          .withGraphFetched('authors')
+          .withGraphFetched('blocks');
+
+        if (!lesson) {
+          throw new NotFoundError(NOT_FOUND);
+        }
+
+        try {
+          const { parent } = await LessonBlockStructure.query()
+            .first()
+            .select('id as parent')
+            .where({ lessonId: id })
+            .whereNull('parentId');
+
+          const { rows: blocksOrder } = await LessonBlockStructure.knex().raw(
+            `select lesson_block_structure.block_id from connectby('lesson_block_structure', 'id', 'parent_id', '${parent}', 0, '~') 
+          as temporary(id uuid, parent_id uuid, level int, branch text) join lesson_block_structure on temporary.id = lesson_block_structure.id`,
+          );
+
+          const blocks = [];
+
+          const dictionary = lesson.blocks.reduce((result, filter) => {
+            // eslint-disable-next-line no-param-reassign
+            result[filter.blockId] = filter;
+            return result;
+          }, {});
+
+          blocksOrder.map((block) => blocks.push(dictionary[block.block_id]));
+
+          lesson.blocks = blocks;
+        } catch (err) {
+          return { lesson };
+        }
+
+        return { lesson };
+      }
+
+      if (!status.start) {
+        const lesson = await Lesson.query()
+          .findById(id)
+          .withGraphFetched('authors');
+
+        if (!lesson) {
+          throw new NotFoundError(NOT_FOUND);
+        }
+
+        lesson.blocks = [];
+
+        return { lesson };
+      }
+
+      const t = {};
+
+      const { blockId } = await Result.query()
+        .first()
+        .select('results.*')
+        .from(function () {
+          this.select(this.knex().raw('max(created_at) as created_at'))
+            .from('results')
+            .where({
+              userId: user.id,
+              lessonId: id,
+            })
+            .as('temporary');
+        })
+        .join('results', 'results.created_at', '=', 'temporary.created_at');
 
       const lesson = await Lesson.query()
         .findById(id)
-        .withGraphFetched('authors');
+        .withGraphFetched('authors')
+        .withGraphFetched('blocks');
 
       if (!lesson) {
         throw new NotFoundError(NOT_FOUND);
       }
 
-      return { data: lesson };
+      try {
+        if (blockId) {
+          const { parent } = await LessonBlockStructure.query()
+            .first()
+            .select('id as parent')
+            .where({ lessonId: id, blockId });
+
+          t.parent = parent;
+        } else {
+          const { parent } = await LessonBlockStructure.query()
+            .first()
+            .select('id as parent')
+            .where({ lessonId: id })
+            .whereNull('parentId');
+
+          t.parent = parent;
+        }
+
+        const { rows: blocksOrder } = await LessonBlockStructure.knex().raw(
+          `select lesson_block_structure.block_id from connectby('lesson_block_structure', 'id', 'parent_id', '${t.parent}', 0, '~') 
+          as temporary(id uuid, parent_id uuid, level int, branch text) join lesson_block_structure on temporary.id = lesson_block_structure.id`,
+        );
+
+        const blocks = [];
+
+        const dictionary = lesson.blocks.reduce((result, filter) => {
+          // eslint-disable-next-line no-param-reassign
+          result[filter.blockId] = filter;
+          return result;
+        }, {});
+
+        if (blockId) {
+          for (let i = 0, n = blocksOrder.length; i < n; i += 1) {
+            if (
+              i === 0 &&
+              config.interactiveBlocks.includes(
+                dictionary[blocksOrder[i].block_id].type,
+              )
+            ) {
+              // eslint-disable-next-line no-continue
+              continue;
+            }
+
+            delete dictionary[blocksOrder[i].block_id].answer;
+            delete dictionary[blocksOrder[i].block_id].weight;
+
+            blocks.push(dictionary[blocksOrder[i].block_id]);
+
+            if (
+              config.interactiveBlocks.includes(
+                dictionary[blocksOrder[i].block_id].type,
+              )
+            ) {
+              break;
+            }
+          }
+        } else {
+          for (let i = 0, n = blocksOrder.length; i < n; i += 1) {
+            delete dictionary[blocksOrder[i].block_id].answer;
+            delete dictionary[blocksOrder[i].block_id].weight;
+
+            blocks.push(dictionary[blocksOrder[i].block_id]);
+
+            if (
+              config.interactiveBlocks.includes(
+                dictionary[blocksOrder[i].block_id].type,
+              )
+            ) {
+              break;
+            }
+          }
+        }
+
+        lesson.blocks = blocks;
+      } catch (err) {
+        return { lesson };
+      }
+
+      return { lesson };
     },
   });
 
@@ -644,9 +814,9 @@ const router = async (instance) => {
                   userId: user.id,
                   lessonId: id,
                 })
-                .as('test');
+                .as('temporary');
             })
-            .join('results', 'results.created_at', '=', 'test.created_at');
+            .join('results', 'results.created_at', '=', 'temporary.created_at');
 
           await Result.query().insert({
             lessonId: id,
