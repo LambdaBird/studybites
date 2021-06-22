@@ -9,8 +9,22 @@ import validatorCompiler from '../../validation/validatorCompiler';
 import errorHandler from '../../validation/errorHandler';
 import { BadRequestError, NotFoundError } from '../../validation/errors';
 
-import { putBodyValidator, postBodyValidator, validateId } from './validators';
-import { NOT_FOUND, INVALID_ENROLL, ENROLL_SUCCESS } from './constants';
+import {
+  putBodyValidator,
+  postBodyValidator,
+  validateId,
+  learnBodyValidator,
+} from './validators';
+import {
+  NOT_FOUND,
+  INVALID_ENROLL,
+  ENROLL_SUCCESS,
+  ALREADY_FINISHED,
+  NOT_STARTED,
+  ALREADY_STARTED,
+  INVALID_LEARN,
+  INVALID_NEXT,
+} from './constants';
 
 const router = async (instance) => {
   const { Lesson, UserRole, Block, LessonBlockStructure, User, Result } =
@@ -551,7 +565,7 @@ const router = async (instance) => {
     method: 'POST',
     url: '/:lesson_id/learn',
     schema: {
-      // body
+      body: learnBodyValidator,
       response: errorResponse,
     },
     validatorCompiler,
@@ -566,7 +580,126 @@ const router = async (instance) => {
     handler: async ({ params, body, user }) => {
       const id = validateId(params.lesson_id);
 
-      await Result.query().insert({ ...body, lessonId: id, userId: user.id });
+      const status = {};
+
+      const { action } = body;
+
+      const checkStatus = await Result.query()
+        .where({
+          userId: user.id,
+          lessonId: id,
+        })
+        .andWhere(function () {
+          this.where({ action: 'start' }).orWhere({ action: 'finish' });
+        });
+
+      checkStatus.forEach((entry) => {
+        status[entry.action] = true;
+      });
+
+      if (status.finish) {
+        throw new BadRequestError(ALREADY_FINISHED);
+      }
+
+      if (!status.start && action !== 'start') {
+        throw new BadRequestError(NOT_STARTED);
+      }
+
+      switch (action) {
+        case 'start': {
+          if (status.start) {
+            throw new BadRequestError(ALREADY_STARTED);
+          }
+
+          await Result.query().insert({
+            lessonId: id,
+            userId: user.id,
+            action: 'start',
+            correctness: 0,
+          });
+
+          break;
+        }
+        case 'finish': {
+          await Result.query().insert({
+            lessonId: id,
+            userId: user.id,
+            action: 'finish',
+            correctness: 0,
+          });
+
+          // should compute and write total results
+          // also send them
+
+          return { status: 'finished' };
+        }
+        case 'resume': {
+          const { blockId, revision } = await Result.query()
+            .first()
+            .select('results.*')
+            .from(function () {
+              this.select(this.knex().raw('max(created_at) as created_at'))
+                .from('results')
+                .where({
+                  userId: user.id,
+                  lessonId: id,
+                })
+                .as('test');
+            })
+            .join('results', 'results.created_at', '=', 'test.created_at');
+
+          await Result.query().insert({
+            lessonId: id,
+            userId: user.id,
+            action: 'resume',
+            blockId,
+            revision,
+            correctness: 0,
+          });
+
+          if (blockId) {
+            const { parent } = await LessonBlockStructure.query()
+              .first()
+              .select('id as parent')
+              .where({ lessonId: id, blockId });
+
+            status.parent = parent;
+          }
+
+          break;
+        }
+        case 'next': {
+          const { blockId, revision } = body;
+
+          if (!blockId || !revision) {
+            throw new BadRequestError(INVALID_NEXT);
+          }
+
+          await Result.query().insert({
+            lessonId: id,
+            userId: user.id,
+            action: 'next',
+            blockId,
+            revision,
+            correctness: 0,
+          });
+
+          const { parent } = await LessonBlockStructure.query()
+            .first()
+            .select('id as parent')
+            .where({ lessonId: id, blockId });
+
+          status.parent = parent;
+
+          break;
+        }
+        case 'response': {
+          // TODO
+          break;
+        }
+        default:
+          throw new BadRequestError(INVALID_LEARN);
+      }
 
       const lesson = await Lesson.query()
         .findById(id)
@@ -577,16 +710,18 @@ const router = async (instance) => {
       }
 
       try {
-        const { parent } = await LessonBlockStructure.query()
-          .first()
-          .select('id as parent')
-          .where({ lessonId: id })
-          .whereNull('parentId');
+        if (!status.parent) {
+          const { parent } = await LessonBlockStructure.query()
+            .first()
+            .select('id as parent')
+            .where({ lessonId: id })
+            .whereNull('parentId');
+
+          status.parent = parent;
+        }
 
         const { rows: blocksOrder } = await LessonBlockStructure.knex().raw(
-          `select lesson_block_structure.block_id from connectby('lesson_block_structure', 'id', 'parent_id', '${
-            body.cursor || parent
-          }', 0, '~')
+          `select lesson_block_structure.block_id from connectby('lesson_block_structure', 'id', 'parent_id', '${status.parent}', 0, '~') 
           as temporary(id uuid, parent_id uuid, level int, branch text) join lesson_block_structure on temporary.id = lesson_block_structure.id`,
         );
 
@@ -599,6 +734,16 @@ const router = async (instance) => {
         }, {});
 
         for (let i = 0, n = blocksOrder.length; i < n; i += 1) {
+          if (
+            i === 0 &&
+            config.interactiveBlocks.includes(
+              dictionary[blocksOrder[i].block_id].type,
+            )
+          ) {
+            // eslint-disable-next-line no-continue
+            continue;
+          }
+
           delete dictionary[blocksOrder[i].block_id].answer;
           delete dictionary[blocksOrder[i].block_id].weight;
 
