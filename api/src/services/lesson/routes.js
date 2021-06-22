@@ -24,6 +24,7 @@ import {
   ALREADY_STARTED,
   INVALID_LEARN,
   INVALID_NEXT,
+  NOT_FINISHED,
 } from './constants';
 
 const router = async (instance) => {
@@ -584,6 +585,8 @@ const router = async (instance) => {
 
       const { action } = body;
 
+      let total;
+
       const checkStatus = await Result.query()
         .where({
           userId: user.id,
@@ -615,17 +618,40 @@ const router = async (instance) => {
             lessonId: id,
             userId: user.id,
             action: 'start',
-            correctness: 0,
           });
 
           break;
         }
         case 'finish': {
+          const { finished } = await Result.query()
+            .first()
+            .select(objection.raw('array_agg(block_id) as finished'))
+            .where({
+              lessonId: id,
+              userId: user.id,
+            })
+            .whereIn('action', config.interactiveBlocks);
+
+          const { blocks } = await LessonBlockStructure.query()
+            .first()
+            .select(objection.raw('array_agg(blocks.block_id) as blocks'))
+            .join(
+              'blocks',
+              'lesson_block_structure.block_id',
+              '=',
+              'blocks.block_id',
+            )
+            .where({ lessonId: id })
+            .whereIn('blocks.type', config.interactiveBlocks);
+
+          if (!blocks.every((block) => finished.includes(block))) {
+            throw new BadRequestError(NOT_FINISHED);
+          }
+
           await Result.query().insert({
             lessonId: id,
             userId: user.id,
             action: 'finish',
-            correctness: 0,
           });
 
           // should compute and write total results
@@ -654,7 +680,6 @@ const router = async (instance) => {
             action: 'resume',
             blockId,
             revision,
-            correctness: 0,
           });
 
           if (blockId) {
@@ -681,7 +706,6 @@ const router = async (instance) => {
             action: 'next',
             blockId,
             revision,
-            correctness: 0,
           });
 
           const { parent } = await LessonBlockStructure.query()
@@ -759,11 +783,12 @@ const router = async (instance) => {
         }
 
         lesson.blocks = blocks;
+        total = blocksOrder.length;
       } catch (err) {
-        return { lesson };
+        return { lesson, total: 0 };
       }
 
-      return { lesson };
+      return { lesson, total };
     },
   });
 };
