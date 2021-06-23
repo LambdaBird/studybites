@@ -177,9 +177,7 @@ const router = async (instance) => {
         return { total: +count, lesson, isFinal };
       }
 
-      const helper = {};
-
-      const { blockId } = await Result.query()
+      const check = await Result.query()
         .first()
         .select('results.*')
         .from(function () {
@@ -189,6 +187,7 @@ const router = async (instance) => {
               userId: user.id,
               lessonId: id,
             })
+            .whereIn('action', config.interactiveBlocks)
             .as('temporary');
         })
         .join('results', 'results.created_at', '=', 'temporary.created_at');
@@ -203,25 +202,14 @@ const router = async (instance) => {
       }
 
       try {
-        if (blockId) {
-          const { parent } = await LessonBlockStructure.query()
-            .first()
-            .select('id as parent')
-            .where({ lessonId: id, blockId });
-
-          helper.parent = parent;
-        } else {
-          const { parent } = await LessonBlockStructure.query()
-            .first()
-            .select('id as parent')
-            .where({ lessonId: id })
-            .whereNull('parentId');
-
-          helper.parent = parent;
-        }
+        const { parent } = await LessonBlockStructure.query()
+          .first()
+          .select('id as parent')
+          .where({ lessonId: id })
+          .whereNull('parentId');
 
         const { rows: blocksOrder } = await LessonBlockStructure.knex().raw(
-          `select lesson_block_structure.block_id from connectby('lesson_block_structure', 'id', 'parent_id', '${helper.parent}', 0, '~') 
+          `select lesson_block_structure.block_id from connectby('lesson_block_structure', 'id', 'parent_id', '${parent}', 0, '~') 
           as temporary(id uuid, parent_id uuid, level int, branch text) join lesson_block_structure on temporary.id = lesson_block_structure.id`,
         );
 
@@ -233,31 +221,27 @@ const router = async (instance) => {
           return result;
         }, {});
 
-        if (blockId) {
-          for (let i = 0, n = blocksOrder.length; i < n; i += 1) {
-            if (
-              i === 0 &&
-              config.interactiveBlocks.includes(
-                dictionary[blocksOrder[i].block_id].type,
-              )
-            ) {
-              // eslint-disable-next-line no-continue
-              continue;
-            }
+        if (check && check.blockId) {
+          blocksOrder.map((block) => blocks.push(dictionary[block.block_id]));
 
-            delete dictionary[blocksOrder[i].block_id].answer;
-            delete dictionary[blocksOrder[i].block_id].weight;
+          const temp = [];
 
-            blocks.push(dictionary[blocksOrder[i].block_id]);
-
+          for (let i = 0, n = blocks.length; i < n; i += 1) {
             if (
               config.interactiveBlocks.includes(
                 dictionary[blocksOrder[i].block_id].type,
-              )
+              ) &&
+              temp.some((block) => block.blockId === check.blockId)
             ) {
+              temp.push(blocks[i]);
+
               break;
             }
+
+            temp.push(blocks[i]);
           }
+
+          lesson.blocks = temp;
         } else {
           for (let i = 0, n = blocksOrder.length; i < n; i += 1) {
             delete dictionary[blocksOrder[i].block_id].answer;
@@ -273,9 +257,9 @@ const router = async (instance) => {
               break;
             }
           }
-        }
 
-        lesson.blocks = blocks;
+          lesson.blocks = blocks;
+        }
       } catch (err) {
         return { total: 0, lesson, isFinal: false };
       }
