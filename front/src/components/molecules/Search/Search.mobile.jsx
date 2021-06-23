@@ -8,7 +8,7 @@ import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
 
 import * as S from './Search.mobile.styled';
 
-const SearchMobile = ({ setSearchText }) => {
+const SearchMobile = ({ setSearchText, className }) => {
   const { t } = useTranslation();
 
   const [isSearchVisible, setIsSearchVisible] = useState(false);
@@ -27,19 +27,27 @@ const SearchMobile = ({ setSearchText }) => {
 
   return (
     <>
-      <Button shape="circle" icon={<SearchOutlined />} size="large" onClick={showSearch} />
-      {
-        isSearchVisible 
-          ?  (
-            <S.ButtonClose type="button" onClick={hideSearch}>
-              <S.CloseIcon />
-            </S.ButtonClose>
-          )
-          : null
-      }
-      <S.SearchModal visible={isSearchVisible} bodyStyle={{ padding: 0 }} zIndex={900} footer={null} title={null} closable={false}>
+      <Button
+        shape="circle"
+        icon={<SearchOutlined />}
+        size="large"
+        onClick={showSearch}
+      />
+      {isSearchVisible ? (
+        <S.ButtonClose type="button" onClick={hideSearch}>
+          <S.CloseIcon />
+        </S.ButtonClose>
+      ) : null}
+      <S.SearchModal
+        visible={isSearchVisible}
+        bodyStyle={{ padding: 0 }}
+        zIndex={900}
+        footer={null}
+        title={null}
+        closable={false}
+      >
         <DebouncedSearch
-          style={{ height: 50 }}
+          className={className}
           delay={500}
           placeholder={t('user_home.open_lessons.search')}
           allowClear
@@ -47,7 +55,7 @@ const SearchMobile = ({ setSearchText }) => {
         />
       </S.SearchModal>
     </>
-  )
+  );
 };
 
 SearchMobile.defaultProps = {
@@ -56,6 +64,7 @@ SearchMobile.defaultProps = {
 
 SearchMobile.propTypes = {
   setSearchText: PropTypes.func,
+  className: PropTypes.string,
 };
 
 export default SearchMobile;

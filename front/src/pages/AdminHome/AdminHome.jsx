@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Button,
   Checkbox,
@@ -11,11 +11,15 @@ import {
   Typography,
 } from 'antd';
 import { useTranslation } from 'react-i18next';
+import { useHistory, useLocation } from 'react-router-dom';
+import { useQuery } from 'react-query';
+
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
-import { useTableRequest } from '@sb-ui/hooks/useTableRequest';
 import { appointTeacher } from '@sb-ui/utils/api/v1/user';
-import { MainDiv, TableHeader, TitleHeader } from './AdminHome.styled';
+import { getQueryPage } from '@sb-ui/utils/utils';
+import { ADMIN_USERS_BASE_KEY } from '@sb-ui/utils/queries';
 import { getUsers, removeTeacher } from '../../utils/api/v1/user/user';
+import { MainDiv, TableHeader, TitleHeader } from './AdminHome.styled';
 
 const messageKey = 'teacherStateLoading';
 
@@ -25,16 +29,56 @@ const AdminHome = () => {
   const { t } = useTranslation();
   const [teacherRoleState, setTeacherRoleState] = useState({});
 
+  const location = useLocation();
+  const queryPage = useMemo(() => location.search, [location]);
+  const history = useHistory();
+  const [search, setSearch] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+
   const {
-    loading,
-    dataSource,
-    pagination,
-    handleTableSearch,
-    handleTableChange,
-  } = useTableRequest({
-    requestFunc: getUsers,
-    pageSize: PAGE_SIZE,
-  });
+    data: responseData,
+    isLoading,
+    isPreviousData,
+  } = useQuery(
+    [
+      ADMIN_USERS_BASE_KEY,
+      {
+        offset: (currentPage - 1) * PAGE_SIZE,
+        limit: PAGE_SIZE,
+        search,
+      },
+    ],
+    getUsers,
+    { keepPreviousData: true },
+  );
+
+  const { data, total } = responseData || {};
+
+  useEffect(() => {
+    if (data?.length === 0 && total !== 0) {
+      setCurrentPage(1);
+      history.replace({
+        search: ``,
+      });
+    }
+  }, [data, history, total]);
+
+  useEffect(() => {
+    const { incorrect, page } = getQueryPage(queryPage);
+    setCurrentPage(page);
+    if (incorrect || page === 1) {
+      history.replace({
+        search: ``,
+      });
+    }
+  }, [history, queryPage]);
+
+  const onChangeLessonsPage = ({ current }) => {
+    setCurrentPage(current);
+    history.push({
+      search: `?page=${current}`,
+    });
+  };
 
   const handleTeacherRoleChange = useCallback(
     ({ isTeacher, userId }) =>
@@ -133,7 +177,7 @@ const AdminHome = () => {
                 delay={500}
                 placeholder={t('admin_home.search.placeholder')}
                 allowClear
-                onChange={handleTableSearch}
+                onChange={setSearch}
               />
             </Space>
           </Row>
@@ -144,10 +188,18 @@ const AdminHome = () => {
       </TableHeader>
       <Table
         columns={columns}
-        dataSource={dataSource}
-        pagination={pagination}
-        onChange={handleTableChange}
-        loading={loading}
+        dataSource={data}
+        pagination={
+          !isLoading &&
+          total > PAGE_SIZE && {
+            showSizeChanger: false,
+            current: currentPage,
+            pageSize: PAGE_SIZE,
+            total,
+          }
+        }
+        onChange={onChangeLessonsPage}
+        loading={isLoading || isPreviousData}
         locale={{
           emptyText: (
             <Empty
