@@ -24,6 +24,7 @@ import {
   ALREADY_STARTED,
   INVALID_LEARN,
   INVALID_NEXT,
+  NOT_FINISHED,
 } from './constants';
 
 const router = async (instance) => {
@@ -785,23 +786,43 @@ const router = async (instance) => {
             lessonId: id,
             userId: user.id,
             action: 'start',
-            correctness: 0,
           });
 
           break;
         }
         case 'finish': {
+          const { finished } = await Result.query()
+            .first()
+            .select(objection.raw('array_agg(block_id) as finished'))
+            .where({
+              lessonId: id,
+              userId: user.id,
+            })
+            .whereIn('action', config.interactiveBlocks);
+
+          const { blocks } = await LessonBlockStructure.query()
+            .first()
+            .select(objection.raw('array_agg(blocks.block_id) as blocks'))
+            .join(
+              'blocks',
+              'lesson_block_structure.block_id',
+              '=',
+              'blocks.block_id',
+            )
+            .where({ lessonId: id })
+            .whereIn('blocks.type', config.interactiveBlocks);
+
+          if (!finished || !blocks.every((block) => finished.includes(block))) {
+            throw new BadRequestError(NOT_FINISHED);
+          }
+
           await Result.query().insert({
             lessonId: id,
             userId: user.id,
             action: 'finish',
-            correctness: 0,
           });
 
-          // should compute and write total results
-          // also send them
-
-          return { status: 'finished' };
+          break;
         }
         case 'resume': {
           const { blockId, revision } = await Result.query()
@@ -824,7 +845,6 @@ const router = async (instance) => {
             action: 'resume',
             blockId,
             revision,
-            correctness: 0,
           });
 
           if (blockId) {
@@ -845,13 +865,21 @@ const router = async (instance) => {
             throw new BadRequestError(INVALID_NEXT);
           }
 
+          const check = await LessonBlockStructure.query().first().where({
+            lessonId: id,
+            blockId,
+          });
+
+          if (!check) {
+            throw new BadRequestError(INVALID_LEARN);
+          }
+
           await Result.query().insert({
             lessonId: id,
             userId: user.id,
             action: 'next',
             blockId,
             revision,
-            correctness: 0,
           });
 
           const { parent } = await LessonBlockStructure.query()
@@ -903,37 +931,77 @@ const router = async (instance) => {
           return result;
         }, {});
 
-        for (let i = 0, n = blocksOrder.length; i < n; i += 1) {
-          if (
-            i === 0 &&
-            config.interactiveBlocks.includes(
-              dictionary[blocksOrder[i].block_id].type,
-            )
-          ) {
-            // eslint-disable-next-line no-continue
-            continue;
+        if (action === 'start') {
+          for (let i = 0, n = blocksOrder.length; i < n; i += 1) {
+            delete dictionary[blocksOrder[i].block_id].answer;
+            delete dictionary[blocksOrder[i].block_id].weight;
+
+            blocks.push(dictionary[blocksOrder[i].block_id]);
+
+            if (
+              config.interactiveBlocks.includes(
+                dictionary[blocksOrder[i].block_id].type,
+              )
+            ) {
+              break;
+            }
           }
+        } else if (action === 'finish') {
+          for (let i = 0, n = blocksOrder.length; i < n; i += 1) {
+            delete dictionary[blocksOrder[i].block_id].answer;
+            delete dictionary[blocksOrder[i].block_id].weight;
 
-          delete dictionary[blocksOrder[i].block_id].answer;
-          delete dictionary[blocksOrder[i].block_id].weight;
+            blocks.push(dictionary[blocksOrder[i].block_id]);
+          }
+        } else {
+          for (let i = 0, n = blocksOrder.length; i < n; i += 1) {
+            if (
+              i === 0 &&
+              config.interactiveBlocks.includes(
+                dictionary[blocksOrder[i].block_id].type,
+              )
+            ) {
+              // eslint-disable-next-line no-continue
+              continue;
+            }
 
-          blocks.push(dictionary[blocksOrder[i].block_id]);
+            delete dictionary[blocksOrder[i].block_id].answer;
+            delete dictionary[blocksOrder[i].block_id].weight;
 
-          if (
-            config.interactiveBlocks.includes(
-              dictionary[blocksOrder[i].block_id].type,
-            )
-          ) {
-            break;
+            blocks.push(dictionary[blocksOrder[i].block_id]);
+
+            if (
+              config.interactiveBlocks.includes(
+                dictionary[blocksOrder[i].block_id].type,
+              )
+            ) {
+              break;
+            }
           }
         }
 
         lesson.blocks = blocks;
       } catch (err) {
-        return { lesson };
+        return { total: 0, lesson, isFinal: false };
       }
 
-      return { lesson };
+      const { count } = await LessonBlockStructure.query()
+        .first()
+        .count('blockId')
+        .where({
+          lessonId: id,
+        });
+
+      const { blockId: final } = await LessonBlockStructure.query()
+        .first()
+        .where({
+          lessonId: id,
+        })
+        .whereNull('childId');
+
+      const isFinal = lesson.blocks.some((block) => block.blockId === final);
+
+      return { total: +count, lesson, isFinal };
     },
   });
 };

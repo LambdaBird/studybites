@@ -47,3 +47,8 @@ export const INVALID_LEARN = {
   key: 'lesson.errors.invalid_learn',
   message: 'Invalid action',
 };
+
+export const NOT_FINISHED = {
+  key: 'lesson.errors.not_finished',
+  message: 'Haven`t finished this lesson yet',
+};
