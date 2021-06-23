@@ -585,8 +585,6 @@ const router = async (instance) => {
 
       const { action } = body;
 
-      let total;
-
       const checkStatus = await Result.query()
         .where({
           userId: user.id,
@@ -644,7 +642,7 @@ const router = async (instance) => {
             .where({ lessonId: id })
             .whereIn('blocks.type', config.interactiveBlocks);
 
-          if (!blocks.every((block) => finished.includes(block))) {
+          if (!finished || !blocks.every((block) => finished.includes(block))) {
             throw new BadRequestError(NOT_FINISHED);
           }
 
@@ -654,10 +652,7 @@ const router = async (instance) => {
             action: 'finish',
           });
 
-          // should compute and write total results
-          // also send them
-
-          return { status: 'finished' };
+          break;
         }
         case 'resume': {
           const { blockId, revision } = await Result.query()
@@ -698,6 +693,15 @@ const router = async (instance) => {
 
           if (!blockId || !revision) {
             throw new BadRequestError(INVALID_NEXT);
+          }
+
+          const check = await LessonBlockStructure.query().first().where({
+            lessonId: id,
+            blockId,
+          });
+
+          if (!check) {
+            throw new BadRequestError(INVALID_LEARN);
           }
 
           await Result.query().insert({
@@ -757,38 +761,68 @@ const router = async (instance) => {
           return result;
         }, {});
 
-        for (let i = 0, n = blocksOrder.length; i < n; i += 1) {
-          if (
-            i === 0 &&
-            config.interactiveBlocks.includes(
-              dictionary[blocksOrder[i].block_id].type,
-            )
-          ) {
-            // eslint-disable-next-line no-continue
-            continue;
+        if (action === 'start') {
+          for (let i = 0, n = blocksOrder.length; i < n; i += 1) {
+            delete dictionary[blocksOrder[i].block_id].answer;
+            delete dictionary[blocksOrder[i].block_id].weight;
+
+            blocks.push(dictionary[blocksOrder[i].block_id]);
+
+            if (
+              config.interactiveBlocks.includes(
+                dictionary[blocksOrder[i].block_id].type,
+              )
+            ) {
+              break;
+            }
           }
+        } else if (action === 'finish') {
+          for (let i = 0, n = blocksOrder.length; i < n; i += 1) {
+            delete dictionary[blocksOrder[i].block_id].answer;
+            delete dictionary[blocksOrder[i].block_id].weight;
 
-          delete dictionary[blocksOrder[i].block_id].answer;
-          delete dictionary[blocksOrder[i].block_id].weight;
+            blocks.push(dictionary[blocksOrder[i].block_id]);
+          }
+        } else {
+          for (let i = 0, n = blocksOrder.length; i < n; i += 1) {
+            if (
+              i === 0 &&
+              config.interactiveBlocks.includes(
+                dictionary[blocksOrder[i].block_id].type,
+              )
+            ) {
+              // eslint-disable-next-line no-continue
+              continue;
+            }
 
-          blocks.push(dictionary[blocksOrder[i].block_id]);
+            delete dictionary[blocksOrder[i].block_id].answer;
+            delete dictionary[blocksOrder[i].block_id].weight;
 
-          if (
-            config.interactiveBlocks.includes(
-              dictionary[blocksOrder[i].block_id].type,
-            )
-          ) {
-            break;
+            blocks.push(dictionary[blocksOrder[i].block_id]);
+
+            if (
+              config.interactiveBlocks.includes(
+                dictionary[blocksOrder[i].block_id].type,
+              )
+            ) {
+              break;
+            }
           }
         }
 
         lesson.blocks = blocks;
-        total = blocksOrder.length;
       } catch (err) {
-        return { lesson, total: 0 };
+        return { total: 0, lesson };
       }
 
-      return { lesson, total };
+      const { count } = await LessonBlockStructure.query()
+        .first()
+        .count('blockId')
+        .where({
+          lessonId: id,
+        });
+
+      return { total: +count, lesson };
     },
   });
 };
