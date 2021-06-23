@@ -13,7 +13,11 @@ const Block = ({ children }) => (
       <S.BlockWrapper justify="start" align="top">
         <S.StyledRow justify="space-between">
           {Array.isArray(children) ? (
-            children?.map((elem) => <Col span={24}>{elem}</Col>)
+            children?.map((elem) => (
+              <Col key={elem.blockId} span={24}>
+                {elem}
+              </Col>
+            ))
           ) : (
             <Col span={24}>{children}</Col>
           )}
