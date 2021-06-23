@@ -812,7 +812,7 @@ const router = async (instance) => {
 
         lesson.blocks = blocks;
       } catch (err) {
-        return { total: 0, lesson };
+        return { total: 0, lesson, isFinal: false };
       }
 
       const { count } = await LessonBlockStructure.query()
@@ -822,7 +822,16 @@ const router = async (instance) => {
           lessonId: id,
         });
 
-      return { total: +count, lesson };
+      const { blockId: final } = await LessonBlockStructure.query()
+        .first()
+        .where({
+          lessonId: id,
+        })
+        .whereNull('childId');
+
+      const isFinal = lesson.blocks.some((block) => block.blockId === final);
+
+      return { total: +count, lesson, isFinal };
     },
   });
 };
