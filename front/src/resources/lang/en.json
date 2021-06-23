@@ -1,5 +1,11 @@
 {
   "translation": {
+    "header": {
+      "profile": "Profile",
+      "sign_out": "Sign out",
+      "switch_teacher": "Switch to teacher view",
+      "switch_student": "Switch to student view"
+    },
     "sign_up": {
       "have_account": "Already have an account? Sign in!",
       "title": "Sign up to your account",
@@ -140,7 +146,8 @@
       },
       "by": "By",
       "blocks": "blocks",
-      "start": "Start"
+      "start": "Start",
+      "next": "Next"
     },
     "enroll_modal": {
       "review": {
@@ -158,8 +165,7 @@
         "preview": "Preview"
       },
       "title": {
-        "default":"How to use StudyBites - For Teachers",
-        "placeholder": "Title"
+        "placeholder": "Lesson title"
       },
       "links": {
         "invite": "Invite Collaborators",
@@ -168,6 +174,15 @@
         "archive": "Archive"
       },
       "description": "Description"
+    },
+    "editor_js": {
+      "tool_names": {
+        "text": "Text",
+        "next": "Next"
+      },
+      "toolbar": {
+        "toolbox_add": "Add"
+      }
     }
   }
 }

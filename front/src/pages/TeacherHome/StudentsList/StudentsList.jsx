@@ -1,18 +1,58 @@
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Typography, Divider, Row, Col, Space, Avatar } from 'antd';
+import { Button, Col, Divider, Skeleton, Space, Typography } from 'antd';
+import { useQuery } from 'react-query';
 import emptyImage from '@sb-ui/resources/img/empty.svg';
+import { getTeacherStudents } from '@sb-ui/utils/api/v1/lesson';
+import {
+  itemPerPage,
+  MAX_STUDENTS_IN_LIST,
+} from '@sb-ui/pages/TeacherHome/StudentsList/constants';
+import { TEACHER_STUDENTS_BASE_KEY } from '@sb-ui/utils/queries';
 import * as S from './StudentsList.styled';
 
 const { Text } = Typography;
 
-const TEMP_STUDENTS = [];
-
 const StudentsList = () => {
   const { t } = useTranslation();
+  const [students, setStudents] = useState([]);
+  const { data: studentsResponseData, isLoading } = useQuery(
+    TEACHER_STUDENTS_BASE_KEY,
+    getTeacherStudents,
+  );
+
+  useEffect(() => {
+    if (studentsResponseData) {
+      setStudents(
+        studentsResponseData?.students
+          ?.slice(0, MAX_STUDENTS_IN_LIST)
+          ?.map(({ firstName, lastName }) => ({
+            name: `${firstName} ${lastName}`,
+          })),
+      );
+    }
+  }, [studentsResponseData]);
+
+  if (isLoading) {
+    return (
+      <S.Wrapper>
+        <S.EmptyListHeader>
+          <S.ListTitle level={4}>{t('students_list.title')}</S.ListTitle>
+        </S.EmptyListHeader>
+        <S.StudentsRow gutter={[16, 16]} align="top">
+          {itemPerPage.map(({ id }) => (
+            <Col key={id} span={12}>
+              <Skeleton avatar paragraph={{ rows: 0 }} />
+            </Col>
+          ))}
+        </S.StudentsRow>
+      </S.Wrapper>
+    );
+  }
 
   return (
     <S.Wrapper>
-      {!TEMP_STUDENTS.length ? (
+      {!students.length ? (
         <>
           <S.EmptyListHeader>
             <S.ListTitle level={4}>{t('students_list.title')}</S.ListTitle>
@@ -38,16 +78,16 @@ const StudentsList = () => {
             </Button>
           </S.ListHeader>
           <Divider />
-          <Row justify="center" align="top">
-            {TEMP_STUDENTS.map((el) => (
+          <S.StudentsRow gutter={[16, 16]} align="top">
+            {students.map(({ name }) => (
               <Col span={12}>
                 <Space>
-                  <Avatar src={el.cover} />
-                  <Text>{el.name}</Text>
+                  <S.AuthorAvatar>{name?.[0]}</S.AuthorAvatar>
+                  <S.AuthorName>{name}</S.AuthorName>
                 </Space>
               </Col>
             ))}
-          </Row>
+          </S.StudentsRow>
         </>
       )}
     </S.Wrapper>

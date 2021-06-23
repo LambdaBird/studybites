@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import { Button, Row, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { LESSON_PAGE, USER_ENROLL, USER_HOME } from '@sb-ui/utils/paths';
+import { LESSON_PAGE, USER_ENROLL } from '@sb-ui/utils/paths';
 import lessonImage from '../../../resources/img/lesson.svg';
 import {
   AuthorAvatar,
@@ -31,7 +31,7 @@ const PublicLessonDesktop = ({ lesson }) => {
   const handleEnroll = () => {
     history.push({
       search: query,
-      pathname: `${USER_HOME}${USER_ENROLL}/${id}`,
+      pathname: USER_ENROLL.replace(':id', id),
     });
   };
 

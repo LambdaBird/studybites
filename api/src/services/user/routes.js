@@ -1,4 +1,4 @@
-import { raw } from 'objection';
+import objection, { raw } from 'objection';
 
 import config from '../../../config';
 
@@ -167,7 +167,7 @@ const router = async (instance) => {
 
       const userWithRoles = { ...user, roles };
 
-      return repl.status(200).send({ data: userWithRoles });
+      return repl.status(200).send(userWithRoles);
     },
   });
 
@@ -187,11 +187,16 @@ const router = async (instance) => {
         lastName: 'lastName',
       };
 
-      if (!req.query.search) {
+      const { search: searchRaw } = req.query;
+      const search = searchRaw?.trim();
+
+      if (!search) {
         columns.email = undefined;
         columns.firstName = undefined;
         columns.lastName = undefined;
       }
+
+      const [firstName, lastName] = search?.split(' ') || [];
 
       const data = await User.query()
         .skipUndefined()
@@ -204,25 +209,56 @@ const router = async (instance) => {
             )
             .as('isTeacher'),
         )
-        .where(columns.email, 'ilike', `%${req.query.search}%`)
-        .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
-        .whereNot({
+
+        .where(function () {
+          this.skipUndefined()
+            .where(columns.email, 'ilike', `%${search}%`)
+            .orWhere(columns.firstName, 'ilike', `%${search}%`)
+            .orWhere(columns.lastName, 'ilike', `%${search}%`)
+            .modify((queryBuilder) => {
+              if (firstName && lastName) {
+                queryBuilder.orWhere(
+                  objection.raw(`concat(first_name,' ',last_name)`),
+                  'ilike',
+                  `%${firstName}% %${lastName}%`,
+                );
+              }
+            });
+        })
+        .orWhere(function () {
+          if (firstName && lastName) {
+            this.skipUndefined()
+              .where(columns.firstName, 'ilike', `%${firstName}%`)
+              .andWhere(columns.lastName, 'ilike', `%${lastName}%`);
+          }
+        })
+        .andWhereNot({
           id: req.user.id,
         })
-        .where(columns.email, 'ilike', `%${req.query.search}%`)
-        .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
-        .orWhere(columns.lastName, 'ilike', `%${req.query.search}%`)
         .offset(req.query.offset || 0)
         .limit(req.query.limit || config.search.USER_SEARCH_LIMIT);
 
       const count = await User.query()
+
         .skipUndefined()
-        .whereNot({
+        .where(function () {
+          this.skipUndefined()
+            .where(columns.email, 'ilike', `%${search}%`)
+            .orWhere(columns.firstName, 'ilike', `%${search}%`)
+            .orWhere(columns.lastName, 'ilike', `%${search}%`);
+        })
+        .modify((queryBuilder) => {
+          if (firstName && lastName) {
+            queryBuilder.orWhere(
+              objection.raw(`concat(first_name,' ',last_name)`),
+              'ilike',
+              `%${firstName}% %${lastName}%`,
+            );
+          }
+        })
+        .andWhereNot({
           id: req.user.id,
         })
-        .where(columns.email, 'ilike', `%${req.query.search}%`)
-        .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
-        .orWhere(columns.lastName, 'ilike', `%${req.query.search}%`)
         .count('*');
 
       return repl.status(200).send({ total: +count[0].count, data });

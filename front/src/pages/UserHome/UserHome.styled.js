@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { Row, Typography, Col, Button, Modal } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
+import Search from '@sb-ui/components/molecules/Search';
 
 export const Main = styled.div`
   display: flex;
@@ -14,10 +15,10 @@ export const Main = styled.div`
 `;
 
 export const OpenHeader = styled(Row)`
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
+  width: 100%;
   @media (max-width: 767px) {
     padding: 1rem 2rem;
-    width: 100%;
   }
 `;
 
@@ -33,11 +34,9 @@ export const Container = styled.div`
 
 export const OpenTitle = styled(Typography.Title)`
   margin-bottom: 0 !important;
-  @media (max-width: 767px) {
-    size: 24px !important;
-    line-height: 32px !important;
-    font-weight: 400 !important;
-  }
+  font-size: 1.5rem !important;
+  line-height: 1.5rem !important;
+  font-weight: 400 !important;
 `;
 
 export const Column = styled(Col)`
@@ -64,4 +63,9 @@ export const CloseIcon = styled(CloseOutlined)`
 
 export const SearchModal = styled(Modal)`
   padding: 3rem;
+`;
+
+export const StyledSearch = styled(Search)`
+  width: 200px;
+  margin-left: 1rem;
 `;

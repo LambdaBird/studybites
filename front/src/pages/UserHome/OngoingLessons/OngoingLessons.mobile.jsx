@@ -1,11 +1,11 @@
 import { Col, Row } from 'antd';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import LessonsMain from '@sb-ui/components/molecules/OngoingLessons/LessonsMain';
 import { USER_LESSONS } from '@sb-ui/utils/paths';
 import * as S from './OngoingLessons.mobile.styled';
+import LessonsList from './LessonsList';
 
-const OngoingLessonsMobile = () => {
+const OngoingLessonsMobile = (props) => {
   const { t } = useTranslation();
 
   return (
@@ -20,7 +20,7 @@ const OngoingLessonsMobile = () => {
         </Col>
       </S.Header>
       <S.Main>
-        <LessonsMain />
+        <LessonsList {...props} />
       </S.Main>
 
       <S.Footer>

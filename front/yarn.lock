@@ -3996,11 +3996,6 @@ editorjs-drag-drop@^0.1.3:
   resolved "https://registry.yarnpkg.com/editorjs-drag-drop/-/editorjs-drag-drop-0.1.3.tgz#a9a581af5b20a0d736fc25b44cc9a34e46c2e483"
   integrity sha512-63XhyWWkEaWVHgMDAqPsE63YC2thGah8fFjxgoKZ9Tm+6huiS+VTjP2Kpx1FzOR9/xdE/56XYfiC65PI7rUvkA==
 
-editorjs-undo@^0.1.6:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/editorjs-undo/-/editorjs-undo-0.1.6.tgz#823349a1e9a78d8bc68ba8570a2b854063bc804a"
-  integrity sha512-zVHPnBf2mcI8hWT9Eu8H3bGDEcMj4gppXbQjJW11Aa8Kdy2SVBGhM6fS59OUlBsm8iHWLxuoG2NUIfy9Rd30sw==
-
 ee-first@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"
