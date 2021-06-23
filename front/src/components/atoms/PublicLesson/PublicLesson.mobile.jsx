@@ -4,7 +4,7 @@ import { Row } from 'antd';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
-import {LESSON_PAGE, USER_ENROLL, USER_HOME } from '@sb-ui/utils/paths';
+import { LESSON_PAGE, USER_ENROLL } from '@sb-ui/utils/paths';
 import * as S from './PublicLesson.mobile.styled';
 
 const PublicLessonMobile = ({ lesson }) => {
@@ -18,7 +18,7 @@ const PublicLessonMobile = ({ lesson }) => {
   const handleEnroll = () => {
     history.push({
       search: query,
-      pathname: `${USER_HOME}${USER_ENROLL}/${id}`,
+      pathname: USER_ENROLL.replace(':id', id),
     });
   };
 

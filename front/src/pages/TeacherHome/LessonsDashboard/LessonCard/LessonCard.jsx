@@ -2,12 +2,15 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { Typography, Space, Avatar, Tooltip, Menu, Dropdown } from 'antd';
 import { useMutation } from 'react-query';
+import { useHistory } from 'react-router-dom';
 import { EllipsisOutlined } from '@ant-design/icons';
 import lesson from '@sb-ui/resources/img/lesson.svg';
-import { archiveLesson } from '@sb-ui/utils/api/v1/lesson';
+import { putLesson } from '@sb-ui/utils/api/v1/lesson';
 import { queryClient } from '@sb-ui/query';
+import { LESSONS_EDIT } from '@sb-ui/utils/paths';
+import { TEACHER_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
 import * as S from './LessonCard.styled';
-import { TEACHER_LESSONS_BASE_KEY, Statuses } from '../constants';
+import { Statuses } from '../constants';
 
 const { Title, Text } = Typography;
 
@@ -34,8 +37,9 @@ const menuItems = {
 };
 
 const LessonCard = ({ title, id, students, status }) => {
+  const history = useHistory();
   const { t } = useTranslation();
-  const patchMutation = useMutation(archiveLesson, {
+  const updateLessonMutation = useMutation(putLesson, {
     onSuccess: () => {
       queryClient.invalidateQueries(TEACHER_LESSONS_BASE_KEY);
     },
@@ -43,17 +47,23 @@ const LessonCard = ({ title, id, students, status }) => {
 
   const handleMenuClick = ({ key }) => {
     if (key === 'archiveLesson') {
-      patchMutation.mutate({ id, status: Statuses.ARCHIVED });
+      updateLessonMutation.mutate({
+        lesson: { id, status: Statuses.ARCHIVED },
+      });
     }
     if (key === 'publishLesson') {
-      patchMutation.mutate({ id, status: Statuses.PUBLIC });
+      updateLessonMutation.mutate({ lesson: { id, status: Statuses.PUBLIC } });
     }
     if (key === 'restoreLesson') {
-      patchMutation.mutate({ id, status: Statuses.DRAFT });
+      updateLessonMutation.mutate({ lesson: { id, status: Statuses.DRAFT } });
     }
     if (key === 'draftLesson') {
-      patchMutation.mutate({ id, status: Statuses.DRAFT });
+      updateLessonMutation.mutate({ lesson: { id, status: Statuses.DRAFT } });
     }
+  };
+
+  const handleEdit = () => {
+    history.push(LESSONS_EDIT.replace(':id', id));
   };
 
   const menu = () => (
@@ -104,7 +114,9 @@ const LessonCard = ({ title, id, students, status }) => {
           <Dropdown overlay={menu} trigger={['click']} placement="bottomRight">
             <EllipsisOutlined />
           </Dropdown>
-          <S.CardButton>{t('lesson_dashboard.card.edit')}</S.CardButton>
+          <S.CardButton onClick={handleEdit}>
+            {t('lesson_dashboard.card.edit')}
+          </S.CardButton>
         </S.ActionsWrapper>
       </S.CardDescription>
     </S.Wrapper>
@@ -112,10 +124,10 @@ const LessonCard = ({ title, id, students, status }) => {
 };
 
 LessonCard.propTypes = {
-  status: PropTypes.string.isRequired,
+  students: PropTypes.arrayOf(PropTypes.shape({})),
+  status: PropTypes.oneOf(Object.values(Statuses)).isRequired,
   title: PropTypes.string.isRequired,
   id: PropTypes.number.isRequired,
-  students: PropTypes.arrayOf(PropTypes.shape({})),
 };
 
 LessonCard.defaultProps = {

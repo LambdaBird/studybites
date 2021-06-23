@@ -13,9 +13,9 @@ const TeacherHome = () => (
         />
         <LessonsDashboard />
       </S.LeftCol>
-      <S.StyledCol>
+      <S.RightCol>
         <StudentsList />
-      </S.StyledCol>
+      </S.RightCol>
     </S.StyledRow>
   </S.Page>
 );

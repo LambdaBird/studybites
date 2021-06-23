@@ -2,7 +2,8 @@ import styled from 'styled-components';
 
 export const Page = styled.div`
   height: 100%;
-  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
   padding: 2rem;
   margin: 0 auto;
 `;
@@ -13,12 +14,11 @@ export const StyledRow = styled.div`
   display: flex;
 `;
 
-export const StyledCol = styled.div`
+export const RightCol = styled.div`
   height: 100%;
 `;
 
 export const LeftCol = styled.div`
-  width: 1200px;
   margin-right: 32px;
   display: flex;
   flex-direction: column;

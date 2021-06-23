@@ -2,38 +2,26 @@ import { useEffect, useMemo, useState } from 'react';
 import { Col, Row, Skeleton } from 'antd';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import {
-  Route,
-  useHistory,
-  useLocation,
-  useRouteMatch,
-} from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
+import { useQuery } from 'react-query';
+
 import emptyImg from '@sb-ui/resources/img/empty.svg';
 import PublicLesson from '@sb-ui/components/atoms/PublicLesson';
-import OngoingLesson from '@sb-ui/components/atoms/OngoingLesson';
-import { useQuery } from 'react-query';
-import LessonModal from '@sb-ui/components/atoms/PublicLesson/LessonModal';
 import {
   getEnrolledLessons,
   getPublicLessons,
-} from '@sb-ui/utils/api/v1/lesson';
+} from '@sb-ui/utils/api/v1/lesson/lesson';
+import OngoingLesson from '@sb-ui/components/atoms/OngoingLesson';
 import { getQueryPage } from '@sb-ui/utils/utils';
 import {
-  PAGE_SIZE,
   USER_ENROLLED_LESSONS_BASE_KEY,
   USER_PUBLIC_LESSONS_BASE_KEY,
-} from '@sb-ui/components/molecules/LessonsMain/constants';
-import { USER_ENROLL } from '@sb-ui/utils/paths';
-import {
-  LessonsColumn,
-  LessonsEmpty,
-  LessonsMainDiv,
-  LessonsPagination,
-} from './LessonsMain.desktop.styled';
+} from '@sb-ui/utils/queries';
+import * as S from './PublicLessons.mobile.styled';
+import { PAGE_SIZE } from './constants';
 
-const LessonsMainDesktop = ({ searchLessons, isOngoingLesson }) => {
+const LessonsMainMobile = ({ searchLessons, isOngoingLesson }) => {
   const { t } = useTranslation();
-  const { path } = useRouteMatch();
   const location = useLocation();
   const queryPage = useMemo(() => location.search, [location]);
   const history = useHistory();
@@ -94,78 +82,70 @@ const LessonsMainDesktop = ({ searchLessons, isOngoingLesson }) => {
 
   if (isSuccess && data?.length === 0) {
     return (
-      <LessonsMainDiv>
-        <LessonsEmpty
+      <S.Main>
+        <S.Container
           image={emptyImg}
           description={t('user_home.open_lessons.not_found')}
         />
-      </LessonsMainDiv>
+      </S.Main>
     );
   }
 
   return (
-    <LessonsMainDiv>
+    <>
       {isLoading || isPreviousData ? (
-        <Row gutter={[16, 16]}>
-          <Col lg={{ span: 12 }} md={{ span: 24 }}>
-            <Skeleton avatar />
+        <S.Main gutter={[32, 16]}>
+          <Col>
+            <Skeleton avatar paragraph={{}} />
           </Col>
-          <Col lg={{ span: 12 }} md={{ span: 24 }}>
-            <Skeleton avatar />
+          <Col>
+            <Skeleton avatar paragraph={{}} />
           </Col>
-          <Col lg={{ span: 12 }} md={{ span: 24 }}>
-            <Skeleton avatar />
+          <Col>
+            <Skeleton avatar paragraph={{}} />
           </Col>
-          <Col lg={{ span: 12 }} md={{ span: 24 }}>
-            <Skeleton avatar />
+          <Col>
+            <Skeleton avatar paragraph={{}} />
           </Col>
-        </Row>
+        </S.Main>
       ) : (
         <>
-          <Route
-            path={`${path}${USER_ENROLL}/:id`}
-            component={() => <LessonModal lessons={data} />}
-          />
-          <Row gutter={[16, 16]}>
+          <S.Main gutter={[32, 16]}>
             {data?.map((lesson) => (
-              <LessonsColumn
-                key={lesson.id}
-                lg={{ span: 12 }}
-                md={{ span: 24 }}
-              >
+              <S.Column key={lesson.id}>
                 {isOngoingLesson ? (
                   <OngoingLesson lesson={lesson} />
                 ) : (
                   <PublicLesson lesson={lesson} />
                 )}
-              </LessonsColumn>
+              </S.Column>
             ))}
-          </Row>
-          <Row justify="end">
-            {!isLoading && total > PAGE_SIZE && (
-              <LessonsPagination
-                current={currentPage}
-                total={total}
-                pageSize={PAGE_SIZE}
-                onChange={onChangeLessonsPage}
-                showSizeChanger={false}
-              />
-            )}
-          </Row>
+            <Row justify="end">
+              {!isLoading && total > PAGE_SIZE && (
+                <S.Pages
+                  current={currentPage}
+                  total={total}
+                  pageSize={PAGE_SIZE}
+                  onChange={onChangeLessonsPage}
+                  showSizeChanger={false}
+                />
+              )}
+            </Row>
+          </S.Main>
         </>
       )}
-    </LessonsMainDiv>
+    </>
   );
 };
 
-LessonsMainDesktop.defaultProps = {
+LessonsMainMobile.defaultProps = {
   searchLessons: null,
   isOngoingLesson: false,
 };
 
-LessonsMainDesktop.propTypes = {
+LessonsMainMobile.propTypes = {
   searchLessons: PropTypes.string,
   isOngoingLesson: PropTypes.bool,
 };
 
-export default LessonsMainDesktop;
+export default LessonsMainMobile;

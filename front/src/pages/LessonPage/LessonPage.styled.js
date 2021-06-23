@@ -6,13 +6,17 @@ export const Page = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-  @media (max-width: 767px) {
-    justify-content: space-between;
-  }
 `;
 
 export const PageRow = styled(Row)`
   width: 100%;
+`;
+
+export const PageRowStart = styled(Row)`
+  width: 100%;
+  @media (max-width: 767px) {
+    margin-top: auto;
+  }
 `;
 
 export const BlockCol = styled(Col)`
