@@ -125,10 +125,26 @@ const router = async (instance) => {
 
           lesson.blocks = blocks;
         } catch (err) {
-          return { lesson };
+          return { total: 0, lesson, isFinal: false };
         }
 
-        return { lesson };
+        const { count } = await LessonBlockStructure.query()
+          .first()
+          .count('blockId')
+          .where({
+            lessonId: id,
+          });
+
+        const { blockId: final } = await LessonBlockStructure.query()
+          .first()
+          .where({
+            lessonId: id,
+          })
+          .whereNull('childId');
+
+        const isFinal = lesson.blocks.some((block) => block.blockId === final);
+
+        return { total: +count, lesson, isFinal };
       }
 
       if (!status.start) {
@@ -142,10 +158,26 @@ const router = async (instance) => {
 
         lesson.blocks = [];
 
-        return { lesson };
+        const { count } = await LessonBlockStructure.query()
+          .first()
+          .count('blockId')
+          .where({
+            lessonId: id,
+          });
+
+        const { blockId: final } = await LessonBlockStructure.query()
+          .first()
+          .where({
+            lessonId: id,
+          })
+          .whereNull('childId');
+
+        const isFinal = lesson.blocks.some((block) => block.blockId === final);
+
+        return { total: +count, lesson, isFinal };
       }
 
-      const t = {};
+      const helper = {};
 
       const { blockId } = await Result.query()
         .first()
@@ -177,7 +209,7 @@ const router = async (instance) => {
             .select('id as parent')
             .where({ lessonId: id, blockId });
 
-          t.parent = parent;
+          helper.parent = parent;
         } else {
           const { parent } = await LessonBlockStructure.query()
             .first()
@@ -185,11 +217,11 @@ const router = async (instance) => {
             .where({ lessonId: id })
             .whereNull('parentId');
 
-          t.parent = parent;
+          helper.parent = parent;
         }
 
         const { rows: blocksOrder } = await LessonBlockStructure.knex().raw(
-          `select lesson_block_structure.block_id from connectby('lesson_block_structure', 'id', 'parent_id', '${t.parent}', 0, '~') 
+          `select lesson_block_structure.block_id from connectby('lesson_block_structure', 'id', 'parent_id', '${helper.parent}', 0, '~') 
           as temporary(id uuid, parent_id uuid, level int, branch text) join lesson_block_structure on temporary.id = lesson_block_structure.id`,
         );
 
@@ -245,10 +277,26 @@ const router = async (instance) => {
 
         lesson.blocks = blocks;
       } catch (err) {
-        return { lesson };
+        return { total: 0, lesson, isFinal: false };
       }
 
-      return { lesson };
+      const { count } = await LessonBlockStructure.query()
+        .first()
+        .count('blockId')
+        .where({
+          lessonId: id,
+        });
+
+      const { blockId: final } = await LessonBlockStructure.query()
+        .first()
+        .where({
+          lessonId: id,
+        })
+        .whereNull('childId');
+
+      const isFinal = lesson.blocks.some((block) => block.blockId === final);
+
+      return { total: +count, lesson, isFinal };
     },
   });
 
