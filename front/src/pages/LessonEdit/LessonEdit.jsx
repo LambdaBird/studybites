@@ -12,7 +12,13 @@ import { createLesson, getLesson, putLesson } from '@sb-ui/utils/api/v1/lesson';
 import { Statuses } from '@sb-ui/pages/TeacherHome/LessonsDashboard/constants';
 import { LESSONS_EDIT } from '@sb-ui/utils/paths';
 import Next from '@sb-ui/utils/editorjs/next-plugin';
+import Quiz from '@sb-ui/utils/editorjs/quiz-plugin';
 import Undo from '@sb-ui/utils/editorjs/undo-plugin';
+import {
+  prepareApiData,
+  prepareEditorData,
+  QUIZ_TYPE,
+} from '@sb-ui/pages/LessonEdit/utils';
 import * as S from './LessonEdit.styled';
 
 const { TextArea } = Input;
@@ -61,6 +67,7 @@ const LessonEdit = () => {
       },
       tools: {
         next: Next,
+        quiz: Quiz,
       },
       i18n: {
         messages: {
@@ -98,7 +105,7 @@ const LessonEdit = () => {
   useEffect(() => {
     if (editorReady && lessonData) {
       const editorToRender = {
-        blocks: lessonData.lesson.blocks.map(({ content }) => content),
+        blocks: prepareEditorData(lessonData?.lesson?.blocks),
       };
 
       if (editorToRender.blocks.length === 0) {
@@ -152,7 +159,13 @@ const LessonEdit = () => {
             content: {
               id,
               type,
-              data,
+              data: prepareApiData(data, type),
+            },
+            answer: {
+              results:
+                type === QUIZ_TYPE
+                  ? block?.data?.answers?.map((x) => x.correct)
+                  : undefined,
             },
           };
         }),
