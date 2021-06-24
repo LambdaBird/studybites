@@ -61,7 +61,10 @@ const revisionValidator = yup
   .typeError(propertyTypeError('lesson', 'revision', 'string'));
 
 const dataValidator = yup
-  .object()
+  .object({
+    question: yup.string(),
+    answers: yup.array(),
+  })
   .typeError(propertyTypeError('lesson', 'data', 'object'));
 
 export const postBodyValidator = yup.object({
