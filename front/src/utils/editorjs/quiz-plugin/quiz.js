@@ -49,7 +49,6 @@ export default class Quiz {
 
   render() {
     const { answers, question } = this.data;
-
     this.elements.wrapper = document.createElement('div');
     this.elements.wrapper.classList.add(this.CSS.wrapper);
 
@@ -77,7 +76,7 @@ export default class Quiz {
 
     this.elements.wrapper.appendChild(this.elements.question);
 
-    if (answers?.length > 1) {
+    if (answers?.length > 0) {
       const answersItems = answers.map(({ value, correct }) =>
         this.createChecklistItem({
           value,
@@ -195,7 +194,7 @@ export default class Quiz {
     }
 
     event.preventDefault();
-    if (prevItem.classList.contains(this.CSS.question)) {
+    if (prevItem.classList.contains(this.CSS.questionWrapper)) {
       if (this.items.length === 2) {
         this.api.blocks.clear();
       }

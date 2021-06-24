@@ -20,6 +20,8 @@ const { TextArea } = Input;
 
 const GET_LESSON_BASE_QUERY = 'getLesson';
 
+const QUIZ_TYPE = 'quiz';
+
 const LessonEdit = () => {
   const { t } = useTranslation();
   const { id: lessonId } = useParams();
@@ -100,7 +102,20 @@ const LessonEdit = () => {
   useEffect(() => {
     if (editorReady && lessonData) {
       const editorToRender = {
-        blocks: lessonData.lesson.blocks.map(({ content }) => content),
+        blocks: lessonData.lesson.blocks.map(({ content, answer, type }) =>
+          type === QUIZ_TYPE
+            ? {
+                ...content,
+                data: {
+                  ...content?.data,
+                  answers: content?.data?.answers?.map(({ value }, i) => ({
+                    value,
+                    correct: answer?.results[i],
+                  })),
+                },
+              }
+            : content,
+        ),
       };
 
       if (editorToRender.blocks.length === 0) {
@@ -136,6 +151,16 @@ const LessonEdit = () => {
     },
   });
 
+  const removeAnswers = (data, type) => {
+    if (type !== QUIZ_TYPE) {
+      return data;
+    }
+    return {
+      ...data,
+      answers: data?.answers.map(({ value }) => ({ value })),
+    };
+  };
+
   const handleSave = async () => {
     try {
       const { blocks } = await editorJSref.current.save();
@@ -154,7 +179,13 @@ const LessonEdit = () => {
             content: {
               id,
               type,
-              data,
+              data: removeAnswers(data, type),
+            },
+            answer: {
+              results:
+                type === QUIZ_TYPE
+                  ? block?.data?.answers?.map((x) => x.correct)
+                  : undefined,
             },
           };
         }),
