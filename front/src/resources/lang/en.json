@@ -147,7 +147,8 @@
       "by": "By",
       "blocks": "blocks",
       "start": "Start",
-      "next": "Next"
+      "next": "Next",
+      "finish": "Finish"
     },
     "enroll_modal": {
       "review": {

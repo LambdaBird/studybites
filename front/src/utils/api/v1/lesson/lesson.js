@@ -20,12 +20,17 @@ export const getLessons = async (paramsData) => {
 export const getLessonById = async ({ queryKey }) => {
   const [, paramsData] = queryKey;
   const { id } = paramsData;
-
   const { data } = await api.get(`${PATH}/${id}`, {
     params: paramsData,
   });
 
   return data;
+};
+
+export const postLessonById = async (paramsData) => {
+  const { data } = await api.post(`${PATH}/${paramsData.id}/learn`, paramsData);
+
+  return { data };
 };
 
 export const postEnroll = async (id) => {

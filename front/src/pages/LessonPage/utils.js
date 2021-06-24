@@ -14,14 +14,29 @@ export const groupBlocks = (lessons) => {
       lastIndex = i + 1;
     }
   });
+  if (lastIndex === 0 && lessons.length !== 0) {
+    return [lessons];
+  }
+  if (lastIndex !== lessons?.length) {
+    res.push(lessons.slice(lastIndex));
+  }
+
   return res;
 };
 
 export const generateBlockByElement = (element) => {
-  const { content } = element;
+  const { content, blockId } = element;
   if (content.type === 'paragraph') {
-    // eslint-disable-next-line react/jsx-filename-extension
-    return <Text type="secondary">{content?.data?.text}</Text>;
+    return (
+      // eslint-disable-next-line react/jsx-filename-extension
+      <Text key={blockId} type="secondary">
+        {content?.data?.text}
+      </Text>
+    );
   }
-  return <Text type="danger">ERROR PARSE BLOCK</Text>;
+  return (
+    <Text key={blockId} type="danger">
+      ERROR PARSE BLOCK
+    </Text>
+  );
 };
