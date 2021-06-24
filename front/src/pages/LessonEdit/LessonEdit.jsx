@@ -14,13 +14,16 @@ import { LESSONS_EDIT } from '@sb-ui/utils/paths';
 import Next from '@sb-ui/utils/editorjs/next-plugin';
 import Quiz from '@sb-ui/utils/editorjs/quiz-plugin';
 import Undo from '@sb-ui/utils/editorjs/undo-plugin';
+import {
+  prepareApiData,
+  prepareEditorData,
+  QUIZ_TYPE,
+} from '@sb-ui/pages/LessonEdit/utils';
 import * as S from './LessonEdit.styled';
 
 const { TextArea } = Input;
 
 const GET_LESSON_BASE_QUERY = 'getLesson';
-
-const QUIZ_TYPE = 'quiz';
 
 const LessonEdit = () => {
   const { t } = useTranslation();
@@ -102,20 +105,7 @@ const LessonEdit = () => {
   useEffect(() => {
     if (editorReady && lessonData) {
       const editorToRender = {
-        blocks: lessonData.lesson.blocks.map(({ content, answer, type }) =>
-          type === QUIZ_TYPE
-            ? {
-                ...content,
-                data: {
-                  ...content?.data,
-                  answers: content?.data?.answers?.map(({ value }, i) => ({
-                    value,
-                    correct: answer?.results[i],
-                  })),
-                },
-              }
-            : content,
-        ),
+        blocks: prepareEditorData(lessonData?.lesson?.blocks),
       };
 
       if (editorToRender.blocks.length === 0) {
@@ -151,16 +141,6 @@ const LessonEdit = () => {
     },
   });
 
-  const removeAnswers = (data, type) => {
-    if (type !== QUIZ_TYPE) {
-      return data;
-    }
-    return {
-      ...data,
-      answers: data?.answers.map(({ value }) => ({ value })),
-    };
-  };
-
   const handleSave = async () => {
     try {
       const { blocks } = await editorJSref.current.save();
@@ -179,7 +159,7 @@ const LessonEdit = () => {
             content: {
               id,
               type,
-              data: removeAnswers(data, type),
+              data: prepareApiData(data, type),
             },
             answer: {
               results:
