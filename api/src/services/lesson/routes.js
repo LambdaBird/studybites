@@ -143,6 +143,29 @@ const router = async (instance) => {
           })
           .whereNull('childId');
 
+        const results = await Result.query()
+          .select('results.data', 'results.blockId', 'results.revision')
+          .from(
+            objection.raw(`
+          (select block_id, max(created_at) as created_at from results 
+          where lesson_id = ${id} and user_id = ${user.id} and data is not null group by block_id) as temp
+        `),
+          )
+          .join(
+            objection.raw(
+              `results on results.block_id = temp.block_id and results.created_at = temp.created_at`,
+            ),
+          );
+
+        lesson.blocks = lesson.blocks.map((block) => ({
+          ...block,
+          ...results.find(
+            (result) =>
+              result.blockId === block.blockId &&
+              result.revision === block.revision,
+          ),
+        }));
+
         const isFinal = lesson.blocks.some((block) => block.blockId === final);
 
         return { total: +count, lesson, isFinal };
@@ -282,6 +305,29 @@ const router = async (instance) => {
           lessonId: id,
         })
         .whereNull('childId');
+
+      const results = await Result.query()
+        .select('results.data', 'results.blockId', 'results.revision')
+        .from(
+          objection.raw(`
+          (select block_id, max(created_at) as created_at from results 
+          where lesson_id = ${id} and user_id = ${user.id} and data is not null group by block_id) as temp
+        `),
+        )
+        .join(
+          objection.raw(
+            `results on results.block_id = temp.block_id and results.created_at = temp.created_at`,
+          ),
+        );
+
+      lesson.blocks = lesson.blocks.map((block) => ({
+        ...block,
+        ...results.find(
+          (result) =>
+            result.blockId === block.blockId &&
+            result.revision === block.revision,
+        ),
+      }));
 
       const isFinal = lesson.blocks.some((block) => block.blockId === final);
 
@@ -1072,6 +1118,29 @@ const router = async (instance) => {
           lessonId: id,
         })
         .whereNull('childId');
+
+      const results = await Result.query()
+        .select('results.data', 'results.blockId', 'results.revision')
+        .from(
+          objection.raw(`
+          (select block_id, max(created_at) as created_at from results 
+          where lesson_id = ${id} and user_id = ${user.id} and data is not null group by block_id) as temp
+        `),
+        )
+        .join(
+          objection.raw(
+            `results on results.block_id = temp.block_id and results.created_at = temp.created_at`,
+          ),
+        );
+
+      lesson.blocks = lesson.blocks.map((block) => ({
+        ...block,
+        ...results.find(
+          (result) =>
+            result.blockId === block.blockId &&
+            result.revision === block.revision,
+        ),
+      }));
 
       const isFinal = lesson.blocks.some((block) => block.blockId === final);
 
