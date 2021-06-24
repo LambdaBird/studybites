@@ -25,4 +25,5 @@ export default {
     LESSON: 'lesson',
   },
   interactiveBlocks: ['next', 'quiz'],
+  actions: ['next', 'response'],
 };

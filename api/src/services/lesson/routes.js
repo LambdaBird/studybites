@@ -188,10 +188,13 @@ const router = async (instance) => {
               userId: user.id,
               lessonId: id,
             })
-            .whereIn('action', config.interactiveBlocks)
+            .whereIn('action', config.actions)
             .as('temporary');
         })
-        .join('results', 'results.created_at', '=', 'temporary.created_at');
+        .join('results', 'results.created_at', '=', 'temporary.created_at')
+        .debug();
+
+      console.log(check);
 
       const lesson = await Lesson.query()
         .findById(id)
@@ -234,6 +237,9 @@ const router = async (instance) => {
               ) &&
               temp.some((block) => block.blockId === check.blockId)
             ) {
+              delete blocks[i].answer;
+              delete blocks[i].weight;
+
               temp.push(blocks[i]);
 
               break;
@@ -835,7 +841,7 @@ const router = async (instance) => {
               lessonId: id,
               userId: user.id,
             })
-            .whereIn('action', config.interactiveBlocks);
+            .whereIn('action', config.actions);
 
           const { blocks } = await LessonBlockStructure.query()
             .first()
