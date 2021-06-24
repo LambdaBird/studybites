@@ -12,6 +12,7 @@ import { createLesson, getLesson, putLesson } from '@sb-ui/utils/api/v1/lesson';
 import { Statuses } from '@sb-ui/pages/TeacherHome/LessonsDashboard/constants';
 import { LESSONS_EDIT } from '@sb-ui/utils/paths';
 import Next from '@sb-ui/utils/editorjs/next-plugin';
+import Quiz from '@sb-ui/utils/editorjs/quiz-plugin';
 import Undo from '@sb-ui/utils/editorjs/undo-plugin';
 import * as S from './LessonEdit.styled';
 
@@ -61,6 +62,7 @@ const LessonEdit = () => {
       },
       tools: {
         next: Next,
+        quiz: Quiz,
       },
       i18n: {
         messages: {
