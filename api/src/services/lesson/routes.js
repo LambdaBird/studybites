@@ -9,11 +9,26 @@ import validatorCompiler from '../../validation/validatorCompiler';
 import errorHandler from '../../validation/errorHandler';
 import { BadRequestError, NotFoundError } from '../../validation/errors';
 
-import { putBodyValidator, postBodyValidator, validateId } from './validators';
-import { NOT_FOUND, INVALID_ENROLL, ENROLL_SUCCESS } from './constants';
+import {
+  putBodyValidator,
+  postBodyValidator,
+  validateId,
+  learnBodyValidator,
+} from './validators';
+import {
+  NOT_FOUND,
+  INVALID_ENROLL,
+  ENROLL_SUCCESS,
+  ALREADY_FINISHED,
+  NOT_STARTED,
+  ALREADY_STARTED,
+  INVALID_LEARN,
+  INVALID_NEXT,
+  NOT_FINISHED,
+} from './constants';
 
 const router = async (instance) => {
-  const { Lesson, UserRole, Block, LessonBlockStructure, User } =
+  const { Lesson, UserRole, Block, LessonBlockStructure, User, Result } =
     instance.models;
 
   instance.route({
@@ -549,6 +564,279 @@ const router = async (instance) => {
         .count('*');
 
       return repl.status(200).send({ total: +count[0].count, data });
+    },
+  });
+
+  instance.route({
+    method: 'POST',
+    url: '/:lesson_id/learn',
+    schema: {
+      body: learnBodyValidator,
+      response: errorResponse,
+    },
+    validatorCompiler,
+    errorHandler,
+    onRequest: instance.auth({ instance }),
+    preHandler: instance.access({
+      instance,
+      type: config.resources.LESSON,
+      role: config.roles.STUDENT.id,
+      getId: (req) => req.params.lesson_id,
+    }),
+    handler: async ({ params, body, user }) => {
+      const id = validateId(params.lesson_id);
+
+      const status = {};
+
+      const { action } = body;
+
+      const checkStatus = await Result.query()
+        .where({
+          userId: user.id,
+          lessonId: id,
+        })
+        .andWhere(function () {
+          this.where({ action: 'start' }).orWhere({ action: 'finish' });
+        });
+
+      checkStatus.forEach((entry) => {
+        status[entry.action] = true;
+      });
+
+      if (status.finish) {
+        throw new BadRequestError(ALREADY_FINISHED);
+      }
+
+      if (!status.start && action !== 'start') {
+        throw new BadRequestError(NOT_STARTED);
+      }
+
+      switch (action) {
+        case 'start': {
+          if (status.start) {
+            throw new BadRequestError(ALREADY_STARTED);
+          }
+
+          await Result.query().insert({
+            lessonId: id,
+            userId: user.id,
+            action: 'start',
+          });
+
+          break;
+        }
+        case 'finish': {
+          const { finished } = await Result.query()
+            .first()
+            .select(objection.raw('array_agg(block_id) as finished'))
+            .where({
+              lessonId: id,
+              userId: user.id,
+            })
+            .whereIn('action', config.interactiveBlocks);
+
+          const { blocks } = await LessonBlockStructure.query()
+            .first()
+            .select(objection.raw('array_agg(blocks.block_id) as blocks'))
+            .join(
+              'blocks',
+              'lesson_block_structure.block_id',
+              '=',
+              'blocks.block_id',
+            )
+            .where({ lessonId: id })
+            .whereIn('blocks.type', config.interactiveBlocks);
+
+          if (!finished || !blocks.every((block) => finished.includes(block))) {
+            throw new BadRequestError(NOT_FINISHED);
+          }
+
+          await Result.query().insert({
+            lessonId: id,
+            userId: user.id,
+            action: 'finish',
+          });
+
+          break;
+        }
+        case 'resume': {
+          const { blockId, revision } = await Result.query()
+            .first()
+            .select('results.*')
+            .from(function () {
+              this.select(this.knex().raw('max(created_at) as created_at'))
+                .from('results')
+                .where({
+                  userId: user.id,
+                  lessonId: id,
+                })
+                .as('test');
+            })
+            .join('results', 'results.created_at', '=', 'test.created_at');
+
+          await Result.query().insert({
+            lessonId: id,
+            userId: user.id,
+            action: 'resume',
+            blockId,
+            revision,
+          });
+
+          if (blockId) {
+            const { parent } = await LessonBlockStructure.query()
+              .first()
+              .select('id as parent')
+              .where({ lessonId: id, blockId });
+
+            status.parent = parent;
+          }
+
+          break;
+        }
+        case 'next': {
+          const { blockId, revision } = body;
+
+          if (!blockId || !revision) {
+            throw new BadRequestError(INVALID_NEXT);
+          }
+
+          const check = await LessonBlockStructure.query().first().where({
+            lessonId: id,
+            blockId,
+          });
+
+          if (!check) {
+            throw new BadRequestError(INVALID_LEARN);
+          }
+
+          await Result.query().insert({
+            lessonId: id,
+            userId: user.id,
+            action: 'next',
+            blockId,
+            revision,
+          });
+
+          const { parent } = await LessonBlockStructure.query()
+            .first()
+            .select('id as parent')
+            .where({ lessonId: id, blockId });
+
+          status.parent = parent;
+
+          break;
+        }
+        case 'response': {
+          // TODO
+          break;
+        }
+        default:
+          throw new BadRequestError(INVALID_LEARN);
+      }
+
+      const lesson = await Lesson.query()
+        .findById(id)
+        .withGraphFetched('blocks');
+
+      if (!lesson) {
+        throw new NotFoundError(NOT_FOUND);
+      }
+
+      try {
+        if (!status.parent) {
+          const { parent } = await LessonBlockStructure.query()
+            .first()
+            .select('id as parent')
+            .where({ lessonId: id })
+            .whereNull('parentId');
+
+          status.parent = parent;
+        }
+
+        const { rows: blocksOrder } = await LessonBlockStructure.knex().raw(
+          `select lesson_block_structure.block_id from connectby('lesson_block_structure', 'id', 'parent_id', '${status.parent}', 0, '~') 
+          as temporary(id uuid, parent_id uuid, level int, branch text) join lesson_block_structure on temporary.id = lesson_block_structure.id`,
+        );
+
+        const blocks = [];
+
+        const dictionary = lesson.blocks.reduce((result, filter) => {
+          // eslint-disable-next-line no-param-reassign
+          result[filter.blockId] = filter;
+          return result;
+        }, {});
+
+        if (action === 'start') {
+          for (let i = 0, n = blocksOrder.length; i < n; i += 1) {
+            delete dictionary[blocksOrder[i].block_id].answer;
+            delete dictionary[blocksOrder[i].block_id].weight;
+
+            blocks.push(dictionary[blocksOrder[i].block_id]);
+
+            if (
+              config.interactiveBlocks.includes(
+                dictionary[blocksOrder[i].block_id].type,
+              )
+            ) {
+              break;
+            }
+          }
+        } else if (action === 'finish') {
+          for (let i = 0, n = blocksOrder.length; i < n; i += 1) {
+            delete dictionary[blocksOrder[i].block_id].answer;
+            delete dictionary[blocksOrder[i].block_id].weight;
+
+            blocks.push(dictionary[blocksOrder[i].block_id]);
+          }
+        } else {
+          for (let i = 0, n = blocksOrder.length; i < n; i += 1) {
+            if (
+              i === 0 &&
+              config.interactiveBlocks.includes(
+                dictionary[blocksOrder[i].block_id].type,
+              )
+            ) {
+              // eslint-disable-next-line no-continue
+              continue;
+            }
+
+            delete dictionary[blocksOrder[i].block_id].answer;
+            delete dictionary[blocksOrder[i].block_id].weight;
+
+            blocks.push(dictionary[blocksOrder[i].block_id]);
+
+            if (
+              config.interactiveBlocks.includes(
+                dictionary[blocksOrder[i].block_id].type,
+              )
+            ) {
+              break;
+            }
+          }
+        }
+
+        lesson.blocks = blocks;
+      } catch (err) {
+        return { total: 0, lesson, isFinal: false };
+      }
+
+      const { count } = await LessonBlockStructure.query()
+        .first()
+        .count('blockId')
+        .where({
+          lessonId: id,
+        });
+
+      const { blockId: final } = await LessonBlockStructure.query()
+        .first()
+        .where({
+          lessonId: id,
+        })
+        .whereNull('childId');
+
+      const isFinal = lesson.blocks.some((block) => block.blockId === final);
+
+      return { total: +count, lesson, isFinal };
     },
   });
 };

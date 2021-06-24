@@ -47,6 +47,23 @@ const lessonValidatorPut = yup
     status: statusValidator,
   });
 
+const actionValidator = yup
+  .string()
+  .typeError(propertyTypeError('lesson', 'action', 'string'))
+  .required(requiredPropertyError('lesson', 'action'));
+
+const blockIdValidator = yup
+  .string()
+  .typeError(propertyTypeError('lesson', 'blockId', 'string'));
+
+const revisionValidator = yup
+  .string()
+  .typeError(propertyTypeError('lesson', 'revision', 'string'));
+
+const dataValidator = yup
+  .object()
+  .typeError(propertyTypeError('lesson', 'data', 'object'));
+
 export const postBodyValidator = yup.object({
   lesson: lessonValidatorPost,
   blocks: blocksValidator,
@@ -55,6 +72,13 @@ export const postBodyValidator = yup.object({
 export const putBodyValidator = yup.object({
   lesson: lessonValidatorPut,
   blocks: blocksValidator,
+});
+
+export const learnBodyValidator = yup.object({
+  action: actionValidator,
+  blockId: blockIdValidator,
+  revision: revisionValidator,
+  data: dataValidator,
 });
 
 export const validateId = (paramId) => {
