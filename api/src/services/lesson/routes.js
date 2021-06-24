@@ -188,10 +188,11 @@ const router = async (instance) => {
               userId: user.id,
               lessonId: id,
             })
-            .whereIn('action', config.interactiveBlocks)
+            .whereIn('action', config.interactiveActions)
             .as('temporary');
         })
-        .join('results', 'results.created_at', '=', 'temporary.created_at');
+        .join('results', 'results.created_at', '=', 'temporary.created_at')
+        .debug();
 
       const lesson = await Lesson.query()
         .findById(id)
@@ -234,6 +235,9 @@ const router = async (instance) => {
               ) &&
               temp.some((block) => block.blockId === check.blockId)
             ) {
+              delete blocks[i].answer;
+              delete blocks[i].weight;
+
               temp.push(blocks[i]);
 
               break;
@@ -835,7 +839,7 @@ const router = async (instance) => {
               lessonId: id,
               userId: user.id,
             })
-            .whereIn('action', config.interactiveBlocks);
+            .whereIn('action', config.interactiveActions);
 
           const { blocks } = await LessonBlockStructure.query()
             .first()
@@ -929,7 +933,38 @@ const router = async (instance) => {
           break;
         }
         case 'response': {
-          // TODO
+          const { blockId, revision, data } = body;
+
+          if (!blockId || !revision || !data) {
+            throw new BadRequestError(INVALID_LEARN);
+          }
+
+          await Result.query().insert({
+            lessonId: id,
+            userId: user.id,
+            action: 'response',
+            data,
+            blockId,
+            revision,
+          });
+
+          const { answer } = await Block.query()
+            .select('answer')
+            .first()
+            .where({
+              blockId,
+              revision,
+            });
+
+          const { parent } = await LessonBlockStructure.query()
+            .first()
+            .select('id as parent')
+            .where({ lessonId: id, blockId });
+
+          status.parent = parent;
+
+          status.answer = answer;
+
           break;
         }
         default:
@@ -943,6 +978,8 @@ const router = async (instance) => {
       if (!lesson) {
         throw new NotFoundError(NOT_FOUND);
       }
+
+      lesson.answer = status.answer;
 
       try {
         if (!status.parent) {

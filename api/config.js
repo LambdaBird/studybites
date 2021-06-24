@@ -24,5 +24,7 @@ export default {
   resources: {
     LESSON: 'lesson',
   },
-  interactiveBlocks: ['next'],
+  interactiveBlocks: ['next', 'quiz'],
+  actions: ['start', 'finish', 'resume', 'next', 'response'],
+  interactiveActions: ['next', 'response'],
 };
