@@ -17,6 +17,17 @@ export const getLessons = async (paramsData) => {
   }
 };
 
+export const mockData = (data) => ({
+  ...data,
+  lesson: {
+    ...data?.lesson,
+    blocks: data?.lesson?.blocks.map((x) => ({
+      ...x,
+      results: x.type === 'quiz' ? [true, true] : undefined,
+    })),
+  },
+});
+
 export const getLessonById = async ({ queryKey }) => {
   const [, paramsData] = queryKey;
   const { id } = paramsData;
@@ -30,7 +41,7 @@ export const getLessonById = async ({ queryKey }) => {
 export const postLessonById = async (paramsData) => {
   const { data } = await api.post(`${PATH}/${paramsData.id}/learn`, paramsData);
 
-  return { data };
+  return data;
 };
 
 export const postEnroll = async (id) => {

@@ -1,18 +1,22 @@
 import { useEffect, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { Progress } from 'antd';
+import { Col, Progress, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
 import { LESSON_BASE_QUERY } from '@sb-ui/utils/queries';
 import {
   generateBlockByElement,
   groupBlocks,
+  prepareResultToAnswers,
 } from '@sb-ui/pages/LessonPage/utils';
 import Block from '@sb-ui/pages/LessonPage/Block';
 import { getLessonById, postLessonById } from '@sb-ui/utils/api/v1/lesson';
 import { USER_HOME } from '@sb-ui/utils/paths';
+import QuizBlock from '@sb-ui/pages/LessonPage/QuizBlock';
 import InfoBlock from './InfoBlock';
 import * as S from './LessonPage.styled';
+
+const { Text } = Typography;
 
 const LessonPage = () => {
   const { t } = useTranslation();
@@ -21,6 +25,8 @@ const LessonPage = () => {
   const { id: lessonId } = useParams();
   const [blocks, setBlocks] = useState([]);
   const [interactiveBlock, setInteractiveBlock] = useState();
+  // eslint-disable-next-line no-unused-vars
+  const [quizAnswer, setQuizAnswer] = useState({});
   const [isFinal, setIsFinal] = useState(false);
   const [total, setTotal] = useState(0);
   const [nextCount, setNextCount] = useState(0);
@@ -37,14 +43,11 @@ const LessonPage = () => {
 
   const { mutate } = useMutation(postLessonById, {
     onSuccess: (newBlocks) => {
-      const {
-        isFinal: finishStatus,
-        lesson,
-        total: totalBlocks,
-      } = newBlocks?.data;
+      const { isFinal: finishStatus, lesson, total: totalBlocks } = newBlocks;
       if (finishStatus) {
         setIsFinal(finishStatus);
       }
+      const answers = lesson?.userAnswer?.response;
 
       const dataBlocks = lesson?.blocks;
       if (dataBlocks) {
@@ -56,7 +59,21 @@ const LessonPage = () => {
           setNextCount(
             (prev) => prev + dataBlocks.filter((x) => x.type === 'next').length,
           );
-          setBlocks((prev) => [...prev, ...groupBlocks(dataBlocks)]);
+          setBlocks((prev) => {
+            const newPrev = JSON.parse(JSON.stringify(prev));
+            if (answers) {
+              newPrev[newPrev.length - 1][0].content.data.answers = newPrev[
+                newPrev.length - 1
+              ]?.[0]?.content?.data?.answers?.map((x, i) => ({
+                ...x,
+                correct: answers[i],
+              }));
+              newPrev[newPrev.length - 1][0].answer = {
+                results: lesson?.answer?.results,
+              };
+            }
+            return [...newPrev, ...groupBlocks(dataBlocks)];
+          });
           const lastBlock = dataBlocks[dataBlocks.length - 1];
           if (lastBlock) {
             setInteractiveBlock(lastBlock);
@@ -67,12 +84,13 @@ const LessonPage = () => {
   });
 
   useEffect(() => {
-    const dataBlocks = responseData?.lesson?.blocks;
-    const finishStatus = responseData?.isFinal;
+    const preparedData = prepareResultToAnswers(responseData);
+    const dataBlocks = preparedData?.lesson?.blocks;
+    const finishStatus = preparedData?.isFinal;
     if (finishStatus) {
       setIsFinal(finishStatus);
     }
-    const totalData = responseData?.total;
+    const totalData = preparedData?.total;
     setTotal(totalData);
 
     if (dataBlocks) {
@@ -105,6 +123,22 @@ const LessonPage = () => {
     history.push(USER_HOME);
   };
 
+  const handleSendClick = () => {
+    // eslint-disable-next-line no-unused-vars
+    const { revision, blockId } = interactiveBlock;
+    mutate({
+      id: lessonId,
+      action: 'response',
+      revision,
+      blockId,
+      data: {
+        response: interactiveBlock?.content?.data?.answers.map(
+          (x, i) => !!quizAnswer.includes(i),
+        ),
+      },
+    });
+  };
+
   useEffect(() => {}, [blocks]);
 
   return (
@@ -123,7 +157,7 @@ const LessonPage = () => {
           xs={{ span: 20 }}
           sm={{ span: 18 }}
           md={{ span: 16 }}
-          lg={{ span: 12 }}
+          lg={{ span: 14 }}
         >
           <InfoBlock
             isLoading={isLoading}
@@ -134,8 +168,10 @@ const LessonPage = () => {
       </S.PageRow>
 
       {blocks?.map((block) => (
-        <Block key={block.map((x) => x.blockId).join('')}>
-          {block.map((element) => generateBlockByElement(element))}
+        <Block>
+          {block
+            .map((element) => generateBlockByElement(element))
+            .filter((x) => !!x)}
         </Block>
       ))}
       {!isLoading && (
@@ -144,17 +180,39 @@ const LessonPage = () => {
             xs={{ span: 20 }}
             sm={{ span: 18 }}
             md={{ span: 16 }}
-            lg={{ span: 12 }}
+            lg={{ span: 14 }}
           >
             {!interactiveBlock && blocks?.length === 0 && (
               <S.LessonButton onClick={handleStartClick}>
                 {t('lesson.start')}
               </S.LessonButton>
             )}
-            {interactiveBlock && !isFinal && (
+            {interactiveBlock?.type === 'next' && !isFinal && (
               <S.LessonButton onClick={handleNextClick}>
                 {t('lesson.next')}
               </S.LessonButton>
+            )}
+
+            {interactiveBlock?.type === 'quiz' && !isFinal && (
+              <S.PageRow justify="center" align="top">
+                <Col span={24}>
+                  <Block isQuiz>
+                    <Text>{interactiveBlock?.content?.data?.question}</Text>
+                  </Block>
+                </Col>
+                <Col span={24}>
+                  <QuizBlock
+                    key={interactiveBlock?.blockId}
+                    setQuiz={setQuizAnswer}
+                    data={interactiveBlock?.content?.data}
+                  />
+                </Col>
+                <S.BlockCol span={24}>
+                  <S.LessonButton onClick={handleSendClick}>
+                    Send
+                  </S.LessonButton>
+                </S.BlockCol>
+              </S.PageRow>
             )}
 
             {isFinal && (

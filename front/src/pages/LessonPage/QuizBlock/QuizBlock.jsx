@@ -1,0 +1,109 @@
+import PropTypes from 'prop-types';
+import { Col, Typography } from 'antd';
+import { CloseCircleTwoTone, CheckCircleTwoTone } from '@ant-design/icons';
+import { verifyAnswers } from '@sb-ui/pages/LessonPage/QuizBlock/utils';
+import * as S from './Quizblock.styled';
+
+const { Text } = Typography;
+// eslint-disable-next-line react/prop-types
+const QuizBlock = ({ isResult, data, setQuiz, correctAnswer }) => {
+  // eslint-disable-next-line no-unused-vars
+  const { answers, question } = data;
+
+  const options = answers?.map(({ value, correct }, i) => ({
+    label: value,
+    value: i,
+    correct,
+  }));
+
+  // eslint-disable-next-line no-unused-vars
+
+  if (isResult) {
+    const { correct, difference } = verifyAnswers(
+      answers.map((x) => x.correct),
+      // eslint-disable-next-line react/prop-types
+      correctAnswer?.results,
+    );
+    return (
+      <S.PageRow justify="center" align="top">
+        <S.BlockCol span={24}>
+          <S.StyledRow justify="space-between">
+            <Col span={24}>{question}</Col>
+            <Col span={24}>
+              <S.ColumnCheckbox
+                defaultValue={options
+                  ?.map((x) => (x.correct ? x.value : null))
+                  .filter((x) => x !== null)}
+                disabled
+                onChange={(e) => setQuiz(e)}
+                options={options}
+              />
+            </Col>
+            <Col span={24}>
+              {correct ? (
+                <>
+                  <Text>You`r right !</Text>
+                  <CheckCircleTwoTone twoToneColor="#52c41a" />
+                </>
+              ) : (
+                <>
+                  <Text>Wrong :(</Text>
+                  <CloseCircleTwoTone twoToneColor="#F5222D" />
+                  <S.ColumnCheckbox
+                    disabled
+                    defaultValue={difference
+                      .map((x, i) =>
+                        x === true && options[i].correct ? i : null,
+                      )
+                      .filter((x) => x !== null)}
+                    options={difference
+                      .map((x, i) =>
+                        x === true
+                          ? {
+                              label: options[i].label,
+                              value: i,
+                            }
+                          : null,
+                      )
+                      .filter((x) => x !== null)}
+                  />
+                </>
+              )}
+            </Col>
+          </S.StyledRow>
+        </S.BlockCol>
+      </S.PageRow>
+    );
+  }
+
+  console.log(options, 'OPTS');
+
+  return (
+    <S.PageRow justify="center" align="top">
+      <S.BlockCol span={24}>
+        <S.BlockWrapperWhite justify="start" align="top">
+          <S.StyledRow justify="space-between">
+            <Col span={24}>
+              <S.ColumnCheckbox
+                defaultValue={[-1]}
+                onChange={(e) => setQuiz(e)}
+                options={JSON.parse(JSON.stringify(options))}
+              />
+            </Col>
+          </S.StyledRow>
+        </S.BlockWrapperWhite>
+      </S.BlockCol>
+    </S.PageRow>
+  );
+};
+
+QuizBlock.propTypes = {
+  data: PropTypes.shape({
+    answers: PropTypes.arrayOf({
+      label: PropTypes.string,
+    }).isRequired,
+    question: PropTypes.string.isRequired,
+  }),
+};
+
+export default QuizBlock;
