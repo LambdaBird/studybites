@@ -25,5 +25,6 @@ export default {
     LESSON: 'lesson',
   },
   interactiveBlocks: ['next', 'quiz'],
-  actions: ['next', 'response'],
+  actions: ['start', 'finish', 'resume', 'next', 'response'],
+  interactiveActions: ['next', 'response'],
 };

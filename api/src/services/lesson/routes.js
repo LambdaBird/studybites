@@ -188,13 +188,11 @@ const router = async (instance) => {
               userId: user.id,
               lessonId: id,
             })
-            .whereIn('action', config.actions)
+            .whereIn('action', config.interactiveActions)
             .as('temporary');
         })
         .join('results', 'results.created_at', '=', 'temporary.created_at')
         .debug();
-
-      console.log(check);
 
       const lesson = await Lesson.query()
         .findById(id)
@@ -841,7 +839,7 @@ const router = async (instance) => {
               lessonId: id,
               userId: user.id,
             })
-            .whereIn('action', config.actions);
+            .whereIn('action', config.interactiveActions);
 
           const { blocks } = await LessonBlockStructure.query()
             .first()

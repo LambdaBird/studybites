@@ -9,7 +9,7 @@ export const up = (knex) =>
     table.integer('lesson_id').notNullable();
     table.uuid('block_id');
     table.string('revision');
-    table.float('correctness', [0.0, 1.0]);
+    table.float('correctness', [1.0]);
     table.json('meta');
     table.timestamp('created_at').defaultTo(knex.fn.now());
     table.foreign('user_id').references('users.id');
