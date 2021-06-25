@@ -43,6 +43,26 @@ export const LessonButton = styled(Button).attrs({
   margin-bottom: 1rem;
 `;
 
+export const SendWrapper = styled(Col)`
+  display: flex;
+  justify-content: center;
+  @media (max-width: 767px) {
+    justify-content: flex-end;
+  }
+`;
+
+export const LessonButtonSend = styled(Button).attrs({
+  size: 'large',
+})`
+  width: 100%;
+  @media (max-width: 767px) {
+    width: 150px;
+  }
+
+  max-width: 614px;
+  margin-bottom: 1rem;
+`;
+
 export const Background = styled.div`
   background: white;
   min-height: calc(100% - 56px);

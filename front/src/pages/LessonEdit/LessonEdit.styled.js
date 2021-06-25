@@ -25,7 +25,7 @@ export const EditorWrapper = styled.div`
   background-color: white;
   border: 32px solid #e2eff8;
   border-radius: 40px;
-  height: 120%;
+  min-height: 100%;
   padding: 2rem;
   max-width: 850px;
 `;

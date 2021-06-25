@@ -33,7 +33,7 @@ const QuizBlockResult = ({ data, correctAnswer }) => {
   const defaultValueCorrect = useMemo(
     () =>
       difference
-        ?.map((x, i) => (x === true && options[i].correct ? i : null))
+        ?.map((x, i) => (x === true && !options[i].correct ? i : null))
         ?.filter((x) => x !== null),
     [difference, options],
   );
@@ -63,8 +63,8 @@ const QuizBlockResult = ({ data, correctAnswer }) => {
       <Block top="1rem">
         <Col span={24}>
           <S.ColumnCheckbox
-            defaultValue={defaultValueAnswers}
             disabled
+            value={defaultValueAnswers}
             options={options}
           />
         </Col>
@@ -91,13 +91,13 @@ const QuizBlockResult = ({ data, correctAnswer }) => {
                 alignItems: 'center',
               }}
             >
-              <Text>Wrong :(</Text>
+              <Text>You’re wrong. Correct answer:</Text>
               <CloseCircleTwoTone twoToneColor="#F5222D" />
             </div>
 
             <S.ColumnCheckbox
               disabled
-              defaultValue={defaultValueCorrect}
+              value={defaultValueCorrect}
               options={optionsDifference}
             />
           </>

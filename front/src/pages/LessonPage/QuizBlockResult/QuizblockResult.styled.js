@@ -8,4 +8,7 @@ export const StyledRow = styled(Row)`
 export const ColumnCheckbox = styled(Checkbox.Group)`
   display: flex;
   flex-direction: column;
+  input[type='checkbox'] {
+    background-color: green;
+  }
 `;

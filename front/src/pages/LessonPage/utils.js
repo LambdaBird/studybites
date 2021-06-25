@@ -57,15 +57,15 @@ export const generateBlockByElement = (element) => {
           </Col>
         )}
       </Row>
-     );
+    );
   }
 
   if (content.type === 'image') {
-    const { caption, url, stretched } = content?.data || {};
+    const { caption, url } = content?.data || {};
     return (
       <Row key={blockId}>
         <Col span={24}>
-          <img width={stretched ? '100%' : undefined} src={url} alt={caption} />
+          <img width="100%" src={url} alt={caption} />
         </Col>
         {caption && (
           <Col span={24}>

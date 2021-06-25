@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { useHistory, useParams } from 'react-router-dom';
-import { Col, Progress, Typography } from 'antd';
+import { Col, Progress, Row, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
 import { LESSON_BASE_QUERY } from '@sb-ui/utils/queries';
@@ -190,27 +190,7 @@ const LessonPage = () => {
               </S.LessonButton>
             )}
 
-            {interactiveBlock?.type === 'quiz' && !isFinal && (
-              <S.PageRow justify="center" align="top">
-                <Col span={24}>
-                  <Block isQuiz>
-                    <Text>{interactiveBlock?.content?.data?.question}</Text>
-                  </Block>
-                </Col>
-                <Col span={24}>
-                  <QuizBlock
-                    key={interactiveBlock?.blockId}
-                    setQuiz={setQuizAnswer}
-                    data={interactiveBlock?.content?.data}
-                  />
-                </Col>
-                <S.BlockCol span={24}>
-                  <S.LessonButton onClick={handleSendClick}>
-                    Send
-                  </S.LessonButton>
-                </S.BlockCol>
-              </S.PageRow>
-            )}
+            {/*  */}
 
             {isFinal && (
               <S.LessonButton onClick={handleFinishClick}>
@@ -219,6 +199,38 @@ const LessonPage = () => {
             )}
           </S.BlockCol>
         </S.PageRowStart>
+      )}
+
+      {!isLoading && interactiveBlock?.type === 'quiz' && !isFinal && (
+        <Row justify="center" align="top">
+          <Col
+            xs={{ span: 20 }}
+            sm={{ span: 18 }}
+            md={{ span: 16 }}
+            lg={{ span: 14 }}
+          >
+            <Block isQuiz>
+              <Text>{interactiveBlock?.content?.data?.question}</Text>
+            </Block>
+          </Col>
+          <Col span={24}>
+            <QuizBlock
+              key={interactiveBlock?.blockId}
+              setQuiz={setQuizAnswer}
+              data={interactiveBlock?.content?.data}
+            />
+          </Col>
+          <S.SendWrapper
+            xs={{ span: 20 }}
+            sm={{ span: 18 }}
+            md={{ span: 16 }}
+            lg={{ span: 14 }}
+          >
+            <S.LessonButtonSend onClick={handleSendClick}>
+              Send
+            </S.LessonButtonSend>
+          </S.SendWrapper>
+        </Row>
       )}
     </S.Page>
   );

@@ -11,11 +11,15 @@ export const BlockWrapper = styled(Row)`
 
 export const BlockWrapperWhite = styled(Row)`
   width: 100%;
-  max-width: 614px;
+
   padding: 2rem;
   background-color: white;
   box-shadow: 0px -4px 10px rgba(231, 231, 231, 0.5);
   border-radius: 8px;
+  max-width: 614px;
+  @media (max-width: 767px) {
+    max-width: none;
+  }
 `;
 
 export const PageRow = styled(Row)`
