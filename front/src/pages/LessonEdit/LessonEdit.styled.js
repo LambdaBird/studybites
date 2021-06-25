@@ -6,7 +6,6 @@ export const Page = styled.div`
   height: 100%;
   width: 100%;
   padding: 2rem;
-  margin: 0 auto;
 `;
 
 export const StyledRow = styled(Row)`
@@ -16,43 +15,43 @@ export const StyledRow = styled(Row)`
 `;
 
 export const LeftCol = styled(Col)`
-  height: 120%;
-  width: 650px;
-  margin-left: 12rem;
-  padding: 2rem;
+  height: 100%;
+  @media (min-width: 1450px) {
+    margin: 0 auto;
+  }
+`;
+
+export const EditorWrapper = styled.div`
   background-color: white;
   border: 32px solid #e2eff8;
   border-radius: 40px;
+  min-height: 100%;
+  padding: 2rem;
+  max-width: 850px;
 `;
 
 export const RightCol = styled(Col)`
   height: 100%;
   position: fixed;
-  right: 12rem;
+  right: 0;
   padding: 2rem;
-  margin-left: 2rem;
-  @media (max-width: 1600px) {
-    right: 6rem;
-  }
-  @media (max-width: 1350px) {
-    right: 3rem;
+  @media (min-width: 1600px) {
+    right: 8rem;
   }
 `;
 
 export const InputTitle = styled.input`
-  border-top-style: hidden;
-  border-right-style: hidden;
-  border-left-style: hidden;
-  border-bottom-style: none;
-  transition: border-bottom-style 2s;
+  border: none;
   margin-bottom: 1rem;
   &:focus {
     outline: none;
-    border-bottom-style: groove;
   }
-  font-size: 24px;
+  font-size: 1.5rem;
   width: 100%;
-  text-align: center;
+
+  @media (min-width: 1200px) {
+    padding: 0 2.25rem;
+  }
 `;
 
 export const SaveButton = styled(Button)`
@@ -82,7 +81,7 @@ export const HeaderButtons = styled(Col)`
 `;
 
 export const PublishButton = styled(Button)`
-  margin-left: 2rem;
+  margin-left: 1rem;
 `;
 
 export const RowStyled = styled(Row)`

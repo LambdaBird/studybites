@@ -1,7 +1,8 @@
 import styled from 'styled-components';
-import { Row, Typography, Empty } from 'antd';
+import { Avatar, Empty, Row, Typography } from 'antd';
+import { VOLCANO_2, VOLCANO_6 } from '@sb-ui/resources/styles/Global.styled';
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 export const Wrapper = styled(Row)`
   height: 100%;
@@ -35,4 +36,17 @@ export const ListHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+`;
+
+export const AuthorAvatar = styled(Avatar)`
+  color: ${VOLCANO_6};
+  background-color: ${VOLCANO_2};
+`;
+
+export const AuthorName = styled(Text)`
+  white-space: nowrap;
+`;
+
+export const StudentsRow = styled(Row)`
+  width: 100%;
 `;

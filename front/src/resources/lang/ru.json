@@ -1,5 +1,11 @@
 {
   "translation": {
+    "header": {
+      "profile": "Профиль",
+      "sign_out": "Выйти",
+      "switch_teacher": "Переключиться на вид учителя",
+      "switch_student": "Переключиться на вид студента"
+    },
     "sign_up": {
       "have_account": "Уже есть аккаунт? Ввойдите!",
       "title": "Зарегистрируйтесь в своей учетной записи",
@@ -119,7 +125,9 @@
       },
       "by": "От",
       "blocks": "блоков",
-      "start": "Начать"
+      "start": "Начать",
+      "next": "Дальше",
+      "finish": "Закончить"
     },
     "enroll_modal": {
       "review": {
@@ -137,8 +145,7 @@
         "preview": "Предпросмотр"
       },
       "title": {
-        "default":"How to use StudyBites - For Teachers",
-        "placeholder": "Название"
+        "placeholder": "Название урока"
       },
       "links": {
         "invite": "Пригласить соавторов",
@@ -147,6 +154,15 @@
         "archive": "Архив"
       },
       "description": "Описание"
+    },
+    "editor_js": {
+      "tool_names": {
+        "text": "Текст",
+        "next": "Следующий"
+      },
+      "toolbar": {
+        "toolbox_add": "Добавить"
+      }
     }
   }
 }

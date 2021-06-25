@@ -6,15 +6,11 @@ import { PlusOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
 import { getTeacherLessons } from '@sb-ui/utils/api/v1/lesson';
-import { LESSONS_EDIT_NEW } from '@sb-ui/utils/paths';
+import { LESSONS_NEW } from '@sb-ui/utils/paths';
+import { TEACHER_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
 import * as S from './LessonsDashboard.styled';
 import LessonsList from './LessonsList';
-import {
-  itemPerPage,
-  pageLimit,
-  TEACHER_LESSONS_BASE_KEY,
-  statusesOptions,
-} from './constants';
+import { itemPerPage, pageLimit, statusesOptions } from './constants';
 
 const { Option } = Select;
 
@@ -46,7 +42,7 @@ const LessonsDashboard = () => {
   const { data, total } = responseData || {};
 
   const handleCreateLesson = () => {
-    history.push(LESSONS_EDIT_NEW);
+    history.push(LESSONS_NEW);
   };
 
   return (

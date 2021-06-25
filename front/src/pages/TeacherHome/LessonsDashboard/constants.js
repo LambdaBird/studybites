@@ -28,8 +28,6 @@ export const statusesOptions = [
   },
 ];
 
-export const TEACHER_LESSONS_BASE_KEY = 'teacherLessons';
-
 export const pageLimit = 8;
 
 export const DEFAULT_LESSON_NAME = 'New lesson';

@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { Avatar, Typography } from 'antd';
 import { getTeacherLessons } from '@sb-ui/utils/api/v1/lesson';
+import { TEACHER_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
 import * as S from './TeacherInfo.styled';
-import { TEACHER_LESSONS_BASE_KEY } from '../LessonsDashboard/constants';
 
 const { Title, Text } = Typography;
 
@@ -13,7 +13,7 @@ const TeacherInfo = ({ username, description }) => {
   const { t } = useTranslation();
 
   const { data: lessonsResponseData } = useQuery(
-    [TEACHER_LESSONS_BASE_KEY],
+    TEACHER_LESSONS_BASE_KEY,
     getTeacherLessons,
   );
 

@@ -6,7 +6,7 @@ import * as S from './InfoBlock.styled';
 
 const { Title, Text } = Typography;
 
-const InfoBlock = ({ isLoading, lesson }) => {
+const InfoBlock = ({ isLoading, lesson, total }) => {
   const { t } = useTranslation();
 
   const authors = useMemo(
@@ -28,7 +28,9 @@ const InfoBlock = ({ isLoading, lesson }) => {
             <Text type="secondary">
               {t('lesson.by')} {authors}
             </Text>
-            <Text type="secondary">0 {t('lesson.blocks')}</Text>
+            <Text type="secondary">
+              {total} {t('lesson.blocks')}
+            </Text>
           </S.StyledRow>
         </>
       )}
@@ -46,6 +48,7 @@ InfoBlock.propTypes = {
       lastName: PropTypes.string,
     }),
   }),
+  total: PropTypes.number.isRequired,
   isLoading: PropTypes.bool.isRequired,
 };
 

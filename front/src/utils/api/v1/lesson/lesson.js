@@ -20,10 +20,15 @@ export const getLessons = async (paramsData) => {
 export const getLessonById = async ({ queryKey }) => {
   const [, paramsData] = queryKey;
   const { id } = paramsData;
-
   const { data } = await api.get(`${PATH}/${id}`, {
     params: paramsData,
   });
+
+  return data;
+};
+
+export const postLessonById = async (paramsData) => {
+  const { data } = await api.post(`${PATH}/${paramsData.id}/learn`, paramsData);
 
   return data;
 };
@@ -71,15 +76,20 @@ export const createLesson = async (values) => {
   return data;
 };
 
-export const archiveLesson = async ({ status, id }) => {
-  const { data } = await api.patch(`${PATH}/maintain/${id}`, { status });
-  return data;
-};
-
 export const getTeacherLessons = async ({ queryKey }) => {
   const [, paramsData] = queryKey;
 
   const { data } = await api.get(`${PATH}/maintain/`, {
+    params: paramsData,
+  });
+
+  return data;
+};
+
+export const getTeacherStudents = async ({ queryKey }) => {
+  const [, paramsData] = queryKey;
+
+  const { data } = await api.get(`${PATH}/maintain/students`, {
     params: paramsData,
   });
 
@@ -92,7 +102,6 @@ export const getPublicLessons = async ({ queryKey }) => {
   const { data } = await api.get(`${PATH}/`, {
     params: paramsData,
   });
-
   return data;
 };
 
