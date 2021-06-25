@@ -7,8 +7,9 @@
   "scripts": {
     "dev": "./bootstrap",
     "seed:run": "./seeds/run",
+    "seed:test": "./seeds/run_test",
     "test:unit": "babel-node node_modules/.bin/jest test/unit/",
-    "test:integration": "babel-node ./init.js admin@test.io passwd3 && babel-node node_modules/.bin/jest test/integration/",
+    "test:integration": "babel-node ./init.js admin@test.io passwd3 && yarn seed:test && babel-node node_modules/.bin/jest test/integration/",
     "migrate:make": "knex --esm migrate:make"
   },
   "dependencies": {

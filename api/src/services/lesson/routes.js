@@ -216,7 +216,7 @@ const router = async (instance) => {
             })
             .returning('*');
 
-          if (blocks.length) {
+          if (blocks && blocks.length) {
             const blocksData = await Block.query(trx)
               .insert(blocks)
               .returning('*');

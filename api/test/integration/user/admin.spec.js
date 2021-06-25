@@ -217,7 +217,7 @@ describe('Test admin route:', () => {
   it('should return 200 for valid data', async () => {
     const response = await app.inject({
       method: 'DELETE',
-      url: '/api/v1/user/2',
+      url: '/api/v1/user/3',
       headers: {
         Authorization: `Bearer ${tokensAdmin['access']}`,
       },
