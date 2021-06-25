@@ -59,7 +59,7 @@ describe('Test user (self) route:', () => {
     });
 
     expect(response.statusCode).toBe(200);
-    expect(JSON.parse(response.payload)).toHaveProperty('data');
+    expect(JSON.parse(response.payload)).toHaveProperty('roles');
   });
 
   it.each([
