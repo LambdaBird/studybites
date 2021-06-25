@@ -1,5 +1,8 @@
 import { Typography } from 'antd';
+import HtmlToReact from 'html-to-react';
 import QuizBlockResult from '@sb-ui/pages/LessonPage/QuizBlockResult';
+
+const HtmlToReactParser = HtmlToReact.Parser;
 
 const { Text } = Typography;
 
@@ -28,16 +31,14 @@ export const groupBlocks = (lessons) => {
 export const generateBlockByElement = (element) => {
   const { content, blockId, answer } = element;
   if (content.type === 'paragraph') {
-    return (
-      // eslint-disable-next-line react/jsx-filename-extension
-      <Text key={blockId} type="secondary">
-        {content?.data?.text}
-      </Text>
-    );
+    const htmlInput = content?.data?.text;
+    const htmlToReactParser = new HtmlToReactParser();
+    return htmlToReactParser.parse(htmlInput);
   }
 
   if (content.type === 'quiz') {
     if (content.data?.answers?.some((x) => x.correct !== undefined)) {
+      // eslint-disable-next-line react/jsx-filename-extension
       return <QuizBlockResult correctAnswer={answer} data={content?.data} />;
     }
     return null;
