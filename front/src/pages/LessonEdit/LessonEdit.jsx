@@ -3,6 +3,7 @@ import { Button, Col, Input, Row, Typography, message } from 'antd';
 import hash from 'object-hash';
 import { useTranslation } from 'react-i18next';
 import EditorJS from '@editorjs/editorjs';
+import Embed from '@editorjs/embed';
 import DragDrop from 'editorjs-drag-drop';
 import { useHistory, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from 'react-query';
@@ -68,6 +69,7 @@ const LessonEdit = () => {
       tools: {
         next: Next,
         quiz: Quiz,
+        embed: Embed,
       },
       i18n: {
         messages: {

@@ -1,4 +1,4 @@
-import { Typography } from 'antd';
+import { Col, Row, Typography } from 'antd';
 import QuizBlockResult from '@sb-ui/pages/LessonPage/QuizBlockResult';
 
 const { Text } = Typography;
@@ -41,6 +41,22 @@ export const generateBlockByElement = (element) => {
       return <QuizBlockResult correctAnswer={answer} data={content?.data} />;
     }
     return null;
+  }
+
+  if (content.type === 'embed') {
+    const { caption, embed, height } = content.data;
+    return (
+      <Row>
+        <Col span={24}>
+          <embed height={height} width="100%" title={caption} src={embed} />
+        </Col>
+        {caption && (
+          <Col>
+            <Text>{caption}</Text>
+          </Col>
+        )}
+      </Row>
+    );
   }
 
   return (
