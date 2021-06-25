@@ -1,6 +1,7 @@
 import { Col, Row, Typography } from 'antd';
 import QuizBlockResult from '@sb-ui/pages/LessonPage/QuizBlockResult';
 
+
 const { Text } = Typography;
 
 export const groupBlocks = (lessons) => {
@@ -51,8 +52,24 @@ export const generateBlockByElement = (element) => {
           <embed height={height} width="100%" title={caption} src={embed} />
         </Col>
         {caption && (
-          <Col>
-            <Text>{caption}</Text>
+          <Col span={24}>
+            <Text type="">{caption}</Text>
+          </Col>
+        )}
+      </Row>
+     );
+  }
+
+  if (content.type === 'image') {
+    const { caption, url, stretched } = content?.data || {};
+    return (
+      <Row key={blockId}>
+        <Col span={24}>
+          <img width={stretched ? '100%' : undefined} src={url} alt={caption} />
+        </Col>
+        {caption && (
+          <Col span={24}>
+            <Text type="">{caption}</Text>
           </Col>
         )}
       </Row>
