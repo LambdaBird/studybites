@@ -139,11 +139,9 @@ const LessonPage = () => {
     });
   };
 
-  useEffect(() => {}, [blocks]);
-
   return (
     <S.Page>
-      <S.Background />
+      <S.GlobalStylesLessonPage />
       <S.ProgressCol span={24}>
         <Progress
           showInfo={false}

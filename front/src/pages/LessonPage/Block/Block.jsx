@@ -3,14 +3,19 @@ import { Col } from 'antd';
 import * as S from './Block.styled';
 
 // eslint-disable-next-line react/prop-types
-const Block = ({ children, isQuiz }) => {
+const Block = ({ top, children, isQuiz }) => {
   if (children?.length === 0 || !children) {
     return null;
+  }
+
+  if (children?.[0]?.props?.isResult) {
+    return children;
   }
 
   return (
     <S.PageRow justify="center" align="top">
       <S.BlockCol
+        top={top}
         xs={{ span: isQuiz ? 24 : 20 }}
         sm={{ span: isQuiz ? 24 : 18 }}
         md={{ span: isQuiz ? 24 : 16 }}

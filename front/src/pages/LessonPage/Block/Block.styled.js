@@ -20,5 +20,5 @@ export const StyledRow = styled(Row)`
 export const BlockCol = styled(Col)`
   display: flex;
   justify-content: center;
-  padding-top: 3rem;
+  padding-top: ${(props) => (props.top ? props.top : '3rem')};
 `;
