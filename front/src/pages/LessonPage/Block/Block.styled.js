@@ -4,7 +4,7 @@ import { Col, Row } from 'antd';
 export const BlockWrapper = styled(Row)`
   width: 100%;
   max-width: 614px;
-  padding: 2rem;
+  padding: ${(props) => props.padding || '2rem'};
   background-color: rgba(245, 245, 245, 1);
   border-radius: 8px;
 `;
@@ -20,5 +20,5 @@ export const StyledRow = styled(Row)`
 export const BlockCol = styled(Col)`
   display: flex;
   justify-content: center;
-  padding-top: 3rem;
+  padding-top: ${(props) => (props.top ? props.top : '3rem')};
 `;

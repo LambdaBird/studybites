@@ -64,6 +64,7 @@ const dataValidator = yup
   .object({
     question: yup.string(),
     answers: yup.array(),
+    response: yup.array(),
   })
   .typeError(propertyTypeError('lesson', 'data', 'object'));
 

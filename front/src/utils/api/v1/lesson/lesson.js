@@ -30,7 +30,7 @@ export const getLessonById = async ({ queryKey }) => {
 export const postLessonById = async (paramsData) => {
   const { data } = await api.post(`${PATH}/${paramsData.id}/learn`, paramsData);
 
-  return { data };
+  return data;
 };
 
 export const postEnroll = async (id) => {

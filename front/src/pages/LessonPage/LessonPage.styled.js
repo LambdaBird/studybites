@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import { Row, Col, Button } from 'antd';
 
 export const Page = styled.div`
@@ -49,4 +49,10 @@ export const Background = styled.div`
   width: 100%;
   position: absolute;
   z-index: -1;
+`;
+
+export const GlobalStylesLessonPage = createGlobalStyle`
+  body{
+    background-color: white; 
+  }
 `;
