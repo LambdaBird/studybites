@@ -44,6 +44,22 @@ export const generateBlockByElement = (element) => {
     return null;
   }
 
+  if (content.type === 'embed') {
+    const { caption, embed, height } = content.data;
+    return (
+      <Row>
+        <Col span={24}>
+          <embed height={height} width="100%" title={caption} src={embed} />
+        </Col>
+        {caption && (
+          <Col span={24}>
+            <Text type="">{caption}</Text>
+          </Col>
+        )}
+      </Row>
+     );
+  }
+
   if (content.type === 'image') {
     const { caption, url, stretched } = content?.data || {};
     return (
