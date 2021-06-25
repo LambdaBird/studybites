@@ -196,7 +196,7 @@ export default class Quiz {
     event.preventDefault();
     if (prevItem.classList.contains(this.CSS.questionWrapper)) {
       if (this.items.length === 2) {
-        this.api.blocks.clear();
+        this.api.blocks.delete(this.api.blocks.getCurrentBlockIndex());
       }
     } else {
       const fragmentAfterCaret = extractContentAfterCaret();

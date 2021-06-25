@@ -35,7 +35,7 @@ const QuizBlockResult = ({ data, correctAnswer }) => {
       difference
         ?.map((x, i) => (x === true && options[i].correct ? i : null))
         ?.filter((x) => x !== null),
-    [difference],
+    [difference, options],
   );
 
   const optionsDifference = useMemo(
