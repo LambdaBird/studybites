@@ -23,7 +23,9 @@ const QuizBlock = ({ isResult, data, setQuiz, correctAnswer }) => {
     return (
       <>
         <Block>
-          <Col span={24}>{question}</Col>
+          <Col span={24}>
+            <Text style={{ fontStyle: 'italic' }}>{question}</Text>
+          </Col>
         </Block>
         <Block top="1rem">
           <Col span={24}>
@@ -38,7 +40,7 @@ const QuizBlock = ({ isResult, data, setQuiz, correctAnswer }) => {
           </Col>
           <Col span={24} />
         </Block>
-        <Block top="1rem">
+        <Block padding="1rem 2rem" top="1rem">
           {correct ? (
             <div
               style={{
