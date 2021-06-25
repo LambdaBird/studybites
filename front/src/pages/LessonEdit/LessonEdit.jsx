@@ -3,9 +3,11 @@ import { Button, Col, Input, Row, Typography, message } from 'antd';
 import hash from 'object-hash';
 import { useTranslation } from 'react-i18next';
 import EditorJS from '@editorjs/editorjs';
+import Embed from '@editorjs/embed';
 import DragDrop from 'editorjs-drag-drop';
 import { useHistory, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from 'react-query';
+import SimpleImage from '@editorjs/simple-image';
 import { RedoOutlined, SaveOutlined, UndoOutlined } from '@ant-design/icons';
 import Header from '@sb-ui/components/molecules/Header';
 import { createLesson, getLesson, putLesson } from '@sb-ui/utils/api/v1/lesson';
@@ -14,11 +16,13 @@ import { LESSONS_EDIT } from '@sb-ui/utils/paths';
 import Next from '@sb-ui/utils/editorjs/next-plugin';
 import Quiz from '@sb-ui/utils/editorjs/quiz-plugin';
 import Undo from '@sb-ui/utils/editorjs/undo-plugin';
+
 import {
   prepareApiData,
   prepareEditorData,
   QUIZ_TYPE,
 } from '@sb-ui/pages/LessonEdit/utils';
+
 import * as S from './LessonEdit.styled';
 
 const { TextArea } = Input;
@@ -66,8 +70,10 @@ const LessonEdit = () => {
         setEditorReady(true);
       },
       tools: {
+        image: SimpleImage,
         next: Next,
         quiz: Quiz,
+        embed: Embed,
       },
       i18n: {
         messages: {
