@@ -1,5 +1,5 @@
 import { Typography } from 'antd';
-import QuizBlock from '@sb-ui/pages/LessonPage/QuizBlock';
+import QuizBlockResult from '@sb-ui/pages/LessonPage/QuizBlockResult';
 
 const { Text } = Typography;
 
@@ -38,7 +38,7 @@ export const generateBlockByElement = (element) => {
 
   if (content.type === 'quiz') {
     if (content.data?.answers?.some((x) => x.correct !== undefined)) {
-      return <QuizBlock correctAnswer={answer} isResult data={content?.data} />;
+      return <QuizBlockResult correctAnswer={answer} data={content?.data} />;
     }
     return null;
   }

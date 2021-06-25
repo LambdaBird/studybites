@@ -7,7 +7,7 @@ const Block = ({ top, children, isQuiz, padding }) => {
     return null;
   }
 
-  if (children?.[0]?.props?.isResult) {
+  if (children?.[0]?.props?.correctAnswer) {
     return children;
   }
 

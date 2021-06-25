@@ -17,17 +17,6 @@ export const getLessons = async (paramsData) => {
   }
 };
 
-export const mockData = (data) => ({
-  ...data,
-  lesson: {
-    ...data?.lesson,
-    blocks: data?.lesson?.blocks.map((x) => ({
-      ...x,
-      results: x.type === 'quiz' ? [true, true] : undefined,
-    })),
-  },
-});
-
 export const getLessonById = async ({ queryKey }) => {
   const [, paramsData] = queryKey;
   const { id } = paramsData;
