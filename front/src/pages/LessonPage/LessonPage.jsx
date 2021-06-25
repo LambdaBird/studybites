@@ -25,7 +25,6 @@ const LessonPage = () => {
   const { id: lessonId } = useParams();
   const [blocks, setBlocks] = useState([]);
   const [interactiveBlock, setInteractiveBlock] = useState();
-  // eslint-disable-next-line no-unused-vars
   const [quizAnswer, setQuizAnswer] = useState({});
   const [isFinal, setIsFinal] = useState(false);
   const [total, setTotal] = useState(0);
@@ -124,7 +123,6 @@ const LessonPage = () => {
   };
 
   const handleSendClick = () => {
-    // eslint-disable-next-line no-unused-vars
     const { revision, blockId } = interactiveBlock;
     mutate({
       id: lessonId,

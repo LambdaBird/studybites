@@ -6,9 +6,7 @@ import Block from '@sb-ui/pages/LessonPage/Block';
 import * as S from './Quizblock.styled';
 
 const { Text } = Typography;
-// eslint-disable-next-line react/prop-types
 const QuizBlock = ({ isResult, data, setQuiz, correctAnswer }) => {
-  // eslint-disable-next-line no-unused-vars
   const { answers, question } = data;
 
   const options = answers?.map(({ value, correct }, i) => ({
@@ -17,12 +15,9 @@ const QuizBlock = ({ isResult, data, setQuiz, correctAnswer }) => {
     correct,
   }));
 
-  // eslint-disable-next-line no-unused-vars
-
   if (isResult) {
     const { correct, difference } = verifyAnswers(
       answers.map((x) => x.correct),
-      // eslint-disable-next-line react/prop-types
       correctAnswer?.results,
     );
     return (
@@ -111,6 +106,11 @@ const QuizBlock = ({ isResult, data, setQuiz, correctAnswer }) => {
 };
 
 QuizBlock.propTypes = {
+  correctAnswer: {
+    results: PropTypes.array.isRequired,
+  },
+  setQuiz: PropTypes.func,
+  isResult: PropTypes.bool,
   data: PropTypes.shape({
     answers: PropTypes.arrayOf({
       label: PropTypes.string,

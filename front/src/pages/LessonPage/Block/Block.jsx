@@ -2,7 +2,6 @@ import PropTypes from 'prop-types';
 import { Col } from 'antd';
 import * as S from './Block.styled';
 
-// eslint-disable-next-line react/prop-types
 const Block = ({ top, children, isQuiz }) => {
   if (children?.length === 0 || !children) {
     return null;
@@ -40,6 +39,8 @@ const Block = ({ top, children, isQuiz }) => {
 };
 
 Block.propTypes = {
+  top: PropTypes.string,
+  isQuiz: PropTypes.bool,
   children: PropTypes.oneOfType([
     PropTypes.arrayOf(PropTypes.node),
     PropTypes.node,

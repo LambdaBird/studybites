@@ -1,9 +1,5 @@
 import { Typography } from 'antd';
 import QuizBlock from '@sb-ui/pages/LessonPage/QuizBlock';
-import config from '../../utils/api/config';
-
-// eslint-disable-next-line no-unused-vars
-const { interactiveBlocks } = config;
 
 const { Text } = Typography;
 
@@ -30,7 +26,6 @@ export const groupBlocks = (lessons) => {
 };
 
 export const generateBlockByElement = (element) => {
-  // eslint-disable-next-line no-unused-vars
   const { content, blockId, answer } = element;
   if (content.type === 'paragraph') {
     return (
