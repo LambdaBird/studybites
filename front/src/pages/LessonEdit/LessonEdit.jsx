@@ -1,12 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
+import { useMutation, useQuery } from 'react-query';
 import { Button, Col, Input, Row, Typography, message } from 'antd';
 import hash from 'object-hash';
 import { useTranslation } from 'react-i18next';
 import EditorJS from '@editorjs/editorjs';
 import Embed from '@editorjs/embed';
+import HeaderTool from '@editorjs/header';
+import List from '@editorjs/list';
+import Quote from '@editorjs/quote';
+import Delimiter from '@editorjs/delimiter';
+import Marker from '@editorjs/marker';
+import Table from 'editorjs-table';
 import DragDrop from 'editorjs-drag-drop';
-import { useHistory, useParams } from 'react-router-dom';
-import { useMutation, useQuery } from 'react-query';
 import SimpleImage from '@editorjs/simple-image';
 import { RedoOutlined, SaveOutlined, UndoOutlined } from '@ant-design/icons';
 import Header from '@sb-ui/components/molecules/Header';
@@ -74,6 +80,12 @@ const LessonEdit = () => {
         next: Next,
         quiz: Quiz,
         embed: Embed,
+        header: HeaderTool,
+        list: List,
+        quote: Quote,
+        delimiter: Delimiter,
+        marker: Marker,
+        table: Table,
       },
       i18n: {
         messages: {
