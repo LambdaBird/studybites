@@ -3,20 +3,15 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { LESSON_PAGE } from '@sb-ui/utils/paths';
-import {
-  LeftColumn,
-  MainSpace,
-  ProgressBar,
-  RightColumn,
-} from './CurrentLesson.styled';
-
-import lessonImg from '../../../resources/img/lesson.svg';
+import lessonImg from '@sb-ui/resources/img/lesson.svg';
+import * as S from './OngoingLesson.styled';
 
 const { Title } = Typography;
 
-const CurrentLessonMobile = ({ lesson }) => {
+const OngoingLessonDesktop = ({ lesson }) => {
   const { t } = useTranslation();
   const history = useHistory();
+
   const { name, id } = lesson;
 
   const handleContinueLesson = () => {
@@ -24,12 +19,12 @@ const CurrentLessonMobile = ({ lesson }) => {
   };
 
   return (
-    <MainSpace>
-      <LeftColumn span={8}>
+    <S.MainSpace>
+      <S.LeftColumn span={8}>
         <img height={100} src={lessonImg} alt="Lesson" />
-        <ProgressBar percent={50} />
-      </LeftColumn>
-      <RightColumn span={14}>
+        <S.ProgressBar percent={50} />
+      </S.LeftColumn>
+      <S.RightColumn span={16}>
         <Title level={4}>{name}</Title>
         <Row justify="end" align="between">
           <Col>
@@ -38,17 +33,18 @@ const CurrentLessonMobile = ({ lesson }) => {
             </Button>
           </Col>
         </Row>
-      </RightColumn>
-    </MainSpace>
+      </S.RightColumn>
+    </S.MainSpace>
   );
 };
 
-CurrentLessonMobile.propTypes = {
+OngoingLessonDesktop.propTypes = {
   lesson: PropTypes.exact({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     maintainer: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
   }).isRequired,
 };
 
-export default CurrentLessonMobile;
+export default OngoingLessonDesktop;

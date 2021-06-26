@@ -87,7 +87,7 @@
       },
       "ongoing_lessons": {
         "title": "Ongoing lessons",
-        "view_all_lessons": "View all lessons",
+        "view_all_lessons": "View all my lessons",
         "continue_button": "Continue"
       }
     },
@@ -95,6 +95,9 @@
       "ongoing_lessons": {
         "continue_button": "Continue",
         "title": "Ongoing lessons"
+      },
+      "finished_lessons": {
+        "title": "Finished lessons"
       }
     },
     "lesson_dashboard": {
@@ -129,8 +132,7 @@
       }
     },
     "teacher_info": {
-      "greeting": "Good morning, ",
-      "wishes": ", have a great day!",
+      "greeting": "Welcome back, {{fullName}}",
       "lessons": "Lessons",
       "students": "Students"
     },
@@ -155,7 +157,8 @@
         "header": "Reviews",
         "empty": "No reviews yet",
         "be_first": "Be first to rate a lesson"
-      }
+      },
+      "start": "Start"
     },
     "lesson_edit": {
       "buttons": {

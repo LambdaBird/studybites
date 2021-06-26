@@ -1,16 +1,21 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
-import { Avatar, Typography } from 'antd';
+import { Typography } from 'antd';
 import { getTeacherLessons } from '@sb-ui/utils/api/v1/lesson';
-import { TEACHER_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
+import {
+  TEACHER_LESSONS_BASE_KEY,
+  USER_BASE_QUERY,
+} from '@sb-ui/utils/queries';
+import { getUser } from '@sb-ui/utils/api/v1/user';
 import * as S from './TeacherInfo.styled';
 
 const { Title, Text } = Typography;
 
-const TeacherInfo = ({ username, description }) => {
+const TeacherInfo = () => {
   const { t } = useTranslation();
+  const { data: userResponse } = useQuery(USER_BASE_QUERY, getUser);
+  const user = userResponse?.data || {};
 
   const { data: lessonsResponseData } = useQuery(
     TEACHER_LESSONS_BASE_KEY,
@@ -32,18 +37,24 @@ const TeacherInfo = ({ username, description }) => {
     },
   ];
 
+  const fullName = useMemo(
+    () => `${user.firstName} ${user.lastName}`.trim(),
+    [user.firstName, user.lastName],
+  );
+
+  const firstNameLetter = useMemo(
+    () => user.firstName[0] || user.lastName[0],
+    [user.firstName, user.lastName],
+  );
+
   return (
     <S.Wrapper justify="center" align="center">
       <S.AvatarCol>
-        <Avatar size={64}>T</Avatar>
+        <S.StyledAvatar size={64}>{firstNameLetter}</S.StyledAvatar>
       </S.AvatarCol>
       <S.TextCol span={14}>
-        <Title level={4}>
-          {`${t('teacher_info.greeting')}${username}${t(
-            'teacher_info.wishes',
-          )}`}
-        </Title>
-        <Text type="secondary">{description}</Text>
+        <Title level={4}>{t('teacher_info.greeting', { fullName })}</Title>
+        <Text type="secondary">Your awesome description</Text>
       </S.TextCol>
       <S.StatisticCol span={8}>
         {statisticColumns.map((column) => (
@@ -60,16 +71,6 @@ const TeacherInfo = ({ username, description }) => {
       </S.StatisticCol>
     </S.Wrapper>
   );
-};
-
-TeacherInfo.propTypes = {
-  username: PropTypes.string,
-  description: PropTypes.string,
-};
-
-TeacherInfo.defaultProps = {
-  username: '',
-  description: '',
 };
 
 export default TeacherInfo;

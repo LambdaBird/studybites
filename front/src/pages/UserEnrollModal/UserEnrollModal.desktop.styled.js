@@ -1,6 +1,13 @@
 import styled from 'styled-components';
-import { Button, Col, Row, Space } from 'antd';
-import { WHITE_COLOR } from '../../../../resources/styles/Global.styled';
+import { Avatar, Button, Col, Row, Space, Typography } from 'antd';
+import {
+  DESCRIPTION_COLOR,
+  VOLCANO_2,
+  VOLCANO_6,
+  WHITE_COLOR,
+} from '@sb-ui/resources/styles/Global.styled';
+
+const { Text } = Typography;
 
 export const AuthorContainer = styled.div`
   display: flex;
@@ -61,4 +68,19 @@ export const ReviewFooter = styled.div`
 
 export const StartButton = styled(Button)`
   width: 8rem;
+`;
+
+export const AuthorAvatar = styled(Avatar)`
+  color: ${VOLCANO_6};
+  background-color: ${VOLCANO_2};
+`;
+
+export const AuthorName = styled(Typography.Link)`
+  margin-left: 0.5rem;
+  white-space: nowrap;
+`;
+
+export const DescriptionText = styled(Text)`
+  text-align: justify;
+  color: ${DESCRIPTION_COLOR};
 `;

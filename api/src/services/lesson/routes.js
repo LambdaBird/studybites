@@ -682,6 +682,26 @@ const router = async (instance) => {
   });
 
   instance.route({
+    method: 'GET',
+    url: '/enroll/:id',
+    schema: {
+      response: errorResponse,
+    },
+    validatorCompiler,
+    errorHandler,
+    onRequest: instance.auth({ instance }),
+    handler: async (req, repl) => {
+      const id = validateId(req.params.id);
+
+      const lesson = await Lesson.query()
+        .findById(id)
+        .withGraphFetched('authors');
+
+      return repl.status(200).send({ lesson });
+    },
+  });
+
+  instance.route({
     method: 'POST',
     url: '/enroll/:id',
     schema: {

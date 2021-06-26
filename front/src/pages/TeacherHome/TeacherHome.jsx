@@ -7,10 +7,7 @@ const TeacherHome = () => (
   <S.Page>
     <S.StyledRow gutter={[32]} justify="center" align="top">
       <S.LeftCol>
-        <TeacherInfo
-          username="John Galt"
-          description="User interaction expert | Teacher in Awesome School"
-        />
+        <TeacherInfo />
         <LessonsDashboard />
       </S.LeftCol>
       <S.RightCol>

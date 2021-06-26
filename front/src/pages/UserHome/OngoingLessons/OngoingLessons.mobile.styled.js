@@ -4,15 +4,14 @@ import { Row, Typography } from 'antd';
 const { Title } = Typography;
 
 export const Header = styled(Row)`
-  padding: 1rem 2rem;
+  padding: 1rem 0;
   margin-bottom: 1rem;
   width: 100%;
 `;
 
 export const HeaderTitle = styled(Title)`
-  size: 24px !important;
-  line-height: 32px !important;
   font-weight: 400 !important;
+  font-size: 1.25rem !important;
   margin-bottom: 0 !important;
 `;
 
@@ -29,4 +28,5 @@ export const Footer = styled(Row)`
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 2rem;
 `;

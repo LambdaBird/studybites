@@ -12,14 +12,14 @@ export const Main = styled.div`
   @media (max-width: 767px) {
     padding: 1rem;
   }
+  max-width: 1600px;
+  margin: 0 auto;
+  width: 100%;
 `;
 
 export const OpenHeader = styled(Row)`
   margin-bottom: 2rem;
   width: 100%;
-  @media (max-width: 767px) {
-    padding: 1rem 2rem;
-  }
 `;
 
 export const Container = styled.div`
@@ -34,8 +34,8 @@ export const Container = styled.div`
 
 export const OpenTitle = styled(Typography.Title)`
   margin-bottom: 0 !important;
-  font-size: 1.5rem !important;
-  line-height: 1.5rem !important;
+  font-size: 1.25rem !important;
+  line-height: 1.25rem !important;
   font-weight: 400 !important;
 `;
 
@@ -65,7 +65,4 @@ export const SearchModal = styled(Modal)`
   padding: 3rem;
 `;
 
-export const StyledSearch = styled(Search)`
-  width: 200px;
-  margin-left: 1rem;
-`;
+export const StyledSearch = styled(Search)``;

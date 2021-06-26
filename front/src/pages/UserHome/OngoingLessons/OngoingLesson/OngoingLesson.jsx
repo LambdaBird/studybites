@@ -3,20 +3,20 @@ import PropTypes from 'prop-types';
 
 import MobileContext from '@sb-ui/contexts/MobileContext';
 
-import CurrentLessonMobile from './CurrentLesson.mobile';
-import CurrentLessonDesktop from './CurrentLesson.desktop';
+import OngoingLessonMobile from './OngoingLesson.mobile';
+import OngoingLessonDesktop from './OngoingLesson.desktop';
 
-const CurrentLesson = ({ lesson }) => {
+const OngoingLesson = ({ lesson }) => {
   const isMobile = useContext(MobileContext);
 
   if (isMobile) {
-    return <CurrentLessonMobile lesson={lesson} />
+    return <OngoingLessonMobile lesson={lesson} />;
   }
 
-  return <CurrentLessonDesktop lesson={lesson} />
+  return <OngoingLessonDesktop lesson={lesson} />;
 };
 
-CurrentLesson.propTypes = {
+OngoingLesson.propTypes = {
   lesson: PropTypes.exact({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
@@ -25,4 +25,4 @@ CurrentLesson.propTypes = {
   }).isRequired,
 };
 
-export default CurrentLesson;
+export default OngoingLesson;

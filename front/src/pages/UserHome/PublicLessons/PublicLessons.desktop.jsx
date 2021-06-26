@@ -4,18 +4,11 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
 import emptyImg from '@sb-ui/resources/img/empty.svg';
-import PublicLesson from '@sb-ui/components/atoms/PublicLesson';
-import OngoingLesson from '@sb-ui/components/atoms/OngoingLesson';
+import PublicLesson from '@sb-ui/pages/UserHome/PublicLessons/PublicLesson';
 import { useQuery } from 'react-query';
-import {
-  getEnrolledLessons,
-  getPublicLessons,
-} from '@sb-ui/utils/api/v1/lesson';
+import { getPublicLessons } from '@sb-ui/utils/api/v1/lesson';
 import { getQueryPage } from '@sb-ui/utils/utils';
-import {
-  USER_ENROLLED_LESSONS_BASE_KEY,
-  USER_PUBLIC_LESSONS_BASE_KEY,
-} from '@sb-ui/utils/queries';
+import { USER_PUBLIC_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
 import { PAGE_SIZE } from './constants';
 import {
   LessonsColumn,
@@ -24,7 +17,7 @@ import {
   LessonsPagination,
 } from './PublicLessons.desktop.styled';
 
-const LessonsMainDesktop = ({ searchLessons, isOngoingLesson }) => {
+const LessonsMainDesktop = ({ searchLessons }) => {
   const { t } = useTranslation();
   const location = useLocation();
   const queryPage = useMemo(() => location.search, [location]);
@@ -39,16 +32,14 @@ const LessonsMainDesktop = ({ searchLessons, isOngoingLesson }) => {
     isSuccess,
   } = useQuery(
     [
-      isOngoingLesson
-        ? USER_PUBLIC_LESSONS_BASE_KEY
-        : USER_ENROLLED_LESSONS_BASE_KEY,
+      USER_PUBLIC_LESSONS_BASE_KEY,
       {
         offset: (currentPage - 1) * PAGE_SIZE,
         limit: PAGE_SIZE,
         search,
       },
     ],
-    isOngoingLesson ? getEnrolledLessons : getPublicLessons,
+    getPublicLessons,
     { keepPreviousData: true },
   );
 
@@ -114,10 +105,6 @@ const LessonsMainDesktop = ({ searchLessons, isOngoingLesson }) => {
         </Row>
       ) : (
         <>
-          {/* <Route
-            path={`${USER_ENROLL}`}
-            component={() => <LessonModal lessons={data} />}
-          /> */}
           <Row gutter={[16, 16]}>
             {data?.map((lesson) => (
               <LessonsColumn
@@ -125,11 +112,7 @@ const LessonsMainDesktop = ({ searchLessons, isOngoingLesson }) => {
                 lg={{ span: 12 }}
                 md={{ span: 24 }}
               >
-                {isOngoingLesson ? (
-                  <OngoingLesson lesson={lesson} />
-                ) : (
-                  <PublicLesson lesson={lesson} />
-                )}
+                <PublicLesson lesson={lesson} />
               </LessonsColumn>
             ))}
           </Row>
@@ -152,12 +135,10 @@ const LessonsMainDesktop = ({ searchLessons, isOngoingLesson }) => {
 
 LessonsMainDesktop.defaultProps = {
   searchLessons: null,
-  isOngoingLesson: false,
 };
 
 LessonsMainDesktop.propTypes = {
   searchLessons: PropTypes.string,
-  isOngoingLesson: PropTypes.bool,
 };
 
 export default LessonsMainDesktop;

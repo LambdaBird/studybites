@@ -1,5 +1,6 @@
 import { createGlobalStyle } from 'styled-components';
 
+// FIXME: move to variables.js
 export const WHITE_COLOR = 'white';
 
 export const DESCRIPTION_COLOR = 'rgba(0, 0, 0, 0.45)';

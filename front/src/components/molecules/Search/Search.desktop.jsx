@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
+import * as S from './Search.desktop.styled';
 
 const SearchDesktop = ({ setSearchText, className = '' }) => {
   const { t } = useTranslation();
@@ -11,14 +12,15 @@ const SearchDesktop = ({ setSearchText, className = '' }) => {
   };
 
   return (
-    <DebouncedSearch
-      delay={500}
-      placeholder={t('user_home.open_lessons.search')}
-      allowClear
-      onChange={onSearchChange}
-      size="large"
-      className={className}
-    />
+    <S.Wrapper>
+      <DebouncedSearch
+        delay={500}
+        placeholder={t('user_home.open_lessons.search')}
+        allowClear
+        onChange={onSearchChange}
+        className={className}
+      />
+    </S.Wrapper>
   );
 };
 

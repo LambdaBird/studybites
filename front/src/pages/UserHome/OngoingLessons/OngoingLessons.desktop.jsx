@@ -1,22 +1,22 @@
-import { Col, Row, Typography } from 'antd';
+import { Col, Row } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import { USER_LESSONS } from '@sb-ui/utils/paths';
-import { LessonsHeader, LessonsMainDiv } from './OngoingLessons.desktop.styled';
+import * as S from './OngoingLessons.desktop.styled';
 import LessonsList from './LessonsList';
-
-const { Title } = Typography;
 
 const OngoingLessonsDesktop = (props) => {
   const { t } = useTranslation();
 
   return (
-    <>
-      <LessonsHeader justify="space-between" align="middle">
+    <S.Wrapper>
+      <S.LessonsHeader justify="space-between" align="middle">
         <Col>
           <Row justify="center" align="middle">
-            <Title level={3}>{t('user_home.ongoing_lessons.title')}</Title>
+            <S.StyledTitle level={4}>
+              {t('user_home.ongoing_lessons.title')}
+            </S.StyledTitle>
           </Row>
         </Col>
         <Col>
@@ -24,11 +24,11 @@ const OngoingLessonsDesktop = (props) => {
             {t('user_home.ongoing_lessons.view_all_lessons')}
           </Link>
         </Col>
-      </LessonsHeader>
-      <LessonsMainDiv>
+      </S.LessonsHeader>
+      <S.LessonsMainDiv>
         <LessonsList {...props} />
-      </LessonsMainDiv>
-    </>
+      </S.LessonsMainDiv>
+    </S.Wrapper>
   );
 };
 

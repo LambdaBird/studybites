@@ -13,7 +13,7 @@ const OngoingLessonsMobile = (props) => {
       <S.Header justify="space-between" align="middle">
         <Col>
           <Row justify="center" align="middle">
-            <S.HeaderTitle level={3}>
+            <S.HeaderTitle level={4}>
               {t('user_home.ongoing_lessons.title')}
             </S.HeaderTitle>
           </Row>

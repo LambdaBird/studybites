@@ -16,10 +16,13 @@ const UserHome = ({ children }) => {
         <S.OpenHeader justify="space-between" align="middle">
           <S.Column>
             <S.Container>
-              <S.OpenTitle level={3}>
+              <S.OpenTitle level={4}>
                 {t('user_home.open_lessons.title')}
               </S.OpenTitle>
-              <S.StyledSearch setSearchText={setSearchText} />
+              <S.StyledSearch
+                searchText={searchText}
+                setSearchText={setSearchText}
+              />
             </S.Container>
           </S.Column>
         </S.OpenHeader>

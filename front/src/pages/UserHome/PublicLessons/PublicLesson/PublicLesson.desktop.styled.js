@@ -1,6 +1,5 @@
 import styled from 'styled-components';
-import { Avatar, Row, Typography, Button } from 'antd';
-
+import { Avatar, Col, Row, Typography } from 'antd';
 import {
   DESCRIPTION_COLOR,
   VOLCANO_2,
@@ -10,26 +9,27 @@ import {
 
 const { Text } = Typography;
 
-export const Main = styled(Row)`
+export const MainSpace = styled(Row)`
   background-color: ${WHITE_COLOR};
   padding: 1rem;
+  height: 10rem;
+`;
+
+export const LeftContent = styled(Col)`
+  margin-right: 1.5rem;
+`;
+
+export const RightContent = styled(Col)`
+  display: flex;
   flex-direction: column;
-`;
-
-export const Image = styled.img`
   width: 100%;
-  height: 100%;
-  object-fit: cover;
 `;
 
-export const Title = styled(Typography.Title)`
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-  font-size: 20px !important;
-  line-height: 28px !important;
+export const LessonImg = styled.img`
+  height: 8rem;
 `;
 
-export const Description = styled(Text)`
+export const DescriptionText = styled(Text)`
   text-align: justify;
   color: ${DESCRIPTION_COLOR};
 `;
@@ -40,11 +40,11 @@ export const AuthorContainer = styled.div`
   justify-content: space-around;
   background-color: ${WHITE_COLOR};
   height: 2.5rem;
+  position: absolute;
+  left: 0.5rem;
+  bottom: 0.5rem;
   border-radius: 5px;
   padding: 0.5rem 0.5rem;
-  position: absolute;
-  top: 24px;
-  right: 40px;
 `;
 
 export const AuthorAvatar = styled(Avatar)`
@@ -59,9 +59,4 @@ export const AuthorName = styled(Typography.Link)`
 
 export const EnrollRow = styled(Row)`
   margin-top: auto;
-  width: 100%;
-`;
-
-export const Enroll = styled(Button)`
-  width: 100%;
 `;

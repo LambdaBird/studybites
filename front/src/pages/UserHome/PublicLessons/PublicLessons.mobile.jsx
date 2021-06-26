@@ -6,21 +6,14 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { useQuery } from 'react-query';
 
 import emptyImg from '@sb-ui/resources/img/empty.svg';
-import PublicLesson from '@sb-ui/components/atoms/PublicLesson';
-import {
-  getEnrolledLessons,
-  getPublicLessons,
-} from '@sb-ui/utils/api/v1/lesson/lesson';
-import OngoingLesson from '@sb-ui/components/atoms/OngoingLesson';
+import PublicLesson from '@sb-ui/pages/UserHome/PublicLessons/PublicLesson';
+import { getPublicLessons } from '@sb-ui/utils/api/v1/lesson/lesson';
 import { getQueryPage } from '@sb-ui/utils/utils';
-import {
-  USER_ENROLLED_LESSONS_BASE_KEY,
-  USER_PUBLIC_LESSONS_BASE_KEY,
-} from '@sb-ui/utils/queries';
+import { USER_PUBLIC_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
 import * as S from './PublicLessons.mobile.styled';
 import { PAGE_SIZE } from './constants';
 
-const LessonsMainMobile = ({ searchLessons, isOngoingLesson }) => {
+const PublicLessonsMobile = ({ searchLessons }) => {
   const { t } = useTranslation();
   const location = useLocation();
   const queryPage = useMemo(() => location.search, [location]);
@@ -35,16 +28,14 @@ const LessonsMainMobile = ({ searchLessons, isOngoingLesson }) => {
     isSuccess,
   } = useQuery(
     [
-      isOngoingLesson
-        ? USER_PUBLIC_LESSONS_BASE_KEY
-        : USER_ENROLLED_LESSONS_BASE_KEY,
+      USER_PUBLIC_LESSONS_BASE_KEY,
       {
         offset: (currentPage - 1) * PAGE_SIZE,
         limit: PAGE_SIZE,
         search,
       },
     ],
-    isOngoingLesson ? getEnrolledLessons : getPublicLessons,
+    getPublicLessons,
     { keepPreviousData: true },
   );
 
@@ -110,14 +101,10 @@ const LessonsMainMobile = ({ searchLessons, isOngoingLesson }) => {
         </S.Main>
       ) : (
         <>
-          <S.Main gutter={[32, 16]}>
+          <S.Main gutter={[0, 16]}>
             {data?.map((lesson) => (
               <S.Column key={lesson.id}>
-                {isOngoingLesson ? (
-                  <OngoingLesson lesson={lesson} />
-                ) : (
-                  <PublicLesson lesson={lesson} />
-                )}
+                <PublicLesson lesson={lesson} />
               </S.Column>
             ))}
             <Row justify="end">
@@ -138,14 +125,12 @@ const LessonsMainMobile = ({ searchLessons, isOngoingLesson }) => {
   );
 };
 
-LessonsMainMobile.defaultProps = {
+PublicLessonsMobile.defaultProps = {
   searchLessons: null,
-  isOngoingLesson: false,
 };
 
-LessonsMainMobile.propTypes = {
+PublicLessonsMobile.propTypes = {
   searchLessons: PropTypes.string,
-  isOngoingLesson: PropTypes.bool,
 };
 
-export default LessonsMainMobile;
+export default PublicLessonsMobile;

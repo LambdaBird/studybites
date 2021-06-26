@@ -20,9 +20,7 @@ export const getLessons = async (paramsData) => {
 export const getLessonById = async ({ queryKey }) => {
   const [, paramsData] = queryKey;
   const { id } = paramsData;
-  const { data } = await api.get(`${PATH}/${id}`, {
-    params: paramsData,
-  });
+  const { data } = await api.get(`${PATH}/${id}`);
 
   return data;
 };
@@ -52,6 +50,14 @@ export const getEnrolledLessons = async ({ queryKey }) => {
   const { data } = await api.get(`${PATH}/enrolled/`, {
     params: paramsData,
   });
+
+  return data;
+};
+
+export const getEnrolledLesson = async ({ queryKey }) => {
+  const [, paramsData] = queryKey;
+
+  const { data } = await api.get(`${PATH}/enroll/${paramsData.id}`);
 
   return data;
 };

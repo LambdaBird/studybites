@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Row, Col, Statistic, Divider } from 'antd';
+import { Row, Col, Statistic, Divider, Avatar } from 'antd';
 
 export const Wrapper = styled(Row)`
   padding: 16px 0;
@@ -34,4 +34,9 @@ export const StatisticCell = styled(Statistic)`
 export const StatisticDivider = styled(Divider)`
   margin: 0 0 0 2rem;
   height: 50%;
+`;
+
+export const StyledAvatar = styled(Avatar)`
+  color: #f56a00;
+  background-color: #fde3cf;
 `;

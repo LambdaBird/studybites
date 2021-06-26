@@ -1,21 +1,19 @@
 import { Col, Empty, Skeleton } from 'antd';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import CurrentLesson from '@sb-ui/components/atoms/CurrentLesson';
+import CurrentLesson from '@sb-ui/pages/UserHome/OngoingLessons/OngoingLesson';
 import emptyImg from '@sb-ui/resources/img/empty.svg';
+import useMobile from '@sb-ui/hooks/useMobile';
 
-import {
-  LessonsColumn,
-  LessonsMainEmpty,
-  LessonsMainRow,
-} from './LessonsList.styled';
+import * as S from './LessonsList.styled';
 
 const LessonsList = ({ lessons, isLoading }) => {
   const { t } = useTranslation();
+  const isMobile = useMobile();
 
   if (isLoading || lessons?.length > 0) {
     return (
-      <LessonsMainRow gutter={[16, 16]}>
+      <S.LessonsMainRow gutter={isMobile ? [0, 16] : [16, 16]}>
         {isLoading ? (
           <>
             <Col xl={{ span: 8 }} lg={{ span: 24 }}>
@@ -31,23 +29,23 @@ const LessonsList = ({ lessons, isLoading }) => {
         ) : (
           <>
             {lessons?.map((lesson) => (
-              <LessonsColumn xl={{ span: 8 }} lg={{ span: 24 }}>
+              <S.LessonsColumn xl={{ span: 8 }} lg={{ span: 24 }}>
                 <CurrentLesson lesson={lesson} />
-              </LessonsColumn>
+              </S.LessonsColumn>
             ))}
           </>
         )}
-      </LessonsMainRow>
+      </S.LessonsMainRow>
     );
   }
 
   return (
-    <LessonsMainEmpty>
+    <S.LessonsMainEmpty>
       <Empty
         image={emptyImg}
         description={t('user_home.open_lessons.not_found')}
       />
-    </LessonsMainEmpty>
+    </S.LessonsMainEmpty>
   );
 };
 

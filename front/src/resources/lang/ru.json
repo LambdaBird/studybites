@@ -76,6 +76,29 @@
         "add_user": "Добавить пользователя"
       }
     },
+    "user_home": {
+      "open_lessons": {
+        "title": "Открытые уроки",
+        "not_found": "Нет открытых уроков",
+        "search": "Имя или автор",
+        "enroll_button": "Записаться",
+        "start_button": "Начать"
+      },
+      "ongoing_lessons": {
+        "title": "Текущие уроки",
+        "view_all_lessons": "Посмотреть все мои уроки",
+        "continue_button": "Продолжить"
+      }
+    },
+    "user_lessons": {
+      "ongoing_lessons": {
+        "continue_button": "Продолжить",
+        "title": "Текущие уроки"
+      },
+      "finished_lessons": {
+        "title": "Finished lessons"
+      }
+    },
     "lesson_dashboard": {
       "title": "Мои уроки",
       "add_button": "Добавить урок",
@@ -108,8 +131,7 @@
       }
     },
     "teacher_info": {
-      "greeting": "Добрый день, ",
-      "wishes": ", хорошего дня!",
+      "greeting": "Добрый день, {{fullName}}",
       "lessons": "Уроки",
       "students": "Студенты"
     },
@@ -134,7 +156,8 @@
         "header": "Отзывы",
         "empty": "Отзывов еще нет",
         "be_first": "Оцените урок первым"
-      }
+      },
+      "start": "Начать"
     },
     "lesson_edit": {
       "buttons": {

@@ -4,27 +4,14 @@ import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
 import { useTranslation } from 'react-i18next';
 import { Col, Divider, Modal, Rate, Typography } from 'antd';
-import { getLessonById, postEnroll } from '@sb-ui/utils/api/v1/lesson/lesson';
+import {
+  getEnrolledLesson,
+  postEnroll,
+} from '@sb-ui/utils/api/v1/lesson/lesson';
 import { USER_HOME } from '@sb-ui/utils/paths';
 import { USER_LESSON_MODAL_BASE_KEY } from '@sb-ui/utils/queries';
 import lessonImg from '@sb-ui/resources/img/lesson.svg';
-import {
-  AuthorAvatar,
-  AuthorName,
-  DescriptionText,
-} from '../PublicLesson.desktop.styled';
-import {
-  AuthorContainer,
-  LeftColumn,
-  NameColumn,
-  ReviewBody,
-  ReviewBodyText,
-  ReviewFooter,
-  ReviewHeader,
-  ReviewHeaderSpace,
-  RightColumn,
-  StartButton,
-} from './LessonModal.styled';
+import * as S from './UserEnrollModal.desktop.styled';
 
 const { Title, Text } = Typography;
 
@@ -49,9 +36,9 @@ const LessonModal = ({ onStartEnroll = () => {} }) => {
         id,
       },
     ],
-    getLessonById,
+    getEnrolledLesson,
   );
-  const { name, authors, description } = responseData?.data || {
+  const { name, authors, description } = responseData?.lesson || {
     authors: [
       {
         firstName: '',
@@ -83,51 +70,55 @@ const LessonModal = ({ onStartEnroll = () => {} }) => {
         display: 'flex',
       }}
     >
-      <LeftColumn>
+      <S.LeftColumn>
         <Col span={24}>
           <img width="100%" src={lessonImg} alt="" />
-          <AuthorContainer>
-            <AuthorAvatar>{author?.[0]}</AuthorAvatar>
-            <AuthorName>{author}</AuthorName>
-          </AuthorContainer>
+          <S.AuthorContainer>
+            <S.AuthorAvatar>{author?.[0]}</S.AuthorAvatar>
+            <S.AuthorName>{author}</S.AuthorName>
+          </S.AuthorContainer>
         </Col>
-        <NameColumn span={24}>
+        <S.NameColumn span={24}>
           <Title level={3}>{name}</Title>
-        </NameColumn>
+        </S.NameColumn>
         <Col span={24}>
-          <DescriptionText>{description}</DescriptionText>
+          <S.DescriptionText>{description}</S.DescriptionText>
         </Col>
-      </LeftColumn>
-      <RightColumn>
-        <ReviewHeader>
-          <ReviewHeaderSpace>
+      </S.LeftColumn>
+      <S.RightColumn>
+        <S.ReviewHeader>
+          <S.ReviewHeaderSpace>
             <Text>{t('enroll_modal.review.header')}</Text>
             <Rate />
-            <DescriptionText>(0)</DescriptionText>
-          </ReviewHeaderSpace>
+            <S.DescriptionText>(0)</S.DescriptionText>
+          </S.ReviewHeaderSpace>
           <Divider />
-        </ReviewHeader>
-        <ReviewBody>
-          <ReviewBodyText>
+        </S.ReviewHeader>
+        <S.ReviewBody>
+          <S.ReviewBodyText>
             <div>
-              <DescriptionText>
+              <S.DescriptionText>
                 {t('enroll_modal.review.empty')}
-              </DescriptionText>
+              </S.DescriptionText>
             </div>
             <div>
               <Typography.Link>
                 {t('enroll_modal.review.be_first')}
               </Typography.Link>
             </div>
-          </ReviewBodyText>
+          </S.ReviewBodyText>
           <Divider />
-        </ReviewBody>
-        <ReviewFooter>
-          <StartButton onClick={onClickStartEnroll} size="large" type="primary">
-            Start
-          </StartButton>
-        </ReviewFooter>
-      </RightColumn>
+        </S.ReviewBody>
+        <S.ReviewFooter>
+          <S.StartButton
+            onClick={onClickStartEnroll}
+            size="large"
+            type="primary"
+          >
+            {t('enroll_modal.start')}
+          </S.StartButton>
+        </S.ReviewFooter>
+      </S.RightColumn>
     </Modal>
   );
 };

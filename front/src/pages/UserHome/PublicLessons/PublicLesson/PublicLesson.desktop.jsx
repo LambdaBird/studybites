@@ -4,7 +4,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { Button, Row, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { LESSON_PAGE, USER_ENROLL } from '@sb-ui/utils/paths';
-import lessonImage from '../../../resources/img/lesson.svg';
+import lessonImage from '@sb-ui/resources/img/lesson.svg';
 import {
   AuthorAvatar,
   AuthorContainer,
