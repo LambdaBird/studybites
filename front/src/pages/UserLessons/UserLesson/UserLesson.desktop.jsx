@@ -1,21 +1,18 @@
 import PropTypes from 'prop-types';
 import { useMemo } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { Button, Row, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { LESSON_PAGE, USER_ENROLL } from '@sb-ui/utils/paths';
+import { LESSON_PAGE } from '@sb-ui/utils/paths';
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
 import * as S from './UserLesson.desktop.styled';
 
 const { Title } = Typography;
 
 const UserLessonDesktop = ({ lesson }) => {
-  const location = useLocation();
-  const query = useMemo(() => location.search, [location]);
-
   const { t } = useTranslation();
   const history = useHistory();
-  const { id, isEnrolled, name, description, maintainer } = lesson;
+  const { id, name, description, maintainer } = lesson;
 
   const fullName = useMemo(
     () =>
@@ -27,13 +24,6 @@ const UserLessonDesktop = ({ lesson }) => {
     () => maintainer.userInfo.firstName[0] || maintainer.userInfo.lastName[0],
     [maintainer.userInfo.firstName, maintainer.userInfo.lastName],
   );
-
-  const handleEnroll = () => {
-    history.push({
-      search: query,
-      pathname: USER_ENROLL.replace(':id', id),
-    });
-  };
 
   const handleContinueLesson = () => {
     history.push(LESSON_PAGE.replace(':id', id));
@@ -49,6 +39,7 @@ const UserLessonDesktop = ({ lesson }) => {
               <S.AuthorAvatar>{firstNameLetter}</S.AuthorAvatar>
               <S.AuthorName>{fullName}</S.AuthorName>
             </S.AuthorContainer>
+            <S.ProgressBar percent={50} />
           </div>
         </S.LeftContent>
         <S.RightContent>
@@ -59,15 +50,9 @@ const UserLessonDesktop = ({ lesson }) => {
             <S.DescriptionText>{description}</S.DescriptionText>
           </Row>
           <S.EnrollRow justify="end">
-            {isEnrolled ? (
-              <Button type="primary" onClick={handleContinueLesson}>
-                {t('user_home.ongoing_lessons.continue_button')}
-              </Button>
-            ) : (
-              <Button size="medium" type="secondary" onClick={handleEnroll}>
-                {t('user_home.open_lessons.enroll_button')}
-              </Button>
-            )}
+            <Button type="primary" onClick={handleContinueLesson}>
+              {t('user_home.ongoing_lessons.continue_button')}
+            </Button>
           </S.EnrollRow>
         </S.RightContent>
       </S.MainSpace>
@@ -78,7 +63,6 @@ const UserLessonDesktop = ({ lesson }) => {
 UserLessonDesktop.propTypes = {
   lesson: PropTypes.exact({
     id: PropTypes.number.isRequired,
-    isEnrolled: PropTypes.bool.isRequired,
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
     maintainer: PropTypes.shape({

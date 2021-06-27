@@ -6,7 +6,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
 import * as S from './Search.mobile.styled';
 
-const SearchMobile = ({ setSearchText, searchText, className }) => {
+const SearchMobile = ({ setSearchText, searchText, className, placement }) => {
   const { t } = useTranslation();
 
   const onSearchChange = (data) => {
@@ -16,7 +16,7 @@ const SearchMobile = ({ setSearchText, searchText, className }) => {
   return (
     <>
       <Popover
-        placement="topRight"
+        placement={placement}
         content={
           <DebouncedSearch
             className={className}
@@ -43,12 +43,14 @@ const SearchMobile = ({ setSearchText, searchText, className }) => {
 SearchMobile.defaultProps = {
   setSearchText: () => {},
   searchText: '',
+  placement: 'topRight',
 };
 
 SearchMobile.propTypes = {
   setSearchText: PropTypes.func,
   className: PropTypes.string,
   searchText: PropTypes.string,
+  placement: PropTypes.string,
 };
 
 export default SearchMobile;

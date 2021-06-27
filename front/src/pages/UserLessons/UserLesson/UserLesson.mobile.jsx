@@ -1,26 +1,27 @@
 import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Row } from 'antd';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
-import { LESSON_PAGE, USER_ENROLL } from '@sb-ui/utils/paths';
+import { LESSON_PAGE } from '@sb-ui/utils/paths';
 import * as S from './UserLesson.mobile.styled';
 
 const UserLessonMobile = ({ lesson }) => {
-  const location = useLocation();
-  const query = useMemo(() => location.search, [location]);
   const { t } = useTranslation();
   const history = useHistory();
-  const { id, isEnrolled, name, description, firstName, lastName } = lesson;
-  const author = `${firstName} ${lastName}`;
+  const { id, name, description, maintainer } = lesson;
 
-  const handleEnroll = () => {
-    history.push({
-      search: query,
-      pathname: USER_ENROLL.replace(':id', id),
-    });
-  };
+  const fullName = useMemo(
+    () =>
+      `${maintainer.userInfo.firstName} ${maintainer.userInfo.lastName}`.trim(),
+    [maintainer.userInfo.firstName, maintainer.userInfo.lastName],
+  );
+
+  const firstNameLetter = useMemo(
+    () => maintainer.userInfo.firstName[0] || maintainer.userInfo.lastName[0],
+    [maintainer.userInfo.firstName, maintainer.userInfo.lastName],
+  );
 
   const handleContinueLesson = () => {
     history.push(LESSON_PAGE.replace(':id', id));
@@ -28,8 +29,9 @@ const UserLessonMobile = ({ lesson }) => {
 
   return (
     <S.Main size="large" wrap={false}>
-      <div style={{ height: '9rem' }}>
+      <div>
         <S.Image src={lessonImage} alt="Lesson" />
+        <S.ProgressBar percent={50} />
       </div>
       <Row>
         <S.Title level={3}>{name}</S.Title>
@@ -38,19 +40,13 @@ const UserLessonMobile = ({ lesson }) => {
         <S.Description>{description}</S.Description>
       </Row>
       <S.EnrollRow>
-        {isEnrolled ? (
-          <S.Enroll type="primary" onClick={handleContinueLesson}>
-            {t('user_home.ongoing_lessons.continue_button')}
-          </S.Enroll>
-        ) : (
-          <S.Enroll size="medium" type="secondary" onClick={handleEnroll}>
-            {t('user_home.open_lessons.enroll_button')}
-          </S.Enroll>
-        )}
+        <S.Enroll type="primary" onClick={handleContinueLesson}>
+          {t('user_home.ongoing_lessons.continue_button')}
+        </S.Enroll>
       </S.EnrollRow>
       <S.AuthorContainer>
-        <S.AuthorAvatar>{author?.[0]}</S.AuthorAvatar>
-        <S.AuthorName>{author}</S.AuthorName>
+        <S.AuthorAvatar>{firstNameLetter}</S.AuthorAvatar>
+        <S.AuthorName>{fullName}</S.AuthorName>
       </S.AuthorContainer>
     </S.Main>
   );
@@ -59,11 +55,14 @@ const UserLessonMobile = ({ lesson }) => {
 UserLessonMobile.propTypes = {
   lesson: PropTypes.exact({
     id: PropTypes.number.isRequired,
-    isEnrolled: PropTypes.bool.isRequired,
-    firstName: PropTypes.string.isRequired,
-    lastName: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
+    maintainer: PropTypes.shape({
+      userInfo: PropTypes.shape({
+        firstName: PropTypes.string.isRequired,
+        lastName: PropTypes.string.isRequired,
+      }),
+    }),
   }).isRequired,
 };
 

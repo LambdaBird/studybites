@@ -1,12 +1,11 @@
 import { useState } from 'react';
-import { Col, Row, Skeleton, Space } from 'antd';
+import { Skeleton } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 
 import { USER_ENROLLED_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
 import { getEnrolledLessons } from '@sb-ui/utils/api/v1/lesson';
 import UserLesson from '@sb-ui/pages/UserLessons/UserLesson';
-import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
 
 import * as S from './UserLessonsList.styled';
 
@@ -31,42 +30,31 @@ const UserLessonsList = () => {
   );
   const { data: lessons, total } = responseData || {};
 
-  const onSearchChange = (data) => {
-    setSearchText(data);
-  };
-
   return (
     <S.Wrapper>
       <S.LessonsHeader justify="space-between">
-        <Col>
-          <Row justify="center" align="middle">
-            <Space size="large">
-              <S.OpenLessonsTitle level={4}>
-                {t('user_lessons.ongoing_lessons.title')}
-              </S.OpenLessonsTitle>
-              <DebouncedSearch
-                delay={500}
-                placeholder={t('user_home.open_lessons.search')}
-                allowClear
-                onChange={onSearchChange}
-              />
-            </Space>
-          </Row>
-        </Col>
+        <S.OpenLessonsTitle level={4}>
+          {t('user_lessons.ongoing_lessons.title')}
+        </S.OpenLessonsTitle>
+        <S.StyledSearch
+          searchText={searchText}
+          setSearchText={setSearchText}
+          placement="bottomLeft"
+        />
       </S.LessonsHeader>
-      <S.LessonsRow gutter={[16, 16]}>
+      <S.LessonsRow gutter={[32, 32]}>
         {isLoading
           ? Array(PAGE_SIZE)
               .fill()
               .map(() => (
-                <Col lg={{ span: 12 }} md={{ span: 24 }}>
+                <S.LessonCol lg={{ span: 12 }} md={{ span: 24 }}>
                   <Skeleton avatar />
-                </Col>
+                </S.LessonCol>
               ))
           : lessons.map((lesson) => (
-              <Col key={lesson.id} lg={{ span: 12 }} md={{ span: 24 }}>
+              <S.LessonCol key={lesson.id} lg={{ span: 12 }} md={{ span: 24 }}>
                 <UserLesson lesson={lesson} />
-              </Col>
+              </S.LessonCol>
             ))}
       </S.LessonsRow>
       {!isLoading && total > PAGE_SIZE && (

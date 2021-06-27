@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Avatar, Row, Typography, Button } from 'antd';
+import { Avatar, Row, Typography, Button, Progress } from 'antd';
 
 import {
   DESCRIPTION_COLOR,
@@ -7,6 +7,7 @@ import {
   VOLCANO_6,
   WHITE_COLOR,
 } from '@sb-ui/resources/styles/Global.styled';
+import variables from '@sb-ui/theme/variables';
 
 const { Text } = Typography;
 
@@ -64,4 +65,16 @@ export const EnrollRow = styled(Row)`
 
 export const Enroll = styled(Button)`
   width: 100%;
+`;
+
+export const ProgressBar = styled(Progress)`
+  padding: 0.5rem 0;
+
+  .ant-progress-bg {
+    background-color: ${variables['primary-color']} !important;
+  }
+
+  .ant-progress-text {
+    color: ${variables['secondary-text-color']} !important;
+  }
 `;
