@@ -1,10 +1,11 @@
 import { Col, Row, Typography } from 'antd';
 import HtmlToReact from 'html-to-react';
 import QuizBlockResult from '@sb-ui/pages/LessonPage/QuizBlockResult';
+import * as S from '@sb-ui/pages/LessonPage/LessonPage.styled';
 
 const HtmlToReactParser = HtmlToReact.Parser;
 
-const { Text } = Typography;
+const { Text, Title } = Typography;
 
 export const groupBlocks = (lessons) => {
   const res = [];
@@ -73,6 +74,69 @@ export const generateBlockByElement = (element) => {
           </Col>
         )}
       </Row>
+    );
+  }
+
+  if (content.type === 'list') {
+    const { style, items } = content.data;
+    if (style === 'ordered') {
+      return (
+        <ol>
+          {items.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ol>
+      );
+    }
+
+    if (style === 'unordered') {
+      return (
+        <ul>
+          {items.map((item) => (
+            <li>{item}</li>
+          ))}
+        </ul>
+      );
+    }
+  }
+
+  if (content.type === 'header') {
+    const { text, level } = content.data;
+    return <Title level={level}>{text}</Title>;
+  }
+
+  if (content.type === 'quote') {
+    const { alignment, caption, text } = content.data;
+    return (
+      <S.Quote>
+        <blockquote>{text}</blockquote>
+        <S.QuoteAuthor alignment={alignment}>
+          <Text>{caption}</Text>
+        </S.QuoteAuthor>
+      </S.Quote>
+    );
+  }
+
+  if (content.type === 'delimiter') {
+    return <S.Delimiter />;
+  }
+
+  if (content.type === 'table') {
+    const contentTable = content.data.content;
+    return (
+      <S.CustomTableWrapper
+        style={{ backgroundColor: 'white', padding: '1rem' }}
+      >
+        <S.CustomTable>
+          {contentTable.map((row) => (
+            <tr>
+              {row.map((col) => (
+                <td>{col}</td>
+              ))}
+            </tr>
+          ))}
+        </S.CustomTable>
+      </S.CustomTableWrapper>
     );
   }
 

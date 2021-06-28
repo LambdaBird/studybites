@@ -80,8 +80,18 @@ const LessonEdit = () => {
         next: Next,
         quiz: Quiz,
         embed: Embed,
-        header: HeaderTool,
-        list: List,
+        header: {
+          class: HeaderTool,
+          config: {
+            placeholder: 'Enter a header',
+            levels: [1, 2, 3, 4, 5],
+            defaultLevel: 3,
+          },
+        },
+        list: {
+          class: List,
+          inlineToolbar: true,
+        },
         quote: Quote,
         delimiter: Delimiter,
         marker: Marker,
