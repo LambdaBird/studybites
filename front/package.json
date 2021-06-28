@@ -1,9 +1,8 @@
 {
   "name": "studybites-front",
   "version": "0.0.1",
-  "private": true,
+  "license": "Apache License 2.0",
   "proxy": "http://studybites-api:3017",
-  "repository": "https://github.com/LambdaBird/studybites",
   "scripts": {
     "start": "yarn install && craco start",
     "build": "yarn install && craco build",
