@@ -183,6 +183,9 @@
         "text": "Текст",
         "next": "Следующий"
       },
+      "header": {
+        "placeholder": "Введите заголовок"
+      },
       "toolbar": {
         "toolbox_add": "Добавить"
       }
