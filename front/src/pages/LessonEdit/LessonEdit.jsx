@@ -83,7 +83,7 @@ const LessonEdit = () => {
         header: {
           class: HeaderTool,
           config: {
-            placeholder: 'Enter a header',
+            placeholder: t('editor_js.header.placeholder'),
             levels: [1, 2, 3, 4, 5],
             defaultLevel: 3,
           },

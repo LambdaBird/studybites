@@ -184,6 +184,9 @@
         "text": "Text",
         "next": "Next"
       },
+      "header": {
+        "placeholder": "Enter a header"
+      },
       "toolbar": {
         "toolbox_add": "Add"
       }
