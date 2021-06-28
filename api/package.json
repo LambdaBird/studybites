@@ -1,9 +1,8 @@
 {
   "name": "studybites-api",
   "version": "0.0.1",
-  "private": true,
+  "license": "Apache License 2.0",
   "main": "server.js",
-  "repository": "https://github.com/LambdaBird/studyBites",
   "scripts": {
     "dev": "./bootstrap",
     "seed:run": "./seeds/run",
