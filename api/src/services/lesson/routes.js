@@ -189,12 +189,13 @@ const router = async (instance) => {
             lessonId: id,
           });
 
-        const { blockId: final } = await LessonBlockStructure.query()
-          .first()
-          .where({
-            lessonId: id,
-          })
-          .whereNull('childId');
+        const { blockId: final } =
+          (await LessonBlockStructure.query()
+            .first()
+            .where({
+              lessonId: id,
+            })
+            .whereNull('childId')) || {};
 
         const isFinal = lesson.blocks.some((block) => block.blockId === final);
 
