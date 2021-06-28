@@ -3,6 +3,7 @@ const variables = {
   'text-color': 'rgba(0, 0, 0, 0.85)',
   'secondary-text-color': '#595959',
   'placeholder-color': '#bfbfbf',
+  'checkbox-disabled': '#8c8c8c',
 };
 
 module.exports = variables;

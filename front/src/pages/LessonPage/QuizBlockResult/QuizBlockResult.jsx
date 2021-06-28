@@ -1,10 +1,10 @@
 import { verifyAnswers } from '@sb-ui/pages/LessonPage/QuizBlock/utils';
 import Block from '@sb-ui/pages/LessonPage/Block';
 import { Col, Typography } from 'antd';
-import * as S from '@sb-ui/pages/LessonPage/QuizBlockResult/QuizblockResult.styled';
 import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import { useMemo } from 'react';
+import ColumnDisabledCheckbox from '@sb-ui/components/atoms/ColumnDisabledCheckbox';
 
 const { Text } = Typography;
 
@@ -62,8 +62,7 @@ const QuizBlockResult = ({ data, correctAnswer }) => {
       </Block>
       <Block top="1rem">
         <Col span={24}>
-          <S.ColumnCheckbox
-            disabled
+          <ColumnDisabledCheckbox
             value={defaultValueAnswers}
             options={options}
           />
@@ -95,8 +94,7 @@ const QuizBlockResult = ({ data, correctAnswer }) => {
               <CloseCircleTwoTone twoToneColor="#F5222D" />
             </div>
 
-            <S.ColumnCheckbox
-              disabled
+            <ColumnDisabledCheckbox
               value={defaultValueCorrect}
               options={optionsDifference}
             />
