@@ -1,9 +1,11 @@
+import { useMemo } from 'react';
 import { Button, Col, Row, Typography } from 'antd';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { LESSON_PAGE } from '@sb-ui/utils/paths';
 import lessonImg from '@sb-ui/resources/img/lesson.svg';
+import { getProgressEnrolledLesson } from '@sb-ui/utils';
 import * as S from './OngoingLesson.styled';
 
 const { Title } = Typography;
@@ -11,7 +13,13 @@ const { Title } = Typography;
 const OngoingLessonMobile = ({ lesson }) => {
   const { t } = useTranslation();
   const history = useHistory();
-  const { name, id } = lesson;
+  const { name, id, blocks, totalBlocks, isFinished } = lesson;
+
+  const progressPercent = useMemo(
+    () => (isFinished ? 100 : getProgressEnrolledLesson(blocks, totalBlocks)),
+
+    [blocks, isFinished, totalBlocks],
+  );
 
   const handleContinueLesson = () => {
     history.push(LESSON_PAGE.replace(':id', id));
@@ -21,7 +29,7 @@ const OngoingLessonMobile = ({ lesson }) => {
     <S.MainSpace>
       <S.LeftColumn span={8}>
         <S.StyledImage src={lessonImg} alt="Lesson" />
-        <S.ProgressBar percent={50} />
+        <S.ProgressBar percent={progressPercent} />
       </S.LeftColumn>
       <S.RightColumn span={16}>
         <Title level={4}>{name}</Title>
@@ -42,6 +50,9 @@ OngoingLessonMobile.propTypes = {
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     maintainer: PropTypes.string.isRequired,
+    blocks: PropTypes.array.isRequired,
+    totalBlocks: PropTypes.number.isRequired,
+    isFinished: PropTypes.bool,
   }).isRequired,
 };
 

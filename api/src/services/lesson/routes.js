@@ -30,6 +30,7 @@ import {
 const router = async (instance) => {
   const { Lesson, UserRole, Block, LessonBlockStructure, User, Result } =
     instance.models;
+  const { knex } = instance;
 
   instance.route({
     method: 'GET',
@@ -754,32 +755,109 @@ const router = async (instance) => {
     validatorCompiler,
     errorHandler,
     onRequest: instance.auth({ instance }),
-    handler: async (req, repl) => {
+    handler: async ({ query, user }) => {
       const columns = {
         name: 'name',
         firstName: 'maintainer:userInfo.first_name',
         lastName: 'maintainer:userInfo.last_name',
       };
 
-      if (!req.query.search) {
+      if (!query.search) {
         columns.name = undefined;
         columns.firstName = undefined;
         columns.lastName = undefined;
       }
 
-      const firstIndex = parseInt(req.query.offset, 10) || 0;
+      const firstIndex = parseInt(query.offset, 10) || 0;
       const lastIndex =
         firstIndex +
-        (parseInt(req.query.limit, 10) || config.search.LESSON_SEARCH_LIMIT) -
+        (parseInt(query.limit, 10) || config.search.LESSON_SEARCH_LIMIT) -
         1;
 
       const { total, results } = await Lesson.getAllEnrolled({
         columns,
-        userId: req.user.id,
-        search: req.query?.search?.trim(),
+        userId: user.id,
+        search: query?.search?.trim(),
       }).range(firstIndex, lastIndex);
 
-      return repl.status(200).send({ total, data: results });
+      await Promise.all(
+        results.map(async (lesson) => {
+          const { count } =
+            (await LessonBlockStructure.query()
+              .first()
+              .count()
+              .where({ lessonId: lesson.id })) || {};
+
+          // eslint-disable-next-line no-param-reassign
+          lesson.totalBlocks = +count || 0;
+
+          const { isFinished } =
+            (await Result.query()
+              .first()
+              .select('action as is_finished')
+              .where({ lessonId: lesson.id })
+              .andWhere({ userId: user.id })
+              .andWhere({ action: 'finish' })) || {};
+
+          console.log(isFinished);
+          if (isFinished) {
+            // eslint-disable-next-line no-param-reassign
+            lesson.blocks = [];
+            // eslint-disable-next-line no-param-reassign
+            lesson.isFinished = true;
+
+            return lesson;
+          }
+
+          const lessonResults = await Result.query()
+            .first()
+            .select('results.*')
+            .from(function () {
+              this.select(this.knex().raw('max(created_at) as created_at'))
+                .from('results')
+                .where({
+                  userId: user.id,
+                  lessonId: lesson.id,
+                })
+                .as('temp');
+            })
+            .join('results', 'results.created_at', '=', 'temp.created_at');
+
+          if (!lessonResults) {
+            // eslint-disable-next-line no-param-reassign
+            lesson.blocks = [];
+
+            return lesson;
+          }
+
+          const { parent } = await LessonBlockStructure.query()
+            .first()
+            .select('id as parent')
+            .where({ lessonId: lesson.id })
+            .whereNull('parentId');
+
+          const blocks = await knex.select(
+            knex.raw(`
+              blocks.* from connectby('lesson_block_structure', 'id', 'parent_id', '${parent}', 0) as temp(id uuid, parent_id uuid, level int) 
+              join lesson_block_structure structure on structure.id = temp.id join blocks on blocks.block_id = structure.block_id
+              join (select block_id, MAX(created_at) as created_at from blocks group by block_id) recent on recent.block_id = blocks.block_id and recent.created_at = blocks.created_at
+            `),
+          );
+
+          const index = blocks.findIndex(
+            (block) =>
+              block.blockId === lessonResults.blockId &&
+              block.revision === lessonResults.revision,
+          );
+
+          // eslint-disable-next-line no-param-reassign
+          lesson.blocks = blocks.splice(0, index + 1);
+
+          return lesson;
+        }),
+      );
+
+      return { totalLessons: total, lessons: results };
     },
   });
 
@@ -919,7 +997,7 @@ const router = async (instance) => {
             .where({ lessonId: id })
             .whereIn('blocks.type', config.interactiveBlocks);
 
-          if (!finished || !blocks.every((block) => finished.includes(block))) {
+          if (finished && !blocks.every((block) => finished.includes(block))) {
             throw new BadRequestError(NOT_FINISHED);
           }
 

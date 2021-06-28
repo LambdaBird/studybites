@@ -28,7 +28,7 @@ const UserLessonsList = () => {
     getEnrolledLessons,
     { keepPreviousData: true },
   );
-  const { data: lessons, total } = responseData || {};
+  const { lessons, totalLessons } = responseData || {};
 
   return (
     <S.Wrapper>
@@ -57,10 +57,10 @@ const UserLessonsList = () => {
               </S.LessonCol>
             ))}
       </S.LessonsRow>
-      {!isLoading && total > PAGE_SIZE && (
+      {!isLoading && totalLessons > PAGE_SIZE && (
         <S.StyledPagination
           current={currentPage}
-          total={total}
+          total={totalLessons}
           pageSize={PAGE_SIZE}
           onChange={setCurrentPage}
           showSizeChanger={false}

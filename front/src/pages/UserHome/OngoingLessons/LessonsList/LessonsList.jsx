@@ -10,7 +10,6 @@ import * as S from './LessonsList.styled';
 const LessonsList = ({ lessons, isLoading }) => {
   const { t } = useTranslation();
   const isMobile = useMobile();
-
   if (isLoading || lessons?.length > 0) {
     return (
       <S.LessonsMainRow gutter={isMobile ? [0, 16] : [16, 16]}>

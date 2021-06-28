@@ -19,10 +19,9 @@ const OngoingLessons = () => {
     getEnrolledLessons,
     { keepPreviousData: true },
   );
-  const { data: lessons } = responseData || {};
+  const { lessons } = responseData || {};
 
-  if (!isLoading && !lessons.length) return null;
-
+  if (!isLoading && !lessons?.length) return null;
   return (
     <>
       {isMobile ? (
