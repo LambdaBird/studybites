@@ -31,7 +31,3 @@ export const statusesOptions = [
 export const pageLimit = 8;
 
 export const DEFAULT_LESSON_NAME = 'New lesson';
-
-export const itemPerPage = [...new Array(pageLimit)].map((_, index) => ({
-  id: `skeleton ${index}`,
-}));

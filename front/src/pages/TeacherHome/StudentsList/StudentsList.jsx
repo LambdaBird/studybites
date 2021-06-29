@@ -4,11 +4,9 @@ import { Button, Col, Divider, Skeleton, Space, Typography } from 'antd';
 import { useQuery } from 'react-query';
 import emptyImage from '@sb-ui/resources/img/empty.svg';
 import { getTeacherStudents } from '@sb-ui/utils/api/v1/lesson';
-import {
-  itemPerPage,
-  MAX_STUDENTS_IN_LIST,
-} from '@sb-ui/pages/TeacherHome/StudentsList/constants';
+import { MAX_STUDENTS_IN_LIST } from '@sb-ui/pages/TeacherHome/StudentsList/constants';
 import { TEACHER_STUDENTS_BASE_KEY } from '@sb-ui/utils/queries';
+import { skeletonArray } from '@sb-ui/utils/utils';
 import * as S from './StudentsList.styled';
 
 const { Text } = Typography;
@@ -41,7 +39,7 @@ const StudentsList = () => {
           <S.ListTitle level={4}>{t('students_list.title')}</S.ListTitle>
         </S.EmptyListHeader>
         <S.StudentsRow gutter={[16, 16]} align="top">
-          {itemPerPage.map(({ id }) => (
+          {skeletonArray(MAX_STUDENTS_IN_LIST).map(({ id }) => (
             <Col key={id} span={12}>
               <Skeleton avatar paragraph={{ rows: 0 }} />
             </Col>

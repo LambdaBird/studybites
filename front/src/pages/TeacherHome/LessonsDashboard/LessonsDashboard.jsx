@@ -2,15 +2,16 @@ import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { useTranslation } from 'react-i18next';
 import { Row, Select, Space, Button, Skeleton, Alert } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
 import { useHistory } from 'react-router-dom';
+import { PlusOutlined } from '@ant-design/icons';
+import { skeletonArray } from '@sb-ui/utils/utils';
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
 import { getTeacherLessons } from '@sb-ui/utils/api/v1/lesson';
 import { LESSONS_NEW } from '@sb-ui/utils/paths';
 import { TEACHER_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
 import * as S from './LessonsDashboard.styled';
 import LessonsList from './LessonsList';
-import { itemPerPage, pageLimit, statusesOptions } from './constants';
+import { pageLimit, statusesOptions } from './constants';
 
 const { Option } = Select;
 
@@ -79,7 +80,7 @@ const LessonsDashboard = () => {
       )}
 
       {isLoading ? (
-        itemPerPage.map((el) => (
+        skeletonArray(pageLimit).map((el) => (
           <S.CardCol key={el.id} span={12}>
             <Skeleton loading active avatar paragraph={{ rows: 2 }} />
           </S.CardCol>
