@@ -5,7 +5,13 @@ import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
 import { DownOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
-import { HOME, SIGN_IN, TEACHER_HOME, USER_HOME } from '@sb-ui/utils/paths';
+import {
+  HOME,
+  SIGN_IN,
+  TEACHER_HOME,
+  USER_HOME,
+  USER_LESSONS,
+} from '@sb-ui/utils/paths';
 import logo from '@sb-ui/resources/img/logo.svg';
 import { clearJWT } from '@sb-ui/utils/jwt';
 import { USER_BASE_QUERY } from '@sb-ui/utils/queries';
@@ -37,9 +43,16 @@ const Header = ({ children }) => {
   const getTeacherMenu = () => {
     if (location.pathname.includes(USER_HOME)) {
       return (
-        <Menu.Item key="teacherHome">
-          <Link to={TEACHER_HOME}>{t('header.switch_teacher')}</Link>
-        </Menu.Item>
+        <>
+          <Menu.Item key="teacherHome">
+            <Link to={TEACHER_HOME}>{t('header.switch_teacher')}</Link>
+          </Menu.Item>
+          <Menu.Item key="viewAllMyLessons">
+            <Link to={USER_LESSONS}>
+              {t('user_home.ongoing_lessons.view_all_lessons')}
+            </Link>
+          </Menu.Item>
+        </>
       );
     }
     return (
@@ -53,6 +66,7 @@ const Header = ({ children }) => {
     <Menu onClick={handleMenuClick}>
       <Menu.Item key="profile">{t('header.profile')}</Menu.Item>
       {user.roles.includes(Roles.TEACHER) && getTeacherMenu()}
+
       <Menu.Divider />
       <Menu.Item key="signOut">{t('header.sign_out')}</Menu.Item>
     </Menu>
