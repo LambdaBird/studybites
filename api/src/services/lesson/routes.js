@@ -2,7 +2,7 @@
 import { v4 } from 'uuid';
 import objection from 'objection';
 
-import config from '../../../config';
+import config from '../../config';
 
 import errorResponse from '../../validation/schemas';
 import validatorCompiler from '../../validation/validatorCompiler';

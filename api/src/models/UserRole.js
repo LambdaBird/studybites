@@ -1,6 +1,5 @@
 import objection from 'objection';
 import path from 'path';
-import config from '../../config';
 
 class UserRole extends objection.Model {
   static get tableName() {

@@ -1,6 +1,6 @@
 import objection, { raw } from 'objection';
 
-import config from '../../../config';
+import config from '../../config';
 
 import errorResponse from '../../validation/schemas';
 import validatorCompiler from '../../validation/validatorCompiler';
@@ -34,7 +34,7 @@ import {
   USER_FIELDS,
   REFRESH_TOKEN_EXPIRED,
 } from './constants';
-import { hashPassword, comparePasswords } from '../../../utils/salt';
+import { hashPassword, comparePasswords } from '../../utils/salt';
 
 const router = async (instance) => {
   const { User, UserRole } = instance.models;

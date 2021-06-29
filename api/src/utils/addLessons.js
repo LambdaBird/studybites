@@ -1,5 +1,5 @@
 import config from '../config';
-import build from '../src/app';
+import build from '../app';
 
 const addLessons = async ({ name, description, status, userId }) => {
   const app = await build();

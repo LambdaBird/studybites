@@ -1,4 +1,4 @@
-import config from '../config.js'; // eslint-disable-line import/extensions
+import config from '../src/config.js'; // eslint-disable-line import/extensions
 
 export const up = (knex) =>
   knex.schema

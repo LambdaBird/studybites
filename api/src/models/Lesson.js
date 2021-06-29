@@ -1,7 +1,7 @@
 import objection from 'objection';
 import path from 'path';
 
-import config from '../../config';
+import config from '../config';
 
 class Lesson extends objection.Model {
   static get tableName() {

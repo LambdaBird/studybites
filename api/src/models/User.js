@@ -3,7 +3,7 @@
 import objection from 'objection';
 import path from 'path';
 
-import config from '../../config';
+import config from '../config';
 
 class UserQueryBuilder extends objection.QueryBuilder {
   getAll(columns, req) {

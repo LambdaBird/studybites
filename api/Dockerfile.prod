@@ -1,0 +1,17 @@
+FROM node:14-alpine as build
+WORKDIR /api
+COPY package.json yarn.lock ./
+RUN apk --no-cache add --virtual builds-deps build-base python
+RUN yarn install
+COPY . .
+RUN yarn build
+
+FROM node:14-alpine
+WORKDIR /api
+COPY --from=build /api/dist /api
+COPY package.json /api/package.json
+RUN apk --no-cache add --virtual builds-deps build-base python
+RUN npm install --only=prod
+EXPOSE 3017 
+USER node
+CMD ["./bootstrap-prod"]

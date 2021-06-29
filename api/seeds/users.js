@@ -1,6 +1,6 @@
-import config from '../config';
+import config from '../src/config';
 import usersData from './data/users';
-import { hashPassword } from '../utils/salt';
+import { hashPassword } from '../src/utils/salt';
 
 export const seed = async (knex) => {
   await knex('users_roles').del();
