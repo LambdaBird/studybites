@@ -1,5 +1,5 @@
-import { useMemo } from 'react';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { useCallback } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 import { Comment, List, Rate, Row, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
@@ -9,7 +9,7 @@ import {
   getEnrolledLesson,
   postEnroll,
 } from '@sb-ui/utils/api/v1/lesson/lesson';
-import { USER_HOME } from '@sb-ui/utils/paths';
+import { LESSON_PAGE } from '@sb-ui/utils/paths';
 import { USER_LESSON_MODAL_BASE_KEY } from '@sb-ui/utils/queries';
 import * as S from './UserEnrollModal.mobile.styled';
 
@@ -48,18 +48,13 @@ const dataReview = TEST_DATA
   : [];
 
 const UserEnrollModal = () => {
-  const location = useLocation();
-  const query = useMemo(() => location.search, [location]);
   const history = useHistory();
   const { t } = useTranslation();
   const { id } = useParams();
 
-  const historyPushBack = () => {
-    history.push({
-      search: query,
-      pathname: USER_HOME,
-    });
-  };
+  const historyPushLesson = useCallback(() => {
+    history.push(LESSON_PAGE.replace(':id', id));
+  }, [history, id]);
 
   const { data: responseData } = useQuery(
     [
@@ -88,7 +83,7 @@ const UserEnrollModal = () => {
 
   const onClickStartEnroll = async () => {
     await postEnroll(id);
-    historyPushBack();
+    historyPushLesson();
   };
 
   return (
