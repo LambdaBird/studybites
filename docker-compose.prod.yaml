@@ -20,6 +20,7 @@ services:
       - postgres
     volumes:
       - ./api:/api
+      - /api/node_modules
     environment:
       SB_ADMIN_EMAIL: ${SB_ADMIN_EMAIL}
       SB_ADMIN_PASSWORD: ${SB_ADMIN_PASSWORD}
@@ -39,6 +40,7 @@ services:
       dockerfile: Dockerfile.prod
     volumes:
       - ./front:/front
+      - /front/node_modules
     ports:
       - '80:80'
     environment:

@@ -1,4 +1,4 @@
-export const up = (knex) =>
+exports.up = (knex) =>
   knex.schema.createTable('results', (table) => {
     table.uuid('id').primary().defaultTo(knex.raw('gen_random_uuid()'));
     table
@@ -16,4 +16,4 @@ export const up = (knex) =>
     table.foreign('lesson_id').references('lessons.id');
   });
 
-export const down = (knex) => knex.schema.dropTable('results');
+exports.down = (knex) => knex.schema.dropTable('results');

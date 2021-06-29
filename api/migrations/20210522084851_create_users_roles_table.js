@@ -1,4 +1,4 @@
-export const up = (knex) =>
+exports.up = (knex) =>
   knex.schema.createTable('users_roles', (table) => {
     table.integer('user_id').notNullable();
     table.integer('role_id').notNullable();
@@ -9,4 +9,4 @@ export const up = (knex) =>
     table.foreign('role_id').references('roles.id');
   });
 
-export const down = (knex) => knex.schema.dropTable('users_roles');
+exports.down = (knex) => knex.schema.dropTable('users_roles');

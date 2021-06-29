@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   jwt: {
     ACCESS_JWT_EXPIRES_IN: 60 * 5,
     REFRESH_JWT_EXPIRES_IN: 60 * 60 * 24 * 7,

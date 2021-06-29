@@ -1,4 +1,4 @@
-export const up = (knex) =>
+exports.up = (knex) =>
   knex.schema.createTable('lessons', (table) => {
     table.increments();
     table.string('name').notNullable();
@@ -10,4 +10,4 @@ export const up = (knex) =>
     table.timestamp('updated_at').defaultTo(knex.fn.now());
   });
 
-export const down = (knex) => knex.schema.dropTable('lessons');
+exports.down = (knex) => knex.schema.dropTable('lessons');

@@ -1,6 +1,6 @@
-import config from '../src/config.js'; // eslint-disable-line import/extensions
+const config = require('../src/config.js'); // eslint-disable-line import/extensions
 
-export const up = (knex) =>
+exports.up = (knex) =>
   knex.schema
     .createTable('roles', (table) => {
       table.increments();
@@ -14,4 +14,4 @@ export const up = (knex) =>
       ]),
     );
 
-export const down = (knex) => knex.schema.dropTable('roles');
+exports.down = (knex) => knex.schema.dropTable('roles');

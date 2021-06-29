@@ -1,4 +1,4 @@
-export const up = (knex) =>
+exports.up = (knex) =>
   knex.schema.createTable('blocks', (table) => {
     table
       .uuid('block_id')
@@ -13,4 +13,4 @@ export const up = (knex) =>
     table.timestamp('updated_at').defaultTo(knex.fn.now());
   });
 
-export const down = (knex) => knex.schema.dropTable('blocks');
+exports.down = (knex) => knex.schema.dropTable('blocks');
