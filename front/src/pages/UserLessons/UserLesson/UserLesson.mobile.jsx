@@ -5,25 +5,17 @@ import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
 import { LESSON_PAGE } from '@sb-ui/utils/paths';
-import { getProgressEnrolledLesson } from '@sb-ui/utils';
 import * as S from './UserLesson.mobile.styled';
 
 const UserLessonMobile = ({ lesson }) => {
   const { t } = useTranslation();
   const history = useHistory();
-  const { id, name, description, maintainer, blocks, totalBlocks, isFinished } =
-    lesson;
+  const { id, name, description, maintainer, percentage } = lesson;
 
   const fullName = useMemo(
     () =>
       `${maintainer.userInfo.firstName} ${maintainer.userInfo.lastName}`.trim(),
     [maintainer.userInfo.firstName, maintainer.userInfo.lastName],
-  );
-
-  const progressPercent = useMemo(
-    () => (isFinished ? 100 : getProgressEnrolledLesson(blocks, totalBlocks)),
-
-    [blocks, isFinished, totalBlocks],
   );
 
   const firstNameLetter = useMemo(
@@ -39,7 +31,7 @@ const UserLessonMobile = ({ lesson }) => {
     <S.Main size="large" wrap={false}>
       <div>
         <S.Image src={lessonImage} alt="Lesson" />
-        <S.ProgressBar percent={progressPercent} />
+        <S.ProgressBar percent={Math.round(percentage)} />
       </div>
       <Row>
         <S.Title level={3}>{name}</S.Title>
@@ -65,9 +57,7 @@ UserLessonMobile.propTypes = {
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    blocks: PropTypes.array.isRequired,
-    totalBlocks: PropTypes.number.isRequired,
-    isFinished: PropTypes.bool,
+    percentage: PropTypes.number.isRequired,
     maintainer: PropTypes.shape({
       userInfo: PropTypes.shape({
         firstName: PropTypes.string.isRequired,

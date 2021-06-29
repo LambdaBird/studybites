@@ -774,90 +774,128 @@ const router = async (instance) => {
         (parseInt(query.limit, 10) || config.search.LESSON_SEARCH_LIMIT) -
         1;
 
-      const { total, results } = await Lesson.getAllEnrolled({
+      const { finishedLessons } = await Result.query()
+        .first()
+        .select(knex.raw('array_agg(lesson_id) as finished_lessons'))
+        .where({
+          action: 'finish',
+          userId: user.id,
+        });
+
+      const { total, results: lessons } = await Lesson.getAllEnrolled({
         columns,
         userId: user.id,
         search: query?.search?.trim(),
-      }).range(firstIndex, lastIndex);
+      })
+        .whereNotIn('lessons.id', finishedLessons)
+        .range(firstIndex, lastIndex);
 
       await Promise.all(
-        results.map(async (lesson) => {
-          const { count } =
-            (await LessonBlockStructure.query()
-              .first()
-              .count()
-              .where({ lessonId: lesson.id })) || {};
-
-          // eslint-disable-next-line no-param-reassign
-          lesson.totalBlocks = +count || 0;
-
-          const { isFinished } =
+        lessons.map(async (lesson) => {
+          const { id, blockId, revision } =
             (await Result.query()
               .first()
-              .select('action as is_finished')
-              .where({ lessonId: lesson.id })
-              .andWhere({ userId: user.id })
-              .andWhere({ action: 'finish' })) || {};
+              .select('results.*')
+              .from(function () {
+                this.select(this.knex().raw('max(created_at) as created_at'))
+                  .from('results')
+                  .where({
+                    userId: user.id,
+                    lessonId: lesson.id,
+                  })
+                  .as('temporary');
+              })
+              .join(
+                'results',
+                'results.created_at',
+                '=',
+                'temporary.created_at',
+              )) || {};
 
-          console.log(isFinished);
-          if (isFinished) {
+          if (!id) {
             // eslint-disable-next-line no-param-reassign
-            lesson.blocks = [];
-            // eslint-disable-next-line no-param-reassign
-            lesson.isFinished = true;
+            lesson.percentage = 0;
 
             return lesson;
           }
 
-          const lessonResults = await Result.query()
-            .first()
-            .select('results.*')
-            .from(function () {
-              this.select(this.knex().raw('max(created_at) as created_at'))
-                .from('results')
-                .where({
-                  userId: user.id,
-                  lessonId: lesson.id,
-                })
-                .as('temp');
-            })
-            .join('results', 'results.created_at', '=', 'temp.created_at');
+          const { rows: blocks } = await knex.raw(`
+              with recursive sort as (select id, block_id
+                            from lesson_block_structure
+                            where parent_id is null
+                              and lesson_id = ${lesson.id}
+                            union all
+                            select lesson_block_structure.id, lesson_block_structure.block_id
+                            from lesson_block_structure
+                                    join sort on sort.id = lesson_block_structure.parent_id)
+              select blocks.*
+              from sort
+                      join blocks on blocks.block_id = sort.block_id
+                      join (select block_id, max(created_at) as created_at from blocks group by block_id) recent
+                            on recent.block_id = blocks.block_id and recent.created_at = blocks.created_at
+            `);
 
-          if (!lessonResults) {
-            // eslint-disable-next-line no-param-reassign
-            lesson.blocks = [];
+          const { rows: interactiveBlocks } = await knex.raw(`
+              with recursive sort as (select id, block_id
+                            from lesson_block_structure
+                            where parent_id is null
+                              and lesson_id = ${lesson.id}
+                            union all
+                            select lesson_block_structure.id, lesson_block_structure.block_id
+                            from lesson_block_structure
+                                    join sort on sort.id = lesson_block_structure.parent_id)
+              select blocks.*
+              from sort
+                      join blocks on blocks.block_id = sort.block_id
+                      join (select block_id, max(created_at) as created_at from blocks where type in ('next', 'quiz') group by block_id) recent
+                            on recent.block_id = blocks.block_id and recent.created_at = blocks.created_at
+            `);
+
+          const count = blocks.length;
+
+          let nextBlock;
+
+          if (blockId && revision) {
+            for (let i = 0, n = interactiveBlocks.length; i < n; i += 1) {
+              if (
+                interactiveBlocks[i].block_id === blockId &&
+                interactiveBlocks[i].revision === revision
+              ) {
+                nextBlock = interactiveBlocks[i + 1];
+                break;
+              }
+            }
+          } else {
+            // eslint-disable-next-line prefer-destructuring
+            nextBlock = interactiveBlocks[0];
+          }
+
+          if (!nextBlock) {
+            if (id && !blockId) {
+              // eslint-disable-next-line no-param-reassign
+              lesson.percentage = 0;
+            } else {
+              // eslint-disable-next-line no-param-reassign
+              lesson.percentage = 100;
+            }
 
             return lesson;
           }
 
-          const { parent } = await LessonBlockStructure.query()
-            .first()
-            .select('id as parent')
-            .where({ lessonId: lesson.id })
-            .whereNull('parentId');
-
-          const blocks = await knex.select(
-            knex.raw(`
-              blocks.* from connectby('lesson_block_structure', 'id', 'parent_id', '${parent}', 0) as temp(id uuid, parent_id uuid, level int) 
-              join lesson_block_structure structure on structure.id = temp.id join blocks on blocks.block_id = structure.block_id
-              join (select block_id, MAX(created_at) as created_at from blocks group by block_id) recent on recent.block_id = blocks.block_id and recent.created_at = blocks.created_at
-            `),
-          );
-
-          const index = blocks.findIndex(
-            (block) =>
-              block.blockId === lessonResults.blockId &&
-              block.revision === lessonResults.revision,
+          const currentBlocks = blocks.splice(
+            0,
+            blocks.findIndex((block) => block.block_id === nextBlock.block_id) +
+              1,
           );
 
           // eslint-disable-next-line no-param-reassign
-          lesson.blocks = blocks.splice(0, index + 1);
+          lesson.percentage = (currentBlocks.length / count) * 100;
 
           return lesson;
         }),
       );
 
-      return { totalLessons: total, lessons: results };
+      return { total, lessons };
     },
   });
 

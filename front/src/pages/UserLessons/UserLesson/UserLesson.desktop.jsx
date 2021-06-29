@@ -5,7 +5,6 @@ import { Button, Row, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { LESSON_PAGE } from '@sb-ui/utils/paths';
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
-import { getProgressEnrolledLesson } from '@sb-ui/utils';
 import * as S from './UserLesson.desktop.styled';
 
 const { Title } = Typography;
@@ -13,19 +12,12 @@ const { Title } = Typography;
 const UserLessonDesktop = ({ lesson }) => {
   const { t } = useTranslation();
   const history = useHistory();
-  const { id, name, description, maintainer, blocks, totalBlocks, isFinished } =
-    lesson;
+  const { id, name, description, maintainer, percentage } = lesson;
 
   const fullName = useMemo(
     () =>
       `${maintainer.userInfo.firstName} ${maintainer.userInfo.lastName}`.trim(),
     [maintainer.userInfo.firstName, maintainer.userInfo.lastName],
-  );
-
-  const progressPercent = useMemo(
-    () => (isFinished ? 100 : getProgressEnrolledLesson(blocks, totalBlocks)),
-
-    [blocks, isFinished, totalBlocks],
   );
 
   const firstNameLetter = useMemo(
@@ -47,7 +39,7 @@ const UserLessonDesktop = ({ lesson }) => {
               <S.AuthorAvatar>{firstNameLetter}</S.AuthorAvatar>
               <S.AuthorName>{fullName}</S.AuthorName>
             </S.AuthorContainer>
-            <S.ProgressBar percent={progressPercent} />
+            <S.ProgressBar percent={Math.round(percentage)} />
           </div>
         </S.LeftContent>
         <S.RightContent>
@@ -73,9 +65,7 @@ UserLessonDesktop.propTypes = {
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    blocks: PropTypes.array.isRequired,
-    totalBlocks: PropTypes.number.isRequired,
-    isFinished: PropTypes.bool.isRequired,
+    percentage: PropTypes.number.isRequired,
     maintainer: PropTypes.shape({
       userInfo: PropTypes.shape({
         firstName: PropTypes.string.isRequired,

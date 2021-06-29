@@ -1,11 +1,9 @@
-import { useMemo } from 'react';
 import { Button, Col, Row, Typography } from 'antd';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { LESSON_PAGE } from '@sb-ui/utils/paths';
 import lessonImg from '@sb-ui/resources/img/lesson.svg';
-import { getProgressEnrolledLesson } from '@sb-ui/utils';
 import * as S from './OngoingLesson.styled';
 
 const { Title } = Typography;
@@ -14,12 +12,7 @@ const OngoingLessonDesktop = ({ lesson }) => {
   const { t } = useTranslation();
   const history = useHistory();
 
-  const { name, id, blocks, totalBlocks, isFinished } = lesson;
-
-  const progressPercent = useMemo(
-    () => (isFinished ? 100 : getProgressEnrolledLesson(blocks, totalBlocks)),
-    [blocks, isFinished, totalBlocks],
-  );
+  const { name, id, percentage } = lesson;
 
   const handleContinueLesson = () => {
     history.push(LESSON_PAGE.replace(':id', id));
@@ -29,7 +22,7 @@ const OngoingLessonDesktop = ({ lesson }) => {
     <S.MainSpace>
       <S.LeftColumn span={8}>
         <img height={100} src={lessonImg} alt="Lesson" />
-        <S.ProgressBar percent={progressPercent} />
+        <S.ProgressBar percent={Math.round(percentage)} />
       </S.LeftColumn>
       <S.RightColumn span={16}>
         <Title level={4}>{name}</Title>
@@ -51,9 +44,7 @@ OngoingLessonDesktop.propTypes = {
     name: PropTypes.string.isRequired,
     maintainer: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
-    blocks: PropTypes.array.isRequired,
-    totalBlocks: PropTypes.number.isRequired,
-    isFinished: PropTypes.bool,
+    percentage: PropTypes.number.isRequired,
   }).isRequired,
 };
 
