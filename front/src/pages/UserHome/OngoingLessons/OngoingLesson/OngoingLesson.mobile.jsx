@@ -38,7 +38,7 @@ const OngoingLessonMobile = ({ lesson }) => {
 };
 
 OngoingLessonMobile.propTypes = {
-  lesson: PropTypes.exact({
+  lesson: PropTypes.shape({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     maintainer: PropTypes.string.isRequired,

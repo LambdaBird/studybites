@@ -21,6 +21,12 @@ export const PageRowStart = styled(Row)`
   }
 `;
 
+export const RowQuiz = styled(Row)`
+  @media (max-width: 767px) {
+    margin-top: auto;
+  }
+`;
+
 export const BlockCol = styled(Col)`
   display: flex;
   justify-content: center;

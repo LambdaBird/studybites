@@ -26,7 +26,8 @@ const StudentsList = () => {
       setStudents(
         studentsResponseData?.students
           ?.slice(0, MAX_STUDENTS_IN_LIST)
-          ?.map(({ firstName, lastName }) => ({
+          ?.map(({ id, firstName, lastName }) => ({
+            id,
             name: `${firstName} ${lastName}`,
           })),
       );
@@ -79,8 +80,8 @@ const StudentsList = () => {
           </S.ListHeader>
           <Divider />
           <S.StudentsRow gutter={[16, 16]} align="top">
-            {students.map(({ name }) => (
-              <Col span={12}>
+            {students.map(({ id, name }) => (
+              <Col key={id} span={12}>
                 <Space>
                   <S.AuthorAvatar>{name?.[0]}</S.AuthorAvatar>
                   <S.AuthorName>{name}</S.AuthorName>

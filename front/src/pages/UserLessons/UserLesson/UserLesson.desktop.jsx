@@ -61,7 +61,7 @@ const UserLessonDesktop = ({ lesson }) => {
 };
 
 UserLessonDesktop.propTypes = {
-  lesson: PropTypes.exact({
+  lesson: PropTypes.shape({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,

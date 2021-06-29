@@ -7,9 +7,9 @@ import UserLesson from '@sb-ui/pages/UserLessons/UserLesson';
 
 import emptyImg from '@sb-ui/resources/img/empty.svg';
 import { useTranslation } from 'react-i18next';
+import { itemPerPage } from '@sb-ui/pages/TeacherHome/LessonsDashboard/constants';
 import * as S from './UserLessonsList.styled';
-
-const PAGE_SIZE = 10;
+import { PAGE_SIZE } from './constants';
 
 const UserLessonsList = ({ title, query }) => {
   const { t } = useTranslation();
@@ -43,13 +43,11 @@ const UserLessonsList = ({ title, query }) => {
       </S.LessonsHeader>
       <S.LessonsRow gutter={[32, 32]}>
         {isLoading
-          ? Array(PAGE_SIZE)
-              .fill()
-              .map(() => (
-                <S.LessonCol lg={{ span: 12 }} md={{ span: 24 }}>
-                  <Skeleton avatar />
-                </S.LessonCol>
-              ))
+          ? itemPerPage.map((el) => (
+              <S.LessonCol key={el.id} lg={{ span: 12 }} md={{ span: 24 }}>
+                <Skeleton avatar />
+              </S.LessonCol>
+            ))
           : lessons?.map((lesson) => (
               <S.LessonCol key={lesson.id} lg={{ span: 12 }} md={{ span: 24 }}>
                 <UserLesson lesson={lesson} />
