@@ -12,7 +12,7 @@ const OngoingLessonDesktop = ({ lesson }) => {
   const { t } = useTranslation();
   const history = useHistory();
 
-  const { name, id } = lesson;
+  const { name, id, percentage } = lesson;
 
   const handleContinueLesson = () => {
     history.push(LESSON_PAGE.replace(':id', id));
@@ -22,7 +22,7 @@ const OngoingLessonDesktop = ({ lesson }) => {
     <S.MainSpace>
       <S.LeftColumn span={8}>
         <img height={100} src={lessonImg} alt="Lesson" />
-        <S.ProgressBar percent={50} />
+        <S.ProgressBar percent={Math.round(percentage)} />
       </S.LeftColumn>
       <S.RightColumn span={16}>
         <Title level={4}>{name}</Title>
@@ -44,6 +44,7 @@ OngoingLessonDesktop.propTypes = {
     name: PropTypes.string.isRequired,
     maintainer: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
+    percentage: PropTypes.number.isRequired,
   }).isRequired,
 };
 

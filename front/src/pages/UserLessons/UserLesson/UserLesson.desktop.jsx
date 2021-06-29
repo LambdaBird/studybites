@@ -12,7 +12,7 @@ const { Title } = Typography;
 const UserLessonDesktop = ({ lesson }) => {
   const { t } = useTranslation();
   const history = useHistory();
-  const { id, name, description, maintainer } = lesson;
+  const { id, name, description, maintainer, percentage } = lesson;
 
   const fullName = useMemo(
     () =>
@@ -39,7 +39,7 @@ const UserLessonDesktop = ({ lesson }) => {
               <S.AuthorAvatar>{firstNameLetter}</S.AuthorAvatar>
               <S.AuthorName>{fullName}</S.AuthorName>
             </S.AuthorContainer>
-            <S.ProgressBar percent={50} />
+            <S.ProgressBar percent={Math.round(percentage)} />
           </div>
         </S.LeftContent>
         <S.RightContent>
@@ -65,6 +65,7 @@ UserLessonDesktop.propTypes = {
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
+    percentage: PropTypes.number.isRequired,
     maintainer: PropTypes.shape({
       userInfo: PropTypes.shape({
         firstName: PropTypes.string.isRequired,

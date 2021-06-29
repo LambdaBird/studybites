@@ -10,7 +10,7 @@ import * as S from './UserLesson.mobile.styled';
 const UserLessonMobile = ({ lesson }) => {
   const { t } = useTranslation();
   const history = useHistory();
-  const { id, name, description, maintainer } = lesson;
+  const { id, name, description, maintainer, percentage } = lesson;
 
   const fullName = useMemo(
     () =>
@@ -31,7 +31,7 @@ const UserLessonMobile = ({ lesson }) => {
     <S.Main size="large" wrap={false}>
       <div>
         <S.Image src={lessonImage} alt="Lesson" />
-        <S.ProgressBar percent={50} />
+        <S.ProgressBar percent={Math.round(percentage)} />
       </div>
       <Row>
         <S.Title level={3}>{name}</S.Title>
@@ -57,6 +57,7 @@ UserLessonMobile.propTypes = {
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,
+    percentage: PropTypes.number.isRequired,
     maintainer: PropTypes.shape({
       userInfo: PropTypes.shape({
         firstName: PropTypes.string.isRequired,

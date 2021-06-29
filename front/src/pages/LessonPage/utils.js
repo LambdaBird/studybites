@@ -20,7 +20,7 @@ export const groupBlocks = (lessons) => {
       lastIndex = i + 1;
     }
   });
-  if (lastIndex === 0 && lessons.length !== 0) {
+  if (lastIndex === 0 && lessons?.length !== 0) {
     return [lessons];
   }
   if (lastIndex !== lessons?.length) {

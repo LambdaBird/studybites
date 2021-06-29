@@ -11,7 +11,7 @@ const { Title } = Typography;
 const OngoingLessonMobile = ({ lesson }) => {
   const { t } = useTranslation();
   const history = useHistory();
-  const { name, id } = lesson;
+  const { name, id, percentage } = lesson;
 
   const handleContinueLesson = () => {
     history.push(LESSON_PAGE.replace(':id', id));
@@ -21,7 +21,7 @@ const OngoingLessonMobile = ({ lesson }) => {
     <S.MainSpace>
       <S.LeftColumn span={8}>
         <S.StyledImage src={lessonImg} alt="Lesson" />
-        <S.ProgressBar percent={50} />
+        <S.ProgressBar percent={Math.round(percentage)} />
       </S.LeftColumn>
       <S.RightColumn span={16}>
         <Title level={4}>{name}</Title>
@@ -42,6 +42,7 @@ OngoingLessonMobile.propTypes = {
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     maintainer: PropTypes.string.isRequired,
+    percentage: PropTypes.number.isRequired,
   }).isRequired,
 };
 
