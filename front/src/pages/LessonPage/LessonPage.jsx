@@ -171,66 +171,77 @@ const LessonPage = () => {
             .filter((x) => !!x)}
         </Block>
       ))}
-      {!isLoading && (
-        <S.PageRowStart justify="center" align="top">
-          <S.BlockCol
-            xs={{ span: 20 }}
-            sm={{ span: 18 }}
-            md={{ span: 16 }}
-            lg={{ span: 14 }}
-          >
-            {!interactiveBlock && blocks?.length === 0 && (
-              <S.LessonButton onClick={handleStartClick}>
-                {t('lesson.start')}
-              </S.LessonButton>
-            )}
-            {interactiveBlock?.type === 'next' && !isFinal && (
-              <S.LessonButton onClick={handleNextClick}>
-                {t('lesson.next')}
-              </S.LessonButton>
-            )}
+      {!isLoading &&
+        (isFinal ||
+          (interactiveBlock?.type === 'next' && !isFinal) ||
+          (!interactiveBlock && blocks?.length === 0)) && (
+          <S.PageRowStart justify="center" align="top">
+            <S.BlockCol
+              xs={{ span: 20 }}
+              sm={{ span: 18 }}
+              md={{ span: 16 }}
+              lg={{ span: 14 }}
+            >
+              {!interactiveBlock && blocks?.length === 0 && (
+                <S.LessonButton onClick={handleStartClick}>
+                  {t('lesson.start')}
+                </S.LessonButton>
+              )}
+              {interactiveBlock?.type === 'next' && !isFinal && (
+                <S.LessonButton onClick={handleNextClick}>
+                  {t('lesson.next')}
+                </S.LessonButton>
+              )}
 
-            {/*  */}
-
-            {isFinal && (
-              <S.LessonButton onClick={handleFinishClick}>
-                {t('lesson.finish')}
-              </S.LessonButton>
-            )}
-          </S.BlockCol>
-        </S.PageRowStart>
-      )}
+              {isFinal && (
+                <S.LessonButton onClick={handleFinishClick}>
+                  {t('lesson.finish')}
+                </S.LessonButton>
+              )}
+            </S.BlockCol>
+          </S.PageRowStart>
+        )}
 
       {!isLoading && interactiveBlock?.type === 'quiz' && !isFinal && (
-        <Row justify="center" align="top">
-          <Col
-            xs={{ span: 20 }}
-            sm={{ span: 18 }}
-            md={{ span: 16 }}
-            lg={{ span: 14 }}
-          >
-            <Block isQuiz>
-              <Text>{interactiveBlock?.content?.data?.question}</Text>
-            </Block>
-          </Col>
-          <Col span={24}>
-            <QuizBlock
-              key={interactiveBlock?.blockId}
-              setQuiz={setQuizAnswer}
-              data={interactiveBlock?.content?.data}
-            />
-          </Col>
-          <S.SendWrapper
-            xs={{ span: 20 }}
-            sm={{ span: 18 }}
-            md={{ span: 16 }}
-            lg={{ span: 14 }}
-          >
-            <S.LessonButtonSend onClick={handleSendClick}>
-              Send
-            </S.LessonButtonSend>
-          </S.SendWrapper>
-        </Row>
+        <>
+          <Row justify="center">
+            <Col
+              xs={{ span: 20 }}
+              sm={{ span: 18 }}
+              md={{ span: 16 }}
+              lg={{ span: 14 }}
+            >
+              <Block isQuiz>
+                <Text
+                  style={{
+                    fontStyle: 'italic',
+                  }}
+                >
+                  {interactiveBlock?.content?.data?.question}
+                </Text>
+              </Block>
+            </Col>
+          </Row>
+          <S.RowQuiz justify="center" align="top">
+            <Col span={24}>
+              <QuizBlock
+                key={interactiveBlock?.blockId}
+                setQuiz={setQuizAnswer}
+                data={interactiveBlock?.content?.data}
+              />
+            </Col>
+            <S.SendWrapper
+              xs={{ span: 20 }}
+              sm={{ span: 18 }}
+              md={{ span: 16 }}
+              lg={{ span: 14 }}
+            >
+              <S.LessonButtonSend onClick={handleSendClick}>
+                Send
+              </S.LessonButtonSend>
+            </S.SendWrapper>
+          </S.RowQuiz>
+        </>
       )}
     </S.Page>
   );

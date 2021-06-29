@@ -70,3 +70,8 @@ export const getPasswordStrength = (password = '') => {
 
 export const getProgressEnrolledLesson = (blocks, totalBlocks) =>
   (blocks?.length / totalBlocks).toFixed(2) * 100 || 0;
+
+export const skeletonArray = (size) =>
+  [...new Array(size)].map((_, index) => ({
+    id: `skeleton ${index}`,
+  }));

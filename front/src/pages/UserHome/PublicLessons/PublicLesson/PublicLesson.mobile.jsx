@@ -57,7 +57,7 @@ const PublicLessonMobile = ({ lesson }) => {
 };
 
 PublicLessonMobile.propTypes = {
-  lesson: PropTypes.exact({
+  lesson: PropTypes.shape({
     id: PropTypes.number.isRequired,
     isEnrolled: PropTypes.bool.isRequired,
     firstName: PropTypes.string.isRequired,

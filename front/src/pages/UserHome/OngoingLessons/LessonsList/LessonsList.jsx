@@ -55,8 +55,12 @@ LessonsList.propTypes = {
       status: PropTypes.string.isRequired,
       id: PropTypes.number.isRequired,
     }),
-  ).isRequired,
+  ),
   isLoading: PropTypes.bool.isRequired,
+};
+
+LessonsList.defaultProps = {
+  lessons: [],
 };
 
 export default LessonsList;
