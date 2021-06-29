@@ -774,7 +774,7 @@ const router = async (instance) => {
         (parseInt(query.limit, 10) || config.search.LESSON_SEARCH_LIMIT) -
         1;
 
-      const { finishedLessons } = await Result.query()
+      let { finishedLessons } = await Result.query()
         .first()
         .select(knex.raw('array_agg(lesson_id) as finished_lessons'))
         .where({
@@ -782,11 +782,15 @@ const router = async (instance) => {
           userId: user.id,
         });
 
+      if (finishedLessons === null) {
+        finishedLessons = undefined;
+      }
       const { total, results: lessons } = await Lesson.getAllEnrolled({
         columns,
         userId: user.id,
         search: query?.search?.trim(),
       })
+        .skipUndefined()
         .whereNotIn('lessons.id', finishedLessons)
         .range(firstIndex, lastIndex);
 
@@ -894,6 +898,63 @@ const router = async (instance) => {
           return lesson;
         }),
       );
+
+      return { total, lessons };
+    },
+  });
+
+  instance.route({
+    method: 'GET',
+    url: '/enrolled-finished/',
+    schema: {
+      response: errorResponse,
+    },
+    validatorCompiler,
+    errorHandler,
+    onRequest: instance.auth({ instance }),
+    handler: async ({ query, user }) => {
+      const columns = {
+        name: 'name',
+        firstName: 'maintainer:userInfo.first_name',
+        lastName: 'maintainer:userInfo.last_name',
+      };
+
+      if (!query.search) {
+        columns.name = undefined;
+        columns.firstName = undefined;
+        columns.lastName = undefined;
+      }
+
+      const firstIndex = parseInt(query.offset, 10) || 0;
+      const lastIndex =
+        firstIndex +
+        (parseInt(query.limit, 10) || config.search.LESSON_SEARCH_LIMIT) -
+        1;
+
+      const { finishedLessons } = await Result.query()
+        .first()
+        .select(knex.raw('array_agg(lesson_id) as finished_lessons'))
+        .where({
+          action: 'finish',
+          userId: user.id,
+        });
+
+      if (finishedLessons === null) {
+        return { total: 0, lessons: [] };
+      }
+
+      const { total, results } = await Lesson.getAllEnrolled({
+        columns,
+        userId: user.id,
+        search: query?.search?.trim(),
+      })
+        .whereIn('lessons.id', finishedLessons)
+        .range(firstIndex, lastIndex);
+
+      const lessons = results?.map((result) => ({
+        ...result,
+        percentage: 100,
+      }));
 
       return { total, lessons };
     },

@@ -1,4 +1,4 @@
-import { Col, Pagination, Row, Typography } from 'antd';
+import { Col, Empty, Pagination, Row, Typography } from 'antd';
 import styled from 'styled-components';
 import Search from '@sb-ui/components/molecules/Search';
 
@@ -11,6 +11,9 @@ export const Wrapper = styled.div`
 
 export const LessonsHeader = styled(Row)`
   margin-bottom: 2rem;
+  @media (max-width: 767px) {
+    justify-content: space-between;
+  }
 `;
 
 export const OpenLessonsTitle = styled(Title)`
@@ -20,8 +23,6 @@ export const OpenLessonsTitle = styled(Title)`
 `;
 
 export const LessonsRow = styled(Row)`
-  width: 100%;
-
   @media (max-width: 767px) {
     margin: 0 !important;
   }
@@ -41,4 +42,10 @@ export const LessonCol = styled(Col)`
   @media (max-width: 767px) {
     padding: 0 !important;
   }
+`;
+
+export const EmptyContainer = styled(Empty)`
+  display: flex;
+  justify-content: center;
+  width: 100%;
 `;
