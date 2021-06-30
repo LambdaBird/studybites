@@ -1,91 +1,22 @@
-import Knex from 'knex';
-
 import build from '../../src/app';
-import config from '../../config';
+import {
+  ENROLL_SUCCESS,
+  NOT_FINISHED,
+  NOT_STARTED,
+} from '../../src/services/lesson/constants';
 
-const prefix = '/api/v1/lesson';
-
-describe(`GET ${prefix}`, () => {
+describe('GET /api/v1/lesson', () => {
   const app = build();
-
-  const knex = Knex({
-    client: 'pg',
-    connection: process.env.DATABASE_URL,
-  });
 
   let token;
 
-  const resources = {
-    users: [
-      {
-        id: 1,
-        email: 'teacher@test.io',
-        password: '$2b$12$cCb6rfWiaeLyxNYWvDwBbe7bXXVzlPMxlV1J6cp1EjSyCRKnGC.6e',
-        first_name: 'Teacher',
-        last_name: 'User',
-      },
-      {
-        id: 2,
-        email: 'student@test.io',
-        password: '$2b$12$cCb6rfWiaeLyxNYWvDwBbe7bXXVzlPMxlV1J6cp1EjSyCRKnGC.6e',
-        first_name: 'Student',
-        last_name: 'User',
-      },
-    ],
-    lessons: [
-      {
-        id: 1,
-        name: 'Math',
-        status: 'Public',
-      },
-      {
-        id: 2,
-        name: 'English',
-        status: 'Public',
-      },
-      {
-        id: 3,
-        name: 'Biology',
-        status: 'Public',
-      },
-    ],
-    usersRoles: [
-      {
-        user_id: 1,
-        role_id: config.roles.TEACHER.id,
-      },
-      {
-        user_id: 1,
-        role_id: config.roles.MAINTAINER.id,
-        resource_type: config.resources.LESSON,
-        resource_id: 1,
-      },
-      {
-        user_id: 1,
-        role_id: config.roles.MAINTAINER.id,
-        resource_type: config.resources.LESSON,
-        resource_id: 2,
-      },
-      {
-        user_id: 1,
-        role_id: config.roles.MAINTAINER.id,
-        resource_type: config.resources.LESSON,
-        resource_id: 3,
-      },
-    ],
-  };
-
   const credentials = {
-    email: 'student@test.io',
+    email: 'john@test.io',
     password: 'passwd3',
   };
 
   beforeAll(async () => {
     await app.ready();
-
-    await knex('users').insert(resources.users);
-    await knex('lessons').insert(resources.lessons);
-    await knex('users_roles').insert(resources.usersRoles);
 
     const response = await app.inject({
       method: 'POST',
@@ -99,18 +30,13 @@ describe(`GET ${prefix}`, () => {
   });
 
   afterAll(async () => {
-    await knex('users_roles').delete();
-    await knex('lessons').delete();
-    await knex('users').delete();
-
     await app.close();
-    await knex.destroy();
   });
 
   it('should return public lessons with the total count', async () => {
     const response = await app.inject({
       method: 'GET',
-      url: `${prefix}`,
+      url: '/api/v1/lesson',
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -121,33 +47,615 @@ describe(`GET ${prefix}`, () => {
     expect(response.statusCode).toBe(200);
     expect(payload).toHaveProperty('total');
     expect(payload).toHaveProperty('lessons');
-    expect(payload.total).toBe(3);
-    expect(payload.lessons.length).toBe(3);
-  });
-
-  it('should return public lessons matching the search query', async () => {
-    const response = await app.inject({
-      method: 'GET',
-      url: `${prefix}?search=${resources.lessons[0].name}`,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    const payload = JSON.parse(response.payload);
-
-    expect(response.statusCode).toBe(200);
-    expect(payload).toHaveProperty('total');
-    expect(payload).toHaveProperty('lessons');
-    expect(payload.lessons.length).toBe(1);
-    expect(payload.total).toBe(1);
-    expect(payload.lessons[0].name).toBe(resources.lessons[0].name);
   });
 
   it('should return no lessons', async () => {
     const response = await app.inject({
       method: 'GET',
-      url: `${prefix}?search=nomatch`,
+      url: '/api/v1/lesson?search=nomatchstring',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const payload = JSON.parse(response.payload);
+
+    expect(response.statusCode).toBe(200);
+    expect(payload).toHaveProperty('total');
+    expect(payload).toHaveProperty('lessons');
+    expect(payload.total).toBe(0);
+  });
+});
+
+describe('GET /api/v1/lesson/:lesson_id', () => {
+  const app = build();
+
+  let token;
+
+  const credentials = {
+    email: 'john@test.io',
+    password: 'passwd3',
+  };
+
+  beforeAll(async () => {
+    await app.ready();
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/v1/user/signin',
+      payload: credentials,
+    });
+
+    const data = JSON.parse(response.payload);
+
+    token = data.accessToken;
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
+
+  it('should return a lesson with blocks and authors', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: '/api/v1/lesson/100',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const payload = JSON.parse(response.payload);
+
+    expect(response.statusCode).toBe(200);
+    expect(payload).toHaveProperty('total');
+    expect(payload).toHaveProperty('lesson');
+    expect(payload).toHaveProperty('isFinal');
+    expect(payload.lesson).toHaveProperty('authors');
+    expect(payload.lesson).toHaveProperty('blocks');
+  });
+});
+
+describe('OPTIONS /api/v1/lesson', () => {
+  const app = build();
+
+  let token;
+
+  const credentials = {
+    email: 'mike@test.io',
+    password: 'passwd3',
+  };
+
+  beforeAll(async () => {
+    await app.ready();
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/v1/user/signin',
+      payload: credentials,
+    });
+
+    const data = JSON.parse(response.payload);
+
+    token = data.accessToken;
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
+
+  it('should return an array of possible lesson statuses', async () => {
+    const response = await app.inject({
+      method: 'OPTIONS',
+      url: '/api/v1/lesson',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const payload = JSON.parse(response.payload);
+
+    expect(response.statusCode).toBe(200);
+    expect(payload).toHaveProperty('status');
+  });
+});
+
+describe('GET /api/v1/lesson/maintain/students', () => {
+  const app = build();
+
+  let token;
+
+  const credentials = {
+    email: 'mike@test.io',
+    password: 'passwd3',
+  };
+
+  beforeAll(async () => {
+    await app.ready();
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/v1/user/signin',
+      payload: credentials,
+    });
+
+    const data = JSON.parse(response.payload);
+
+    token = data.accessToken;
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
+
+  it('should return students with total count', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: '/api/v1/lesson/maintain/students',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const payload = JSON.parse(response.payload);
+
+    expect(response.statusCode).toBe(200);
+    expect(payload).toHaveProperty('total');
+    expect(payload).toHaveProperty('students');
+  });
+
+  it('should return no students', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: '/api/v1/lesson/maintain/students?search=nomatchstring',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const payload = JSON.parse(response.payload);
+
+    expect(response.statusCode).toBe(200);
+    expect(payload).toHaveProperty('total');
+    expect(payload).toHaveProperty('students');
+    expect(payload.total).toBe(0);
+  });
+});
+
+describe('GET /api/v1/lesson/maintain/', () => {
+  const app = build();
+
+  let token;
+
+  const credentials = {
+    email: 'mike@test.io',
+    password: 'passwd3',
+  };
+
+  beforeAll(async () => {
+    await app.ready();
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/v1/user/signin',
+      payload: credentials,
+    });
+
+    const data = JSON.parse(response.payload);
+
+    token = data.accessToken;
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
+
+  it('should return lessons with total count', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: '/api/v1/lesson/maintain/',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const payload = JSON.parse(response.payload);
+
+    expect(response.statusCode).toBe(200);
+    expect(payload).toHaveProperty('total');
+    expect(payload).toHaveProperty('lessons');
+  });
+
+  it('should return no lessons', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: '/api/v1/lesson/maintain/?search=nomatchstring',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const payload = JSON.parse(response.payload);
+
+    expect(response.statusCode).toBe(200);
+    expect(payload).toHaveProperty('total');
+    expect(payload).toHaveProperty('lessons');
+  });
+});
+
+describe('GET /api/v1/lesson/maintain/:id', () => {
+  const app = build();
+
+  let token;
+
+  const credentials = {
+    email: 'mike@test.io',
+    password: 'passwd3',
+  };
+
+  beforeAll(async () => {
+    await app.ready();
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/v1/user/signin',
+      payload: credentials,
+    });
+
+    const data = JSON.parse(response.payload);
+
+    token = data.accessToken;
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
+
+  it('should return a lesson with blocks', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: '/api/v1/lesson/maintain/100',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const payload = JSON.parse(response.payload);
+
+    expect(response.statusCode).toBe(200);
+    expect(payload).toHaveProperty('lesson');
+    expect(payload.lesson).toHaveProperty('blocks');
+  });
+});
+
+describe('POST /api/v1/lesson/maintain/', () => {
+  const app = build();
+
+  let token;
+
+  const credentials = {
+    email: 'mike@test.io',
+    password: 'passwd3',
+  };
+
+  beforeAll(async () => {
+    await app.ready();
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/v1/user/signin',
+      payload: credentials,
+    });
+
+    const data = JSON.parse(response.payload);
+
+    token = data.accessToken;
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
+
+  it('should return a lesson without blocks', async () => {
+    const body = {
+      lesson: {
+        name: 'Math',
+        status: 'Public',
+      },
+    };
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/v1/lesson/maintain/',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body,
+    });
+
+    const payload = JSON.parse(response.payload);
+
+    expect(response.statusCode).toBe(200);
+    expect(payload).toHaveProperty('lesson');
+    expect(payload.lesson).toHaveProperty('blocks');
+    expect(payload.lesson.blocks.length).toBe(0);
+  });
+
+  it('should return a lesson with blocks', async () => {
+    const body = {
+      lesson: {
+        name: 'English',
+        status: 'Public',
+      },
+      blocks: [
+        {
+          content: {
+            data: 'paragraph text',
+          },
+          type: 'paragraph',
+          revision: '9f8ef6dd-34aa-4ff4-9fc6-4b5afbfde165',
+        },
+        {
+          content: {
+            data: 'quiz question',
+          },
+          type: 'quiz',
+          answer: {
+            data: 1,
+          },
+          revision: '06421c44-a853-4708-8f40-81c55a0e8861',
+        },
+        {
+          content: {
+            data: 'paragraph text',
+          },
+          type: 'paragraph',
+          revision: '5014d8d5-d4e3-4135-995f-0e84cded4cdb',
+        },
+      ],
+    };
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/v1/lesson/maintain/',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body,
+    });
+
+    const payload = JSON.parse(response.payload);
+
+    expect(response.statusCode).toBe(200);
+    expect(payload).toHaveProperty('lesson');
+    expect(payload.lesson).toHaveProperty('blocks');
+    expect(payload.lesson.blocks.length).toBe(3);
+    payload.lesson.blocks.forEach((block, index) => {
+      expect(block.revision).toBe(body.blocks[index].revision);
+    });
+  });
+});
+
+describe('PUT /api/v1/maintain/:id', () => {
+  const app = build();
+
+  let token;
+
+  const credentials = {
+    email: 'mike@test.io',
+    password: 'passwd3',
+  };
+
+  beforeAll(async () => {
+    await app.ready();
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/v1/user/signin',
+      payload: credentials,
+    });
+
+    const data = JSON.parse(response.payload);
+
+    token = data.accessToken;
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
+
+  it('should return a lesson with blocks', async () => {
+    const body = {
+      blocks: [
+        {
+          content: {
+            data: 'quiz question',
+          },
+          type: 'quiz',
+          answer: {
+            data: 1,
+          },
+          revision: '06421c44-a853-4708-8f40-81c55a0e8871',
+        },
+        {
+          content: {
+            data: 'paragraph text',
+          },
+          type: 'paragraph',
+          revision: '5014d8d5-d4e3-4135-995f-0e84cded4cab',
+        },
+        {
+          content: {
+            data: 'paragraph text',
+          },
+          type: 'paragraph',
+          revision: '9f8ef6dd-34aa-4ff4-9fc6-4b5afbfde175',
+        },
+      ],
+    };
+
+    const response = await app.inject({
+      method: 'PUT',
+      url: '/api/v1/lesson/maintain/100',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body,
+    });
+
+    const payload = JSON.parse(response.payload);
+
+    expect(response.statusCode).toBe(200);
+    expect(payload).toHaveProperty('lesson');
+    expect(payload.lesson).toHaveProperty('blocks');
+    expect(payload.lesson.blocks.length).toBe(3);
+    payload.lesson.blocks.forEach((block, index) => {
+      expect(block.revision).toBe(body.blocks[index].revision);
+    });
+  });
+
+  it('should return a lesson without blocks', async () => {
+    const body = {
+      blocks: [],
+    };
+
+    const response = await app.inject({
+      method: 'PUT',
+      url: '/api/v1/lesson/maintain/100',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body,
+    });
+
+    const payload = JSON.parse(response.payload);
+
+    expect(response.statusCode).toBe(200);
+    expect(payload).toHaveProperty('lesson');
+    expect(payload.lesson).toHaveProperty('blocks');
+    expect(payload.lesson.blocks.length).toBe(0);
+  });
+
+  it('should return a lesson without blocks and a new name', async () => {
+    const body = {
+      lesson: {
+        name: 'The new name',
+      },
+      blocks: [],
+    };
+
+    const response = await app.inject({
+      method: 'PUT',
+      url: '/api/v1/lesson/maintain/100',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body,
+    });
+
+    const payload = JSON.parse(response.payload);
+
+    expect(response.statusCode).toBe(200);
+    expect(payload).toHaveProperty('lesson');
+    expect(payload.lesson).toHaveProperty('blocks');
+    expect(payload.lesson.blocks.length).toBe(0);
+    expect(payload.lesson.name).toBe(body.lesson.name);
+  });
+});
+
+describe('POST /api/v1/lesson/enroll/:id', () => {
+  const app = build();
+
+  let token;
+  let lessonId;
+
+  const credentials = {
+    email: 'john@test.io',
+    password: 'passwd3',
+  };
+
+  beforeAll(async () => {
+    await app.ready();
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/v1/user/signin',
+      payload: credentials,
+    });
+
+    const data = JSON.parse(response.payload);
+
+    token = data.accessToken;
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
+
+  it('should return status 200 and a success message', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: `/api/v1/lesson/enroll/103`,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const payload = JSON.parse(response.payload);
+
+    expect(response.statusCode).toBe(200);
+    expect(payload).toMatchObject(ENROLL_SUCCESS);
+  });
+});
+
+describe('GET /api/v1/lesson/enrolled/', () => {
+  const app = build();
+
+  let token;
+
+  const credentials = {
+    email: 'john@test.io',
+    password: 'passwd3',
+  };
+
+  beforeAll(async () => {
+    await app.ready();
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/v1/user/signin',
+      payload: credentials,
+    });
+
+    const data = JSON.parse(response.payload);
+
+    token = data.accessToken;
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
+
+  it('should return lessons with authors', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: '/api/v1/lesson/enrolled/',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const payload = JSON.parse(response.payload);
+
+    expect(response.statusCode).toBe(200);
+    expect(payload).toHaveProperty('total');
+    expect(payload).toHaveProperty('lessons');
+    expect(payload.lessons).toHaveProperty('authors');
+  });
+
+  it('should return no lessons', async () => {
+    const response = await app.inject({
+      method: 'GET',
+      url: '/api/v1/lesson/enrolled/?search=nomatchstring',
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -163,140 +671,18 @@ describe(`GET ${prefix}`, () => {
   });
 });
 
-describe(`GET ${prefix}/:lesson_id`, () => {
+describe('GET /api/v1/lesson/enrolled/:id', () => {
   const app = build();
-
-  const knex = Knex({
-    client: 'pg',
-    connection: process.env.DATABASE_URL,
-  });
 
   let token;
 
-  const resources = {
-    users: [
-      {
-        id: 1,
-        email: 'teacher@test.io',
-        password: '$2b$12$cCb6rfWiaeLyxNYWvDwBbe7bXXVzlPMxlV1J6cp1EjSyCRKnGC.6e',
-        first_name: 'Teacher',
-        last_name: 'User',
-      },
-      {
-        id: 2,
-        email: 'student@test.io',
-        password: '$2b$12$cCb6rfWiaeLyxNYWvDwBbe7bXXVzlPMxlV1J6cp1EjSyCRKnGC.6e',
-        first_name: 'Student',
-        last_name: 'User',
-      },
-    ],
-    lessons: [
-      {
-        id: 1,
-        name: 'Math',
-        status: 'Public',
-      },
-      {
-        id: 2,
-        name: 'English',
-        status: 'Public',
-      },
-    ],
-    blocks: [
-      {
-        block_id: 'aa34585e-130b-468c-be1a-5a8012f0d55c',
-        content: {
-          data: 'paragraph text',
-        },
-        type: 'paragraph',
-        revision: '9f8ef6dd-34aa-4ff4-9fc6-4b5afbfde165',
-      },
-      {
-        block_id: '7142e20a-0d30-47e5-aea8-546e0ec5e395',
-        content: {
-          data: 'quiz question',
-        },
-        type: 'quiz',
-        answer: {
-          data: 1,
-        },
-        revision: '06421c44-a853-4708-8f40-81c55a0e8861',
-      },
-      {
-        block_id: '8483d0b2-9576-4b35-957b-58b63d097f6f',
-        content: {
-          data: 'paragraph text',
-        },
-        type: 'paragraph',
-        revision: '5014d8d5-d4e3-4135-995f-0e84cded4cdb',
-      },
-    ],
-    lessonBlockStructure: [
-      {
-        id: 'af7d4157-d009-4260-a42f-919ee4a55a9e',
-        lesson_id: 1,
-        block_id: 'aa34585e-130b-468c-be1a-5a8012f0d55c',
-        child_id: '0b7e5d54-a78c-4340-abec-ee08713d43bd',
-      },
-      {
-        id: '0b7e5d54-a78c-4340-abec-ee08713d43bd',
-        lesson_id: 1,
-        block_id: '7142e20a-0d30-47e5-aea8-546e0ec5e395',
-        child_id: '9c3f1934-328e-44e0-8cf4-c52beb30c6b5',
-        parent_id: 'af7d4157-d009-4260-a42f-919ee4a55a9e',
-      },
-      {
-        id: '9c3f1934-328e-44e0-8cf4-c52beb30c6b5',
-        lesson_id: 1,
-        block_id: '8483d0b2-9576-4b35-957b-58b63d097f6f',
-        parent_id: '0b7e5d54-a78c-4340-abec-ee08713d43bd',
-      },
-    ],
-    usersRoles: [
-      {
-        user_id: 1,
-        role_id: config.roles.TEACHER.id,
-      },
-      {
-        user_id: 1,
-        role_id: config.roles.MAINTAINER.id,
-        resource_type: config.resources.LESSON,
-        resource_id: 1,
-      },
-      {
-        user_id: 2,
-        role_id: config.roles.STUDENT.id,
-        resource_type: config.resources.LESSON,
-        resource_id: 1,
-      },
-      {
-        user_id: 1,
-        role_id: config.roles.MAINTAINER.id,
-        resource_type: config.resources.LESSON,
-        resource_id: 2,
-      },
-      {
-        user_id: 2,
-        role_id: config.roles.STUDENT.id,
-        resource_type: config.resources.LESSON,
-        resource_id: 2,
-      },
-    ],
-  };
-
   const credentials = {
-    email: 'student@test.io',
+    email: 'mike@test.io',
     password: 'passwd3',
   };
 
   beforeAll(async () => {
     await app.ready();
-
-    await knex('users').insert(resources.users);
-    await knex('lessons').insert(resources.lessons);
-    await knex('users_roles').insert(resources.usersRoles);
-    await knex('blocks').insert(resources.blocks);
-    await knex('lesson_block_structure').insert(resources.lessonBlockStructure);
 
     const response = await app.inject({
       method: 'POST',
@@ -310,20 +696,13 @@ describe(`GET ${prefix}/:lesson_id`, () => {
   });
 
   afterAll(async () => {
-    await knex('lesson_block_structure').delete();
-    await knex('blocks').delete();
-    await knex('users_roles').delete();
-    await knex('lessons').delete();
-    await knex('users').delete();
-
     await app.close();
-    await knex.destroy();
   });
 
-  it('should return a lesson with blocks and authors', async () => {
+  it('should return students with total count', async () => {
     const response = await app.inject({
       method: 'GET',
-      url: `${prefix}/1`,
+      url: '/api/v1/lesson/enrolled/100',
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -333,18 +712,15 @@ describe(`GET ${prefix}/:lesson_id`, () => {
 
     expect(response.statusCode).toBe(200);
     expect(payload).toHaveProperty('total');
-    expect(payload).toHaveProperty('lesson');
-    expect(payload).toHaveProperty('isFinal');
-    expect(payload.lesson).toHaveProperty('authors');
-    expect(payload.lesson).toHaveProperty('blocks');
-    expect(payload.total).toBe(3);
-    expect(payload.lesson.blocks.length).toBe(0);
+    expect(payload).toHaveProperty('students');
+    expect(payload.total).toBe(2);
+    expect(payload.students.length).toBe(2);
   });
 
-  it('should return a lesson without blocks', async () => {
+  it('should return no students', async () => {
     const response = await app.inject({
       method: 'GET',
-      url: `${prefix}/2`,
+      url: '/api/v1/lesson/enrolled/1?search=nomatch',
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -354,91 +730,24 @@ describe(`GET ${prefix}/:lesson_id`, () => {
 
     expect(response.statusCode).toBe(200);
     expect(payload).toHaveProperty('total');
-    expect(payload).toHaveProperty('lesson');
-    expect(payload).toHaveProperty('isFinal');
-    expect(payload.lesson).toHaveProperty('authors');
-    expect(payload.lesson).toHaveProperty('blocks');
+    expect(payload).toHaveProperty('students');
     expect(payload.total).toBe(0);
-    expect(payload.lesson.blocks.length).toBe(0);
+    expect(payload.students.length).toBe(0);
   });
 });
 
-describe(`POST ${prefix}/maintain/`, () => {
+describe('POST /api/v1/lesson/:lesson_id/learn', () => {
   const app = build();
-
-  const knex = Knex({
-    client: 'pg',
-    connection: process.env.DATABASE_URL,
-  });
 
   let token;
 
-  const resources = {
-    users: [
-      {
-        id: 1,
-        email: 'teacher@test.io',
-        password: '$2b$12$cCb6rfWiaeLyxNYWvDwBbe7bXXVzlPMxlV1J6cp1EjSyCRKnGC.6e',
-        first_name: 'Teacher',
-        last_name: 'User',
-      },
-    ],
-    lessons: [
-      {
-        id: 1,
-        name: 'Math',
-        status: 'Public',
-      },
-      {
-        id: 2,
-        name: 'English',
-        status: 'Public',
-      },
-    ],
-    blocks: [
-      {
-        content: {
-          data: 'paragraph text',
-        },
-        type: 'paragraph',
-        revision: '9f8ef6dd-34aa-4ff4-9fc6-4b5afbfde165',
-      },
-      {
-        content: {
-          data: 'quiz question',
-        },
-        type: 'quiz',
-        answer: {
-          data: 1,
-        },
-        revision: '06421c44-a853-4708-8f40-81c55a0e8861',
-      },
-      {
-        content: {
-          data: 'paragraph text',
-        },
-        type: 'paragraph',
-        revision: '5014d8d5-d4e3-4135-995f-0e84cded4cdb',
-      },
-    ],
-    usersRoles: [
-      {
-        user_id: 1,
-        role_id: config.roles.TEACHER.id,
-      },
-    ],
-  };
-
   const credentials = {
-    email: 'teacher@test.io',
+    email: 'john@test.io',
     password: 'passwd3',
   };
 
   beforeAll(async () => {
     await app.ready();
-
-    await knex('users').insert(resources.users);
-    await knex('users_roles').insert(resources.usersRoles);
 
     const response = await app.inject({
       method: 'POST',
@@ -452,57 +761,141 @@ describe(`POST ${prefix}/maintain/`, () => {
   });
 
   afterAll(async () => {
-    await knex('lesson_block_structure').delete();
-    await knex('blocks').delete();
-    await knex('users_roles').delete();
-    await knex('lessons').delete();
-    await knex('users').delete();
-
     await app.close();
-    await knex.destroy();
   });
 
-  it('should return a lessons without blocks', async () => {
+  it('should return an error if learn flow was not started yet', async () => {
     const response = await app.inject({
       method: 'POST',
-      url: `${prefix}/maintain/`,
+      url: '/api/v1/lesson/200/learn',
       headers: {
         Authorization: `Bearer ${token}`,
       },
       body: {
-        lesson: resources.lessons[0],
-      }
+        action: 'finish',
+      },
+    });
+
+    const payload = JSON.parse(response.payload);
+
+    expect(response.statusCode).toBe(400);
+    expect(payload.errors[0]).toMatchObject(NOT_STARTED);
+  });
+
+  it('should return a lesson with blocks to the next interactive block', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/v1/lesson/200/learn',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: {
+        action: 'start',
+      },
     });
 
     const payload = JSON.parse(response.payload);
 
     expect(response.statusCode).toBe(200);
+    expect(payload).toHaveProperty('total');
     expect(payload).toHaveProperty('lesson');
-    expect(payload.lesson).toHaveProperty('blocks');
-    expect(payload.lesson.blocks.length).toBe(0);
-  });
-
-  it('should return a lesson with blocks in the right order', async () => {
-    const response = await app.inject({
-      method: 'POST',
-      url: `${prefix}/maintain/`,
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: {
-        lesson: resources.lessons[1],
-        blocks: resources.blocks,
-      }
-    });
-
-    const payload = JSON.parse(response.payload);
-
-    expect(response.statusCode).toBe(200);
-    expect(payload).toHaveProperty('lesson');
+    expect(payload).toHaveProperty('isFinal');
     expect(payload.lesson).toHaveProperty('blocks');
     expect(payload.lesson.blocks.length).toBe(3);
-    payload.lesson.blocks.forEach((block, index) => {
-      expect(block.revision).toBe(resources.blocks[index].revision);
+    expect(payload.lesson.blocks[2].type).toBe('next');
+  });
+
+  it('should return an error if learn flow was not finished yet', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/v1/lesson/200/learn',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: {
+        action: 'finish',
+      },
     });
+
+    const payload = JSON.parse(response.payload);
+
+    expect(response.statusCode).toBe(400);
+    expect(payload.errors[0]).toMatchObject(NOT_FINISHED);
+  });
+
+  it('should return a lesson with blocks to the next interactive block', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/v1/lesson/200/learn',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: {
+        action: 'next',
+        blockId: 'aa34585e-130b-468c-be1a-5a8012f0d57a',
+        revision: '9f8ef6dd-34aa-4ff4-9fc6-4b5afbfde366',
+      },
+    });
+
+    const payload = JSON.parse(response.payload);
+
+    expect(response.statusCode).toBe(200);
+    expect(payload).toHaveProperty('total');
+    expect(payload).toHaveProperty('lesson');
+    expect(payload).toHaveProperty('isFinal');
+    expect(payload.lesson).toHaveProperty('blocks');
+    expect(payload.lesson.blocks.length).toBe(2);
+    expect(payload.lesson.blocks[1].type).toBe('quiz');
+  });
+
+  it('should return a lesson with blocks to the next interactive block, and answer', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/v1/lesson/200/learn',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: {
+        action: 'response',
+        blockId: '7142e20a-0d30-47e5-aea8-546e0ec5e396',
+        revision: '06421c44-a853-4708-8f40-81c55a0e8862',
+        data: {
+          answers: ['my answer'],
+        },
+      },
+    });
+
+    const payload = JSON.parse(response.payload);
+
+    expect(response.statusCode).toBe(200);
+    expect(payload).toHaveProperty('total');
+    expect(payload).toHaveProperty('lesson');
+    expect(payload).toHaveProperty('isFinal');
+    expect(payload.lesson).toHaveProperty('blocks');
+    expect(payload.lesson).toHaveProperty('answer');
+    expect(payload.lesson).toHaveProperty('userAnswer');
+    expect(payload.lesson.blocks.length).toBe(1);
+    expect(payload.isFinal).toBe(true);
+  });
+
+  it('should return a lesson with all blocks', async () => {
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/v1/lesson/200/learn',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: {
+        action: 'finish',
+      },
+    });
+
+    const payload = JSON.parse(response.payload);
+
+    expect(response.statusCode).toBe(200);
+    expect(payload).toHaveProperty('total');
+    expect(payload).toHaveProperty('lesson');
+    expect(payload.lesson).toHaveProperty('blocks');
+    expect(payload.lesson.blocks.length).toBe(6);
   });
 });
