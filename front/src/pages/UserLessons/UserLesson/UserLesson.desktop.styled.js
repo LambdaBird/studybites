@@ -8,9 +8,10 @@ import {
   WHITE_COLOR,
 } from '@sb-ui/resources/styles/Global.styled';
 
-const { Text } = Typography;
+const { Text, Title } = Typography;
 
 export const MainSpace = styled(Row)`
+  height: 12rem;
   background-color: ${WHITE_COLOR};
 `;
 
@@ -28,7 +29,7 @@ export const RightContent = styled(Col)`
 `;
 
 export const LessonImg = styled.img`
-  height: 100%;
+  height: 8rem;
   width: 200px;
 `;
 
@@ -45,7 +46,7 @@ export const AuthorContainer = styled.div`
 
   position: absolute;
   left: 1.5rem;
-  bottom: 2.75rem;
+  bottom: 3.5rem;
   border-radius: 5px;
   padding: 0.25rem 0.5rem;
 `;
@@ -74,4 +75,8 @@ export const ProgressBar = styled(Progress)`
   .ant-progress-text {
     color: ${variables['secondary-text-color']} !important;
   }
+`;
+
+export const TitleEllipsis = styled(Title)`
+  overflow-wrap: anywhere;
 `;

@@ -7,12 +7,12 @@ import {
   WHITE_COLOR,
 } from '@sb-ui/resources/styles/Global.styled';
 
-const { Text } = Typography;
+const { Paragraph, Title } = Typography;
 
 export const MainSpace = styled(Row)`
   background-color: ${WHITE_COLOR};
   padding: 1rem;
-  height: 10rem;
+  height: 12rem;
 `;
 
 export const LeftContent = styled(Col)`
@@ -22,16 +22,18 @@ export const LeftContent = styled(Col)`
 export const RightContent = styled(Col)`
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   width: 100%;
 `;
 
 export const LessonImg = styled.img`
-  height: 8rem;
+  height: 10rem;
 `;
 
-export const DescriptionText = styled(Text)`
+export const DescriptionText = styled(Paragraph)`
   text-align: justify;
   color: ${DESCRIPTION_COLOR};
+  overflow-wrap: anywhere;
 `;
 
 export const AuthorContainer = styled.div`
@@ -59,4 +61,12 @@ export const AuthorName = styled(Typography.Link)`
 
 export const EnrollRow = styled(Row)`
   margin-top: auto;
+`;
+
+export const RowEllipsis = styled(Row)`
+  overflow: hidden;
+`;
+
+export const TitleEllipsis = styled(Title)`
+  overflow-wrap: anywhere;
 `;

@@ -34,10 +34,24 @@ const UserLessonMobile = ({ lesson }) => {
         <S.ProgressBar percent={Math.round(percentage)} />
       </div>
       <Row>
-        <S.Title level={3}>{name}</S.Title>
+        <S.Title
+          level={3}
+          ellipsis={{
+            tooltip: true,
+          }}
+        >
+          {name}
+        </S.Title>
       </Row>
       <Row>
-        <S.Description>{description}</S.Description>
+        <S.Description
+          ellipsis={{
+            tooltip: true,
+            rows: 2,
+          }}
+        >
+          {description}
+        </S.Description>
       </Row>
       <S.EnrollRow>
         <S.Enroll type="primary" onClick={handleContinueLesson}>

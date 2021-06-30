@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useMemo } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { Button, Row, Typography } from 'antd';
+import { Button, Col } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { LESSON_PAGE, USER_ENROLL } from '@sb-ui/utils/paths';
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
@@ -15,9 +15,9 @@ import {
   LessonImg,
   MainSpace,
   RightContent,
+  RowEllipsis,
+  TitleEllipsis,
 } from './PublicLesson.desktop.styled';
-
-const { Title } = Typography;
 
 const PublicLessonDesktop = ({ lesson }) => {
   const location = useLocation();
@@ -27,7 +27,6 @@ const PublicLessonDesktop = ({ lesson }) => {
   const history = useHistory();
   const { id, isEnrolled, name, description, firstName, lastName } = lesson;
   const author = `${firstName} ${lastName}`;
-
   const handleEnroll = () => {
     history.push({
       search: query,
@@ -52,12 +51,28 @@ const PublicLessonDesktop = ({ lesson }) => {
           </div>
         </LeftContent>
         <RightContent>
-          <Row>
-            <Title level={3}>{name}</Title>
-          </Row>
-          <Row>
-            <DescriptionText>{description}</DescriptionText>
-          </Row>
+          <RowEllipsis>
+            <Col span={24}>
+              <TitleEllipsis
+                ellipsis={{
+                  tooltip: true,
+                }}
+                level={3}
+              >
+                {name}
+              </TitleEllipsis>
+            </Col>
+            <Col span={24}>
+              <DescriptionText
+                ellipsis={{
+                  tooltip: true,
+                  rows: 2,
+                }}
+              >
+                {description}
+              </DescriptionText>
+            </Col>
+          </RowEllipsis>
           <EnrollRow justify="end">
             {isEnrolled ? (
               <Button type="primary" onClick={handleContinueLesson}>

@@ -28,6 +28,7 @@ export const Title = styled(Typography.Title)`
   padding-bottom: 0.5rem;
   font-size: 20px !important;
   line-height: 28px !important;
+  overflow-wrap: anywhere;
 `;
 
 export const Description = styled(Text)`
