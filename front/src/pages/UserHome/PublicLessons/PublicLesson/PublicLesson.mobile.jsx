@@ -34,7 +34,7 @@ const PublicLessonMobile = ({ lesson }) => {
       <Row>
         <S.Title
           ellipsis={{
-            tooltip: name,
+            tooltip: true,
           }}
           level={3}
         >
@@ -44,7 +44,8 @@ const PublicLessonMobile = ({ lesson }) => {
       <Row>
         <S.Description
           ellipsis={{
-            tooltip: description,
+            rows: 2,
+            tooltip: true,
           }}
         >
           {description}

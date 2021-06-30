@@ -27,7 +27,7 @@ const OngoingLessonDesktop = ({ lesson }) => {
       <S.RightColumn span={16}>
         <Title
           ellipsis={{
-            tooltip: name,
+            tooltip: true,
             rows: 3,
           }}
           level={4}

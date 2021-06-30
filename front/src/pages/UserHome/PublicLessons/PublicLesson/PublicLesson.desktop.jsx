@@ -27,7 +27,6 @@ const PublicLessonDesktop = ({ lesson }) => {
   const history = useHistory();
   const { id, isEnrolled, name, description, firstName, lastName } = lesson;
   const author = `${firstName} ${lastName}`;
-
   const handleEnroll = () => {
     history.push({
       search: query,
@@ -56,7 +55,7 @@ const PublicLessonDesktop = ({ lesson }) => {
             <Col span={24}>
               <TitleEllipsis
                 ellipsis={{
-                  tooltip: name,
+                  tooltip: true,
                 }}
                 level={3}
               >
@@ -66,7 +65,8 @@ const PublicLessonDesktop = ({ lesson }) => {
             <Col span={24}>
               <DescriptionText
                 ellipsis={{
-                  tooltip: description,
+                  tooltip: true,
+                  rows: 2,
                 }}
               >
                 {description}

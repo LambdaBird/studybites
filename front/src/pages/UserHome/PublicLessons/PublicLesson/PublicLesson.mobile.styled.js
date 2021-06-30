@@ -8,7 +8,7 @@ import {
   WHITE_COLOR,
 } from '@sb-ui/resources/styles/Global.styled';
 
-const { Text } = Typography;
+const { Paragraph } = Typography;
 
 export const Main = styled(Row)`
   background-color: ${WHITE_COLOR};
@@ -29,7 +29,7 @@ export const Title = styled(Typography.Title)`
   line-height: 28px !important;
 `;
 
-export const Description = styled(Text)`
+export const Description = styled(Paragraph)`
   text-align: justify;
   color: ${DESCRIPTION_COLOR};
 `;

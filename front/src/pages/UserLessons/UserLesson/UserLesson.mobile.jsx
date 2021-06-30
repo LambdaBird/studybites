@@ -37,7 +37,7 @@ const UserLessonMobile = ({ lesson }) => {
         <S.Title
           level={3}
           ellipsis={{
-            tooltip: name,
+            tooltip: true,
           }}
         >
           {name}
@@ -46,7 +46,8 @@ const UserLessonMobile = ({ lesson }) => {
       <Row>
         <S.Description
           ellipsis={{
-            tooltip: description,
+            tooltip: true,
+            rows: 2,
           }}
         >
           {description}

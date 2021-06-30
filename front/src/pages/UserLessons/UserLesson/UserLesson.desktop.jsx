@@ -44,7 +44,7 @@ const UserLessonDesktop = ({ lesson }) => {
           <Row>
             <S.TitleEllipsis
               ellipsis={{
-                tooltip: name,
+                tooltip: true,
               }}
               level={3}
             >

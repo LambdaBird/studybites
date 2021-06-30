@@ -92,7 +92,7 @@ const LessonCard = ({ title, id, students, status }) => {
         <S.CardText>
           <S.TitleEllipsis
             ellipsis={{
-              tooltip: title,
+              tooltip: true,
             }}
             level={4}
           >

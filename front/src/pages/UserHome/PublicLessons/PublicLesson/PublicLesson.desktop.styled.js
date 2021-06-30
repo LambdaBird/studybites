@@ -7,7 +7,7 @@ import {
   WHITE_COLOR,
 } from '@sb-ui/resources/styles/Global.styled';
 
-const { Text, Title } = Typography;
+const { Paragraph, Title } = Typography;
 
 export const MainSpace = styled(Row)`
   background-color: ${WHITE_COLOR};
@@ -30,7 +30,7 @@ export const LessonImg = styled.img`
   height: 10rem;
 `;
 
-export const DescriptionText = styled(Text)`
+export const DescriptionText = styled(Paragraph)`
   text-align: justify;
   color: ${DESCRIPTION_COLOR};
   overflow-wrap: anywhere;
