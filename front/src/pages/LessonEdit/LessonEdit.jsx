@@ -130,10 +130,47 @@ const LessonEdit = () => {
     }
   }, [lessonData?.lesson.name]);
 
+  const { mutate } = useMutation(createLesson, {
+    onSuccess: (data) => {
+      const { id } = data?.lesson;
+      history.push(LESSONS_EDIT.replace(':id', id));
+      message.success({
+        content: t('editor_js.message.success_created'),
+        duration: 2,
+      });
+    },
+    onError: () => {
+      message.error({
+        content: t('editor_js.message.error_created'),
+        duration: 2,
+      });
+    },
+  });
+
+  const { mutate: updateLesson, data: updatedLessonData } = useMutation(
+    putLesson,
+    {
+      onSuccess: () => {
+        message.success({
+          content: t('editor_js.message.success_updated'),
+          duration: 2,
+        });
+      },
+      onError: () => {
+        message.error({
+          content: t('editor_js.message.error_updated'),
+          duration: 2,
+        });
+      },
+    },
+  );
+
   useEffect(() => {
-    if (editorReady && lessonData) {
+    if (editorReady && (lessonData || updatedLessonData)) {
       const editorToRender = {
-        blocks: prepareEditorData(lessonData?.lesson?.blocks),
+        blocks: prepareEditorData(
+          updatedLessonData?.lesson?.blocks || lessonData?.lesson?.blocks,
+        ),
       };
 
       if (editorToRender.blocks.length === 0) {
@@ -143,31 +180,7 @@ const LessonEdit = () => {
       }
       undoPluginRef.current.initialize(editorToRender);
     }
-  }, [editorReady, lessonData]);
-
-  const { mutate } = useMutation(createLesson, {
-    onSuccess: (data) => {
-      const { id } = data?.lesson;
-      history.push(LESSONS_EDIT.replace(':id', id));
-    },
-    onError: (e) => {
-      message.error({
-        content: e.message,
-        key: e.key,
-        duration: 2,
-      });
-    },
-  });
-
-  const { mutate: updateLesson } = useMutation(putLesson, {
-    onError: (e) => {
-      message.error({
-        content: e.message,
-        key: e.key,
-        duration: 2,
-      });
-    },
-  });
+  }, [editorReady, lessonData, updatedLessonData]);
 
   const handleSave = async () => {
     try {
