@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { Typography, Space, Avatar, Tooltip, Menu, Dropdown } from 'antd';
+import { Avatar, Dropdown, Menu, Space, Tooltip, Typography } from 'antd';
 import { useMutation } from 'react-query';
 import { useHistory } from 'react-router-dom';
 import { EllipsisOutlined } from '@ant-design/icons';
@@ -12,7 +12,7 @@ import { TEACHER_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
 import * as S from './LessonCard.styled';
 import { Statuses } from '../constants';
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 const menuItems = {
   [Statuses.DRAFT]: [
@@ -90,7 +90,14 @@ const LessonCard = ({ title, id, students, status }) => {
       </S.ImageCol>
       <S.CardDescription span={16}>
         <S.CardText>
-          <Title level={4}>{title}</Title>
+          <S.TitleEllipsis
+            ellipsis={{
+              tooltip: title,
+            }}
+            level={4}
+          >
+            {title}
+          </S.TitleEllipsis>
           {!students.length ? (
             <Text type="secondary">
               {t('lesson_dashboard.card.no_students')}

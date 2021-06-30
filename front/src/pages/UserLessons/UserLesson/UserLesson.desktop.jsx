@@ -1,13 +1,11 @@
 import PropTypes from 'prop-types';
 import { useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Button, Row, Typography } from 'antd';
+import { Button, Row } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { LESSON_PAGE } from '@sb-ui/utils/paths';
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
 import * as S from './UserLesson.desktop.styled';
-
-const { Title } = Typography;
 
 const UserLessonDesktop = ({ lesson }) => {
   const { t } = useTranslation();
@@ -44,7 +42,14 @@ const UserLessonDesktop = ({ lesson }) => {
         </S.LeftContent>
         <S.RightContent>
           <Row>
-            <Title level={3}>{name}</Title>
+            <S.TitleEllipsis
+              ellipsis={{
+                tooltip: name,
+              }}
+              level={3}
+            >
+              {name}
+            </S.TitleEllipsis>
           </Row>
           <Row>
             <S.DescriptionText>{description}</S.DescriptionText>

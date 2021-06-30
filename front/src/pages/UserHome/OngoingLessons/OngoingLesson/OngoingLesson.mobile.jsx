@@ -24,7 +24,15 @@ const OngoingLessonMobile = ({ lesson }) => {
         <S.ProgressBar percent={Math.round(percentage)} />
       </S.LeftColumn>
       <S.RightColumn span={16}>
-        <Title level={4}>{name}</Title>
+        <Title
+          ellipsis={{
+            tooltip: name,
+            rows: 3,
+          }}
+          level={4}
+        >
+          {name}
+        </Title>
         <Row justify="end" align="between">
           <Col>
             <Button type="primary" onClick={handleContinueLesson}>

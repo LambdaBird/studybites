@@ -8,7 +8,7 @@ import {
   WHITE_COLOR,
 } from '@sb-ui/resources/styles/Global.styled';
 
-const { Text } = Typography;
+const { Text, Title } = Typography;
 
 export const MainSpace = styled(Row)`
   background-color: ${WHITE_COLOR};
@@ -74,4 +74,8 @@ export const ProgressBar = styled(Progress)`
   .ant-progress-text {
     color: ${variables['secondary-text-color']} !important;
   }
+`;
+
+export const TitleEllipsis = styled(Title)`
+  overflow-wrap: anywhere;
 `;

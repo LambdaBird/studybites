@@ -32,10 +32,23 @@ const PublicLessonMobile = ({ lesson }) => {
         <S.Image src={lessonImage} alt="Lesson" />
       </div>
       <Row>
-        <S.Title level={3}>{name}</S.Title>
+        <S.Title
+          ellipsis={{
+            tooltip: name,
+          }}
+          level={3}
+        >
+          {name}
+        </S.Title>
       </Row>
       <Row>
-        <S.Description>{description}</S.Description>
+        <S.Description
+          ellipsis={{
+            tooltip: description,
+          }}
+        >
+          {description}
+        </S.Description>
       </Row>
       <S.EnrollRow>
         {isEnrolled ? (

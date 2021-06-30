@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Row, Button, Col, Badge, Typography } from 'antd';
 import variables from '@sb-ui/theme/variables';
 
-const { Text } = Typography;
+const { Text, Title } = Typography;
 
 export const Wrapper = styled(Row)`
   height: 100%;
@@ -38,11 +38,16 @@ export const BadgeWrapper = styled.div`
   align-items: flex-start;
 `;
 
+export const TitleEllipsis = styled(Title)`
+  overflow-wrap: anywhere;
+`;
+
 export const CardText = styled(Col)`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: flex-start;
+  overflow: hidden;
 `;
 
 export const CardButton = styled(Button)`
