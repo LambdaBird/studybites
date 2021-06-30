@@ -12,7 +12,7 @@ const { Text, Title } = Typography;
 export const MainSpace = styled(Row)`
   background-color: ${WHITE_COLOR};
   padding: 1rem;
-  height: 10rem;
+  height: 12rem;
 `;
 
 export const LeftContent = styled(Col)`
@@ -27,7 +27,7 @@ export const RightContent = styled(Col)`
 `;
 
 export const LessonImg = styled.img`
-  height: 8rem;
+  height: 10rem;
 `;
 
 export const DescriptionText = styled(Text)`
