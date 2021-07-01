@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { Typography } from 'antd';
-import { getTeacherLessons } from '@sb-ui/utils/api/v1/lesson';
+import { getTeacherLessons } from '@sb-ui/utils/api/v1/teacher';
 import {
   TEACHER_LESSONS_BASE_KEY,
   USER_BASE_QUERY,

@@ -15,9 +15,9 @@ import {
 import logo from '@sb-ui/resources/img/logo.svg';
 import { clearJWT } from '@sb-ui/utils/jwt';
 import { USER_BASE_QUERY } from '@sb-ui/utils/queries';
-import { getUser } from '@sb-ui/utils/api/v1/user';
 import { Roles } from '@sb-ui/utils/constants';
 import useMobile from '@sb-ui/hooks/useMobile';
+import { getUser } from '@sb-ui/utils/api/v1/user';
 import * as S from './Header.styled';
 
 const Header = ({ children }) => {

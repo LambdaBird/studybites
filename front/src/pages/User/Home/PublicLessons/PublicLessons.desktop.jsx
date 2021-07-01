@@ -6,7 +6,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import emptyImg from '@sb-ui/resources/img/empty.svg';
 import LessonBlock, { PUBLIC_LESSON } from '@sb-ui/components/LessonBlock';
-import { getPublicLessons } from '@sb-ui/utils/api/v1/lesson';
+import { getPublicLessons } from '@sb-ui/utils/api/v1/student';
 import { getQueryPage } from '@sb-ui/utils/utils';
 import { USER_PUBLIC_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
 import { PAGE_SIZE } from './constants';

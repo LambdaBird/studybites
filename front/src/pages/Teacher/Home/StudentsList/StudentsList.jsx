@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Button, Col, Divider, Skeleton, Space, Typography } from 'antd';
 import { useQuery } from 'react-query';
 import emptyImage from '@sb-ui/resources/img/empty.svg';
-import { getTeacherStudents } from '@sb-ui/utils/api/v1/lesson';
+import { getTeacherStudents } from '@sb-ui/utils/api/v1/teacher';
 import { MAX_STUDENTS_IN_LIST } from '@sb-ui/pages/Teacher/Home/StudentsList/constants';
 import { TEACHER_STUDENTS_BASE_KEY } from '@sb-ui/utils/queries';
 import { skeletonArray } from '@sb-ui/utils/utils';

@@ -11,7 +11,7 @@ import {
   prepareResultToAnswers,
 } from '@sb-ui/pages/User/LessonPage/utils';
 import Block from '@sb-ui/pages/User/LessonPage/Block';
-import { getLessonById, postLessonById } from '@sb-ui/utils/api/v1/lesson';
+import { getLessonById, postLessonById } from '@sb-ui/utils/api/v1/student';
 import { USER_HOME } from '@sb-ui/utils/paths';
 import QuizBlock from '@sb-ui/pages/User/LessonPage/QuizBlock';
 import InfoBlock from './InfoBlock';

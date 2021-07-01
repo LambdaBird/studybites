@@ -5,10 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
 import { DescriptionText } from '@sb-ui/components/LessonBlock/Public/Public.desktop.styled';
-import {
-  getEnrolledLesson,
-  postEnroll,
-} from '@sb-ui/utils/api/v1/lesson/lesson';
+import { getEnrolledLesson, postEnroll } from '@sb-ui/utils/api/v1/student';
 import { LESSON_PAGE } from '@sb-ui/utils/paths';
 import { USER_LESSON_MODAL_BASE_KEY } from '@sb-ui/utils/queries';
 import * as S from './EnrollModal.mobile.styled';

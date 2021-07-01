@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { PlusOutlined } from '@ant-design/icons';
 import { skeletonArray } from '@sb-ui/utils/utils';
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
-import { getTeacherLessons } from '@sb-ui/utils/api/v1/lesson';
+import { getTeacherLessons } from '@sb-ui/utils/api/v1/teacher';
 import { LESSONS_NEW } from '@sb-ui/utils/paths';
 import { TEACHER_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
 import * as S from './LessonsDashboard.styled';

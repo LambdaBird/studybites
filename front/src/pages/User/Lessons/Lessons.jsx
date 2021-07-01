@@ -5,7 +5,7 @@ import {
 import {
   getEnrolledLessons,
   getEnrolledLessonsFinished,
-} from '@sb-ui/utils/api/v1/lesson';
+} from '@sb-ui/utils/api/v1/student';
 import { useTranslation } from 'react-i18next';
 import * as S from './Lessons.styled';
 import UserLessonsList from './UserLessonsList';

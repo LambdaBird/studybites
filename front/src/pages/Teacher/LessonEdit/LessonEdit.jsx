@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useEffect, useRef, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from 'react-query';
@@ -16,7 +17,11 @@ import DragDrop from 'editorjs-drag-drop';
 import SimpleImage from '@editorjs/simple-image';
 import { RedoOutlined, SaveOutlined, UndoOutlined } from '@ant-design/icons';
 import Header from '@sb-ui/components/molecules/Header';
-import { createLesson, getLesson, putLesson } from '@sb-ui/utils/api/v1/lesson';
+import {
+  createLesson,
+  getLesson,
+  putLesson,
+} from '@sb-ui/utils/api/v1/teacher';
 import { Statuses } from '@sb-ui/pages/Teacher/Home/LessonsDashboard/constants';
 import { LESSONS_EDIT } from '@sb-ui/utils/paths';
 import Next from '@sb-ui/utils/editorjs/next-plugin';

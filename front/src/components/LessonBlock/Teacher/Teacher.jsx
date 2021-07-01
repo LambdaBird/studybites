@@ -5,7 +5,7 @@ import { useMutation } from 'react-query';
 import { useHistory } from 'react-router-dom';
 import { EllipsisOutlined } from '@ant-design/icons';
 import lesson from '@sb-ui/resources/img/lesson.svg';
-import { putLesson } from '@sb-ui/utils/api/v1/lesson';
+import { putLesson } from '@sb-ui/utils/api/v1/teacher';
 import { queryClient } from '@sb-ui/query';
 import { LESSONS_EDIT } from '@sb-ui/utils/paths';
 import { TEACHER_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
