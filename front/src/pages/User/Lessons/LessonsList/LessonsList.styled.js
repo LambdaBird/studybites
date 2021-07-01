@@ -29,6 +29,7 @@ export const LessonsRow = styled(Row)`
 `;
 
 export const StyledPagination = styled(Pagination)`
+  margin-top: 1rem;
   width: 100%;
   display: flex;
   justify-content: flex-end;

@@ -8,21 +8,21 @@ import {
 } from '@sb-ui/utils/api/v1/student';
 import { useTranslation } from 'react-i18next';
 import * as S from './Lessons.styled';
-import UserLessonsList from './UserLessonsList';
+import LessonsList from './LessonsList';
 
 const Lessons = () => {
   const { t } = useTranslation();
 
   return (
     <S.MainDiv>
-      <UserLessonsList
+      <LessonsList
         title={t('user_lessons.ongoing_lessons.title')}
         query={{
           key: USER_ENROLLED_LESSONS_BASE_KEY,
           func: getEnrolledLessons,
         }}
       />
-      <UserLessonsList
+      <LessonsList
         title={t('user_lessons.finished_lessons.title')}
         query={{
           key: USER_ENROLLED_LESSONS_FINISHED_BASE_KEY,

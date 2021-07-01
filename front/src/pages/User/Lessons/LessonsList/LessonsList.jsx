@@ -6,10 +6,10 @@ import OngoingFullLesson from '@sb-ui/components/lessonBlocks/OngoingFull';
 import emptyImg from '@sb-ui/resources/img/empty.svg';
 import { useTranslation } from 'react-i18next';
 import { skeletonArray } from '@sb-ui/utils/utils';
-import * as S from './UserLessonsList.styled';
+import * as S from './LessonsList.styled';
 import { PAGE_SIZE } from './constants';
 
-const UserLessonsList = ({ title, query }) => {
+const LessonsList = ({ title, query }) => {
   const { t } = useTranslation();
   const { key: queryKey, func: queryFunc } = query;
   const [currentPage, setCurrentPage] = useState(1);
@@ -71,7 +71,7 @@ const UserLessonsList = ({ title, query }) => {
   );
 };
 
-UserLessonsList.propTypes = {
+LessonsList.propTypes = {
   title: PropTypes.string.isRequired,
   query: PropTypes.shape({
     key: PropTypes.string.isRequired,
@@ -79,4 +79,4 @@ UserLessonsList.propTypes = {
   }),
 };
 
-export default UserLessonsList;
+export default LessonsList;
