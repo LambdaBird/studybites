@@ -4,13 +4,14 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { LESSON_PAGE } from '@sb-ui/utils/paths';
 import lessonImg from '@sb-ui/resources/img/lesson.svg';
-import * as S from './OngoingLesson.styled';
+import * as S from './OngoingShort.styled';
 
 const { Title } = Typography;
 
-const OngoingLessonMobile = ({ lesson }) => {
+const OngoingShortDesktop = ({ lesson }) => {
   const { t } = useTranslation();
   const history = useHistory();
+
   const { name, id, percentage } = lesson;
 
   const handleContinueLesson = () => {
@@ -20,7 +21,7 @@ const OngoingLessonMobile = ({ lesson }) => {
   return (
     <S.MainSpace>
       <S.LeftColumn span={8}>
-        <S.StyledImage src={lessonImg} alt="Lesson" />
+        <img height={100} src={lessonImg} alt="Lesson" />
         <S.ProgressBar percent={Math.round(percentage)} />
       </S.LeftColumn>
       <S.RightColumn span={16}>
@@ -45,13 +46,14 @@ const OngoingLessonMobile = ({ lesson }) => {
   );
 };
 
-OngoingLessonMobile.propTypes = {
+OngoingShortDesktop.propTypes = {
   lesson: PropTypes.shape({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
     maintainer: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
     percentage: PropTypes.number.isRequired,
   }).isRequired,
 };
 
-export default OngoingLessonMobile;
+export default OngoingShortDesktop;

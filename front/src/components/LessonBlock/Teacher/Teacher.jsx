@@ -9,8 +9,8 @@ import { putLesson } from '@sb-ui/utils/api/v1/lesson';
 import { queryClient } from '@sb-ui/query';
 import { LESSONS_EDIT } from '@sb-ui/utils/paths';
 import { TEACHER_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
-import * as S from './LessonCard.styled';
-import { Statuses } from '../constants';
+import { Statuses } from '@sb-ui/pages/Teacher/Home/LessonsDashboard/constants';
+import * as S from './Teacher.styled';
 
 const { Text } = Typography;
 
@@ -36,7 +36,7 @@ const menuItems = {
   ],
 };
 
-const LessonCard = ({ title, id, students, status }) => {
+const Teacher = ({ title, id, students, status }) => {
   const history = useHistory();
   const { t } = useTranslation();
   const updateLessonMutation = useMutation(putLesson, {
@@ -130,15 +130,15 @@ const LessonCard = ({ title, id, students, status }) => {
   );
 };
 
-LessonCard.propTypes = {
+Teacher.propTypes = {
   students: PropTypes.arrayOf(PropTypes.shape({})),
   status: PropTypes.oneOf(Object.values(Statuses)).isRequired,
   title: PropTypes.string.isRequired,
   id: PropTypes.number.isRequired,
 };
 
-LessonCard.defaultProps = {
+Teacher.defaultProps = {
   students: [],
 };
 
-export default LessonCard;
+export default Teacher;

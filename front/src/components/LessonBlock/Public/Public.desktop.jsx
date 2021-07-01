@@ -17,9 +17,9 @@ import {
   RightContent,
   RowEllipsis,
   TitleEllipsis,
-} from './PublicLesson.desktop.styled';
+} from './Public.desktop.styled';
 
-const PublicLessonDesktop = ({ lesson }) => {
+const PublicDesktop = ({ lesson }) => {
   const location = useLocation();
   const query = useMemo(() => location.search, [location]);
 
@@ -90,7 +90,7 @@ const PublicLessonDesktop = ({ lesson }) => {
   );
 };
 
-PublicLessonDesktop.propTypes = {
+PublicDesktop.propTypes = {
   lesson: PropTypes.shape({
     id: PropTypes.number.isRequired,
     isEnrolled: PropTypes.bool.isRequired,
@@ -101,4 +101,4 @@ PublicLessonDesktop.propTypes = {
   }).isRequired,
 };
 
-export default PublicLessonDesktop;
+export default PublicDesktop;

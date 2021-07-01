@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { Skeleton } from 'antd';
 import { useQuery } from 'react-query';
 import PropTypes from 'prop-types';
-
-import UserLesson from '@sb-ui/pages/User/Lessons/UserLesson';
+import LessonBlock, {
+  ONGOING_FULL_LESSON,
+} from '@sb-ui/components/LessonBlock';
 
 import emptyImg from '@sb-ui/resources/img/empty.svg';
 import { useTranslation } from 'react-i18next';
@@ -50,7 +51,7 @@ const UserLessonsList = ({ title, query }) => {
             ))
           : lessons?.map((lesson) => (
               <S.LessonCol key={lesson.id} lg={{ span: 12 }} md={{ span: 24 }}>
-                <UserLesson lesson={lesson} />
+                <LessonBlock type={ONGOING_FULL_LESSON} lesson={lesson} />
               </S.LessonCol>
             ))}
         {!isLoading && total === 0 && lessons?.length === 0 && (

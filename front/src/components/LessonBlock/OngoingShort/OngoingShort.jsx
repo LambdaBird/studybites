@@ -3,20 +3,20 @@ import PropTypes from 'prop-types';
 
 import MobileContext from '@sb-ui/contexts/MobileContext';
 
-import OngoingLessonMobile from './OngoingLesson.mobile';
-import OngoingLessonDesktop from './OngoingLesson.desktop';
+import OngoingShortMobile from './OngoingShort.mobile';
+import OngoingShortDesktop from './OngoingShort.desktop';
 
-const OngoingLesson = ({ lesson }) => {
+const OngoingShort = ({ lesson }) => {
   const isMobile = useContext(MobileContext);
 
   if (isMobile) {
-    return <OngoingLessonMobile lesson={lesson} />;
+    return <OngoingShortMobile lesson={lesson} />;
   }
 
-  return <OngoingLessonDesktop lesson={lesson} />;
+  return <OngoingShortDesktop lesson={lesson} />;
 };
 
-OngoingLesson.propTypes = {
+OngoingShort.propTypes = {
   lesson: PropTypes.shape({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
@@ -25,4 +25,4 @@ OngoingLesson.propTypes = {
   }).isRequired,
 };
 
-export default OngoingLesson;
+export default OngoingShort;

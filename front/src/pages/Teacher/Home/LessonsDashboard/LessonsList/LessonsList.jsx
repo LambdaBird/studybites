@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
+import LessonBlock from '@sb-ui/components/LessonBlock';
+import { TEACHER_LESSON } from '@sb-ui/components/LessonBlock/LessonBlock';
 import AddCard from '../AddCard';
-import LessonCard from '../LessonCard';
+
 import { CardCol } from '../LessonsDashboard.styled';
 
 const LessonsList = ({ lessons, onCreateLesson, isAddNewShown }) => (
@@ -12,7 +14,8 @@ const LessonsList = ({ lessons, onCreateLesson, isAddNewShown }) => (
     ) : (
       lessons.map((lesson) => (
         <CardCol key={lesson.id} span={12}>
-          <LessonCard
+          <LessonBlock
+            type={TEACHER_LESSON}
             id={lesson.id}
             title={lesson.name}
             students={lesson.students}

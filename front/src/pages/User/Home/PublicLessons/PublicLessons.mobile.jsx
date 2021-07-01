@@ -4,9 +4,8 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useQuery } from 'react-query';
-
 import emptyImg from '@sb-ui/resources/img/empty.svg';
-import PublicLesson from '@sb-ui/pages/User/Home/PublicLessons/PublicLesson';
+import LessonBlock, { PUBLIC_LESSON } from '@sb-ui/components/LessonBlock';
 import { getPublicLessons } from '@sb-ui/utils/api/v1/lesson/lesson';
 import { getQueryPage } from '@sb-ui/utils/utils';
 import { USER_PUBLIC_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
@@ -104,7 +103,7 @@ const PublicLessonsMobile = ({ searchLessons }) => {
           <S.Main gutter={[0, 16]}>
             {data?.map((lesson) => (
               <S.Column key={lesson.id}>
-                <PublicLesson lesson={lesson} />
+                <LessonBlock type={PUBLIC_LESSON} lesson={lesson} />
               </S.Column>
             ))}
             <Row justify="end">

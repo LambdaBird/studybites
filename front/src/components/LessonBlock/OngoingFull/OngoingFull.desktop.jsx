@@ -5,9 +5,9 @@ import { Button, Row } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { LESSON_PAGE } from '@sb-ui/utils/paths';
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
-import * as S from './UserLesson.desktop.styled';
+import * as S from './OngoingFull.desktop.styled';
 
-const UserLessonDesktop = ({ lesson }) => {
+const OngoingFullDesktop = ({ lesson }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const { id, name, description, maintainer, percentage } = lesson;
@@ -65,7 +65,7 @@ const UserLessonDesktop = ({ lesson }) => {
   );
 };
 
-UserLessonDesktop.propTypes = {
+OngoingFullDesktop.propTypes = {
   lesson: PropTypes.shape({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
@@ -80,4 +80,4 @@ UserLessonDesktop.propTypes = {
   }).isRequired,
 };
 
-export default UserLessonDesktop;
+export default OngoingFullDesktop;

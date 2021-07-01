@@ -5,9 +5,9 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
 import { LESSON_PAGE, USER_ENROLL } from '@sb-ui/utils/paths';
-import * as S from './PublicLesson.mobile.styled';
+import * as S from './Public.mobile.styled';
 
-const PublicLessonMobile = ({ lesson }) => {
+const PublicMobile = ({ lesson }) => {
   const location = useLocation();
   const query = useMemo(() => location.search, [location]);
   const { t } = useTranslation();
@@ -70,7 +70,7 @@ const PublicLessonMobile = ({ lesson }) => {
   );
 };
 
-PublicLessonMobile.propTypes = {
+PublicMobile.propTypes = {
   lesson: PropTypes.shape({
     id: PropTypes.number.isRequired,
     isEnrolled: PropTypes.bool.isRequired,
@@ -81,4 +81,4 @@ PublicLessonMobile.propTypes = {
   }).isRequired,
 };
 
-export default PublicLessonMobile;
+export default PublicMobile;

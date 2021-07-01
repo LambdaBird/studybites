@@ -4,7 +4,7 @@ import { Comment, List, Rate, Row, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
-import { DescriptionText } from '@sb-ui/pages/User/Home/PublicLessons/PublicLesson/PublicLesson.desktop.styled';
+import { DescriptionText } from '@sb-ui/components/LessonBlock/Public/Public.desktop.styled';
 import {
   getEnrolledLesson,
   postEnroll,

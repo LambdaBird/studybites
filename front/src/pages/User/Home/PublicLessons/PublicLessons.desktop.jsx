@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import emptyImg from '@sb-ui/resources/img/empty.svg';
-import PublicLesson from '@sb-ui/pages/User/Home/PublicLessons/PublicLesson';
+import LessonBlock, { PUBLIC_LESSON } from '@sb-ui/components/LessonBlock';
 import { getPublicLessons } from '@sb-ui/utils/api/v1/lesson';
 import { getQueryPage } from '@sb-ui/utils/utils';
 import { USER_PUBLIC_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
@@ -112,7 +112,7 @@ const LessonsMainDesktop = ({ searchLessons }) => {
                 lg={{ span: 12 }}
                 md={{ span: 24 }}
               >
-                <PublicLesson lesson={lesson} />
+                <LessonBlock type={PUBLIC_LESSON} lesson={lesson} />
               </LessonsColumn>
             ))}
           </Row>

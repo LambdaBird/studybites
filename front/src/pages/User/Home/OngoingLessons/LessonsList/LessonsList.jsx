@@ -1,10 +1,11 @@
 import { Col, Empty, Skeleton } from 'antd';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import CurrentLesson from '@sb-ui/pages/User/Home/OngoingLessons/OngoingLesson';
 import emptyImg from '@sb-ui/resources/img/empty.svg';
 import useMobile from '@sb-ui/hooks/useMobile';
-
+import LessonBlock, {
+  ONGOING_SHORT_LESSON,
+} from '@sb-ui/components/LessonBlock';
 import * as S from './LessonsList.styled';
 
 const LessonsList = ({ lessons, isLoading }) => {
@@ -29,7 +30,7 @@ const LessonsList = ({ lessons, isLoading }) => {
           <>
             {lessons?.map((lesson) => (
               <S.LessonsColumn xl={{ span: 8 }} lg={{ span: 24 }}>
-                <CurrentLesson lesson={lesson} />
+                <LessonBlock type={ONGOING_SHORT_LESSON} lesson={lesson} />
               </S.LessonsColumn>
             ))}
           </>

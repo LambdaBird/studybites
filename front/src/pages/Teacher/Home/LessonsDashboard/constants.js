@@ -29,5 +29,3 @@ export const statusesOptions = [
 ];
 
 export const pageLimit = 8;
-
-export const DEFAULT_LESSON_NAME = 'New lesson';

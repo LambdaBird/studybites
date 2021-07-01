@@ -5,9 +5,9 @@ import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
 import { LESSON_PAGE } from '@sb-ui/utils/paths';
-import * as S from './UserLesson.mobile.styled';
+import * as S from './OngoingFull.mobile.styled';
 
-const UserLessonMobile = ({ lesson }) => {
+const OngoingFullMobile = ({ lesson }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const { id, name, description, maintainer, percentage } = lesson;
@@ -66,7 +66,7 @@ const UserLessonMobile = ({ lesson }) => {
   );
 };
 
-UserLessonMobile.propTypes = {
+OngoingFullMobile.propTypes = {
   lesson: PropTypes.shape({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
@@ -81,4 +81,4 @@ UserLessonMobile.propTypes = {
   }).isRequired,
 };
 
-export default UserLessonMobile;
+export default OngoingFullMobile;
