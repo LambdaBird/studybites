@@ -2,10 +2,7 @@ import { useState } from 'react';
 import { Skeleton } from 'antd';
 import { useQuery } from 'react-query';
 import PropTypes from 'prop-types';
-import LessonBlock, {
-  ONGOING_FULL_LESSON,
-} from '@sb-ui/components/LessonBlock';
-
+import OngoingFullLesson from '@sb-ui/components/lessonBlocks/OngoingFull';
 import emptyImg from '@sb-ui/resources/img/empty.svg';
 import { useTranslation } from 'react-i18next';
 import { skeletonArray } from '@sb-ui/utils/utils';
@@ -51,7 +48,7 @@ const UserLessonsList = ({ title, query }) => {
             ))
           : lessons?.map((lesson) => (
               <S.LessonCol key={lesson.id} lg={{ span: 12 }} md={{ span: 24 }}>
-                <LessonBlock type={ONGOING_FULL_LESSON} lesson={lesson} />
+                <OngoingFullLesson lesson={lesson} />
               </S.LessonCol>
             ))}
         {!isLoading && total === 0 && lessons?.length === 0 && (

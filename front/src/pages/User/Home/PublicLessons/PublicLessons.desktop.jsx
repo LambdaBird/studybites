@@ -2,7 +2,7 @@ import { Col, Row, Skeleton } from 'antd';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import emptyImg from '@sb-ui/resources/img/empty.svg';
-import LessonBlock, { PUBLIC_LESSON } from '@sb-ui/components/LessonBlock';
+import PublicLesson from '@sb-ui/components/lessonBlocks/Public';
 import { PAGE_SIZE } from './constants';
 import { useLessons } from './useLessons';
 import * as S from './PublicLessons.desktop.styled';
@@ -56,7 +56,7 @@ const LessonsMainDesktop = ({ searchLessons }) => {
                 lg={{ span: 12 }}
                 md={{ span: 24 }}
               >
-                <LessonBlock type={PUBLIC_LESSON} lesson={lesson} />
+                <PublicLesson lesson={lesson} />
               </S.LessonsColumn>
             ))}
           </Row>

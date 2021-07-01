@@ -2,7 +2,7 @@ import { Col, Row, Skeleton } from 'antd';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import emptyImg from '@sb-ui/resources/img/empty.svg';
-import LessonBlock, { PUBLIC_LESSON } from '@sb-ui/components/LessonBlock';
+import PublicLesson from '@sb-ui/components/lessonBlocks/Public';
 import { PAGE_SIZE } from './constants';
 import { useLessons } from './useLessons';
 import * as S from './PublicLessons.mobile.styled';
@@ -52,7 +52,7 @@ const PublicLessonsMobile = ({ searchLessons }) => {
           <S.Main gutter={[0, 16]}>
             {data?.map((lesson) => (
               <S.Column key={lesson.id}>
-                <LessonBlock type={PUBLIC_LESSON} lesson={lesson} />
+                <PublicLesson lesson={lesson} />
               </S.Column>
             ))}
             <Row justify="end">
