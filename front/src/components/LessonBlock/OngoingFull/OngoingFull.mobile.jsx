@@ -1,31 +1,15 @@
-import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Row } from 'antd';
-import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
-import { LESSON_PAGE } from '@sb-ui/utils/paths';
+import { useLesson } from './useLesson';
 import * as S from './OngoingFull.mobile.styled';
 
 const OngoingFullMobile = ({ lesson }) => {
   const { t } = useTranslation();
-  const history = useHistory();
-  const { id, name, description, maintainer, percentage } = lesson;
+  const { name, description, percentage } = lesson;
 
-  const fullName = useMemo(
-    () =>
-      `${maintainer.userInfo.firstName} ${maintainer.userInfo.lastName}`.trim(),
-    [maintainer.userInfo.firstName, maintainer.userInfo.lastName],
-  );
-
-  const firstNameLetter = useMemo(
-    () => maintainer.userInfo.firstName[0] || maintainer.userInfo.lastName[0],
-    [maintainer.userInfo.firstName, maintainer.userInfo.lastName],
-  );
-
-  const handleContinueLesson = () => {
-    history.push(LESSON_PAGE.replace(':id', id));
-  };
+  const { fullName, firstNameLetter, handleContinueLesson } = useLesson(lesson);
 
   return (
     <S.Main size="large" wrap={false}>

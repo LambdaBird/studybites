@@ -1,10 +1,8 @@
 import PropTypes from 'prop-types';
-import { useMemo } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 import { Button, Col } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { LESSON_PAGE, USER_ENROLL } from '@sb-ui/utils/paths';
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
+import { useLesson } from './useLesson';
 import {
   AuthorAvatar,
   AuthorContainer,
@@ -20,23 +18,10 @@ import {
 } from './Public.desktop.styled';
 
 const PublicDesktop = ({ lesson }) => {
-  const location = useLocation();
-  const query = useMemo(() => location.search, [location]);
-
   const { t } = useTranslation();
-  const history = useHistory();
-  const { id, isEnrolled, name, description, firstName, lastName } = lesson;
-  const author = `${firstName} ${lastName}`;
-  const handleEnroll = () => {
-    history.push({
-      search: query,
-      pathname: USER_ENROLL.replace(':id', id),
-    });
-  };
 
-  const handleContinueLesson = () => {
-    history.push(LESSON_PAGE.replace(':id', id));
-  };
+  const { name, description, isEnrolled } = lesson;
+  const { author, handleContinueLesson, handleEnroll } = useLesson(lesson);
 
   return (
     <>

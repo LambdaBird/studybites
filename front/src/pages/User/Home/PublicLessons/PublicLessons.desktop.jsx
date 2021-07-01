@@ -1,93 +1,37 @@
-import { useEffect, useMemo, useState } from 'react';
 import { Col, Row, Skeleton } from 'antd';
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { useHistory, useLocation } from 'react-router-dom';
-import { useQuery } from 'react-query';
+import PropTypes from 'prop-types';
 import emptyImg from '@sb-ui/resources/img/empty.svg';
 import LessonBlock, { PUBLIC_LESSON } from '@sb-ui/components/LessonBlock';
-import { getPublicLessons } from '@sb-ui/utils/api/v1/student';
-import { getQueryPage } from '@sb-ui/utils/utils';
-import { USER_PUBLIC_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
 import { PAGE_SIZE } from './constants';
-import {
-  LessonsColumn,
-  LessonsEmpty,
-  LessonsMainDiv,
-  LessonsPagination,
-} from './PublicLessons.desktop.styled';
+import { useLessons } from './useLessons';
+import * as S from './PublicLessons.desktop.styled';
 
 const LessonsMainDesktop = ({ searchLessons }) => {
   const { t } = useTranslation();
-  const location = useLocation();
-  const queryPage = useMemo(() => location.search, [location]);
-  const history = useHistory();
-  const [search, setSearch] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-
   const {
-    data: responseData,
+    data,
+    total,
+    currentPage,
     isLoading,
-    isPreviousData,
     isSuccess,
-  } = useQuery(
-    [
-      USER_PUBLIC_LESSONS_BASE_KEY,
-      {
-        offset: (currentPage - 1) * PAGE_SIZE,
-        limit: PAGE_SIZE,
-        search,
-      },
-    ],
-    getPublicLessons,
-    { keepPreviousData: true },
-  );
-
-  const { data, total } = responseData || {};
-
-  useEffect(() => {
-    if (data?.length === 0 && total !== 0) {
-      setCurrentPage(1);
-      history.replace({
-        search: ``,
-      });
-    }
-  }, [data, history, total]);
-
-  useEffect(() => {
-    const { incorrect, page } = getQueryPage(queryPage);
-    setCurrentPage(page);
-    if (incorrect || page === 1) {
-      history.replace({
-        search: ``,
-      });
-    }
-  }, [history, queryPage]);
-
-  useEffect(() => {
-    setSearch(searchLessons);
-  }, [searchLessons]);
-
-  const onChangeLessonsPage = (page) => {
-    setCurrentPage(page);
-    history.push({
-      search: `?page=${page}`,
-    });
-  };
+    isPreviousData,
+    onChangeLessonsPage,
+  } = useLessons(searchLessons);
 
   if (isSuccess && data?.length === 0) {
     return (
-      <LessonsMainDiv>
-        <LessonsEmpty
+      <S.LessonsMainDiv>
+        <S.LessonsEmpty
           image={emptyImg}
           description={t('user_home.open_lessons.not_found')}
         />
-      </LessonsMainDiv>
+      </S.LessonsMainDiv>
     );
   }
 
   return (
-    <LessonsMainDiv>
+    <S.LessonsMainDiv>
       {isLoading || isPreviousData ? (
         <Row gutter={[16, 16]}>
           <Col lg={{ span: 12 }} md={{ span: 24 }}>
@@ -107,18 +51,18 @@ const LessonsMainDesktop = ({ searchLessons }) => {
         <>
           <Row gutter={[16, 16]}>
             {data?.map((lesson) => (
-              <LessonsColumn
+              <S.LessonsColumn
                 key={lesson.id}
                 lg={{ span: 12 }}
                 md={{ span: 24 }}
               >
                 <LessonBlock type={PUBLIC_LESSON} lesson={lesson} />
-              </LessonsColumn>
+              </S.LessonsColumn>
             ))}
           </Row>
           <Row justify="end">
             {!isLoading && total > PAGE_SIZE && (
-              <LessonsPagination
+              <S.LessonsPagination
                 current={currentPage}
                 total={total}
                 pageSize={PAGE_SIZE}
@@ -129,7 +73,7 @@ const LessonsMainDesktop = ({ searchLessons }) => {
           </Row>
         </>
       )}
-    </LessonsMainDiv>
+    </S.LessonsMainDiv>
   );
 };
 

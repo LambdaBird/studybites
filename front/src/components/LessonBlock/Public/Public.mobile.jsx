@@ -1,30 +1,15 @@
-import { useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { Row } from 'antd';
-import { useHistory, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
-import { LESSON_PAGE, USER_ENROLL } from '@sb-ui/utils/paths';
+import { useLesson } from './useLesson';
 import * as S from './Public.mobile.styled';
 
 const PublicMobile = ({ lesson }) => {
-  const location = useLocation();
-  const query = useMemo(() => location.search, [location]);
   const { t } = useTranslation();
-  const history = useHistory();
-  const { id, isEnrolled, name, description, firstName, lastName } = lesson;
-  const author = `${firstName} ${lastName}`;
 
-  const handleEnroll = () => {
-    history.push({
-      search: query,
-      pathname: USER_ENROLL.replace(':id', id),
-    });
-  };
-
-  const handleContinueLesson = () => {
-    history.push(LESSON_PAGE.replace(':id', id));
-  };
+  const { name, description, isEnrolled } = lesson;
+  const { author, handleContinueLesson, handleEnroll } = useLesson(lesson);
 
   return (
     <S.Main size="large" wrap={false}>

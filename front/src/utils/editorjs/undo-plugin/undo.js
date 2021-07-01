@@ -145,15 +145,7 @@ export default class Undo {
     if (this.canUndo()) {
       this.shouldSaveHistory = false;
       const { index, state } = this.stack[(this.position -= 1)];
-      this.onUpdate();
-      if (state.length === 0) {
-        this.editor.clear();
-      } else {
-        this.editor.blocks.render({ blocks: state }).then(() => {
-          this.editor.caret.setToBlock(index, 'end');
-          this.editor.caret.focus(true);
-        });
-      }
+      this.updateBlocks(index, state);
     }
   }
 
@@ -164,15 +156,22 @@ export default class Undo {
     if (this.canRedo()) {
       this.shouldSaveHistory = false;
       const { index, state } = this.stack[(this.position += 1)];
-      this.onUpdate();
-      if (state.length === 0) {
-        this.editor.clear();
-      } else {
-        this.editor.blocks.render({ blocks: state }).then(() => {
-          this.editor.caret.setToBlock(index, 'end');
-          this.editor.caret.focus(true);
-        });
-      }
+      this.updateBlocks(index, state);
+    }
+  }
+
+  /**
+   * Renders data in the editor by index with state
+   */
+  updateBlocks(index, state) {
+    this.onUpdate();
+    if (state.length === 0) {
+      this.editor.clear();
+    } else {
+      this.editor.blocks.render({ blocks: state }).then(() => {
+        this.editor.caret.setToBlock(index, 'end');
+        this.editor.caret.focus(true);
+      });
     }
   }
 
