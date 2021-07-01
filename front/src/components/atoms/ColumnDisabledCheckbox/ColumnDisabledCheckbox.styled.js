@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import variables from '@sb-ui/theme/variables';
 import { Checkbox } from 'antd';
+import variables from '@sb-ui/theme/variables';
 
 export const DisabledCheckbox = styled(Checkbox)`
   cursor: default !important;

@@ -13,8 +13,7 @@ export const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 0 auto;
-  margin-bottom: 16rem;
+  margin: 0 auto 16rem;
 `;
 
 export const SignUpFormContainer = styled.div`

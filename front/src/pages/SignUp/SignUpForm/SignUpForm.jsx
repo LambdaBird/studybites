@@ -4,10 +4,10 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { usePasswordInput } from '@sb-ui/hooks/usePasswordInput';
 import { useAuthentication } from '@sb-ui/hooks/useAuthentication';
-import PasswordStrengthIndicator from '../../../components/atoms/PasswordStrengthIndicator';
-import { postSignUp } from '../../../utils/api/v1/user';
+import { postSignUp } from '@sb-ui/utils/api/v1/user';
+import { SIGN_IN } from '@sb-ui/utils/paths';
+import PasswordStrengthIndicator from '@sb-ui/components/atoms/PasswordStrengthIndicator';
 import { DivAlignCenter, SubmitButton, LinkButton } from './SignUpForm.styled';
-import { SIGN_IN } from '../../../utils/paths';
 
 const SignUpForm = () => {
   const { t } = useTranslation();
