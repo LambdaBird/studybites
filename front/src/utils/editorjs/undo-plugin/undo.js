@@ -59,6 +59,7 @@ export default class Undo {
    *
    * @param {Object} stack  Changes history stack.
    * @param {Number} stack  Limit of changes recorded by the history stack.
+   * @param limit
    */
   // eslint-disable-next-line class-methods-use-this
   truncate(stack, limit) {

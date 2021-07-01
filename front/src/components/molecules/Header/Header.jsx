@@ -3,8 +3,8 @@ import { Col, Dropdown, Menu } from 'antd';
 import { useHistory, useLocation, Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
-import { DownOutlined } from '@ant-design/icons';
 import { useTranslation } from 'react-i18next';
+import { DownOutlined } from '@ant-design/icons';
 import {
   HOME,
   SIGN_IN,

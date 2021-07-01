@@ -3,14 +3,14 @@ import { Alert, Form, Input } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuthentication } from '@sb-ui/hooks/useAuthentication';
+import { postSignIn } from '@sb-ui/utils/api/v1/user';
+import { SIGN_UP } from '@sb-ui/utils/paths';
 import {
   DivAlignCenter,
   SubmitButton,
   LinkButton,
   FormItemAlignEnd,
 } from './SignInForm.styled';
-import { postSignIn } from '../../../utils/api/v1/user';
-import { SIGN_UP } from '../../../utils/paths';
 
 const SignInForm = () => {
   const { t } = useTranslation();
