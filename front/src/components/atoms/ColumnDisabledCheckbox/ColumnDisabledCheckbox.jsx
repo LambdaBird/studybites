@@ -5,7 +5,7 @@ import * as S from './ColumnDisabledCheckbox.styled';
 const ColumnDisabledCheckbox = ({ value, options }) => (
   <Row>
     {options.map((opt, i) => (
-      <Col span={24}>
+      <Col key={opt.value} span={24}>
         <S.DisabledCheckbox disabled checked={value.includes(i)}>
           {opt.label}
         </S.DisabledCheckbox>

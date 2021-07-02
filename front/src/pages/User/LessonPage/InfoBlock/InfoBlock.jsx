@@ -4,7 +4,7 @@ import { Skeleton, Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
 import * as S from './InfoBlock.styled';
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 const InfoBlock = ({ isLoading, lesson, total }) => {
   const { t } = useTranslation();
@@ -23,7 +23,14 @@ const InfoBlock = ({ isLoading, lesson, total }) => {
         <Skeleton loading={isLoading} paragraph={{ rows: 2 }} active />
       ) : (
         <>
-          <Title level={2}>{lesson.name}</Title>
+          <S.TitleEllipsis
+            ellipsis={{
+              tooltip: true,
+            }}
+            level={2}
+          >
+            {lesson.name}
+          </S.TitleEllipsis>
           <S.StyledRow justify="space-between">
             <Text type="secondary">
               {t('lesson.by')} {authors}
@@ -40,13 +47,14 @@ const InfoBlock = ({ isLoading, lesson, total }) => {
 
 InfoBlock.propTypes = {
   lesson: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    author: PropTypes.string.isRequired,
-    blocks: PropTypes.number.isRequired,
-    authors: PropTypes.arrayOf({
-      firstName: PropTypes.string,
-      lastName: PropTypes.string,
-    }),
+    name: PropTypes.string,
+
+    authors: PropTypes.arrayOf(
+      PropTypes.shape({
+        firstName: PropTypes.string,
+        lastName: PropTypes.string,
+      }),
+    ),
   }),
   total: PropTypes.number.isRequired,
   isLoading: PropTypes.bool.isRequired,

@@ -34,9 +34,11 @@ const QuizBlock = ({ data, setQuiz }) => {
 QuizBlock.propTypes = {
   setQuiz: PropTypes.func,
   data: PropTypes.shape({
-    answers: PropTypes.arrayOf({
-      label: PropTypes.string,
-    }).isRequired,
+    answers: PropTypes.arrayOf(
+      PropTypes.shape({
+        label: PropTypes.string,
+      }),
+    ).isRequired,
     question: PropTypes.string.isRequired,
   }),
 };

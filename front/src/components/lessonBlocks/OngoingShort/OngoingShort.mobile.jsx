@@ -49,7 +49,6 @@ OngoingShortMobile.propTypes = {
   lesson: PropTypes.shape({
     id: PropTypes.number.isRequired,
     name: PropTypes.string.isRequired,
-    maintainer: PropTypes.string.isRequired,
     percentage: PropTypes.number.isRequired,
   }).isRequired,
 };

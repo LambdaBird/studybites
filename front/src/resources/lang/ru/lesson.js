@@ -6,5 +6,6 @@ export default {
   blocks: 'блоков',
   start: 'Начать',
   next: 'Дальше',
+  send: 'Отправить',
   finish: 'Закончить',
 };
