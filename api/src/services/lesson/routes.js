@@ -1097,6 +1097,10 @@ const router = async (instance) => {
             .where({ lessonId: id })
             .whereIn('blocks.type', config.interactiveBlocks);
 
+          if (!finished) {
+            throw new BadRequestError(NOT_FINISHED);
+          }
+
           if (finished && !blocks.every((block) => finished.includes(block))) {
             throw new BadRequestError(NOT_FINISHED);
           }

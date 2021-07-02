@@ -46,7 +46,7 @@ describe('GET /api/v1/lesson', () => {
 
     expect(response.statusCode).toBe(200);
     expect(payload).toHaveProperty('total');
-    expect(payload).toHaveProperty('lessons');
+    expect(payload).toHaveProperty('data');
   });
 
   it('should return no lessons', async () => {
@@ -62,7 +62,7 @@ describe('GET /api/v1/lesson', () => {
 
     expect(response.statusCode).toBe(200);
     expect(payload).toHaveProperty('total');
-    expect(payload).toHaveProperty('lessons');
+    expect(payload).toHaveProperty('data');
     expect(payload.total).toBe(0);
   });
 });
@@ -155,7 +155,7 @@ describe('OPTIONS /api/v1/lesson', () => {
     const payload = JSON.parse(response.payload);
 
     expect(response.statusCode).toBe(200);
-    expect(payload).toHaveProperty('status');
+    expect(payload).toHaveProperty('properties');
   });
 });
 
@@ -262,7 +262,7 @@ describe('GET /api/v1/lesson/maintain/', () => {
 
     expect(response.statusCode).toBe(200);
     expect(payload).toHaveProperty('total');
-    expect(payload).toHaveProperty('lessons');
+    expect(payload).toHaveProperty('data');
   });
 
   it('should return no lessons', async () => {
@@ -278,7 +278,7 @@ describe('GET /api/v1/lesson/maintain/', () => {
 
     expect(response.statusCode).toBe(200);
     expect(payload).toHaveProperty('total');
-    expect(payload).toHaveProperty('lessons');
+    expect(payload).toHaveProperty('data');
   });
 });
 
@@ -376,8 +376,6 @@ describe('POST /api/v1/lesson/maintain/', () => {
 
     expect(response.statusCode).toBe(200);
     expect(payload).toHaveProperty('lesson');
-    expect(payload.lesson).toHaveProperty('blocks');
-    expect(payload.lesson.blocks.length).toBe(0);
   });
 
   it('should return a lesson with blocks', async () => {
@@ -531,8 +529,6 @@ describe('PUT /api/v1/maintain/:id', () => {
 
     expect(response.statusCode).toBe(200);
     expect(payload).toHaveProperty('lesson');
-    expect(payload.lesson).toHaveProperty('blocks');
-    expect(payload.lesson.blocks.length).toBe(0);
   });
 
   it('should return a lesson without blocks and a new name', async () => {
@@ -556,8 +552,6 @@ describe('PUT /api/v1/maintain/:id', () => {
 
     expect(response.statusCode).toBe(200);
     expect(payload).toHaveProperty('lesson');
-    expect(payload.lesson).toHaveProperty('blocks');
-    expect(payload.lesson.blocks.length).toBe(0);
     expect(payload.lesson.name).toBe(body.lesson.name);
   });
 });
@@ -649,7 +643,7 @@ describe('GET /api/v1/lesson/enrolled/', () => {
     expect(response.statusCode).toBe(200);
     expect(payload).toHaveProperty('total');
     expect(payload).toHaveProperty('lessons');
-    expect(payload.lessons).toHaveProperty('authors');
+    expect(payload.lessons[0]).toHaveProperty('maintainer');
   });
 
   it('should return no lessons', async () => {
@@ -712,9 +706,9 @@ describe('GET /api/v1/lesson/enrolled/:id', () => {
 
     expect(response.statusCode).toBe(200);
     expect(payload).toHaveProperty('total');
-    expect(payload).toHaveProperty('students');
+    expect(payload).toHaveProperty('data');
     expect(payload.total).toBe(2);
-    expect(payload.students.length).toBe(2);
+    expect(payload.data.length).toBe(2);
   });
 
   it('should return no students', async () => {
@@ -730,9 +724,9 @@ describe('GET /api/v1/lesson/enrolled/:id', () => {
 
     expect(response.statusCode).toBe(200);
     expect(payload).toHaveProperty('total');
-    expect(payload).toHaveProperty('students');
+    expect(payload).toHaveProperty('data');
     expect(payload.total).toBe(0);
-    expect(payload.students.length).toBe(0);
+    expect(payload.data.length).toBe(0);
   });
 });
 
@@ -818,6 +812,7 @@ describe('POST /api/v1/lesson/:lesson_id/learn', () => {
     });
 
     const payload = JSON.parse(response.payload);
+    // console.log(payload)
 
     expect(response.statusCode).toBe(400);
     expect(payload.errors[0]).toMatchObject(NOT_FINISHED);
@@ -866,6 +861,7 @@ describe('POST /api/v1/lesson/:lesson_id/learn', () => {
     });
 
     const payload = JSON.parse(response.payload);
+    // console.log(payload)
 
     expect(response.statusCode).toBe(200);
     expect(payload).toHaveProperty('total');

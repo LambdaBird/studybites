@@ -37,7 +37,7 @@ describe('POST /api/v1/user/signup', () => {
 
     const payload = JSON.parse(response.payload);
 
-    expect(response.statusCode).toBe(200);
+    expect(response.statusCode).toBe(201);
     expect(payload).toHaveProperty('accessToken');
     expect(payload).toHaveProperty('refreshToken');
   });
@@ -161,51 +161,6 @@ describe('POST /api/v1/user/refresh_token', () => {
   it('should return new access and refresh tokens', async () => {
     const response = await app.inject({
       method: 'POST',
-      url: '/api/v1/user/signin',
-      body: {
-        refreshToken: token,
-      },
-    });
-
-    const payload = JSON.parse(response.payload);
-
-    expect(response.statusCode).toBe(200);
-    expect(payload).toHaveProperty('accessToken');
-    expect(payload).toHaveProperty('refreshToken');
-  });
-});
-
-describe('POST /api/v1/user/refresh_token', () => {
-  const app = build();
-
-  let token;
-
-  const credentials = {
-    email: 'john@test.io',
-    password: 'passwd3',
-  };
-
-  beforeAll(async () => {
-    await app.ready();
-
-    const response = await app.inject({
-      method: 'POST',
-      url: '/api/v1/user/signin',
-      payload: credentials,
-    });
-
-    const data = JSON.parse(response.payload);
-
-    token = data.refreshToken;
-  });
-
-  afterAll(async () => {
-    await app.close();
-  });
-
-  it('should return new access and refresh tokens', async () => {
-    const response = await app.inject({
-      method: 'POST',
       url: '/api/v1/user/refresh_token',
       body: {
         refreshToken: token,
@@ -260,7 +215,7 @@ describe('GET /api/v1/user/self', () => {
     const payload = JSON.parse(response.payload);
 
     expect(response.statusCode).toBe(200);
-    expect(payload).toHaveProperty('user');
+    expect(payload).toHaveProperty('email');
     expect(payload).toHaveProperty('roles');
   });
 });
@@ -305,7 +260,7 @@ describe('GET /api/v1/user', () => {
     const payload = JSON.parse(response.payload);
 
     expect(response.statusCode).toBe(200);
-    expect(payload).toHaveProperty('users');
+    expect(payload).toHaveProperty('data');
     expect(payload).toHaveProperty('total');
   });
 
@@ -321,7 +276,7 @@ describe('GET /api/v1/user', () => {
     const payload = JSON.parse(response.payload);
 
     expect(response.statusCode).toBe(200);
-    expect(payload).toHaveProperty('users');
+    expect(payload).toHaveProperty('data');
     expect(payload).toHaveProperty('total');
     expect(payload.total).toBe(0);
   });
@@ -367,7 +322,7 @@ describe('GET /api/v1/user/:id', () => {
     const payload = JSON.parse(response.payload);
 
     expect(response.statusCode).toBe(200);
-    expect(payload).toHaveProperty('user');
+    expect(payload).toHaveProperty('data');
   });
 
   it('should return an error', async () => {
@@ -429,8 +384,8 @@ describe('PATCH /api/v1/user/:id', () => {
     const payload = JSON.parse(response.payload);
 
     expect(response.statusCode).toBe(200);
-    expect(payload).toHaveProperty('user');
-    expect(payload.user.firstName).toBe('Newname');
+    expect(payload).toHaveProperty('data');
+    expect(payload.data.firstName).toBe('Newname');
   });
 
   it('should return an error', async () => {
@@ -445,7 +400,7 @@ describe('PATCH /api/v1/user/:id', () => {
     const payload = JSON.parse(response.payload);
 
     expect(response.statusCode).toBe(404);
-    expect(payload.errors[0]).toMatchObject(INVALID_PATCH);
+    expect(payload.errors[0]).toMatchObject(USER_NOT_FOUND);
   });
 });
 
