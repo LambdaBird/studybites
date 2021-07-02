@@ -1,4 +1,14 @@
 {
+  "license": "Apache License 2.0",
+  "description": "Open-source Education Platform focused on microlearning and mobile-centric design.",
+  "repository": "https://github.com/LambdaBird/studybites",
+  "keywords": [
+    "education",
+    "lms",
+    "microlearning",
+    "course",
+    "lesson"
+  ],
   "devDependencies": {
     "eslint": "^7.26.0",
     "husky": "^6.0.0",

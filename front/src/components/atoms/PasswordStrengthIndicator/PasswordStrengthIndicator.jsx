@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { getPasswordStrength } from '../../../utils';
+import { getPasswordStrength } from '@sb-ui/utils';
 import { IndicatorDiv, LineDiv } from './PasswordStrengthIndicator.styled';
 
 const PasswordStrengthIndicator = ({ value }) => {

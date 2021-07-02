@@ -1,70 +1,56 @@
-import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { Button } from 'antd';
+import { Popover } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
-
 import * as S from './Search.mobile.styled';
 
-const SearchMobile = ({ setSearchText, className }) => {
+const SearchMobile = ({ setSearchText, searchText, className, placement }) => {
   const { t } = useTranslation();
-
-  const [isSearchVisible, setIsSearchVisible] = useState(false);
 
   const onSearchChange = (data) => {
     setSearchText(data);
   };
 
-  const showSearch = () => {
-    setIsSearchVisible(true);
-  };
-
-  const hideSearch = () => {
-    setIsSearchVisible(false);
-  };
-
   return (
     <>
-      <Button
-        shape="circle"
-        icon={<SearchOutlined />}
-        size="large"
-        onClick={showSearch}
-      />
-      {isSearchVisible ? (
-        <S.ButtonClose type="button" onClick={hideSearch}>
-          <S.CloseIcon />
-        </S.ButtonClose>
-      ) : null}
-      <S.SearchModal
-        visible={isSearchVisible}
-        bodyStyle={{ padding: 0 }}
-        zIndex={900}
-        footer={null}
-        title={null}
-        closable={false}
+      <Popover
+        placement={placement}
+        content={
+          <DebouncedSearch
+            className={className}
+            delay={500}
+            placeholder={t('user_home.open_lessons.search')}
+            allowClear
+            onChange={onSearchChange}
+            size="large"
+          />
+        }
+        trigger="click"
       >
-        <DebouncedSearch
-          className={className}
-          delay={500}
-          placeholder={t('user_home.open_lessons.search')}
-          allowClear
-          onChange={onSearchChange}
+        <S.StyledSearchButton
+          shape="circle"
+          icon={<SearchOutlined />}
+          size="large"
+          $isActive={!!searchText}
         />
-      </S.SearchModal>
+      </Popover>
     </>
   );
 };
 
 SearchMobile.defaultProps = {
   setSearchText: () => {},
+  searchText: '',
+  placement: 'topRight',
 };
 
 SearchMobile.propTypes = {
   setSearchText: PropTypes.func,
   className: PropTypes.string,
+  searchText: PropTypes.string,
+  placement: PropTypes.string,
 };
 
 export default SearchMobile;

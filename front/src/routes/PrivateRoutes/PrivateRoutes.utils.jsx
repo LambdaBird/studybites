@@ -1,15 +1,16 @@
 import { matchPath } from 'react-router-dom';
 import * as paths from '@sb-ui/utils/paths';
 import { Roles } from '@sb-ui/utils/constants';
-import UserHome from '@sb-ui/pages/UserHome';
-import AdminHome from '@sb-ui/pages/AdminHome';
-import TeacherHome from '@sb-ui/pages/TeacherHome';
-import UserLessons from '@sb-ui/pages/UserHome/UserLessons';
-import LessonEdit from '@sb-ui/pages/LessonEdit';
-import LessonPage from '@sb-ui/pages/LessonPage';
+import { AdminHome } from '@sb-ui/pages/Admin';
+import {
+  UserHome,
+  UserLessons,
+  EnrollModalMobile,
+  EnrollModalDesktop,
+  LessonPage,
+} from '@sb-ui/pages/User';
+import { TeacherHome, LessonEdit } from '@sb-ui/pages/Teacher';
 import { LESSONS_EDIT, LESSONS_NEW } from '@sb-ui/utils/paths';
-import UserEnrollModal from '@sb-ui/pages/UserHome/UserEnrollModal';
-import LessonModal from '@sb-ui/components/atoms/PublicLesson/LessonModal';
 
 const SKIP_HEADER = [LESSONS_NEW, LESSONS_EDIT];
 
@@ -41,7 +42,7 @@ export const getPrivateRoutes = ({ isMobile }) => [
     children: !isMobile
       ? [
           {
-            component: LessonModal,
+            component: EnrollModalDesktop,
             path: paths.USER_ENROLL,
             exact: true,
           },
@@ -69,7 +70,7 @@ export const getPrivateRoutes = ({ isMobile }) => [
   ...(isMobile
     ? [
         {
-          component: UserEnrollModal,
+          component: EnrollModalMobile,
           path: paths.USER_ENROLL,
           exact: true,
         },

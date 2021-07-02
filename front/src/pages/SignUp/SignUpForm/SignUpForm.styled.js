@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import { Button } from 'antd';
-import variables from '../../../theme/variables';
+import variables from '@sb-ui/theme/variables';
 
 export const SubmitButton = styled(Button)`
   width: 100%;

@@ -67,3 +67,11 @@ export const getPasswordStrength = (password = '') => {
     .sort((o1, o2) => o2.id - o1.id);
   return fulfilledOptions[0].id;
 };
+
+export const getProgressEnrolledLesson = (blocks, totalBlocks) =>
+  (blocks?.length / totalBlocks).toFixed(2) * 100 || 0;
+
+export const skeletonArray = (size) =>
+  [...new Array(size)].map((_, index) => ({
+    id: `skeleton ${index}`,
+  }));

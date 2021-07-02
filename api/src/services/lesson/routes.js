@@ -30,6 +30,7 @@ import {
 const router = async (instance) => {
   const { Lesson, UserRole, Block, LessonBlockStructure, User, Result } =
     instance.models;
+  const { knex } = instance;
 
   instance.route({
     method: 'GET',
@@ -683,6 +684,26 @@ const router = async (instance) => {
   });
 
   instance.route({
+    method: 'GET',
+    url: '/enroll/:id',
+    schema: {
+      response: errorResponse,
+    },
+    validatorCompiler,
+    errorHandler,
+    onRequest: instance.auth({ instance }),
+    handler: async (req, repl) => {
+      const id = validateId(req.params.id);
+
+      const lesson = await Lesson.query()
+        .findById(id)
+        .withGraphFetched('authors');
+
+      return repl.status(200).send({ lesson });
+    },
+  });
+
+  instance.route({
     method: 'POST',
     url: '/enroll/:id',
     schema: {
@@ -735,32 +756,208 @@ const router = async (instance) => {
     validatorCompiler,
     errorHandler,
     onRequest: instance.auth({ instance }),
-    handler: async (req, repl) => {
+    handler: async ({ query, user }) => {
       const columns = {
         name: 'name',
         firstName: 'maintainer:userInfo.first_name',
         lastName: 'maintainer:userInfo.last_name',
       };
 
-      if (!req.query.search) {
+      if (!query.search) {
         columns.name = undefined;
         columns.firstName = undefined;
         columns.lastName = undefined;
       }
 
-      const firstIndex = parseInt(req.query.offset, 10) || 0;
+      const firstIndex = parseInt(query.offset, 10) || 0;
       const lastIndex =
         firstIndex +
-        (parseInt(req.query.limit, 10) || config.search.LESSON_SEARCH_LIMIT) -
+        (parseInt(query.limit, 10) || config.search.LESSON_SEARCH_LIMIT) -
         1;
+
+      let { finishedLessons } = await Result.query()
+        .first()
+        .select(knex.raw('array_agg(lesson_id) as finished_lessons'))
+        .where({
+          action: 'finish',
+          userId: user.id,
+        });
+
+      if (finishedLessons === null) {
+        finishedLessons = undefined;
+      }
+      const { total, results: lessons } = await Lesson.getAllEnrolled({
+        columns,
+        userId: user.id,
+        search: query?.search?.trim(),
+      })
+        .skipUndefined()
+        .whereNotIn('lessons.id', finishedLessons)
+        .range(firstIndex, lastIndex);
+
+      await Promise.all(
+        lessons.map(async (lesson) => {
+          const { id, blockId, revision } =
+            (await Result.query()
+              .first()
+              .select('results.*')
+              .from(function () {
+                this.select(this.knex().raw('max(created_at) as created_at'))
+                  .from('results')
+                  .where({
+                    userId: user.id,
+                    lessonId: lesson.id,
+                  })
+                  .as('temporary');
+              })
+              .join(
+                'results',
+                'results.created_at',
+                '=',
+                'temporary.created_at',
+              )) || {};
+
+          if (!id) {
+            // eslint-disable-next-line no-param-reassign
+            lesson.percentage = 0;
+
+            return lesson;
+          }
+
+          const { rows: blocks } = await knex.raw(`
+              with recursive sort as (select id, block_id
+                            from lesson_block_structure
+                            where parent_id is null
+                              and lesson_id = ${lesson.id}
+                            union all
+                            select lesson_block_structure.id, lesson_block_structure.block_id
+                            from lesson_block_structure
+                                    join sort on sort.id = lesson_block_structure.parent_id)
+              select blocks.*
+              from sort
+                      join blocks on blocks.block_id = sort.block_id
+                      join (select block_id, max(created_at) as created_at from blocks group by block_id) recent
+                            on recent.block_id = blocks.block_id and recent.created_at = blocks.created_at
+            `);
+
+          const { rows: interactiveBlocks } = await knex.raw(`
+              with recursive sort as (select id, block_id
+                            from lesson_block_structure
+                            where parent_id is null
+                              and lesson_id = ${lesson.id}
+                            union all
+                            select lesson_block_structure.id, lesson_block_structure.block_id
+                            from lesson_block_structure
+                                    join sort on sort.id = lesson_block_structure.parent_id)
+              select blocks.*
+              from sort
+                      join blocks on blocks.block_id = sort.block_id
+                      join (select block_id, max(created_at) as created_at from blocks where type in ('next', 'quiz') group by block_id) recent
+                            on recent.block_id = blocks.block_id and recent.created_at = blocks.created_at
+            `);
+
+          const count = blocks.length;
+
+          let nextBlock;
+
+          if (blockId && revision) {
+            for (let i = 0, n = interactiveBlocks.length; i < n; i += 1) {
+              if (
+                interactiveBlocks[i].block_id === blockId &&
+                interactiveBlocks[i].revision === revision
+              ) {
+                nextBlock = interactiveBlocks[i + 1];
+                break;
+              }
+            }
+          } else {
+            // eslint-disable-next-line prefer-destructuring
+            nextBlock = interactiveBlocks[0];
+          }
+
+          if (!nextBlock) {
+            if (id && !blockId) {
+              // eslint-disable-next-line no-param-reassign
+              lesson.percentage = 0;
+            } else {
+              // eslint-disable-next-line no-param-reassign
+              lesson.percentage = 100;
+            }
+
+            return lesson;
+          }
+
+          const currentBlocks = blocks.splice(
+            0,
+            blocks.findIndex((block) => block.block_id === nextBlock.block_id) +
+              1,
+          );
+
+          // eslint-disable-next-line no-param-reassign
+          lesson.percentage = (currentBlocks.length / count) * 100;
+
+          return lesson;
+        }),
+      );
+
+      return { total, lessons };
+    },
+  });
+
+  instance.route({
+    method: 'GET',
+    url: '/enrolled-finished/',
+    schema: {
+      response: errorResponse,
+    },
+    validatorCompiler,
+    errorHandler,
+    onRequest: instance.auth({ instance }),
+    handler: async ({ query, user }) => {
+      const columns = {
+        name: 'name',
+        firstName: 'maintainer:userInfo.first_name',
+        lastName: 'maintainer:userInfo.last_name',
+      };
+
+      if (!query.search) {
+        columns.name = undefined;
+        columns.firstName = undefined;
+        columns.lastName = undefined;
+      }
+
+      const firstIndex = parseInt(query.offset, 10) || 0;
+      const lastIndex =
+        firstIndex +
+        (parseInt(query.limit, 10) || config.search.LESSON_SEARCH_LIMIT) -
+        1;
+
+      const { finishedLessons } = await Result.query()
+        .first()
+        .select(knex.raw('array_agg(lesson_id) as finished_lessons'))
+        .where({
+          action: 'finish',
+          userId: user.id,
+        });
+
+      if (finishedLessons === null) {
+        return { total: 0, lessons: [] };
+      }
 
       const { total, results } = await Lesson.getAllEnrolled({
         columns,
-        userId: req.user.id,
-        search: req.query?.search?.trim(),
-      }).range(firstIndex, lastIndex);
+        userId: user.id,
+        search: query?.search?.trim(),
+      })
+        .whereIn('lessons.id', finishedLessons)
+        .range(firstIndex, lastIndex);
 
-      return repl.status(200).send({ total, data: results });
+      const lessons = results?.map((result) => ({
+        ...result,
+        percentage: 100,
+      }));
+
+      return { total, lessons };
     },
   });
 
@@ -900,7 +1097,7 @@ const router = async (instance) => {
             .where({ lessonId: id })
             .whereIn('blocks.type', config.interactiveBlocks);
 
-          if (!finished || !blocks.every((block) => finished.includes(block))) {
+          if (finished && !blocks.every((block) => finished.includes(block))) {
             throw new BadRequestError(NOT_FINISHED);
           }
 

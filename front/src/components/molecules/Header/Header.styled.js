@@ -1,10 +1,10 @@
 import styled from 'styled-components';
-import { Avatar, Button, Row, Typography } from 'antd';
+import { Avatar, Row, Typography } from 'antd';
 
 const { Text } = Typography;
 
 export const Container = styled.header`
-  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   background: white;
   height: 56px;
 `;
@@ -17,10 +17,6 @@ export const RowMain = styled(Row)`
 export const Logo = styled.img`
   height: 1.75rem;
   cursor: pointer;
-`;
-
-export const SignOutButton = styled(Button)`
-  margin-right: 0.5rem;
 `;
 
 export const StyledAvatar = styled(Avatar)`

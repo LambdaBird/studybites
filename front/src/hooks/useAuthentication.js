@@ -1,8 +1,8 @@
-import { HOME } from '@sb-ui/utils/paths';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { setJWT } from '../utils/jwt';
+import { setJWT } from '@sb-ui/utils/jwt';
+import { HOME } from '@sb-ui/utils/paths';
 
 const getTranslationFromMessageData = (t, data) => {
   const { key, message } = data;

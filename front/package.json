@@ -1,9 +1,8 @@
 {
   "name": "studybites-front",
   "version": "0.0.1",
-  "private": true,
+  "license": "Apache License 2.0",
   "proxy": "http://studybites-api:3017",
-  "repository": "https://github.com/LambdaBird/studybites",
   "scripts": {
     "start": "yarn install && craco start",
     "build": "yarn install && craco build",
@@ -14,9 +13,13 @@
   },
   "dependencies": {
     "@ant-design/icons": "^4.6.2",
+    "@editorjs/delimiter": "^1.2.0",
     "@editorjs/editorjs": "^2.22.0",
     "@editorjs/embed": "^2.4.6",
     "@editorjs/header": "^2.6.1",
+    "@editorjs/list": "^1.6.2",
+    "@editorjs/marker": "^1.2.2",
+    "@editorjs/quote": "^2.4.0",
     "@editorjs/simple-image": "^1.4.1",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
@@ -24,6 +27,7 @@
     "antd": "^4.15.5",
     "axios": "^0.21.1",
     "editorjs-drag-drop": "^0.1.3",
+    "editorjs-table": "^1.4.10",
     "html-to-react": "^1.4.5",
     "i18next": "^20.2.2",
     "object-hash": "^2.2.0",

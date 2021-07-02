@@ -1,3 +1,3 @@
-import { getPasswordStrength, sleep } from './utils';
+import { getPasswordStrength, sleep, getProgressEnrolledLesson } from './utils';
 
-export { getPasswordStrength, sleep };
+export { getPasswordStrength, sleep, getProgressEnrolledLesson };
