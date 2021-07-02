@@ -37,7 +37,10 @@ export const StyledPagination = styled(Pagination)`
 
 export const StyledSearch = styled(Search)``;
 
-export const LessonCol = styled(Col)`
+export const LessonCol = styled(Col).attrs(() => ({
+  lg: { span: 12 },
+  md: { span: 24 },
+}))`
   width: 100%;
 
   @media (max-width: 767px) {

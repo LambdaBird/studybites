@@ -1,9 +1,11 @@
 import { Col, Empty, Skeleton } from 'antd';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+
 import emptyImg from '@sb-ui/resources/img/empty.svg';
 import useMobile from '@sb-ui/hooks/useMobile';
 import OngoingShortLesson from '@sb-ui/components/lessonBlocks/OngoingShort';
+
 import * as S from './LessonsList.styled';
 
 const LessonsList = ({ lessons, isLoading }) => {
