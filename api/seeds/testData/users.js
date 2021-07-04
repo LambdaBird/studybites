@@ -2,6 +2,8 @@ import config from '../../config';
 
 import * as lessons from './lessons';
 
+export const defaultPassword = 'passwd3';
+
 export const superAdmin = {
   id: 100,
   email: 'admin@test.io',
