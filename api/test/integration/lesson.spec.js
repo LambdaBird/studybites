@@ -5,6 +5,8 @@ import {
   NOT_STARTED,
 } from '../../src/services/lesson/constants';
 
+import { authorizeUser } from './utils';
+
 describe('GET /api/v1/lesson', () => {
   const app = build();
 
@@ -16,17 +18,13 @@ describe('GET /api/v1/lesson', () => {
   };
 
   beforeAll(async () => {
-    await app.ready();
-
-    const response = await app.inject({
-      method: 'POST',
-      url: '/api/v1/user/signin',
-      payload: credentials,
+    await authorizeUser({
+      credentials,
+      app,
+      setToken: (accessToken) => {
+        token = accessToken;
+      },
     });
-
-    const data = JSON.parse(response.payload);
-
-    token = data.accessToken;
   });
 
   afterAll(async () => {
@@ -78,17 +76,13 @@ describe('GET /api/v1/lesson/:lesson_id', () => {
   };
 
   beforeAll(async () => {
-    await app.ready();
-
-    const response = await app.inject({
-      method: 'POST',
-      url: '/api/v1/user/signin',
-      payload: credentials,
+    await authorizeUser({
+      credentials,
+      app,
+      setToken: (accessToken) => {
+        token = accessToken;
+      },
     });
-
-    const data = JSON.parse(response.payload);
-
-    token = data.accessToken;
   });
 
   afterAll(async () => {
@@ -126,17 +120,13 @@ describe('OPTIONS /api/v1/lesson', () => {
   };
 
   beforeAll(async () => {
-    await app.ready();
-
-    const response = await app.inject({
-      method: 'POST',
-      url: '/api/v1/user/signin',
-      payload: credentials,
+    await authorizeUser({
+      credentials,
+      app,
+      setToken: (accessToken) => {
+        token = accessToken;
+      },
     });
-
-    const data = JSON.parse(response.payload);
-
-    token = data.accessToken;
   });
 
   afterAll(async () => {
@@ -170,17 +160,13 @@ describe('GET /api/v1/lesson/maintain/students', () => {
   };
 
   beforeAll(async () => {
-    await app.ready();
-
-    const response = await app.inject({
-      method: 'POST',
-      url: '/api/v1/user/signin',
-      payload: credentials,
+    await authorizeUser({
+      credentials,
+      app,
+      setToken: (accessToken) => {
+        token = accessToken;
+      },
     });
-
-    const data = JSON.parse(response.payload);
-
-    token = data.accessToken;
   });
 
   afterAll(async () => {
@@ -232,17 +218,13 @@ describe('GET /api/v1/lesson/maintain/', () => {
   };
 
   beforeAll(async () => {
-    await app.ready();
-
-    const response = await app.inject({
-      method: 'POST',
-      url: '/api/v1/user/signin',
-      payload: credentials,
+    await authorizeUser({
+      credentials,
+      app,
+      setToken: (accessToken) => {
+        token = accessToken;
+      },
     });
-
-    const data = JSON.parse(response.payload);
-
-    token = data.accessToken;
   });
 
   afterAll(async () => {
@@ -293,17 +275,13 @@ describe('GET /api/v1/lesson/maintain/:id', () => {
   };
 
   beforeAll(async () => {
-    await app.ready();
-
-    const response = await app.inject({
-      method: 'POST',
-      url: '/api/v1/user/signin',
-      payload: credentials,
+    await authorizeUser({
+      credentials,
+      app,
+      setToken: (accessToken) => {
+        token = accessToken;
+      },
     });
-
-    const data = JSON.parse(response.payload);
-
-    token = data.accessToken;
   });
 
   afterAll(async () => {
@@ -338,17 +316,13 @@ describe('POST /api/v1/lesson/maintain/', () => {
   };
 
   beforeAll(async () => {
-    await app.ready();
-
-    const response = await app.inject({
-      method: 'POST',
-      url: '/api/v1/user/signin',
-      payload: credentials,
+    await authorizeUser({
+      credentials,
+      app,
+      setToken: (accessToken) => {
+        token = accessToken;
+      },
     });
-
-    const data = JSON.parse(response.payload);
-
-    token = data.accessToken;
   });
 
   afterAll(async () => {
@@ -444,17 +418,13 @@ describe('PUT /api/v1/maintain/:id', () => {
   };
 
   beforeAll(async () => {
-    await app.ready();
-
-    const response = await app.inject({
-      method: 'POST',
-      url: '/api/v1/user/signin',
-      payload: credentials,
+    await authorizeUser({
+      credentials,
+      app,
+      setToken: (accessToken) => {
+        token = accessToken;
+      },
     });
-
-    const data = JSON.parse(response.payload);
-
-    token = data.accessToken;
   });
 
   afterAll(async () => {
@@ -568,17 +538,13 @@ describe('POST /api/v1/lesson/enroll/:id', () => {
   };
 
   beforeAll(async () => {
-    await app.ready();
-
-    const response = await app.inject({
-      method: 'POST',
-      url: '/api/v1/user/signin',
-      payload: credentials,
+    await authorizeUser({
+      credentials,
+      app,
+      setToken: (accessToken) => {
+        token = accessToken;
+      },
     });
-
-    const data = JSON.parse(response.payload);
-
-    token = data.accessToken;
   });
 
   afterAll(async () => {
@@ -612,17 +578,13 @@ describe('GET /api/v1/lesson/enrolled/', () => {
   };
 
   beforeAll(async () => {
-    await app.ready();
-
-    const response = await app.inject({
-      method: 'POST',
-      url: '/api/v1/user/signin',
-      payload: credentials,
+    await authorizeUser({
+      credentials,
+      app,
+      setToken: (accessToken) => {
+        token = accessToken;
+      },
     });
-
-    const data = JSON.parse(response.payload);
-
-    token = data.accessToken;
   });
 
   afterAll(async () => {
@@ -676,17 +638,13 @@ describe('GET /api/v1/lesson/enrolled/:id', () => {
   };
 
   beforeAll(async () => {
-    await app.ready();
-
-    const response = await app.inject({
-      method: 'POST',
-      url: '/api/v1/user/signin',
-      payload: credentials,
+    await authorizeUser({
+      credentials,
+      app,
+      setToken: (accessToken) => {
+        token = accessToken;
+      },
     });
-
-    const data = JSON.parse(response.payload);
-
-    token = data.accessToken;
   });
 
   afterAll(async () => {
@@ -741,17 +699,13 @@ describe('POST /api/v1/lesson/:lesson_id/learn', () => {
   };
 
   beforeAll(async () => {
-    await app.ready();
-
-    const response = await app.inject({
-      method: 'POST',
-      url: '/api/v1/user/signin',
-      payload: credentials,
+    await authorizeUser({
+      credentials,
+      app,
+      setToken: (accessToken) => {
+        token = accessToken;
+      },
     });
-
-    const data = JSON.parse(response.payload);
-
-    token = data.accessToken;
   });
 
   afterAll(async () => {
