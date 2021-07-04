@@ -74,6 +74,7 @@ export const french = {
   name: 'French',
   status: 'Public',
   _blocks: {
+    _indexesOfInteractive: [2, 4],
     _current: [
       {
         id: 'ee83a561-984e-4a5e-a438-de7d690293f8',
