@@ -8,7 +8,9 @@
     "seed:run": "./seeds/run",
     "seed:test": "./seeds/run_test",
     "test:unit": "babel-node node_modules/.bin/jest test/unit/",
-    "test:integration": "knex --esm migrate:latest && yarn seed:test && babel-node node_modules/.bin/jest test/integration/",
+    "test:integration": "npm run prepare:integrationTests && npm run run:integrationTests",
+    "prepare:integrationTests": "knex --esm migrate:latest && yarn seed:test",
+    "run:integrationTests": "babel-node node_modules/.bin/jest --verbose --colors test/integration/",
     "migrate:make": "knex --esm migrate:make"
   },
   "dependencies": {

@@ -1,13 +1,11 @@
 import { hashPassword } from '../utils/salt';
-import { users, usersRoles } from './testData/users';
+import { users, usersRoles, defaultPassword } from './testData/users';
 import { lessons, blocks, lessonBlockStructure } from './testData/lessons';
-
-const PASSWORD = 'passwd3';
 
 export const seed = async (knex) => {
   await Promise.all(
     users.map(async (user) => {
-      const hash = await hashPassword(PASSWORD);
+      const hash = await hashPassword(defaultPassword);
       return knex('users').insert({ ...user, password: hash });
     }),
   );
