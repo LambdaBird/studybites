@@ -530,7 +530,6 @@ describe('POST /api/v1/lesson/enroll/:id', () => {
   const app = build();
 
   let token;
-  let lessonId;
 
   const credentials = {
     email: 'john@test.io',

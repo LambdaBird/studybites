@@ -20,11 +20,7 @@ export const authorizeUser = async ({
   return data.accessToken;
 };
 
-export const createLesson = async ({
-  app,
-  credentials,
-  body,
-}) => {
+export const createLesson = async ({ app, credentials, body }) => {
   const token = await authorizeUser({
     app,
     credentials,
@@ -49,7 +45,9 @@ export const prepareLessonFromSeed = (lessonSeed, nameModifier = '') => ({
     name: `${lessonSeed.name}${nameModifier}`,
     status: 'Public',
   },
-  blocks: lessonSeed._blocks._current.map(structureItem => {
+  // eslint-disable-next-line no-underscore-dangle
+  blocks: lessonSeed._blocks._current.map((structureItem) => {
+    // eslint-disable-next-line no-underscore-dangle
     const lastRevision = structureItem._revisions[0];
 
     return {

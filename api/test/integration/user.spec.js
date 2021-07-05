@@ -2,7 +2,6 @@ import build from '../../src/app';
 import {
   ALTER_ROLE_FAIL,
   ALTER_ROLE_SUCCESS,
-  INVALID_PATCH,
   UNAUTHORIZED,
   USER_ALREADY_REGISTERED,
   USER_DELETED,

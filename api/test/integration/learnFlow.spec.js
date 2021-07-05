@@ -1,6 +1,10 @@
 import build from '../../src/app';
 
-import { studentJohn, teacher, defaultPassword } from '../../seeds/testData/users';
+import {
+  studentJohn,
+  teacher,
+  defaultPassword,
+} from '../../seeds/testData/users';
 import { math, french } from '../../seeds/testData/lessons';
 
 import { authorizeUser, createLesson, prepareLessonFromSeed } from './utils';
@@ -27,8 +31,8 @@ describe('Learning flow', () => {
     });
 
     testContext.request = async ({ url, method = 'POST', body }) => {
-      return await testContext.app.inject({
-        method: method,
+      return testContext.app.inject({
+        method,
         url: `/api/v1/${url}`,
         headers: {
           Authorization: `Bearer ${testContext.token}`,
@@ -42,12 +46,11 @@ describe('Learning flow', () => {
     await testContext.app.close();
   });
 
-
   describe('Get untaken lesson by student', () => {
     let notEnrolledLesson;
     let notStartedLesson;
 
-    beforeAll(async () => {  
+    beforeAll(async () => {
       notEnrolledLesson = await createLesson({
         app: testContext.app,
         credentials: teacherCredentials,
@@ -59,7 +62,9 @@ describe('Learning flow', () => {
         credentials: teacherCredentials,
         body: prepareLessonFromSeed(math, '-notStartedLesson'),
       });
-      await testContext.request({ url: `lesson/enroll/${notStartedLesson.lesson.id}` });
+      await testContext.request({
+        url: `lesson/enroll/${notStartedLesson.lesson.id}`,
+      });
     });
 
     it('should return error for not enrolled user', async () => {
@@ -95,7 +100,6 @@ describe('Learning flow', () => {
       expect(payload.lesson.blocks.length).toBe(0);
     });
   });
-  
 
   describe('Get enrolled lesson by student', () => {
     let notStartedLesson;
@@ -151,8 +155,9 @@ describe('Learning flow', () => {
       expect(response.statusCode).toBe(200);
 
       const payload = JSON.parse(response.payload);
-      expect(payload.lesson).toHaveProperty('blocks');;
+      expect(payload.lesson).toHaveProperty('blocks');
       expect(payload.lesson.blocks.length).toBe(
+        // eslint-disable-next-line no-underscore-dangle
         french._blocks._indexesOfInteractive[0] + 1,
       );
     });
