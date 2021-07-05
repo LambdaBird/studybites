@@ -765,7 +765,6 @@ describe('POST /api/v1/lesson/:lesson_id/learn', () => {
     });
 
     const payload = JSON.parse(response.payload);
-    // console.log(payload)
 
     expect(response.statusCode).toBe(400);
     expect(payload.errors[0]).toMatchObject(NOT_FINISHED);

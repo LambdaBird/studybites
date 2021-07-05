@@ -51,6 +51,7 @@ export const prepareLessonFromSeed = (lessonSeed, nameModifier = '') => ({
     const lastRevision = structureItem._revisions[0];
 
     return {
+      block_id: structureItem.block_id,
       content: lastRevision.content,
       type: lastRevision.type,
       answer: lastRevision.answer,
