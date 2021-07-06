@@ -1,23 +1,60 @@
-export const groupBlocks = (lessons) => {
-  const res = [];
+export const START_TYPE = 'start';
+export const NEXT_TYPE = 'next';
+export const QUIZ_TYPE = 'quiz';
+export const FINISH_TYPE = 'finish';
+export const RESPONSE_TYPE = 'response';
+
+export const isQuizBlockResult = (block) =>
+  block.type === QUIZ_TYPE &&
+  block.content.data?.answers?.every((x) => x.correct !== undefined);
+
+export const newGroupBlocks = (blocks) => {
+  const filteredBlocks = [];
+  let nextCount = 0;
+  let next = null;
+  let quiz = null;
+  let lastInteractiveBlock = null;
   let lastIndex = 0;
-  lessons?.forEach((value, i) => {
-    if (value?.content?.type === 'next') {
-      res.push(lessons.slice(lastIndex, i));
+  blocks.forEach((block, i) => {
+    if (block?.type === NEXT_TYPE) {
+      next = block;
+      filteredBlocks.push(blocks.slice(lastIndex, i));
       lastIndex = i + 1;
-    } else if (value?.content?.type === 'quiz') {
-      res.push(lessons.slice(lastIndex, i));
-      res.push(lessons.slice(i, i + 1));
+      nextCount += 1;
+    } else if (isQuizBlockResult(block)) {
+      filteredBlocks.push(blocks.slice(lastIndex, i));
+      filteredBlocks.push(blocks.slice(i, i + 1));
+      lastIndex = i + 1;
+    } else if (block?.type === QUIZ_TYPE) {
+      quiz = block;
+      filteredBlocks.push(blocks.slice(lastIndex, i));
       lastIndex = i + 1;
     }
   });
-  if (lastIndex === 0 && lessons?.length !== 0) {
-    return [lessons];
+  if (lastIndex === 0 && blocks?.length !== 0) {
+    return {
+      blocks: [blocks],
+      lastInteractiveBlock,
+      next,
+      quiz,
+      nextCount,
+    };
   }
-  if (lastIndex !== lessons?.length) {
-    res.push(lessons.slice(lastIndex));
+  if (lastIndex !== blocks?.length) {
+    filteredBlocks.push(blocks.slice(lastIndex));
   }
-  return res;
+  const lastBlock = blocks[blocks.length - 1];
+  if (lastBlock?.type === NEXT_TYPE || lastBlock?.type === QUIZ_TYPE) {
+    lastInteractiveBlock = lastBlock;
+  }
+
+  return {
+    blocks: filteredBlocks,
+    lastInteractiveBlock,
+    next,
+    quiz,
+    nextCount,
+  };
 };
 
 export const prepareResultToAnswers = (data) => ({

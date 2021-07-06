@@ -7,9 +7,9 @@ import Header from '@sb-ui/pages/User/LessonPage/Header';
 import GroupBlock from '@sb-ui/pages/User/LessonPage/GroupBlock';
 import BlockElement from '@sb-ui/pages/User/LessonPage/BlockElement';
 
-import { useCallback } from 'react';
 import * as S from './LessonPage.styled';
 import { useLesson } from './useLesson';
+import { NEXT_TYPE, QUIZ_TYPE } from './utils';
 
 const LessonPage = () => {
   const { t } = useTranslation();
@@ -28,13 +28,6 @@ const LessonPage = () => {
     handleStartClick,
   } = useLesson();
 
-  const isQuizBlockResult = useCallback(
-    (block) =>
-      block.type === 'quiz' &&
-      block.content.data?.answers?.every((x) => x.correct === undefined),
-    [],
-  );
-
   return (
     <S.Page>
       <S.GlobalStylesLessonPage />
@@ -48,21 +41,15 @@ const LessonPage = () => {
       {blocks.map((groupBlock) => (
         <GroupBlock
           key={groupBlock?.map((x) => x.blockId).join('')}
-          elements={groupBlock
-            .map((block) => {
-              if (isQuizBlockResult(block)) {
-                return null;
-              }
-
-              return <BlockElement element={block} />;
-            })
-            .filter((x) => !!x)}
+          elements={groupBlock.map((block) => (
+            <BlockElement element={block} />
+          ))}
         />
       ))}
 
       {!isLoading &&
         (isFinal ||
-          (interactiveBlock?.type === 'next' && !isFinal) ||
+          (interactiveBlock?.type === NEXT_TYPE && !isFinal) ||
           (!interactiveBlock && blocks?.length === 0)) && (
           <S.PageRowStart justify="center" align="top">
             <S.BlockCol
@@ -76,7 +63,7 @@ const LessonPage = () => {
                   {t('lesson.start')}
                 </S.LessonButton>
               )}
-              {interactiveBlock?.type === 'next' && !isFinal && (
+              {interactiveBlock?.type === NEXT_TYPE && !isFinal && (
                 <S.LessonButton onClick={handleNextClick}>
                   {t('lesson.next')}
                 </S.LessonButton>
@@ -91,20 +78,17 @@ const LessonPage = () => {
           </S.PageRowStart>
         )}
 
-      {!isLoading && interactiveBlock?.type === 'quiz' && !isFinal && (
+      {!isLoading && interactiveBlock?.type === QUIZ_TYPE && !isFinal && (
         <>
           <Row justify="center">
-            <Col
-              xs={{ span: 20 }}
-              sm={{ span: 18 }}
-              md={{ span: 16 }}
-              lg={{ span: 14 }}
-            >
-              <GroupBlock>
-                <S.TextItalic>
-                  {interactiveBlock?.content?.data?.question}
-                </S.TextItalic>
-              </GroupBlock>
+            <Col span={24}>
+              <GroupBlock
+                elements={[
+                  <S.TextItalic>
+                    {interactiveBlock?.content?.data?.question}
+                  </S.TextItalic>,
+                ]}
+              />
             </Col>
           </Row>
           <S.RowQuiz justify="center" align="top">
