@@ -23,7 +23,19 @@ export const RowQuiz = styled(Row)`
   }
 `;
 
-export const BlockCol = styled(Col)`
+export const ColQuiz = styled(Col).attrs({
+  xs: { span: 24 },
+  sm: { span: 24 },
+  md: { span: 16 },
+  lg: { span: 14 },
+});
+
+export const BlockCol = styled(Col).attrs({
+  xs: { span: 20 },
+  sm: { span: 18 },
+  md: { span: 16 },
+  lg: { span: 14 },
+})`
   display: flex;
   justify-content: center;
   padding-top: 3rem;
@@ -37,7 +49,12 @@ export const LessonButton = styled(Button).attrs({
   margin-bottom: 1rem;
 `;
 
-export const SendWrapper = styled(Col)`
+export const SendWrapper = styled(Col).attrs({
+  xs: { span: 20 },
+  sm: { span: 18 },
+  md: { span: 16 },
+  lg: { span: 14 },
+})`
   display: flex;
   justify-content: center;
   @media (max-width: 767px) {
