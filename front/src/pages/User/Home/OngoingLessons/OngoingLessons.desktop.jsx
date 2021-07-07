@@ -6,7 +6,7 @@ import * as S from './OngoingLessons.desktop.styled';
 import LessonsList from './LessonsList';
 
 const OngoingLessonsDesktop = (props) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('user');
 
   return (
     <S.Wrapper>
@@ -14,13 +14,13 @@ const OngoingLessonsDesktop = (props) => {
         <Col>
           <Row justify="center" align="middle">
             <S.StyledTitle level={4}>
-              {t('user_home.ongoing_lessons.title')}
+              {t('home.ongoing_lessons.title')}
             </S.StyledTitle>
           </Row>
         </Col>
         <Col>
           <Link to={USER_LESSONS}>
-            {t('user_home.ongoing_lessons.view_all_lessons')}
+            {t('home.ongoing_lessons.view_all_lessons')}
           </Link>
         </Col>
       </S.LessonsHeader>

@@ -38,7 +38,7 @@ const menuItems = {
 
 const Teacher = ({ title, id, students, status }) => {
   const history = useHistory();
-  const { t } = useTranslation();
+  const { t } = useTranslation('teacher');
   const updateLessonMutation = useMutation(putLesson, {
     onSuccess: () => {
       queryClient.invalidateQueries(TEACHER_LESSONS_BASE_KEY);

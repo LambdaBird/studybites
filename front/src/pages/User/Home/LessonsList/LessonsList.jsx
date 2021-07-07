@@ -12,7 +12,7 @@ import { USER_PUBLIC_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
 import { getPublicLessons } from '@sb-ui/utils/api/v1/student';
 
 const LessonsList = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('user');
   const location = useLocation();
   const queryPage = useMemo(() => location.search, [location]);
   const history = useHistory();
@@ -67,7 +67,7 @@ const LessonsList = () => {
     <S.Wrapper>
       <S.LessonsHeader>
         <S.OpenLessonsTitle level={4}>
-          {t('user_home.open_lessons.title')}
+          {t('home.open_lessons.title')}
         </S.OpenLessonsTitle>
         <S.StyledSearch
           searchText={searchText}
@@ -90,7 +90,7 @@ const LessonsList = () => {
         {!isLoading && total === 0 && data?.length === 0 && (
           <S.EmptyContainer
             image={emptyImg}
-            description={t('user_home.open_lessons.not_found')}
+            description={t('home.open_lessons.not_found')}
           />
         )}
       </S.LessonsRow>

@@ -6,7 +6,7 @@ import { useLesson } from './useLesson';
 import * as S from './OngoingFull.desktop.styled';
 
 const OngoingFullDesktop = ({ lesson }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('user');
   const { name, description, percentage } = lesson;
 
   const { fullName, firstNameLetter, handleContinueLesson } = useLesson(lesson);
@@ -40,7 +40,7 @@ const OngoingFullDesktop = ({ lesson }) => {
           </Row>
           <S.EnrollRow justify="end">
             <Button type="primary" onClick={handleContinueLesson}>
-              {t('user_home.ongoing_lessons.continue_button')}
+              {t('home.ongoing_lessons.continue_button')}
             </Button>
           </S.EnrollRow>
         </S.RightContent>

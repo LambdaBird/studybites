@@ -13,24 +13,24 @@ import {
 } from './SignInForm.styled';
 
 const SignInForm = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('sign_in');
   const history = useHistory();
   const formRules = useMemo(
     () => ({
       email: [
         {
           required: true,
-          message: t('sign_in.email.error'),
+          message: t('email.error'),
         },
         {
           type: 'email',
-          message: t('sign_in.email.validation'),
+          message: t('email.validation'),
         },
       ],
       password: [
         {
           required: true,
-          message: t('sign_in.password.error'),
+          message: t('password.error'),
         },
       ],
     }),
@@ -61,23 +61,21 @@ const SignInForm = () => {
       )}
 
       <Form.Item name="email" rules={formRules.email}>
-        <Input placeholder={t('sign_in.email.placeholder')} />
+        <Input placeholder={t('email.placeholder')} />
       </Form.Item>
       <FormItemAlignEnd
         name="password"
         rules={formRules.password}
-        extra={<LinkButton>{t('sign_in.forgot_password')}</LinkButton>}
+        extra={<LinkButton>{t('forgot_password')}</LinkButton>}
       >
-        <Input.Password placeholder={t('sign_in.password.placeholder')} />
+        <Input.Password placeholder={t('password.placeholder')} />
       </FormItemAlignEnd>
 
       <SubmitButton loading={loading} type="primary" htmlType="submit">
-        {t('sign_in.button')}
+        {t('button')}
       </SubmitButton>
       <DivAlignCenter>
-        <LinkButton onClick={onClickNoAccount}>
-          {t('sign_in.no_account')}
-        </LinkButton>
+        <LinkButton onClick={onClickNoAccount}>{t('no_account')}</LinkButton>
       </DivAlignCenter>
     </Form>
   );

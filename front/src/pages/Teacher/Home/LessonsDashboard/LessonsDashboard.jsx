@@ -16,7 +16,7 @@ import { pageLimit, statusesOptions } from './constants';
 const { Option } = Select;
 
 const LessonsDashboard = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('teacher');
   const history = useHistory();
 
   const [selectedStatus, setSelectedStatus] = useState(null);

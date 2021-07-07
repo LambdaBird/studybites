@@ -28,7 +28,7 @@ const messageKey = 'teacherStateLoading';
 const PAGE_SIZE = 10;
 
 const Home = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('admin');
   const [teacherRoleState, setTeacherRoleState] = useState({});
 
   const location = useLocation();
@@ -125,19 +125,19 @@ const Home = () => {
   const columns = useMemo(
     () => [
       {
-        title: t('admin_home.table.full_name'),
+        title: t('home.table.full_name'),
         dataIndex: 'fullName',
         key: 'fullName',
         width: '35%',
       },
       {
-        title: t('admin_home.table.email'),
+        title: t('home.table.email'),
         dataIndex: 'email',
         key: 'email',
         width: '35%',
       },
       {
-        title: t('admin_home.table.role'),
+        title: t('home.table.role'),
         dataIndex: 'isTeacher',
         key: 'isTeacher',
         render: (isTeacherDefault, user) => {
@@ -155,11 +155,11 @@ const Home = () => {
         width: '20%',
       },
       {
-        title: t('admin_home.table.action'),
+        title: t('home.table.action'),
         key: 'action',
         render: () => (
           <Space size="middle">
-            <Typography.Link>{t('admin_home.table.edit')}</Typography.Link>
+            <Typography.Link>{t('home.table.edit')}</Typography.Link>
           </Space>
         ),
         width: '10%',
@@ -174,10 +174,10 @@ const Home = () => {
         <Col>
           <Row>
             <Space size="large">
-              <TitleHeader level={3}>{t('admin_home.title')}</TitleHeader>
+              <TitleHeader level={3}>{t('home.title')}</TitleHeader>
               <DebouncedSearch
                 delay={500}
-                placeholder={t('admin_home.search.placeholder')}
+                placeholder={t('home.search.placeholder')}
                 allowClear
                 onChange={setSearch}
               />
@@ -185,7 +185,7 @@ const Home = () => {
           </Row>
         </Col>
         <Col>
-          <Button disabled>{t('admin_home.buttons.add_user')}</Button>
+          <Button disabled>{t('home.buttons.add_user')}</Button>
         </Col>
       </TableHeader>
       <Table
@@ -206,7 +206,7 @@ const Home = () => {
           emptyText: (
             <Empty
               image={Empty.PRESENTED_IMAGE_SIMPLE}
-              description={t('admin_home.table.no_data')}
+              description={t('home.table.no_data')}
             />
           ),
         }}

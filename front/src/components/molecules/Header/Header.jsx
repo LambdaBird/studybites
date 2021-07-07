@@ -22,7 +22,7 @@ import * as S from './Header.styled';
 
 const Header = ({ children }) => {
   const history = useHistory();
-  const { t } = useTranslation();
+  const { t } = useTranslation(['common', 'user']);
   const location = useLocation();
   const isMobile = useMobile();
 
@@ -49,7 +49,7 @@ const Header = ({ children }) => {
           </Menu.Item>
           <Menu.Item key="viewAllMyLessons">
             <Link to={USER_LESSONS}>
-              {t('user_home.ongoing_lessons.view_all_lessons')}
+              {t('user:home.ongoing_lessons.view_all_lessons')}
             </Link>
           </Menu.Item>
         </>

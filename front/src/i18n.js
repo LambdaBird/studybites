@@ -11,6 +11,8 @@ const resources = {
 i18n.use(initReactI18next).init({
   resources,
   lng: 'en',
+  ns: ['admin', 'sign_in', 'sign_up', 'teacher', 'user', 'common'],
+  defaultNS: 'common',
   keySeparator: '.',
   interpolation: {
     escapeValue: false,

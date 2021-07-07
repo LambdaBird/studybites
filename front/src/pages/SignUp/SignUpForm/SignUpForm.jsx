@@ -10,7 +10,7 @@ import PasswordStrengthIndicator from '@sb-ui/components/atoms/PasswordStrengthI
 import { DivAlignCenter, SubmitButton, LinkButton } from './SignUpForm.styled';
 
 const SignUpForm = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('sign_up');
   const history = useHistory();
 
   const { password, passwordValidator } = usePasswordInput();
@@ -26,29 +26,29 @@ const SignUpForm = () => {
       firstName: [
         {
           required: true,
-          message: t('sign_up.first_name.error'),
+          message: t('first_name.error'),
         },
       ],
       lastName: [
         {
           required: true,
-          message: t('sign_up.last_name.error'),
+          message: t('last_name.error'),
         },
       ],
       email: [
         {
           required: true,
-          message: t('sign_up.email.error'),
+          message: t('email.error'),
         },
         {
           type: 'email',
-          message: t('sign_up.email.validation'),
+          message: t('email.validation'),
         },
       ],
       password: [
         {
           required: true,
-          message: t('sign_up.password.error'),
+          message: t('password.error'),
         },
         {
           validator: passwordValidator,
@@ -77,30 +77,30 @@ const SignUpForm = () => {
       )}
 
       <Form.Item name="firstName" rules={formRules.firstName}>
-        <Input placeholder={t('sign_up.first_name.placeholder')} />
+        <Input placeholder={t('first_name.placeholder')} />
       </Form.Item>
 
       <Form.Item name="lastName" rules={formRules.lastName}>
-        <Input placeholder={t('sign_up.last_name.placeholder')} />
+        <Input placeholder={t('last_name.placeholder')} />
       </Form.Item>
 
       <Form.Item name="email" rules={formRules.email}>
-        <Input placeholder={t('sign_up.email.placeholder')} />
+        <Input placeholder={t('email.placeholder')} />
       </Form.Item>
 
       <Form.Item name="password" rules={formRules.password}>
         <div>
-          <Input.Password placeholder={t('sign_up.password.placeholder')} />
+          <Input.Password placeholder={t('password.placeholder')} />
           <PasswordStrengthIndicator value={password} />
         </div>
       </Form.Item>
 
       <SubmitButton type="primary" loading={loading} htmlType="submit">
-        {t('sign_up.button')}
+        {t('button')}
       </SubmitButton>
       <DivAlignCenter>
         <LinkButton onClick={onClickHaveAccount}>
-          {t('sign_up.have_account')}
+          {t('have_account')}
         </LinkButton>
       </DivAlignCenter>
     </Form>

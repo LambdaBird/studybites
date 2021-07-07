@@ -7,7 +7,7 @@ import OngoingShortLesson from '@sb-ui/components/lessonBlocks/OngoingShort';
 import * as S from './LessonsList.styled';
 
 const LessonsList = ({ lessons, isLoading }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('user');
   const isMobile = useMobile();
   if (isLoading || lessons?.length > 0) {
     return (
@@ -43,10 +43,7 @@ const LessonsList = ({ lessons, isLoading }) => {
 
   return (
     <S.LessonsMainEmpty>
-      <Empty
-        image={emptyImg}
-        description={t('user_home.open_lessons.not_found')}
-      />
+      <Empty image={emptyImg} description={t('home.open_lessons.not_found')} />
     </S.LessonsMainEmpty>
   );
 };

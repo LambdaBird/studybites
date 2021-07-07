@@ -18,7 +18,7 @@ import {
 } from './Public.desktop.styled';
 
 const PublicDesktop = ({ lesson }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('user');
 
   const { name, description, isEnrolled } = lesson;
   const { author, handleContinueLesson, handleEnroll } = useLesson(lesson);
@@ -61,11 +61,11 @@ const PublicDesktop = ({ lesson }) => {
           <EnrollRow justify="end">
             {isEnrolled ? (
               <Button type="primary" onClick={handleContinueLesson}>
-                {t('user_home.ongoing_lessons.continue_button')}
+                {t('home.ongoing_lessons.continue_button')}
               </Button>
             ) : (
               <Button size="medium" type="secondary" onClick={handleEnroll}>
-                {t('user_home.open_lessons.enroll_button')}
+                {t('home.open_lessons.enroll_button')}
               </Button>
             )}
           </EnrollRow>

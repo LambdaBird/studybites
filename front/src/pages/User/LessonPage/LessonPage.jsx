@@ -11,7 +11,7 @@ import { useLesson } from './useLesson';
 import { NEXT_TYPE, QUIZ_TYPE } from './utils';
 
 const LessonPage = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('user');
   const {
     lesson,
     blocks,
@@ -50,7 +50,6 @@ const LessonPage = () => {
         total={total - nextCount}
         isLoading={isLoading}
       />
-
       {blocks.map((groupBlock) => (
         <GroupBlock
           key={groupBlock?.map((x) => x.blockId).join('')}
@@ -59,7 +58,6 @@ const LessonPage = () => {
           ))}
         />
       ))}
-
       {isShowInteractive && (
         <S.PageRowStart justify="center" align="top">
           <S.BlockCol>
@@ -82,7 +80,6 @@ const LessonPage = () => {
           </S.BlockCol>
         </S.PageRowStart>
       )}
-
       {isShowInteractiveQuiz && (
         <>
           <Row justify="center">

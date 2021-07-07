@@ -46,7 +46,7 @@ const dataReview = TEST_DATA
 
 const EnrollModalMobile = () => {
   const history = useHistory();
-  const { t } = useTranslation();
+  const { t } = useTranslation('user');
   const { id } = useParams();
 
   const historyPushLesson = useCallback(() => {
@@ -135,7 +135,7 @@ const EnrollModalMobile = () => {
 
       <S.EnrollRow>
         <S.StartButton onClick={onClickStartEnroll} size="large" type="primary">
-          {t('user_home.open_lessons.start_button')}
+          {t('home.open_lessons.start_button')}
         </S.StartButton>
       </S.EnrollRow>
     </S.Main>

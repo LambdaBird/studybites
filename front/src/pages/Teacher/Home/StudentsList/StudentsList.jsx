@@ -12,7 +12,7 @@ import * as S from './StudentsList.styled';
 const { Text } = Typography;
 
 const StudentsList = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('teacher');
   const [students, setStudents] = useState([]);
   const { data: studentsResponseData, isLoading } = useQuery(
     TEACHER_STUDENTS_BASE_KEY,

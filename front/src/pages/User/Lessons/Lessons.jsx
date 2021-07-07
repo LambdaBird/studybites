@@ -11,19 +11,19 @@ import * as S from './Lessons.styled';
 import LessonsList from './LessonsList';
 
 const Lessons = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('user');
 
   return (
     <S.MainDiv>
       <LessonsList
-        title={t('user_lessons.ongoing_lessons.title')}
+        title={t('home.ongoing_lessons.title')}
         query={{
           key: USER_ENROLLED_LESSONS_BASE_KEY,
           func: getEnrolledLessons,
         }}
       />
       <LessonsList
-        title={t('user_lessons.finished_lessons.title')}
+        title={t('home.finished_lessons.title')}
         query={{
           key: USER_ENROLLED_LESSONS_FINISHED_BASE_KEY,
           func: getEnrolledLessonsFinished,
