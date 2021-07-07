@@ -1,5 +1,6 @@
-import { verifyAnswers } from '@sb-ui/pages/User/LessonPage/QuizBlock/utils';
 import PropTypes from 'prop-types';
+
+import { verifyAnswers } from '@sb-ui/pages/User/LessonPage/QuizBlock/utils';
 import GroupBlock from '@sb-ui/pages/User/LessonPage/GroupBlock';
 import Question from './Question';
 import AnswersResult from './AnswerResult';

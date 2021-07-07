@@ -1,6 +1,6 @@
 import { Typography } from 'antd';
 import { useLocation } from 'react-router-dom';
-import { BlockElementProps } from '../utils';
+import { BlockElementProps } from '../types';
 
 const { Text } = Typography;
 

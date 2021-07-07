@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { BlockElementProps } from '../utils';
+import { BlockElementProps } from '../types';
 import * as S from './Table.styled';
 
 const Table = ({ content }) => {

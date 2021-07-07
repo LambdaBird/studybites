@@ -1,13 +1,11 @@
+import { useCallback } from 'react';
 import { Col, Row } from 'antd';
 import { useTranslation } from 'react-i18next';
 
 import QuizBlock from '@sb-ui/pages/User/LessonPage/QuizBlock';
 import Header from '@sb-ui/pages/User/LessonPage/Header';
-
 import GroupBlock from '@sb-ui/pages/User/LessonPage/GroupBlock';
 import BlockElement from '@sb-ui/pages/User/LessonPage/BlockElement';
-
-import { useCallback } from 'react';
 import * as S from './LessonPage.styled';
 import { useLesson } from './useLesson';
 

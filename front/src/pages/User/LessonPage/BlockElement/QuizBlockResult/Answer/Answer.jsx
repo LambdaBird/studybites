@@ -1,7 +1,8 @@
-import PropTypes from 'prop-types';
-import { Col } from 'antd';
-import ColumnDisabledCheckbox from '@sb-ui/components/atoms/ColumnDisabledCheckbox';
 import { useMemo } from 'react';
+import { Col } from 'antd';
+import PropTypes from 'prop-types';
+
+import ColumnDisabledCheckbox from '@sb-ui/components/atoms/ColumnDisabledCheckbox';
 
 const Answer = ({ options }) => {
   const defaultValueAnswers = useMemo(

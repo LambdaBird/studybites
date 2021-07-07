@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { Col, Row, Typography } from 'antd';
-import { BlockElementProps } from '../utils';
+import { BlockElementProps } from '../types';
 
 const { Text } = Typography;
 

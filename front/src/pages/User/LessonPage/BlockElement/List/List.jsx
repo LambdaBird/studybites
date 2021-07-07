@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { BlockElementProps } from '../utils';
+import { BlockElementProps } from '../types';
 
 const List = ({ content }) => {
   const { style, items } = content.data;

@@ -1,6 +1,6 @@
 import HtmlToReact from 'html-to-react';
 import PropTypes from 'prop-types';
-import { BlockElementProps } from '../utils';
+import { BlockElementProps } from '../types';
 
 const HtmlToReactParser = HtmlToReact.Parser;
 
