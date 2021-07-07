@@ -73,8 +73,8 @@ const Header = ({ children }) => {
       {user.roles.includes(Roles.TEACHER) && getTeacherMenu()}
 
       <SubMenu title={t('header.language')}>
-        {LANGUAGES_LIST.map((lang) => (
-          <Menu.Item key={`language-${lang}`}>{lang.toUpperCase()}</Menu.Item>
+        {LANGUAGES_LIST.map(({ key, value }) => (
+          <Menu.Item key={`language-${key}`}>{value}</Menu.Item>
         ))}
       </SubMenu>
 

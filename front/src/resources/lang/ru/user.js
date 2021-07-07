@@ -25,6 +25,10 @@ export default {
     },
   },
   lesson: {
+    answer_result: {
+      correct: 'Правильно !',
+      wrong: 'Неправильно. Правильный ответ:',
+    },
     errors: {
       not_found: 'Урок не найден',
     },
