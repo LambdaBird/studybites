@@ -28,7 +28,7 @@ export const ColQuiz = styled(Col).attrs({
   sm: { span: 24 },
   md: { span: 16 },
   lg: { span: 14 },
-});
+})``;
 
 export const BlockCol = styled(Col).attrs({
   xs: { span: 20 },

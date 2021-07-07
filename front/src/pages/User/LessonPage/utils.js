@@ -11,13 +11,10 @@ export const isQuizBlockResult = (block) =>
 export const newGroupBlocks = (blocks) => {
   const filteredBlocks = [];
   let nextCount = 0;
-  let next = null;
-  let quiz = null;
   let lastInteractiveBlock = null;
   let lastIndex = 0;
   blocks.forEach((block, i) => {
     if (block?.type === NEXT_TYPE) {
-      next = block;
       filteredBlocks.push(blocks.slice(lastIndex, i));
       lastIndex = i + 1;
       nextCount += 1;
@@ -26,7 +23,6 @@ export const newGroupBlocks = (blocks) => {
       filteredBlocks.push(blocks.slice(i, i + 1));
       lastIndex = i + 1;
     } else if (block?.type === QUIZ_TYPE) {
-      quiz = block;
       filteredBlocks.push(blocks.slice(lastIndex, i));
       lastIndex = i + 1;
     }
@@ -35,8 +31,6 @@ export const newGroupBlocks = (blocks) => {
     return {
       blocks: [blocks],
       lastInteractiveBlock,
-      next,
-      quiz,
       nextCount,
     };
   }
@@ -51,8 +45,6 @@ export const newGroupBlocks = (blocks) => {
   return {
     blocks: filteredBlocks,
     lastInteractiveBlock,
-    next,
-    quiz,
     nextCount,
   };
 };
