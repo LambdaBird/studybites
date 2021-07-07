@@ -29,7 +29,11 @@ const LessonsList = ({ lessons, isLoading }) => {
         ) : (
           <>
             {lessons?.map((lesson) => (
-              <S.LessonsColumn xl={{ span: 8 }} lg={{ span: 24 }}>
+              <S.LessonsColumn
+                key={lesson.id}
+                xl={{ span: 8 }}
+                lg={{ span: 24 }}
+              >
                 <OngoingShortLesson lesson={lesson} />
               </S.LessonsColumn>
             ))}

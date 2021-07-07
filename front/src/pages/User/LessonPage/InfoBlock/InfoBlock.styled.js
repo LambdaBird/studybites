@@ -1,5 +1,7 @@
 import styled from 'styled-components';
-import { Row } from 'antd';
+import { Row, Typography } from 'antd';
+
+const { Title } = Typography;
 
 export const BlockWrapper = styled(Row)`
   width: 100%;
@@ -11,4 +13,8 @@ export const BlockWrapper = styled(Row)`
 
 export const StyledRow = styled(Row)`
   width: 100%;
+`;
+
+export const TitleEllipsis = styled(Title)`
+  overflow-wrap: anywhere;
 `;

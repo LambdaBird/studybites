@@ -6,5 +6,6 @@ export default {
   blocks: 'blocks',
   start: 'Start',
   next: 'Next',
+  send: 'Send',
   finish: 'Finish',
 };
