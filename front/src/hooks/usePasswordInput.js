@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 export const usePasswordInput = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('sign_up');
   const [password, setPassword] = useState('');
 
   const rules = [
@@ -10,19 +10,19 @@ export const usePasswordInput = () => {
       if (value.length >= 5) {
         return null;
       }
-      return t('sign_up.password.min_5_symbols');
+      return t('password.min_5_symbols');
     },
     (value) => {
       if (value.match(/\D/)) {
         return null;
       }
-      return t('sign_up.password.one_non_numerical');
+      return t('password.one_non_numerical');
     },
     (value) => {
       if (value.match(/.*[0-9].*/)) {
         return null;
       }
-      return t('sign_up.password.one_numerical');
+      return t('password.one_numerical');
     },
   ];
 

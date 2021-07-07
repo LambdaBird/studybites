@@ -6,7 +6,7 @@ import * as S from './OngoingLessons.mobile.styled';
 import LessonsList from './LessonsList';
 
 const OngoingLessonsMobile = (props) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('user');
 
   return (
     <>
@@ -14,7 +14,7 @@ const OngoingLessonsMobile = (props) => {
         <Col>
           <Row justify="center" align="middle">
             <S.HeaderTitle level={4}>
-              {t('user_home.ongoing_lessons.title')}
+              {t('home.ongoing_lessons.title')}
             </S.HeaderTitle>
           </Row>
         </Col>
@@ -25,7 +25,7 @@ const OngoingLessonsMobile = (props) => {
       <S.Footer>
         <Col>
           <Link to={USER_LESSONS}>
-            {t('user_home.ongoing_lessons.view_all_lessons')}
+            {t('home.ongoing_lessons.view_all_lessons')}
           </Link>
         </Col>
       </S.Footer>

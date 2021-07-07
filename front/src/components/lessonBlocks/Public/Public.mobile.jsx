@@ -6,7 +6,7 @@ import { useLesson } from './useLesson';
 import * as S from './Public.mobile.styled';
 
 const PublicMobile = ({ lesson }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('user');
 
   const { name, description, isEnrolled } = lesson;
   const { author, handleContinueLesson, handleEnroll } = useLesson(lesson);
@@ -39,11 +39,11 @@ const PublicMobile = ({ lesson }) => {
       <S.EnrollRow>
         {isEnrolled ? (
           <S.Enroll type="primary" onClick={handleContinueLesson}>
-            {t('user_home.ongoing_lessons.continue_button')}
+            {t('home.ongoing_lessons.continue_button')}
           </S.Enroll>
         ) : (
           <S.Enroll size="medium" type="secondary" onClick={handleEnroll}>
-            {t('user_home.open_lessons.enroll_button')}
+            {t('home.open_lessons.enroll_button')}
           </S.Enroll>
         )}
       </S.EnrollRow>

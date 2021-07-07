@@ -5,7 +5,7 @@ import variables from '@sb-ui/theme/variables';
 import * as S from './AddCard.styled';
 
 const AddCard = ({ onClick }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('teacher');
 
   return (
     <S.Wrapper onClick={onClick} justify="center" align="middle">

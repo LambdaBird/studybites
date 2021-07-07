@@ -13,7 +13,7 @@ import * as S from './TeacherInfo.styled';
 const { Title, Text } = Typography;
 
 const TeacherInfo = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('teacher');
   const { data: userResponse } = useQuery(USER_BASE_QUERY, getUser);
   const user = userResponse?.data || {};
 
@@ -25,13 +25,13 @@ const TeacherInfo = () => {
   const statisticColumns = [
     {
       key: 0,
-      title: <Text type="secondary">{t('teacher_info.lessons')}</Text>,
+      title: <Text type="secondary">{t('info.lessons')}</Text>,
       value: lessonsResponseData?.total || '--',
       suffix: '',
     },
     {
       key: 1,
-      title: <Text type="secondary">{t('teacher_info.students')}</Text>,
+      title: <Text type="secondary">{t('info.students')}</Text>,
       value: '--',
       suffix: '',
     },
@@ -53,7 +53,7 @@ const TeacherInfo = () => {
         <S.StyledAvatar size={64}>{firstNameLetter}</S.StyledAvatar>
       </S.AvatarCol>
       <S.TextCol span={14}>
-        <Title level={4}>{t('teacher_info.greeting', { fullName })}</Title>
+        <Title level={4}>{t('info.greeting', { fullName })}</Title>
         <Text type="secondary">Your awesome description</Text>
       </S.TextCol>
       <S.StatisticCol span={8}>

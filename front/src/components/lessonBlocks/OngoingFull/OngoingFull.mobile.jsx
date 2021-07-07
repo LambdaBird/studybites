@@ -6,7 +6,7 @@ import { useLesson } from './useLesson';
 import * as S from './OngoingFull.mobile.styled';
 
 const OngoingFullMobile = ({ lesson }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('user');
   const { name, description, percentage } = lesson;
 
   const { fullName, firstNameLetter, handleContinueLesson } = useLesson(lesson);
@@ -39,7 +39,7 @@ const OngoingFullMobile = ({ lesson }) => {
       </Row>
       <S.EnrollRow>
         <S.Enroll type="primary" onClick={handleContinueLesson}>
-          {t('user_home.ongoing_lessons.continue_button')}
+          {t('home.ongoing_lessons.continue_button')}
         </S.Enroll>
       </S.EnrollRow>
       <S.AuthorContainer>

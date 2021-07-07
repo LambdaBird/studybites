@@ -7,7 +7,7 @@ import * as S from './InfoBlock.styled';
 const { Text } = Typography;
 
 const InfoBlock = ({ isLoading, lesson, total }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('user');
 
   const authors = useMemo(
     () =>

@@ -41,7 +41,7 @@ const { TextArea } = Input;
 const GET_LESSON_BASE_QUERY = 'getLesson';
 
 const LessonEdit = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('teacher');
   const { id: lessonId } = useParams();
   const isEditLesson = !!lessonId;
   const history = useHistory();

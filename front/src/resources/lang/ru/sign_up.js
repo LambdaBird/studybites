@@ -13,6 +13,7 @@ export default {
     placeholder: 'Email',
     error: 'Введите свой email',
     validation: 'Неправильный email',
+    already_registered: 'Этот email уже зарегистрирован',
   },
   password: {
     placeholder: 'Пароль',

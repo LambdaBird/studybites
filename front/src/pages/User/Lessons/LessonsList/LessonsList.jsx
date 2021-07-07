@@ -10,7 +10,7 @@ import * as S from './LessonsList.styled';
 import { PAGE_SIZE } from './constants';
 
 const LessonsList = ({ title, query }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('user');
   const { key: queryKey, func: queryFunc } = query;
   const [currentPage, setCurrentPage] = useState(1);
   const [searchText, setSearchText] = useState(null);
@@ -54,7 +54,7 @@ const LessonsList = ({ title, query }) => {
         {!isLoading && total === 0 && lessons?.length === 0 && (
           <S.EmptyContainer
             image={emptyImg}
-            description={t('user_home.open_lessons.not_found')}
+            description={t('home.open_lessons.not_found')}
           />
         )}
       </S.LessonsRow>

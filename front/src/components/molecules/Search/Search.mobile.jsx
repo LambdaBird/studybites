@@ -7,7 +7,7 @@ import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
 import * as S from './Search.mobile.styled';
 
 const SearchMobile = ({ setSearchText, searchText, className, placement }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('user');
 
   const onSearchChange = (data) => {
     setSearchText(data);
@@ -21,7 +21,7 @@ const SearchMobile = ({ setSearchText, searchText, className, placement }) => {
           <DebouncedSearch
             className={className}
             delay={500}
-            placeholder={t('user_home.open_lessons.search')}
+            placeholder={t('home.open_lessons.search')}
             allowClear
             onChange={onSearchChange}
             size="large"

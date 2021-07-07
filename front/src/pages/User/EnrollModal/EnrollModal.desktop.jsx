@@ -12,7 +12,7 @@ import * as S from './EnrollModal.desktop.styled';
 const { Title, Text } = Typography;
 
 const EnrollModalDesktop = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('user');
   const location = useLocation();
   const query = useMemo(() => location.search, [location]);
   const history = useHistory();

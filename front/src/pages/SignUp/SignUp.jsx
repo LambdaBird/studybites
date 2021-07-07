@@ -3,11 +3,11 @@ import { Container, SignUpFormContainer, StyledTitle } from './SignUp.styled';
 import SignUpForm from './SignUpForm';
 
 const SignUp = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('sign_up');
 
   return (
     <Container>
-      <StyledTitle level={1}>{t('sign_up.title')}</StyledTitle>
+      <StyledTitle level={1}>{t('title')}</StyledTitle>
       <SignUpFormContainer>
         <SignUpForm />
       </SignUpFormContainer>

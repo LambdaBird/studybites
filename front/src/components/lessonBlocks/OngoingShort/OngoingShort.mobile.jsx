@@ -9,7 +9,7 @@ import * as S from './OngoingShort.styled';
 const { Title } = Typography;
 
 const OngoingShortMobile = ({ lesson }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('user');
   const history = useHistory();
   const { name, id, percentage } = lesson;
 
@@ -36,7 +36,7 @@ const OngoingShortMobile = ({ lesson }) => {
         <Row justify="end" align="between">
           <Col>
             <Button type="primary" onClick={handleContinueLesson}>
-              {t('user_home.ongoing_lessons.continue_button')}
+              {t('home.ongoing_lessons.continue_button')}
             </Button>
           </Col>
         </Row>

@@ -12,7 +12,7 @@ import * as S from '@sb-ui/pages/User/Lessons/LessonsList/LessonsList.styled';
 import LessonsListBlock from './LessonsListBlock';
 
 const LessonsList = () => {
-  const { t } = useTranslation();
+  const { t } = useTranslation('user');
   const location = useLocation();
   const queryPage = useMemo(() => location.search, [location]);
   const history = useHistory();
@@ -69,7 +69,7 @@ const LessonsList = () => {
     <S.Wrapper>
       <S.LessonsHeader>
         <S.OpenLessonsTitle level={4}>
-          {t('user_home.open_lessons.title')}
+          {t('home.open_lessons.title')}
         </S.OpenLessonsTitle>
         <S.StyledSearch
           searchText={searchText}
@@ -82,7 +82,7 @@ const LessonsList = () => {
         {isEmpty && (
           <S.EmptyContainer
             image={emptyImg}
-            description={t('user_home.open_lessons.not_found')}
+            description={t('home.open_lessons.not_found')}
           />
         )}
       </S.LessonsRow>
