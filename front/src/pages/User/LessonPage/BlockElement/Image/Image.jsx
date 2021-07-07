@@ -1,5 +1,6 @@
 import { Col, Row, Typography } from 'antd';
-import { BlockElementProps } from '../utils';
+import PropTypes from 'prop-types';
+import { BlockElementProps } from '../types';
 
 const { Text } = Typography;
 
@@ -19,6 +20,15 @@ const Image = ({ content, blockId }) => {
   );
 };
 
-Image.propTypes = BlockElementProps;
+Image.propTypes = {
+  ...BlockElementProps,
+  content: {
+    ...BlockElementProps.content,
+    data: PropTypes.shape({
+      caption: PropTypes.string,
+      url: PropTypes.string,
+    }),
+  },
+};
 
 export default Image;

@@ -1,10 +1,11 @@
 import { useMemo } from 'react';
-import PropTypes from 'prop-types';
 import { Typography } from 'antd';
+import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 
 import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons';
 import ColumnDisabledCheckbox from '@sb-ui/components/atoms/ColumnDisabledCheckbox';
+import * as S from './AnswerResult.styled';
 
 const { Text } = Typography;
 
@@ -35,28 +36,16 @@ const AnswerResult = ({ difference, options, correct }) => {
   return (
     <>
       {correct ? (
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
+        <S.AnswerWrapper>
           <Text>{t('lesson.answer_result.correct')}</Text>
           <CheckCircleTwoTone twoToneColor="#52c41a" />
-        </div>
+        </S.AnswerWrapper>
       ) : (
         <>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-            }}
-          >
+          <S.AnswerWrapper>
             <Text>{t('lesson.answer_result.wrong')}</Text>
             <CloseCircleTwoTone twoToneColor="#F5222D" />
-          </div>
+          </S.AnswerWrapper>
 
           <ColumnDisabledCheckbox
             value={defaultValueCorrect}
