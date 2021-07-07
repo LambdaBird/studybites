@@ -1,5 +1,5 @@
 import { Typography } from 'antd';
-import { BlockElementProps } from '../utils';
+import { BlockElementProps } from '../types';
 import * as S from './Quote.styled';
 
 const { Text } = Typography;
