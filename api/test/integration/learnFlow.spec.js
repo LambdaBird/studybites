@@ -167,10 +167,33 @@ describe('Learning flow', () => {
       expect(payload.lesson).toHaveProperty('blocks');
       expect(payload.lesson.blocks.length).toBe(indexesOfInteractive[0] + 1);
     });
+  });
+
+  describe('Finish the unfinished lesson', () => {
+    let notFinishedLesson;
+
+    beforeAll(async () => {
+      notFinishedLesson = await createLesson({
+        app: testContext.app,
+        credentials: teacherCredentials,
+        body: prepareLessonFromSeed(french, '-notFinishedLesson'),
+      });
+
+      await testContext.request({
+        url: `lesson/enroll/${notFinishedLesson.lesson.id}`,
+      });
+
+      await testContext.request({
+        url: `lesson/${notFinishedLesson.lesson.id}/learn`,
+        body: {
+          action: 'start',
+        },
+      });
+    });
 
     it('should return an error if learn flow was not finished yet', async () => {
       const response = await testContext.request({
-        url: `lesson/${lessonToStart.lesson.id}/learn`,
+        url: `lesson/${notFinishedLesson.lesson.id}/learn`,
         body: {
           action: 'finish',
         },
@@ -181,17 +204,38 @@ describe('Learning flow', () => {
       expect(response.statusCode).toBe(400);
       expect(payload.errors[0]).toMatchObject(NOT_FINISHED);
     });
+  });
+
+  describe('Send the "next" action', () => {
+    let lessonToNext;
+
+    beforeAll(async () => {
+      lessonToNext = await createLesson({
+        app: testContext.app,
+        credentials: teacherCredentials,
+        body: prepareLessonFromSeed(french, '-lessonToNext'),
+      });
+
+      await testContext.request({
+        url: `lesson/enroll/${lessonToNext.lesson.id}`,
+      });
+
+      await testContext.request({
+        url: `lesson/${lessonToNext.lesson.id}/learn`,
+        body: {
+          action: 'start',
+        },
+      });
+    });
 
     it('should return a lesson with blocks to the next interactive block', async () => {
       const response = await testContext.request({
-        url: `lesson/${lessonToStart.lesson.id}/learn`,
+        url: `lesson/${lessonToNext.lesson.id}/learn`,
         body: {
           action: 'next',
           blockId: blocks[indexesOfInteractive[0]].block_id,
-          revision: lessonToStart.lesson.blocks.find(
-            (block) =>
-              block.block_id === blocks[indexesOfInteractive[0]].block_id,
-          ).revision,
+          revision:
+            lessonToNext.lesson.blocks[indexesOfInteractive[0]].revision,
         },
       });
 
@@ -203,20 +247,67 @@ describe('Learning flow', () => {
       expect(payload).toHaveProperty('isFinal');
       expect(payload.lesson).toHaveProperty('blocks');
       expect(payload.lesson.blocks).toBeInstanceOf(Array);
-      expect(payload.lesson.blocks.length).toBe(2);
+      expect(payload.lesson.blocks.length).toBe(
+        indexesOfInteractive[1] - indexesOfInteractive[0],
+      );
       expect(payload.lesson.blocks[1].type).toBe('quiz');
+    });
+
+    it('should not be able to finish this lesson yet', async () => {
+      const response = await testContext.request({
+        url: `lesson/${lessonToNext.lesson.id}/learn`,
+        body: {
+          action: 'finish',
+        },
+      });
+
+      const payload = JSON.parse(response.payload);
+
+      expect(response.statusCode).toBe(400);
+      expect(payload.errors[0]).toMatchObject(NOT_FINISHED);
+    });
+  });
+
+  describe('Answer to quiz', () => {
+    let lessonToAnswer;
+
+    beforeAll(async () => {
+      lessonToAnswer = await createLesson({
+        app: testContext.app,
+        credentials: teacherCredentials,
+        body: prepareLessonFromSeed(french, '-lessonToAnswer'),
+      });
+
+      await testContext.request({
+        url: `lesson/enroll/${lessonToAnswer.lesson.id}`,
+      });
+
+      await testContext.request({
+        url: `lesson/${lessonToAnswer.lesson.id}/learn`,
+        body: {
+          action: 'start',
+        },
+      });
+
+      await testContext.request({
+        url: `lesson/${lessonToAnswer.lesson.id}/learn`,
+        body: {
+          action: 'next',
+          blockId: blocks[indexesOfInteractive[0]].block_id,
+          revision:
+            lessonToAnswer.lesson.blocks[indexesOfInteractive[0]].revision,
+        },
+      });
     });
 
     it('should return a lesson with blocks to the next interactive block, and answer', async () => {
       const response = await testContext.request({
-        url: `lesson/${lessonToStart.lesson.id}/learn`,
+        url: `lesson/${lessonToAnswer.lesson.id}/learn`,
         body: {
           action: 'response',
           blockId: blocks[indexesOfInteractive[1]].block_id,
-          revision: lessonToStart.lesson.blocks.find(
-            (block) =>
-              block.block_id === blocks[indexesOfInteractive[1]].block_id,
-          ).revision,
+          revision:
+            lessonToAnswer.lesson.blocks[indexesOfInteractive[1]].revision,
           data: {
             answers: ['my answer'],
           },
@@ -236,10 +327,56 @@ describe('Learning flow', () => {
       expect(payload.lesson.blocks.length).toBe(1);
       expect(payload.isFinal).toBe(true);
     });
+  });
 
-    it('should return a lesson with all blocks', async () => {
+  describe('Finish the lesson', () => {
+    let lessonToFinish;
+
+    beforeAll(async () => {
+      lessonToFinish = await createLesson({
+        app: testContext.app,
+        credentials: teacherCredentials,
+        body: prepareLessonFromSeed(french, '-lessonToFinish'),
+      });
+
+      await testContext.request({
+        url: `lesson/enroll/${lessonToFinish.lesson.id}`,
+      });
+
+      await testContext.request({
+        url: `lesson/${lessonToFinish.lesson.id}/learn`,
+        body: {
+          action: 'start',
+        },
+      });
+
+      await testContext.request({
+        url: `lesson/${lessonToFinish.lesson.id}/learn`,
+        body: {
+          action: 'next',
+          blockId: blocks[indexesOfInteractive[0]].block_id,
+          revision:
+            lessonToFinish.lesson.blocks[indexesOfInteractive[0]].revision,
+        },
+      });
+
+      await testContext.request({
+        url: `lesson/${lessonToFinish.lesson.id}/learn`,
+        body: {
+          action: 'response',
+          blockId: blocks[indexesOfInteractive[1]].block_id,
+          revision:
+            lessonToFinish.lesson.blocks[indexesOfInteractive[1]].revision,
+          data: {
+            answers: ['my answer'],
+          },
+        },
+      });
+    });
+
+    it('should finish and return all blocks', async () => {
       const response = await testContext.request({
-        url: `lesson/${lessonToStart.lesson.id}/learn`,
+        url: `lesson/${lessonToFinish.lesson.id}/learn`,
         body: {
           action: 'finish',
         },
