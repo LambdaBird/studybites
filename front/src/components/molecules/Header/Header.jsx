@@ -18,11 +18,14 @@ import { USER_BASE_QUERY } from '@sb-ui/utils/queries';
 import { Roles } from '@sb-ui/utils/constants';
 import useMobile from '@sb-ui/hooks/useMobile';
 import { getUser } from '@sb-ui/utils/api/v1/user';
+import { LANGUAGES_LIST } from '@sb-ui/i18n';
 import * as S from './Header.styled';
+
+const { SubMenu } = Menu;
 
 const Header = ({ children }) => {
   const history = useHistory();
-  const { t } = useTranslation(['common', 'user']);
+  const { t, i18n } = useTranslation(['common', 'user']);
   const location = useLocation();
   const isMobile = useMobile();
 
@@ -37,6 +40,8 @@ const Header = ({ children }) => {
   const handleMenuClick = ({ key }) => {
     if (key === 'signOut') {
       handleSignOut();
+    } else if (key.startsWith('language')) {
+      i18n.changeLanguage(key.split('-')?.[1]);
     }
   };
 
@@ -66,6 +71,12 @@ const Header = ({ children }) => {
     <Menu onClick={handleMenuClick}>
       <Menu.Item key="profile">{t('header.profile')}</Menu.Item>
       {user.roles.includes(Roles.TEACHER) && getTeacherMenu()}
+
+      <SubMenu title={t('header.language')}>
+        {LANGUAGES_LIST.map((lang) => (
+          <Menu.Item key={`language-${lang}`}>{lang.toUpperCase()}</Menu.Item>
+        ))}
+      </SubMenu>
 
       <Menu.Divider />
       <Menu.Item key="signOut">{t('header.sign_out')}</Menu.Item>
