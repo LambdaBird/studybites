@@ -8,6 +8,7 @@ import GroupBlock from '@sb-ui/pages/User/LessonPage/GroupBlock';
 import BlockElement from '@sb-ui/pages/User/LessonPage/BlockElement';
 import * as S from './LessonPage.styled';
 import { useLesson } from './useLesson';
+import { NEXT_TYPE, QUIZ_TYPE } from './utils';
 
 const LessonPage = () => {
   const { t } = useTranslation();
@@ -26,11 +27,18 @@ const LessonPage = () => {
     handleStartClick,
   } = useLesson();
 
-  const isQuizBlockResult = useCallback(
-    (block) =>
-      block.type === 'quiz' &&
-      block.content.data?.answers?.every((x) => x.correct === undefined),
-    [],
+  const isShowInteractive = useMemo(
+    () =>
+      !isLoading &&
+      (isFinal ||
+        (interactiveBlock?.type === NEXT_TYPE && !isFinal) ||
+        (!interactiveBlock && blocks?.length === 0)),
+    [blocks?.length, interactiveBlock, isFinal, isLoading],
+  );
+
+  const isShowInteractiveQuiz = useMemo(
+    () => !isLoading && interactiveBlock?.type === QUIZ_TYPE && !isFinal,
+    [interactiveBlock?.type, isFinal, isLoading],
   );
 
   return (
@@ -46,84 +54,57 @@ const LessonPage = () => {
       {blocks.map((groupBlock) => (
         <GroupBlock
           key={groupBlock?.map((x) => x.blockId).join('')}
-          elements={groupBlock
-            .map((block) => {
-              if (isQuizBlockResult(block)) {
-                return null;
-              }
-
-              return <BlockElement element={block} />;
-            })
-            .filter((x) => !!x)}
+          elements={groupBlock.map((block) => (
+            <BlockElement element={block} />
+          ))}
         />
       ))}
 
-      {!isLoading &&
-        (isFinal ||
-          (interactiveBlock?.type === 'next' && !isFinal) ||
-          (!interactiveBlock && blocks?.length === 0)) && (
-          <S.PageRowStart justify="center" align="top">
-            <S.BlockCol
-              xs={{ span: 20 }}
-              sm={{ span: 18 }}
-              md={{ span: 16 }}
-              lg={{ span: 14 }}
-            >
-              {!interactiveBlock && blocks?.length === 0 && (
-                <S.LessonButton onClick={handleStartClick}>
-                  {t('lesson.start')}
-                </S.LessonButton>
-              )}
-              {interactiveBlock?.type === 'next' && !isFinal && (
-                <S.LessonButton onClick={handleNextClick}>
-                  {t('lesson.next')}
-                </S.LessonButton>
-              )}
+      {isShowInteractive && (
+        <S.PageRowStart justify="center" align="top">
+          <S.BlockCol>
+            {!interactiveBlock && blocks?.length === 0 && (
+              <S.LessonButton onClick={handleStartClick}>
+                {t('lesson.start')}
+              </S.LessonButton>
+            )}
+            {interactiveBlock?.type === NEXT_TYPE && !isFinal && (
+              <S.LessonButton onClick={handleNextClick}>
+                {t('lesson.next')}
+              </S.LessonButton>
+            )}
 
-              {isFinal && (
-                <S.LessonButton onClick={handleFinishClick}>
-                  {t('lesson.finish')}
-                </S.LessonButton>
-              )}
-            </S.BlockCol>
-          </S.PageRowStart>
-        )}
+            {isFinal && (
+              <S.LessonButton onClick={handleFinishClick}>
+                {t('lesson.finish')}
+              </S.LessonButton>
+            )}
+          </S.BlockCol>
+        </S.PageRowStart>
+      )}
 
-      {!isLoading && interactiveBlock?.type === 'quiz' && !isFinal && (
+      {isShowInteractiveQuiz && (
         <>
           <Row justify="center">
-            <Col
-              xs={{ span: 20 }}
-              sm={{ span: 18 }}
-              md={{ span: 16 }}
-              lg={{ span: 14 }}
-            >
-              <GroupBlock>
-                <S.TextItalic>
-                  {interactiveBlock?.content?.data?.question}
-                </S.TextItalic>
-              </GroupBlock>
+            <Col span={24}>
+              <GroupBlock
+                elements={[
+                  <S.TextItalic>
+                    {interactiveBlock?.content?.data?.question}
+                  </S.TextItalic>,
+                ]}
+              />
             </Col>
           </Row>
           <S.RowQuiz justify="center" align="top">
-            <Col
-              xs={{ span: 24 }}
-              sm={{ span: 24 }}
-              md={{ span: 16 }}
-              lg={{ span: 14 }}
-            >
+            <S.ColQuiz>
               <QuizBlock
                 key={interactiveBlock?.blockId}
                 setQuiz={setQuizAnswer}
                 data={interactiveBlock?.content?.data}
               />
-            </Col>
-            <S.SendWrapper
-              xs={{ span: 20 }}
-              sm={{ span: 18 }}
-              md={{ span: 16 }}
-              lg={{ span: 14 }}
-            >
+            </S.ColQuiz>
+            <S.SendWrapper>
               <S.LessonButtonSend onClick={handleSendClick}>
                 {t('lesson.send')}
               </S.LessonButtonSend>

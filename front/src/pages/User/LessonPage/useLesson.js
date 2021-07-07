@@ -1,10 +1,15 @@
 import { useHistory, useParams } from 'react-router-dom';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
+
 import { LESSON_BASE_QUERY } from '@sb-ui/utils/queries';
 import { getLessonById, postLessonById } from '@sb-ui/utils/api/v1/student';
 import {
-  groupBlocks,
+  FINISH_TYPE,
+  NEXT_TYPE,
+  RESPONSE_TYPE,
+  START_TYPE,
+  newGroupBlocks,
   prepareResultToAnswers,
 } from '@sb-ui/pages/User/LessonPage/utils';
 import { USER_HOME } from '@sb-ui/utils/paths';
@@ -29,9 +34,21 @@ export const useLesson = () => {
     getLessonById,
   );
 
-  const getNextLength = useCallback(
-    (dataBlocks) => dataBlocks.filter((x) => x.type === 'next').length,
-    [],
+  const addAnswersToPreviousBlocks = useCallback(
+    (answers, results) => {
+      const lastAnswer = JSON.parse(JSON.stringify(interactiveBlock));
+      lastAnswer.content.data.answers = lastAnswer.content.data.answers.map(
+        (x, i) => ({
+          ...x,
+          correct: answers[i],
+        }),
+      );
+      lastAnswer.answer = {
+        results,
+      };
+      return lastAnswer;
+    },
+    [interactiveBlock],
   );
 
   const { mutate } = useMutation(postLessonById, {
@@ -44,31 +61,28 @@ export const useLesson = () => {
 
       const dataBlocks = lesson?.blocks;
       if (dataBlocks) {
+        const {
+          blocks: groupedBlocks,
+          lastInteractiveBlock,
+          nextCount: nextBlocksCount,
+        } = newGroupBlocks(dataBlocks);
         if (lesson?.blocks?.length === totalBlocks) {
-          setNextCount(getNextLength(dataBlocks));
-          setBlocks([...groupBlocks(dataBlocks)]);
+          setNextCount(nextBlocksCount);
+          setBlocks([...groupedBlocks]);
           setInteractiveBlock(null);
         } else {
-          setNextCount((prev) => prev + getNextLength(dataBlocks));
+          setNextCount((prev) => prev + nextCount);
           setBlocks((prev) => {
-            const newPrev = JSON.parse(JSON.stringify(prev));
             if (answers) {
-              newPrev[newPrev.length - 1][0].content.data.answers = newPrev[
-                newPrev.length - 1
-              ]?.[0]?.content?.data?.answers?.map((x, i) => ({
-                ...x,
-                correct: answers[i],
-              }));
-              newPrev[newPrev.length - 1][0].answer = {
-                results: lesson?.answer?.results,
-              };
+              return [
+                ...prev,
+                [addAnswersToPreviousBlocks(answers, lesson?.answer?.results)],
+                ...groupedBlocks,
+              ];
             }
-            return [...newPrev, ...groupBlocks(dataBlocks)];
+            return [...prev, ...groupedBlocks];
           });
-          const lastBlock = dataBlocks[dataBlocks.length - 1];
-          if (lastBlock) {
-            setInteractiveBlock(lastBlock);
-          }
+          setInteractiveBlock(lastInteractiveBlock);
         }
       }
     },
@@ -80,34 +94,34 @@ export const useLesson = () => {
     setIsFinal(preparedData?.isFinal || false);
     const totalData = preparedData?.total;
     setTotal(totalData);
-
     if (dataBlocks) {
-      setBlocks(groupBlocks(dataBlocks));
-      setNextCount(getNextLength(dataBlocks));
-      if (totalData === dataBlocks.length) {
-        setInteractiveBlock(null);
-      } else {
-        const lastBlock = dataBlocks[dataBlocks.length - 1];
-        if (lastBlock) {
-          setInteractiveBlock(lastBlock);
-        }
-      }
+      const {
+        blocks: groupedBlocks,
+        lastInteractiveBlock,
+        nextCount: nextBlocksCount,
+      } = newGroupBlocks(dataBlocks);
+      setBlocks(groupedBlocks);
+      setNextCount(nextBlocksCount);
+      // eslint-disable-next-line no-unused-expressions
+      totalData === dataBlocks.length
+        ? setInteractiveBlock(null)
+        : setInteractiveBlock(lastInteractiveBlock);
     }
   }, [responseData]);
 
   const { lesson } = useMemo(() => responseData || {}, [responseData]);
 
   const handleStartClick = useCallback(() => {
-    mutate({ id: lessonId, action: 'start' });
+    mutate({ id: lessonId, action: START_TYPE });
   }, [lessonId, mutate]);
 
   const handleNextClick = useCallback(() => {
     const { revision, blockId } = interactiveBlock;
-    mutate({ id: lessonId, action: 'next', revision, blockId });
+    mutate({ id: lessonId, action: NEXT_TYPE, revision, blockId });
   }, [interactiveBlock, mutate, lessonId]);
 
   const handleFinishClick = useCallback(() => {
-    mutate({ id: lessonId, action: 'finish' });
+    mutate({ id: lessonId, action: FINISH_TYPE });
     history.push(USER_HOME);
   }, [history, lessonId, mutate]);
 
@@ -115,7 +129,7 @@ export const useLesson = () => {
     const { revision, blockId } = interactiveBlock;
     mutate({
       id: lessonId,
-      action: 'response',
+      action: RESPONSE_TYPE,
       revision,
       blockId,
       data: {
