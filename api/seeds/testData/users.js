@@ -13,7 +13,7 @@ export const superAdmin = {
   is_confirmed: true,
 };
 
-export const teacher = {
+export const teacherMike = {
   id: 101,
   email: 'mike@test.io',
   first_name: 'Mike',
@@ -45,39 +45,58 @@ export const userBob = {
   is_confirmed: true,
 };
 
-export const users = [superAdmin, teacher, studentJohn, studentJane, userBob];
+export const teacherNathan = {
+  id: 105,
+  email: 'nathan@test.io',
+  first_name: 'Nathan',
+  last_name: 'Teacher',
+  is_confirmed: true,
+};
+
+export const users = [
+  superAdmin,
+  teacherMike,
+  studentJohn,
+  studentJane,
+  userBob,
+  teacherNathan,
+];
 
 export const usersRoles = [
   {
-    user_id: teacher.id,
+    user_id: teacherMike.id,
     role_id: config.roles.TEACHER.id,
   },
   {
-    user_id: teacher.id,
+    user_id: teacherNathan.id,
+    role_id: config.roles.TEACHER.id,
+  },
+  {
+    user_id: teacherMike.id,
     role_id: config.roles.MAINTAINER.id,
     resource_type: config.resources.LESSON,
     resource_id: lessons.math.id,
   },
   {
-    user_id: teacher.id,
+    user_id: teacherMike.id,
     role_id: config.roles.MAINTAINER.id,
     resource_type: config.resources.LESSON,
     resource_id: lessons.english.id,
   },
   {
-    user_id: teacher.id,
+    user_id: teacherMike.id,
     role_id: config.roles.MAINTAINER.id,
     resource_type: config.resources.LESSON,
     resource_id: lessons.biology.id,
   },
   {
-    user_id: teacher.id,
+    user_id: teacherMike.id,
     role_id: config.roles.MAINTAINER.id,
     resource_type: config.resources.LESSON,
     resource_id: lessons.literature.id,
   },
   {
-    user_id: teacher.id,
+    user_id: teacherMike.id,
     role_id: config.roles.MAINTAINER.id,
     resource_type: config.resources.LESSON,
     resource_id: lessons.french.id,

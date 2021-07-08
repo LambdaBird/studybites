@@ -2,7 +2,7 @@ import build from '../../src/app';
 
 import {
   studentJohn,
-  teacher,
+  teacherMike,
   defaultPassword,
 } from '../../seeds/testData/users';
 import { math, french } from '../../seeds/testData/lessons';
@@ -22,7 +22,7 @@ const indexesOfInteractive = french._blocks._indexesOfInteractive;
 describe('Learning flow', () => {
   const testContext = {};
   const teacherCredentials = {
-    email: teacher.email,
+    email: teacherMike.email,
     password: defaultPassword,
   };
 

@@ -408,6 +408,11 @@ const router = async (instance) => {
     validatorCompiler,
     errorHandler,
     onRequest: instance.auth({ instance }),
+    preHandler: instance.access({
+      instance,
+      type: config.resources.LESSON,
+      role: config.roles.MAINTAINER.id,
+    }),
     handler: async (req, repl) => {
       const columns = {
         name: 'name',
