@@ -8,7 +8,11 @@ import {
 import { math, french } from '../../seeds/testData/lessons';
 
 import { authorizeUser, createLesson, prepareLessonFromSeed } from './utils';
-import { NOT_FINISHED } from '../../src/services/lesson/constants';
+import {
+  INVALID_LEARN,
+  NOT_FINISHED,
+} from '../../src/services/lesson/constants';
+import { UNAUTHORIZED } from '../../src/services/user/constants';
 
 // eslint-disable-next-line no-underscore-dangle
 const blocks = french._blocks._current;
@@ -36,12 +40,31 @@ describe('Learning flow', () => {
       },
     });
 
+    await authorizeUser({
+      credentials: teacherCredentials,
+      app: testContext.app,
+      setToken: (accessToken) => {
+        testContext.teacherToken = accessToken;
+      },
+    });
+
     testContext.request = async ({ url, method = 'POST', body }) => {
       return testContext.app.inject({
         method,
         url: `/api/v1/${url}`,
         headers: {
           Authorization: `Bearer ${testContext.token}`,
+        },
+        body,
+      });
+    };
+
+    testContext.teacherRequest = async ({ url, method = 'POST', body }) => {
+      return testContext.app.inject({
+        method,
+        url: `/api/v1/${url}`,
+        headers: {
+          Authorization: `Bearer ${testContext.teacherToken}`,
         },
         body,
       });
@@ -390,6 +413,241 @@ describe('Learning flow', () => {
       expect(payload.lesson).toHaveProperty('blocks');
       expect(payload.lesson.blocks).toBeInstanceOf(Array);
       expect(payload.lesson.blocks.length).toBe(6);
+    });
+  });
+
+  describe('Resume the lesson', () => {
+    let lessonToResume;
+
+    beforeAll(async () => {
+      lessonToResume = await createLesson({
+        app: testContext.app,
+        credentials: teacherCredentials,
+        body: prepareLessonFromSeed(french, '-lessonToResume'),
+      });
+
+      await testContext.request({
+        url: `lesson/enroll/${lessonToResume.lesson.id}`,
+      });
+
+      await testContext.request({
+        url: `lesson/${lessonToResume.lesson.id}/learn`,
+        body: {
+          action: 'start',
+        },
+      });
+
+      await testContext.request({
+        url: `lesson/${lessonToResume.lesson.id}/learn`,
+        body: {
+          action: 'next',
+          blockId: blocks[indexesOfInteractive[0]].block_id,
+          revision:
+            lessonToResume.lesson.blocks[indexesOfInteractive[0]].revision,
+        },
+      });
+    });
+
+    it('should return a lesson with blocks to the next interactive block', async () => {
+      const response = await testContext.request({
+        url: `lesson/${lessonToResume.lesson.id}/learn`,
+        body: {
+          action: 'resume',
+          blockId: blocks[indexesOfInteractive[1]].block_id,
+          revision:
+            lessonToResume.lesson.blocks[indexesOfInteractive[1]].revision,
+        },
+      });
+
+      const payload = JSON.parse(response.payload);
+
+      expect(response.statusCode).toBe(200);
+      expect(payload).toHaveProperty('total');
+      expect(payload).toHaveProperty('lesson');
+      expect(payload).toHaveProperty('isFinal');
+      expect(payload.lesson).toHaveProperty('blocks');
+      expect(payload.lesson.blocks).toBeInstanceOf(Array);
+      expect(payload.lesson.blocks.length).toBe(
+        indexesOfInteractive[1] - indexesOfInteractive[0],
+      );
+      expect(payload.lesson.blocks[1].type).toBe('quiz');
+    });
+  });
+
+  describe('Answer to the quiz before the "next" block', () => {
+    let lessonToAnswer;
+
+    beforeAll(async () => {
+      lessonToAnswer = await createLesson({
+        app: testContext.app,
+        credentials: teacherCredentials,
+        body: prepareLessonFromSeed(french, '-lessonToAnswerBeforeNext'),
+      });
+
+      await testContext.request({
+        url: `lesson/enroll/${lessonToAnswer.lesson.id}`,
+      });
+
+      await testContext.request({
+        url: `lesson/${lessonToAnswer.lesson.id}/learn`,
+        body: {
+          action: 'start',
+        },
+      });
+    });
+
+    it('should return an error', async () => {
+      const response = await testContext.request({
+        url: `lesson/${lessonToAnswer.lesson.id}/learn`,
+        body: {
+          action: 'response',
+          blockId: blocks[indexesOfInteractive[1]].block_id,
+          revision:
+            lessonToAnswer.lesson.blocks[indexesOfInteractive[1]].revision,
+          data: {
+            answers: ['my answer'],
+          },
+        },
+      });
+
+      const payload = JSON.parse(response.payload);
+
+      expect(response.statusCode).toBe(400);
+      expect(payload.errors[0]).toMatchObject(INVALID_LEARN);
+    });
+  });
+
+  describe('Answer to the quiz for the "Archived" lesson', () => {
+    let lessonToAnswer;
+
+    beforeAll(async () => {
+      lessonToAnswer = await createLesson({
+        app: testContext.app,
+        credentials: teacherCredentials,
+        body: prepareLessonFromSeed(french, '-lessonToAnswerArchived'),
+      });
+
+      await testContext.request({
+        url: `lesson/enroll/${lessonToAnswer.lesson.id}`,
+      });
+
+      await testContext.request({
+        url: `lesson/${lessonToAnswer.lesson.id}/learn`,
+        body: {
+          action: 'start',
+        },
+      });
+
+      await testContext.request({
+        url: `lesson/${lessonToAnswer.lesson.id}/learn`,
+        body: {
+          action: 'next',
+          blockId: blocks[indexesOfInteractive[0]].block_id,
+          revision:
+            lessonToAnswer.lesson.blocks[indexesOfInteractive[0]].revision,
+        },
+      });
+
+      await testContext.teacherRequest({
+        method: 'PUT',
+        url: `lesson/maintain/${lessonToAnswer.lesson.id}`,
+        body: {
+          lesson: {
+            status: 'Archived',
+          },
+        },
+      });
+    });
+
+    it('should return an error', async () => {
+      const response = await testContext.request({
+        url: `lesson/${lessonToAnswer.lesson.id}/learn`,
+        body: {
+          action: 'response',
+          blockId: blocks[indexesOfInteractive[1]].block_id,
+          revision:
+            lessonToAnswer.lesson.blocks[indexesOfInteractive[1]].revision,
+          data: {
+            answers: ['my answer'],
+          },
+        },
+      });
+
+      const payload = JSON.parse(response.payload);
+
+      expect(response.statusCode).toBe(401);
+      expect(payload.errors[0]).toMatchObject(UNAUTHORIZED);
+    });
+  });
+
+  describe('Answer to the quiz for the "Draft" lesson', () => {
+    let lessonToAnswer;
+
+    beforeAll(async () => {
+      lessonToAnswer = await createLesson({
+        app: testContext.app,
+        credentials: teacherCredentials,
+        body: prepareLessonFromSeed(french, '-lessonToAnswerDraft'),
+      });
+
+      await testContext.request({
+        url: `lesson/enroll/${lessonToAnswer.lesson.id}`,
+      });
+
+      await testContext.request({
+        url: `lesson/${lessonToAnswer.lesson.id}/learn`,
+        body: {
+          action: 'start',
+        },
+      });
+
+      await testContext.request({
+        url: `lesson/${lessonToAnswer.lesson.id}/learn`,
+        body: {
+          action: 'next',
+          blockId: blocks[indexesOfInteractive[0]].block_id,
+          revision:
+            lessonToAnswer.lesson.blocks[indexesOfInteractive[0]].revision,
+        },
+      });
+
+      await testContext.teacherRequest({
+        method: 'PUT',
+        url: `lesson/maintain/${lessonToAnswer.lesson.id}`,
+        body: {
+          lesson: {
+            status: 'Draft',
+          },
+        },
+      });
+    });
+
+    it('should return no error', async () => {
+      const response = await testContext.request({
+        url: `lesson/${lessonToAnswer.lesson.id}/learn`,
+        body: {
+          action: 'response',
+          blockId: blocks[indexesOfInteractive[1]].block_id,
+          revision:
+            lessonToAnswer.lesson.blocks[indexesOfInteractive[1]].revision,
+          data: {
+            answers: ['my answer'],
+          },
+        },
+      });
+
+      const payload = JSON.parse(response.payload);
+
+      expect(response.statusCode).toBe(200);
+      expect(payload).toHaveProperty('total');
+      expect(payload).toHaveProperty('lesson');
+      expect(payload).toHaveProperty('isFinal');
+      expect(payload.lesson).toHaveProperty('blocks');
+      expect(payload.lesson).toHaveProperty('answer');
+      expect(payload.lesson).toHaveProperty('userAnswer');
+      expect(payload.lesson.blocks).toBeInstanceOf(Array);
+      expect(payload.lesson.blocks.length).toBe(1);
+      expect(payload.isFinal).toBe(true);
     });
   });
 });

@@ -8,10 +8,10 @@ export const MISSING_ROLE = {
 };
 
 const access =
-  ({ instance, type, role, getId = () => undefined }) =>
+  ({ instance, type, role, getId = () => undefined, status }) =>
   async (req) => {
     try {
-      const { UserRole } = instance.models;
+      const { UserRole, Lesson } = instance.models;
 
       if (!role) {
         throw new BadRequestError(MISSING_ROLE);
@@ -28,6 +28,16 @@ const access =
 
       if (!data.length) {
         throw new AuthorizationError(UNAUTHORIZED);
+      }
+
+      if (id && status) {
+        const lesson = await Lesson.query()
+          .findById(id)
+          .whereIn('status', status);
+
+        if (!lesson) {
+          throw new AuthorizationError(UNAUTHORIZED);
+        }
       }
     } catch (err) {
       throw new AuthorizationError(UNAUTHORIZED);
