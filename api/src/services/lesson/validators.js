@@ -1,6 +1,7 @@
 import * as yup from 'yup';
 
 import {
+  propertyLengthError,
   propertyTypeError,
   requiredPropertyError,
 } from '../../validation/helpers';
@@ -64,9 +65,15 @@ const dataValidator = yup
   .object({
     question: yup.string(),
     answers: yup.array(),
-    response: yup.array(),
+    response: yup
+      .array()
+      .required(requiredPropertyError('lesson', 'response'))
+      .typeError(propertyTypeError('lesson', 'response', 'array'))
+      .min(1, propertyLengthError('lesson', 'response')),
   })
-  .typeError(propertyTypeError('lesson', 'data', 'object'));
+  .typeError(propertyTypeError('lesson', 'data', 'object'))
+  .default(null)
+  .nullable();
 
 export const postBodyValidator = yup.object({
   lesson: lessonValidatorPost,
