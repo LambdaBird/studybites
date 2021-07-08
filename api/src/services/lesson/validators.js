@@ -7,6 +7,17 @@ import {
 } from '../../validation/helpers';
 import { INVALID_ID, INVALID_STATUS } from './constants';
 
+// eslint-disable-next-line func-names
+yup.addMethod(yup.object, 'atLeastOneOf', function (props, message) {
+  return this.test({
+    name: 'atLeastOneOf',
+    message,
+    exclusive: true,
+    params: { keys: props.join(', ') },
+    test: (value) => value == null || props.some((prop) => value[prop] != null),
+  });
+});
+
 const nameValidatorPost = yup
   .string()
   .typeError(propertyTypeError('lesson', 'name', 'string'))
@@ -67,10 +78,10 @@ const dataValidator = yup
     answers: yup.array(),
     response: yup
       .array()
-      .required(requiredPropertyError('lesson', 'response'))
       .typeError(propertyTypeError('lesson', 'response', 'array'))
       .min(1, propertyLengthError('lesson', 'response')),
   })
+  .atLeastOneOf(['question', 'answers', 'response'], { status: 'ficl' })
   .typeError(propertyTypeError('lesson', 'data', 'object'))
   .default(null)
   .nullable();

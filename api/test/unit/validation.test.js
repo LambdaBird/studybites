@@ -386,9 +386,7 @@ describe('Test learning flow body validation', () => {
     };
 
     learnBodyValidator.validate(data, options).catch((err) => {
-      expect(err.errors[0]).toMatchObject(
-        requiredPropertyError('lesson', 'response'),
-      );
+      expect(err.errors[0]).toMatchObject({ status: 'ficl' });
     });
   });
 
