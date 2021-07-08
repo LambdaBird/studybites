@@ -46,6 +46,9 @@ export const useLesson = () => {
       lastAnswer.answer = {
         results,
       };
+      lastAnswer.data = {
+        response: answers,
+      };
       return lastAnswer;
     },
     [interactiveBlock],
@@ -71,7 +74,7 @@ export const useLesson = () => {
           setBlocks([...groupedBlocks]);
           setInteractiveBlock(null);
         } else {
-          setNextCount((prev) => prev + nextCount);
+          setNextCount((prev) => prev + nextBlocksCount);
           setBlocks((prev) => {
             if (answers) {
               return [
