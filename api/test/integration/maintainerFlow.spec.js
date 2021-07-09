@@ -443,4 +443,89 @@ describe('Maintainer flow', () => {
       expect(payload.total).toBe(0);
     });
   });
+
+  describe('Get all students enrolled to lesson', () => {
+    let lessonToGetStudents;
+
+    beforeAll(async () => {
+      lessonToGetStudents = await createLesson({
+        app: testContext.app,
+        credentials: teacherCredentials,
+        body: prepareLessonFromSeed(french, '-lessonToGetStudents'),
+      });
+
+      await testContext.request({
+        url: `lesson/enroll/${lessonToGetStudents.lesson.id}`,
+      });
+    });
+
+    it('should return an error if the user is not a teacher', async () => {
+      const response = await testContext.studentRequest({
+        method: 'GET',
+        url: `lesson/enrolled/${lessonToGetStudents.lesson.id}`,
+      });
+
+      const payload = JSON.parse(response.payload);
+
+      expect(response.statusCode).toBe(401);
+      expect(payload.errors[0]).toMatchObject(UNAUTHORIZED);
+    });
+
+    it('should return students with total count', async () => {
+      const response = await testContext.request({
+        method: 'GET',
+        url: `lesson/enrolled/${lessonToGetStudents.lesson.id}`,
+      });
+
+      const payload = JSON.parse(response.payload);
+
+      expect(response.statusCode).toBe(200);
+      expect(payload).toHaveProperty('total');
+      expect(payload).toHaveProperty('data');
+    });
+  });
+
+  describe('Search through all students enrolled to lesson', () => {
+    let lessonToSearchStudents;
+
+    beforeAll(async () => {
+      lessonToSearchStudents = await createLesson({
+        app: testContext.app,
+        credentials: teacherCredentials,
+        body: prepareLessonFromSeed(french, '-lessonToSearchStudents'),
+      });
+
+      await testContext.request({
+        url: `lesson/enroll/${lessonToSearchStudents.lesson.id}`,
+      });
+    });
+
+    it('should return one student by name', async () => {
+      const response = await testContext.request({
+        method: 'GET',
+        url: `lesson/enrolled/${lessonToSearchStudents.lesson.id}?search=${studentJohn.first_name}`,
+      });
+
+      const payload = JSON.parse(response.payload);
+
+      expect(response.statusCode).toBe(200);
+      expect(payload).toHaveProperty('total');
+      expect(payload).toHaveProperty('data');
+      expect(payload.total).toBe(1);
+    });
+
+    it('should return no students', async () => {
+      const response = await testContext.request({
+        method: 'GET',
+        url: `lesson/enrolled/${lessonToSearchStudents.lesson.id}?search=nomatchstring`,
+      });
+
+      const payload = JSON.parse(response.payload);
+
+      expect(response.statusCode).toBe(200);
+      expect(payload).toHaveProperty('total');
+      expect(payload).toHaveProperty('data');
+      expect(payload.total).toBe(0);
+    });
+  });
 });
