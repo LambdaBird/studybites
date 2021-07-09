@@ -31,13 +31,13 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     const refreshToken = getJWTRefreshToken();
-    if (
-      refreshToken &&
-      error.response.status === 401 &&
-      !originalRequest._retry
-    ) {
+    if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
+        if (!refreshToken) {
+          clearJWT();
+          return Promise.reject(error);
+        }
         const res = await axios.post(`/api/v1/user/refresh_token`, {
           refreshToken,
         });

@@ -56,7 +56,7 @@ const PrivateRoutes = () => {
   }
 
   const allowedRoutes = getPrivateRoutes({ isMobile }).filter((route) =>
-    checkPermission(user.roles, route.permissions),
+    checkPermission(user?.roles, route?.permissions),
   );
 
   return (
@@ -64,7 +64,7 @@ const PrivateRoutes = () => {
       {getPagesWithSkippedHeader(location.pathname) || <Header />}
       <Switch>
         <Route path={paths.HOME} exact>
-          {getMainPage(user.roles)}
+          {getMainPage(user?.roles)}
         </Route>
         {renderRoutes(allowedRoutes)}
         <Route path="*">

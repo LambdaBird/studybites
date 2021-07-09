@@ -70,7 +70,7 @@ const Header = ({ children }) => {
   const menu = (
     <Menu onClick={handleMenuClick}>
       <Menu.Item key="profile">{t('header.profile')}</Menu.Item>
-      {user.roles.includes(Roles.TEACHER) && getTeacherMenu()}
+      {user?.roles?.includes(Roles.TEACHER) && getTeacherMenu()}
 
       <SubMenu title={t('header.language')}>
         {LANGUAGES_LIST.map(({ key, value }) => (
@@ -84,13 +84,13 @@ const Header = ({ children }) => {
   );
 
   const fullName = useMemo(
-    () => `${user.firstName} ${user.lastName}`.trim(),
-    [user.firstName, user.lastName],
+    () => `${user?.firstName} ${user?.lastName}`.trim(),
+    [user?.firstName, user?.lastName],
   );
 
   const firstNameLetter = useMemo(
-    () => user.firstName[0] || user.lastName[0],
-    [user.firstName, user.lastName],
+    () => user?.firstName?.[0] || user?.lastName?.[0],
+    [user?.firstName, user?.lastName],
   );
 
   return (
