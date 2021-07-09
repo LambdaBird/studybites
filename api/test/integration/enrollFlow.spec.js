@@ -94,10 +94,26 @@ describe('Enroll to lesson flow', () => {
       expect(response.statusCode).toBe(200);
       expect(payload).toMatchObject(ENROLL_SUCCESS);
     });
+  });
+
+  describe('Enroll multiple times', () => {
+    let lessonToEnroll;
+
+    beforeAll(async () => {
+      lessonToEnroll = await createLesson({
+        app: testContext.app,
+        credentials: teacherCredentials,
+        body: prepareLessonFromSeed(french, '-lessonToEnroll'),
+      });
+
+      await testContext.request({
+        url: `lesson/enroll/${lessonToEnroll.lesson.id}`,
+      });
+    });
 
     it('should return an error if try to enroll multiple times', async () => {
       const response = await testContext.request({
-        url: `lesson/enroll/${publicLesson.lesson.id}`,
+        url: `lesson/enroll/${lessonToEnroll.lesson.id}`,
       });
 
       const payload = JSON.parse(response.payload);
