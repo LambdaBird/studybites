@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useQuery } from 'react-query';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +17,12 @@ const EnrollModalDesktop = () => {
   const query = useMemo(() => location.search, [location]);
   const history = useHistory();
   const { id } = useParams();
+
+  const historyReplaceBack = useCallback(() => {
+    history.replace({
+      pathname: USER_HOME,
+    });
+  }, [history]);
 
   const historyPushBack = useCallback(() => {
     history.push({
@@ -48,6 +54,12 @@ const EnrollModalDesktop = () => {
     name: '',
     description: '',
   };
+
+  useEffect(() => {
+    if (responseData !== undefined && !responseData?.lesson) {
+      historyReplaceBack();
+    }
+  }, [historyReplaceBack, responseData]);
 
   const { firstName, lastName } = authors?.[0];
   const author = `${firstName} ${lastName}`;
