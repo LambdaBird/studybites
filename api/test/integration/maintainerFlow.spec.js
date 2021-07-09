@@ -528,4 +528,18 @@ describe('Maintainer flow', () => {
       expect(payload.total).toBe(0);
     });
   });
+
+  describe('Get all possible lesson statuses', () => {
+    it('should return an array of statuses', async () => {
+      const response = await testContext.request({
+        method: 'OPTIONS',
+        url: 'lesson',
+      });
+
+      const payload = JSON.parse(response.payload);
+
+      expect(response.statusCode).toBe(200);
+      expect(payload).toHaveProperty('properties');
+    });
+  });
 });
