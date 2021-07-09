@@ -51,6 +51,7 @@ export default {
       success_updated: 'Урок успешно обновлен',
       error_created: 'Ошибка при создании',
       error_updated: 'Ошибка при обновлении',
+      error_lesson_name: 'Веддите имя урока',
     },
     header: {
       placeholder: 'Введите заголовок',
