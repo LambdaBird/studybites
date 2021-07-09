@@ -39,6 +39,7 @@ import * as S from './LessonEdit.styled';
 const { TextArea } = Input;
 
 const GET_LESSON_BASE_QUERY = 'getLesson';
+const MAX_NAME_LENGTH = 255;
 
 const LessonEdit = () => {
   const { t } = useTranslation('teacher');
@@ -224,6 +225,13 @@ const LessonEdit = () => {
     }
   };
 
+  const handleInputTitle = (e) => {
+    const newText = e.target.value;
+    if (newText.length < MAX_NAME_LENGTH) {
+      setName(newText);
+    }
+  };
+
   const handleNextLine = (e) => {
     if (e.key === 'Enter') {
       editorJSref.current.focus();
@@ -249,7 +257,7 @@ const LessonEdit = () => {
                 type="text"
                 placeholder={t('lesson_edit.title.placeholder')}
                 value={name}
-                onChange={(e) => setName(e.target.value)}
+                onChange={handleInputTitle}
                 onKeyDown={handleNextLine}
               />
               <div id="editorjs" />
