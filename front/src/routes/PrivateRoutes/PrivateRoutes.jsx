@@ -42,7 +42,7 @@ const PrivateRoutes = () => {
 
   const isLoggedIn = getJWTAccessToken();
   const { data: userResponse, isLoading: isUserLoading } = useQuery(
-    USER_BASE_QUERY,
+    [USER_BASE_QUERY, isLoggedIn],
     getUser,
   );
   const user = userResponse?.data;

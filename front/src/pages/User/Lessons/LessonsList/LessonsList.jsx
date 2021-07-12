@@ -4,13 +4,11 @@ import { useQuery } from 'react-query';
 import PropTypes from 'prop-types';
 import OngoingFullLesson from '@sb-ui/components/lessonBlocks/OngoingFull';
 import emptyImg from '@sb-ui/resources/img/empty.svg';
-import { useTranslation } from 'react-i18next';
 import { skeletonArray } from '@sb-ui/utils/utils';
 import * as S from './LessonsList.styled';
 import { PAGE_SIZE } from './constants';
 
-const LessonsList = ({ title, query }) => {
-  const { t } = useTranslation('user');
+const LessonsList = ({ title, notFound, query }) => {
   const { key: queryKey, func: queryFunc } = query;
   const [currentPage, setCurrentPage] = useState(1);
   const [searchText, setSearchText] = useState(null);
@@ -52,10 +50,7 @@ const LessonsList = ({ title, query }) => {
               </S.LessonCol>
             ))}
         {!isLoading && total === 0 && lessons?.length === 0 && (
-          <S.EmptyContainer
-            image={emptyImg}
-            description={t('home.open_lessons.not_found')}
-          />
+          <S.EmptyContainer image={emptyImg} description={notFound} />
         )}
       </S.LessonsRow>
       {!isLoading && total > PAGE_SIZE && (
@@ -73,6 +68,7 @@ const LessonsList = ({ title, query }) => {
 
 LessonsList.propTypes = {
   title: PropTypes.string.isRequired,
+  notFound: PropTypes.string.isRequired,
   query: PropTypes.shape({
     key: PropTypes.string.isRequired,
     func: PropTypes.func.isRequired,

@@ -45,7 +45,10 @@ const LessonsList = ({ lessons, isLoading }) => {
 
   return (
     <S.LessonsMainEmpty>
-      <Empty image={emptyImg} description={t('home.open_lessons.not_found')} />
+      <Empty
+        image={emptyImg}
+        description={t('home.ongoing_lessons.not_found')}
+      />
     </S.LessonsMainEmpty>
   );
 };

@@ -9,6 +9,7 @@ export const LessonsMainRow = styled(Row)`
 export const LessonsMainEmpty = styled.div`
   display: flex;
   justify-content: center;
+  flex-direction: column;
   width: 100%;
 `;
 
