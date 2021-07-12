@@ -36,7 +36,14 @@ const OngoingFullDesktop = ({ lesson }) => {
             </S.TitleEllipsis>
           </Row>
           <Row>
-            <S.DescriptionText>{description}</S.DescriptionText>
+            <S.DescriptionText
+              ellipsis={{
+                tooltip: true,
+                rows: 2,
+              }}
+            >
+              {description}
+            </S.DescriptionText>
           </Row>
           <S.EnrollRow justify="end">
             <Button type="primary" onClick={handleContinueLesson}>
