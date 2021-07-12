@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
-import { Link,useHistory, useLocation } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import { DownOutlined } from '@ant-design/icons';
 
 import useMobile from '@sb-ui/hooks/useMobile';
 import { LANGUAGES_LIST } from '@sb-ui/i18n';
+import { queryClient } from '@sb-ui/query';
 import logo from '@sb-ui/resources/img/logo.svg';
 import { getUser } from '@sb-ui/utils/api/v1/user';
 import { Roles } from '@sb-ui/utils/constants';
@@ -36,6 +37,7 @@ const Header = ({ children }) => {
 
   const handleSignOut = () => {
     clearJWT();
+    queryClient.invalidateQueries();
     history.push(SIGN_IN);
   };
 

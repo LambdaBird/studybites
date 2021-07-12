@@ -1,7 +1,7 @@
 import { matchPath } from 'react-router-dom';
 
 import { AdminHome } from '@sb-ui/pages/Admin';
-import { LessonEdit,TeacherHome } from '@sb-ui/pages/Teacher';
+import { LessonEdit, TeacherHome } from '@sb-ui/pages/Teacher';
 import {
   EnrollModalDesktop,
   EnrollModalMobile,
