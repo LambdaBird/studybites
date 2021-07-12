@@ -34,6 +34,7 @@ export const Title = styled(Typography.Title)`
 export const Description = styled(Text)`
   text-align: justify;
   color: ${DESCRIPTION_COLOR};
+  overflow-wrap: anywhere;
 `;
 
 export const AuthorContainer = styled.div`
