@@ -1,17 +1,19 @@
+import { Alert,Button, Row, Select, Skeleton, Space } from 'antd';
 import { useState } from 'react';
-import { useQuery } from 'react-query';
 import { useTranslation } from 'react-i18next';
-import { Row, Select, Space, Button, Skeleton, Alert } from 'antd';
+import { useQuery } from 'react-query';
 import { useHistory } from 'react-router-dom';
 import { PlusOutlined } from '@ant-design/icons';
-import { skeletonArray } from '@sb-ui/utils/utils';
+
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
 import { getTeacherLessons } from '@sb-ui/utils/api/v1/teacher';
 import { LESSONS_NEW } from '@sb-ui/utils/paths';
 import { TEACHER_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
-import * as S from './LessonsDashboard.styled';
-import LessonsList from './LessonsList';
+import { skeletonArray } from '@sb-ui/utils/utils';
+
 import { pageLimit, statusesOptions } from './constants';
+import LessonsList from './LessonsList';
+import * as S from './LessonsDashboard.styled';
 
 const { Option } = Select;
 

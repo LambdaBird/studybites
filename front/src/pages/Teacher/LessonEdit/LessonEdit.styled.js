@@ -1,5 +1,6 @@
-import styled from 'styled-components';
 import { Badge, Button, Col, Row, Typography } from 'antd';
+import styled from 'styled-components';
+
 import variables from '@sb-ui/theme/variables';
 
 export const Page = styled.div`

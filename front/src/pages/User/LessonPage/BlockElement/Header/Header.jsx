@@ -1,5 +1,6 @@
 import { Typography } from 'antd';
 import PropTypes from 'prop-types';
+
 import { BlockElementProps } from '../types';
 
 const { Title } = Typography;

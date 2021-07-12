@@ -1,5 +1,6 @@
 import { Col, Row } from 'antd';
 import PropTypes from 'prop-types';
+
 import * as S from './ColumnDisabledCheckbox.styled';
 
 const ColumnDisabledCheckbox = ({ value, options }) => (

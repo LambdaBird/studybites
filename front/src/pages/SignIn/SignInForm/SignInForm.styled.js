@@ -1,5 +1,6 @@
-import styled from 'styled-components';
 import { Button, Form } from 'antd';
+import styled from 'styled-components';
+
 import variables from '@sb-ui/theme/variables';
 
 export const SubmitButton = styled(Button)`

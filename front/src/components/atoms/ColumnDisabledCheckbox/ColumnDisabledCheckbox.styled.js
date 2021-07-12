@@ -1,5 +1,6 @@
-import styled from 'styled-components';
 import { Checkbox } from 'antd';
+import styled from 'styled-components';
+
 import variables from '@sb-ui/theme/variables';
 
 export const DisabledCheckbox = styled(Checkbox)`

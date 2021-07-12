@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+
 import { BlockElementProps } from '../types';
 
 const List = ({ content }) => {

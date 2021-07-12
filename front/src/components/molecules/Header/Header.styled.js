@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import { Avatar, Row, Typography } from 'antd';
+import styled from 'styled-components';
 
 const { Text } = Typography;
 

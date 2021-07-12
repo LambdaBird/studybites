@@ -1,5 +1,6 @@
-import PropTypes from 'prop-types';
 import { Col } from 'antd';
+import PropTypes from 'prop-types';
+
 import * as S from './GroupBlock.styled';
 
 const GroupBlock = ({ elements, padding, top }) => {

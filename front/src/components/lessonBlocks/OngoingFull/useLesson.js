@@ -1,5 +1,6 @@
-import { useHistory } from 'react-router-dom';
 import { useMemo } from 'react';
+import { useHistory } from 'react-router-dom';
+
 import { LESSON_PAGE } from '@sb-ui/utils/paths';
 
 export const useLesson = ({ id, maintainer }) => {

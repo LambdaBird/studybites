@@ -1,14 +1,14 @@
-import { BlockElementProps } from './types';
-import Paragraph from './Paragraph';
-import QuizBlockResult from './QuizBlockResult';
+import Delimiter from './Delimiter';
 import Embed from './Embed';
+import Error from './Error';
+import Header from './Header';
 import Image from './Image';
 import List from './List';
-import Header from './Header';
+import Paragraph from './Paragraph';
+import QuizBlockResult from './QuizBlockResult';
 import Quote from './Quote';
-import Delimiter from './Delimiter';
 import Table from './Table';
-import Error from './Error';
+import { BlockElementProps } from './types';
 
 const BLOCKS_TYPE = {
   PARAGRAPH: 'paragraph',

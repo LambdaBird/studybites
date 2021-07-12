@@ -1,7 +1,9 @@
-import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { useEffect, useState } from 'react';
 import { SearchOutlined } from '@ant-design/icons';
+
 import { useDebounce } from '@sb-ui/hooks/useDebounce';
+
 import * as S from './DebouncedSearch.styled';
 
 const DebouncedSearch = ({ delay, onChange, ...props }) => {

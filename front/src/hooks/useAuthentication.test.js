@@ -1,7 +1,9 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+
 import { postSignIn } from '../utils/api/v1/user';
 import { setJWT } from '../utils/jwt';
+
 import useAuthentication from './useAuthentication';
 
 jest.mock('../../utils/api/v1/user');

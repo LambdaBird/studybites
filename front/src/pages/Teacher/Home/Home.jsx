@@ -1,6 +1,6 @@
-import TeacherInfo from './TeacherInfo';
-import StudentsList from './StudentsList';
 import LessonsDashboard from './LessonsDashboard';
+import StudentsList from './StudentsList';
+import TeacherInfo from './TeacherInfo';
 import * as S from './Home.styled';
 
 const Home = () => (

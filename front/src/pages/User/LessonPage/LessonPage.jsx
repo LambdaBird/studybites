@@ -1,14 +1,15 @@
-import { useMemo } from 'react';
 import { Col, Row } from 'antd';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import QuizBlock from '@sb-ui/pages/User/LessonPage/QuizBlock';
-import Header from '@sb-ui/pages/User/LessonPage/Header';
-import GroupBlock from '@sb-ui/pages/User/LessonPage/GroupBlock';
 import BlockElement from '@sb-ui/pages/User/LessonPage/BlockElement';
-import * as S from './LessonPage.styled';
+import GroupBlock from '@sb-ui/pages/User/LessonPage/GroupBlock';
+import Header from '@sb-ui/pages/User/LessonPage/Header';
+import QuizBlock from '@sb-ui/pages/User/LessonPage/QuizBlock';
+
 import { useLesson } from './useLesson';
 import { NEXT_TYPE, QUIZ_TYPE } from './utils';
+import * as S from './LessonPage.styled';
 
 const LessonPage = () => {
   const { t } = useTranslation('user');

@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import { Col, Row } from 'antd';
+import styled from 'styled-components';
 
 export const LessonsMainRow = styled(Row)`
   height: 100%;

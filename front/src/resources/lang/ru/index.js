@@ -1,10 +1,10 @@
 /* eslint-disable camelcase */
 import admin from './admin';
+import common from './common';
 import sign_in from './sign_in';
 import sign_up from './sign_up';
-import user from './user';
 import teacher from './teacher';
-import common from './common';
+import user from './user';
 
 export default {
   admin,

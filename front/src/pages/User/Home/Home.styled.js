@@ -1,5 +1,6 @@
+import { Col,Row, Typography } from 'antd';
 import styled from 'styled-components';
-import { Row, Typography, Col } from 'antd';
+
 import Search from '@sb-ui/components/molecules/Search';
 
 export const Main = styled.div`

@@ -1,10 +1,10 @@
-import { useContext } from 'react';
 import PropTypes from 'prop-types';
+import { useContext } from 'react';
 
 import MobileContext from '@sb-ui/contexts/MobileContext';
 
-import OngoingShortMobile from './OngoingShort.mobile';
 import OngoingShortDesktop from './OngoingShort.desktop';
+import OngoingShortMobile from './OngoingShort.mobile';
 
 const OngoingShort = ({ lesson }) => {
   const isMobile = useContext(MobileContext);

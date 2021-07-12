@@ -1,5 +1,5 @@
+import { Avatar, Button, Row, Space,Typography } from 'antd';
 import styled from 'styled-components';
-import { Avatar, Row, Typography, Button, Space } from 'antd';
 
 import {
   DESCRIPTION_COLOR,

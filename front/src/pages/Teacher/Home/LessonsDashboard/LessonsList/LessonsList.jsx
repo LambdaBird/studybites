@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types';
+
 import TeacherLesson from '@sb-ui/components/lessonBlocks/Teacher';
+
 import AddCard from '../AddCard';
 
 import { CardCol } from '../LessonsDashboard.styled';

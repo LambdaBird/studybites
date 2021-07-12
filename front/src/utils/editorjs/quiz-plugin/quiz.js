@@ -1,6 +1,5 @@
 /* eslint-disable class-methods-use-this */
 
-import './quiz.css';
 import {
   extractContentAfterCaret,
   fragmentToHtml,
@@ -8,6 +7,8 @@ import {
   make,
   moveCaret,
 } from './utils';
+
+import './quiz.css';
 
 export default class Quiz {
   static get toolbox() {

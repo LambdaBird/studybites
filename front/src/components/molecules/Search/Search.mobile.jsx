@@ -1,9 +1,10 @@
+import { Popover } from 'antd';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { Popover } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
+
 import * as S from './Search.mobile.styled';
 
 const SearchMobile = ({ setSearchText, searchText, className, placement }) => {

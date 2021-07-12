@@ -1,15 +1,17 @@
-import { useMemo } from 'react';
 import { Alert, Form, Input } from 'antd';
-import { useHistory } from 'react-router-dom';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
+
 import { useAuthentication } from '@sb-ui/hooks/useAuthentication';
 import { postSignIn } from '@sb-ui/utils/api/v1/user';
 import { SIGN_UP } from '@sb-ui/utils/paths';
+
 import {
   DivAlignCenter,
-  SubmitButton,
-  LinkButton,
   FormItemAlignEnd,
+  LinkButton,
+  SubmitButton,
 } from './SignInForm.styled';
 
 const SignInForm = () => {

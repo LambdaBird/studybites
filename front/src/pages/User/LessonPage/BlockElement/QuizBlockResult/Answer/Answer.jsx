@@ -1,6 +1,6 @@
-import { useMemo } from 'react';
 import { Col } from 'antd';
 import PropTypes from 'prop-types';
+import { useMemo } from 'react';
 
 import ColumnDisabledCheckbox from '@sb-ui/components/atoms/ColumnDisabledCheckbox';
 

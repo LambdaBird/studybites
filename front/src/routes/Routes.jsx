@@ -1,9 +1,10 @@
 import { BrowserRouter as Router, Switch } from 'react-router-dom';
-import SignUp from '../pages/SignUp';
+
 import SignIn from '../pages/SignIn';
+import SignUp from '../pages/SignUp';
+import * as paths from '../utils/paths';
 
 import AuthRoute from './AuthRoute';
-import * as paths from '../utils/paths';
 import PrivateRoutes from './PrivateRoutes';
 
 const Routes = () => (

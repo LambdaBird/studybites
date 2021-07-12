@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
-import * as S from './Home.styled';
-import OngoingLessons from './OngoingLessons';
+
 import LessonsList from './LessonsList';
+import OngoingLessons from './OngoingLessons';
+import * as S from './Home.styled';
 
 const Home = ({ children }) => (
   <>

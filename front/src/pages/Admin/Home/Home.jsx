@@ -1,4 +1,3 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Button,
   Checkbox,
@@ -10,17 +9,20 @@ import {
   Table,
   Typography,
 } from 'antd';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory, useLocation } from 'react-router-dom';
 import { useQuery } from 'react-query';
+import { useHistory, useLocation } from 'react-router-dom';
+
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
 import {
   appointTeacher,
   getUsers,
   removeTeacher,
 } from '@sb-ui/utils/api/v1/admin';
-import { getQueryPage } from '@sb-ui/utils/utils';
 import { ADMIN_USERS_BASE_KEY } from '@sb-ui/utils/queries';
+import { getQueryPage } from '@sb-ui/utils/utils';
+
 import { MainDiv, TableHeader, TitleHeader } from './Home.styled';
 
 const messageKey = 'teacherStateLoading';

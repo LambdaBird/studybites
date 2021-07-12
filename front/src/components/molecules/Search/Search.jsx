@@ -2,8 +2,8 @@ import { useContext } from 'react';
 
 import MobileContext from '@sb-ui/contexts/MobileContext';
 
-import SearchMobile from './Search.mobile';
 import SearchDesktop from './Search.desktop';
+import SearchMobile from './Search.mobile';
 
 const Search = (props) => {
   const isMobile = useContext(MobileContext);
