@@ -17,11 +17,13 @@ export default {
     },
     ongoing_lessons: {
       title: 'Ongoing lessons',
+      not_found: 'No ongoing lessons yet',
       view_all_lessons: 'View all my lessons',
       continue_button: 'Continue',
     },
     finished_lessons: {
       title: 'Finished lessons',
+      not_found: 'No finished lessons yet',
     },
   },
   lesson: {

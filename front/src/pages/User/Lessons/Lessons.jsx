@@ -17,6 +17,7 @@ const Lessons = () => {
     <S.MainDiv>
       <LessonsList
         title={t('home.ongoing_lessons.title')}
+        notFound={t('home.ongoing_lessons.not_found')}
         query={{
           key: USER_ENROLLED_LESSONS_BASE_KEY,
           func: getEnrolledLessons,
@@ -24,6 +25,7 @@ const Lessons = () => {
       />
       <LessonsList
         title={t('home.finished_lessons.title')}
+        notFound={t('home.finished_lessons.not_found')}
         query={{
           key: USER_ENROLLED_LESSONS_FINISHED_BASE_KEY,
           func: getEnrolledLessonsFinished,

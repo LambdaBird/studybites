@@ -50,6 +50,6 @@ export const LessonCol = styled(Col).attrs(() => ({
 
 export const EmptyContainer = styled(Empty)`
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   width: 100%;
 `;
