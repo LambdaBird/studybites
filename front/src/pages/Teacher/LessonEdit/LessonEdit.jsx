@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { useEffect, useRef, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useMutation, useQuery } from 'react-query';
@@ -216,6 +215,14 @@ const LessonEdit = () => {
           };
         }),
       };
+
+      if (!name) {
+        message.error({
+          content: t('editor_js.message.error_lesson_name'),
+          duration: 2,
+        });
+        return;
+      }
       // eslint-disable-next-line no-unused-expressions
       isEditLesson ? updateLesson(params) : mutate(params);
     } catch (e) {
