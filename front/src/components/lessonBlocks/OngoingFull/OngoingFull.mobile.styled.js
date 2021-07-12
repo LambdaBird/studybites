@@ -1,5 +1,5 @@
+import { Avatar, Button, Progress,Row, Typography } from 'antd';
 import styled from 'styled-components';
-import { Avatar, Row, Typography, Button, Progress } from 'antd';
 
 import {
   DESCRIPTION_COLOR,

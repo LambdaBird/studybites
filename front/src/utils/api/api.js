@@ -2,6 +2,7 @@
 /* eslint-disable no-underscore-dangle */
 
 import axios from 'axios';
+
 import {
   clearJWT,
   getJWTAccessToken,

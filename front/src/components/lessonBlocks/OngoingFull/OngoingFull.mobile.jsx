@@ -1,7 +1,9 @@
-import PropTypes from 'prop-types';
 import { Row } from 'antd';
+import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
+
 import { useLesson } from './useLesson';
 import * as S from './OngoingFull.mobile.styled';
 

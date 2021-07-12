@@ -1,5 +1,6 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
+
 import en from './resources/lang/en/index';
 import ru from './resources/lang/ru/index';
 

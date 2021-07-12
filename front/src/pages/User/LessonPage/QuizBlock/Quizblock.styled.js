@@ -1,5 +1,5 @@
-import styled from 'styled-components';
 import { Checkbox, Col, Row } from 'antd';
+import styled from 'styled-components';
 
 export const BlockWrapperWhite = styled(Row)`
   width: 100%;

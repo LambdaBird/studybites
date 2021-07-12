@@ -1,13 +1,15 @@
-import { useMemo } from 'react';
 import { Alert, Form, Input } from 'antd';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { usePasswordInput } from '@sb-ui/hooks/usePasswordInput';
+
+import PasswordStrengthIndicator from '@sb-ui/components/atoms/PasswordStrengthIndicator';
 import { useAuthentication } from '@sb-ui/hooks/useAuthentication';
+import { usePasswordInput } from '@sb-ui/hooks/usePasswordInput';
 import { postSignUp } from '@sb-ui/utils/api/v1/user';
 import { SIGN_IN } from '@sb-ui/utils/paths';
-import PasswordStrengthIndicator from '@sb-ui/components/atoms/PasswordStrengthIndicator';
-import { DivAlignCenter, SubmitButton, LinkButton } from './SignUpForm.styled';
+
+import { DivAlignCenter, LinkButton,SubmitButton } from './SignUpForm.styled';
 
 const SignUpForm = () => {
   const { t } = useTranslation('sign_up');

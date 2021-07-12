@@ -1,12 +1,14 @@
-import { useState } from 'react';
 import { Skeleton } from 'antd';
-import { useQuery } from 'react-query';
 import PropTypes from 'prop-types';
+import { useState } from 'react';
+import { useQuery } from 'react-query';
+
 import OngoingFullLesson from '@sb-ui/components/lessonBlocks/OngoingFull';
 import emptyImg from '@sb-ui/resources/img/empty.svg';
 import { skeletonArray } from '@sb-ui/utils/utils';
-import * as S from './LessonsList.styled';
+
 import { PAGE_SIZE } from './constants';
+import * as S from './LessonsList.styled';
 
 const LessonsList = ({ title, notFound, query }) => {
   const { key: queryKey, func: queryFunc } = query;

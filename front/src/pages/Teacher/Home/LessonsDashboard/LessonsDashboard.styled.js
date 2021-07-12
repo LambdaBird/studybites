@@ -1,5 +1,5 @@
+import { Col, Pagination, Row, Select,Typography } from 'antd';
 import styled from 'styled-components';
-import { Row, Col, Pagination, Typography, Select } from 'antd';
 
 const { Title } = Typography;
 

@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
 
-import { verifyAnswers } from '@sb-ui/pages/User/LessonPage/QuizBlock/utils';
 import GroupBlock from '@sb-ui/pages/User/LessonPage/GroupBlock';
-import Question from './Question';
-import AnswersResult from './AnswerResult';
+import { verifyAnswers } from '@sb-ui/pages/User/LessonPage/QuizBlock/utils';
+
 import Answer from './Answer';
+import AnswersResult from './AnswerResult';
+import Question from './Question';
 
 const QuizBlockResult = ({ data, correctAnswer }) => {
   const { answers, question } = data;

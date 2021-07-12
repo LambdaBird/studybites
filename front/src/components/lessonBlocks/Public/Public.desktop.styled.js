@@ -1,5 +1,6 @@
-import styled from 'styled-components';
 import { Avatar, Col, Row, Typography } from 'antd';
+import styled from 'styled-components';
+
 import {
   DESCRIPTION_COLOR,
   VOLCANO_2,

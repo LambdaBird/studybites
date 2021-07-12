@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
+
 import * as S from './Search.desktop.styled';
 
 const SearchDesktop = ({ setSearchText, className = '' }) => {

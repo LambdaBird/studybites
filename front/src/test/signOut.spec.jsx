@@ -1,12 +1,15 @@
-import { render, fireEvent, screen, waitFor } from '@testing-library/react';
 import reactRouterDom from 'react-router-dom';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+
 import { HOME, SIGN_IN } from '@sb-ui/utils/paths';
-import { postSignIn } from '../utils/api/v1/user';
-import { setJWT, getJWTAccessToken, clearJWT } from '../utils/jwt';
+
 import '../i18n';
 import './mocks/matchMedia';
-import SignIn from '../pages/SignIn';
+
 import Header from '../components/molecules/Header';
+import SignIn from '../pages/SignIn';
+import { postSignIn } from '../utils/api/v1/user';
+import { clearJWT,getJWTAccessToken, setJWT } from '../utils/jwt';
 
 jest.mock('react-router-dom');
 jest.mock('../utils/jwt');

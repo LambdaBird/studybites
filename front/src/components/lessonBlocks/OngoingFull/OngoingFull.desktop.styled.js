@@ -1,12 +1,13 @@
-import styled from 'styled-components';
 import { Avatar, Col, Progress, Row, Typography } from 'antd';
-import variables from '@sb-ui/theme/variables';
+import styled from 'styled-components';
+
 import {
   DESCRIPTION_COLOR,
   VOLCANO_2,
   VOLCANO_6,
   WHITE_COLOR,
 } from '@sb-ui/resources/styles/Global.styled';
+import variables from '@sb-ui/theme/variables';
 
 const { Paragraph, Title } = Typography;
 

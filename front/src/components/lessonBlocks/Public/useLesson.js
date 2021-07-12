@@ -1,5 +1,6 @@
-import { useHistory, useLocation } from 'react-router-dom';
 import { useCallback, useMemo } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
+
 import { LESSON_PAGE, USER_ENROLL } from '@sb-ui/utils/paths';
 
 export const useLesson = ({ id, firstName, lastName }) => {

@@ -1,10 +1,11 @@
-import { useMemo } from 'react';
 import { Typography } from 'antd';
 import PropTypes from 'prop-types';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-
 import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons';
+
 import ColumnDisabledCheckbox from '@sb-ui/components/atoms/ColumnDisabledCheckbox';
+
 import * as S from './AnswerResult.styled';
 
 const { Text } = Typography;

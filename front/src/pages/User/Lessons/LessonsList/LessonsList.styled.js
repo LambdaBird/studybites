@@ -1,5 +1,6 @@
 import { Col, Empty, Pagination, Row, Typography } from 'antd';
 import styled from 'styled-components';
+
 import Search from '@sb-ui/components/molecules/Search';
 
 const { Title } = Typography;

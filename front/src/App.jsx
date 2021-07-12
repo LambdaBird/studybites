@@ -1,8 +1,10 @@
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
+
 import MobileContext from '@sb-ui/contexts/MobileContext';
 import useMobile from '@sb-ui/hooks/useMobile';
 import Routes from '@sb-ui/routes/Routes';
+
 import { queryClient } from './query';
 import { GlobalStyles } from './resources/styles/Global.styled';
 

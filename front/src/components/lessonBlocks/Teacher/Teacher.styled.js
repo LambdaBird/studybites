@@ -1,5 +1,6 @@
+import { Badge, Button, Col, Row, Typography } from 'antd';
 import styled from 'styled-components';
-import { Row, Button, Col, Badge, Typography } from 'antd';
+
 import variables from '@sb-ui/theme/variables';
 
 const { Text, Title } = Typography;

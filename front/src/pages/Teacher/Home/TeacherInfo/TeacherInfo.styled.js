@@ -1,5 +1,5 @@
+import { Avatar,Col, Divider, Row, Statistic } from 'antd';
 import styled from 'styled-components';
-import { Row, Col, Statistic, Divider, Avatar } from 'antd';
 
 export const Wrapper = styled(Row)`
   padding: 16px 0;

@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types';
 import { Col, Typography } from 'antd';
+import PropTypes from 'prop-types';
 
 const { Text } = Typography;
 

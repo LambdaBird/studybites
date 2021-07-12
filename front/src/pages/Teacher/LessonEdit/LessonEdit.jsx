@@ -1,37 +1,37 @@
-import { useEffect, useRef, useState } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
-import { useMutation, useQuery } from 'react-query';
-import { Button, Col, Input, Row, Typography, message } from 'antd';
+import { Button, Col, Input, message,Row, Typography } from 'antd';
+import DragDrop from 'editorjs-drag-drop';
+import Table from 'editorjs-table';
 import hash from 'object-hash';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useMutation, useQuery } from 'react-query';
+import { useHistory, useParams } from 'react-router-dom';
+import { RedoOutlined, SaveOutlined, UndoOutlined } from '@ant-design/icons';
+import Delimiter from '@editorjs/delimiter';
 import EditorJS from '@editorjs/editorjs';
 import Embed from '@editorjs/embed';
 import HeaderTool from '@editorjs/header';
 import List from '@editorjs/list';
-import Quote from '@editorjs/quote';
-import Delimiter from '@editorjs/delimiter';
 import Marker from '@editorjs/marker';
-import Table from 'editorjs-table';
-import DragDrop from 'editorjs-drag-drop';
+import Quote from '@editorjs/quote';
 import SimpleImage from '@editorjs/simple-image';
-import { RedoOutlined, SaveOutlined, UndoOutlined } from '@ant-design/icons';
-import Header from '@sb-ui/components/molecules/Header';
-import {
-  createLesson,
-  getLesson,
-  putLesson,
-} from '@sb-ui/utils/api/v1/teacher';
-import { Statuses } from '@sb-ui/pages/Teacher/Home/LessonsDashboard/constants';
-import { LESSONS_EDIT } from '@sb-ui/utils/paths';
-import Next from '@sb-ui/utils/editorjs/next-plugin';
-import Quiz from '@sb-ui/utils/editorjs/quiz-plugin';
-import Undo from '@sb-ui/utils/editorjs/undo-plugin';
 
+import Header from '@sb-ui/components/molecules/Header';
+import { Statuses } from '@sb-ui/pages/Teacher/Home/LessonsDashboard/constants';
 import {
   prepareApiData,
   prepareEditorData,
   QUIZ_TYPE,
 } from '@sb-ui/pages/Teacher/LessonEdit/utils';
+import {
+  createLesson,
+  getLesson,
+  putLesson,
+} from '@sb-ui/utils/api/v1/teacher';
+import Next from '@sb-ui/utils/editorjs/next-plugin';
+import Quiz from '@sb-ui/utils/editorjs/quiz-plugin';
+import Undo from '@sb-ui/utils/editorjs/undo-plugin';
+import { LESSONS_EDIT } from '@sb-ui/utils/paths';
 
 import * as S from './LessonEdit.styled';
 

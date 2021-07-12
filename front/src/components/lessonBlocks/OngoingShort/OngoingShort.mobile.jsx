@@ -2,8 +2,10 @@ import { Button, Col, Row, Typography } from 'antd';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { LESSON_PAGE } from '@sb-ui/utils/paths';
+
 import lessonImg from '@sb-ui/resources/img/lesson.svg';
+import { LESSON_PAGE } from '@sb-ui/utils/paths';
+
 import * as S from './OngoingShort.styled';
 
 const { Title } = Typography;

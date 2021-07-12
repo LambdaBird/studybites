@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
-import { Container, SignUpFormContainer, StyledTitle } from './SignUp.styled';
+
 import SignUpForm from './SignUpForm';
+import { Container, SignUpFormContainer, StyledTitle } from './SignUp.styled';
 
 const SignUp = () => {
   const { t } = useTranslation('sign_up');

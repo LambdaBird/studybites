@@ -1,7 +1,9 @@
-import { useTranslation } from 'react-i18next';
 import { Space } from 'antd';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
+
 import variables from '@sb-ui/theme/variables';
+
 import * as S from './AddCard.styled';
 
 const AddCard = ({ onClick }) => {

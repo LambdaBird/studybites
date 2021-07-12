@@ -1,12 +1,14 @@
-import { useCallback, useEffect, useMemo } from 'react';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
-import { useQuery } from 'react-query';
-import { useTranslation } from 'react-i18next';
 import { Col, Divider, Modal, Rate, Typography } from 'antd';
+import { useCallback, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useQuery } from 'react-query';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
+
+import lessonImg from '@sb-ui/resources/img/lesson.svg';
 import { getEnrolledLesson, postEnroll } from '@sb-ui/utils/api/v1/student';
 import { LESSON_PAGE, USER_HOME } from '@sb-ui/utils/paths';
 import { USER_LESSON_MODAL_BASE_KEY } from '@sb-ui/utils/queries';
-import lessonImg from '@sb-ui/resources/img/lesson.svg';
+
 import * as S from './EnrollModal.desktop.styled';
 
 const { Title, Text } = Typography;

@@ -1,5 +1,6 @@
-import styled from 'styled-components';
 import { Avatar, Empty, Row, Typography } from 'antd';
+import styled from 'styled-components';
+
 import { VOLCANO_2, VOLCANO_6 } from '@sb-ui/resources/styles/Global.styled';
 
 const { Title, Text } = Typography;

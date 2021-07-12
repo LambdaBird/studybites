@@ -1,4 +1,5 @@
 import ShallowRenderer from 'react-test-renderer/shallow';
+
 import PasswordStrengthIndicator from './PasswordStrengthIndicator';
 
 describe('Test PasswordStrengthIndicator', () => {
