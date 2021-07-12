@@ -32,22 +32,18 @@ const LessonsList = ({ title, notFound, query }) => {
   return (
     <S.Wrapper>
       <S.LessonsHeader>
-        <S.OpenLessonsTitle level={4}>{title}</S.OpenLessonsTitle>
-        <S.StyledSearch
-          searchText={searchText}
-          setSearchText={setSearchText}
-          placement="bottomLeft"
-        />
+        <S.OpenLessonsTitle>{title}</S.OpenLessonsTitle>
+        <S.StyledSearch searchText={searchText} setSearchText={setSearchText} />
       </S.LessonsHeader>
-      <S.LessonsRow gutter={[32, 32]}>
+      <S.LessonsRow>
         {isLoading
           ? skeletonArray(PAGE_SIZE).map((el) => (
-              <S.LessonCol key={el.id} lg={{ span: 12 }} md={{ span: 24 }}>
+              <S.LessonCol key={el.id}>
                 <Skeleton avatar />
               </S.LessonCol>
             ))
           : lessons?.map((lesson) => (
-              <S.LessonCol key={lesson.id} lg={{ span: 12 }} md={{ span: 24 }}>
+              <S.LessonCol key={lesson.id}>
                 <OngoingFullLesson lesson={lesson} />
               </S.LessonCol>
             ))}
@@ -61,7 +57,6 @@ const LessonsList = ({ title, notFound, query }) => {
           total={total}
           pageSize={PAGE_SIZE}
           onChange={setCurrentPage}
-          showSizeChanger={false}
         />
       )}
     </S.Wrapper>

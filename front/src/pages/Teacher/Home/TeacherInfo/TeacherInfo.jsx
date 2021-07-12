@@ -45,20 +45,20 @@ const TeacherInfo = () => {
   );
 
   const firstNameLetter = useMemo(
-    () => user.firstName[0] || user.lastName[0],
+    () => user.firstName?.[0] || user.lastName?.[0],
     [user.firstName, user.lastName],
   );
 
   return (
-    <S.Wrapper justify="center" align="center">
+    <S.Wrapper>
       <S.AvatarCol>
-        <S.StyledAvatar size={64}>{firstNameLetter}</S.StyledAvatar>
+        <S.StyledAvatar>{firstNameLetter}</S.StyledAvatar>
       </S.AvatarCol>
-      <S.TextCol span={14}>
+      <S.TextCol>
         <Title level={4}>{t('info.greeting', { fullName })}</Title>
         <Text type="secondary">Your awesome description</Text>
       </S.TextCol>
-      <S.StatisticCol span={8}>
+      <S.StatisticCol>
         {statisticColumns.map((column) => (
           <React.Fragment key={column.key}>
             <S.StatisticCell
@@ -67,7 +67,7 @@ const TeacherInfo = () => {
               suffix={column.suffix}
               valueStyle={{ textAlign: 'right' }}
             />
-            <S.StatisticDivider type="vertical" />
+            <S.StatisticDivider />
           </React.Fragment>
         ))}
       </S.StatisticCol>

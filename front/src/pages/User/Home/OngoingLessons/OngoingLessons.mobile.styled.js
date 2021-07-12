@@ -3,13 +3,18 @@ import styled from 'styled-components';
 
 const { Title } = Typography;
 
-export const Header = styled(Row)`
+export const Header = styled(Row).attrs({
+  justify: 'space-between',
+  align: 'middle',
+})`
   padding: 1rem 0;
   margin-bottom: 1rem;
   width: 100%;
 `;
 
-export const HeaderTitle = styled(Title)`
+export const HeaderTitle = styled(Title).attrs({
+  level: 4,
+})`
   font-weight: 400 !important;
   font-size: 1.25rem !important;
   margin-bottom: 0 !important;

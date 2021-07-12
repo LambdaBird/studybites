@@ -98,7 +98,7 @@ const EnrollModalMobile = () => {
   };
 
   return (
-    <S.Main size="large" wrap={false}>
+    <S.Main>
       <S.ImageBlock>
         <S.Image src={lessonImage} alt="Lesson" />
         <S.AuthorContainer>
@@ -107,7 +107,7 @@ const EnrollModalMobile = () => {
         </S.AuthorContainer>
       </S.ImageBlock>
       <Row>
-        <S.Title level={3}>{name}</S.Title>
+        <S.Title>{name}</S.Title>
       </Row>
       <Row>
         <S.Description>{description}</S.Description>
@@ -148,7 +148,7 @@ const EnrollModalMobile = () => {
       )}
 
       <S.EnrollRow>
-        <S.StartButton onClick={onClickStartEnroll} size="large" type="primary">
+        <S.StartButton onClick={onClickStartEnroll}>
           {t('home.open_lessons.start_button')}
         </S.StartButton>
       </S.EnrollRow>

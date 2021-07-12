@@ -17,26 +17,34 @@ export const LessonsHeader = styled(Row)`
   }
 `;
 
-export const OpenLessonsTitle = styled(Title)`
+export const OpenLessonsTitle = styled(Title).attrs({
+  level: 4,
+})`
   margin-bottom: 0 !important;
   font-weight: 400 !important;
   font-size: 1.25rem !important;
 `;
 
-export const LessonsRow = styled(Row)`
+export const LessonsRow = styled(Row).attrs({
+  gutter: [32, 32],
+})`
   @media (max-width: 767px) {
     margin: 0 !important;
   }
 `;
 
-export const StyledPagination = styled(Pagination)`
+export const StyledPagination = styled(Pagination).attrs({
+  showSizeChanger: false,
+})`
   margin-top: 1rem;
   width: 100%;
   display: flex;
   justify-content: flex-end;
 `;
 
-export const StyledSearch = styled(Search)``;
+export const StyledSearch = styled(Search).attrs({
+  placement: 'bottomLeft',
+})``;
 
 export const LessonCol = styled(Col).attrs(() => ({
   lg: { span: 12 },

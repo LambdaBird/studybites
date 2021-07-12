@@ -16,10 +16,6 @@ export const LinkButton = styled(Button).attrs({ type: 'link', size: 'small' })`
   }
 `;
 
-export const FormItemBottomEmpty = styled(Form.Item)`
-  margin-bottom: 0;
-`;
-
 export const FormItemAlignEnd = styled(Form.Item)`
   text-align: end;
 `;

@@ -9,7 +9,7 @@ import { usePasswordInput } from '@sb-ui/hooks/usePasswordInput';
 import { postSignUp } from '@sb-ui/utils/api/v1/user';
 import { SIGN_IN } from '@sb-ui/utils/paths';
 
-import { DivAlignCenter, LinkButton,SubmitButton } from './SignUpForm.styled';
+import * as S from './SignUpForm.styled';
 
 const SignUpForm = () => {
   const { t } = useTranslation('sign_up');
@@ -97,14 +97,12 @@ const SignUpForm = () => {
         </div>
       </Form.Item>
 
-      <SubmitButton type="primary" loading={loading} htmlType="submit">
-        {t('button')}
-      </SubmitButton>
-      <DivAlignCenter>
-        <LinkButton onClick={onClickHaveAccount}>
+      <S.SubmitButton loading={loading}>{t('button')}</S.SubmitButton>
+      <S.DivAlignCenter>
+        <S.LinkButton onClick={onClickHaveAccount}>
           {t('have_account')}
-        </LinkButton>
-      </DivAlignCenter>
+        </S.LinkButton>
+      </S.DivAlignCenter>
     </Form>
   );
 };

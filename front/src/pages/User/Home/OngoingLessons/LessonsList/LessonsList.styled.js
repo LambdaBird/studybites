@@ -13,6 +13,9 @@ export const LessonsMainEmpty = styled.div`
   width: 100%;
 `;
 
-export const LessonsColumn = styled(Col)`
+export const LessonsColumn = styled(Col).attrs({
+  xl: { span: 8 },
+  lg: { span: 24 },
+})`
   width: 100%;
 `;

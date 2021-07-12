@@ -91,7 +91,7 @@ const EnrollModalDesktop = () => {
             <S.AuthorName>{author}</S.AuthorName>
           </S.AuthorContainer>
         </Col>
-        <S.NameColumn span={24}>
+        <S.NameColumn>
           <Title level={3}>{name}</Title>
         </S.NameColumn>
         <Col span={24}>

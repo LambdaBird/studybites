@@ -35,7 +35,9 @@ export const RightColumn = styled(Row)`
   width: 50%;
 `;
 
-export const NameColumn = styled(Col)`
+export const NameColumn = styled(Col).attrs({
+  span: 24,
+})`
   margin-top: 1rem;
 `;
 
