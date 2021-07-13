@@ -5,6 +5,7 @@ import { LessonEdit,TeacherHome } from '@sb-ui/pages/Teacher';
 import {
   EnrollModalDesktop,
   EnrollModalMobile,
+  LearnPage,
   LessonPage,
   UserHome,
   UserLessons,
@@ -31,6 +32,7 @@ export const getPrivateRoutes = ({ isMobile }) => [
     exact: true,
   },
   { component: LessonPage, path: paths.LESSON_PAGE, exact: true },
+  { component: LearnPage, path: paths.LEARN_PAGE, exact: true },
   {
     component: UserLessons,
     path: paths.USER_LESSONS,

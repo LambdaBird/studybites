@@ -10,6 +10,8 @@ export const BLOCKS_TYPE = {
   QUOTE: 'quote',
   DELIMITER: 'delimiter',
   TABLE: 'table',
+  FINISH: 'finish',
+  NEXT: 'next',
 };
 
 export const BlockContentType = PropTypes.shape({

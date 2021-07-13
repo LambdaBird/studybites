@@ -7,7 +7,7 @@ const HtmlToReactParser = HtmlToReact.Parser;
 const Paragraph = ({ content }) => {
   const htmlInput = content?.data?.text;
   const htmlToReactParser = new HtmlToReactParser();
-  return htmlToReactParser.parse(htmlInput);
+  return <p>{htmlToReactParser.parse(htmlInput)}</p>;
 };
 
 Paragraph.propTypes = {
