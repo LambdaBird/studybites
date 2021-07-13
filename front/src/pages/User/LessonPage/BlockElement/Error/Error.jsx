@@ -1,12 +1,12 @@
 import { Typography } from 'antd';
-import { useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 import { BlockIdType } from '../types';
 
 const { Text } = Typography;
 
 const Error = ({ blockId }) => {
-  const { t } = useLocation();
+  const { t } = useTranslation();
   return (
     <Text key={blockId} type="danger">
       {t('errors.parse_block')}
