@@ -1,4 +1,4 @@
-import { Button, Col, Input, message,Row, Typography } from 'antd';
+import { Button, Col, Input, message, Row, Typography } from 'antd';
 import DragDrop from 'editorjs-drag-drop';
 import Table from 'editorjs-table';
 import hash from 'object-hash';
@@ -49,6 +49,7 @@ const LessonEdit = () => {
   const [description, setDescription] = useState('');
   const [editorReady, setEditorReady] = useState(false);
   const editorJSref = useRef(null);
+  const editorContainerRef = useRef(null);
   const undoPluginRef = useRef(null);
 
   const inputTitle = useRef(null);
@@ -69,17 +70,6 @@ const LessonEdit = () => {
   useEffect(() => {
     editorJSref.current = new EditorJS({
       holder: 'editorjs',
-      onReady: () => {
-        // eslint-disable-next-line no-new
-        undoPluginRef.current = new Undo({
-          editor: editorJSref.current,
-          redoButton: 'redo-button',
-          undoButton: 'undo-button',
-        });
-        // eslint-disable-next-line no-new
-        new DragDrop(editorJSref.current);
-        setEditorReady(true);
-      },
       tools: {
         image: SimpleImage,
         next: Next,
@@ -119,7 +109,23 @@ const LessonEdit = () => {
       },
       plugins: [],
     });
+
+    editorJSref.current.isReady.then(() => {
+      setEditorReady(true);
+    });
   }, [t]);
+
+  useEffect(() => {
+    if (editorReady && editorContainerRef.current) {
+      undoPluginRef.current = new Undo({
+        editor: editorJSref.current,
+        redoButton: 'redo-button',
+        undoButton: 'undo-button',
+      });
+      // eslint-disable-next-line no-new
+      new DragDrop(editorJSref.current);
+    }
+  }, [editorReady, editorContainerRef]);
 
   useEffect(() => {
     if (inputTitle.current && !isLoading && !lessonData?.lesson.name) {
@@ -267,7 +273,7 @@ const LessonEdit = () => {
                 onChange={handleInputTitle}
                 onKeyDown={handleNextLine}
               />
-              <div id="editorjs" />
+              <div id="editorjs" ref={editorContainerRef} />
             </S.EditorWrapper>
           </S.LeftCol>
           <S.RightCol sm={12} md={10} lg={8} xl={6}>
