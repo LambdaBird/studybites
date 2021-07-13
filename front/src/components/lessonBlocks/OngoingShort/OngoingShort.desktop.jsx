@@ -1,8 +1,8 @@
 import { Button, Col, Row, Typography } from 'antd';
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 
+import { LessonType } from '@sb-ui/components/lessonBlocks/types';
 import lessonImg from '@sb-ui/resources/img/lesson.svg';
 import { LESSON_PAGE } from '@sb-ui/utils/paths';
 
@@ -49,12 +49,7 @@ const OngoingShortDesktop = ({ lesson }) => {
 };
 
 OngoingShortDesktop.propTypes = {
-  lesson: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    percentage: PropTypes.number.isRequired,
-  }).isRequired,
+  lesson: LessonType,
 };
 
 export default OngoingShortDesktop;

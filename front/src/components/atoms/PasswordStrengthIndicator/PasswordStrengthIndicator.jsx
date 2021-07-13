@@ -1,7 +1,6 @@
-import PropTypes from 'prop-types';
-
 import { getPasswordStrength } from '@sb-ui/utils';
 
+import { PasswordStrengthIndicatorPropTypes } from './types';
 import { IndicatorDiv, LineDiv } from './PasswordStrengthIndicator.styled';
 
 const PasswordStrengthIndicator = ({ value }) => {
@@ -13,8 +12,6 @@ const PasswordStrengthIndicator = ({ value }) => {
   );
 };
 
-PasswordStrengthIndicator.propTypes = {
-  value: PropTypes.string.isRequired,
-};
+PasswordStrengthIndicator.propTypes = PasswordStrengthIndicatorPropTypes;
 
 export default PasswordStrengthIndicator;

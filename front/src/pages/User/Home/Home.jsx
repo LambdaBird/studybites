@@ -1,7 +1,6 @@
-import PropTypes from 'prop-types';
-
 import LessonsList from './LessonsList';
 import OngoingLessons from './OngoingLessons';
+import { HomePropTypes } from './types';
 import * as S from './Home.styled';
 
 const Home = ({ children }) => (
@@ -14,8 +13,6 @@ const Home = ({ children }) => (
   </>
 );
 
-Home.propTypes = {
-  children: PropTypes.node,
-};
+Home.propTypes = HomePropTypes;
 
 export default Home;

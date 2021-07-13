@@ -1,8 +1,7 @@
-import PropTypes from 'prop-types';
-
 import TeacherLesson from '@sb-ui/components/lessonBlocks/Teacher';
 
 import AddCard from '../AddCard';
+import { LessonsListPropTypes } from '../types';
 
 import * as S from '../LessonsDashboard.styled';
 
@@ -27,20 +26,10 @@ const LessonsList = ({ lessons, onCreateLesson, isAddNewShown }) => (
   </>
 );
 
-LessonsList.propTypes = {
-  lessons: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      status: PropTypes.string.isRequired,
-      id: PropTypes.number.isRequired,
-    }),
-  ),
-  onCreateLesson: PropTypes.func.isRequired,
-  isAddNewShown: PropTypes.bool.isRequired,
-};
-
 LessonsList.defaultProps = {
   lessons: [],
 };
+
+LessonsList.propTypes = LessonsListPropTypes;
 
 export default LessonsList;
