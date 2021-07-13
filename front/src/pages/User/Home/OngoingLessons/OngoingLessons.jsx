@@ -23,7 +23,7 @@ const OngoingLessons = () => {
   );
   const { lessons } = responseData || {};
 
-  if (!isLoading && !lessons?.length) return null;
+  if (!lessons?.length) return null;
   return (
     <>
       {isMobile ? (

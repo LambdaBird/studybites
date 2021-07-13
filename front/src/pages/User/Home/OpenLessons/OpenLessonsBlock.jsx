@@ -6,7 +6,7 @@ import { PAGE_SIZE } from '@sb-ui/pages/User/Lessons/LessonsList/constants';
 import * as S from '@sb-ui/pages/User/Lessons/LessonsList/LessonsList.styled';
 import { skeletonArray } from '@sb-ui/utils/utils';
 
-const LessonsListBlock = ({ isLoading, data }) => {
+const OpenLessonsBlock = ({ isLoading, data }) => {
   if (isLoading) {
     return (
       <>
@@ -30,9 +30,9 @@ const LessonsListBlock = ({ isLoading, data }) => {
   );
 };
 
-LessonsListBlock.propTypes = {
+OpenLessonsBlock.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   data: PropTypes.arrayOf(PropTypes.object),
 };
 
-export default LessonsListBlock;
+export default OpenLessonsBlock;
