@@ -69,16 +69,10 @@ const LessonsList = () => {
   return (
     <S.Wrapper>
       <S.LessonsHeader>
-        <S.OpenLessonsTitle level={4}>
-          {t('home.open_lessons.title')}
-        </S.OpenLessonsTitle>
-        <S.StyledSearch
-          searchText={searchText}
-          setSearchText={setSearchText}
-          placement="bottomLeft"
-        />
+        <S.OpenLessonsTitle>{t('home.open_lessons.title')}</S.OpenLessonsTitle>
+        <S.StyledSearch searchText={searchText} setSearchText={setSearchText} />
       </S.LessonsHeader>
-      <S.LessonsRow gutter={[32, 32]}>
+      <S.LessonsRow>
         <LessonsListBlock isLoading={isLoading} data={data} />
         {isEmpty && (
           <S.EmptyContainer
@@ -93,7 +87,6 @@ const LessonsList = () => {
           total={total}
           pageSize={PAGE_SIZE}
           onChange={handlePageChange}
-          showSizeChanger={false}
         />
       )}
     </S.Wrapper>

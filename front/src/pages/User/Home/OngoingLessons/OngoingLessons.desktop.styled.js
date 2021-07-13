@@ -3,7 +3,10 @@ import styled from 'styled-components';
 
 const { Title } = Typography;
 
-export const LessonsHeader = styled(Row)`
+export const LessonsHeader = styled(Row).attrs({
+  justify: 'space-between',
+  align: 'middle',
+})`
   margin-bottom: 1rem;
   width: 100%;
 `;

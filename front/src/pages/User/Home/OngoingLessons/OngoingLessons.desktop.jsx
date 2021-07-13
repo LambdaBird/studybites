@@ -12,7 +12,7 @@ const OngoingLessonsDesktop = (props) => {
 
   return (
     <S.Wrapper>
-      <S.LessonsHeader justify="space-between" align="middle">
+      <S.LessonsHeader>
         <Col>
           <Row justify="center" align="middle">
             <S.StyledTitle level={4}>

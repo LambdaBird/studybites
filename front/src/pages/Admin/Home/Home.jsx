@@ -23,7 +23,7 @@ import {
 import { ADMIN_USERS_BASE_KEY } from '@sb-ui/utils/queries';
 import { getQueryPage } from '@sb-ui/utils/utils';
 
-import { MainDiv, TableHeader, TitleHeader } from './Home.styled';
+import * as S from './Home.styled';
 
 const messageKey = 'teacherStateLoading';
 
@@ -171,12 +171,12 @@ const Home = () => {
   );
 
   return (
-    <MainDiv>
-      <TableHeader justify="space-between" align="middle">
+    <S.MainDiv>
+      <S.TableHeader>
         <Col>
           <Row>
             <Space size="large">
-              <TitleHeader level={3}>{t('home.title')}</TitleHeader>
+              <S.TitleHeader>{t('home.title')}</S.TitleHeader>
               <DebouncedSearch
                 delay={500}
                 placeholder={t('home.search.placeholder')}
@@ -189,7 +189,7 @@ const Home = () => {
         <Col>
           <Button disabled>{t('home.buttons.add_user')}</Button>
         </Col>
-      </TableHeader>
+      </S.TableHeader>
       <Table
         columns={columns}
         dataSource={data}
@@ -213,7 +213,7 @@ const Home = () => {
           ),
         }}
       />
-    </MainDiv>
+    </S.MainDiv>
   );
 };
 

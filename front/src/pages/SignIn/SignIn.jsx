@@ -1,18 +1,18 @@
 import { useTranslation } from 'react-i18next';
 
 import SignInForm from './SignInForm';
-import { Container, SignInFormContainer,StyledTitle } from './SignIn.styled';
+import * as S from './SignIn.styled';
 
 const SignIn = () => {
   const { t } = useTranslation('sign_in');
 
   return (
-    <Container>
-      <StyledTitle level={1}>{t('title')}</StyledTitle>
-      <SignInFormContainer>
+    <S.Container>
+      <S.StyledTitle>{t('title')}</S.StyledTitle>
+      <S.SignInFormContainer>
         <SignInForm />
-      </SignInFormContainer>
-    </Container>
+      </S.SignInFormContainer>
+    </S.Container>
   );
 };
 

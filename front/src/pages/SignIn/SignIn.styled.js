@@ -3,7 +3,9 @@ import styled from 'styled-components';
 
 const { Title } = Typography;
 
-export const StyledTitle = styled(Title)`
+export const StyledTitle = styled(Title).attrs({
+  level: 1,
+})`
   margin-bottom: 2rem !important;
 `;
 

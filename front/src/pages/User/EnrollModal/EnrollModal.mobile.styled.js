@@ -1,4 +1,4 @@
-import { Avatar, Button, Row, Space,Typography } from 'antd';
+import { Avatar, Button, Row, Space, Typography } from 'antd';
 import styled from 'styled-components';
 
 import {
@@ -10,7 +10,10 @@ import {
 
 const { Text } = Typography;
 
-export const Main = styled(Row)`
+export const Main = styled(Row).attrs({
+  size: 'large',
+  wrap: false,
+})`
   height: 100vh;
   background-color: ${WHITE_COLOR};
   padding: 1rem;
@@ -23,7 +26,9 @@ export const Image = styled.img`
   object-fit: cover;
 `;
 
-export const Title = styled(Typography.Title)`
+export const Title = styled(Typography.Title).attrs({
+  level: 3,
+})`
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   font-size: 20px !important;
@@ -78,7 +83,10 @@ export const ReviewHeader = styled(Space)`
   margin-top: 1rem;
 `;
 
-export const StartButton = styled(Button)`
+export const StartButton = styled(Button).attrs({
+  size: 'large',
+  type: 'primary',
+})`
   margin-top: auto;
   width: 100%;
 `;

@@ -1,4 +1,4 @@
-import { Alert,Button, Row, Select, Skeleton, Space } from 'antd';
+import { Alert, Button, Row, Select, Skeleton, Space } from 'antd';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
@@ -50,11 +50,9 @@ const LessonsDashboard = () => {
 
   return (
     <Row gutter={[32, 32]}>
-      <S.DashboardControls justify="space-between" align="middle">
+      <S.DashboardControls>
         <Space size="middle">
-          <S.DashboardTitle level={4}>
-            {t('lesson_dashboard.title')}
-          </S.DashboardTitle>
+          <S.DashboardTitle>{t('lesson_dashboard.title')}</S.DashboardTitle>
           <DebouncedSearch
             delay={500}
             placeholder={t('lesson_dashboard.search.placeholder')}
@@ -83,7 +81,7 @@ const LessonsDashboard = () => {
 
       {isLoading ? (
         skeletonArray(pageLimit).map((el) => (
-          <S.CardCol key={el.id} span={12}>
+          <S.CardCol key={el.id}>
             <Skeleton loading active avatar paragraph={{ rows: 2 }} />
           </S.CardCol>
         ))
@@ -101,8 +99,6 @@ const LessonsDashboard = () => {
             total={total}
             pageSize={pageLimit}
             onChange={setCurrentPage}
-            showSizeChanger={false}
-            size="small"
           />
         </S.PaginationWrapper>
       ) : null}
