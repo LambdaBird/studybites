@@ -8,19 +8,7 @@ import Paragraph from './Paragraph';
 import QuizBlockResult from './QuizBlockResult';
 import Quote from './Quote';
 import Table from './Table';
-import { BlockElementProps } from './types';
-
-const BLOCKS_TYPE = {
-  PARAGRAPH: 'paragraph',
-  QUIZ: 'quiz',
-  EMBED: 'embed',
-  IMAGE: 'image',
-  LIST: 'list',
-  HEADER: 'header',
-  QUOTE: 'quote',
-  DELIMITER: 'delimiter',
-  TABLE: 'table',
-};
+import { BlockElementProps, BLOCKS_TYPE } from './types';
 
 const BlockElement = ({ element }) => {
   const { content, answer } = element;

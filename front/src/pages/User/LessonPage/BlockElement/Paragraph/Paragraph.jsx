@@ -1,7 +1,6 @@
 import HtmlToReact from 'html-to-react';
-import PropTypes from 'prop-types';
 
-import { BlockElementProps } from '../types';
+import { ParagraphContentType } from '../types';
 
 const HtmlToReactParser = HtmlToReact.Parser;
 
@@ -12,13 +11,7 @@ const Paragraph = ({ content }) => {
 };
 
 Paragraph.propTypes = {
-  ...BlockElementProps,
-  content: {
-    ...BlockElementProps.content,
-    data: PropTypes.shape({
-      text: PropTypes.string,
-    }),
-  },
+  content: ParagraphContentType,
 };
 
 export default Paragraph;

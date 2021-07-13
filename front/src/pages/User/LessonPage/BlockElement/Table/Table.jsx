@@ -1,6 +1,4 @@
-import PropTypes from 'prop-types';
-
-import { BlockElementProps } from '../types';
+import { TableContentType } from '../types';
 
 import * as S from './Table.styled';
 
@@ -27,13 +25,7 @@ const Table = ({ content }) => {
 };
 
 Table.propTypes = {
-  ...BlockElementProps,
-  content: {
-    ...BlockElementProps.content,
-    data: PropTypes.shape({
-      content: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
-    }),
-  },
+  content: TableContentType,
 };
 
 export default Table;

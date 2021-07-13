@@ -1,7 +1,6 @@
 import { Typography } from 'antd';
-import PropTypes from 'prop-types';
 
-import { BlockElementProps } from '../types';
+import { HeaderContentType } from '../types';
 
 const { Title } = Typography;
 
@@ -11,14 +10,7 @@ const Header = ({ content }) => {
 };
 
 Header.propTypes = {
-  ...BlockElementProps,
-  content: {
-    ...BlockElementProps.content,
-    data: PropTypes.shape({
-      text: PropTypes.string,
-      level: PropTypes.number,
-    }),
-  },
+  content: HeaderContentType,
 };
 
 export default Header;
