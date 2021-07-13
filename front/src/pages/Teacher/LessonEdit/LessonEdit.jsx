@@ -1,43 +1,34 @@
 import { Button, Col, Input, message, Row, Typography } from 'antd';
 import DragDrop from 'editorjs-drag-drop';
-import Table from 'editorjs-table';
 import hash from 'object-hash';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
 import { useHistory, useParams } from 'react-router-dom';
 import { RedoOutlined, SaveOutlined, UndoOutlined } from '@ant-design/icons';
-import Delimiter from '@editorjs/delimiter';
 import EditorJS from '@editorjs/editorjs';
-import Embed from '@editorjs/embed';
-import HeaderTool from '@editorjs/header';
-import List from '@editorjs/list';
-import Marker from '@editorjs/marker';
-import Quote from '@editorjs/quote';
-import SimpleImage from '@editorjs/simple-image';
 
 import Header from '@sb-ui/components/molecules/Header';
 import { Statuses } from '@sb-ui/pages/Teacher/Home/LessonsDashboard/constants';
-import {
-  prepareApiData,
-  prepareEditorData,
-  QUIZ_TYPE,
-} from '@sb-ui/pages/Teacher/LessonEdit/utils';
 import {
   createLesson,
   getLesson,
   putLesson,
 } from '@sb-ui/utils/api/v1/teacher';
-import Next from '@sb-ui/utils/editorjs/next-plugin';
-import Quiz from '@sb-ui/utils/editorjs/quiz-plugin';
 import Undo from '@sb-ui/utils/editorjs/undo-plugin';
 import { LESSONS_EDIT } from '@sb-ui/utils/paths';
+import { TEACHER_LESSON_BASE_KEY } from '@sb-ui/utils/queries';
 
+import {
+  getConfig,
+  prepareApiData,
+  prepareEditorData,
+  QUIZ_TYPE,
+} from './utils';
 import * as S from './LessonEdit.styled';
 
 const { TextArea } = Input;
 
-const GET_LESSON_BASE_QUERY = 'getLesson';
 const MAX_NAME_LENGTH = 255;
 
 const LessonEdit = () => {
@@ -56,7 +47,7 @@ const LessonEdit = () => {
 
   const { data: lessonData, isLoading } = useQuery(
     [
-      GET_LESSON_BASE_QUERY,
+      TEACHER_LESSON_BASE_KEY,
       {
         id: lessonId,
       },
@@ -68,48 +59,7 @@ const LessonEdit = () => {
   );
 
   useEffect(() => {
-    editorJSref.current = new EditorJS({
-      holder: 'editorjs',
-      tools: {
-        image: SimpleImage,
-        next: Next,
-        quiz: Quiz,
-        embed: Embed,
-        header: {
-          class: HeaderTool,
-          config: {
-            placeholder: t('editor_js.header.placeholder'),
-            levels: [1, 2, 3, 4, 5],
-            defaultLevel: 3,
-          },
-        },
-        list: {
-          class: List,
-          inlineToolbar: true,
-        },
-        quote: Quote,
-        delimiter: Delimiter,
-        marker: Marker,
-        table: Table,
-      },
-      i18n: {
-        messages: {
-          ui: {
-            toolbar: {
-              toolbox: {
-                Add: t('editor_js.toolbar.toolbox_add'),
-              },
-            },
-          },
-          toolNames: {
-            Text: t('editor_js.tool_names.text'),
-            Next: t('editor_js.tool_names.next'),
-          },
-        },
-      },
-      plugins: [],
-    });
-
+    editorJSref.current = new EditorJS(getConfig(t));
     editorJSref.current.isReady.then(() => {
       setEditorReady(true);
     });
@@ -144,7 +94,7 @@ const LessonEdit = () => {
   const { mutate } = useMutation(createLesson, {
     onSuccess: (data) => {
       const { id } = data?.lesson;
-      history.push(LESSONS_EDIT.replace(':id', id));
+      history.replace(LESSONS_EDIT.replace(':id', id));
       message.success({
         content: t('editor_js.message.success_created'),
         duration: 2,
@@ -158,30 +108,37 @@ const LessonEdit = () => {
     },
   });
 
-  const { mutate: updateLesson, data: updatedLessonData } = useMutation(
-    putLesson,
-    {
-      onSuccess: () => {
-        message.success({
-          content: t('editor_js.message.success_updated'),
-          duration: 2,
-        });
-      },
-      onError: () => {
-        message.error({
-          content: t('editor_js.message.error_updated'),
-          duration: 2,
-        });
-      },
+  const { mutate: updateLesson } = useMutation(putLesson, {
+    onSuccess: (data) => {
+      if (editorReady && data) {
+        const editorToRender = {
+          blocks: prepareEditorData(data?.lesson?.blocks),
+        };
+
+        if (editorToRender.blocks.length === 0) {
+          editorJSref.current.clear();
+        } else {
+          editorJSref.current.render?.(editorToRender);
+        }
+        undoPluginRef.current.initialize(editorToRender);
+      }
+      message.success({
+        content: t('editor_js.message.success_updated'),
+        duration: 2,
+      });
     },
-  );
+    onError: () => {
+      message.error({
+        content: t('editor_js.message.error_updated'),
+        duration: 2,
+      });
+    },
+  });
 
   useEffect(() => {
-    if (editorReady && (lessonData || updatedLessonData)) {
+    if (editorReady && lessonData) {
       const editorToRender = {
-        blocks: prepareEditorData(
-          updatedLessonData?.lesson?.blocks || lessonData?.lesson?.blocks,
-        ),
+        blocks: prepareEditorData(lessonData?.lesson?.blocks),
       };
 
       if (editorToRender.blocks.length === 0) {
@@ -191,7 +148,7 @@ const LessonEdit = () => {
       }
       undoPluginRef.current.initialize(editorToRender);
     }
-  }, [editorReady, lessonData, updatedLessonData]);
+  }, [editorReady, lessonData]);
 
   const handleSave = async () => {
     try {
