@@ -34,7 +34,7 @@ export const QuizBlockDataType = PropTypes.shape({
 });
 
 export const QuizBlockAnswerType = PropTypes.shape({
-  results: PropTypes.arrayOf(PropTypes.bool).isRequired,
+  results: PropTypes.arrayOf(PropTypes.bool),
 });
 export const EmbedContentType = PropTypes.shape({
   data: PropTypes.shape({
@@ -79,10 +79,10 @@ export const HeaderContentType = PropTypes.shape({
   }),
 });
 
-export const BlockElementProps = PropTypes.shape({
+export const BlockElementProps = {
   element: PropTypes.shape({
     content: BlockContentType.isRequired,
     blockId: BlockIdType,
     answer: QuizBlockAnswerType,
   }),
-});
+};
