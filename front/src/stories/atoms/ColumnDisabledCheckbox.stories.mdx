@@ -1,0 +1,80 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+import ColumnDisabledCheckbox from '@sb-ui/components/atoms/ColumnDisabledCheckbox';
+
+<Meta
+  title="SB/atoms/ColumnDisabledCheckbox"
+  component={ColumnDisabledCheckbox}
+/>
+
+# ColumnDisabledCheckbox
+
+Component `ColumnDisabledCheckbox` accepts an unlimited number of options:
+
+export const Template = (args) => <ColumnDisabledCheckbox {...args} />;
+
+<Canvas>
+  <Story
+    name="One unchecked"
+    args={{
+      value: [],
+      options: [
+        {
+          value: 0,
+          label: 'Option A',
+        },
+      ],
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+  <Story
+    name="One checked"
+    args={{
+      value: [0],
+      options: [
+        {
+          value: 0,
+          label: 'Option A',
+        },
+      ],
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+  <Story
+    name="Two unchecked"
+    args={{
+      value: [],
+      options: [
+        {
+          value: 0,
+          label: 'Option A',
+        },
+        {
+          value: 1,
+          label: 'Option B',
+        },
+      ],
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+  <Story
+    name="Two checked"
+    args={{
+      value: [0, 1],
+      options: [
+        {
+          value: 0,
+          label: 'Option A',
+        },
+        {
+          value: 1,
+          label: 'Option B',
+        },
+      ],
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>

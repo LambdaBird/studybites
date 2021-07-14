@@ -1,0 +1,27 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
+
+<Meta
+  title="SB/atoms/DebouncedSearch"
+  argTypes={{
+    onChange: {},
+  }}
+  component={DebouncedSearch}
+/>
+
+# DebouncedSearch
+
+Component `DebouncedSearch` invokes callback function `onChange` with `delay` ms after stop typing input:
+
+export const Template = (args) => <DebouncedSearch {...args} />;
+
+<Canvas>
+  <Story
+    name="Value"
+    args={{
+      delay: 500,
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
