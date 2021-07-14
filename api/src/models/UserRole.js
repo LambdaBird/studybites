@@ -1,6 +1,5 @@
 import objection from 'objection';
 import path from 'path';
-import config from '../../config';
 
 class UserRole extends objection.Model {
   static get tableName() {
@@ -11,10 +10,10 @@ class UserRole extends objection.Model {
     return {
       type: 'object',
       properties: {
-        userID: { type: 'integer' },
-        roleID: { type: 'integer' },
+        userId: { type: 'integer' },
+        roleId: { type: 'integer' },
         resourceType: { type: 'string' },
-        resourceID: { type: 'integer' },
+        resourceId: { type: 'integer' },
         createdAt: { type: 'string' },
         updatedAt: { type: 'string' },
       },

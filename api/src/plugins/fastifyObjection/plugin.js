@@ -4,15 +4,13 @@ import objection from 'objection';
 
 import { ERROR_MISSING_FIELDS, ERROR_INVALID_ARRAY } from './errors';
 
-const objectionModel = (instance, options, next) => {
+export default fp((instance, options, next) => {
   if (!options.connection || !options.models) {
-    next(new Error(ERROR_MISSING_FIELDS));
-    return;
+    return next(new Error(ERROR_MISSING_FIELDS));
   }
 
-  if (!Array.isArray(options.models) || options.models.length < 1) {
-    next(new Error(ERROR_INVALID_ARRAY));
-    return;
+  if (!Array.isArray(options.models) || !options.models.length) {
+    return next(new Error(ERROR_INVALID_ARRAY));
   }
 
   const connection = knex({
@@ -34,10 +32,8 @@ const objectionModel = (instance, options, next) => {
 
   instance.addHook('onClose', (_, done) => {
     connection.destroy();
-    done();
+    return done();
   });
 
-  next();
-};
-
-export default fp(objectionModel);
+  return next();
+});

@@ -650,4 +650,72 @@ describe('Learning flow', () => {
       expect(payload.isFinal).toBe(true);
     });
   });
+
+  describe('Get all finished lessons', () => {
+    let finishedLesson;
+
+    beforeAll(async () => {
+      finishedLesson = await createLesson({
+        app: testContext.app,
+        credentials: teacherCredentials,
+        body: prepareLessonFromSeed(french, '-finishedLesson'),
+      });
+
+      await testContext.request({
+        url: `lesson/enroll/${finishedLesson.lesson.id}`,
+      });
+
+      await testContext.request({
+        url: `lesson/${finishedLesson.lesson.id}/learn`,
+        body: {
+          action: 'start',
+        },
+      });
+
+      await testContext.request({
+        url: `lesson/${finishedLesson.lesson.id}/learn`,
+        body: {
+          action: 'next',
+          blockId: blocks[indexesOfInteractive[0]].block_id,
+          revision:
+            finishedLesson.lesson.blocks[indexesOfInteractive[0]].revision,
+        },
+      });
+
+      await testContext.request({
+        url: `lesson/${finishedLesson.lesson.id}/learn`,
+        body: {
+          action: 'response',
+          blockId: blocks[indexesOfInteractive[1]].block_id,
+          revision:
+            finishedLesson.lesson.blocks[indexesOfInteractive[1]].revision,
+          data: {
+            answers: ['my answer'],
+          },
+        },
+      });
+
+      await testContext.request({
+        url: `lesson/${finishedLesson.lesson.id}/learn`,
+        body: {
+          action: 'finish',
+        },
+      });
+    });
+
+    it('should return all finished lessons with their maintainers', async () => {
+      const response = await testContext.request({
+        url: `lesson/enrolled-finished/`,
+        method: 'GET',
+      });
+
+      const payload = JSON.parse(response.payload);
+
+      expect(response.statusCode).toBe(200);
+      expect(payload).toHaveProperty('total');
+      expect(payload).toHaveProperty('lessons');
+      expect(payload.lessons).toBeInstanceOf(Array);
+      expect(payload.lessons[0]).toHaveProperty('maintainer');
+    });
+  });
 });
