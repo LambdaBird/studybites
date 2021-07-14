@@ -1,7 +1,7 @@
 import { Button, Row } from 'antd';
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 
+import { LessonType } from '@sb-ui/components/lessonBlocks/types';
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
 
 import { useLesson } from './useLesson';
@@ -59,18 +59,7 @@ const OngoingFullDesktop = ({ lesson }) => {
 };
 
 OngoingFullDesktop.propTypes = {
-  lesson: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    percentage: PropTypes.number.isRequired,
-    maintainer: PropTypes.shape({
-      userInfo: PropTypes.shape({
-        firstName: PropTypes.string.isRequired,
-        lastName: PropTypes.string.isRequired,
-      }),
-    }),
-  }).isRequired,
+  lesson: LessonType.isRequired,
 };
 
 export default OngoingFullDesktop;

@@ -1,5 +1,4 @@
 import { Col, Dropdown, Menu } from 'antd';
-import PropTypes from 'prop-types';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
@@ -21,6 +20,7 @@ import {
   USER_LESSONS,
 } from '@sb-ui/utils/paths';
 import { USER_BASE_QUERY } from '@sb-ui/utils/queries';
+import { ChildrenType } from '@sb-ui/utils/types';
 
 import * as S from './Header.styled';
 
@@ -121,7 +121,7 @@ const Header = ({ children }) => {
 };
 
 Header.propTypes = {
-  children: PropTypes.node,
+  children: ChildrenType,
 };
 
 export default Header;

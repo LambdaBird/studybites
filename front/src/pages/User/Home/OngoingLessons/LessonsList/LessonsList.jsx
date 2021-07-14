@@ -1,11 +1,11 @@
 import { Col, Empty, Skeleton } from 'antd';
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 
 import OngoingShortLesson from '@sb-ui/components/lessonBlocks/OngoingShort';
 import useMobile from '@sb-ui/hooks/useMobile';
 import emptyImg from '@sb-ui/resources/img/empty.svg';
 
+import { LessonsListPropTypes } from './types';
 import * as S from './LessonsList.styled';
 
 const LessonsList = ({ lessons, isLoading }) => {
@@ -49,16 +49,7 @@ const LessonsList = ({ lessons, isLoading }) => {
   );
 };
 
-LessonsList.propTypes = {
-  lessons: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      status: PropTypes.string.isRequired,
-      id: PropTypes.number.isRequired,
-    }),
-  ),
-  isLoading: PropTypes.bool.isRequired,
-};
+LessonsList.propTypes = LessonsListPropTypes;
 
 LessonsList.defaultProps = {
   lessons: [],

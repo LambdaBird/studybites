@@ -1,5 +1,4 @@
 import { Skeleton } from 'antd';
-import PropTypes from 'prop-types';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 
@@ -8,6 +7,7 @@ import emptyImg from '@sb-ui/resources/img/empty.svg';
 import { skeletonArray } from '@sb-ui/utils/utils';
 
 import { PAGE_SIZE } from './constants';
+import { LessonsListPropTypes } from './types';
 import * as S from './LessonsList.styled';
 
 const LessonsList = ({ title, notFound, query }) => {
@@ -63,13 +63,6 @@ const LessonsList = ({ title, notFound, query }) => {
   );
 };
 
-LessonsList.propTypes = {
-  title: PropTypes.string.isRequired,
-  notFound: PropTypes.string.isRequired,
-  query: PropTypes.shape({
-    key: PropTypes.string.isRequired,
-    func: PropTypes.func.isRequired,
-  }),
-};
+LessonsList.propTypes = LessonsListPropTypes;
 
 export default LessonsList;

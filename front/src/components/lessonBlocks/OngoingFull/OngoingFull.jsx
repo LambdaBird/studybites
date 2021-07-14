@@ -8,15 +8,11 @@ import OngoingFullMobile from './OngoingFull.mobile';
 const OngoingFull = (props) => {
   const isMobile = useContext(MobileContext);
 
-  return (
-    <>
-      {isMobile ? (
-        <OngoingFullMobile {...props} />
-      ) : (
-        <OngoingFullDesktop {...props} />
-      )}
-    </>
-  );
+  if (isMobile) {
+    return <OngoingFullMobile {...props} />;
+  }
+
+  return <OngoingFullDesktop {...props} />;
 };
 
 export default OngoingFull;

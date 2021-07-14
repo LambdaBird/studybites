@@ -1,5 +1,4 @@
 import { Avatar, Dropdown, Menu, Space, Tooltip, Typography } from 'antd';
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 import { useHistory } from 'react-router-dom';
@@ -12,6 +11,7 @@ import { putLesson } from '@sb-ui/utils/api/v1/teacher';
 import { LESSONS_EDIT } from '@sb-ui/utils/paths';
 import { TEACHER_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
 
+import { TeacherPropTypes } from './types';
 import * as S from './Teacher.styled';
 
 const { Text } = Typography;
@@ -132,12 +132,7 @@ const Teacher = ({ title, id, students, status }) => {
   );
 };
 
-Teacher.propTypes = {
-  students: PropTypes.arrayOf(PropTypes.shape({})),
-  status: PropTypes.oneOf(Object.values(Statuses)).isRequired,
-  title: PropTypes.string.isRequired,
-  id: PropTypes.number.isRequired,
-};
+Teacher.propTypes = TeacherPropTypes;
 
 Teacher.defaultProps = {
   students: [],

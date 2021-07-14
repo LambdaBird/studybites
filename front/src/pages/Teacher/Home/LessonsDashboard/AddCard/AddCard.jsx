@@ -1,6 +1,7 @@
 import { Space } from 'antd';
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+
+import { AddCardPropTypes } from '../types';
 
 import * as S from './AddCard.styled';
 
@@ -17,8 +18,6 @@ const AddCard = ({ onClick }) => {
   );
 };
 
-AddCard.propTypes = {
-  onClick: PropTypes.func.isRequired,
-};
+AddCard.propTypes = AddCardPropTypes;
 
 export default AddCard;

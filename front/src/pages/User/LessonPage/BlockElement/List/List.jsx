@@ -1,6 +1,4 @@
-import PropTypes from 'prop-types';
-
-import { BlockElementProps } from '../types';
+import { ListContentType } from '../types';
 
 const List = ({ content }) => {
   const { style, items } = content.data;
@@ -29,14 +27,7 @@ const List = ({ content }) => {
 };
 
 List.propTypes = {
-  ...BlockElementProps,
-  content: {
-    ...BlockElementProps.content,
-    data: PropTypes.shape({
-      style: PropTypes.string,
-      items: PropTypes.arrayOf(PropTypes.string),
-    }),
-  },
+  content: ListContentType,
 };
 
 export default List;
