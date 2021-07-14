@@ -1,3 +1,3 @@
 import PropTypes from 'prop-types';
 
-export const ChildrenType = PropTypes.node.isRequired;
+export const ChildrenType = PropTypes.node;

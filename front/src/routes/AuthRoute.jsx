@@ -23,7 +23,7 @@ const AuthRoute = ({ children: Component, ...rest }) => {
 };
 
 AuthRoute.propTypes = {
-  children: ChildrenType,
+  children: ChildrenType.isRequired,
 };
 
 export default AuthRoute;

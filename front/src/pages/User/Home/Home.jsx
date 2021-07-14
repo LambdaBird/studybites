@@ -1,6 +1,7 @@
+import { ChildrenType } from '@sb-ui/utils/types';
+
 import LessonsList from './LessonsList';
 import OngoingLessons from './OngoingLessons';
-import { HomePropTypes } from './types';
 import * as S from './Home.styled';
 
 const Home = ({ children }) => (
@@ -13,6 +14,8 @@ const Home = ({ children }) => (
   </>
 );
 
-Home.propTypes = HomePropTypes;
+Home.propTypes = {
+  children: ChildrenType,
+};
 
 export default Home;

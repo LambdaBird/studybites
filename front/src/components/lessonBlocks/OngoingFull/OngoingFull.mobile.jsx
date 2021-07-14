@@ -53,7 +53,7 @@ const OngoingFullMobile = ({ lesson }) => {
 };
 
 OngoingFullMobile.propTypes = {
-  lesson: LessonType,
+  lesson: LessonType.isRequired,
 };
 
 export default OngoingFullMobile;

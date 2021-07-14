@@ -11,7 +11,7 @@ export const LessonType = PropTypes.shape({
       lastName: PropTypes.string.isRequired,
     }),
   }),
-}).isRequired;
+});
 
 export const PublicLessonType = PropTypes.shape({
   id: PropTypes.number.isRequired,
@@ -20,4 +20,4 @@ export const PublicLessonType = PropTypes.shape({
   lastName: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
-}).isRequired;
+});

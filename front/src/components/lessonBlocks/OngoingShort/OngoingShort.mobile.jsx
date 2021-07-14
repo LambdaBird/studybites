@@ -48,7 +48,7 @@ const OngoingShortMobile = ({ lesson }) => {
 };
 
 OngoingShortMobile.propTypes = {
-  lesson: LessonType,
+  lesson: LessonType.isRequired,
 };
 
 export default OngoingShortMobile;

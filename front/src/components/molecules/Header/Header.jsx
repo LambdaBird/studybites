@@ -19,8 +19,8 @@ import {
   USER_LESSONS,
 } from '@sb-ui/utils/paths';
 import { USER_BASE_QUERY } from '@sb-ui/utils/queries';
+import { ChildrenType } from '@sb-ui/utils/types';
 
-import { HeaderPropTypes } from './types';
 import * as S from './Header.styled';
 
 const { SubMenu } = Menu;
@@ -118,6 +118,8 @@ const Header = ({ children }) => {
   );
 };
 
-Header.propTypes = HeaderPropTypes;
+Header.propTypes = {
+  children: ChildrenType,
+};
 
 export default Header;
