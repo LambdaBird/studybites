@@ -193,6 +193,7 @@ const Home = () => {
       <Table
         columns={columns}
         dataSource={data}
+        rowKey={(row) => row.id}
         pagination={
           !isLoading &&
           total > PAGE_SIZE && {

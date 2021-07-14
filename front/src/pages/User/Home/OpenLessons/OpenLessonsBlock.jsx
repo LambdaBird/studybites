@@ -1,13 +1,12 @@
 import { Skeleton } from 'antd';
+import PropTypes from 'prop-types';
 
 import PublicLesson from '@sb-ui/components/lessonBlocks/Public';
 import { PAGE_SIZE } from '@sb-ui/pages/User/Lessons/LessonsList/constants';
 import * as S from '@sb-ui/pages/User/Lessons/LessonsList/LessonsList.styled';
 import { skeletonArray } from '@sb-ui/utils/utils';
 
-import { LessonsListBlockPropTypes } from './types';
-
-const LessonsListBlock = ({ isLoading, data }) => {
+const OpenLessonsBlock = ({ isLoading, data }) => {
   if (isLoading) {
     return (
       <>
@@ -31,6 +30,9 @@ const LessonsListBlock = ({ isLoading, data }) => {
   );
 };
 
-LessonsListBlock.propTypes = LessonsListBlockPropTypes;
+OpenLessonsBlock.propTypes = {
+  isLoading: PropTypes.bool.isRequired,
+  data: PropTypes.arrayOf(PropTypes.object),
+};
 
-export default LessonsListBlock;
+export default OpenLessonsBlock;

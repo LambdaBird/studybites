@@ -1,14 +1,14 @@
 import { ChildrenType } from '@sb-ui/utils/types';
 
-import LessonsList from './LessonsList';
 import OngoingLessons from './OngoingLessons';
+import OpenLessons from './OpenLessons';
 import * as S from './Home.styled';
 
 const Home = ({ children }) => (
   <>
     <S.Main>
       <OngoingLessons />
-      <LessonsList />
+      <OpenLessons />
     </S.Main>
     {children}
   </>
