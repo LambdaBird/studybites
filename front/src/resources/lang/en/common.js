@@ -7,6 +7,8 @@ export default {
     language: 'Choose language',
   },
   errors: {
+    boundary_title: 'Oops',
+    boundary_subtitle: 'Something went wrong',
     unauthorized: 'Wrong credentials',
     no_internet: 'Oops no internet connection',
   },

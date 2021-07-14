@@ -7,6 +7,8 @@ export default {
     language: 'Выберите язык',
   },
   errors: {
+    boundary_title: 'Упс',
+    boundary_subtitle: 'Что то пошло не так',
     unauthorized: 'Неправильные данные',
     no_internet: 'Упс, нет интернет соединения',
   },
