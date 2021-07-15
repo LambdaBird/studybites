@@ -6,7 +6,6 @@ export const getLessonById = async ({ queryKey }) => {
   const [, paramsData] = queryKey;
   const { id } = paramsData;
   const { data } = await api.get(`${PATH}/${id}`);
-
   return data;
 };
 
