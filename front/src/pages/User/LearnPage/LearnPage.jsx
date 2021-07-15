@@ -29,18 +29,8 @@ const LearnPage = () => {
       createParagraphBlock(5, 'Paragraph3'),
       createNextBlock(6, true),
       // createQuizBlock(7, [true, true]),
-      {
-        content: {
-          id: 'finish',
-          type: 'finish',
-        },
-        response: {
-          isSolved: false,
-        },
-        blockId: 12341124,
-        answer: {}
-      },
     ],
+    [createFinishBlock(7)],
   ];
 
   return (
@@ -105,6 +95,18 @@ export const createQuizBlock = (id, results) => ({
   },
   revision: `hashTest${id}`,
   type: 'quiz',
+});
+
+export const createFinishBlock = (id) => ({
+  content: {
+    id: 'finish',
+    type: 'finish',
+  },
+  response: {
+    isSolved: false,
+  },
+  blockId: id,
+  answer: {},
 });
 
 export const createQuizResultBlock = (id, results, response) => ({

@@ -81,6 +81,13 @@ export const HeaderContentType = PropTypes.shape({
   }),
 });
 
+export const NextPropType = {
+  response: PropTypes.shape({
+    isSolved: PropTypes.bool,
+  }),
+  handleNextClick: PropTypes.func.isRequired,
+};
+
 export const BlockElementProps = PropTypes.shape({
   element: PropTypes.shape({
     content: BlockContentType,

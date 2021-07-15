@@ -1,22 +1,18 @@
-import { useTranslation } from 'react-i18next';
-
-import * as S from '@sb-ui/pages/User/LessonPage/LessonPage.styled';
-
 import Delimiter from './Delimiter';
 import Embed from './Embed';
 import Error from './Error';
+import Finish from './Finish';
 import Header from './Header';
 import Image from './Image';
 import List from './List';
+import Next from './Next';
 import Paragraph from './Paragraph';
 import QuizBlockResult from './QuizBlockResult';
 import Quote from './Quote';
 import Table from './Table';
 import { BlockElementProps, BLOCKS_TYPE } from './types';
 
-
 const BlockElement = ({ element }) => {
-  const { t } = useTranslation();
   const { content, answer } = element;
   switch (content.type) {
     case BLOCKS_TYPE.PARAGRAPH:
@@ -38,17 +34,9 @@ const BlockElement = ({ element }) => {
     case BLOCKS_TYPE.TABLE:
       return <Table {...element} />;
     case BLOCKS_TYPE.NEXT:
-      return !element.response.isSolved ? (
-        <S.LessonButton onClick={element.handleNextClick}>
-          {t('user:lesson.next')}
-        </S.LessonButton>
-      ) : null;
+      return <Next {...element} />;
     case BLOCKS_TYPE.FINISH:
-      return !element.response.isSolved ? (
-        <S.LessonButton onClick={element.handleNextClick}>
-          Finish
-        </S.LessonButton>
-      ) : null;
+      return <Finish {...element} />;
     default:
       return <Error />;
   }
