@@ -20,7 +20,11 @@ const OpenLessons = () => {
   const [searchText, setSearchText] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { data: responseData, isLoading } = useQuery(
+  const {
+    data: responseData,
+    isLoading,
+    error,
+  } = useQuery(
     [
       USER_PUBLIC_LESSONS_BASE_KEY,
       {
@@ -73,7 +77,7 @@ const OpenLessons = () => {
         <S.StyledSearch searchText={searchText} setSearchText={setSearchText} />
       </S.LessonsHeader>
       <S.LessonsRow>
-        <OpenLessonsBlock isLoading={isLoading} data={data} />
+        <OpenLessonsBlock isLoading={isLoading} error={error} data={data} />
         {isEmpty && (
           <S.EmptyContainer
             image={emptyImg}
