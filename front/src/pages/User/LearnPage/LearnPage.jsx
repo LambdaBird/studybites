@@ -19,11 +19,11 @@ const LearnPage = () => {
       createParagraphBlock(2, 'Paragraph2'),
       createNextBlock(3, true),
     ],
+
     [
-      createParagraphBlock(2, 'Paragraph2'),
-      createQuizResultBlock(4, [true, true], [true, true]),
+      createParagraphBlock(5, 'Paragraph3'),
+      createQuizBlock(6, [true, true, true, true, true]),
     ],
-    [createParagraphBlock(5, 'Paragraph3'), createNextBlock(6, false)],
   ];
 
   return (
@@ -102,24 +102,6 @@ export const createFinishBlock = (id) => ({
 });
 
 export const createQuizResultBlock = (id, results, response) => ({
-  answer: { results },
-  blockId: id,
-  content: {
-    data: {
-      answers: results.map((x, i) => ({ value: i, correct: response[i] })),
-      question: 'Test text',
-    },
-    id: `content-${id}`,
-    type: 'quiz',
-  },
-  data: {
-    response,
-  },
-  revision: `hashTest${id}`,
-  type: 'quiz',
-});
-
-export const createQuizResultBlockResponse = (id, results, response) => ({
   answer: { results },
   blockId: id,
   content: {
