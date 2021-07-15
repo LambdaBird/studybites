@@ -1,7 +1,7 @@
 import { matchPath } from 'react-router-dom';
 
 import { AdminHome } from '@sb-ui/pages/Admin';
-import { LessonEdit,TeacherHome } from '@sb-ui/pages/Teacher';
+import { LessonEdit, TeacherHome } from '@sb-ui/pages/Teacher';
 import {
   EnrollModalDesktop,
   EnrollModalMobile,
@@ -12,9 +12,9 @@ import {
 } from '@sb-ui/pages/User';
 import { Roles } from '@sb-ui/utils/constants';
 import * as paths from '@sb-ui/utils/paths';
-import { LESSONS_EDIT, LESSONS_NEW } from '@sb-ui/utils/paths';
+import { LEARN_PAGE, LESSONS_EDIT, LESSONS_NEW } from '@sb-ui/utils/paths';
 
-const SKIP_HEADER = [LESSONS_NEW, LESSONS_EDIT];
+const SKIP_HEADER = [LESSONS_NEW, LESSONS_EDIT, LEARN_PAGE];
 
 export const checkPermission = (roles, permissions) => {
   if (!permissions) return true;

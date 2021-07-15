@@ -1,14 +1,9 @@
 /* eslint no-use-before-define: "off" */
+
 import InfoBlock from '@sb-ui/pages/User/LessonPage/InfoBlock';
 
 import LearnChunk from './LearnChunk';
-import {
-  BlockCell,
-  LearnPageWrapper,
-  LearnWrapper,
-  Progress,
-  Row,
-} from './styled';
+import * as S from './LearnPage.styled';
 
 const LearnPage = () => {
   const leanProgress = 50;
@@ -24,35 +19,32 @@ const LearnPage = () => {
       createParagraphBlock(2, 'Paragraph2'),
       createNextBlock(3, true),
     ],
-    // [createQuizResultBlock(4, [true, true], [false, true])],
     [
-      createParagraphBlock(5, 'Paragraph3'),
-      createNextBlock(6, true),
-      // createQuizBlock(7, [true, true]),
+      createParagraphBlock(2, 'Paragraph2'),
+      createQuizResultBlock(4, [true, true], [true, true]),
     ],
-    [createFinishBlock(7)],
+    [createParagraphBlock(5, 'Paragraph3'), createNextBlock(6, false)],
   ];
 
   return (
-    <LearnPageWrapper>
-      <Progress
-        showInfo={false}
-        percent={leanProgress}
-        strokeWidth={2}
-        strokeLinecap="round"
-      />
-      <Row>
-        <BlockCell>
-          <LearnWrapper>
-            <InfoBlock isLoading={isLoading} total={total} lesson={lesson} />
-            {chunks.map((chunk, index) => (
-              // eslint-disable-next-line react/no-array-index-key
-              <LearnChunk key={index} chunk={chunk} />
-            ))}
-          </LearnWrapper>
-        </BlockCell>
-      </Row>
-    </LearnPageWrapper>
+    <>
+      <S.Header />
+      <div>
+        <S.GlobalStylesLearnPage />
+        <S.Progress percent={leanProgress} />
+        <S.Row>
+          <S.BlockCell>
+            <S.LearnWrapper>
+              <InfoBlock isLoading={isLoading} total={total} lesson={lesson} />
+              {chunks.map((chunk, index) => (
+                // eslint-disable-next-line react/no-array-index-key
+                <LearnChunk key={index} chunk={chunk} />
+              ))}
+            </S.LearnWrapper>
+          </S.BlockCell>
+        </S.Row>
+      </div>
+    </>
   );
 };
 
@@ -114,7 +106,7 @@ export const createQuizResultBlock = (id, results, response) => ({
   blockId: id,
   content: {
     data: {
-      answers: results.map((x, i) => ({ value: i })),
+      answers: results.map((x, i) => ({ value: i, correct: response[i] })),
       question: 'Test text',
     },
     id: `content-${id}`,

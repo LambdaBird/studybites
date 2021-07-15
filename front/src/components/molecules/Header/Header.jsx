@@ -25,7 +25,7 @@ import * as S from './Header.styled';
 
 const { SubMenu } = Menu;
 
-const Header = ({ children }) => {
+const Header = ({ style, children }) => {
   const history = useHistory();
   const { t, i18n } = useTranslation(['common', 'user']);
   const location = useLocation();
@@ -96,7 +96,7 @@ const Header = ({ children }) => {
   );
 
   return (
-    <S.Container>
+    <S.Container style={style}>
       <S.RowMain align="middle" justify="space-between">
         <Col>
           <Link to={HOME}>

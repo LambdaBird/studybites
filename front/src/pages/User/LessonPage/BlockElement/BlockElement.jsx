@@ -7,7 +7,7 @@ import Image from './Image';
 import List from './List';
 import Next from './Next';
 import Paragraph from './Paragraph';
-import QuizBlockResult from './QuizBlockResult';
+import QuizResult from './QuizResult';
 import Quote from './Quote';
 import Table from './Table';
 import { BlockElementProps, BLOCKS_TYPE } from './types';
@@ -18,7 +18,7 @@ const BlockElement = ({ element }) => {
     case BLOCKS_TYPE.PARAGRAPH:
       return <Paragraph {...element} />;
     case BLOCKS_TYPE.QUIZ:
-      return <QuizBlockResult correctAnswer={answer} data={content?.data} />;
+      return <QuizResult correctAnswer={answer} data={content?.data} />;
     case BLOCKS_TYPE.EMBED:
       return <Embed {...element} />;
     case BLOCKS_TYPE.IMAGE:
