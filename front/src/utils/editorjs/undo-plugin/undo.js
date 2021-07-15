@@ -233,13 +233,12 @@ export default class Undo {
     };
 
     const handleAction = (e) => {
-      if (e.code === 'KeyZ') {
-        if (e[buttonKey] && !e.shiftKey) {
-          handleUndo(e);
-        } else if (e[buttonKey] && e.shiftKey) {
+      if (e.code === 'KeyZ' && e[buttonKey]) {
+        if (e.shiftKey) {
           handleRedo(e);
+        } else {
+          handleUndo(e);
         }
-
         this.editor.caret.focus();
       }
     };

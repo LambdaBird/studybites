@@ -17,10 +17,12 @@ export default {
     },
     ongoing_lessons: {
       title: 'Текущие уроки',
+      not_found: 'Нет текущих уроков',
       view_all_lessons: 'Посмотреть все мои уроки',
       continue_button: 'Продолжить',
     },
     finished_lessons: {
+      not_found: 'Нет законченых уроков',
       title: 'Законченные уроки',
     },
   },

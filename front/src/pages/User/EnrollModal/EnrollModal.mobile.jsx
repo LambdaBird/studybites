@@ -1,13 +1,15 @@
-import { useCallback } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
 import { Comment, List, Rate, Row, Typography } from 'antd';
+import { useCallback, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
-import lessonImage from '@sb-ui/resources/img/lesson.svg';
+import { useHistory, useParams } from 'react-router-dom';
+
 import { DescriptionText } from '@sb-ui/components/lessonBlocks/Public/Public.desktop.styled';
+import lessonImage from '@sb-ui/resources/img/lesson.svg';
 import { getEnrolledLesson, postEnroll } from '@sb-ui/utils/api/v1/student';
-import { LESSON_PAGE } from '@sb-ui/utils/paths';
+import { LESSON_PAGE, USER_HOME } from '@sb-ui/utils/paths';
 import { USER_LESSON_MODAL_BASE_KEY } from '@sb-ui/utils/queries';
+
 import * as S from './EnrollModal.mobile.styled';
 
 const { Title } = Typography;
@@ -78,13 +80,25 @@ const EnrollModalMobile = () => {
   const { firstName, lastName } = authors?.[0];
   const author = `${firstName} ${lastName}`;
 
+  const historyReplaceBack = useCallback(() => {
+    history.replace({
+      pathname: USER_HOME,
+    });
+  }, [history]);
+
+  useEffect(() => {
+    if (responseData !== undefined && !responseData?.lesson) {
+      historyReplaceBack();
+    }
+  }, [historyReplaceBack, responseData]);
+
   const onClickStartEnroll = async () => {
     await postEnroll(id);
     historyPushLesson();
   };
 
   return (
-    <S.Main size="large" wrap={false}>
+    <S.Main>
       <S.ImageBlock>
         <S.Image src={lessonImage} alt="Lesson" />
         <S.AuthorContainer>
@@ -93,7 +107,7 @@ const EnrollModalMobile = () => {
         </S.AuthorContainer>
       </S.ImageBlock>
       <Row>
-        <S.Title level={3}>{name}</S.Title>
+        <S.Title>{name}</S.Title>
       </Row>
       <Row>
         <S.Description>{description}</S.Description>
@@ -134,7 +148,7 @@ const EnrollModalMobile = () => {
       )}
 
       <S.EnrollRow>
-        <S.StartButton onClick={onClickStartEnroll} size="large" type="primary">
+        <S.StartButton onClick={onClickStartEnroll}>
           {t('home.open_lessons.start_button')}
         </S.StartButton>
       </S.EnrollRow>

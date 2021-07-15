@@ -1,5 +1,6 @@
-import styled from 'styled-components';
 import { Avatar, Button, Col, Row, Space, Typography } from 'antd';
+import styled from 'styled-components';
+
 import {
   DESCRIPTION_COLOR,
   VOLCANO_2,
@@ -34,7 +35,9 @@ export const RightColumn = styled(Row)`
   width: 50%;
 `;
 
-export const NameColumn = styled(Col)`
+export const NameColumn = styled(Col).attrs({
+  span: 24,
+})`
   margin-top: 1rem;
 `;
 

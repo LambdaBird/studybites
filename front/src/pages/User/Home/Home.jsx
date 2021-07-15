@@ -1,20 +1,21 @@
-import PropTypes from 'prop-types';
-import * as S from './Home.styled';
+import { ChildrenType } from '@sb-ui/utils/types';
+
 import OngoingLessons from './OngoingLessons';
-import LessonsList from './LessonsList';
+import OpenLessons from './OpenLessons';
+import * as S from './Home.styled';
 
 const Home = ({ children }) => (
   <>
     <S.Main>
       <OngoingLessons />
-      <LessonsList />
+      <OpenLessons />
     </S.Main>
     {children}
   </>
 );
 
 Home.propTypes = {
-  children: PropTypes.node,
+  children: ChildrenType,
 };
 
 export default Home;

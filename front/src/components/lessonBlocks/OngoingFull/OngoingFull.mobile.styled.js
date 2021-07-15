@@ -1,5 +1,5 @@
+import { Avatar, Button, Progress,Row, Typography } from 'antd';
 import styled from 'styled-components';
-import { Avatar, Row, Typography, Button, Progress } from 'antd';
 
 import {
   DESCRIPTION_COLOR,
@@ -34,6 +34,7 @@ export const Title = styled(Typography.Title)`
 export const Description = styled(Text)`
   text-align: justify;
   color: ${DESCRIPTION_COLOR};
+  overflow-wrap: anywhere;
 `;
 
 export const AuthorContainer = styled.div`

@@ -1,16 +1,16 @@
-import { useState } from 'react';
 import { Skeleton } from 'antd';
+import { useState } from 'react';
 import { useQuery } from 'react-query';
-import PropTypes from 'prop-types';
+
 import OngoingFullLesson from '@sb-ui/components/lessonBlocks/OngoingFull';
 import emptyImg from '@sb-ui/resources/img/empty.svg';
-import { useTranslation } from 'react-i18next';
 import { skeletonArray } from '@sb-ui/utils/utils';
-import * as S from './LessonsList.styled';
-import { PAGE_SIZE } from './constants';
 
-const LessonsList = ({ title, query }) => {
-  const { t } = useTranslation('user');
+import { PAGE_SIZE } from './constants';
+import { LessonsListPropTypes } from './types';
+import * as S from './LessonsList.styled';
+
+const LessonsList = ({ title, notFound, query }) => {
   const { key: queryKey, func: queryFunc } = query;
   const [currentPage, setCurrentPage] = useState(1);
   const [searchText, setSearchText] = useState(null);
@@ -32,30 +32,23 @@ const LessonsList = ({ title, query }) => {
   return (
     <S.Wrapper>
       <S.LessonsHeader>
-        <S.OpenLessonsTitle level={4}>{title}</S.OpenLessonsTitle>
-        <S.StyledSearch
-          searchText={searchText}
-          setSearchText={setSearchText}
-          placement="bottomLeft"
-        />
+        <S.OpenLessonsTitle>{title}</S.OpenLessonsTitle>
+        <S.StyledSearch searchText={searchText} setSearchText={setSearchText} />
       </S.LessonsHeader>
-      <S.LessonsRow gutter={[32, 32]}>
+      <S.LessonsRow>
         {isLoading
           ? skeletonArray(PAGE_SIZE).map((el) => (
-              <S.LessonCol key={el.id} lg={{ span: 12 }} md={{ span: 24 }}>
+              <S.LessonCol key={el.id}>
                 <Skeleton avatar />
               </S.LessonCol>
             ))
           : lessons?.map((lesson) => (
-              <S.LessonCol key={lesson.id} lg={{ span: 12 }} md={{ span: 24 }}>
+              <S.LessonCol key={lesson.id}>
                 <OngoingFullLesson lesson={lesson} />
               </S.LessonCol>
             ))}
         {!isLoading && total === 0 && lessons?.length === 0 && (
-          <S.EmptyContainer
-            image={emptyImg}
-            description={t('home.open_lessons.not_found')}
-          />
+          <S.EmptyContainer image={emptyImg} description={notFound} />
         )}
       </S.LessonsRow>
       {!isLoading && total > PAGE_SIZE && (
@@ -64,19 +57,12 @@ const LessonsList = ({ title, query }) => {
           total={total}
           pageSize={PAGE_SIZE}
           onChange={setCurrentPage}
-          showSizeChanger={false}
         />
       )}
     </S.Wrapper>
   );
 };
 
-LessonsList.propTypes = {
-  title: PropTypes.string.isRequired,
-  query: PropTypes.shape({
-    key: PropTypes.string.isRequired,
-    func: PropTypes.func.isRequired,
-  }),
-};
+LessonsList.propTypes = LessonsListPropTypes;
 
 export default LessonsList;

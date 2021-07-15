@@ -1,11 +1,11 @@
-import TeacherInfo from './TeacherInfo';
-import StudentsList from './StudentsList';
 import LessonsDashboard from './LessonsDashboard';
+import StudentsList from './StudentsList';
+import TeacherInfo from './TeacherInfo';
 import * as S from './Home.styled';
 
 const Home = () => (
   <S.Page>
-    <S.StyledRow gutter={[32]} justify="center" align="top">
+    <S.StyledRow>
       <S.LeftCol>
         <TeacherInfo />
         <LessonsDashboard />

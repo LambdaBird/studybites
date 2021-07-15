@@ -1,5 +1,6 @@
-import styled from 'styled-components';
 import { Button, Form } from 'antd';
+import styled from 'styled-components';
+
 import variables from '@sb-ui/theme/variables';
 
 export const SubmitButton = styled(Button)`
@@ -13,10 +14,6 @@ export const LinkButton = styled(Button).attrs({ type: 'link', size: 'small' })`
   & > span {
     text-decoration: underline;
   }
-`;
-
-export const FormItemBottomEmpty = styled(Form.Item)`
-  margin-bottom: 0;
 `;
 
 export const FormItemAlignEnd = styled(Form.Item)`

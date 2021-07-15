@@ -1,8 +1,12 @@
-import styled from 'styled-components';
 import { Button } from 'antd';
+import styled from 'styled-components';
+
 import variables from '@sb-ui/theme/variables';
 
-export const SubmitButton = styled(Button)`
+export const SubmitButton = styled(Button).attrs({
+  type: 'primary',
+  htmlType: 'submit',
+})`
   width: 100%;
   margin-top: 1rem;
 `;

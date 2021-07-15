@@ -1,9 +1,10 @@
-import PropTypes from 'prop-types';
-import { useTranslation } from 'react-i18next';
 import { Popover } from 'antd';
+import { useTranslation } from 'react-i18next';
 import { SearchOutlined } from '@ant-design/icons';
 
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
+
+import { SearchPropTypes } from './types';
 import * as S from './Search.mobile.styled';
 
 const SearchMobile = ({ setSearchText, searchText, className, placement }) => {
@@ -46,11 +47,6 @@ SearchMobile.defaultProps = {
   placement: 'topRight',
 };
 
-SearchMobile.propTypes = {
-  setSearchText: PropTypes.func,
-  className: PropTypes.string,
-  searchText: PropTypes.string,
-  placement: PropTypes.string,
-};
+SearchMobile.propTypes = SearchPropTypes;
 
 export default SearchMobile;

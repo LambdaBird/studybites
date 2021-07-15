@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types';
 import { Col, Row, Typography } from 'antd';
-import { BlockElementProps } from '../types';
+
+import { EmbedContentType } from '../types';
 
 const { Text } = Typography;
 
@@ -21,15 +21,7 @@ const Embed = ({ content }) => {
 };
 
 Embed.propTypes = {
-  ...BlockElementProps,
-  content: {
-    ...BlockElementProps.content,
-    data: PropTypes.shape({
-      caption: PropTypes.string,
-      embed: PropTypes.string,
-      height: PropTypes.string,
-    }),
-  },
+  content: EmbedContentType,
 };
 
 export default Embed;

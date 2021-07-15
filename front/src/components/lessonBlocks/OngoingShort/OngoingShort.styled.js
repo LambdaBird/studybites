@@ -1,8 +1,8 @@
-import styled from 'styled-components';
 import { Col, Progress, Row } from 'antd';
+import styled from 'styled-components';
 
-import variables from '@sb-ui/theme/variables';
 import { WHITE_COLOR } from '@sb-ui/resources/styles/Global.styled';
+import variables from '@sb-ui/theme/variables';
 
 export const MainSpace = styled(Row)`
   max-height: 150px;

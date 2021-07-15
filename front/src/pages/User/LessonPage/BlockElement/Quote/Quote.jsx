@@ -1,5 +1,7 @@
 import { Typography } from 'antd';
-import { BlockElementProps } from '../types';
+
+import { QuoteContentType } from '../types';
+
 import * as S from './Quote.styled';
 
 const { Text } = Typography;
@@ -16,6 +18,8 @@ const Quote = ({ content }) => {
   );
 };
 
-Quote.propTypes = BlockElementProps;
+Quote.propTypes = {
+  content: QuoteContentType,
+};
 
 export default Quote;

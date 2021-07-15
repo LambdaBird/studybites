@@ -1,17 +1,19 @@
-import { Switch, Redirect, Route, useLocation } from 'react-router-dom';
-import { useQuery } from 'react-query';
-import * as paths from '@sb-ui/utils/paths';
-import { getJWTAccessToken } from '@sb-ui/utils/jwt';
-import Header from '@sb-ui/components/molecules/Header';
-import { getUser } from '@sb-ui/utils/api/v1/user';
-import { USER_BASE_QUERY } from '@sb-ui/utils/queries';
-import MobileContext from '@sb-ui/contexts/MobileContext';
 import { useContext } from 'react';
+import { useQuery } from 'react-query';
+import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
+
+import Header from '@sb-ui/components/molecules/Header';
+import MobileContext from '@sb-ui/contexts/MobileContext';
+import { getUser } from '@sb-ui/utils/api/v1/user';
+import { getJWTAccessToken } from '@sb-ui/utils/jwt';
+import * as paths from '@sb-ui/utils/paths';
+import { USER_BASE_QUERY } from '@sb-ui/utils/queries';
+
 import {
-  getPrivateRoutes,
   checkPermission,
   getMainPage,
   getPagesWithSkippedHeader,
+  getPrivateRoutes,
 } from './PrivateRoutes.utils';
 
 const renderRoutes = (routes) =>
@@ -44,6 +46,9 @@ const PrivateRoutes = () => {
   const { data: userResponse, isLoading: isUserLoading } = useQuery(
     USER_BASE_QUERY,
     getUser,
+    {
+      enabled: !!isLoggedIn,
+    },
   );
   const user = userResponse?.data;
 
@@ -56,7 +61,7 @@ const PrivateRoutes = () => {
   }
 
   const allowedRoutes = getPrivateRoutes({ isMobile }).filter((route) =>
-    checkPermission(user.roles, route.permissions),
+    checkPermission(user?.roles, route?.permissions),
   );
 
   return (
@@ -64,7 +69,7 @@ const PrivateRoutes = () => {
       {getPagesWithSkippedHeader(location.pathname) || <Header />}
       <Switch>
         <Route path={paths.HOME} exact>
-          {getMainPage(user.roles)}
+          {getMainPage(user?.roles)}
         </Route>
         {renderRoutes(allowedRoutes)}
         <Route path="*">

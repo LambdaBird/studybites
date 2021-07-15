@@ -1,11 +1,13 @@
 import { useContext } from 'react';
 import { useQuery } from 'react-query';
+
 import MobileContext from '@sb-ui/contexts/MobileContext';
-import { USER_ENROLLED_SHORT_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
 import { getEnrolledLessons } from '@sb-ui/utils/api/v1/student';
-import OngoingLessonsMobile from './OngoingLessons.mobile';
-import OngoingLessonsDesktop from './OngoingLessons.desktop';
+import { USER_ENROLLED_SHORT_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
+
 import { PAGE_SHORT_SIZE } from './constants';
+import OngoingLessonsDesktop from './OngoingLessons.desktop';
+import OngoingLessonsMobile from './OngoingLessons.mobile';
 
 const OngoingLessons = () => {
   const isMobile = useContext(MobileContext);
@@ -21,7 +23,7 @@ const OngoingLessons = () => {
   );
   const { lessons } = responseData || {};
 
-  if (!isLoading && !lessons?.length) return null;
+  if (!lessons?.length) return null;
   return (
     <>
       {isMobile ? (

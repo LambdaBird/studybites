@@ -1,16 +1,13 @@
-import { useMemo } from 'react';
 import { Alert, Form, Input } from 'antd';
-import { useHistory } from 'react-router-dom';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
+
 import { useAuthentication } from '@sb-ui/hooks/useAuthentication';
 import { postSignIn } from '@sb-ui/utils/api/v1/user';
 import { SIGN_UP } from '@sb-ui/utils/paths';
-import {
-  DivAlignCenter,
-  SubmitButton,
-  LinkButton,
-  FormItemAlignEnd,
-} from './SignInForm.styled';
+
+import * as S from './SignInForm.styled';
 
 const SignInForm = () => {
   const { t } = useTranslation('sign_in');
@@ -63,20 +60,22 @@ const SignInForm = () => {
       <Form.Item name="email" rules={formRules.email}>
         <Input placeholder={t('email.placeholder')} />
       </Form.Item>
-      <FormItemAlignEnd
+      <S.FormItemAlignEnd
         name="password"
         rules={formRules.password}
-        extra={<LinkButton>{t('forgot_password')}</LinkButton>}
+        extra={<S.LinkButton>{t('forgot_password')}</S.LinkButton>}
       >
         <Input.Password placeholder={t('password.placeholder')} />
-      </FormItemAlignEnd>
+      </S.FormItemAlignEnd>
 
-      <SubmitButton loading={loading} type="primary" htmlType="submit">
+      <S.SubmitButton loading={loading} type="primary" htmlType="submit">
         {t('button')}
-      </SubmitButton>
-      <DivAlignCenter>
-        <LinkButton onClick={onClickNoAccount}>{t('no_account')}</LinkButton>
-      </DivAlignCenter>
+      </S.SubmitButton>
+      <S.DivAlignCenter>
+        <S.LinkButton onClick={onClickNoAccount}>
+          {t('no_account')}
+        </S.LinkButton>
+      </S.DivAlignCenter>
     </Form>
   );
 };

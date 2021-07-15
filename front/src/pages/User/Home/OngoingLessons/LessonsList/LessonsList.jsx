@@ -1,11 +1,11 @@
 import { Col, Empty, Skeleton } from 'antd';
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 
-import emptyImg from '@sb-ui/resources/img/empty.svg';
-import useMobile from '@sb-ui/hooks/useMobile';
 import OngoingShortLesson from '@sb-ui/components/lessonBlocks/OngoingShort';
+import useMobile from '@sb-ui/hooks/useMobile';
+import emptyImg from '@sb-ui/resources/img/empty.svg';
 
+import { LessonsListPropTypes } from './types';
 import * as S from './LessonsList.styled';
 
 const LessonsList = ({ lessons, isLoading }) => {
@@ -29,11 +29,7 @@ const LessonsList = ({ lessons, isLoading }) => {
         ) : (
           <>
             {lessons?.map((lesson) => (
-              <S.LessonsColumn
-                key={lesson.id}
-                xl={{ span: 8 }}
-                lg={{ span: 24 }}
-              >
+              <S.LessonsColumn key={lesson.id}>
                 <OngoingShortLesson lesson={lesson} />
               </S.LessonsColumn>
             ))}
@@ -45,21 +41,15 @@ const LessonsList = ({ lessons, isLoading }) => {
 
   return (
     <S.LessonsMainEmpty>
-      <Empty image={emptyImg} description={t('home.open_lessons.not_found')} />
+      <Empty
+        image={emptyImg}
+        description={t('home.ongoing_lessons.not_found')}
+      />
     </S.LessonsMainEmpty>
   );
 };
 
-LessonsList.propTypes = {
-  lessons: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      status: PropTypes.string.isRequired,
-      id: PropTypes.number.isRequired,
-    }),
-  ),
-  isLoading: PropTypes.bool.isRequired,
-};
+LessonsList.propTypes = LessonsListPropTypes;
 
 LessonsList.defaultProps = {
   lessons: [],

@@ -1,26 +1,14 @@
-import { BlockElementProps } from './types';
-import Paragraph from './Paragraph';
-import QuizBlockResult from './QuizBlockResult';
+import Delimiter from './Delimiter';
 import Embed from './Embed';
+import Error from './Error';
+import Header from './Header';
 import Image from './Image';
 import List from './List';
-import Header from './Header';
+import Paragraph from './Paragraph';
+import QuizBlockResult from './QuizBlockResult';
 import Quote from './Quote';
-import Delimiter from './Delimiter';
 import Table from './Table';
-import Error from './Error';
-
-const BLOCKS_TYPE = {
-  PARAGRAPH: 'paragraph',
-  QUIZ: 'quiz',
-  EMBED: 'embed',
-  IMAGE: 'image',
-  LIST: 'list',
-  HEADER: 'header',
-  QUOTE: 'quote',
-  DELIMITER: 'delimiter',
-  TABLE: 'table',
-};
+import { BlockElementProps, BLOCKS_TYPE } from './types';
 
 const BlockElement = ({ element }) => {
   const { content, answer } = element;

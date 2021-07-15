@@ -1,44 +1,35 @@
-import PropTypes from 'prop-types';
 import TeacherLesson from '@sb-ui/components/lessonBlocks/Teacher';
-import AddCard from '../AddCard';
 
-import { CardCol } from '../LessonsDashboard.styled';
+import AddCard from '../AddCard';
+import { LessonsListPropTypes } from '../types';
+
+import * as S from '../LessonsDashboard.styled';
 
 const LessonsList = ({ lessons, onCreateLesson, isAddNewShown }) => (
   <>
     {isAddNewShown ? (
-      <CardCol span={12}>
+      <S.CardCol>
         <AddCard onClick={onCreateLesson} />
-      </CardCol>
+      </S.CardCol>
     ) : (
       lessons.map((lesson) => (
-        <CardCol key={lesson.id} span={12}>
+        <S.CardCol key={lesson.id}>
           <TeacherLesson
             id={lesson.id}
             title={lesson.name}
             students={lesson.students}
             status={lesson.status}
           />
-        </CardCol>
+        </S.CardCol>
       ))
     )}
   </>
 );
 
-LessonsList.propTypes = {
-  lessons: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      status: PropTypes.string.isRequired,
-      id: PropTypes.number.isRequired,
-    }),
-  ),
-  onCreateLesson: PropTypes.func.isRequired,
-  isAddNewShown: PropTypes.bool.isRequired,
-};
-
 LessonsList.defaultProps = {
   lessons: [],
 };
+
+LessonsList.propTypes = LessonsListPropTypes;
 
 export default LessonsList;

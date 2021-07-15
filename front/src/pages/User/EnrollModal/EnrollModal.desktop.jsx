@@ -1,12 +1,14 @@
-import { useCallback, useMemo } from 'react';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
-import { useQuery } from 'react-query';
-import { useTranslation } from 'react-i18next';
 import { Col, Divider, Modal, Rate, Typography } from 'antd';
+import { useCallback, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useQuery } from 'react-query';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
+
+import lessonImg from '@sb-ui/resources/img/lesson.svg';
 import { getEnrolledLesson, postEnroll } from '@sb-ui/utils/api/v1/student';
 import { LESSON_PAGE, USER_HOME } from '@sb-ui/utils/paths';
 import { USER_LESSON_MODAL_BASE_KEY } from '@sb-ui/utils/queries';
-import lessonImg from '@sb-ui/resources/img/lesson.svg';
+
 import * as S from './EnrollModal.desktop.styled';
 
 const { Title, Text } = Typography;
@@ -17,6 +19,12 @@ const EnrollModalDesktop = () => {
   const query = useMemo(() => location.search, [location]);
   const history = useHistory();
   const { id } = useParams();
+
+  const historyReplaceBack = useCallback(() => {
+    history.replace({
+      pathname: USER_HOME,
+    });
+  }, [history]);
 
   const historyPushBack = useCallback(() => {
     history.push({
@@ -49,6 +57,12 @@ const EnrollModalDesktop = () => {
     description: '',
   };
 
+  useEffect(() => {
+    if (responseData !== undefined && !responseData?.lesson) {
+      historyReplaceBack();
+    }
+  }, [historyReplaceBack, responseData]);
+
   const { firstName, lastName } = authors?.[0];
   const author = `${firstName} ${lastName}`;
 
@@ -77,7 +91,7 @@ const EnrollModalDesktop = () => {
             <S.AuthorName>{author}</S.AuthorName>
           </S.AuthorContainer>
         </Col>
-        <S.NameColumn span={24}>
+        <S.NameColumn>
           <Title level={3}>{name}</Title>
         </S.NameColumn>
         <Col span={24}>

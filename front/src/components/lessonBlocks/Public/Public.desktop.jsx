@@ -1,7 +1,9 @@
-import PropTypes from 'prop-types';
 import { Button, Col } from 'antd';
 import { useTranslation } from 'react-i18next';
+
+import { PublicLessonType } from '@sb-ui/components/lessonBlocks/types';
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
+
 import { useLesson } from './useLesson';
 import {
   AuthorAvatar,
@@ -76,14 +78,7 @@ const PublicDesktop = ({ lesson }) => {
 };
 
 PublicDesktop.propTypes = {
-  lesson: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    isEnrolled: PropTypes.bool.isRequired,
-    firstName: PropTypes.string.isRequired,
-    lastName: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-  }).isRequired,
+  lesson: PublicLessonType.isRequired,
 };
 
 export default PublicDesktop;

@@ -1,13 +1,15 @@
+import { Typography } from 'antd';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
-import { Typography } from 'antd';
+
 import { getTeacherLessons } from '@sb-ui/utils/api/v1/teacher';
+import { getUser } from '@sb-ui/utils/api/v1/user';
 import {
   TEACHER_LESSONS_BASE_KEY,
   USER_BASE_QUERY,
 } from '@sb-ui/utils/queries';
-import { getUser } from '@sb-ui/utils/api/v1/user';
+
 import * as S from './TeacherInfo.styled';
 
 const { Title, Text } = Typography;
@@ -43,20 +45,20 @@ const TeacherInfo = () => {
   );
 
   const firstNameLetter = useMemo(
-    () => user.firstName[0] || user.lastName[0],
+    () => user.firstName?.[0] || user.lastName?.[0],
     [user.firstName, user.lastName],
   );
 
   return (
-    <S.Wrapper justify="center" align="center">
+    <S.Wrapper>
       <S.AvatarCol>
-        <S.StyledAvatar size={64}>{firstNameLetter}</S.StyledAvatar>
+        <S.StyledAvatar>{firstNameLetter}</S.StyledAvatar>
       </S.AvatarCol>
-      <S.TextCol span={14}>
+      <S.TextCol>
         <Title level={4}>{t('info.greeting', { fullName })}</Title>
         <Text type="secondary">Your awesome description</Text>
       </S.TextCol>
-      <S.StatisticCol span={8}>
+      <S.StatisticCol>
         {statisticColumns.map((column) => (
           <React.Fragment key={column.key}>
             <S.StatisticCell
@@ -65,7 +67,7 @@ const TeacherInfo = () => {
               suffix={column.suffix}
               valueStyle={{ textAlign: 'right' }}
             />
-            <S.StatisticDivider type="vertical" />
+            <S.StatisticDivider />
           </React.Fragment>
         ))}
       </S.StatisticCol>

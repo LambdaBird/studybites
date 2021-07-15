@@ -1,12 +1,14 @@
+import { Button, Col, Divider, Skeleton, Space, Typography } from 'antd';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Col, Divider, Skeleton, Space, Typography } from 'antd';
 import { useQuery } from 'react-query';
+
+import { MAX_STUDENTS_IN_LIST } from '@sb-ui/pages/Teacher/Home/StudentsList/constants';
 import emptyImage from '@sb-ui/resources/img/empty.svg';
 import { getTeacherStudents } from '@sb-ui/utils/api/v1/teacher';
-import { MAX_STUDENTS_IN_LIST } from '@sb-ui/pages/Teacher/Home/StudentsList/constants';
 import { TEACHER_STUDENTS_BASE_KEY } from '@sb-ui/utils/queries';
 import { skeletonArray } from '@sb-ui/utils/utils';
+
 import * as S from './StudentsList.styled';
 
 const { Text } = Typography;
@@ -36,9 +38,9 @@ const StudentsList = () => {
     return (
       <S.Wrapper>
         <S.EmptyListHeader>
-          <S.ListTitle level={4}>{t('students_list.title')}</S.ListTitle>
+          <S.ListTitle>{t('students_list.title')}</S.ListTitle>
         </S.EmptyListHeader>
-        <S.StudentsRow gutter={[16, 16]} align="top">
+        <S.StudentsRow>
           {skeletonArray(MAX_STUDENTS_IN_LIST).map(({ id }) => (
             <Col key={id} span={12}>
               <Skeleton avatar paragraph={{ rows: 0 }} />
@@ -54,13 +56,10 @@ const StudentsList = () => {
       {!students.length ? (
         <>
           <S.EmptyListHeader>
-            <S.ListTitle level={4}>{t('students_list.title')}</S.ListTitle>
+            <S.ListTitle>{t('students_list.title')}</S.ListTitle>
           </S.EmptyListHeader>
           <S.EmptyList
             image={emptyImage}
-            imageStyle={{
-              height: 60,
-            }}
             description={<Text>{t('students_list.no_students')}</Text>}
           >
             <Button type="link" onClick={() => {}}>
@@ -71,13 +70,13 @@ const StudentsList = () => {
       ) : (
         <>
           <S.ListHeader>
-            <S.ListTitle level={4}>{t('students_list.title')}</S.ListTitle>
+            <S.ListTitle>{t('students_list.title')}</S.ListTitle>
             <Button type="link" onClick={() => {}}>
               {t('students_list.all')}
             </Button>
           </S.ListHeader>
           <Divider />
-          <S.StudentsRow gutter={[16, 16]} align="top">
+          <S.StudentsRow>
             {students.map(({ id, name }) => (
               <Col key={id} span={12}>
                 <Space>

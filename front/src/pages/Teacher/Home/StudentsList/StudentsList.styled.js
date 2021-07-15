@@ -1,5 +1,6 @@
-import styled from 'styled-components';
 import { Avatar, Empty, Row, Typography } from 'antd';
+import styled from 'styled-components';
+
 import { VOLCANO_2, VOLCANO_6 } from '@sb-ui/resources/styles/Global.styled';
 
 const { Title, Text } = Typography;
@@ -16,11 +17,17 @@ export const Wrapper = styled(Row)`
   width: 400px;
 `;
 
-export const ListTitle = styled(Title)`
+export const ListTitle = styled(Title).attrs({
+  level: 4,
+})`
   padding-top: 0.5rem;
 `;
 
-export const EmptyList = styled(Empty)`
+export const EmptyList = styled(Empty).attrs({
+  imageStyle: {
+    height: 60,
+  },
+})`
   padding-top: 4rem;
 `;
 
@@ -47,6 +54,9 @@ export const AuthorName = styled(Text)`
   white-space: nowrap;
 `;
 
-export const StudentsRow = styled(Row)`
+export const StudentsRow = styled(Row).attrs({
+  gutter: [16, 16],
+  align: 'top',
+})`
   width: 100%;
 `;

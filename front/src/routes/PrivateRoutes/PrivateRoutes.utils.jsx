@@ -1,15 +1,16 @@
 import { matchPath } from 'react-router-dom';
-import * as paths from '@sb-ui/utils/paths';
-import { Roles } from '@sb-ui/utils/constants';
+
 import { AdminHome } from '@sb-ui/pages/Admin';
+import { LessonEdit, TeacherHome } from '@sb-ui/pages/Teacher';
 import {
+  EnrollModalDesktop,
+  EnrollModalMobile,
+  LessonPage,
   UserHome,
   UserLessons,
-  EnrollModalMobile,
-  EnrollModalDesktop,
-  LessonPage,
 } from '@sb-ui/pages/User';
-import { TeacherHome, LessonEdit } from '@sb-ui/pages/Teacher';
+import { Roles } from '@sb-ui/utils/constants';
+import * as paths from '@sb-ui/utils/paths';
 import { LESSONS_EDIT, LESSONS_NEW } from '@sb-ui/utils/paths';
 
 const SKIP_HEADER = [LESSONS_NEW, LESSONS_EDIT];
@@ -17,7 +18,7 @@ const SKIP_HEADER = [LESSONS_NEW, LESSONS_EDIT];
 export const checkPermission = (roles, permissions) => {
   if (!permissions) return true;
 
-  return roles.find((role) =>
+  return roles?.find((role) =>
     permissions.some((permission) => role === permission),
   );
 };
@@ -87,10 +88,10 @@ export const getPagesWithSkippedHeader = (pathname) =>
   ).some((x) => !!x);
 
 export const getMainPage = (roles) => {
-  if (roles.includes(Roles.SUPER_ADMIN)) {
+  if (roles?.includes(Roles.SUPER_ADMIN)) {
     return <AdminHome />;
   }
-  if (roles.includes(Roles.TEACHER)) {
+  if (roles?.includes(Roles.TEACHER)) {
     return <TeacherHome />;
   }
   return <UserHome />;

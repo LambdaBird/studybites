@@ -1,9 +1,11 @@
 import { Button, Col, Row, Typography } from 'antd';
-import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { LESSON_PAGE } from '@sb-ui/utils/paths';
+
+import { LessonType } from '@sb-ui/components/lessonBlocks/types';
 import lessonImg from '@sb-ui/resources/img/lesson.svg';
+import { LESSON_PAGE } from '@sb-ui/utils/paths';
+
 import * as S from './OngoingShort.styled';
 
 const { Title } = Typography;
@@ -46,11 +48,7 @@ const OngoingShortMobile = ({ lesson }) => {
 };
 
 OngoingShortMobile.propTypes = {
-  lesson: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    percentage: PropTypes.number.isRequired,
-  }).isRequired,
+  lesson: LessonType.isRequired,
 };
 
 export default OngoingShortMobile;

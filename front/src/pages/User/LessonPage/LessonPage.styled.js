@@ -1,5 +1,5 @@
+import { Button, Col, Row, Typography } from 'antd';
 import styled, { createGlobalStyle } from 'styled-components';
-import { Row, Col, Button, Typography } from 'antd';
 
 const { Text } = Typography;
 

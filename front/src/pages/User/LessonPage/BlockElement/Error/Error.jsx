@@ -1,6 +1,7 @@
 import { Typography } from 'antd';
 import { useLocation } from 'react-router-dom';
-import { BlockElementProps } from '../types';
+
+import { BlockIdType } from '../types';
 
 const { Text } = Typography;
 
@@ -13,6 +14,8 @@ const Error = ({ blockId }) => {
   );
 };
 
-Error.propTypes = BlockElementProps;
+Error.propTypes = {
+  blockId: BlockIdType,
+};
 
 export default Error;

@@ -1,10 +1,17 @@
-import { useMemo } from 'react';
 import { Col, Dropdown, Menu } from 'antd';
-import { useHistory, useLocation, Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { useQuery } from 'react-query';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useQuery } from 'react-query';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import { DownOutlined } from '@ant-design/icons';
+
+import useMobile from '@sb-ui/hooks/useMobile';
+import { LANGUAGES_LIST } from '@sb-ui/i18n';
+import { queryClient } from '@sb-ui/query';
+import logo from '@sb-ui/resources/img/logo.svg';
+import { getUser } from '@sb-ui/utils/api/v1/user';
+import { Roles } from '@sb-ui/utils/constants';
+import { clearJWT } from '@sb-ui/utils/jwt';
 import {
   HOME,
   SIGN_IN,
@@ -12,13 +19,9 @@ import {
   USER_HOME,
   USER_LESSONS,
 } from '@sb-ui/utils/paths';
-import logo from '@sb-ui/resources/img/logo.svg';
-import { clearJWT } from '@sb-ui/utils/jwt';
 import { USER_BASE_QUERY } from '@sb-ui/utils/queries';
-import { Roles } from '@sb-ui/utils/constants';
-import useMobile from '@sb-ui/hooks/useMobile';
-import { getUser } from '@sb-ui/utils/api/v1/user';
-import { LANGUAGES_LIST } from '@sb-ui/i18n';
+import { ChildrenType } from '@sb-ui/utils/types';
+
 import * as S from './Header.styled';
 
 const { SubMenu } = Menu;
@@ -34,6 +37,7 @@ const Header = ({ children }) => {
 
   const handleSignOut = () => {
     clearJWT();
+    queryClient.invalidateQueries();
     history.push(SIGN_IN);
   };
 
@@ -70,7 +74,7 @@ const Header = ({ children }) => {
   const menu = (
     <Menu onClick={handleMenuClick}>
       <Menu.Item key="profile">{t('header.profile')}</Menu.Item>
-      {user.roles.includes(Roles.TEACHER) && getTeacherMenu()}
+      {user?.roles?.includes(Roles.TEACHER) && getTeacherMenu()}
 
       <SubMenu title={t('header.language')}>
         {LANGUAGES_LIST.map(({ key, value }) => (
@@ -84,13 +88,13 @@ const Header = ({ children }) => {
   );
 
   const fullName = useMemo(
-    () => `${user.firstName} ${user.lastName}`.trim(),
-    [user.firstName, user.lastName],
+    () => `${user?.firstName} ${user?.lastName}`.trim(),
+    [user?.firstName, user?.lastName],
   );
 
   const firstNameLetter = useMemo(
-    () => user.firstName[0] || user.lastName[0],
-    [user.firstName, user.lastName],
+    () => user?.firstName?.[0] || user?.lastName?.[0],
+    [user?.firstName, user?.lastName],
   );
 
   return (
@@ -117,7 +121,7 @@ const Header = ({ children }) => {
 };
 
 Header.propTypes = {
-  children: PropTypes.node,
+  children: ChildrenType,
 };
 
 export default Header;

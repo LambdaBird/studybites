@@ -1,8 +1,10 @@
 import { Redirect, Route } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { HOME } from '@sb-ui/utils/paths';
+
 import logo from '@sb-ui/resources/img/logo.svg';
+import { HOME } from '@sb-ui/utils/paths';
+import { ChildrenType } from '@sb-ui/utils/types';
+
 import { getJWTAccessToken } from '../utils/jwt';
 
 const AuthRoute = ({ children: Component, ...rest }) => {
@@ -21,7 +23,7 @@ const AuthRoute = ({ children: Component, ...rest }) => {
 };
 
 AuthRoute.propTypes = {
-  children: PropTypes.node.isRequired,
+  children: ChildrenType.isRequired,
 };
 
 export default AuthRoute;

@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { SearchOutlined } from '@ant-design/icons';
+
 import { useDebounce } from '@sb-ui/hooks/useDebounce';
+
+import { DebouncedSearchDefaultProps, DebouncedSearchPropTypes } from './types';
 import * as S from './DebouncedSearch.styled';
 
 const DebouncedSearch = ({ delay, onChange, ...props }) => {
@@ -22,13 +24,7 @@ const DebouncedSearch = ({ delay, onChange, ...props }) => {
   );
 };
 
-DebouncedSearch.defaultProps = {
-  delay: 500,
-};
-
-DebouncedSearch.propTypes = {
-  onChange: PropTypes.func.isRequired,
-  delay: PropTypes.number,
-};
+DebouncedSearch.defaultProps = DebouncedSearchDefaultProps;
+DebouncedSearch.propTypes = DebouncedSearchPropTypes;
 
 export default DebouncedSearch;

@@ -2,6 +2,7 @@ import { Progress } from 'antd';
 import PropTypes from 'prop-types';
 
 import InfoBlock from '@sb-ui/pages/User/LessonPage/InfoBlock';
+
 import * as S from './Header.styled';
 
 const Header = ({ isLoading, percent, total, lesson }) => (

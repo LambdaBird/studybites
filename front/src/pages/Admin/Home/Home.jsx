@@ -1,4 +1,3 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   Button,
   Checkbox,
@@ -10,18 +9,21 @@ import {
   Table,
   Typography,
 } from 'antd';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory, useLocation } from 'react-router-dom';
 import { useQuery } from 'react-query';
+import { useHistory, useLocation } from 'react-router-dom';
+
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
 import {
   appointTeacher,
   getUsers,
   removeTeacher,
 } from '@sb-ui/utils/api/v1/admin';
-import { getQueryPage } from '@sb-ui/utils/utils';
 import { ADMIN_USERS_BASE_KEY } from '@sb-ui/utils/queries';
-import { MainDiv, TableHeader, TitleHeader } from './Home.styled';
+import { getQueryPage } from '@sb-ui/utils/utils';
+
+import * as S from './Home.styled';
 
 const messageKey = 'teacherStateLoading';
 
@@ -169,12 +171,12 @@ const Home = () => {
   );
 
   return (
-    <MainDiv>
-      <TableHeader justify="space-between" align="middle">
+    <S.MainDiv>
+      <S.TableHeader>
         <Col>
           <Row>
             <Space size="large">
-              <TitleHeader level={3}>{t('home.title')}</TitleHeader>
+              <S.TitleHeader>{t('home.title')}</S.TitleHeader>
               <DebouncedSearch
                 delay={500}
                 placeholder={t('home.search.placeholder')}
@@ -187,10 +189,11 @@ const Home = () => {
         <Col>
           <Button disabled>{t('home.buttons.add_user')}</Button>
         </Col>
-      </TableHeader>
+      </S.TableHeader>
       <Table
         columns={columns}
         dataSource={data}
+        rowKey={(row) => row.id}
         pagination={
           !isLoading &&
           total > PAGE_SIZE && {
@@ -211,7 +214,7 @@ const Home = () => {
           ),
         }}
       />
-    </MainDiv>
+    </S.MainDiv>
   );
 };
 

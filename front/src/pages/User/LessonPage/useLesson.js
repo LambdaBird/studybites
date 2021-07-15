@@ -1,18 +1,18 @@
-import { useHistory, useParams } from 'react-router-dom';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
+import { useHistory, useParams } from 'react-router-dom';
 
-import { LESSON_BASE_QUERY } from '@sb-ui/utils/queries';
-import { getLessonById, postLessonById } from '@sb-ui/utils/api/v1/student';
 import {
   FINISH_TYPE,
+  newGroupBlocks,
   NEXT_TYPE,
+  prepareResultToAnswers,
   RESPONSE_TYPE,
   START_TYPE,
-  newGroupBlocks,
-  prepareResultToAnswers,
 } from '@sb-ui/pages/User/LessonPage/utils';
+import { getLessonById, postLessonById } from '@sb-ui/utils/api/v1/student';
 import { USER_HOME } from '@sb-ui/utils/paths';
+import { LESSON_BASE_QUERY } from '@sb-ui/utils/queries';
 
 export const useLesson = () => {
   const history = useHistory();

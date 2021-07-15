@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
+
 import { setJWT } from '@sb-ui/utils/jwt';
 import { HOME } from '@sb-ui/utils/paths';
 

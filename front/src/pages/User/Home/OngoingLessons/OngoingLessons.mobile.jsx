@@ -1,21 +1,21 @@
 import { Col, Row } from 'antd';
-import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+
 import { USER_LESSONS } from '@sb-ui/utils/paths';
-import * as S from './OngoingLessons.mobile.styled';
+
 import LessonsList from './LessonsList';
+import * as S from './OngoingLessons.mobile.styled';
 
 const OngoingLessonsMobile = (props) => {
   const { t } = useTranslation('user');
 
   return (
     <>
-      <S.Header justify="space-between" align="middle">
+      <S.Header>
         <Col>
           <Row justify="center" align="middle">
-            <S.HeaderTitle level={4}>
-              {t('home.ongoing_lessons.title')}
-            </S.HeaderTitle>
+            <S.HeaderTitle>{t('home.ongoing_lessons.title')}</S.HeaderTitle>
           </Row>
         </Col>
       </S.Header>

@@ -1,27 +1,18 @@
 import { useContext } from 'react';
-import PropTypes from 'prop-types';
 
 import MobileContext from '@sb-ui/contexts/MobileContext';
 
-import OngoingShortMobile from './OngoingShort.mobile';
 import OngoingShortDesktop from './OngoingShort.desktop';
+import OngoingShortMobile from './OngoingShort.mobile';
 
-const OngoingShort = ({ lesson }) => {
+const OngoingShort = (props) => {
   const isMobile = useContext(MobileContext);
 
   if (isMobile) {
-    return <OngoingShortMobile lesson={lesson} />;
+    return <OngoingShortMobile {...props} />;
   }
 
-  return <OngoingShortDesktop lesson={lesson} />;
-};
-
-OngoingShort.propTypes = {
-  lesson: PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-  }).isRequired,
+  return <OngoingShortDesktop {...props} />;
 };
 
 export default OngoingShort;

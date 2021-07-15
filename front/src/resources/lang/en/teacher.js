@@ -51,6 +51,7 @@ export default {
       success_updated: 'Successfully updated',
       error_created: 'Create error',
       error_updated: 'Update error',
+      error_lesson_name: 'Missing lesson name',
     },
     header: {
       placeholder: 'Enter a header',

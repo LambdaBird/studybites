@@ -1,17 +1,18 @@
-import { useTranslation } from 'react-i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
+import { useHistory, useLocation } from 'react-router-dom';
 
-import { getQueryPage } from '@sb-ui/utils/utils';
 import { PAGE_SIZE } from '@sb-ui/pages/User/Lessons/LessonsList/constants';
-import emptyImg from '@sb-ui/resources/img/empty.svg';
-import { USER_PUBLIC_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
-import { getPublicLessons } from '@sb-ui/utils/api/v1/student';
 import * as S from '@sb-ui/pages/User/Lessons/LessonsList/LessonsList.styled';
-import LessonsListBlock from './LessonsListBlock';
+import emptyImg from '@sb-ui/resources/img/empty.svg';
+import { getPublicLessons } from '@sb-ui/utils/api/v1/student';
+import { USER_PUBLIC_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
+import { getQueryPage } from '@sb-ui/utils/utils';
 
-const LessonsList = () => {
+import OpenLessonsBlock from './OpenLessonsBlock';
+
+const OpenLessons = () => {
   const { t } = useTranslation('user');
   const location = useLocation();
   const queryPage = useMemo(() => location.search, [location]);
@@ -68,17 +69,11 @@ const LessonsList = () => {
   return (
     <S.Wrapper>
       <S.LessonsHeader>
-        <S.OpenLessonsTitle level={4}>
-          {t('home.open_lessons.title')}
-        </S.OpenLessonsTitle>
-        <S.StyledSearch
-          searchText={searchText}
-          setSearchText={setSearchText}
-          placement="bottomLeft"
-        />
+        <S.OpenLessonsTitle>{t('home.open_lessons.title')}</S.OpenLessonsTitle>
+        <S.StyledSearch searchText={searchText} setSearchText={setSearchText} />
       </S.LessonsHeader>
-      <S.LessonsRow gutter={[32, 32]}>
-        <LessonsListBlock isLoading={isLoading} data={data} />
+      <S.LessonsRow>
+        <OpenLessonsBlock isLoading={isLoading} data={data} />
         {isEmpty && (
           <S.EmptyContainer
             image={emptyImg}
@@ -92,11 +87,10 @@ const LessonsList = () => {
           total={total}
           pageSize={PAGE_SIZE}
           onChange={handlePageChange}
-          showSizeChanger={false}
         />
       )}
     </S.Wrapper>
   );
 };
 
-export default LessonsList;
+export default OpenLessons;
