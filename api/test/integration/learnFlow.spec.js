@@ -413,6 +413,10 @@ describe('Learning flow', () => {
       expect(payload.lesson).toHaveProperty('blocks');
       expect(payload.lesson.blocks).toBeInstanceOf(Array);
       expect(payload.lesson.blocks.length).toBe(6);
+      payload.lesson.blocks.forEach((block, index) => {
+        // eslint-disable-next-line no-underscore-dangle
+        expect(block.blockId).toBe(french._blocks._current[index].block_id);
+      });
     });
   });
 
