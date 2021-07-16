@@ -27,7 +27,7 @@ const LearnPage = () => {
     [
       createParagraphBlock(4, 'Paragraph1'),
       createParagraphBlock(5, 'Paragraph2'),
-      createNextBlock(6, true),
+      createQuizResultBlock(6, [true, false, true], [true, true, true]),
     ],
     [
       createParagraphBlock(7, 'Paragraph3'),
@@ -88,7 +88,7 @@ export const createQuizBlock = (id, results) => ({
   blockId: id,
   content: {
     data: {
-      answers: results.map((x, i) => ({ value: i })),
+      answers: results.map((x, i) => ({ value: `Value ${i + 1}` })),
       question: 'Test text',
     },
     id: `content-${id}`,
@@ -115,7 +115,10 @@ export const createQuizResultBlock = (id, results, response) => ({
   blockId: id,
   content: {
     data: {
-      answers: results.map((x, i) => ({ value: i, correct: response[i] })),
+      answers: results.map((x, i) => ({
+        value: `Value ${i + 1}`,
+        correct: response[i],
+      })),
       question: 'Test text',
     },
     id: `content-${id}`,

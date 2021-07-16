@@ -20,10 +20,7 @@ const QuizResult = ({ data, correctAnswer }) => {
     correct,
   }));
 
-  const { correct, difference } = verifyAnswers(
-    answers.map((x) => x.correct),
-    correctAnswer?.results,
-  );
+  const { correct, result } = verifyAnswers(answers, correctAnswer?.results);
 
   const defaultValueAnswers = useMemo(
     () =>
@@ -42,11 +39,7 @@ const QuizResult = ({ data, correctAnswer }) => {
         <ColumnDisabledCheckbox value={defaultValueAnswers} options={options} />
       </ChunkWrapper>
       <ChunkWrapper>
-        <AnswersResult
-          difference={difference}
-          options={options}
-          correct={correct}
-        />
+        <AnswersResult result={result} options={options} correct={correct} />
       </ChunkWrapper>
     </>
   );
