@@ -1,11 +1,14 @@
 /* eslint no-use-before-define: "off" */
 
+import LearnContext from '@sb-ui/contexts/LearnContext';
+import BlockElement from '@sb-ui/pages/User/LessonPage/BlockElement';
 import InfoBlock from '@sb-ui/pages/User/LessonPage/InfoBlock';
 
 import LearnChunk from './LearnChunk';
 import * as S from './LearnPage.styled';
 
 const LearnPage = () => {
+  const lessonId = 2;
   const leanProgress = 50;
   const isLoading = false;
   const total = 42;
@@ -35,6 +38,10 @@ const LearnPage = () => {
     ],
   ];
 
+  const mutate = (params) => {
+    console.log(params);
+  };
+
   return (
     <>
       <S.Header />
@@ -43,13 +50,27 @@ const LearnPage = () => {
         <S.Progress percent={leanProgress} />
         <S.Row>
           <S.BlockCell>
-            <S.LearnWrapper>
-              <InfoBlock isLoading={isLoading} total={total} lesson={lesson} />
-              {chunks.map((chunk, index) => (
-                // eslint-disable-next-line react/no-array-index-key
-                <LearnChunk key={index} chunk={chunk} />
-              ))}
-            </S.LearnWrapper>
+            <LearnContext.Provider
+              value={{
+                mutate,
+                id: lessonId,
+              }}
+            >
+              <S.LearnWrapper>
+                <InfoBlock
+                  isLoading={isLoading}
+                  total={total}
+                  lesson={lesson}
+                />
+                {chunks.map((chunk, index) => (
+                  // eslint-disable-next-line react/no-array-index-key
+                  <LearnChunk key={index} chunk={chunk} />
+                ))}
+                {chunks?.length === 0 && (
+                  <BlockElement element={createStartBlock()} />
+                )}
+              </S.LearnWrapper>
+            </LearnContext.Provider>
           </S.BlockCell>
         </S.Row>
       </S.Wrapper>
@@ -57,9 +78,15 @@ const LearnPage = () => {
   );
 };
 
+export const createStartBlock = () => ({
+  content: {
+    type: 'start',
+  },
+});
+
 export const createParagraphBlock = (id, text) => ({
   answer: {},
-  blockId: id,
+  blockId: `block-${id}`,
   content: {
     id: `content-${id}`,
     data: { text },
@@ -71,7 +98,7 @@ export const createParagraphBlock = (id, text) => ({
 
 export const createNextBlock = (id, isSolved) => ({
   answer: {},
-  blockId: id,
+  blockId: `block-${id}`,
   content: {
     id: `content-${id}`,
     data: {},
@@ -85,7 +112,7 @@ export const createNextBlock = (id, isSolved) => ({
 });
 
 export const createQuizBlock = (id, results) => ({
-  blockId: id,
+  blockId: `block-${id}`,
   content: {
     data: {
       answers: results.map((x, i) => ({ value: `Value ${i + 1}` })),
@@ -106,13 +133,13 @@ export const createFinishBlock = (id) => ({
   response: {
     isSolved: false,
   },
-  blockId: id,
+  blockId: `block-${id}`,
   answer: {},
 });
 
 export const createQuizResultBlock = (id, results, response) => ({
   answer: { results },
-  blockId: id,
+  blockId: `block-${id}`,
   content: {
     data: {
       answers: results.map((x, i) => ({

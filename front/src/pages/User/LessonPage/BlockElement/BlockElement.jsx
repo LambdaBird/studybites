@@ -9,6 +9,7 @@ import Next from './Next';
 import Paragraph from './Paragraph';
 import Quiz from './Quiz';
 import Quote from './Quote';
+import Start from './Start';
 import Table from './Table';
 import { BlockElementProps, BLOCKS_TYPE } from './types';
 
@@ -36,6 +37,8 @@ const BlockElement = ({ element }) => {
       return <Next {...element} />;
     case BLOCKS_TYPE.FINISH:
       return <Finish {...element} />;
+    case BLOCKS_TYPE.START:
+      return <Start {...element} />;
     default:
       return <Error />;
   }
