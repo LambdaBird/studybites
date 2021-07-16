@@ -26,6 +26,8 @@ import * as S from './Header.styled';
 
 const { SubMenu } = Menu;
 
+const USER_LOGO_FALLBACK = 'X';
+
 const Header = ({ children }) => {
   const history = useHistory();
   const { t, i18n } = useTranslation(['common', 'user']);
@@ -87,14 +89,21 @@ const Header = ({ children }) => {
     </Menu>
   );
 
-  const fullName = useMemo(
-    () => `${user?.firstName} ${user?.lastName}`.trim(),
+  const isUsername = useMemo(
+    () => user?.firstName && user?.lastName,
     [user?.firstName, user?.lastName],
   );
 
+  const fullName = useMemo(
+    () => isUsername && `${user?.firstName} ${user?.lastName}`.trim(),
+    [user?.firstName, user?.lastName, isUsername],
+  );
+
   const firstNameLetter = useMemo(
-    () => user?.firstName?.[0] || user?.lastName?.[0],
-    [user?.firstName, user?.lastName],
+    () =>
+      (isUsername && (user?.firstName?.[0] || user?.lastName?.[0])) ||
+      USER_LOGO_FALLBACK,
+    [user?.firstName, user?.lastName, isUsername],
   );
 
   return (

@@ -1,7 +1,10 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-underscore-dangle */
 
+import { message } from 'antd';
 import axios from 'axios';
+
+import i18n from '@sb-ui/i18n';
 
 import {
   clearJWT,
@@ -32,6 +35,13 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     const refreshToken = getJWTRefreshToken();
+    if (error.response.status === 500) {
+      message.error({
+        key: 'errors.internal_server',
+        content: i18n.t('errors.internal_server'),
+        duration: 3,
+      });
+    }
     if (error.response.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
