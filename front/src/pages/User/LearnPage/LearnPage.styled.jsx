@@ -38,6 +38,10 @@ export const LearnWrapper = styled.div`
   margin: 0 auto;
 `;
 
+export const Wrapper = styled.div`
+  height: 100%;
+`;
+
 export const BlockCell = styled(Col).attrs(() => ({
   xs: { span: 20 },
   sm: { span: 18 },
@@ -49,7 +53,8 @@ export const BlockCell = styled(Col).attrs(() => ({
 `;
 
 export const Row = styled(AntdRow)`
-  margin-top: 4rem;
+  height: 100%;
+  padding-top: 4rem;
   justify-content: center;
 `;
 
@@ -59,6 +64,10 @@ export const ChunkWrapper = styled.div`
   border-radius: 8px;
   padding: 2rem;
   max-width: 614px;
+
+  @media (max-width: 767px) {
+    margin-top: ${(props) => (props.isBottom ? 'auto' : '')};
+  }
 
   p:last-child {
     margin-bottom: 0;

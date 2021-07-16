@@ -16,7 +16,7 @@ const QuizAnswer = ({ setQuiz, question, answers }) => {
 
   return (
     <>
-      <ChunkWrapper>
+      <ChunkWrapper isBottom>
         <S.Question>{question}</S.Question>
       </ChunkWrapper>
       <S.BlockWrapperWhite>

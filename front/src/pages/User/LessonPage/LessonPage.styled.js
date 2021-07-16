@@ -44,6 +44,9 @@ export const BlockCol = styled(Col).attrs({
 export const LessonButton = styled(Button).attrs({
   size: 'large',
 })`
+  @media (max-width: 767px) {
+    margin-top: auto;
+  }
   width: 100%;
   max-width: 614px;
   margin-bottom: 1rem;

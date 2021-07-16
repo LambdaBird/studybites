@@ -19,17 +19,26 @@ const LearnPage = () => {
       createParagraphBlock(2, 'Paragraph2'),
       createNextBlock(3, true),
     ],
-
     [
-      createParagraphBlock(5, 'Paragraph3'),
-      createQuizBlock(6, [true, true, true, true, true]),
+      createParagraphBlock(1, 'Paragraph1'),
+      createParagraphBlock(2, 'Paragraph2'),
+      createNextBlock(3, true),
+    ],
+    [
+      createParagraphBlock(4, 'Paragraph1'),
+      createParagraphBlock(5, 'Paragraph2'),
+      createNextBlock(6, true),
+    ],
+    [
+      createParagraphBlock(7, 'Paragraph3'),
+      createQuizBlock(8, [true, true, true, true, true]),
     ],
   ];
 
   return (
     <>
       <S.Header />
-      <div>
+      <S.Wrapper>
         <S.GlobalStylesLearnPage />
         <S.Progress percent={leanProgress} />
         <S.Row>
@@ -43,7 +52,7 @@ const LearnPage = () => {
             </S.LearnWrapper>
           </S.BlockCell>
         </S.Row>
-      </div>
+      </S.Wrapper>
     </>
   );
 };
