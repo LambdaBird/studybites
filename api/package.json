@@ -6,8 +6,11 @@
   "scripts": {
     "dev": "./bootstrap",
     "seed:run": "./seeds/run",
+    "seed:test": "./seeds/run_test",
     "test:unit": "babel-node node_modules/.bin/jest test/unit/",
-    "test:integration": "babel-node ./init.js admin@test.io passwd3 && babel-node node_modules/.bin/jest test/integration/",
+    "test:integration": "yarn prepare:integrationTests && yarn run:integrationTests",
+    "prepare:integrationTests": "knex --esm migrate:latest && yarn seed:test",
+    "run:integrationTests": "babel-node node_modules/.bin/jest --verbose --colors test/integration/",
     "migrate:make": "knex --esm migrate:make"
   },
   "dependencies": {
@@ -30,6 +33,7 @@
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-jest": "^24.3.6",
     "eslint-plugin-prettier": "^3.4.0",
     "jest": "^27.0.3",
     "nodemon": "^2.0.7",

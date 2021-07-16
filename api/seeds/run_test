@@ -1,0 +1,3 @@
+#!/bin/sh
+
+./node_modules/.bin/knex --esm seed:run --specific test.js

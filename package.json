@@ -20,6 +20,10 @@
       "prettier --config ./.prettierrc",
       "eslint --fix"
     ],
+    "./api/test/**/*.js": [
+      "prettier --config ./.prettierrc",
+      "eslint --fix"
+    ],
     "./front/src/**/*.{js,jsx}": [
       "prettier --config ./.prettierrc",
       "eslint --fix"

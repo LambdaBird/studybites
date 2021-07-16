@@ -1,4 +1,5 @@
 import {
+  propertyLengthError,
   propertyTypeError,
   requiredPropertyError,
 } from '../../src/validation/helpers';
@@ -15,6 +16,7 @@ import {
   INVALID_PASSWORD,
 } from '../../src/services/user/constants';
 import { options } from '../../src/validation/validatorCompiler';
+import { learnBodyValidator } from '../../src/services/lesson/validators';
 
 describe('Test signup body validation:', () => {
   test.each([
@@ -348,6 +350,72 @@ describe('Test role body validation:', () => {
     roleBodyValidator.validate(data, options).catch((err) => {
       expect(err.errors[0]).toMatchObject(
         propertyTypeError('role', 'id', 'integer'),
+      );
+    });
+  });
+});
+
+describe('Test learning flow body validation', () => {
+  test('should return an error for missing action', () => {
+    const data = {};
+
+    learnBodyValidator.validate(data, options).catch((err) => {
+      expect(err.errors[0]).toMatchObject(
+        requiredPropertyError('lesson', 'action'),
+      );
+    });
+  });
+
+  test('should return an error if data is not an object', () => {
+    const data = {
+      action: 'answer',
+      data: 1,
+    };
+
+    learnBodyValidator.validate(data, options).catch((err) => {
+      expect(err.errors[0]).toMatchObject(
+        propertyTypeError('lesson', 'data', 'object'),
+      );
+    });
+  });
+
+  test('should return an error if data is an empty object', () => {
+    const data = {
+      action: 'answer',
+      data: {},
+    };
+
+    learnBodyValidator.validate(data, options).catch((err) => {
+      expect(err.errors[0]).toMatchObject({ status: 'ficl' });
+    });
+  });
+
+  test('should return an error if response is not an array', () => {
+    const data = {
+      action: 'answer',
+      data: {
+        response: 1,
+      },
+    };
+
+    learnBodyValidator.validate(data, options).catch((err) => {
+      expect(err.errors[0]).toMatchObject(
+        propertyTypeError('lesson', 'response', 'array'),
+      );
+    });
+  });
+
+  test('should return an error if response is an empty array', () => {
+    const data = {
+      action: 'answer',
+      data: {
+        response: [],
+      },
+    };
+
+    learnBodyValidator.validate(data, options).catch((err) => {
+      expect(err.errors[0]).toMatchObject(
+        propertyLengthError('lesson', 'response'),
       );
     });
   });

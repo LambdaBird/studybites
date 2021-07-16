@@ -190,12 +190,13 @@ const router = async (instance) => {
             lessonId: id,
           });
 
-        const { blockId: final } = await LessonBlockStructure.query()
-          .first()
-          .where({
-            lessonId: id,
-          })
-          .whereNull('childId');
+        const { blockId: final } =
+          (await LessonBlockStructure.query()
+            .first()
+            .where({
+              lessonId: id,
+            })
+            .whereNull('childId')) || {};
 
         const isFinal = lesson.blocks.some((block) => block.blockId === final);
 
@@ -407,6 +408,11 @@ const router = async (instance) => {
     validatorCompiler,
     errorHandler,
     onRequest: instance.auth({ instance }),
+    preHandler: instance.access({
+      instance,
+      type: config.resources.LESSON,
+      role: config.roles.MAINTAINER.id,
+    }),
     handler: async (req, repl) => {
       const columns = {
         name: 'name',
@@ -535,7 +541,7 @@ const router = async (instance) => {
             })
             .returning('*');
 
-          if (blocks.length) {
+          if (blocks && blocks.length) {
             const blocksData = await Block.query(trx)
               .insert(blocks)
               .returning('*');
@@ -1031,6 +1037,7 @@ const router = async (instance) => {
       type: config.resources.LESSON,
       role: config.roles.STUDENT.id,
       getId: (req) => req.params.lesson_id,
+      status: ['Public', 'Draft'],
     }),
     handler: async ({ params, body, user }) => {
       const id = validateId(params.lesson_id);
@@ -1096,6 +1103,10 @@ const router = async (instance) => {
             .where({ lessonId: id })
             .whereIn('blocks.type', config.interactiveBlocks);
 
+          if (!finished) {
+            throw new BadRequestError(NOT_FINISHED);
+          }
+
           if (finished && !blocks.every((block) => finished.includes(block))) {
             throw new BadRequestError(NOT_FINISHED);
           }
@@ -1158,6 +1169,63 @@ const router = async (instance) => {
             throw new BadRequestError(INVALID_LEARN);
           }
 
+          const { start } = await LessonBlockStructure.query()
+            .first()
+            .select('id as start')
+            .where({ lessonId: id })
+            .whereNull('parentId');
+
+          const { blocksInOrder } = await LessonBlockStructure.query()
+            .first()
+            .select(
+              knex.raw(
+                `array_agg(lesson_block_structure.block_id) as blocks_in_order`,
+              ),
+            )
+            .from(
+              knex.raw(`connectby('lesson_block_structure', 'id', 'parent_id', '${start}', 0, '~') 
+                as temporary(id uuid, parent_id uuid, level int, branch text)`),
+            )
+            .join(
+              'lesson_block_structure',
+              'lesson_block_structure.id',
+              '=',
+              'temporary.id',
+            )
+            .join(
+              'blocks',
+              'blocks.block_id',
+              '=',
+              'lesson_block_structure.block_id',
+            )
+            .whereIn('blocks.type', config.interactiveBlocks);
+
+          const blocks = blocksInOrder.splice(
+            0,
+            blocksInOrder.indexOf(blockId),
+          );
+
+          const { finished } = await Result.query()
+            .first()
+            .select(objection.raw('array_agg(block_id) as finished'))
+            .where({
+              lessonId: id,
+              userId: user.id,
+            })
+            .whereIn('action', config.interactiveActions);
+
+          if (blocks.length && !finished) {
+            throw new BadRequestError(INVALID_LEARN);
+          }
+
+          if (
+            finished &&
+            blocks.length &&
+            !blocks.every((block) => finished.includes(block))
+          ) {
+            throw new BadRequestError(INVALID_LEARN);
+          }
+
           await Result.query().insert({
             lessonId: id,
             userId: user.id,
@@ -1179,6 +1247,63 @@ const router = async (instance) => {
           const { blockId, revision, data } = body;
 
           if (!blockId || !revision || !data) {
+            throw new BadRequestError(INVALID_LEARN);
+          }
+
+          const { start } = await LessonBlockStructure.query()
+            .first()
+            .select('id as start')
+            .where({ lessonId: id })
+            .whereNull('parentId');
+
+          const { blocksInOrder } = await LessonBlockStructure.query()
+            .first()
+            .select(
+              knex.raw(
+                `array_agg(lesson_block_structure.block_id) as blocks_in_order`,
+              ),
+            )
+            .from(
+              knex.raw(`connectby('lesson_block_structure', 'id', 'parent_id', '${start}', 0, '~') 
+                as temporary(id uuid, parent_id uuid, level int, branch text)`),
+            )
+            .join(
+              'lesson_block_structure',
+              'lesson_block_structure.id',
+              '=',
+              'temporary.id',
+            )
+            .join(
+              'blocks',
+              'blocks.block_id',
+              '=',
+              'lesson_block_structure.block_id',
+            )
+            .whereIn('blocks.type', config.interactiveBlocks);
+
+          const blocks = blocksInOrder.splice(
+            0,
+            blocksInOrder.indexOf(blockId),
+          );
+
+          const { finished } = await Result.query()
+            .first()
+            .select(objection.raw('array_agg(block_id) as finished'))
+            .where({
+              lessonId: id,
+              userId: user.id,
+            })
+            .whereIn('action', config.interactiveActions);
+
+          if (blocks.length && !finished) {
+            throw new BadRequestError(INVALID_LEARN);
+          }
+
+          if (
+            finished &&
+            blocks.length &&
+            !blocks.every((block) => finished.includes(block))
+          ) {
             throw new BadRequestError(INVALID_LEARN);
           }
 
