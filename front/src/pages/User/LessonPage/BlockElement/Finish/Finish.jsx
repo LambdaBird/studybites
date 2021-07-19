@@ -7,8 +7,8 @@ import { FINISH_TYPE } from '@sb-ui/pages/User/LessonPage/utils';
 
 import { NextPropType } from '../types';
 
-const Finish = ({ revision, blockId, response }) => {
-  const { mutate, id } = useContext(LearnContext);
+const Finish = ({ response }) => {
+  const { handleInteractiveClick, id } = useContext(LearnContext);
 
   const { t } = useTranslation();
   if (response.isSolved) {
@@ -17,7 +17,7 @@ const Finish = ({ revision, blockId, response }) => {
 
   return (
     <S.LessonButton
-      onClick={() => mutate({ id, action: FINISH_TYPE, revision, blockId })}
+      onClick={() => handleInteractiveClick({ id, action: FINISH_TYPE })}
     >
       {t('user:lesson.finish')}
     </S.LessonButton>

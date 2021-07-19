@@ -39,7 +39,7 @@ const QuizResult = ({ data, correctAnswer }) => {
         <ColumnDisabledCheckbox value={defaultValueAnswers} options={options} />
       </ChunkWrapper>
       <ChunkWrapper>
-        <AnswersResult result={result} options={options} correct={correct} />
+        <AnswersResult result={result} correct={correct} />
       </ChunkWrapper>
     </>
   );

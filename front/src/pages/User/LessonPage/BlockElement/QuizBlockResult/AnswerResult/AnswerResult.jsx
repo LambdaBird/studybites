@@ -21,8 +21,10 @@ const AnswerResult = ({ correct, result }) => {
       })),
     [result],
   );
+
   const value = useMemo(
-    () => result?.map((x, i) => (x.correct ? i : null)).filter((x) => !!x),
+    () =>
+      result?.map((x, i) => (x.correct ? i : null)).filter((x) => x !== null),
     [result],
   );
 
@@ -54,7 +56,7 @@ AnswerResult.propTypes = {
         .isRequired,
       correct: PropTypes.bool.isRequired,
     }),
-  ).isRequired,
+  ),
   correct: PropTypes.bool.isRequired,
 };
 

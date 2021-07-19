@@ -11,6 +11,7 @@ export const BLOCKS_TYPE = {
   DELIMITER: 'delimiter',
   TABLE: 'table',
   FINISH: 'finish',
+  FINISHED: 'finished',
   NEXT: 'next',
   START: 'start',
 };

@@ -14,7 +14,7 @@ import * as S from './QuizAnswer.styled';
 
 const QuizAnswer = ({ blockId, revision, question, answers }) => {
   const { t } = useTranslation('user');
-  const { mutate, id } = useContext(LearnContext);
+  const { handleInteractiveClick, id } = useContext(LearnContext);
   const [quizCheckbox, setQuizCheckbox] = useState([]);
 
   const options = answers?.map(({ value, correct }, i) => ({
@@ -38,7 +38,7 @@ const QuizAnswer = ({ blockId, revision, question, answers }) => {
         <S.ButtonWrapper>
           <S.LessonButtonSend
             onClick={() =>
-              mutate({
+              handleInteractiveClick({
                 id,
                 action: RESPONSE_TYPE,
                 blockId,
