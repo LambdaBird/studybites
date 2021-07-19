@@ -81,8 +81,6 @@ export async function handler({
       if (blocks && blocks.length) {
         const blocksData = await Block.query(trx).insert(blocks).returning('*');
 
-        lessonData.blocks = blocksData;
-
         const blockStructure = [];
 
         for (let i = 0, n = blocksData.length; i < n; i += 1) {
@@ -103,6 +101,10 @@ export async function handler({
       }
 
       return lessonData;
+    });
+
+    data.blocks = await LessonBlockStructure.getAllBlocks({
+      lessonId: data.id,
     });
 
     return { lesson: data };

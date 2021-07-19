@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import build from '../../src/app';
 
 import {
@@ -5,16 +6,11 @@ import {
   teacherMike,
   defaultPassword,
 } from '../../seeds/testData/users';
-import { math, french } from '../../seeds/testData/lessons';
+import { math, french, russian } from '../../seeds/testData/lessons';
 
 import { authorizeUser, createLesson, prepareLessonFromSeed } from './utils';
 import { INVALID_LEARN } from '../../src/services/lesson/constants';
 import { UNAUTHORIZED } from '../../src/services/user/constants';
-
-// eslint-disable-next-line no-underscore-dangle
-const blocks = french._blocks._current;
-// eslint-disable-next-line no-underscore-dangle
-const indexesOfInteractive = french._blocks._indexesOfInteractive;
 
 describe('Learning flow', () => {
   const testContext = {};
@@ -185,7 +181,9 @@ describe('Learning flow', () => {
 
       const payload = JSON.parse(response.payload);
       expect(payload).toHaveProperty('blocks');
-      expect(payload.blocks.length).toBe(indexesOfInteractive[0] + 1);
+      expect(payload.blocks.length).toBe(
+        french._blocks._indexesOfInteractive[0] + 1,
+      );
     });
   });
 
@@ -253,9 +251,12 @@ describe('Learning flow', () => {
         url: `lesson/${lessonToNext.lesson.id}/learn`,
         body: {
           action: 'next',
-          blockId: blocks[indexesOfInteractive[0]].block_id,
+          blockId:
+            french._blocks._current[french._blocks._indexesOfInteractive[0]]
+              .block_id,
           revision:
-            lessonToNext.lesson.blocks[indexesOfInteractive[0]].revision,
+            lessonToNext.lesson.blocks[french._blocks._indexesOfInteractive[0]]
+              .revision,
         },
       });
 
@@ -267,7 +268,8 @@ describe('Learning flow', () => {
       expect(payload).toHaveProperty('blocks');
       expect(payload.blocks).toBeInstanceOf(Array);
       expect(payload.blocks.length).toBe(
-        indexesOfInteractive[1] - indexesOfInteractive[0],
+        french._blocks._indexesOfInteractive[1] -
+          french._blocks._indexesOfInteractive[0],
       );
       expect(payload.blocks[1].type).toBe('quiz');
     });
@@ -312,9 +314,13 @@ describe('Learning flow', () => {
         url: `lesson/${lessonToAnswer.lesson.id}/learn`,
         body: {
           action: 'next',
-          blockId: blocks[indexesOfInteractive[0]].block_id,
+          blockId:
+            french._blocks._current[french._blocks._indexesOfInteractive[0]]
+              .block_id,
           revision:
-            lessonToAnswer.lesson.blocks[indexesOfInteractive[0]].revision,
+            lessonToAnswer.lesson.blocks[
+              french._blocks._indexesOfInteractive[0]
+            ].revision,
         },
       });
     });
@@ -324,9 +330,13 @@ describe('Learning flow', () => {
         url: `lesson/${lessonToAnswer.lesson.id}/learn`,
         body: {
           action: 'response',
-          blockId: blocks[indexesOfInteractive[1]].block_id,
+          blockId:
+            french._blocks._current[french._blocks._indexesOfInteractive[1]]
+              .block_id,
           revision:
-            lessonToAnswer.lesson.blocks[indexesOfInteractive[1]].revision,
+            lessonToAnswer.lesson.blocks[
+              french._blocks._indexesOfInteractive[1]
+            ].revision,
           data: {
             answers: ['my answer'],
           },
@@ -372,9 +382,13 @@ describe('Learning flow', () => {
         url: `lesson/${lessonToFinish.lesson.id}/learn`,
         body: {
           action: 'next',
-          blockId: blocks[indexesOfInteractive[0]].block_id,
+          blockId:
+            french._blocks._current[french._blocks._indexesOfInteractive[0]]
+              .block_id,
           revision:
-            lessonToFinish.lesson.blocks[indexesOfInteractive[0]].revision,
+            lessonToFinish.lesson.blocks[
+              french._blocks._indexesOfInteractive[0]
+            ].revision,
         },
       });
 
@@ -382,9 +396,13 @@ describe('Learning flow', () => {
         url: `lesson/${lessonToFinish.lesson.id}/learn`,
         body: {
           action: 'response',
-          blockId: blocks[indexesOfInteractive[1]].block_id,
+          blockId:
+            french._blocks._current[french._blocks._indexesOfInteractive[1]]
+              .block_id,
           revision:
-            lessonToFinish.lesson.blocks[indexesOfInteractive[1]].revision,
+            lessonToFinish.lesson.blocks[
+              french._blocks._indexesOfInteractive[1]
+            ].revision,
           data: {
             answers: ['my answer'],
           },
@@ -441,9 +459,13 @@ describe('Learning flow', () => {
         url: `lesson/${lessonToAnswer.lesson.id}/learn`,
         body: {
           action: 'response',
-          blockId: blocks[indexesOfInteractive[1]].block_id,
+          blockId:
+            french._blocks._current[french._blocks._indexesOfInteractive[1]]
+              .block_id,
           revision:
-            lessonToAnswer.lesson.blocks[indexesOfInteractive[1]].revision,
+            lessonToAnswer.lesson.blocks[
+              french._blocks._indexesOfInteractive[1]
+            ].revision,
           data: {
             answers: ['my answer'],
           },
@@ -482,9 +504,13 @@ describe('Learning flow', () => {
         url: `lesson/${lessonToAnswer.lesson.id}/learn`,
         body: {
           action: 'next',
-          blockId: blocks[indexesOfInteractive[0]].block_id,
+          blockId:
+            french._blocks._current[french._blocks._indexesOfInteractive[0]]
+              .block_id,
           revision:
-            lessonToAnswer.lesson.blocks[indexesOfInteractive[0]].revision,
+            lessonToAnswer.lesson.blocks[
+              french._blocks._indexesOfInteractive[0]
+            ].revision,
         },
       });
 
@@ -504,9 +530,13 @@ describe('Learning flow', () => {
         url: `lesson/${lessonToAnswer.lesson.id}/learn`,
         body: {
           action: 'response',
-          blockId: blocks[indexesOfInteractive[1]].block_id,
+          blockId:
+            french._blocks._current[french._blocks._indexesOfInteractive[1]]
+              .block_id,
           revision:
-            lessonToAnswer.lesson.blocks[indexesOfInteractive[1]].revision,
+            lessonToAnswer.lesson.blocks[
+              french._blocks._indexesOfInteractive[1]
+            ].revision,
           data: {
             answers: ['my answer'],
           },
@@ -545,9 +575,13 @@ describe('Learning flow', () => {
         url: `lesson/${lessonToAnswer.lesson.id}/learn`,
         body: {
           action: 'next',
-          blockId: blocks[indexesOfInteractive[0]].block_id,
+          blockId:
+            french._blocks._current[french._blocks._indexesOfInteractive[0]]
+              .block_id,
           revision:
-            lessonToAnswer.lesson.blocks[indexesOfInteractive[0]].revision,
+            lessonToAnswer.lesson.blocks[
+              french._blocks._indexesOfInteractive[0]
+            ].revision,
         },
       });
 
@@ -567,9 +601,13 @@ describe('Learning flow', () => {
         url: `lesson/${lessonToAnswer.lesson.id}/learn`,
         body: {
           action: 'response',
-          blockId: blocks[indexesOfInteractive[1]].block_id,
+          blockId:
+            french._blocks._current[french._blocks._indexesOfInteractive[1]]
+              .block_id,
           revision:
-            lessonToAnswer.lesson.blocks[indexesOfInteractive[1]].revision,
+            lessonToAnswer.lesson.blocks[
+              french._blocks._indexesOfInteractive[1]
+            ].revision,
           data: {
             answers: ['my answer'],
           },
@@ -615,9 +653,13 @@ describe('Learning flow', () => {
         url: `lesson/${finishedLesson.lesson.id}/learn`,
         body: {
           action: 'next',
-          blockId: blocks[indexesOfInteractive[0]].block_id,
+          blockId:
+            french._blocks._current[french._blocks._indexesOfInteractive[0]]
+              .block_id,
           revision:
-            finishedLesson.lesson.blocks[indexesOfInteractive[0]].revision,
+            finishedLesson.lesson.blocks[
+              french._blocks._indexesOfInteractive[0]
+            ].revision,
         },
       });
 
@@ -625,9 +667,13 @@ describe('Learning flow', () => {
         url: `lesson/${finishedLesson.lesson.id}/learn`,
         body: {
           action: 'response',
-          blockId: blocks[indexesOfInteractive[1]].block_id,
+          blockId:
+            french._blocks._current[french._blocks._indexesOfInteractive[1]]
+              .block_id,
           revision:
-            finishedLesson.lesson.blocks[indexesOfInteractive[1]].revision,
+            finishedLesson.lesson.blocks[
+              french._blocks._indexesOfInteractive[1]
+            ].revision,
           data: {
             answers: ['my answer'],
           },
@@ -655,6 +701,241 @@ describe('Learning flow', () => {
       expect(payload).toHaveProperty('lessons');
       expect(payload.lessons).toBeInstanceOf(Array);
       expect(payload.lessons[0]).toHaveProperty('maintainer');
+    });
+  });
+
+  describe('Learn lesson with one block (interactive)', () => {
+    describe('start lesson', () => {
+      let notStarted;
+
+      beforeAll(async () => {
+        notStarted = await createLesson({
+          app: testContext.app,
+          credentials: teacherCredentials,
+          body: prepareLessonFromSeed(math),
+        });
+
+        await testContext.request({
+          url: `lesson/enroll/${notStarted.lesson.id}`,
+        });
+      });
+
+      it('should return one block', async () => {
+        const response = await testContext.request({
+          url: `lesson/${notStarted.lesson.id}/learn`,
+          body: {
+            action: 'start',
+          },
+        });
+
+        const payload = JSON.parse(response.payload);
+
+        expect(response.statusCode).toBe(200);
+
+        expect(payload).toHaveProperty('blocks');
+        expect(payload.blocks.length).toBe(1);
+
+        expect(payload).toHaveProperty('total');
+        expect(payload.total).toBe(1);
+
+        expect(payload).toHaveProperty('isFinal');
+        expect(payload.isFinal).toBe(false);
+      });
+    });
+
+    describe('answer to interactive', () => {
+      let notAnswered;
+
+      beforeAll(async () => {
+        notAnswered = await createLesson({
+          app: testContext.app,
+          credentials: teacherCredentials,
+          body: prepareLessonFromSeed(math),
+        });
+
+        await testContext.request({
+          url: `lesson/enroll/${notAnswered.lesson.id}`,
+        });
+
+        await testContext.request({
+          url: `lesson/${notAnswered.lesson.id}/learn`,
+          body: {
+            action: 'start',
+          },
+        });
+      });
+
+      it('should return answer and userAnswer', async () => {
+        const response = await testContext.request({
+          url: `lesson/${notAnswered.lesson.id}/learn`,
+          body: {
+            action: 'response',
+            blockId: math._blocks._current[0].block_id,
+            revision: notAnswered.lesson.blocks[0].revision,
+            data: {
+              answers: ['my answer'],
+            },
+          },
+        });
+
+        const payload = JSON.parse(response.payload);
+
+        expect(response.statusCode).toBe(200);
+
+        expect(payload).toHaveProperty('blocks');
+        expect(payload.blocks.length).toBe(0);
+
+        expect(payload).toHaveProperty('total');
+        expect(payload.total).toBe(1);
+
+        expect(payload).toHaveProperty('isFinal');
+        expect(payload.isFinal).toBe(true);
+
+        expect(payload).toHaveProperty('answer');
+        expect(payload).toHaveProperty('userAnswer');
+      });
+    });
+
+    describe('finish the lesson', () => {
+      let notFinished;
+
+      beforeAll(async () => {
+        notFinished = await createLesson({
+          app: testContext.app,
+          credentials: teacherCredentials,
+          body: prepareLessonFromSeed(math),
+        });
+
+        await testContext.request({
+          url: `lesson/enroll/${notFinished.lesson.id}`,
+        });
+
+        await testContext.request({
+          url: `lesson/${notFinished.lesson.id}/learn`,
+          body: {
+            action: 'start',
+          },
+        });
+
+        await testContext.request({
+          url: `lesson/${notFinished.lesson.id}/learn`,
+          body: {
+            action: 'response',
+            blockId: math._blocks._current[0].block_id,
+            revision: notFinished.lesson.blocks[0].revision,
+            data: {
+              answers: ['my answer'],
+            },
+          },
+        });
+      });
+
+      it('should return all blocks on finish', async () => {
+        const response = await testContext.request({
+          url: `lesson/${notFinished.lesson.id}/learn`,
+          body: {
+            action: 'finish',
+          },
+        });
+
+        const payload = JSON.parse(response.payload);
+
+        expect(response.statusCode).toBe(200);
+
+        expect(payload).toHaveProperty('blocks');
+        expect(payload.blocks.length).toBe(1);
+
+        expect(payload).toHaveProperty('total');
+        expect(payload.total).toBe(1);
+
+        expect(payload).toHaveProperty('isFinished');
+        expect(payload.isFinished).toBe(true);
+      });
+    });
+  });
+
+  describe('Learn lesson with one block (non-interactive)', () => {
+    describe('start lesson', () => {
+      let notStarted;
+
+      beforeAll(async () => {
+        notStarted = await createLesson({
+          app: testContext.app,
+          credentials: teacherCredentials,
+          body: prepareLessonFromSeed(russian),
+        });
+
+        await testContext.request({
+          url: `lesson/enroll/${notStarted.lesson.id}`,
+        });
+      });
+
+      it('should return one block', async () => {
+        const response = await testContext.request({
+          url: `lesson/${notStarted.lesson.id}/learn`,
+          body: {
+            action: 'start',
+          },
+        });
+
+        const payload = JSON.parse(response.payload);
+
+        expect(response.statusCode).toBe(200);
+
+        expect(payload).toHaveProperty('blocks');
+        expect(payload.blocks.length).toBe(1);
+
+        expect(payload).toHaveProperty('total');
+        expect(payload.total).toBe(1);
+
+        expect(payload).toHaveProperty('isFinal');
+        expect(payload.isFinal).toBe(true);
+      });
+    });
+
+    describe('finish the lesson', () => {
+      let notFinished;
+
+      beforeAll(async () => {
+        notFinished = await createLesson({
+          app: testContext.app,
+          credentials: teacherCredentials,
+          body: prepareLessonFromSeed(russian),
+        });
+
+        await testContext.request({
+          url: `lesson/enroll/${notFinished.lesson.id}`,
+        });
+
+        await testContext.request({
+          url: `lesson/${notFinished.lesson.id}/learn`,
+          body: {
+            action: 'start',
+          },
+        });
+      });
+
+      it('should return all blocks on finish', async () => {
+        const response = await testContext.request({
+          url: `lesson/${notFinished.lesson.id}/learn`,
+          body: {
+            action: 'finish',
+          },
+        });
+
+        const payload = JSON.parse(response.payload);
+
+        expect(response.statusCode).toBe(200);
+
+        expect(payload).toHaveProperty('blocks');
+        expect(payload.blocks.length).toBe(1);
+
+        expect(payload).toHaveProperty('total');
+        expect(payload.total).toBe(1);
+
+        expect(payload).toHaveProperty('isFinished');
+        expect(payload.isFinished).toBe(true);
+      });
     });
   });
 });

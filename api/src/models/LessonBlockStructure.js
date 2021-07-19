@@ -21,7 +21,7 @@ class LessonBlockStructure extends objection.Model {
     };
   }
 
-  static #sortBlocks({ blocksUnordered }) {
+  static #sortBlocks({ blocksUnordered, shouldStrip = false }) {
     const dictionary = blocksUnordered.reduce((result, filter) => {
       // eslint-disable-next-line no-param-reassign
       result[filter.id] = filter;
@@ -31,11 +31,21 @@ class LessonBlockStructure extends objection.Model {
     const blocksInOrder = [];
 
     if (blocksUnordered.length) {
-      blocksInOrder.push(blocksUnordered[0]);
+      const block = blocksUnordered[0];
+      if (shouldStrip) {
+        delete block.answer;
+        delete block.weight;
+      }
+      blocksInOrder.push(block);
     }
 
     for (let i = 0, n = blocksUnordered.length - 1; i < n; i += 1) {
-      blocksInOrder.push(dictionary[blocksInOrder[i].childId]);
+      const block = dictionary[blocksInOrder[i].childId];
+      if (shouldStrip) {
+        delete block.answer;
+        delete block.weight;
+      }
+      blocksInOrder.push(block);
     }
 
     return blocksInOrder;
@@ -62,7 +72,7 @@ class LessonBlockStructure extends objection.Model {
     return { chunk: remainingBlocks, position: blocks.length };
   }
 
-  static async getAllBlocks({ lessonId }) {
+  static async getAllBlocks({ lessonId, shouldStrip = false }) {
     const blocksUnordered = await this.query()
       .select(
         'blocks.*',
@@ -88,6 +98,10 @@ class LessonBlockStructure extends objection.Model {
       );
 
     if (blocksUnordered.length === 1) {
+      if (shouldStrip) {
+        delete blocksUnordered[0].answer;
+        delete blocksUnordered[0].weight;
+      }
       return blocksUnordered;
     }
 
@@ -95,16 +109,12 @@ class LessonBlockStructure extends objection.Model {
       return [];
     }
 
-    return this.#sortBlocks({ blocksUnordered });
+    return this.#sortBlocks({ blocksUnordered, shouldStrip });
   }
 
   static async getChunk({ lessonId, previousBlock = null }) {
-    const blocks = await this.getAllBlocks({ lessonId });
+    const blocks = await this.getAllBlocks({ lessonId, shouldStrip: true });
     const total = blocks.length;
-
-    if (total === 1) {
-      return { total: blocks.length, chunk: blocks };
-    }
 
     if (!previousBlock) {
       const { chunk, position } = this.#findChunk({ blocks });
