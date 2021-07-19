@@ -98,9 +98,11 @@ describe('LessonBlockStructure methods', () => {
           lessonId: lessonWithBlocks.lesson.id,
         });
 
-        expect(blocks).toHaveLength(french._blocks._current.length);
+        expect(blocks).toHaveLength(lessonWithBlocks.lesson.blocks.length);
         blocks.forEach((block, index) => {
-          expect(block.blockId).toBe(french._blocks._current[index].block_id);
+          expect(block.blockId).toBe(
+            lessonWithBlocks.lesson.blocks[index].blockId,
+          );
         });
       });
     });
@@ -131,7 +133,9 @@ describe('LessonBlockStructure methods', () => {
 
         expect(blocks).toHaveLength(math._blocks._current.length);
         blocks.forEach((block, index) => {
-          expect(block.blockId).toBe(math._blocks._current[index].block_id);
+          expect(block.blockId).toBe(
+            lessonWithBlocks.lesson.blocks[index].blockId,
+          );
         });
       });
     });
@@ -162,7 +166,9 @@ describe('LessonBlockStructure methods', () => {
 
         expect(blocks).toHaveLength(russian._blocks._current.length);
         blocks.forEach((block, index) => {
-          expect(block.blockId).toBe(russian._blocks._current[index].block_id);
+          expect(block.blockId).toBe(
+            lessonWithBlocks.lesson.blocks[index].blockId,
+          );
         });
       });
     });
@@ -259,7 +265,9 @@ describe('LessonBlockStructure methods', () => {
             french._blocks._indexesOfInteractive[0] + 1,
           );
           chunk.forEach((block, index) => {
-            expect(block.blockId).toBe(french._blocks._current[index].block_id);
+            expect(block.blockId).toBe(
+              lessonWithBlocks.lesson.blocks[index].blockId,
+            );
           });
         });
       });
@@ -290,8 +298,9 @@ describe('LessonBlockStructure methods', () => {
             body: {
               action: 'next',
               blockId:
-                french._blocks._current[french._blocks._indexesOfInteractive[0]]
-                  .block_id,
+                lessonWithBlocks.lesson.blocks[
+                  french._blocks._indexesOfInteractive[0]
+                ].blockId,
               revision:
                 lessonWithBlocks.lesson.blocks[
                   french._blocks._indexesOfInteractive[0]
@@ -304,8 +313,9 @@ describe('LessonBlockStructure methods', () => {
           const { chunk } = await LessonBlockStructure.getChunk({
             lessonId: lessonWithBlocks.lesson.id,
             previousBlock:
-              french._blocks._current[french._blocks._indexesOfInteractive[0]]
-                .block_id,
+              lessonWithBlocks.lesson.blocks[
+                french._blocks._indexesOfInteractive[0]
+              ].blockId,
           });
 
           expect(chunk).toBeInstanceOf(Array);
@@ -315,8 +325,9 @@ describe('LessonBlockStructure methods', () => {
           const { chunk } = await LessonBlockStructure.getChunk({
             lessonId: lessonWithBlocks.lesson.id,
             previousBlock:
-              french._blocks._current[french._blocks._indexesOfInteractive[0]]
-                .block_id,
+              lessonWithBlocks.lesson.blocks[
+                french._blocks._indexesOfInteractive[0]
+              ].blockId,
           });
 
           expect(chunk).toHaveLength(
@@ -325,9 +336,9 @@ describe('LessonBlockStructure methods', () => {
           );
           chunk.forEach((block, index) => {
             expect(block.blockId).toBe(
-              french._blocks._current[
+              lessonWithBlocks.lesson.blocks[
                 index + french._blocks._indexesOfInteractive[0] + 1
-              ].block_id,
+              ].blockId,
             );
           });
         });
@@ -359,8 +370,9 @@ describe('LessonBlockStructure methods', () => {
             body: {
               action: 'next',
               blockId:
-                french._blocks._current[french._blocks._indexesOfInteractive[0]]
-                  .block_id,
+                lessonWithBlocks.lesson.blocks[
+                  french._blocks._indexesOfInteractive[0]
+                ].blockId,
               revision:
                 lessonWithBlocks.lesson.blocks[
                   french._blocks._indexesOfInteractive[0]
@@ -373,8 +385,9 @@ describe('LessonBlockStructure methods', () => {
             body: {
               action: 'response',
               blockId:
-                french._blocks._current[french._blocks._indexesOfInteractive[1]]
-                  .block_id,
+                lessonWithBlocks.lesson.blocks[
+                  french._blocks._indexesOfInteractive[1]
+                ].blockId,
               revision:
                 lessonWithBlocks.lesson.blocks[
                   french._blocks._indexesOfInteractive[1]
@@ -390,8 +403,9 @@ describe('LessonBlockStructure methods', () => {
           const { chunk } = await LessonBlockStructure.getChunk({
             lessonId: lessonWithBlocks.lesson.id,
             previousBlock:
-              french._blocks._current[french._blocks._indexesOfInteractive[1]]
-                .block_id,
+              lessonWithBlocks.lesson.blocks[
+                french._blocks._indexesOfInteractive[1]
+              ].blockId,
           });
 
           expect(chunk).toBeInstanceOf(Array);
@@ -401,16 +415,17 @@ describe('LessonBlockStructure methods', () => {
           const { chunk } = await LessonBlockStructure.getChunk({
             lessonId: lessonWithBlocks.lesson.id,
             previousBlock:
-              french._blocks._current[french._blocks._indexesOfInteractive[1]]
-                .block_id,
+              lessonWithBlocks.lesson.blocks[
+                french._blocks._indexesOfInteractive[1]
+              ].blockId,
           });
 
           expect(chunk).toHaveLength(1);
           chunk.forEach((block, index) => {
             expect(block.blockId).toBe(
-              french._blocks._current[
+              lessonWithBlocks.lesson.blocks[
                 index + french._blocks._indexesOfInteractive[1] + 1
-              ].block_id,
+              ].blockId,
             );
           });
         });
@@ -454,7 +469,9 @@ describe('LessonBlockStructure methods', () => {
 
         expect(chunk).toHaveLength(math._blocks._indexesOfInteractive[0] + 1);
         chunk.forEach((block, index) => {
-          expect(block.blockId).toBe(math._blocks._current[index].block_id);
+          expect(block.blockId).toBe(
+            lessonWithInteractive.lesson.blocks[index].blockId,
+          );
         });
       });
     });
@@ -496,7 +513,9 @@ describe('LessonBlockStructure methods', () => {
 
         expect(chunk).toHaveLength(1);
         chunk.forEach((block, index) => {
-          expect(block.blockId).toBe(russian._blocks._current[index].block_id);
+          expect(block.blockId).toBe(
+            lessonWithNonInteractive.lesson.blocks[index].blockId,
+          );
         });
       });
     });
