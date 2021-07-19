@@ -410,8 +410,7 @@ const router = async (instance) => {
     onRequest: instance.auth({ instance }),
     preHandler: instance.access({
       instance,
-      type: config.resources.LESSON,
-      role: config.roles.MAINTAINER.id,
+      role: config.roles.TEACHER.id,
     }),
     handler: async (req, repl) => {
       const columns = {
