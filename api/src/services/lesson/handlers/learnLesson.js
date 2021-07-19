@@ -2,17 +2,9 @@ import config from '../../../../config';
 
 import errorResponse from '../../../validation/schemas';
 import errorHandler from '../../../validation/errorHandler';
-import { BadRequestError, NotFoundError } from '../../../validation/errors';
+import { BadRequestError } from '../../../validation/errors';
 
-import {
-  ALREADY_FINISHED,
-  ALREADY_STARTED,
-  INVALID_LEARN,
-  INVALID_NEXT,
-  NOT_FINISHED,
-  NOT_FOUND,
-  NOT_STARTED,
-} from '../constants';
+import { INVALID_LEARN } from '../constants';
 
 export const options = {
   schema: {
@@ -118,7 +110,7 @@ export async function checkAllowed({
    * to the next interactive block and return allowed action based on blocks type
    */
   if (lastResult.action === 'start') {
-    const chunk = await LessonBlockStructure.getChunk({ lessonId });
+    const { chunk } = await LessonBlockStructure.getChunk({ lessonId });
     block = chunk[chunk.length - 1];
   }
   /**
@@ -126,7 +118,7 @@ export async function checkAllowed({
    * and return allowed action based on blocks type
    */
   if (!block) {
-    const chunk = await LessonBlockStructure.getChunk({
+    const { chunk } = await LessonBlockStructure.getChunk({
       lessonId,
       previousBlock: lastResult.blockId,
     });
@@ -147,11 +139,19 @@ export async function checkAllowed({
   switch (block.type) {
     case 'next':
       return {
-        allowed: { action: 'next' },
+        allowed: {
+          action: 'next',
+          blockId: block.blockId,
+          revision: block.revision,
+        },
       };
     case 'quiz':
       return {
-        allowed: { action: 'response' },
+        allowed: {
+          action: 'response',
+          blockId: block.blockId,
+          revision: block.revision,
+        },
       };
     default:
       return {
@@ -163,410 +163,72 @@ export async function checkAllowed({
 export async function handler({
   user: { id: userId },
   params: { lessonId },
-  body,
+  body: { action, blockId, revision, data },
 }) {
   const {
-    knex,
-    models: { Result, LessonBlockStructure, Lesson, Block },
+    models: { Result, LessonBlockStructure, Block },
   } = this;
-
-  const status = {};
-
-  const { action } = body;
-
-  const checkStatus = await Result.query()
-    .where({
-      userId,
-      lessonId,
-    })
-    // eslint-disable-next-line func-names
-    .andWhere(function () {
-      this.where({ action: 'start' }).orWhere({ action: 'finish' });
-    });
-  checkStatus.forEach((entry) => {
-    status[entry.action] = true;
+  /**
+   * get allowed action type
+   */
+  const { allowed } = await checkAllowed({
+    userId,
+    lessonId,
+    Result,
+    LessonBlockStructure,
   });
-
-  if (status.finish) {
-    throw new BadRequestError(ALREADY_FINISHED);
+  /**
+   * allowed will be null if the lesson was finished already
+   */
+  if (!allowed) {
+    throw new BadRequestError(INVALID_LEARN);
   }
-
-  if (!status.start && action !== 'start') {
-    throw new BadRequestError(NOT_STARTED);
+  /**
+   * check if action != allowed action
+   */
+  if (action !== allowed.action) {
+    throw new BadRequestError(INVALID_LEARN);
   }
-
-  switch (action) {
-    case 'start': {
-      if (status.start) {
-        throw new BadRequestError(ALREADY_STARTED);
-      }
-
-      await Result.query().insert({
-        lessonId,
-        userId,
-        action: 'start',
-      });
-
-      break;
-    }
-    case 'finish': {
-      const { finished } = await Result.query()
-        .first()
-        .select(knex.raw('array_agg(block_id) as finished'))
-        .where({
-          lessonId,
-          userId,
-        })
-        .whereIn('action', config.interactiveActions);
-
-      const { blocks } = await LessonBlockStructure.query()
-        .first()
-        .select(knex.raw('array_agg(blocks.block_id) as blocks'))
-        .join(
-          'blocks',
-          'lesson_block_structure.block_id',
-          '=',
-          'blocks.block_id',
-        )
-        .where({ lessonId })
-        .whereIn('blocks.type', config.interactiveBlocks);
-
-      if (!finished) {
-        throw new BadRequestError(NOT_FINISHED);
-      }
-
-      if (finished && !blocks.every((block) => finished.includes(block))) {
-        throw new BadRequestError(NOT_FINISHED);
-      }
-
-      await Result.query().insert({
-        lessonId,
-        userId,
-        action: 'finish',
-      });
-
-      break;
-    }
-    case 'resume': {
-      const { blockId, revision } = await Result.query()
-        .first()
-        .select('results.*')
-        // eslint-disable-next-line func-names
-        .from(function () {
-          this.select(this.knex().raw('max(created_at) as created_at'))
-            .from('results')
-            .where({
-              userId,
-              lessonId,
-            })
-            .as('temporary');
-        })
-        .join('results', 'results.created_at', '=', 'temporary.created_at');
-
-      await Result.query().insert({
-        lessonId,
-        userId,
-        action: 'resume',
-        blockId,
-        revision,
-      });
-
-      if (blockId) {
-        const { parent } = await LessonBlockStructure.query()
-          .first()
-          .select('id as parent')
-          .where({ lessonId, blockId });
-
-        status.parent = parent;
-      }
-
-      break;
-    }
-    case 'next': {
-      const { blockId, revision } = body;
-
-      if (!blockId || !revision) {
-        throw new BadRequestError(INVALID_NEXT);
-      }
-
-      const check = await LessonBlockStructure.query().first().where({
-        lessonId,
-        blockId,
-      });
-
-      if (!check) {
-        throw new BadRequestError(INVALID_LEARN);
-      }
-
-      const { start } = await LessonBlockStructure.query()
-        .first()
-        .select('id as start')
-        .where({ lessonId })
-        .whereNull('parentId');
-
-      const { blocksInOrder } = await LessonBlockStructure.query()
-        .first()
-        .select(
-          knex.raw(
-            `array_agg(lesson_block_structure.block_id) as blocks_in_order`,
-          ),
-        )
-        .from(
-          knex.raw(`connectby('lesson_block_structure', 'id', 'parent_id', '${start}', 0, '~') 
-                as temporary(id uuid, parent_id uuid, level int, branch text)`),
-        )
-        .join(
-          'lesson_block_structure',
-          'lesson_block_structure.id',
-          '=',
-          'temporary.id',
-        )
-        .join(
-          'blocks',
-          'blocks.block_id',
-          '=',
-          'lesson_block_structure.block_id',
-        )
-        .whereIn('blocks.type', config.interactiveBlocks);
-
-      const blocks = blocksInOrder.splice(0, blocksInOrder.indexOf(blockId));
-
-      const { finished } = await Result.query()
-        .first()
-        .select(knex.raw('array_agg(block_id) as finished'))
-        .where({
-          lessonId,
-          userId,
-        })
-        .whereIn('action', config.interactiveActions);
-
-      if (blocks.length && !finished) {
-        throw new BadRequestError(INVALID_LEARN);
-      }
-
-      if (
-        finished &&
-        blocks.length &&
-        !blocks.every((block) => finished.includes(block))
-      ) {
-        throw new BadRequestError(INVALID_LEARN);
-      }
-
-      await Result.query().insert({
-        lessonId,
-        userId,
-        action: 'next',
-        blockId,
-        revision,
-      });
-
-      const { parent } = await LessonBlockStructure.query()
-        .first()
-        .select('id as parent')
-        .where({ lessonId, blockId });
-
-      status.parent = parent;
-
-      break;
-    }
-    case 'response': {
-      const { blockId, revision, data } = body;
-
-      if (!blockId || !revision || !data) {
-        throw new BadRequestError(INVALID_LEARN);
-      }
-
-      const { start } = await LessonBlockStructure.query()
-        .first()
-        .select('id as start')
-        .where({ lessonId })
-        .whereNull('parentId');
-
-      const { blocksInOrder } = await LessonBlockStructure.query()
-        .first()
-        .select(
-          knex.raw(
-            `array_agg(lesson_block_structure.block_id) as blocks_in_order`,
-          ),
-        )
-        .from(
-          knex.raw(`connectby('lesson_block_structure', 'id', 'parent_id', '${start}', 0, '~') 
-                as temporary(id uuid, parent_id uuid, level int, branch text)`),
-        )
-        .join(
-          'lesson_block_structure',
-          'lesson_block_structure.id',
-          '=',
-          'temporary.id',
-        )
-        .join(
-          'blocks',
-          'blocks.block_id',
-          '=',
-          'lesson_block_structure.block_id',
-        )
-        .whereIn('blocks.type', config.interactiveBlocks);
-
-      const blocks = blocksInOrder.splice(0, blocksInOrder.indexOf(blockId));
-
-      const { finished } = await Result.query()
-        .first()
-        .select(knex.raw('array_agg(block_id) as finished'))
-        .where({
-          lessonId,
-          userId,
-        })
-        .whereIn('action', config.interactiveActions);
-
-      if (blocks.length && !finished) {
-        throw new BadRequestError(INVALID_LEARN);
-      }
-
-      if (
-        finished &&
-        blocks.length &&
-        !blocks.every((block) => finished.includes(block))
-      ) {
-        throw new BadRequestError(INVALID_LEARN);
-      }
-
-      await Result.query().insert({
-        lessonId,
-        userId,
-        action: 'response',
-        data,
-        blockId,
-        revision,
-      });
-
-      const { answer } = await Block.query().select('answer').first().where({
-        blockId,
-        revision,
-      });
-
-      const { parent } = await LessonBlockStructure.query()
-        .first()
-        .select('id as parent')
-        .where({ lessonId, blockId });
-
-      status.parent = parent;
-
-      status.answer = answer;
-
-      status.data = data;
-
-      break;
-    }
-    default:
+  if (config.interactiveActions.includes(action)) {
+    if (blockId !== allowed.blockId || revision !== allowed.revision) {
       throw new BadRequestError(INVALID_LEARN);
-  }
-
-  const lesson = await Lesson.query()
-    .findById(lessonId)
-    .withGraphFetched('blocks');
-
-  if (!lesson) {
-    throw new NotFoundError(NOT_FOUND);
-  }
-
-  lesson.answer = status.answer;
-
-  if (status.data) {
-    lesson.userAnswer = status.data;
-  }
-  try {
-    if (!status.parent) {
-      const { parent } = await LessonBlockStructure.query()
-        .first()
-        .select('id as parent')
-        .where({ lessonId })
-        .whereNull('parentId');
-
-      status.parent = parent;
     }
-
-    const { rows: blocksOrder } = await LessonBlockStructure.knex().raw(
-      `select lesson_block_structure.block_id from connectby('lesson_block_structure', 'id', 'parent_id', '${status.parent}', 0, '~') 
-          as temporary(id uuid, parent_id uuid, level int, branch text) join lesson_block_structure on temporary.id = lesson_block_structure.id`,
-    );
-
-    const blocks = [];
-
-    const dictionary = lesson.blocks.reduce((result, filter) => {
-      // eslint-disable-next-line no-param-reassign
-      result[filter.blockId] = filter;
-      return result;
-    }, {});
-
-    if (action === 'start') {
-      for (let i = 0, n = blocksOrder.length; i < n; i += 1) {
-        delete dictionary[blocksOrder[i].block_id].answer;
-        delete dictionary[blocksOrder[i].block_id].weight;
-
-        blocks.push(dictionary[blocksOrder[i].block_id]);
-
-        if (
-          config.interactiveBlocks.includes(
-            dictionary[blocksOrder[i].block_id].type,
-          )
-        ) {
-          break;
-        }
-      }
-    } else if (action === 'finish') {
-      for (let i = 0, n = blocksOrder.length; i < n; i += 1) {
-        delete dictionary[blocksOrder[i].block_id].answer;
-        delete dictionary[blocksOrder[i].block_id].weight;
-
-        blocks.push(dictionary[blocksOrder[i].block_id]);
-      }
-    } else {
-      for (let i = 0, n = blocksOrder.length; i < n; i += 1) {
-        if (
-          i === 0 &&
-          config.interactiveBlocks.includes(
-            dictionary[blocksOrder[i].block_id].type,
-          )
-        ) {
-          // eslint-disable-next-line no-continue
-          continue;
-        }
-
-        delete dictionary[blocksOrder[i].block_id].answer;
-        delete dictionary[blocksOrder[i].block_id].weight;
-
-        blocks.push(dictionary[blocksOrder[i].block_id]);
-
-        if (
-          config.interactiveBlocks.includes(
-            dictionary[blocksOrder[i].block_id].type,
-          )
-        ) {
-          break;
-        }
-      }
-    }
-
-    lesson.blocks = blocks;
-  } catch (err) {
-    return { total: 0, lesson, isFinal: false };
+  }
+  /**
+   * write action to the results table
+   */
+  await Result.query().insert({
+    userId,
+    lessonId,
+    action,
+    blockId,
+    revision,
+    data,
+  });
+  /**
+   * get all blocks on finish
+   */
+  if (action === 'finish') {
+    const blocks = await LessonBlockStructure.getAllBlocks({ lessonId });
+    return { total: blocks.length, blocks, isFinished: true };
+  }
+  /**
+   * else get the next chunk of blocks
+   */
+  const { total, chunk, isFinal } = await LessonBlockStructure.getChunk({
+    lessonId,
+    previousBlock: blockId,
+  });
+  /**
+   * if action is response -> get the answer for the block
+   */
+  if (action === 'response') {
+    const { answer } = await Block.query()
+      .select('answer')
+      .first()
+      .where({ blockId, revision });
+    return { total, blocks: chunk, isFinal, userAnswer: data, answer };
   }
 
-  const { count } = await LessonBlockStructure.query()
-    .first()
-    .count('blockId')
-    .where({
-      lessonId,
-    });
-
-  const { blockId: final } = await LessonBlockStructure.query()
-    .first()
-    .where({
-      lessonId,
-    })
-    .whereNull('childId');
-
-  const isFinal = lesson.blocks.some((block) => block.blockId === final);
-
-  return { total: +count, lesson, isFinal };
+  return { total, blocks: chunk, isFinal };
 }

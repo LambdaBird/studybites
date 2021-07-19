@@ -52,11 +52,14 @@ class LessonBlockStructure extends objection.Model {
 
     for (let i = 0, n = dictionary.length; i < n; i += 1) {
       if (config.interactiveBlocks.includes(dictionary[i])) {
-        return remainingBlocks.slice(0, i + 1);
+        return {
+          chunk: remainingBlocks.slice(0, i + 1),
+          position: i + 1 + startIndex,
+        };
       }
     }
 
-    return remainingBlocks;
+    return { chunk: remainingBlocks, position: blocks.length };
   }
 
   static async getAllBlocks({ lessonId }) {
@@ -97,27 +100,34 @@ class LessonBlockStructure extends objection.Model {
 
   static async getChunk({ lessonId, previousBlock = null }) {
     const blocks = await this.getAllBlocks({ lessonId });
+    const total = blocks.length;
 
-    if (blocks.length === 1) {
-      return blocks;
+    if (total === 1) {
+      return { total: blocks.length, chunk: blocks };
     }
 
     if (!previousBlock) {
-      return this.#findChunk({ blocks });
+      const { chunk, position } = this.#findChunk({ blocks });
+      return { total, chunk, isFinal: position === total };
     }
 
     const dictionary = blocks.map((block) => block.blockId);
 
     for (let i = 0, n = dictionary.length; i < n; i += 1) {
       if (dictionary[i] === previousBlock) {
-        return this.#findChunk({
+        const { chunk, position } = this.#findChunk({
           blocks,
           startIndex: i + 1,
         });
+        return {
+          total,
+          chunk,
+          isFinal: position === total,
+        };
       }
     }
 
-    return [];
+    return { total, chunk: [], isFinal: true };
   }
 
   static relationMappings() {

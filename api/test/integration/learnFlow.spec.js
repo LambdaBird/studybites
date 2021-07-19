@@ -8,10 +8,7 @@ import {
 import { math, french } from '../../seeds/testData/lessons';
 
 import { authorizeUser, createLesson, prepareLessonFromSeed } from './utils';
-import {
-  INVALID_LEARN,
-  NOT_FINISHED,
-} from '../../src/services/lesson/constants';
+import { INVALID_LEARN } from '../../src/services/lesson/constants';
 import { UNAUTHORIZED } from '../../src/services/user/constants';
 
 // eslint-disable-next-line no-underscore-dangle
@@ -187,8 +184,8 @@ describe('Learning flow', () => {
       expect(response.statusCode).toBe(200);
 
       const payload = JSON.parse(response.payload);
-      expect(payload.lesson).toHaveProperty('blocks');
-      expect(payload.lesson.blocks.length).toBe(indexesOfInteractive[0] + 1);
+      expect(payload).toHaveProperty('blocks');
+      expect(payload.blocks.length).toBe(indexesOfInteractive[0] + 1);
     });
   });
 
@@ -225,7 +222,7 @@ describe('Learning flow', () => {
       const payload = JSON.parse(response.payload);
 
       expect(response.statusCode).toBe(400);
-      expect(payload.errors[0]).toMatchObject(NOT_FINISHED);
+      expect(payload.errors[0]).toMatchObject(INVALID_LEARN);
     });
   });
 
@@ -266,14 +263,13 @@ describe('Learning flow', () => {
 
       expect(response.statusCode).toBe(200);
       expect(payload).toHaveProperty('total');
-      expect(payload).toHaveProperty('lesson');
       expect(payload).toHaveProperty('isFinal');
-      expect(payload.lesson).toHaveProperty('blocks');
-      expect(payload.lesson.blocks).toBeInstanceOf(Array);
-      expect(payload.lesson.blocks.length).toBe(
+      expect(payload).toHaveProperty('blocks');
+      expect(payload.blocks).toBeInstanceOf(Array);
+      expect(payload.blocks.length).toBe(
         indexesOfInteractive[1] - indexesOfInteractive[0],
       );
-      expect(payload.lesson.blocks[1].type).toBe('quiz');
+      expect(payload.blocks[1].type).toBe('quiz');
     });
 
     it('should not be able to finish this lesson yet', async () => {
@@ -287,7 +283,7 @@ describe('Learning flow', () => {
       const payload = JSON.parse(response.payload);
 
       expect(response.statusCode).toBe(400);
-      expect(payload.errors[0]).toMatchObject(NOT_FINISHED);
+      expect(payload.errors[0]).toMatchObject(INVALID_LEARN);
     });
   });
 
@@ -341,13 +337,12 @@ describe('Learning flow', () => {
 
       expect(response.statusCode).toBe(200);
       expect(payload).toHaveProperty('total');
-      expect(payload).toHaveProperty('lesson');
       expect(payload).toHaveProperty('isFinal');
-      expect(payload.lesson).toHaveProperty('blocks');
-      expect(payload.lesson).toHaveProperty('answer');
-      expect(payload.lesson).toHaveProperty('userAnswer');
-      expect(payload.lesson.blocks).toBeInstanceOf(Array);
-      expect(payload.lesson.blocks.length).toBe(1);
+      expect(payload).toHaveProperty('blocks');
+      expect(payload).toHaveProperty('answer');
+      expect(payload).toHaveProperty('userAnswer');
+      expect(payload.blocks).toBeInstanceOf(Array);
+      expect(payload.blocks.length).toBe(1);
       expect(payload.isFinal).toBe(true);
     });
   });
@@ -409,72 +404,13 @@ describe('Learning flow', () => {
 
       expect(response.statusCode).toBe(200);
       expect(payload).toHaveProperty('total');
-      expect(payload).toHaveProperty('lesson');
-      expect(payload.lesson).toHaveProperty('blocks');
-      expect(payload.lesson.blocks).toBeInstanceOf(Array);
-      expect(payload.lesson.blocks.length).toBe(6);
-      payload.lesson.blocks.forEach((block, index) => {
+      expect(payload).toHaveProperty('blocks');
+      expect(payload.blocks).toBeInstanceOf(Array);
+      expect(payload.blocks.length).toBe(6);
+      payload.blocks.forEach((block, index) => {
         // eslint-disable-next-line no-underscore-dangle
         expect(block.blockId).toBe(french._blocks._current[index].block_id);
       });
-    });
-  });
-
-  describe('Resume the lesson', () => {
-    let lessonToResume;
-
-    beforeAll(async () => {
-      lessonToResume = await createLesson({
-        app: testContext.app,
-        credentials: teacherCredentials,
-        body: prepareLessonFromSeed(french, '-lessonToResume'),
-      });
-
-      await testContext.request({
-        url: `lesson/enroll/${lessonToResume.lesson.id}`,
-      });
-
-      await testContext.request({
-        url: `lesson/${lessonToResume.lesson.id}/learn`,
-        body: {
-          action: 'start',
-        },
-      });
-
-      await testContext.request({
-        url: `lesson/${lessonToResume.lesson.id}/learn`,
-        body: {
-          action: 'next',
-          blockId: blocks[indexesOfInteractive[0]].block_id,
-          revision:
-            lessonToResume.lesson.blocks[indexesOfInteractive[0]].revision,
-        },
-      });
-    });
-
-    it('should return a lesson with blocks to the next interactive block', async () => {
-      const response = await testContext.request({
-        url: `lesson/${lessonToResume.lesson.id}/learn`,
-        body: {
-          action: 'resume',
-          blockId: blocks[indexesOfInteractive[1]].block_id,
-          revision:
-            lessonToResume.lesson.blocks[indexesOfInteractive[1]].revision,
-        },
-      });
-
-      const payload = JSON.parse(response.payload);
-
-      expect(response.statusCode).toBe(200);
-      expect(payload).toHaveProperty('total');
-      expect(payload).toHaveProperty('lesson');
-      expect(payload).toHaveProperty('isFinal');
-      expect(payload.lesson).toHaveProperty('blocks');
-      expect(payload.lesson.blocks).toBeInstanceOf(Array);
-      expect(payload.lesson.blocks.length).toBe(
-        indexesOfInteractive[1] - indexesOfInteractive[0],
-      );
-      expect(payload.lesson.blocks[1].type).toBe('quiz');
     });
   });
 
@@ -644,13 +580,12 @@ describe('Learning flow', () => {
 
       expect(response.statusCode).toBe(200);
       expect(payload).toHaveProperty('total');
-      expect(payload).toHaveProperty('lesson');
       expect(payload).toHaveProperty('isFinal');
-      expect(payload.lesson).toHaveProperty('blocks');
-      expect(payload.lesson).toHaveProperty('answer');
-      expect(payload.lesson).toHaveProperty('userAnswer');
-      expect(payload.lesson.blocks).toBeInstanceOf(Array);
-      expect(payload.lesson.blocks.length).toBe(1);
+      expect(payload).toHaveProperty('blocks');
+      expect(payload).toHaveProperty('answer');
+      expect(payload).toHaveProperty('userAnswer');
+      expect(payload.blocks).toBeInstanceOf(Array);
+      expect(payload.blocks.length).toBe(1);
       expect(payload.isFinal).toBe(true);
     });
   });

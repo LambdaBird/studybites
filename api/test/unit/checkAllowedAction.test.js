@@ -10,7 +10,7 @@ describe('checkAllowed returns allowed action based on the last Results record',
         return undefined;
       });
       LessonBlockStructure.getChunk = jest.fn(() => {
-        return [];
+        return { total: 0, chunk: [] };
       });
     });
 
@@ -35,7 +35,7 @@ describe('checkAllowed returns allowed action based on the last Results record',
         };
       });
       LessonBlockStructure.getChunk = jest.fn(() => {
-        return [];
+        return { total: 0, chunk: [] };
       });
     });
 
@@ -60,11 +60,14 @@ describe('checkAllowed returns allowed action based on the last Results record',
           };
         });
         LessonBlockStructure.getChunk = jest.fn(() => {
-          return [
-            {
-              type: 'quiz',
-            },
-          ];
+          return {
+            total: 1,
+            chunk: [
+              {
+                type: 'quiz',
+              },
+            ],
+          };
         });
       });
 
@@ -89,7 +92,7 @@ describe('checkAllowed returns allowed action based on the last Results record',
           };
         });
         LessonBlockStructure.getChunk = jest.fn(() => {
-          return [];
+          return { total: 0, chunk: [] };
         });
       });
 
@@ -115,11 +118,14 @@ describe('checkAllowed returns allowed action based on the last Results record',
         };
       });
       LessonBlockStructure.getChunk = jest.fn(() => {
-        return [
-          {
-            type: 'paragraph',
-          },
-        ];
+        return {
+          total: 1,
+          chunk: [
+            {
+              type: 'paragraph',
+            },
+          ],
+        };
       });
     });
 

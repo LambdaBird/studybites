@@ -243,22 +243,22 @@ describe('LessonBlockStructure methods', () => {
         });
 
         it('should return an array', async () => {
-          const blocks = await LessonBlockStructure.getChunk({
+          const { chunk } = await LessonBlockStructure.getChunk({
             lessonId: lessonWithBlocks.lesson.id,
           });
 
-          expect(blocks).toBeInstanceOf(Array);
+          expect(chunk).toBeInstanceOf(Array);
         });
 
         it('should return a chunk of blocks in the right order', async () => {
-          const blocks = await LessonBlockStructure.getChunk({
+          const { chunk } = await LessonBlockStructure.getChunk({
             lessonId: lessonWithBlocks.lesson.id,
           });
 
-          expect(blocks).toHaveLength(
+          expect(chunk).toHaveLength(
             french._blocks._indexesOfInteractive[0] + 1,
           );
-          blocks.forEach((block, index) => {
+          chunk.forEach((block, index) => {
             expect(block.blockId).toBe(french._blocks._current[index].block_id);
           });
         });
@@ -301,29 +301,29 @@ describe('LessonBlockStructure methods', () => {
         });
 
         it('should return an array', async () => {
-          const blocks = await LessonBlockStructure.getChunk({
+          const { chunk } = await LessonBlockStructure.getChunk({
             lessonId: lessonWithBlocks.lesson.id,
             previousBlock:
               french._blocks._current[french._blocks._indexesOfInteractive[0]]
                 .block_id,
           });
 
-          expect(blocks).toBeInstanceOf(Array);
+          expect(chunk).toBeInstanceOf(Array);
         });
 
         it('should return a chunk of blocks in the right order', async () => {
-          const blocks = await LessonBlockStructure.getChunk({
+          const { chunk } = await LessonBlockStructure.getChunk({
             lessonId: lessonWithBlocks.lesson.id,
             previousBlock:
               french._blocks._current[french._blocks._indexesOfInteractive[0]]
                 .block_id,
           });
 
-          expect(blocks).toHaveLength(
+          expect(chunk).toHaveLength(
             french._blocks._indexesOfInteractive[1] -
               french._blocks._indexesOfInteractive[0],
           );
-          blocks.forEach((block, index) => {
+          chunk.forEach((block, index) => {
             expect(block.blockId).toBe(
               french._blocks._current[
                 index + french._blocks._indexesOfInteractive[0] + 1
@@ -387,26 +387,26 @@ describe('LessonBlockStructure methods', () => {
         });
 
         it('should return an array', async () => {
-          const blocks = await LessonBlockStructure.getChunk({
+          const { chunk } = await LessonBlockStructure.getChunk({
             lessonId: lessonWithBlocks.lesson.id,
             previousBlock:
               french._blocks._current[french._blocks._indexesOfInteractive[1]]
                 .block_id,
           });
 
-          expect(blocks).toBeInstanceOf(Array);
+          expect(chunk).toBeInstanceOf(Array);
         });
 
         it('should return a chunk of blocks in the right order', async () => {
-          const blocks = await LessonBlockStructure.getChunk({
+          const { chunk } = await LessonBlockStructure.getChunk({
             lessonId: lessonWithBlocks.lesson.id,
             previousBlock:
               french._blocks._current[french._blocks._indexesOfInteractive[1]]
                 .block_id,
           });
 
-          expect(blocks).toHaveLength(1);
-          blocks.forEach((block, index) => {
+          expect(chunk).toHaveLength(1);
+          chunk.forEach((block, index) => {
             expect(block.blockId).toBe(
               french._blocks._current[
                 index + french._blocks._indexesOfInteractive[1] + 1
@@ -440,20 +440,20 @@ describe('LessonBlockStructure methods', () => {
       });
 
       it('should return an array', async () => {
-        const blocks = await LessonBlockStructure.getChunk({
+        const { chunk } = await LessonBlockStructure.getChunk({
           lessonId: lessonWithInteractive.lesson.id,
         });
 
-        expect(blocks).toBeInstanceOf(Array);
+        expect(chunk).toBeInstanceOf(Array);
       });
 
       it('should return a chunk of blocks in the right order', async () => {
-        const blocks = await LessonBlockStructure.getChunk({
+        const { chunk } = await LessonBlockStructure.getChunk({
           lessonId: lessonWithInteractive.lesson.id,
         });
 
-        expect(blocks).toHaveLength(math._blocks._indexesOfInteractive[0] + 1);
-        blocks.forEach((block, index) => {
+        expect(chunk).toHaveLength(math._blocks._indexesOfInteractive[0] + 1);
+        chunk.forEach((block, index) => {
           expect(block.blockId).toBe(math._blocks._current[index].block_id);
         });
       });
@@ -482,20 +482,20 @@ describe('LessonBlockStructure methods', () => {
       });
 
       it('should return an array', async () => {
-        const blocks = await LessonBlockStructure.getChunk({
+        const { chunk } = await LessonBlockStructure.getChunk({
           lessonId: lessonWithNonInteractive.lesson.id,
         });
 
-        expect(blocks).toBeInstanceOf(Array);
+        expect(chunk).toBeInstanceOf(Array);
       });
 
       it('should return a chunk of blocks in the right order', async () => {
-        const blocks = await LessonBlockStructure.getChunk({
+        const { chunk } = await LessonBlockStructure.getChunk({
           lessonId: lessonWithNonInteractive.lesson.id,
         });
 
-        expect(blocks).toHaveLength(1);
-        blocks.forEach((block, index) => {
+        expect(chunk).toHaveLength(1);
+        chunk.forEach((block, index) => {
           expect(block.blockId).toBe(russian._blocks._current[index].block_id);
         });
       });
