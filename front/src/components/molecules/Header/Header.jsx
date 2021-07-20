@@ -39,7 +39,7 @@ const Header = ({ children }) => {
 
   const handleSignOut = () => {
     clearJWT();
-    queryClient.invalidateQueries();
+    queryClient.resetQueries();
     history.push(SIGN_IN);
   };
 
