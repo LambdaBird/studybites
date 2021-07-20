@@ -27,6 +27,7 @@ export const options = {
             question: { type: 'string' },
             answers: { type: 'array' },
             response: { type: 'array' },
+            isSolved: { type: 'boolean' },
           },
         },
       },

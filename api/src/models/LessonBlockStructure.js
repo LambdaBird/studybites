@@ -121,8 +121,13 @@ class LessonBlockStructure extends objection.Model {
     return this.#sortBlocks({ blocksUnordered, shouldStrip });
   }
 
-  static async getChunk({ lessonId, previousBlock = null, fromStart = false }) {
-    const blocks = await this.getAllBlocks({ lessonId, shouldStrip: true });
+  static async getChunk({
+    lessonId,
+    previousBlock = null,
+    fromStart = false,
+    shouldStrip = true,
+  }) {
+    const blocks = await this.getAllBlocks({ lessonId, shouldStrip });
     const total = blocks.length;
 
     if (!previousBlock) {

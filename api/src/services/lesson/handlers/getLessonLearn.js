@@ -31,8 +31,9 @@ export const options = {
             },
           },
           isFinal: { type: 'boolean' },
+          isFinished: { type: 'boolean' },
         },
-        required: ['total', 'lesson', 'isFinal'],
+        required: ['total', 'lesson'],
       },
       ...errorResponse,
     },
@@ -53,6 +54,7 @@ export const options = {
 
 export async function handler({ user: { id: userId }, params: { lessonId } }) {
   const {
+    knex,
     models: { Lesson, Result, LessonBlockStructure },
   } = this;
   /**
@@ -74,11 +76,46 @@ export async function handler({ user: { id: userId }, params: { lessonId } }) {
     return { total: 0, lesson, isFinal: false };
   }
   /**
+   * get results for interactive blocks
+   */
+  const results = await Result.query()
+    .select('results.data', 'results.blockId', 'results.revision')
+    .from(
+      knex.raw(`
+          (select block_id, max(created_at) as created_at from results 
+          where lesson_id = ${lessonId} and user_id = ${userId} and data is not null group by block_id) as temp
+        `),
+    )
+    .join(
+      knex.raw(
+        `results on results.block_id = temp.block_id and results.created_at = temp.created_at`,
+      ),
+    );
+
+  const dictionary = results.reduce((result, filter) => {
+    // eslint-disable-next-line no-param-reassign
+    result[filter.blockId] = filter;
+    return result;
+  }, {});
+  /**
    * if the lesson was finished
    */
   if (lastResult.action === 'finish') {
     const blocks = await LessonBlockStructure.getAllBlocks({ lessonId });
-    lesson.blocks = blocks;
+
+    lesson.blocks = blocks.map((block) => {
+      if (dictionary[block.blockId]) {
+        if (dictionary[block.blockId].revision === block.revision) {
+          return {
+            ...block,
+            ...dictionary[block.blockId],
+            isSolved: true,
+          };
+        }
+      }
+      return block;
+    });
+
     return {
       total: blocks.length,
       lesson,
@@ -92,7 +129,24 @@ export async function handler({ user: { id: userId }, params: { lessonId } }) {
     lessonId,
     previousBlock: lastResult.blockId,
     fromStart: true,
+    shouldStrip: false,
   });
-  lesson.blocks = chunk;
+
+  lesson.blocks = chunk.map((block) => {
+    if (dictionary[block.blockId]) {
+      if (dictionary[block.blockId].revision === block.revision) {
+        return {
+          ...block,
+          ...dictionary[block.blockId],
+          isSolved: true,
+        };
+      }
+    }
+    return block;
+  });
+
+  delete lesson.blocks[lesson.blocks.length - 1].answer;
+  delete lesson.blocks[lesson.blocks.length - 1].weight;
+
   return { total, lesson, isFinal };
 }
