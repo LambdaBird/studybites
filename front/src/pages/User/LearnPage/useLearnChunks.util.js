@@ -79,7 +79,7 @@ export const createFinishBlock = (isSolved) => ({
   answer: {},
 });
 
-export const createQuizResultBlock = (id, results, response) => ({
+export const createQuizResultNoDataBlock = (id, results, response) => ({
   answer: { results },
   blockId: `block-${id}`,
   content: {
@@ -88,16 +88,20 @@ export const createQuizResultBlock = (id, results, response) => ({
         value: `Value ${i + 1}`,
         correct: response[i],
       })),
-      question: 'Test text',
+      question: `Answer for question ${id}?`,
     },
     id: `content-${id}`,
     type: 'quiz',
   },
+  revision: `hashTest${id}`,
+  type: 'quiz',
+});
+
+export const createQuizResultBlock = (id, results, response) => ({
+  ...createQuizResultNoDataBlock(id, results, response),
   data: {
     response,
   },
-  revision: `hashTest${id}`,
-  type: 'quiz',
 });
 
 export const createMockedBlocks = (variant) => {
