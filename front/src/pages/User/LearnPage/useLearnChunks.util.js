@@ -62,6 +62,9 @@ export const createQuizBlock = (id, results) => ({
     id: `content-${id}`,
     type: 'quiz',
   },
+  response: {
+    isResolved: false,
+  },
   revision: `hashTest${id}`,
   type: 'quiz',
 });
@@ -92,6 +95,9 @@ export const createQuizResultNoDataBlock = (id, results, response) => ({
     },
     id: `content-${id}`,
     type: 'quiz',
+  },
+  response: {
+    isResolved: true,
   },
   revision: `hashTest${id}`,
   type: 'quiz',
@@ -183,6 +189,26 @@ export const createMockedBlocks = (variant) => {
           createNextBlock(3, true),
           createQuizResultBlock(4, [true], [true]),
         ],
+      };
+    case 8:
+      return {
+        isFinished: false,
+        blocks: [
+          createParagraphBlock(1, 'Paragraph1'),
+          createParagraphBlock(2, 'Paragraph2'),
+          createNextBlock(3, true),
+          createParagraphBlock(4, 'paragraph3'),
+        ],
+      };
+    case 9:
+      return {
+        isFinished: false,
+        blocks: [],
+      };
+    case 10:
+      return {
+        isFinished: true,
+        blocks: [],
       };
     default:
       return {
@@ -323,6 +349,36 @@ export const createMockedBlocksResponse = ({ id, action, blockId, data }) => {
       }
       break;
     case 7:
+      if (action === 'finish') {
+        return {
+          isFinished: true,
+          blocks: [],
+        };
+      }
+      break;
+    case 8:
+      if (action === 'finish') {
+        return {
+          isFinished: true,
+          blocks: [],
+        };
+      }
+      break;
+    case 9:
+      if (action === 'start') {
+        return {
+          isFinished: false,
+          blocks: [],
+        };
+      }
+      if (action === 'finish') {
+        return {
+          isFinished: true,
+          blocks: [],
+        };
+      }
+      break;
+    case 10:
       if (action === 'finish') {
         return {
           isFinished: true,

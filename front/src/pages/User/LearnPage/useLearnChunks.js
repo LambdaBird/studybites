@@ -21,34 +21,38 @@ export const convertBlocksToChunks = (blocks) => {
     }
     return acc;
   }, []);
-  return { chunks, lastIndex };
+  if (lastIndex !== blocks.length) {
+    chunks.push(blocks.slice(lastIndex, blocks.length));
+  }
+  return chunks;
 };
 
-export const createChunks = ({ blocks, isFinished, lastChunk }) => {
-  if (blocks?.length === 0 && !isFinished && !lastChunk) {
+export const createChunksFromBlocks = ({
+  blocks,
+  isFinished,
+  isPost = false,
+}) => {
+  const isEmptyBlocks = blocks.length === 0;
+
+  if (isEmptyBlocks && !isFinished && !isPost) {
     return [[createStartBlock(false)]];
   }
 
-  const { chunks, lastIndex } = convertBlocksToChunks(blocks);
+  const isLastInteractiveResolved =
+    blocks[blocks.length - 1]?.response?.isResolved;
+
+  const isLastNonInteractiveBlock = !apiConfig.interactiveBlocks.includes(
+    blocks[blocks.length - 1]?.type,
+  );
+
+  const chunks = convertBlocksToChunks(blocks);
   if (isFinished) {
     chunks.push([createFinished(false)]);
-  } else if (
-    /*
-     * Three cases of displaying 'Finish' button only if isFinished === false
-     * 1. Last element is not interactive block
-     * 2. Last element is interactive quiz block with RESULT (answer)
-     * 3. Response blocks = []
-     * */
-    lastIndex !== blocks.length ||
-    blocks[blocks.length - 1]?.answer?.results?.length > 0 ||
-    blocks.length === 0
-  ) {
-    chunks.push([
-      ...blocks.slice(lastIndex, blocks.length),
-      createFinishBlock(false),
-    ]);
+  } else if (isLastInteractiveResolved || isEmptyBlocks) {
+    chunks.push([createFinishBlock(false)]);
+  } else if (isLastNonInteractiveBlock) {
+    chunks[chunks.length - 1].push(createFinishBlock(false));
   }
-
   return chunks;
 };
 
@@ -69,7 +73,11 @@ export const handleAnswer = ({ data, prevChunks }) => {
   }
   return [
     ...prevChunks,
-    ...createChunks({ blocks: newLesson?.blocks, isFinished, lastChunk }),
+    ...createChunksFromBlocks({
+      blocks: newLesson?.blocks,
+      isFinished,
+      isPost: true,
+    }),
   ];
 };
 
@@ -102,11 +110,11 @@ export const useLearnChunks = ({ lessonId }) => {
   useEffect(() => {
     if (getData) {
       const { lesson: newLesson, isFinished, total: newTotal } = getData;
-      setChunks((prevChunks) =>
-        createChunks({
+      setChunks(
+        createChunksFromBlocks({
           blocks: newLesson?.blocks,
           isFinished,
-          lastChunk: prevChunks?.[prevChunks?.length - 1],
+          isPost: false,
         }),
       );
       setTotal(newTotal);

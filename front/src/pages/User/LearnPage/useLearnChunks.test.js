@@ -16,91 +16,79 @@ import {
 
 describe('Test useLearnChunks', () => {
   describe('Test convertBlocksToChunks()', () => {
-    test.each([
-      ['[]', { blocks: [] }, { chunks: [], lastIndex: 0 }],
-      [
-        '[paragraph]',
-        { blocks: [createParagraphBlock(1, 'Paragraph1')] },
-        { chunks: [], lastIndex: 0 },
-      ],
-      [
-        '[next]',
-        { blocks: [createNextBlock(1, false)] },
-        { chunks: [[createNextBlock(1, false)]], lastIndex: 1 },
-      ],
-      [
-        '[paragraph,next]',
-        {
-          blocks: [
-            createParagraphBlock(1, 'Paragraph1'),
-            createNextBlock(2, false),
-          ],
-        },
-        {
-          chunks: [
-            [createParagraphBlock(1, 'Paragraph1'), createNextBlock(2, false)],
-          ],
-          lastIndex: 2,
-        },
-      ],
-      [
-        '[paragraph,quiz]',
-        {
-          blocks: [
-            createParagraphBlock(1, 'Paragraph1'),
-            createQuizBlock(2, [true, true]),
-          ],
-        },
-        {
-          chunks: [
-            [
-              createParagraphBlock(1, 'Paragraph1'),
-              createQuizBlock(2, [true, true]),
-            ],
-          ],
-          lastIndex: 2,
-        },
-      ],
-      [
-        '[paragraph,quizResult]',
-        {
-          blocks: [
-            createParagraphBlock(1, 'Paragraph1'),
-            createQuizResultBlock(2, [true, true], [true, true]),
-          ],
-        },
-        {
-          chunks: [
-            [
-              createParagraphBlock(1, 'Paragraph1'),
-              createQuizResultBlock(2, [true, true], [true, true]),
-            ],
-          ],
-          lastIndex: 2,
-        },
-      ],
-      [
-        '[paragraph,next,paragraph,next]',
-        {
-          blocks: [
-            createParagraphBlock(1, 'Paragraph1'),
-            createNextBlock(2, true),
-            createParagraphBlock(3, 'Paragraph2'),
-            createNextBlock(4, false),
-          ],
-        },
-        {
-          chunks: [
-            [createParagraphBlock(1, 'Paragraph1'), createNextBlock(2, true)],
-            [createParagraphBlock(3, 'Paragraph2'), createNextBlock(4, false)],
-          ],
-          lastIndex: 4,
-        },
-      ],
-    ])('with blocks %s', async (_, payload, expected) => {
-      const { chunks, lastIndex } = convertBlocksToChunks(payload.blocks);
-      expect(chunks).toStrictEqual(expected.chunks);
-      expect(lastIndex).toStrictEqual(expected.lastIndex);
+    test('should return empty chunks when blocks empty', () => {
+      const { chunks, lastIndex } = convertBlocksToChunks([
+        createParagraphBlock(1, 'Paragraph1'),
+      ]);
+      expect(chunks).toStrictEqual([]);
+      expect(lastIndex).toStrictEqual(0);
+    });
+
+    test('should return empty chunks when blocks without last interactive', () => {
+      const { chunks, lastIndex } = convertBlocksToChunks([]);
+      expect(chunks).toStrictEqual([]);
+      expect(lastIndex).toStrictEqual(0);
+    });
+
+    test('should return next chunk when blocks with one next', () => {
+      const { chunks, lastIndex } = convertBlocksToChunks([
+        createNextBlock(1, false),
+      ]);
+      expect(chunks).toStrictEqual([[createNextBlock(1, false)]]);
+      expect(lastIndex).toStrictEqual(1);
+    });
+
+    test('should return paragraph and next chunk when blocks with one paragraph and next', () => {
+      const { chunks, lastIndex } = convertBlocksToChunks([
+        createParagraphBlock(1, 'Paragraph1'),
+        createNextBlock(2, false),
+      ]);
+      expect(chunks).toStrictEqual([
+        [createParagraphBlock(1, 'Paragraph1'), createNextBlock(2, false)],
+      ]);
+      expect(lastIndex).toStrictEqual(2);
+    });
+
+    test('should return paragraph and quiz chunk when blocks with one paragraph and quiz', () => {
+      const { chunks, lastIndex } = convertBlocksToChunks([
+        createParagraphBlock(1, 'Paragraph1'),
+        createQuizBlock(2, [true, true]),
+      ]);
+      expect(chunks).toStrictEqual([
+        [
+          createParagraphBlock(1, 'Paragraph1'),
+          createQuizBlock(2, [true, true]),
+        ],
+      ]);
+      expect(lastIndex).toStrictEqual(2);
+    });
+
+    test('should return paragraph and quizResult chunk when blocks with one paragraph and quizResult', () => {
+      const { chunks, lastIndex } = convertBlocksToChunks([
+        createParagraphBlock(1, 'Paragraph1'),
+        createQuizResultBlock(2, [true, true], [true, true]),
+      ]);
+      expect(chunks).toStrictEqual([
+        [
+          createParagraphBlock(1, 'Paragraph1'),
+          createQuizResultBlock(2, [true, true], [true, true]),
+        ],
+      ]);
+      expect(lastIndex).toStrictEqual(2);
+    });
+
+    test('should return two chunks [paragraph, next] and [paragraph,next] when blocks [paragraph,next,paragraph,next]', () => {
+      const { chunks, lastIndex } = convertBlocksToChunks([
+        createParagraphBlock(1, 'Paragraph1'),
+        createNextBlock(2, true),
+        createParagraphBlock(3, 'Paragraph2'),
+        createNextBlock(4, false),
+      ]);
+      expect(chunks).toStrictEqual([
+        [createParagraphBlock(1, 'Paragraph1'), createNextBlock(2, true)],
+        [createParagraphBlock(3, 'Paragraph2'), createNextBlock(4, false)],
+      ]);
+      expect(lastIndex).toStrictEqual(4);
     });
   });
 
