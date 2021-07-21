@@ -10,6 +10,10 @@ export const BLOCKS_TYPE = {
   QUOTE: 'quote',
   DELIMITER: 'delimiter',
   TABLE: 'table',
+  FINISH: 'finish',
+  FINISHED: 'finished',
+  NEXT: 'next',
+  START: 'start',
 };
 
 export const BlockContentType = PropTypes.shape({
@@ -17,6 +21,7 @@ export const BlockContentType = PropTypes.shape({
 });
 
 export const BlockIdType = PropTypes.string.isRequired;
+export const RevisionType = PropTypes.string.isRequired;
 
 export const ParagraphContentType = PropTypes.shape({
   data: PropTypes.shape({
@@ -79,9 +84,15 @@ export const HeaderContentType = PropTypes.shape({
   }),
 });
 
+export const NextPropType = {
+  response: PropTypes.shape({
+    isSolved: PropTypes.bool,
+  }),
+};
+
 export const BlockElementProps = {
   element: PropTypes.shape({
-    content: BlockContentType.isRequired,
+    content: BlockContentType,
     blockId: BlockIdType,
     answer: QuizBlockAnswerType,
   }),

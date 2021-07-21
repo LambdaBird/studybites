@@ -10,30 +10,24 @@ import * as S from './AnswerResult.styled';
 
 const { Text } = Typography;
 
-const AnswerResult = ({ difference, options, correct }) => {
+const AnswerResult = ({ correct, result }) => {
   const { t } = useTranslation('user');
-  const defaultValueCorrect = useMemo(
+
+  const options = useMemo(
     () =>
-      difference
-        ?.map((x, i) => (x === true && !options[i].correct ? i : null))
-        ?.filter((x) => x !== null),
-    [difference, options],
+      result?.map((x, i) => ({
+        label: x.value,
+        value: i,
+      })),
+    [result],
   );
 
-  const optionsDifference = useMemo(
+  const value = useMemo(
     () =>
-      difference
-        ?.map((x, i) =>
-          x === true
-            ? {
-                label: options[i].label,
-                value: i,
-              }
-            : null,
-        )
-        ?.filter((x) => x !== null),
-    [difference, options],
+      result?.map((x, i) => (x.correct ? i : null)).filter((x) => x !== null),
+    [result],
   );
+
   return (
     <>
       {correct ? (
@@ -48,10 +42,7 @@ const AnswerResult = ({ difference, options, correct }) => {
             <CloseCircleTwoTone twoToneColor="#F5222D" />
           </S.AnswerWrapper>
 
-          <ColumnDisabledCheckbox
-            value={defaultValueCorrect}
-            options={optionsDifference}
-          />
+          <ColumnDisabledCheckbox value={value} options={options} />
         </>
       )}
     </>
@@ -59,8 +50,13 @@ const AnswerResult = ({ difference, options, correct }) => {
 };
 
 AnswerResult.propTypes = {
-  difference: PropTypes.arrayOf(PropTypes.bool).isRequired,
-  options: PropTypes.arrayOf(PropTypes.object).isRequired,
+  result: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+        .isRequired,
+      correct: PropTypes.bool.isRequired,
+    }),
+  ),
   correct: PropTypes.bool.isRequired,
 };
 

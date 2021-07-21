@@ -40,5 +40,6 @@ export default {
     next: 'Дальше',
     send: 'Отправить',
     finish: 'Закончить',
+    finished: 'Урок закончен',
   },
 };

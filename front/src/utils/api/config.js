@@ -1,3 +1,3 @@
 export default {
-  interactiveBlocks: ['next'],
+  interactiveBlocks: ['next', 'quiz', 'finish'],
 };

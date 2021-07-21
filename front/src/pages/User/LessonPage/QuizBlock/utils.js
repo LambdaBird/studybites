@@ -11,20 +11,35 @@ const diff = (a, b) => {
 };
 
 export const verifyAnswers = (answers, correctAnswers) => {
-  if (answers.length === correctAnswers.length) {
-    const difference = diff(answers, correctAnswers);
-    if (difference.filter((x) => x).length === 0) {
-      return {
-        correct: true,
-      };
-    }
+  if (answers.length !== correctAnswers.length) {
     return {
-      difference,
+      result: [],
       correct: false,
     };
   }
+  const difference = diff(
+    answers.map((x) => x.correct),
+    correctAnswers,
+  );
+  if (difference.filter((x) => x).length === 0) {
+    return {
+      correct: true,
+    };
+  }
+
+  const result = difference
+    .map((y, i) =>
+      y
+        ? {
+            value: answers[i].value,
+            correct: correctAnswers[i],
+          }
+        : null,
+    )
+    .filter((y) => !!y);
 
   return {
     correct: false,
+    result,
   };
 };

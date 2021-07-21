@@ -1,13 +1,15 @@
-import { renderHook, act } from '@testing-library/react-hooks';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { getLessonById, postLessonById } from '@sb-ui/utils/api/v1/student';
+import { act,renderHook } from '@testing-library/react-hooks';
+
 import {
   createNextBlock,
   createParagraphBlock,
+  createQuizBlock,
   createQuizResultBlock,
   createQuizResultBlockResponse,
-  createQuizBlock,
 } from '@sb-ui/pages/User/LessonPage/useLesson.test.util';
+import { getLessonById, postLessonById } from '@sb-ui/utils/api/v1/student';
+
 import { useLesson } from './useLesson';
 
 jest.mock('react-i18next');
