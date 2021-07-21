@@ -17,10 +17,9 @@ const LearnPage = () => {
 
   return (
     <>
-      <S.Header />
+      <S.Header bottom={<S.Progress percent={leanProgress} />} />
       <S.Wrapper>
         <S.GlobalStylesLearnPage />
-        <S.Progress percent={leanProgress} />
         <S.Row>
           <S.BlockCell>
             <LearnContext.Provider

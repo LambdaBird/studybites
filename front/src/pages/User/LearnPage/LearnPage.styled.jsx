@@ -4,13 +4,11 @@ import styled, { createGlobalStyle } from 'styled-components';
 import MainHeader from '@sb-ui/components/molecules/Header';
 import variables from '@sb-ui/theme/variables';
 
-export const Header = styled(MainHeader).attrs({
-  style: {
-    position: 'sticky',
-    top: 0,
-    zIndex: 1,
-  },
-})``;
+export const Header = styled(MainHeader)`
+  position: sticky;
+  top: 0;
+  z-index: 1;
+`;
 
 export const Progress = styled(AntdProgress).attrs({
   trailColor: variables['progress-trail-color'],
@@ -18,8 +16,8 @@ export const Progress = styled(AntdProgress).attrs({
   showInfo: false,
   strokeLinecap: 'round',
 })`
-  position: fixed;
-  top: 43px;
+  position: absolute;
+  bottom: -10px;
   z-index: 2;
 `;
 
