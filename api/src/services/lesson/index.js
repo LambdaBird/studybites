@@ -5,7 +5,7 @@ import router from './routes';
 const lessonService = (instance, opts, next) => {
   instance.register(router, opts);
 
-  next();
+  return next();
 };
 
 export default fp(lessonService);

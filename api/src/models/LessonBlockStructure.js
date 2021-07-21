@@ -1,6 +1,8 @@
 import objection from 'objection';
 import path from 'path';
 
+import config from '../../config';
+
 class LessonBlockStructure extends objection.Model {
   static get tableName() {
     return 'lesson_block_structure';
@@ -17,6 +19,140 @@ class LessonBlockStructure extends objection.Model {
         parentId: { type: ['string', 'null'] },
       },
     };
+  }
+
+  static #sortBlocks({ blocksUnordered, shouldStrip = false }) {
+    const dictionary = blocksUnordered.reduce((result, filter) => {
+      // eslint-disable-next-line no-param-reassign
+      result[filter.id] = filter;
+      return result;
+    }, {});
+
+    const blocksInOrder = [];
+
+    if (blocksUnordered.length) {
+      const block = blocksUnordered[0];
+      if (shouldStrip) {
+        delete block.answer;
+        delete block.weight;
+      }
+      blocksInOrder.push(block);
+    }
+
+    for (let i = 0, n = blocksUnordered.length - 1; i < n; i += 1) {
+      const block = dictionary[blocksInOrder[i].childId];
+      if (shouldStrip) {
+        delete block.answer;
+        delete block.weight;
+      }
+      blocksInOrder.push(block);
+    }
+
+    return blocksInOrder;
+  }
+
+  static #findChunk({ blocks, startIndex, fromStart = false }) {
+    let remainingBlocks = blocks;
+
+    if (startIndex) {
+      remainingBlocks = blocks.slice(startIndex);
+    }
+
+    const dictionary = remainingBlocks.map((block) => block.type);
+
+    for (let i = 0, n = dictionary.length; i < n; i += 1) {
+      if (config.interactiveBlocks.includes(dictionary[i])) {
+        if (fromStart) {
+          return {
+            chunk: blocks.slice(0, i + 1 + startIndex),
+            position: i + 1 + startIndex,
+          };
+        }
+        return {
+          chunk: remainingBlocks.slice(0, i + 1),
+          position: i + 1 + startIndex,
+        };
+      }
+    }
+
+    if (fromStart) {
+      return { chunk: blocks, position: blocks.length };
+    }
+    return { chunk: remainingBlocks, position: blocks.length };
+  }
+
+  static async getAllBlocks({ lessonId, shouldStrip = false }) {
+    const blocksUnordered = await this.query()
+      .select(
+        'blocks.*',
+        'lesson_block_structure.id',
+        'lesson_block_structure.parent_id',
+        'lesson_block_structure.child_id',
+      )
+      .join('blocks', 'blocks.block_id', '=', 'lesson_block_structure.block_id')
+      .join(
+        this.knex().raw(
+          `(select block_id, MAX(created_at) as created_at from blocks group by block_id) recent`,
+        ),
+        'recent.block_id',
+        '=',
+        'blocks.block_id',
+      )
+      .where({
+        lessonId,
+      })
+      .andWhere(this.knex().raw(`recent.created_at = blocks.created_at`))
+      .orderBy(
+        this.knex().raw(`(case when parent_id is null then 0 else 1 end)`),
+      );
+
+    if (blocksUnordered.length === 1) {
+      if (shouldStrip) {
+        delete blocksUnordered[0].answer;
+        delete blocksUnordered[0].weight;
+      }
+      return blocksUnordered;
+    }
+
+    if (!blocksUnordered.length) {
+      return [];
+    }
+
+    return this.#sortBlocks({ blocksUnordered, shouldStrip });
+  }
+
+  static async getChunk({
+    lessonId,
+    previousBlock = null,
+    fromStart = false,
+    shouldStrip = true,
+  }) {
+    const blocks = await this.getAllBlocks({ lessonId, shouldStrip });
+    const total = blocks.length;
+
+    if (!previousBlock) {
+      const { chunk, position } = this.#findChunk({ blocks });
+      return { total, chunk, isFinal: position === total };
+    }
+
+    const dictionary = blocks.map((block) => block.blockId);
+
+    for (let i = 0, n = dictionary.length; i < n; i += 1) {
+      if (dictionary[i] === previousBlock) {
+        const { chunk, position } = this.#findChunk({
+          blocks,
+          startIndex: i + 1,
+          fromStart,
+        });
+        return {
+          total,
+          chunk,
+          isFinal: position === total,
+        };
+      }
+    }
+
+    return { total, chunk: [], isFinal: true };
   }
 
   static relationMappings() {

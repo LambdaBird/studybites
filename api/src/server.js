@@ -1,12 +1,12 @@
 import build from './app';
 
 const server = build({
-  logger: 'info',
+  logger: process.env.API_LOGLEVEL || false,
 });
 
 try {
-  server.listen(process.env.PORT, '0.0.0.0');
-} catch (err) {
-  server.log.error(err);
+  server.listen(process.env.PORT || 3000, process.env.HOST || '0.0.0.0');
+} catch (error) {
+  server.log.error(error);
   process.exit(1);
 }

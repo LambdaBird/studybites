@@ -20,7 +20,7 @@ import {
   USER_LESSONS,
 } from '@sb-ui/utils/paths';
 import { USER_BASE_QUERY } from '@sb-ui/utils/queries';
-import { ChildrenType } from '@sb-ui/utils/types';
+import { ChildrenType, ClassNameType } from '@sb-ui/utils/types';
 
 import * as S from './Header.styled';
 
@@ -28,7 +28,7 @@ const { SubMenu } = Menu;
 
 const USER_LOGO_FALLBACK = 'X';
 
-const Header = ({ children }) => {
+const Header = ({ className, bottom, children }) => {
   const history = useHistory();
   const { t, i18n } = useTranslation(['common', 'user']);
   const location = useLocation();
@@ -39,7 +39,7 @@ const Header = ({ children }) => {
 
   const handleSignOut = () => {
     clearJWT();
-    queryClient.invalidateQueries();
+    queryClient.resetQueries();
     history.push(SIGN_IN);
   };
 
@@ -107,7 +107,7 @@ const Header = ({ children }) => {
   );
 
   return (
-    <S.Container>
+    <S.Container className={className}>
       <S.RowMain align="middle" justify="space-between">
         <Col>
           <Link to={HOME}>
@@ -125,12 +125,15 @@ const Header = ({ children }) => {
           </Dropdown>
         </Col>
       </S.RowMain>
+      {bottom}
     </S.Container>
   );
 };
 
 Header.propTypes = {
   children: ChildrenType,
+  className: ClassNameType,
+  bottom: ChildrenType,
 };
 
 export default Header;
