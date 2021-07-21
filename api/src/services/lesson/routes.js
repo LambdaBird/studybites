@@ -24,9 +24,9 @@ import {
 } from './handlers/getAllMaintainableLessons';
 
 import {
-  options as optionsGetMaintainableLessonById,
-  handler as handlerGetMaintainableLessonById,
-} from './handlers/getMaintainableLesson';
+  maintainerLessonByIdOptions,
+  maintainerLessonByIdHandler,
+} from './handlers/maintainerLessonById';
 
 import {
   options as optionsCreateNewLesson,
@@ -108,8 +108,8 @@ export default async function router(instance) {
    */
   instance.get(
     '/maintain/:lessonId',
-    optionsGetMaintainableLessonById,
-    handlerGetMaintainableLessonById,
+    maintainerLessonByIdOptions,
+    maintainerLessonByIdHandler,
   );
 
   /**
