@@ -253,6 +253,37 @@ describe('Learning flow', () => {
       });
     });
 
+    it('should return a lesson with a chunk of blocks to the "next"', async () => {
+      const { statusCode, payload } = await testContext.studentRequest({
+        method: 'GET',
+        url: `${lessonToNext.lesson.id}`,
+      });
+
+      const responseBody = JSON.parse(payload);
+
+      expect(statusCode).toBe(200);
+
+      expect(responseBody).toHaveProperty('total');
+      expect(responseBody.total).toBe(french._blocks._current.length);
+
+      expect(responseBody).toHaveProperty('lesson');
+      expect(responseBody.lesson).toHaveProperty('blocks');
+      expect(responseBody.lesson).toHaveProperty('authors');
+
+      expect(responseBody).toHaveProperty('isFinal');
+      expect(responseBody.isFinal).toBe(false);
+
+      expect(responseBody.lesson.authors).toBeInstanceOf(Array);
+
+      expect(responseBody.lesson.blocks).toBeInstanceOf(Array);
+      expect(responseBody.lesson.blocks).toHaveLength(
+        french._blocks._indexesOfInteractive[0] + 1,
+      );
+      responseBody.lesson.blocks.forEach((block, index) => {
+        expect(block.blockId).toBe(lessonToNext.lesson.blocks[index].blockId);
+      });
+    });
+
     it('should return a lesson with blocks to the next interactive block', async () => {
       const response = await testContext.studentRequest({
         url: `${lessonToNext.lesson.id}/learn`,
@@ -279,6 +310,37 @@ describe('Learning flow', () => {
           french._blocks._indexesOfInteractive[0],
       );
       expect(payload.blocks[1].type).toBe('quiz');
+    });
+
+    it('should return a lesson with a chunk of blocks the "next" to the "quiz" block', async () => {
+      const { statusCode, payload } = await testContext.studentRequest({
+        method: 'GET',
+        url: `${lessonToNext.lesson.id}`,
+      });
+
+      const responseBody = JSON.parse(payload);
+
+      expect(statusCode).toBe(200);
+
+      expect(responseBody).toHaveProperty('total');
+      expect(responseBody.total).toBe(french._blocks._current.length);
+
+      expect(responseBody).toHaveProperty('lesson');
+      expect(responseBody.lesson).toHaveProperty('blocks');
+      expect(responseBody.lesson).toHaveProperty('authors');
+
+      expect(responseBody).toHaveProperty('isFinal');
+      expect(responseBody.isFinal).toBe(false);
+
+      expect(responseBody.lesson.authors).toBeInstanceOf(Array);
+
+      expect(responseBody.lesson.blocks).toBeInstanceOf(Array);
+      expect(responseBody.lesson.blocks).toHaveLength(
+        french._blocks._indexesOfInteractive[1] + 1,
+      );
+      responseBody.lesson.blocks.forEach((block, index) => {
+        expect(block.blockId).toBe(lessonToNext.lesson.blocks[index].blockId);
+      });
     });
 
     it('should not be able to finish this lesson yet', async () => {
@@ -363,6 +425,37 @@ describe('Learning flow', () => {
       expect(payload.blocks).toBeInstanceOf(Array);
       expect(payload.blocks.length).toBe(1);
       expect(payload.isFinal).toBe(true);
+    });
+
+    it('should return a lesson with a chunk of blocks from the "quiz" to the last block', async () => {
+      const { statusCode, payload } = await testContext.studentRequest({
+        method: 'GET',
+        url: `${lessonToAnswer.lesson.id}`,
+      });
+
+      const responseBody = JSON.parse(payload);
+
+      expect(statusCode).toBe(200);
+
+      expect(responseBody).toHaveProperty('total');
+      expect(responseBody.total).toBe(french._blocks._current.length);
+
+      expect(responseBody).toHaveProperty('lesson');
+      expect(responseBody.lesson).toHaveProperty('blocks');
+      expect(responseBody.lesson).toHaveProperty('authors');
+
+      expect(responseBody).toHaveProperty('isFinal');
+      expect(responseBody.isFinal).toBe(true);
+
+      expect(responseBody.lesson.authors).toBeInstanceOf(Array);
+
+      expect(responseBody.lesson.blocks).toBeInstanceOf(Array);
+      expect(responseBody.lesson.blocks).toHaveLength(
+        french._blocks._current.length,
+      );
+      responseBody.lesson.blocks.forEach((block, index) => {
+        expect(block.blockId).toBe(lessonToAnswer.lesson.blocks[index].blockId);
+      });
     });
   });
 

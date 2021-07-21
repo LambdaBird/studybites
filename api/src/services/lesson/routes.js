@@ -4,9 +4,9 @@ import {
 } from './handlers/getAllPublicLessons';
 
 import {
-  options as optionsGetPublicLessonById,
-  handler as handlerGetPublicLessonById,
-} from './handlers/getPublicLessonById';
+  options as optionsGetLessonLearn,
+  handler as handlerGetLessonLearn,
+} from './handlers/getLessonLearn';
 
 import {
   options as optionsGetLessonSchema,
@@ -79,11 +79,7 @@ export default async function router(instance) {
    * get lesson where status = 'Public' by id with authors, isFinal key, blocks
    * and blocks total
    */
-  instance.get(
-    '/:lessonId',
-    optionsGetPublicLessonById,
-    handlerGetPublicLessonById,
-  );
+  instance.get('/:lessonId', optionsGetLessonLearn, handlerGetLessonLearn);
 
   /**
    * get lesson schema

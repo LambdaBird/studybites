@@ -51,7 +51,7 @@ class LessonBlockStructure extends objection.Model {
     return blocksInOrder;
   }
 
-  static #findChunk({ blocks, startIndex }) {
+  static #findChunk({ blocks, startIndex, fromStart = false }) {
     let remainingBlocks = blocks;
 
     if (startIndex) {
@@ -62,6 +62,12 @@ class LessonBlockStructure extends objection.Model {
 
     for (let i = 0, n = dictionary.length; i < n; i += 1) {
       if (config.interactiveBlocks.includes(dictionary[i])) {
+        if (fromStart) {
+          return {
+            chunk: blocks.slice(0, i + 1 + startIndex),
+            position: i + 1 + startIndex,
+          };
+        }
         return {
           chunk: remainingBlocks.slice(0, i + 1),
           position: i + 1 + startIndex,
@@ -69,6 +75,9 @@ class LessonBlockStructure extends objection.Model {
       }
     }
 
+    if (fromStart) {
+      return { chunk: blocks, position: blocks.length };
+    }
     return { chunk: remainingBlocks, position: blocks.length };
   }
 
@@ -112,8 +121,13 @@ class LessonBlockStructure extends objection.Model {
     return this.#sortBlocks({ blocksUnordered, shouldStrip });
   }
 
-  static async getChunk({ lessonId, previousBlock = null }) {
-    const blocks = await this.getAllBlocks({ lessonId, shouldStrip: true });
+  static async getChunk({
+    lessonId,
+    previousBlock = null,
+    fromStart = false,
+    shouldStrip = true,
+  }) {
+    const blocks = await this.getAllBlocks({ lessonId, shouldStrip });
     const total = blocks.length;
 
     if (!previousBlock) {
@@ -128,6 +142,7 @@ class LessonBlockStructure extends objection.Model {
         const { chunk, position } = this.#findChunk({
           blocks,
           startIndex: i + 1,
+          fromStart,
         });
         return {
           total,
