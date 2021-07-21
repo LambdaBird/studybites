@@ -39,7 +39,7 @@ export const createChunksFromBlocks = ({
   }
 
   const isLastInteractiveResolved =
-    blocks[blocks.length - 1]?.response?.isResolved;
+    blocks[blocks.length - 1]?.response?.isSolved;
 
   const isLastNonInteractiveBlock = !apiConfig.interactiveBlocks.includes(
     blocks[blocks.length - 1]?.type,
@@ -58,7 +58,9 @@ export const createChunksFromBlocks = ({
 
 export const handleAnswer = ({ data, prevChunks }) => {
   const { isFinished, lesson: newLesson } = data;
+
   const lastChunk = prevChunks?.[prevChunks.length - 1];
+
   const interactiveBlock = lastChunk[lastChunk.length - 1];
   if (newLesson?.answer?.results?.length > 0) {
     interactiveBlock.answer = newLesson?.answer;

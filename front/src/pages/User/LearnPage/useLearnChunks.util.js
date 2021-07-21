@@ -63,7 +63,7 @@ export const createQuizBlock = (id, results) => ({
     type: 'quiz',
   },
   response: {
-    isResolved: false,
+    isSolved: false,
   },
   revision: `hashTest${id}`,
   type: 'quiz',
@@ -97,7 +97,7 @@ export const createQuizResultNoDataBlock = (id, results, response) => ({
     type: 'quiz',
   },
   response: {
-    isResolved: true,
+    isSolved: true,
   },
   revision: `hashTest${id}`,
   type: 'quiz',
