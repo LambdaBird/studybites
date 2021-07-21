@@ -22,6 +22,16 @@ class Result extends objection.Model {
       },
     };
   }
+
+  static getLastResult({ userId, lessonId }) {
+    return this.query()
+      .first()
+      .where({
+        userId,
+        lessonId,
+      })
+      .orderBy('createdAt', 'desc');
+  }
 }
 
 export default Result;

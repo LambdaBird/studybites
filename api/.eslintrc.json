@@ -1,7 +1,8 @@
 {
   "env": {
     "es6": true,
-    "node": true
+    "node": true,
+    "jest/globals": true
   },
   "extends": [
     "airbnb-base",
@@ -9,6 +10,7 @@
     "plugin:import/errors",
     "plugin:import/warnings"
   ],
+  "plugins": ["jest"],
   "parser": "@babel/eslint-parser",
   "parserOptions": {
     "requireConfigFile": false
@@ -16,6 +18,5 @@
   "rules": {
     "eol-last": ["error", "always"],
     "import/prefer-default-export": "off"
-  },
-  "ignorePatterns": ["test/"]
+  }
 }

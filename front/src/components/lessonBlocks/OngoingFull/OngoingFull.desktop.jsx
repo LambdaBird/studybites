@@ -59,7 +59,7 @@ const OngoingFullDesktop = ({ lesson }) => {
 };
 
 OngoingFullDesktop.propTypes = {
-  lesson: LessonType,
+  lesson: LessonType.isRequired,
 };
 
 export default OngoingFullDesktop;

@@ -7,6 +7,7 @@ import { DownOutlined } from '@ant-design/icons';
 
 import useMobile from '@sb-ui/hooks/useMobile';
 import { LANGUAGES_LIST } from '@sb-ui/i18n';
+import { queryClient } from '@sb-ui/query';
 import logo from '@sb-ui/resources/img/logo.svg';
 import { getUser } from '@sb-ui/utils/api/v1/user';
 import { Roles } from '@sb-ui/utils/constants';
@@ -19,13 +20,15 @@ import {
   USER_LESSONS,
 } from '@sb-ui/utils/paths';
 import { USER_BASE_QUERY } from '@sb-ui/utils/queries';
+import { ChildrenType, ClassNameType } from '@sb-ui/utils/types';
 
-import { HeaderPropTypes } from './types';
 import * as S from './Header.styled';
 
 const { SubMenu } = Menu;
 
-const Header = ({ style, children }) => {
+const USER_LOGO_FALLBACK = 'X';
+
+const Header = ({ className, bottom, children }) => {
   const history = useHistory();
   const { t, i18n } = useTranslation(['common', 'user']);
   const location = useLocation();
@@ -36,6 +39,7 @@ const Header = ({ style, children }) => {
 
   const handleSignOut = () => {
     clearJWT();
+    queryClient.resetQueries();
     history.push(SIGN_IN);
   };
 
@@ -85,18 +89,25 @@ const Header = ({ style, children }) => {
     </Menu>
   );
 
-  const fullName = useMemo(
-    () => `${user?.firstName} ${user?.lastName}`.trim(),
+  const isUsername = useMemo(
+    () => user?.firstName && user?.lastName,
     [user?.firstName, user?.lastName],
+  );
+
+  const fullName = useMemo(
+    () => isUsername && `${user?.firstName} ${user?.lastName}`.trim(),
+    [user?.firstName, user?.lastName, isUsername],
   );
 
   const firstNameLetter = useMemo(
-    () => user?.firstName?.[0] || user?.lastName?.[0],
-    [user?.firstName, user?.lastName],
+    () =>
+      (isUsername && (user?.firstName?.[0] || user?.lastName?.[0])) ||
+      USER_LOGO_FALLBACK,
+    [user?.firstName, user?.lastName, isUsername],
   );
 
   return (
-    <S.Container style={style}>
+    <S.Container className={className}>
       <S.RowMain align="middle" justify="space-between">
         <Col>
           <Link to={HOME}>
@@ -114,10 +125,15 @@ const Header = ({ style, children }) => {
           </Dropdown>
         </Col>
       </S.RowMain>
+      {bottom}
     </S.Container>
   );
 };
 
-Header.propTypes = HeaderPropTypes;
+Header.propTypes = {
+  children: ChildrenType,
+  className: ClassNameType,
+  bottom: ChildrenType,
+};
 
 export default Header;

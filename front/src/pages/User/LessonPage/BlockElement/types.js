@@ -18,7 +18,7 @@ export const BLOCKS_TYPE = {
 
 export const BlockContentType = PropTypes.shape({
   type: PropTypes.oneOf(Object.values(BLOCKS_TYPE)),
-}).isRequired;
+});
 
 export const BlockIdType = PropTypes.string.isRequired;
 export const RevisionType = PropTypes.string.isRequired;

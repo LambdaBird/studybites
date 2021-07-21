@@ -1,10 +1,22 @@
 import * as yup from 'yup';
 
 import {
+  propertyLengthError,
   propertyTypeError,
   requiredPropertyError,
 } from '../../validation/helpers';
 import { INVALID_ID, INVALID_STATUS } from './constants';
+
+// eslint-disable-next-line func-names
+yup.addMethod(yup.object, 'atLeastOneOf', function (props, message) {
+  return this.test({
+    name: 'atLeastOneOf',
+    message,
+    exclusive: true,
+    params: { keys: props.join(', ') },
+    test: (value) => value == null || props.some((prop) => value[prop] != null),
+  });
+});
 
 const nameValidatorPost = yup
   .string()
@@ -64,9 +76,15 @@ const dataValidator = yup
   .object({
     question: yup.string(),
     answers: yup.array(),
-    response: yup.array(),
+    response: yup
+      .array()
+      .typeError(propertyTypeError('lesson', 'response', 'array'))
+      .min(1, propertyLengthError('lesson', 'response')),
   })
-  .typeError(propertyTypeError('lesson', 'data', 'object'));
+  .atLeastOneOf(['question', 'answers', 'response'], { status: 'ficl' })
+  .typeError(propertyTypeError('lesson', 'data', 'object'))
+  .default(null)
+  .nullable();
 
 export const postBodyValidator = yup.object({
   lesson: lessonValidatorPost,

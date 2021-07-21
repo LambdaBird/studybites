@@ -11,7 +11,11 @@ import OngoingLessonsMobile from './OngoingLessons.mobile';
 
 const OngoingLessons = () => {
   const isMobile = useContext(MobileContext);
-  const { isLoading, data: responseData } = useQuery(
+  const {
+    isError,
+    isLoading,
+    data: responseData,
+  } = useQuery(
     [
       USER_ENROLLED_SHORT_LESSONS_BASE_KEY,
       {
@@ -23,7 +27,7 @@ const OngoingLessons = () => {
   );
   const { lessons } = responseData || {};
 
-  if (!isLoading && !lessons?.length) return null;
+  if (!lessons?.length || isError) return null;
   return (
     <>
       {isMobile ? (

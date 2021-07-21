@@ -10,9 +10,9 @@ import { getPublicLessons } from '@sb-ui/utils/api/v1/student';
 import { USER_PUBLIC_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
 import { getQueryPage } from '@sb-ui/utils/utils';
 
-import LessonsListBlock from './LessonsListBlock';
+import OpenLessonsBlock from './OpenLessonsBlock';
 
-const LessonsList = () => {
+const OpenLessons = () => {
   const { t } = useTranslation('user');
   const location = useLocation();
   const queryPage = useMemo(() => location.search, [location]);
@@ -20,7 +20,11 @@ const LessonsList = () => {
   const [searchText, setSearchText] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const { data: responseData, isLoading } = useQuery(
+  const {
+    data: responseData,
+    isLoading,
+    error,
+  } = useQuery(
     [
       USER_PUBLIC_LESSONS_BASE_KEY,
       {
@@ -73,7 +77,7 @@ const LessonsList = () => {
         <S.StyledSearch searchText={searchText} setSearchText={setSearchText} />
       </S.LessonsHeader>
       <S.LessonsRow>
-        <LessonsListBlock isLoading={isLoading} data={data} />
+        <OpenLessonsBlock isLoading={isLoading} error={error} data={data} />
         {isEmpty && (
           <S.EmptyContainer
             image={emptyImg}
@@ -93,4 +97,4 @@ const LessonsList = () => {
   );
 };
 
-export default LessonsList;
+export default OpenLessons;

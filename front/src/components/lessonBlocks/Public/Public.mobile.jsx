@@ -58,7 +58,7 @@ const PublicMobile = ({ lesson }) => {
 };
 
 PublicMobile.propTypes = {
-  lesson: PublicLessonType,
+  lesson: PublicLessonType.isRequired,
 };
 
 export default PublicMobile;

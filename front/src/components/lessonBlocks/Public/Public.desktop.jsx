@@ -78,7 +78,7 @@ const PublicDesktop = ({ lesson }) => {
 };
 
 PublicDesktop.propTypes = {
-  lesson: PublicLessonType,
+  lesson: PublicLessonType.isRequired,
 };
 
 export default PublicDesktop;

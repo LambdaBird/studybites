@@ -43,7 +43,7 @@ export const newGroupBlocks = (blocks) => {
   }
 
   return {
-    blocks: filteredBlocks,
+    blocks: filteredBlocks.filter((block) => block.length > 0),
     lastInteractiveBlock,
     nextCount,
   };

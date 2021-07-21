@@ -135,105 +135,211 @@ class Lesson extends objection.Model {
     };
   }
 
-  static getAllPublicLessons({ offset, limit, search, userId }) {
-    const firstIndex = parseInt(offset, 10) || 0;
-    const lastIndex =
-      firstIndex +
-      (parseInt(limit, 10) || config.search.LESSON_SEARCH_LIMIT) -
-      1;
-    const [firstName, lastName] = search?.split(' ') || [];
+  /**
+   * get all lessons where status = 'Public' with authors,
+   * search, pagination and total
+   */
+  static getAllPublicLessons({ knex, userId, offset, limit, search }) {
+    const start = offset;
+    const end = start + limit - 1;
+
+    return (
+      this.query()
+        .select(
+          'lessons.*',
+          /**
+           * using cast to set is_enrolled field to true if user is enrolled to this lesson
+           *
+           * using json_agg to aggregate authors (users_data) json data to an array of objects
+           */
+          knex.raw(`
+            (select cast(case when count(*) > 0 then true else false end as bool)
+              from users_roles
+              where role_id = ${config.roles.STUDENT.id}
+                and user_id = ${userId}
+                and resource_type = '${config.resources.LESSON}'
+                and resource_id = lessons.id) is_enrolled,
+            json_agg(users_data) authors
+        `),
+        )
+        .from(
+          knex.raw(`
+            (select id, first_name, last_name from users) users_data
+        `),
+        )
+        .join('users_roles', 'users_roles.user_id', '=', 'users_data.id')
+        .join('lessons', 'lessons.id', '=', 'users_roles.resource_id')
+        .where('users_roles.role_id', config.roles.MAINTAINER.id)
+        .andWhere('users_roles.resource_type', config.resources.LESSON)
+        /**
+         * using concat to concatenate fields to search through
+         */
+        .andWhere(
+          knex.raw(
+            `concat(users_data.first_name, ' ', users_data.last_name, ' ', users_data.first_name, ' ', lessons.name)`,
+          ),
+          'ilike',
+          `%${search ? search.replace(/ /g, '%') : '%'}%`,
+        )
+        .groupBy('lessons.id')
+        .range(start, end)
+    );
+  }
+
+  /**
+   * get all students enrolled to teacher`s lessons
+   * with search, pagination and total
+   */
+  static getAllEnrolledStudents({
+    knex,
+    userId,
+    offset: start,
+    limit,
+    search,
+  }) {
+    const end = start + limit - 1;
+
+    return (
+      this.query()
+        .select(
+          'users.id',
+          'users.email',
+          'users.first_name',
+          'users.last_name',
+        )
+        .join('users_roles', 'users_roles.resource_id', '=', 'lessons.id')
+        .join(
+          knex.raw(`users_roles students`),
+          'students.resource_id',
+          '=',
+          'lessons.id',
+        )
+        .join('users', 'users.id', '=', 'students.user_id')
+        .where('users_roles.role_id', config.roles.MAINTAINER.id)
+        .andWhere('users_roles.user_id', userId)
+        .andWhere('students.role_id', config.roles.STUDENT.id)
+        /**
+         * using concat to concatenate fields to search through
+         */
+        .andWhere(
+          knex.raw(
+            `concat(users.email, ' ', users.first_name, ' ', users.last_name, ' ', users.first_name)`,
+          ),
+          'ilike',
+          `%${search ? search.replace(/ /g, '%') : '%'}%`,
+        )
+        .groupBy('users.id')
+        .range(start, end)
+    );
+  }
+
+  /**
+   * get all lessons that teacher is maintaining
+   * with search, pagination and total
+   */
+  static getAllMaintainableLessons({ userId, offset: start, limit, search }) {
+    const end = start + limit - 1;
+
     return this.query()
-      .skipUndefined()
-      .where(
-        search
-          ? function () {
-              this.where('name', 'ilike', `%${search}%`)
-                .orWhere('firstName', 'ilike', `%${search}%`)
-                .orWhere('lastName', 'ilike', `%${search}%`);
-            }
-          : undefined,
+      .join('users_roles', 'users_roles.resource_id', '=', 'lessons.id')
+      .where('users_roles.role_id', config.roles.MAINTAINER.id)
+      .andWhere('users_roles.user_id', userId)
+      .andWhere(
+        'lessons.name',
+        'ilike',
+        `%${search ? search.replace(/ /g, '%') : '%'}%`,
       )
-      .modify((queryBuilder) => {
-        if (firstName && lastName) {
-          queryBuilder.orWhere(
-            objection.raw(`concat(first_name,' ',last_name)`),
-            'ilike',
-            `%${firstName}% %${lastName}%`,
-          );
-        }
-      })
-      .where({
-        status: 'Public',
-      })
-      .select(
-        objection.raw(
-          `lessons.*, users.first_name, users.last_name, case when (
-            select role_id from users_roles where role_id = ? and user_id = ? and resource_id = lessons.id
-            ) is null then false else true end as is_enrolled`,
-          [config.roles.STUDENT.id, userId],
+      .orderBy('lessons.created_at', 'desc')
+      .range(start, end);
+  }
+
+  /**
+   * get all lessons user had enrolled to
+   */
+  static getAllEnrolledLessons({ knex, userId, offset: start, limit, search }) {
+    const end = start + limit - 1;
+
+    return this.query()
+      .select('lessons.*', knex.raw(`json_agg(users_data) maintainer`))
+      .from(
+        knex.raw(`
+        (select id, first_name, last_name from users) users_data
+        `),
+      )
+      .join('users_roles', 'users_roles.user_id', '=', 'users_data.id')
+      .join('lessons', 'lessons.id', '=', 'users_roles.resource_id')
+      .join(
+        knex.raw('users_roles learn'),
+        'learn.resource_id',
+        '=',
+        'lessons.id',
+      )
+      .where('users_roles.role_id', config.roles.MAINTAINER.id)
+      .andWhere('learn.role_id', config.roles.STUDENT.id)
+      .andWhere('learn.user_id', userId)
+      .andWhere('users_roles.resource_type', config.resources.LESSON)
+      .andWhere(
+        knex.raw(
+          `concat(users_data.first_name, ' ', users_data.last_name, ' ', users_data.first_name, ' ', lessons.name)`,
         ),
+        'ilike',
+        `%${search ? search.replace(/ /g, '%') : '%'}%`,
       )
-      .join('users_roles', (builder) => {
-        builder
-          .on('lessons.id', '=', 'users_roles.resource_id')
-          .andOn(
-            'users_roles.resource_type',
-            '=',
-            objection.raw('?', ['lesson']),
-          )
-          .andOn(
-            'users_roles.role_id',
-            '=',
-            objection.raw('?', [config.roles.MAINTAINER.id]),
-          );
-      })
-      .join('users', 'users_roles.user_id', '=', 'users.id')
-      .range(firstIndex, lastIndex);
+      .groupBy('lessons.id')
+      .range(start, end);
   }
 
   static getAllEnrolled({ columns, search, userId }) {
     const [firstName, lastName] = search?.split(' ') || [];
-    return this.query()
-      .skipUndefined()
-      .select(
-        objection.raw(
-          `"lessons"."id" as "id", "lessons"."name" as "name", "lessons"."description" as "description","lessons"."status" as "status", "lessons"."created_at" as "created_at", "lessons"."updated_at" as "updated_at"`,
-        ),
-      )
-      .leftJoin('users_roles as enrolled', (builder) => {
-        builder
-          .on('enrolled.resource_id', '=', 'lessons.id')
-          .andOn('enrolled.resource_type', '=', objection.raw('?', ['lesson']))
-          .andOn(
-            'enrolled.role_id',
-            '=',
-            objection.raw('?', [config.roles.STUDENT.id]),
-          );
-      })
-      .withGraphJoined('maintainer.[users(onlyFullName) as userInfo]')
-      .whereIn('maintainer.role_id', [config.roles.MAINTAINER.id])
-      .modifiers({
-        onlyFullName(builder) {
-          builder.select('first_name', 'last_name');
-        },
-      })
-      .where('enrolled.user_id', userId)
-      .where(function () {
-        this.where(function () {
-          this.skipUndefined()
-            .where(columns.name, 'ilike', `%${search}%`)
-            .orWhere(columns.firstName, 'ilike', `%${search}%`)
-            .orWhere(columns.lastName, 'ilike', `%${search}%`);
-        }).modify((queryBuilder) => {
-          if (firstName && lastName) {
-            queryBuilder.orWhere(
-              objection.raw(`concat(first_name,' ',last_name)`),
-              'ilike',
-              `%${firstName}% %${lastName}%`,
+    return (
+      this.query()
+        .skipUndefined()
+        .select(
+          objection.raw(
+            `"lessons"."id" as "id", "lessons"."name" as "name", "lessons"."description" as "description","lessons"."status" as "status", "lessons"."created_at" as "created_at", "lessons"."updated_at" as "updated_at"`,
+          ),
+        )
+        .leftJoin('users_roles as enrolled', (builder) => {
+          builder
+            .on('enrolled.resource_id', '=', 'lessons.id')
+            .andOn(
+              'enrolled.resource_type',
+              '=',
+              objection.raw('?', ['lesson']),
+            )
+            .andOn(
+              'enrolled.role_id',
+              '=',
+              objection.raw('?', [config.roles.STUDENT.id]),
             );
-          }
-        });
-      });
+        })
+        .withGraphJoined('maintainer.[users(onlyFullName) as userInfo]')
+        .whereIn('maintainer.role_id', [config.roles.MAINTAINER.id])
+        .modifiers({
+          onlyFullName(builder) {
+            builder.select('first_name', 'last_name');
+          },
+        })
+        .where('enrolled.user_id', userId)
+        // eslint-disable-next-line func-names
+        .where(function () {
+          // eslint-disable-next-line func-names
+          this.where(function () {
+            this.skipUndefined()
+              .where(columns.name, 'ilike', `%${search}%`)
+              .orWhere(columns.firstName, 'ilike', `%${search}%`)
+              .orWhere(columns.lastName, 'ilike', `%${search}%`);
+          }).modify((queryBuilder) => {
+            if (firstName && lastName) {
+              queryBuilder.orWhere(
+                objection.raw(`concat(first_name,' ',last_name)`),
+                'ilike',
+                `%${firstName}% %${lastName}%`,
+              );
+            }
+          });
+        })
+    );
   }
 }
 
