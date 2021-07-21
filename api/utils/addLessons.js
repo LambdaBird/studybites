@@ -14,8 +14,8 @@ const addLessons = async ({ name, description, status, userId }) => {
       .returning('*');
     await UserRole.query(trx)
       .insert({
-        userID: userId,
-        roleID: config.roles.MAINTAINER.id,
+        userId,
+        roleId: config.roles.MAINTAINER.id,
         resourceType: config.resources.LESSON,
         resourceId: lesson.id,
       })

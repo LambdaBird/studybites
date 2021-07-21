@@ -36,8 +36,10 @@ import {
 } from './constants';
 import { hashPassword, comparePasswords } from '../../../utils/salt';
 
-const router = async (instance) => {
-  const { User, UserRole } = instance.models;
+export default async function router(instance) {
+  const {
+    models: { User, UserRole },
+  } = instance;
 
   instance.route({
     method: 'POST',
@@ -143,7 +145,9 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: instance.auth({ instance }),
+    async onRequest(req) {
+      await instance.auth({ req });
+    },
     handler: async (req, repl) => {
       const userData = await User.query()
         .findById(req.user.id)
@@ -179,7 +183,9 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: instance.auth({ instance, isAdminOnly: true }),
+    async onRequest(req) {
+      await instance.auth({ req, isAdminOnly: true });
+    },
     handler: async (req, repl) => {
       const columns = {
         email: 'email',
@@ -209,7 +215,7 @@ const router = async (instance) => {
             )
             .as('isTeacher'),
         )
-
+        // eslint-disable-next-line func-names
         .where(function () {
           this.skipUndefined()
             .where(columns.email, 'ilike', `%${search}%`)
@@ -225,6 +231,7 @@ const router = async (instance) => {
               }
             });
         })
+        // eslint-disable-next-line func-names
         .orWhere(function () {
           if (firstName && lastName) {
             this.skipUndefined()
@@ -239,8 +246,8 @@ const router = async (instance) => {
         .limit(req.query.limit || config.search.USER_SEARCH_LIMIT);
 
       const count = await User.query()
-
         .skipUndefined()
+        // eslint-disable-next-line func-names
         .where(function () {
           this.skipUndefined()
             .where(columns.email, 'ilike', `%${search}%`)
@@ -273,7 +280,9 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: instance.auth({ instance, isAdminOnly: true }),
+    async onRequest(req) {
+      await instance.auth({ req, isAdminOnly: true });
+    },
     handler: async (req, repl) => {
       const id = validateId(req.params.id, req.user.id);
 
@@ -295,7 +304,9 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: instance.auth({ instance, isAdminOnly: true }),
+    async onRequest(req) {
+      await instance.auth({ req, isAdminOnly: true });
+    },
     handler: async (req, repl) => {
       const id = validateId(req.params.id, req.user.id);
 
@@ -324,7 +335,9 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: instance.auth({ instance, isAdminOnly: true }),
+    async onRequest(req) {
+      await instance.auth({ req, isAdminOnly: true });
+    },
     handler: async (req, repl) => {
       const id = validateId(req.params.id, req.user.id);
 
@@ -347,13 +360,15 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: instance.auth({ instance, isAdminOnly: true }),
+    async onRequest(req) {
+      await instance.auth({ req, isAdminOnly: true });
+    },
     handler: async (req, repl) => {
       const id = validateId(req.body.id, req.user.id);
 
       const check = await UserRole.query().findOne({
-        userID: id,
-        roleID: config.roles.TEACHER.id,
+        userId: id,
+        roleId: config.roles.TEACHER.id,
       });
 
       if (check) {
@@ -362,8 +377,8 @@ const router = async (instance) => {
 
       await UserRole.query()
         .insert({
-          userID: id,
-          roleID: config.roles.TEACHER.id,
+          userId: id,
+          roleId: config.roles.TEACHER.id,
         })
         .returning('*');
 
@@ -380,13 +395,15 @@ const router = async (instance) => {
     },
     validatorCompiler,
     errorHandler,
-    onRequest: instance.auth({ instance, isAdminOnly: true }),
+    async onRequest(req) {
+      await instance.auth({ req, isAdminOnly: true });
+    },
     handler: async (req, repl) => {
       const id = validateId(req.body.id, req.user.id);
 
       const result = await UserRole.query().delete().where({
-        userID: id,
-        roleID: config.roles.TEACHER.id,
+        userId: id,
+        roleId: config.roles.TEACHER.id,
       });
 
       if (!result) {
@@ -396,6 +413,4 @@ const router = async (instance) => {
       return repl.status(200).send(ALTER_ROLE_SUCCESS);
     },
   });
-};
-
-export default router;
+}

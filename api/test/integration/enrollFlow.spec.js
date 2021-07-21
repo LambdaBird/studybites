@@ -316,4 +316,64 @@ describe('Enroll to lesson flow', () => {
       expect(payload.total).toBe(0);
     });
   });
+
+  describe('Get enrolled lesson by id', () => {
+    let lessonToGet;
+
+    beforeAll(async () => {
+      lessonToGet = await createLesson({
+        app: testContext.app,
+        credentials: teacherCredentials,
+        body: prepareLessonFromSeed(french, '-lessonToGet'),
+      });
+
+      await testContext.request({
+        url: `lesson/enroll/${lessonToGet.lesson.id}`,
+      });
+    });
+
+    it('should return a lesson object', async () => {
+      const response = await testContext.request({
+        method: 'GET',
+        url: `lesson/enroll/${lessonToGet.lesson.id}`,
+      });
+
+      const payload = JSON.parse(response.payload);
+
+      expect(response.statusCode).toBe(200);
+      expect(payload).toHaveProperty('lesson');
+      expect(payload.lesson).toBeInstanceOf(Object);
+    });
+
+    it('should return a lesson with an array of authors', async () => {
+      const response = await testContext.request({
+        method: 'GET',
+        url: `lesson/enroll/${lessonToGet.lesson.id}`,
+      });
+
+      const payload = JSON.parse(response.payload);
+
+      expect(payload.lesson).toHaveProperty('authors');
+      expect(payload.lesson.authors).toBeInstanceOf(Array);
+    });
+
+    it('authors should be an array of objects', async () => {
+      const response = await testContext.request({
+        method: 'GET',
+        url: `lesson/enroll/${lessonToGet.lesson.id}`,
+      });
+
+      const payload = JSON.parse(response.payload);
+
+      expect(payload.lesson.authors).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            id: expect.any(Number),
+            firstName: expect.any(String),
+            lastName: expect.any(String),
+          }),
+        ]),
+      );
+    });
+  });
 });

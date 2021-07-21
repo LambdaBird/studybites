@@ -1,3 +1,5 @@
+import { INVALID_STATUS } from '../services/lesson/constants';
+
 const errorArray = (m) => [].concat(m);
 
 const sendReply = (repl, status, fallback, errors) =>
@@ -7,6 +9,10 @@ const sendReply = (repl, status, fallback, errors) =>
   });
 
 const errorHandler = (error, _, reply) => {
+  if (error.validation) {
+    return sendReply(reply, 400, 'errors.validation', INVALID_STATUS);
+  }
+
   switch (error.name) {
     case 'ValidationError':
       return sendReply(reply, 400, 'errors.validation', error.errors);

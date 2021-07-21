@@ -3,7 +3,7 @@ import fastify from 'fastify';
 import db, {
   ERROR_MISSING_FIELDS,
   ERROR_INVALID_ARRAY,
-} from '../../src/plugins/objectionModel';
+} from '../../src/plugins/fastifyObjection';
 
 const app = fastify();
 

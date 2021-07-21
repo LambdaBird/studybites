@@ -1,6 +1,6 @@
 import fastify from 'fastify';
 
-import objectionModel from './plugins/objectionModel';
+import fastifyObjection from './plugins/fastifyObjection';
 
 import User from './models/User';
 import Role from './models/Role';
@@ -23,10 +23,10 @@ export const RESOURCE_NOT_FOUND = {
   ],
 };
 
-const build = (options = {}) => {
+export default (options = {}) => {
   const app = fastify(options);
 
-  app.register(objectionModel, {
+  app.register(fastifyObjection, {
     connection: process.env.DATABASE_URL,
     models: [User, Role, UserRole, Lesson, Block, LessonBlockStructure, Result],
   });
@@ -45,5 +45,3 @@ const build = (options = {}) => {
 
   return app;
 };
-
-export default build;

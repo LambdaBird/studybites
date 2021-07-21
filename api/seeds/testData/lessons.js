@@ -4,20 +4,8 @@ export const math = {
   name: 'Math',
   status: 'Public',
   _blocks: {
+    _indexesOfInteractive: [0],
     _current: [
-      {
-        id: 'af7d4157-d009-4260-a42f-919ee4a55a9e',
-        block_id: 'aa34585e-130b-468c-be1a-5a8012f0d55c',
-        _revisions: [
-          {
-            content: {
-              data: 'paragraph text',
-            },
-            type: 'paragraph',
-            revision: '9f8ef6dd-34aa-4ff4-9fc6-4b5afbfde165',
-          },
-        ],
-      },
       {
         id: '0b7e5d54-a78c-4340-abec-ee08713d43bd',
         block_id: '7142e20a-0d30-47e5-aea8-546e0ec5e395',
@@ -31,19 +19,6 @@ export const math = {
               data: 1,
             },
             revision: '06421c44-a853-4708-8f40-81c55a0e8861',
-          },
-        ],
-      },
-      {
-        id: '9c3f1934-328e-44e0-8cf4-c52beb30c6b5',
-        block_id: '8483d0b2-9576-4b35-957b-58b63d097f6f',
-        _revisions: [
-          {
-            content: {
-              data: 'paragraph text',
-            },
-            type: 'paragraph',
-            revision: '5014d8d5-d4e3-4135-995f-0e84cded4cdb',
           },
         ],
       },
@@ -67,6 +42,29 @@ export const literature = {
   id: 103,
   name: 'Literature',
   status: 'Public',
+};
+
+export const russian = {
+  id: 104,
+  name: 'Russian',
+  status: 'Public',
+  _blocks: {
+    _current: [
+      {
+        id: 'f879f4eb-4ca1-44c3-9d28-10c0c289b76d',
+        block_id: '96a775df-170a-47a2-8d59-854ff0037f40',
+        _revisions: [
+          {
+            content: {
+              data: 'paragraph text',
+            },
+            type: 'paragraph',
+            revision: '5a47de81-d409-446b-8455-00eff9399f33',
+          },
+        ],
+      },
+    ].map(assingParents),
+  },
 };
 
 export const french = {
@@ -158,15 +156,20 @@ export const french = {
   },
 };
 
-export const lessons = [math, english, biology, literature, french].map(
-  (lesson) => ({
-    id: lesson.id,
-    name: lesson.name,
-    status: lesson.status,
-  }),
-);
+export const lessons = [
+  math,
+  english,
+  biology,
+  literature,
+  french,
+  russian,
+].map((lesson) => ({
+  id: lesson.id,
+  name: lesson.name,
+  status: lesson.status,
+}));
 
-export const lessonBlockStructure = [math, french].reduce(
+export const lessonBlockStructure = [math, french, russian].reduce(
   (structure, lesson) => {
     const lessonStructure = lesson._blocks._current.map((structureItem) => ({
       id: structureItem.id,
@@ -181,7 +184,7 @@ export const lessonBlockStructure = [math, french].reduce(
   [],
 );
 
-export const blocks = [math, french].reduce((blocksList, lesson) => {
+export const blocks = [math, french, russian].reduce((blocksList, lesson) => {
   const lessonBlocks = lesson._blocks._current.reduce(
     (revisions, structureItem) => {
       const itemBlocks = structureItem._revisions.map((block) => ({
