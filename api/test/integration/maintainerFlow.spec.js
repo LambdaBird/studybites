@@ -262,6 +262,20 @@ describe('Maintainer flow', () => {
       expect(payload.errors[0]).toMatchObject(UNAUTHORIZED);
     });
 
+    it('should return no lessons if user does not have any lessons', async () => {
+      const response = await testContext.anotherRequest({
+        method: 'GET',
+        url: 'lesson/maintain/',
+      });
+
+      const payload = JSON.parse(response.payload);
+
+      expect(response.statusCode).toBe(200);
+      expect(payload).toHaveProperty('total');
+      expect(payload).toHaveProperty('data');
+      expect(payload.total).toBe(0);
+    });
+
     it('should return lessons with total count', async () => {
       const response = await testContext.request({
         method: 'GET',

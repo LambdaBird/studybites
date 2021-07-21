@@ -31,8 +31,7 @@ export const options = {
   async preHandler({ user: { id: userId } }) {
     await this.access({
       userId,
-      resourceType: config.resources.LESSON,
-      roleId: config.roles.MAINTAINER.id,
+      roleId: config.roles.TEACHER.id,
     });
   },
 };
