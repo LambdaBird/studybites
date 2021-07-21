@@ -7,7 +7,7 @@
     "dev": "./bootstrap",
     "seed:run": "./seeds/run",
     "seed:test": "./seeds/run_test",
-    "test:unit": "babel-node node_modules/.bin/jest test/unit/",
+    "test:unit": "babel-node node_modules/.bin/jest test/unit/ src/",
     "test:integration": "yarn prepare:integrationTests && yarn run:integrationTests",
     "prepare:integrationTests": "knex --esm migrate:latest && yarn seed:test",
     "run:integrationTests": "babel-node node_modules/.bin/jest --verbose --colors test/integration/",
@@ -22,6 +22,7 @@
     "objection": "^2.2.15",
     "pg": "^8.6.0",
     "uuid": "^8.3.2",
+    "ajv": "^8.6.2",
     "yup": "^0.32.9"
   },
   "devDependencies": {

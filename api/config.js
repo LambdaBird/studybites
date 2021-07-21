@@ -28,4 +28,13 @@ export default {
   actions: ['start', 'finish', 'resume', 'next', 'response'],
   interactiveActions: ['next', 'response'],
   lessonStatuses: ['Draft', 'Public', 'Private', 'Archived'],
+  ajv: {
+    /**
+     * default ajv configuration used by fastify
+     * https://www.fastify.io/docs/latest/Validation-and-Serialization/
+     */
+    removeAdditional: true,
+    useDefaults: true,
+    coerceTypes: true,
+  },
 };

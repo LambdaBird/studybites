@@ -63,10 +63,7 @@ import {
   handler as handlerGetStudentsByLesson,
 } from './handlers/getStudentsByLesson';
 
-import {
-  options as optionsLearnLesson,
-  handler as handlerLearnLesson,
-} from './handlers/learnLesson';
+import { learnLessonOptions, learnLessonHandler } from './handlers/learnLesson';
 
 export default async function router(instance) {
   /**
@@ -174,5 +171,5 @@ export default async function router(instance) {
   /**
    * lesson learning flow
    */
-  instance.post('/:lessonId/learn', optionsLearnLesson, handlerLearnLesson);
+  instance.post('/:lessonId/learn', learnLessonOptions, learnLessonHandler);
 }

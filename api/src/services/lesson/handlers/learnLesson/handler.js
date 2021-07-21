@@ -1,79 +1,8 @@
-import config from '../../../../config';
+import config from '../../../../../config';
 
-import errorResponse from '../../../validation/schemas';
-import errorHandler from '../../../validation/errorHandler';
-import { BadRequestError } from '../../../validation/errors';
+import { BadRequestError } from '../../../../validation/errors';
 
-import { INVALID_LEARN } from '../constants';
-
-export const options = {
-  schema: {
-    params: {
-      type: 'object',
-      properties: {
-        lessonId: { type: 'number' },
-      },
-      required: ['lessonId'],
-    },
-    body: {
-      type: 'object',
-      properties: {
-        action: { type: 'string' },
-        blockId: { type: 'string' },
-        revision: { type: 'string' },
-        data: {
-          type: 'object',
-          properties: {
-            question: { type: 'string' },
-            answers: { type: 'array' },
-            response: { type: 'array' },
-            isSolved: { type: 'boolean' },
-          },
-        },
-      },
-      required: ['action'],
-    },
-    response: {
-      // 200: {
-      //   type: 'object',
-      //   properties: {
-      //     total: { type: 'number' },
-      //     lesson: {
-      //       type: 'object',
-      //       properties: {
-      //         id: { type: 'number' },
-      //         name: { type: 'string' },
-      //         description: { type: ['string', 'null'] },
-      //         status: { type: 'string' },
-      //         createdAt: { type: 'string' },
-      //         updatedAt: { type: 'string' },
-      //         authors: { type: 'array' },
-      //         blocks: { type: ['array', 'null'] },
-      //         answer: { type: 'object' },
-      //         userAnswer: { type: 'object' },
-      //       },
-      //     },
-      //     isFinal: { type: 'boolean' },
-      //   },
-      //   required: ['total', 'lesson', 'isFinal'],
-      // },
-      ...errorResponse,
-    },
-  },
-  errorHandler,
-  async onRequest(req) {
-    await this.auth({ req });
-  },
-  async preHandler({ user: { id: userId }, params: { lessonId: resourceId } }) {
-    await this.access({
-      userId,
-      resourceId,
-      resourceType: config.resources.LESSON,
-      roleId: config.roles.STUDENT.id,
-      status: ['Public', 'Draft'],
-    });
-  },
-};
+import { INVALID_LEARN } from '../../constants';
 
 export async function checkAllowed({
   userId,
@@ -161,7 +90,7 @@ export async function checkAllowed({
   }
 }
 
-export async function handler({
+export async function learnLessonHandler({
   user: { id: userId },
   params: { lessonId },
   body: { action, blockId, revision, data },

@@ -295,6 +295,9 @@ describe('Learning flow', () => {
           revision:
             lessonToNext.lesson.blocks[french._blocks._indexesOfInteractive[0]]
               .revision,
+          data: {
+            isSolved: true,
+          },
         },
       });
 
@@ -391,6 +394,9 @@ describe('Learning flow', () => {
             lessonToAnswer.lesson.blocks[
               french._blocks._indexesOfInteractive[0]
             ].revision,
+          data: {
+            isSolved: true,
+          },
         },
       });
     });
@@ -492,6 +498,9 @@ describe('Learning flow', () => {
             lessonToFinish.lesson.blocks[
               french._blocks._indexesOfInteractive[0]
             ].revision,
+          data: {
+            isSolved: true,
+          },
         },
       });
 
@@ -617,6 +626,9 @@ describe('Learning flow', () => {
             lessonToAnswer.lesson.blocks[
               french._blocks._indexesOfInteractive[0]
             ].revision,
+          data: {
+            isSolved: true,
+          },
         },
       });
 
@@ -690,6 +702,9 @@ describe('Learning flow', () => {
             lessonToAnswer.lesson.blocks[
               french._blocks._indexesOfInteractive[0]
             ].revision,
+          data: {
+            isSolved: true,
+          },
         },
       });
 
@@ -770,6 +785,9 @@ describe('Learning flow', () => {
             finishedLesson.lesson.blocks[
               french._blocks._indexesOfInteractive[0]
             ].revision,
+          data: {
+            isSolved: true,
+          },
         },
       });
 
