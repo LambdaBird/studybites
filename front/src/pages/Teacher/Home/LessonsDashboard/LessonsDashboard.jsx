@@ -42,7 +42,7 @@ const LessonsDashboard = () => {
     { keepPreviousData: true },
   );
 
-  const { data, total } = responseData || {};
+  const { lessons, total } = responseData || {};
 
   const handleCreateLesson = () => {
     history.push(LESSONS_NEW);
@@ -87,7 +87,7 @@ const LessonsDashboard = () => {
         ))
       ) : (
         <LessonsList
-          lessons={data}
+          lessons={lessons}
           onCreateLesson={handleCreateLesson}
           isAddNewShown={!total && !search && !selectedStatus}
         />

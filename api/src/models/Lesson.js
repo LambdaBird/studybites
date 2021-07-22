@@ -304,6 +304,7 @@ class Lesson extends objection.Model {
     const end = start + limit - 1;
 
     return this.query()
+      .skipUndefined()
       .select('lessons.*', knex.raw(`json_agg(users_data) maintainers`))
       .from(
         knex.raw(`
@@ -322,7 +323,7 @@ class Lesson extends objection.Model {
       .andWhere('learn.role_id', config.roles.STUDENT.id)
       .andWhere('learn.user_id', userId)
       .andWhere('users_roles.resource_type', config.resources.LESSON)
-      .whereNotIn('lessons.id', excludeLessons)
+      .whereNotIn('lessons.id', excludeLessons || undefined)
       .andWhere(
         knex.raw(
           `concat(users_data."firstName", ' ', users_data."lastName", ' ', users_data."firstName", ' ', lessons.name)`,

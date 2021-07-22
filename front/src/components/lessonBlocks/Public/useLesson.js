@@ -3,13 +3,19 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 import { LEARN_PAGE, USER_ENROLL } from '@sb-ui/utils/paths';
 
-export const useLesson = ({ id, firstName, lastName }) => {
+export const useLesson = ({ id, maintainers }) => {
   const location = useLocation();
   const query = useMemo(() => location.search, [location]);
   const history = useHistory();
-  const author = useMemo(
-    () => `${firstName} ${lastName}`,
-    [firstName, lastName],
+
+  const fullName = useMemo(
+    () => `${maintainers?.[0]?.firstName} ${maintainers?.[0]?.lastName}`.trim(),
+    [maintainers],
+  );
+
+  const firstNameLetter = useMemo(
+    () => maintainers?.[0]?.firstName?.[0] || maintainers?.[0]?.lastName?.[0],
+    [maintainers],
   );
   const handleEnroll = useCallback(() => {
     history.push({
@@ -22,5 +28,5 @@ export const useLesson = ({ id, firstName, lastName }) => {
     history.push(LEARN_PAGE.replace(':id', id));
   }, [history, id]);
 
-  return { author, handleEnroll, handleContinueLesson };
+  return { fullName, firstNameLetter, handleEnroll, handleContinueLesson };
 };

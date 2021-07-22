@@ -3,17 +3,18 @@ import { useHistory } from 'react-router-dom';
 
 import { LEARN_PAGE } from '@sb-ui/utils/paths';
 
-export const useLesson = ({ id, maintainer }) => {
+export const useLesson = ({ id, maintainers }) => {
   const history = useHistory();
 
+  console.log(maintainers);
   const fullName = useMemo(
-    () => `${maintainer?.[0]?.first_name} ${maintainer?.[0]?.last_name}`.trim(),
-    [maintainer],
+    () => `${maintainers?.[0]?.firstName} ${maintainers?.[0]?.lastName}`.trim(),
+    [maintainers],
   );
 
   const firstNameLetter = useMemo(
-    () => maintainer?.[0]?.first_name?.[0] || maintainer?.[0]?.last_name?.[0],
-    [maintainer],
+    () => maintainers?.[0]?.firstName?.[0] || maintainers?.[0]?.lastName?.[0],
+    [maintainers],
   );
 
   const handleContinueLesson = () => {
