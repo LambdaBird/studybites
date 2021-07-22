@@ -11,7 +11,8 @@ const PublicMobile = ({ lesson }) => {
   const { t } = useTranslation('user');
 
   const { name, description, isEnrolled } = lesson;
-  const { author, handleContinueLesson, handleEnroll } = useLesson(lesson);
+  const { fullName, firstNameLetter, handleContinueLesson, handleEnroll } =
+    useLesson(lesson);
 
   return (
     <S.Main size="large" wrap={false}>
@@ -50,8 +51,8 @@ const PublicMobile = ({ lesson }) => {
         )}
       </S.EnrollRow>
       <S.AuthorContainer>
-        <S.AuthorAvatar>{author?.[0]}</S.AuthorAvatar>
-        <S.AuthorName>{author}</S.AuthorName>
+        <S.AuthorAvatar>{firstNameLetter}</S.AuthorAvatar>
+        <S.AuthorName>{fullName}</S.AuthorName>
       </S.AuthorContainer>
     </S.Main>
   );

@@ -272,7 +272,7 @@ describe('Maintainer flow', () => {
 
       expect(response.statusCode).toBe(200);
       expect(payload).toHaveProperty('total');
-      expect(payload).toHaveProperty('data');
+      expect(payload).toHaveProperty('lessons');
       expect(payload.total).toBe(0);
     });
 
@@ -286,7 +286,7 @@ describe('Maintainer flow', () => {
 
       expect(response.statusCode).toBe(200);
       expect(payload).toHaveProperty('total');
-      expect(payload).toHaveProperty('data');
+      expect(payload).toHaveProperty('lessons');
     });
   });
 
@@ -311,7 +311,7 @@ describe('Maintainer flow', () => {
 
       expect(response.statusCode).toBe(200);
       expect(payload).toHaveProperty('total');
-      expect(payload).toHaveProperty('data');
+      expect(payload).toHaveProperty('lessons');
       expect(payload.total).toBe(1);
     });
 
@@ -325,7 +325,7 @@ describe('Maintainer flow', () => {
 
       expect(response.statusCode).toBe(200);
       expect(payload).toHaveProperty('total');
-      expect(payload).toHaveProperty('data');
+      expect(payload).toHaveProperty('lessons');
       expect(payload.total).toBe(0);
     });
   });
@@ -495,7 +495,7 @@ describe('Maintainer flow', () => {
 
       expect(response.statusCode).toBe(200);
       expect(payload).toHaveProperty('total');
-      expect(payload).toHaveProperty('data');
+      expect(payload).toHaveProperty('students');
     });
   });
 
@@ -524,7 +524,7 @@ describe('Maintainer flow', () => {
 
       expect(response.statusCode).toBe(200);
       expect(payload).toHaveProperty('total');
-      expect(payload).toHaveProperty('data');
+      expect(payload).toHaveProperty('students');
       expect(payload.total).toBe(1);
     });
 
@@ -538,7 +538,7 @@ describe('Maintainer flow', () => {
 
       expect(response.statusCode).toBe(200);
       expect(payload).toHaveProperty('total');
-      expect(payload).toHaveProperty('data');
+      expect(payload).toHaveProperty('students');
       expect(payload.total).toBe(0);
     });
   });

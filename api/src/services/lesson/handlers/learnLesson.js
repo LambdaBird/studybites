@@ -210,7 +210,7 @@ export async function handler({
    * get all blocks on finish
    */
   if (action === 'finish') {
-    const blocks = await LessonBlockStructure.getAllBlocks({ lessonId });
+    const blocks = []; // await LessonBlockStructure.getAllBlocks({ lessonId });
     return { total: blocks.length, blocks, isFinished: true };
   }
   /**

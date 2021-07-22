@@ -1,24 +1,24 @@
 import { useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { LESSON_PAGE } from '@sb-ui/utils/paths';
+import { LEARN_PAGE } from '@sb-ui/utils/paths';
 
-export const useLesson = ({ id, maintainer }) => {
+export const useLesson = ({ id, maintainers }) => {
   const history = useHistory();
 
+  console.log(maintainers);
   const fullName = useMemo(
-    () =>
-      `${maintainer.userInfo.firstName} ${maintainer.userInfo.lastName}`.trim(),
-    [maintainer.userInfo.firstName, maintainer.userInfo.lastName],
+    () => `${maintainers?.[0]?.firstName} ${maintainers?.[0]?.lastName}`.trim(),
+    [maintainers],
   );
 
   const firstNameLetter = useMemo(
-    () => maintainer.userInfo.firstName[0] || maintainer.userInfo.lastName[0],
-    [maintainer.userInfo.firstName, maintainer.userInfo.lastName],
+    () => maintainers?.[0]?.firstName?.[0] || maintainers?.[0]?.lastName?.[0],
+    [maintainers],
   );
 
   const handleContinueLesson = () => {
-    history.push(LESSON_PAGE.replace(':id', id));
+    history.push(LEARN_PAGE.replace(':id', id));
   };
 
   return { fullName, firstNameLetter, handleContinueLesson };

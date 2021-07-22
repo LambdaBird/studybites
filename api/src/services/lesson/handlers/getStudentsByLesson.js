@@ -25,7 +25,7 @@ export const options = {
         type: 'object',
         properties: {
           total: { type: 'number' },
-          data: { type: 'array' },
+          students: { type: 'array' },
         },
       },
       ...errorResponse,
@@ -63,7 +63,7 @@ export async function handler({
     columns.firstName = undefined;
   }
 
-  const data = await UserRole.relatedQuery('users')
+  const students = await UserRole.relatedQuery('users')
     .skipUndefined()
     .for(
       UserRole.query().select('user_id').where({
@@ -89,5 +89,5 @@ export async function handler({
     .orWhere(columns.firstName, 'ilike', `%${search}%`)
     .count('*');
 
-  return { total: +count[0].count, data };
+  return { total: +count[0].count, students };
 }

@@ -198,7 +198,7 @@ describe('Enroll to lesson flow', () => {
   });
 
   describe('Get enrolled lessons', () => {
-    it('should return lessons with authors', async () => {
+    it('should return lessons with maintainers', async () => {
       const response = await testContext.request({
         method: 'GET',
         url: 'lesson/enrolled/',
@@ -209,7 +209,8 @@ describe('Enroll to lesson flow', () => {
       expect(response.statusCode).toBe(200);
       expect(payload).toHaveProperty('total');
       expect(payload).toHaveProperty('lessons');
-      expect(payload.lessons[0]).toHaveProperty('maintainer');
+      expect(payload.lessons[0]).toHaveProperty('maintainers');
+      expect(payload.lessons[0].maintainers).toBeInstanceOf(Array);
     });
   });
 
@@ -239,7 +240,7 @@ describe('Enroll to lesson flow', () => {
       expect(response.statusCode).toBe(200);
       expect(payload).toHaveProperty('total');
       expect(payload).toHaveProperty('lessons');
-      expect(payload.lessons[0]).toHaveProperty('maintainer');
+      expect(payload.lessons[0]).toHaveProperty('maintainers');
       expect(payload.total).toBe(1);
     });
 
@@ -259,7 +260,7 @@ describe('Enroll to lesson flow', () => {
   });
 
   describe('Get public lessons', () => {
-    it('should return lessons with authors', async () => {
+    it('should return lessons with maintainers', async () => {
       const response = await testContext.request({
         method: 'GET',
         url: 'lesson',
@@ -269,7 +270,8 @@ describe('Enroll to lesson flow', () => {
 
       expect(response.statusCode).toBe(200);
       expect(payload).toHaveProperty('total');
-      expect(payload).toHaveProperty('data');
+      expect(payload).toHaveProperty('lessons');
+      expect(payload.lessons[0]).toHaveProperty('maintainers');
     });
   });
 
@@ -298,7 +300,7 @@ describe('Enroll to lesson flow', () => {
 
       expect(response.statusCode).toBe(200);
       expect(payload).toHaveProperty('total');
-      expect(payload).toHaveProperty('data');
+      expect(payload).toHaveProperty('lessons');
       expect(payload.total).toBe(1);
     });
 
@@ -312,7 +314,7 @@ describe('Enroll to lesson flow', () => {
 
       expect(response.statusCode).toBe(200);
       expect(payload).toHaveProperty('total');
-      expect(payload).toHaveProperty('data');
+      expect(payload).toHaveProperty('lessons');
       expect(payload.total).toBe(0);
     });
   });
@@ -345,7 +347,7 @@ describe('Enroll to lesson flow', () => {
       expect(payload.lesson).toBeInstanceOf(Object);
     });
 
-    it('should return a lesson with an array of authors', async () => {
+    it('should return a lesson with an array of maintainers', async () => {
       const response = await testContext.request({
         method: 'GET',
         url: `lesson/enroll/${lessonToGet.lesson.id}`,
@@ -353,11 +355,11 @@ describe('Enroll to lesson flow', () => {
 
       const payload = JSON.parse(response.payload);
 
-      expect(payload.lesson).toHaveProperty('authors');
-      expect(payload.lesson.authors).toBeInstanceOf(Array);
+      expect(payload.lesson).toHaveProperty('maintainers');
+      expect(payload.lesson.maintainers).toBeInstanceOf(Array);
     });
 
-    it('authors should be an array of objects', async () => {
+    it('maintainers should be an array of objects', async () => {
       const response = await testContext.request({
         method: 'GET',
         url: `lesson/enroll/${lessonToGet.lesson.id}`,
@@ -365,7 +367,7 @@ describe('Enroll to lesson flow', () => {
 
       const payload = JSON.parse(response.payload);
 
-      expect(payload.lesson.authors).toEqual(
+      expect(payload.lesson.maintainers).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
             id: expect.any(Number),

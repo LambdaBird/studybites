@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 
 import { LessonType } from '@sb-ui/components/lessonBlocks/types';
 import lessonImg from '@sb-ui/resources/img/lesson.svg';
-import { LESSON_PAGE } from '@sb-ui/utils/paths';
+import { LEARN_PAGE } from '@sb-ui/utils/paths';
 
 import * as S from './OngoingShort.styled';
 
@@ -14,17 +14,17 @@ const OngoingShortDesktop = ({ lesson }) => {
   const { t } = useTranslation('user');
   const history = useHistory();
 
-  const { name, id, percentage } = lesson;
+  const { name, id /* percentage */ } = lesson;
 
   const handleContinueLesson = () => {
-    history.push(LESSON_PAGE.replace(':id', id));
+    history.push(LEARN_PAGE.replace(':id', id));
   };
 
   return (
     <S.MainSpace>
       <S.LeftColumn span={8}>
         <img height={100} src={lessonImg} alt="Lesson" />
-        <S.ProgressBar percent={Math.round(percentage)} />
+        {/* <S.ProgressBar percent={Math.round(percentage)} /> */}
       </S.LeftColumn>
       <S.RightColumn span={16}>
         <Title

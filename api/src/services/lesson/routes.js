@@ -49,9 +49,9 @@ import {
 } from './handlers/enrollToLesson';
 
 import {
-  options as optionsGetAllEnrolledLessons,
-  handler as handlerGetAllEnrolledLessons,
-} from './handlers/getAllEnrolledLessons';
+  options as optionsGetOngoingLessons,
+  handler as handlerGetOngoingLessons,
+} from './handlers/getOngoingLessons';
 
 import {
   options as optionsGetFinishedLessons,
@@ -70,13 +70,13 @@ import {
 
 export default async function router(instance) {
   /**
-   * get all lessons where status = 'Public' with authors,
+   * get all lessons where status = 'Public' with maintainers,
    * search, pagination and total
    */
   instance.get('/', optionsGetAllPublicLessons, handlerGetAllPublicLessons);
 
   /**
-   * get lesson where status = 'Public' by id with authors, isFinal key, blocks
+   * get lesson where status = 'Public' by id with maintainers, isFinal key, blocks
    * and blocks total
    */
   instance.get('/:lessonId', optionsGetLessonLearn, handlerGetLessonLearn);
@@ -126,7 +126,7 @@ export default async function router(instance) {
   instance.put('/maintain/:lessonId', optionsUpdateLesson, handlerUpdateLesson);
 
   /**
-   * get enrolled lesson with authors by id
+   * get enrolled lesson with maintainers by id
    */
   instance.get(
     '/enroll/:lessonId',
@@ -148,8 +148,8 @@ export default async function router(instance) {
    */
   instance.get(
     '/enrolled/',
-    optionsGetAllEnrolledLessons,
-    handlerGetAllEnrolledLessons,
+    optionsGetOngoingLessons,
+    handlerGetOngoingLessons,
   );
 
   /**

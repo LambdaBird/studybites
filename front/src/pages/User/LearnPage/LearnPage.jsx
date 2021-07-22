@@ -11,13 +11,14 @@ import * as S from './LearnPage.styled';
 
 const LearnPage = () => {
   const { id: lessonId } = useParams();
-  const leanProgress = 50;
+  /* const learnProgress = 50; */
   const { handleInteractiveClick, chunks, isLoading, lesson, total } =
     useLearnChunks({ lessonId });
 
   return (
     <>
-      <S.Header bottom={<S.Progress percent={leanProgress} />} />
+      {/* <S.Header bottom={<S.Progress percent={leanProgress} />} /> */}
+      <S.Header />
       <S.Wrapper>
         <S.GlobalStylesLearnPage />
         <S.Row>

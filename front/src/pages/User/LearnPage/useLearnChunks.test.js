@@ -178,9 +178,7 @@ describe('Test useLearnChunks', () => {
       const chunks = handleAnswer({
         data: {
           isFinished: false,
-          lesson: {
-            blocks: [],
-          },
+          blocks: [],
         },
         prevChunks: [[createStartBlock(false)]],
       });
@@ -194,9 +192,7 @@ describe('Test useLearnChunks', () => {
       const chunks = handleAnswer({
         data: {
           isFinished: true,
-          lesson: {
-            blocks: [],
-          },
+          blocks: [],
         },
         prevChunks: [[createStartBlock(false)]],
       });
@@ -210,12 +206,10 @@ describe('Test useLearnChunks', () => {
       const chunks = handleAnswer({
         data: {
           isFinished: false,
-          lesson: {
-            blocks: [
-              createParagraphBlock(3, 'Paragraph1'),
-              createNextBlock(4, false),
-            ],
-          },
+          blocks: [
+            createParagraphBlock(3, 'Paragraph1'),
+            createNextBlock(4, false),
+          ],
         },
         prevChunks: [
           [
@@ -239,18 +233,16 @@ describe('Test useLearnChunks', () => {
       const chunks = handleAnswer({
         data: {
           isFinished: false,
-          lesson: {
-            answer: {
-              results: [true, true],
-            },
-            data: {
-              response: [true, true],
-            },
-            blocks: [
-              createParagraphBlock(3, 'Paragraph2'),
-              createNextBlock(4, false),
-            ],
+          answer: {
+            results: [true, true],
           },
+          userAnswer: {
+            response: [true, true],
+          },
+          blocks: [
+            createParagraphBlock(3, 'Paragraph2'),
+            createNextBlock(4, false),
+          ],
         },
         prevChunks: [
           [
