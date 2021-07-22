@@ -1,4 +1,5 @@
 import Table from 'editorjs-table';
+import hash from 'object-hash';
 import Delimiter from '@editorjs/delimiter';
 import Embed from '@editorjs/embed';
 import HeaderTool from '@editorjs/header';
@@ -11,16 +12,6 @@ import Next from '@sb-ui/utils/editorjs/next-plugin';
 import Quiz from '@sb-ui/utils/editorjs/quiz-plugin';
 
 export const QUIZ_TYPE = 'quiz';
-
-export const prepareApiData = (data, type) => {
-  if (type === QUIZ_TYPE) {
-    return {
-      ...data,
-      answers: data?.answers.map(({ value }) => ({ value })),
-    };
-  }
-  return data;
-};
 
 export const prepareEditorData = (blocks) =>
   blocks.map(({ content, answer, type }) =>
@@ -37,6 +28,36 @@ export const prepareEditorData = (blocks) =>
         }
       : content,
   );
+
+export const prepareBlocksDataForApi = (data, type) => {
+  if (type === QUIZ_TYPE) {
+    return {
+      ...data,
+      answers: data?.answers.map(({ value }) => ({ value })),
+    };
+  }
+  return data;
+};
+
+export const prepareBlocksForApi = (blocks) =>
+  blocks.map((block) => {
+    const { id, type, data } = block;
+    return {
+      type,
+      revision: hash(block),
+      content: {
+        id,
+        type,
+        data: prepareBlocksDataForApi(data, type),
+      },
+      answer: {
+        results:
+          type === QUIZ_TYPE
+            ? block?.data?.answers?.map((x) => x.correct)
+            : undefined,
+      },
+    };
+  });
 
 export const getConfig = (t) => ({
   holder: 'editorjs',

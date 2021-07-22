@@ -6,6 +6,7 @@ export const ADMIN_HOME = '/admin';
 export const USER_HOME = '/user';
 export const USER_LESSONS = `${USER_HOME}/lessons`;
 export const LESSON_PAGE = `${USER_LESSONS}/:id`;
+export const LEARN_PAGE = `${USER_LESSONS}/learn/:id`;
 export const USER_ENROLL = `${USER_HOME}/enroll/:id`;
 
 export const TEACHER_HOME = '/teacher';

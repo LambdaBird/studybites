@@ -1,6 +1,5 @@
 import { Button, Col, Input, message, Row, Typography } from 'antd';
 import DragDrop from 'editorjs-drag-drop';
-import hash from 'object-hash';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
@@ -19,12 +18,7 @@ import Undo from '@sb-ui/utils/editorjs/undo-plugin';
 import { LESSONS_EDIT } from '@sb-ui/utils/paths';
 import { TEACHER_LESSON_BASE_KEY } from '@sb-ui/utils/queries';
 
-import {
-  getConfig,
-  prepareApiData,
-  prepareEditorData,
-  QUIZ_TYPE,
-} from './utils';
+import { getConfig, prepareBlocksForApi, prepareEditorData } from './utils';
 import * as S from './LessonEdit.styled';
 
 const { TextArea } = Input;
@@ -32,17 +26,19 @@ const { TextArea } = Input;
 const MAX_NAME_LENGTH = 255;
 
 const LessonEdit = () => {
-  const { t } = useTranslation('teacher');
   const { id: lessonId } = useParams();
   const isEditLesson = !!lessonId;
+
+  const { t } = useTranslation('teacher');
   const history = useHistory();
+
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [editorReady, setEditorReady] = useState(false);
+
   const editorJSref = useRef(null);
   const editorContainerRef = useRef(null);
   const undoPluginRef = useRef(null);
-
   const inputTitle = useRef(null);
 
   const { data: lessonData, isLoading } = useQuery(
@@ -54,9 +50,53 @@ const LessonEdit = () => {
     ],
     getLesson,
     {
-      enabled: !!lessonId,
+      enabled: isEditLesson,
     },
   );
+
+  const createLessonMutation = useMutation(createLesson, {
+    onSuccess: (data) => {
+      const { id } = data?.lesson;
+      history.replace(LESSONS_EDIT.replace(':id', id));
+      message.success({
+        content: t('editor_js.message.success_created'),
+        duration: 2,
+      });
+    },
+    onError: () => {
+      message.error({
+        content: t('editor_js.message.error_created'),
+        duration: 2,
+      });
+    },
+  });
+
+  const updateLessonMutation = useMutation(putLesson, {
+    onSuccess: (data) => {
+      if (editorReady && data) {
+        const editorToRender = {
+          blocks: prepareEditorData(data?.lesson?.blocks),
+        };
+
+        if (editorToRender.blocks.length === 0) {
+          editorJSref.current.clear();
+        } else {
+          editorJSref.current.render?.(editorToRender);
+        }
+        undoPluginRef.current.initialize(editorToRender);
+      }
+      message.success({
+        content: t('editor_js.message.success_updated'),
+        duration: 2,
+      });
+    },
+    onError: () => {
+      message.error({
+        content: t('editor_js.message.error_updated'),
+        duration: 2,
+      });
+    },
+  });
 
   useEffect(() => {
     editorJSref.current = new EditorJS(getConfig(t));
@@ -91,56 +131,11 @@ const LessonEdit = () => {
     }
   }, [lessonData?.lesson.name]);
 
-  const { mutate } = useMutation(createLesson, {
-    onSuccess: (data) => {
-      const { id } = data?.lesson;
-      history.replace(LESSONS_EDIT.replace(':id', id));
-      message.success({
-        content: t('editor_js.message.success_created'),
-        duration: 2,
-      });
-    },
-    onError: () => {
-      message.error({
-        content: t('editor_js.message.error_created'),
-        duration: 2,
-      });
-    },
-  });
-
-  const { mutate: updateLesson } = useMutation(putLesson, {
-    onSuccess: (data) => {
-      if (editorReady && data) {
-        const editorToRender = {
-          blocks: prepareEditorData(data?.lesson?.blocks),
-        };
-
-        if (editorToRender.blocks.length === 0) {
-          editorJSref.current.clear();
-        } else {
-          editorJSref.current.render?.(editorToRender);
-        }
-        undoPluginRef.current.initialize(editorToRender);
-      }
-      message.success({
-        content: t('editor_js.message.success_updated'),
-        duration: 2,
-      });
-    },
-    onError: () => {
-      message.error({
-        content: t('editor_js.message.error_updated'),
-        duration: 2,
-      });
-    },
-  });
-
   useEffect(() => {
     if (editorReady && lessonData) {
       const editorToRender = {
         blocks: prepareEditorData(lessonData?.lesson?.blocks),
       };
-
       if (editorToRender.blocks.length === 0) {
         editorJSref.current.clear();
       } else {
@@ -160,24 +155,7 @@ const LessonEdit = () => {
           description,
           status: Statuses.DRAFT,
         },
-        blocks: blocks.map((block) => {
-          const { id, type, data } = block;
-          return {
-            type,
-            revision: hash(block),
-            content: {
-              id,
-              type,
-              data: prepareApiData(data, type),
-            },
-            answer: {
-              results:
-                type === QUIZ_TYPE
-                  ? block?.data?.answers?.map((x) => x.correct)
-                  : undefined,
-            },
-          };
-        }),
+        blocks: prepareBlocksForApi(blocks),
       };
 
       if (!name) {
@@ -187,8 +165,9 @@ const LessonEdit = () => {
         });
         return;
       }
-      // eslint-disable-next-line no-unused-expressions
-      isEditLesson ? updateLesson(params) : mutate(params);
+
+      if (isEditLesson) updateLessonMutation.mutate(params);
+      else createLessonMutation.mutate(params);
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error('Editor JS error: ', e);
