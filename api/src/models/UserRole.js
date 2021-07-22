@@ -1,5 +1,6 @@
 import objection from 'objection';
 import path from 'path';
+import config from '../../config';
 
 class UserRole extends objection.Model {
   static get tableName() {
@@ -18,6 +19,17 @@ class UserRole extends objection.Model {
         updatedAt: { type: 'string' },
       },
     };
+  }
+
+  static async addMaintainer({ trx, userId, resourceId }) {
+    await this.query(trx)
+      .insert({
+        userId,
+        resourceId,
+        roleId: config.roles.MAINTAINER.id,
+        resourceType: config.resources.LESSON,
+      })
+      .returning('*');
   }
 
   static relationMappings() {

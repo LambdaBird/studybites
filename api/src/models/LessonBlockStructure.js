@@ -1,5 +1,6 @@
 import objection from 'objection';
 import path from 'path';
+import { v4 } from 'uuid';
 
 import config from '../../config';
 
@@ -153,6 +154,25 @@ class LessonBlockStructure extends objection.Model {
     }
 
     return { total, chunk: [], isFinal: true };
+  }
+
+  static async insertBlocks({ trx, blocks, lessonId }) {
+    const blockStructure = [];
+
+    for (let i = 0, n = blocks.length; i < n; i += 1) {
+      blockStructure.push({
+        id: v4(),
+        lessonId,
+        blockId: blocks[i].blockId,
+      });
+    }
+
+    for (let i = 0, n = blockStructure.length; i < n; i += 1) {
+      blockStructure[i].parentId = !i ? null : blockStructure[i - 1].id;
+      blockStructure[i].childId = i === n - 1 ? null : blockStructure[i + 1].id;
+    }
+
+    await this.query(trx).insert(blockStructure);
   }
 
   static relationMappings() {
