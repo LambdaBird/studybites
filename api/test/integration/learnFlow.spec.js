@@ -514,7 +514,7 @@ describe('Learning flow', () => {
       });
     });
 
-    it('should finish and return all blocks', async () => {
+    it('should finish and return none blocks', async () => {
       const response = await testContext.studentRequest({
         url: `${lessonToFinish.lesson.id}/learn`,
         body: {
@@ -528,11 +528,7 @@ describe('Learning flow', () => {
       expect(payload).toHaveProperty('total');
       expect(payload).toHaveProperty('blocks');
       expect(payload.blocks).toBeInstanceOf(Array);
-      expect(payload.blocks.length).toBe(6);
-      payload.blocks.forEach((block, index) => {
-        // eslint-disable-next-line no-underscore-dangle
-        expect(block.blockId).toBe(lessonToFinish.lesson.blocks[index].blockId);
-      });
+      expect(payload.blocks.length).toBe(0);
     });
   });
 
@@ -941,7 +937,7 @@ describe('Learning flow', () => {
         });
       });
 
-      it('should return all blocks on finish', async () => {
+      it('should return no blocks on finish', async () => {
         const response = await testContext.studentRequest({
           url: `${notFinished.lesson.id}/learn`,
           body: {
@@ -954,10 +950,10 @@ describe('Learning flow', () => {
         expect(response.statusCode).toBe(200);
 
         expect(payload).toHaveProperty('blocks');
-        expect(payload.blocks.length).toBe(1);
+        expect(payload.blocks.length).toBe(0);
 
         expect(payload).toHaveProperty('total');
-        expect(payload.total).toBe(1);
+        expect(payload.total).toBe(0);
 
         expect(payload).toHaveProperty('isFinished');
         expect(payload.isFinished).toBe(true);
@@ -1026,7 +1022,7 @@ describe('Learning flow', () => {
         });
       });
 
-      it('should return all blocks on finish', async () => {
+      it('should return none blocks on finish', async () => {
         const response = await testContext.studentRequest({
           url: `${notFinished.lesson.id}/learn`,
           body: {
@@ -1039,10 +1035,10 @@ describe('Learning flow', () => {
         expect(response.statusCode).toBe(200);
 
         expect(payload).toHaveProperty('blocks');
-        expect(payload.blocks.length).toBe(1);
+        expect(payload.blocks.length).toBe(0);
 
         expect(payload).toHaveProperty('total');
-        expect(payload.total).toBe(1);
+        expect(payload.total).toBe(0);
 
         expect(payload).toHaveProperty('isFinished');
         expect(payload.isFinished).toBe(true);

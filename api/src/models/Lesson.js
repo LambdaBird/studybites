@@ -171,6 +171,7 @@ class Lesson extends objection.Model {
         .join('lessons', 'lessons.id', '=', 'users_roles.resource_id')
         .where('users_roles.role_id', config.roles.MAINTAINER.id)
         .andWhere('users_roles.resource_type', config.resources.LESSON)
+        .andWhere('lessons.status', 'Public')
         /**
          * using concat to concatenate fields to search through
          */
@@ -263,7 +264,7 @@ class Lesson extends objection.Model {
       .select('lessons.*', knex.raw(`json_agg(users_data) maintainer`))
       .from(
         knex.raw(`
-        (select id, first_name, last_name from users) users_data
+        (select id, first_name as "firstName", last_name as "lastName" from users) users_data
         `),
       )
       .join('users_roles', 'users_roles.user_id', '=', 'users_data.id')
@@ -280,7 +281,7 @@ class Lesson extends objection.Model {
       .andWhere('users_roles.resource_type', config.resources.LESSON)
       .andWhere(
         knex.raw(
-          `concat(users_data.first_name, ' ', users_data.last_name, ' ', users_data.first_name, ' ', lessons.name)`,
+          `concat(users_data."firstName", ' ', users_data."lastName", ' ', users_data."firstName", ' ', lessons.name)`,
         ),
         'ilike',
         `%${search ? search.replace(/ /g, '%') : '%'}%`,

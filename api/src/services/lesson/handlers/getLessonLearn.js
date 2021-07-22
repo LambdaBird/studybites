@@ -145,8 +145,10 @@ export async function handler({ user: { id: userId }, params: { lessonId } }) {
     return block;
   });
 
-  delete lesson.blocks[lesson.blocks.length - 1].answer;
-  delete lesson.blocks[lesson.blocks.length - 1].weight;
+  if (!isFinal) {
+    delete lesson.blocks[lesson.blocks.length - 1].answer;
+    delete lesson.blocks[lesson.blocks.length - 1].weight;
+  }
 
   return { total, lesson, isFinal };
 }

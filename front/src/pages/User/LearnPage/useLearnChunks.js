@@ -2,14 +2,13 @@ import { useCallback, useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 
 import apiConfig from '@sb-ui/utils/api/config';
+import { getLessonById, postLessonById } from '@sb-ui/utils/api/v1/student';
 import { LESSON_BASE_QUERY } from '@sb-ui/utils/queries';
 
 import {
   createFinishBlock,
   createFinished,
   createStartBlock,
-  getMockedLessonById,
-  postMockedLessonById,
 } from './useLearnChunks.util';
 
 export const convertBlocksToChunks = (blocks) => {
@@ -38,8 +37,7 @@ export const createChunksFromBlocks = ({
     return [[createStartBlock(false)]];
   }
 
-  const isLastInteractiveResolved =
-    blocks[blocks.length - 1]?.response?.isSolved;
+  const isLastInteractiveResolved = blocks[blocks.length - 1]?.isSolved;
 
   const isLastNonInteractiveBlock = !apiConfig.interactiveBlocks.includes(
     blocks[blocks.length - 1]?.type,
@@ -47,7 +45,11 @@ export const createChunksFromBlocks = ({
 
   const chunks = convertBlocksToChunks(blocks);
   if (isFinished) {
-    chunks.push([createFinished(false)]);
+    if (isLastNonInteractiveBlock && !isEmptyBlocks) {
+      chunks[chunks.length - 1].push(createFinished(false));
+    } else {
+      chunks.push([createFinished(false)]);
+    }
   } else if (isLastInteractiveResolved || isEmptyBlocks) {
     chunks.push([createFinishBlock(false)]);
   } else if (isLastNonInteractiveBlock) {
@@ -56,27 +58,28 @@ export const createChunksFromBlocks = ({
   return chunks;
 };
 
-export const handleAnswer = ({ data, prevChunks }) => {
-  const { isFinished, lesson: newLesson } = data;
+export const handleAnswer = ({ data: serverData, prevChunks }) => {
+  const { isFinished, answer, blocks, userAnswer } = serverData;
 
   const lastChunk = prevChunks?.[prevChunks.length - 1];
 
   const interactiveBlock = lastChunk[lastChunk.length - 1];
-  if (newLesson?.answer?.results?.length > 0) {
-    interactiveBlock.answer = newLesson?.answer;
+  if (answer?.results?.length > 0) {
+    interactiveBlock.answer = answer;
     interactiveBlock.content.data.answers =
       interactiveBlock.content.data.answers.map((x, i) => ({
         ...x,
-        correct: newLesson?.data?.response[i],
+        correct: userAnswer?.response[i],
       }));
   }
-  if (interactiveBlock?.response) {
-    interactiveBlock.response.isSolved = true;
+
+  if (interactiveBlock) {
+    interactiveBlock.isSolved = true;
   }
   return [
     ...prevChunks,
     ...createChunksFromBlocks({
-      blocks: newLesson?.blocks,
+      blocks,
       isFinished,
       isPost: true,
     }),
@@ -95,7 +98,7 @@ export const useLearnChunks = ({ lessonId }) => {
         id: lessonId,
       },
     ],
-    getMockedLessonById,
+    getLessonById,
   );
 
   const onSuccess = useCallback(
@@ -105,7 +108,7 @@ export const useLearnChunks = ({ lessonId }) => {
     [setChunks],
   );
 
-  const { mutate: handleInteractiveClick } = useMutation(postMockedLessonById, {
+  const { mutate: handleInteractiveClick } = useMutation(postLessonById, {
     onSuccess,
   });
 

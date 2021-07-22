@@ -6,11 +6,11 @@ import { NextPropType } from '@sb-ui/pages/User/LessonPage/BlockElement/types';
 import * as S from '@sb-ui/pages/User/LessonPage/LessonPage.styled';
 import { START_TYPE } from '@sb-ui/pages/User/LessonPage/utils';
 
-const Start = ({ response }) => {
+const Start = ({ isSolved }) => {
   const { handleInteractiveClick, id } = useContext(LearnContext);
 
   const { t } = useTranslation();
-  if (response.isSolved) {
+  if (isSolved) {
     return null;
   }
 

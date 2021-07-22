@@ -7,11 +7,11 @@ import { FINISH_TYPE } from '@sb-ui/pages/User/LessonPage/utils';
 
 import { NextPropType } from '../types';
 
-const Finish = ({ response }) => {
+const Finish = ({ isSolved }) => {
   const { handleInteractiveClick, id } = useContext(LearnContext);
 
   const { t } = useTranslation();
-  if (response.isSolved) {
+  if (isSolved) {
     return null;
   }
 

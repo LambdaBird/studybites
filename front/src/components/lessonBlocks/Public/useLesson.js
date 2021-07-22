@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
-import { LESSON_PAGE, USER_ENROLL } from '@sb-ui/utils/paths';
+import { LEARN_PAGE, USER_ENROLL } from '@sb-ui/utils/paths';
 
 export const useLesson = ({ id, firstName, lastName }) => {
   const location = useLocation();
@@ -19,7 +19,7 @@ export const useLesson = ({ id, firstName, lastName }) => {
   }, [history, id, query]);
 
   const handleContinueLesson = useCallback(() => {
-    history.push(LESSON_PAGE.replace(':id', id));
+    history.push(LEARN_PAGE.replace(':id', id));
   }, [history, id]);
 
   return { author, handleEnroll, handleContinueLesson };

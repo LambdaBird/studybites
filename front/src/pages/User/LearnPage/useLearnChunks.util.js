@@ -14,9 +14,7 @@ export const createStartBlock = (isSolved) => ({
     type: 'start',
   },
   type: 'start',
-  response: {
-    isSolved,
-  },
+  isSolved,
 });
 
 export const createParagraphBlock = (id, text) => ({
@@ -47,9 +45,7 @@ export const createNextBlock = (id, isSolved) => ({
   revision: `hashTest${id}`,
   type: 'next',
   weight: null,
-  response: {
-    isSolved,
-  },
+  isSolved,
 });
 
 export const createQuizBlock = (id, results) => ({
@@ -62,9 +58,7 @@ export const createQuizBlock = (id, results) => ({
     id: `content-${id}`,
     type: 'quiz',
   },
-  response: {
-    isSolved: false,
-  },
+  isSolved: false,
   revision: `hashTest${id}`,
   type: 'quiz',
 });
@@ -75,9 +69,7 @@ export const createFinishBlock = (isSolved) => ({
     type: 'finish',
   },
   type: 'finish',
-  response: {
-    isSolved,
-  },
+  isSolved,
   blockId: `block-finish-id`,
   answer: {},
 });
@@ -96,9 +88,7 @@ export const createQuizResultNoDataBlock = (id, results, response) => ({
     id: `content-${id}`,
     type: 'quiz',
   },
-  response: {
-    isSolved: true,
-  },
+  isSolved: true,
   revision: `hashTest${id}`,
   type: 'quiz',
 });
