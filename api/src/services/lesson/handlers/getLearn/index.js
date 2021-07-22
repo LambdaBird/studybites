@@ -1,4 +1,4 @@
 import { getLearnHandler } from './handler';
-import { getLearnOptions } from './options';
+import { learnOptions } from './options';
 
-export { getLearnHandler, getLearnOptions };
+export { getLearnHandler, learnOptions };

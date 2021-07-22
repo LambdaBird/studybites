@@ -11,7 +11,7 @@ const NAME_REQUIRED = "must have required property 'name'";
 const NAME_LENGTH = 'must NOT have fewer than 1 characters';
 const STATUS_ENUM = 'must be equal to one of the allowed values';
 
-describe('Test createLesson validation', () => {
+describe('Test createLessonSchema validation', () => {
   const schema = createLessonOptions.schema.body;
   schema.properties.lesson.properties.status = lessonStatus;
 

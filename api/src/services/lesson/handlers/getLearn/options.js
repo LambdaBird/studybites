@@ -1,4 +1,4 @@
-export const getLearnOptions = {
+export const learnOptions = {
   schema: {
     params: { $ref: 'paramsLessonId#' },
     response: {

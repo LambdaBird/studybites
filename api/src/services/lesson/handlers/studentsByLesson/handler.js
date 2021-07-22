@@ -22,6 +22,7 @@ export async function studentsByLessonHandler({
     .for(
       UserRole.query().select('user_id').where({
         roleId: config.roles.STUDENT.id,
+        resourceType: config.resources.LESSON,
         resourceId,
       }),
     )
@@ -36,6 +37,7 @@ export async function studentsByLessonHandler({
     .for(
       UserRole.query().select('user_id').where({
         roleId: config.roles.STUDENT.id,
+        resourceType: config.resources.LESSON,
         resourceId,
       }),
     )

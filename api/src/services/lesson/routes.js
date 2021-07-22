@@ -3,7 +3,7 @@ import {
   publicLessonsHandler,
 } from './handlers/publicLessons';
 
-import { getLearnOptions, getLearnHandler } from './handlers/getLearn';
+import { learnOptions, getLearnHandler } from './handlers/getLearn';
 
 import {
   lessonSchemaOptions,
@@ -73,7 +73,7 @@ export default async function router(instance) {
    * get lesson where status = 'Public' by id with authors, isFinal key, blocks
    * and blocks total
    */
-  instance.get('/:lessonId', getLearnOptions, getLearnHandler);
+  instance.get('/:lessonId', learnOptions, getLearnHandler);
 
   /**
    * get lesson schema
