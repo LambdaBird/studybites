@@ -129,7 +129,10 @@ const LessonEdit = () => {
     if (lessonData?.lesson.name) {
       setName(lessonData.lesson.name);
     }
-  }, [lessonData?.lesson.name]);
+    if (lessonData?.lesson.description) {
+      setDescription(lessonData.lesson.description);
+    }
+  }, [lessonData?.lesson]);
 
   useEffect(() => {
     if (editorReady && lessonData) {
@@ -209,6 +212,15 @@ const LessonEdit = () => {
                 onChange={handleInputTitle}
                 onKeyDown={handleNextLine}
               />
+              <S.BadgeWrapper>
+                <S.CardBadge>
+                  <S.StatusText>
+                    {t(
+                      `lesson_dashboard.status.${lessonData?.lesson.status.toLocaleLowerCase()}`,
+                    )}
+                  </S.StatusText>
+                </S.CardBadge>
+              </S.BadgeWrapper>
               <div id="editorjs" ref={editorContainerRef} />
             </S.EditorWrapper>
           </S.LeftCol>
@@ -249,12 +261,15 @@ const LessonEdit = () => {
                   {t('lesson_edit.links.invite')}
                 </S.TextLink>
               </Col>
-              <Col span={24}>
+              <S.StudentsCol span={24}>
                 <S.TextLink underline>
                   {t('lesson_edit.links.students')}
                 </S.TextLink>
-                <S.StudentsCount showZero count={4} />
-              </Col>
+                <S.StudentsCount
+                  showZero
+                  count={lessonData?.lesson.studentsCount || 0}
+                />
+              </S.StudentsCol>
               <Col span={24}>
                 <S.TextLink underline>
                   {t('lesson_edit.links.analytics')}

@@ -372,7 +372,7 @@ describe('Maintainer flow', () => {
       expect(payload.errors[0]).toMatchObject(UNAUTHORIZED);
     });
 
-    it('should return a lesson with blocks', async () => {
+    it('should return a lesson with blocks and students count', async () => {
       const response = await testContext.request({
         url: `lesson/maintain/${lessonToGet.lesson.id}`,
         method: 'GET',
@@ -382,6 +382,8 @@ describe('Maintainer flow', () => {
 
       expect(response.statusCode).toBe(200);
       expect(payload).toHaveProperty('lesson');
+
+      expect(payload.lesson).toHaveProperty('studentsCount');
       expect(payload.lesson).toHaveProperty('blocks');
       expect(payload.lesson.blocks).toBeInstanceOf(Array);
       // eslint-disable-next-line no-underscore-dangle

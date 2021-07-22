@@ -29,6 +29,7 @@ export const EditorWrapper = styled.div`
   min-height: 100%;
   padding: 2rem;
   max-width: 850px;
+  position: relative;
 `;
 
 export const RightCol = styled(Col)`
@@ -87,4 +88,32 @@ export const PublishButton = styled(Button)`
 
 export const RowStyled = styled(Row)`
   margin-bottom: 2rem;
+`;
+
+export const StudentsCol = styled(Col)`
+  display: flex;
+  align-items: center;
+`;
+
+export const BadgeWrapper = styled.div`
+  right: 1rem;
+  top: 1rem;
+  position: absolute;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+`;
+
+export const CardBadge = styled(Badge)`
+  min-width: 50px;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 1);
+  border-radius: 4px;
+  text-align: center;
+  border: 1px solid #d9d9d9;
+`;
+
+export const StatusText = styled(Typography.Text)`
+  font-size: 1rem;
+  color: ${variables['secondary-text-color']};
 `;
