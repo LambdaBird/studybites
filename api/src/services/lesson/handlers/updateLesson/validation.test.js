@@ -1,6 +1,7 @@
 import Ajv from 'ajv';
 
 import config from '../../../../../config';
+import { lessonStatus } from '../../../../validation/schemas';
 
 import { updateLessonOptions } from './options';
 
@@ -8,8 +9,11 @@ const NAME_LENGTH = 'must NOT have fewer than 1 characters';
 const STATUS_ENUM = 'must be equal to one of the allowed values';
 
 describe('Test updateLesson validation', () => {
+  const schema = updateLessonOptions.schema.body;
+  schema.properties.lesson.properties.status = lessonStatus;
+
   const ajv = new Ajv(config.ajv);
-  const validate = ajv.compile(updateLessonOptions.schema.body);
+  const validate = ajv.compile(schema);
 
   test('should return an error if name is an empty string', () => {
     const data = {
