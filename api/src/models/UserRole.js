@@ -50,12 +50,13 @@ class UserRole extends objection.Model {
     };
   }
 
-  static getLessonStudentsCount({ userId, lessonId }) {
+  static getLessonStudentsCount({ lessonId }) {
     return this.query()
-      .where('users_roles.user_id', userId)
-      .andWhere('users_roles.role_id', config.roles.STUDENT.id)
-      .andWhere('users_roles.resource_id', lessonId)
-      .andWhere('users_roles.resource_type', config.resources.LESSON)
+      .where({
+        resourceId: lessonId,
+        roleId: config.roles.STUDENT.id,
+        resourceType: config.resources.LESSON,
+      })
       .count()
       .first();
   }

@@ -34,6 +34,7 @@ export const EditorWrapper = styled.div`
 
 export const RightCol = styled(Col)`
   height: 100%;
+  width: 100%;
   position: fixed;
   right: 0;
   padding: 2rem;

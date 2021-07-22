@@ -373,17 +373,22 @@ describe('Maintainer flow', () => {
     });
 
     it('should return a lesson with blocks and students count', async () => {
+      await testContext.studentRequest({
+        url: `lesson/enroll/${lessonToGet.lesson.id}`,
+      });
+
       const response = await testContext.request({
         url: `lesson/maintain/${lessonToGet.lesson.id}`,
         method: 'GET',
       });
-
       const payload = JSON.parse(response.payload);
 
       expect(response.statusCode).toBe(200);
       expect(payload).toHaveProperty('lesson');
 
       expect(payload.lesson).toHaveProperty('studentsCount');
+      expect(payload.lesson.studentsCount).toBe(1);
+
       expect(payload.lesson).toHaveProperty('blocks');
       expect(payload.lesson.blocks).toBeInstanceOf(Array);
       // eslint-disable-next-line no-underscore-dangle

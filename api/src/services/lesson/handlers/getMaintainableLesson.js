@@ -52,7 +52,7 @@ export const options = {
   },
 };
 
-export async function handler({ params: { lessonId }, user: { id: userId } }) {
+export async function handler({ params: { lessonId } }) {
   const {
     models: { Lesson, LessonBlockStructure, UserRole },
   } = this;
@@ -66,7 +66,6 @@ export async function handler({ params: { lessonId }, user: { id: userId } }) {
   }
 
   const { count: studentsCount } = await UserRole.getLessonStudentsCount({
-    userId,
     lessonId,
   });
 
