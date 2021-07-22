@@ -1,16 +1,20 @@
-import config from '../../../../config';
-
-import errorResponse from '../../../validation/schemas';
-import errorHandler from '../../../validation/errorHandler';
-
-export const options = {
+export const createLessonOptions = {
   schema: {
-    params: {
+    body: {
       type: 'object',
       properties: {
-        lessonId: { type: 'number' },
+        lesson: {
+          type: 'object',
+          properties: {
+            name: { type: 'string', minLength: 1 },
+            description: { type: ['string', 'null'] },
+            status: { $ref: 'lessonStatus#' },
+          },
+          required: ['name'],
+        },
+        blocks: { type: 'array', default: [] },
       },
-      required: ['lessonId'],
+      required: ['lesson'],
     },
     response: {
       200: {
@@ -31,31 +35,17 @@ export const options = {
           },
         },
       },
-      ...errorResponse,
+      '4xx': { $ref: '4xx#' },
+      '5xx': { $ref: '5xx#' },
     },
   },
-  errorHandler,
   async onRequest(req) {
     await this.auth({ req });
   },
-  async preHandler({ user: { id: userId }, params: { lessonId: resourceId } }) {
+  async preHandler({ user: { id: userId } }) {
     await this.access({
       userId,
-      resourceId,
-      resourceType: config.resources.LESSON,
-      roleId: config.roles.STUDENT.id,
+      roleId: this.config.roles.TEACHER.id,
     });
   },
 };
-
-export async function handler({ params: { lessonId } }) {
-  const {
-    models: { Lesson },
-  } = this;
-
-  const lesson = await Lesson.query()
-    .findById(lessonId)
-    .withGraphFetched('authors');
-
-  return { lesson };
-}

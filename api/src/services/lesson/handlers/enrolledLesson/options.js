@@ -1,17 +1,6 @@
-import config from '../../../../../config';
-
-import errorResponse from '../../../../validation/schemas';
-import errorHandler from '../../../../validation/errorHandler';
-
-export const maintainerLessonByIdOptions = {
+export const enrolledLessonOptions = {
   schema: {
-    params: {
-      type: 'object',
-      properties: {
-        lessonId: { type: 'number' },
-      },
-      required: ['lessonId'],
-    },
+    params: { $ref: 'paramsLessonId#' },
     response: {
       200: {
         type: 'object',
@@ -26,15 +15,15 @@ export const maintainerLessonByIdOptions = {
               createdAt: { type: 'string' },
               updatedAt: { type: 'string' },
               authors: { type: 'array' },
-              blocks: { type: 'array' },
+              blocks: { type: ['array', 'null'] },
             },
           },
         },
       },
-      ...errorResponse,
+      '4xx': { $ref: '4xx#' },
+      '5xx': { $ref: '5xx#' },
     },
   },
-  errorHandler,
   async onRequest(req) {
     await this.auth({ req });
   },
@@ -42,8 +31,8 @@ export const maintainerLessonByIdOptions = {
     await this.access({
       userId,
       resourceId,
-      resourceType: config.resources.LESSON,
-      roleId: config.roles.MAINTAINER.id,
+      resourceType: this.config.resources.LESSON,
+      roleId: this.config.roles.STUDENT.id,
     });
   },
 };

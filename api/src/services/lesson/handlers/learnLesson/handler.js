@@ -1,5 +1,3 @@
-import config from '../../../../../config';
-
 import { BadRequestError } from '../../../../validation/errors';
 
 import { INVALID_LEARN } from '../../constants';
@@ -96,6 +94,7 @@ export async function learnLessonHandler({
   body: { action, blockId, revision, data },
 }) {
   const {
+    config,
     models: { Result, LessonBlockStructure, Block },
   } = this;
   /**

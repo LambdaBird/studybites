@@ -2,7 +2,7 @@ import { NotFoundError } from '../../../../validation/errors';
 
 import { NOT_FOUND } from '../../constants';
 
-export async function maintainerLessonByIdHandler({ params: { lessonId } }) {
+export async function maintainableLessonHandler({ params: { lessonId } }) {
   const {
     models: { Lesson, LessonBlockStructure },
   } = this;

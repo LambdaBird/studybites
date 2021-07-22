@@ -2,9 +2,7 @@ import objection, { raw } from 'objection';
 
 import config from '../../../config';
 
-import errorResponse from '../../validation/schemas';
 import validatorCompiler from '../../validation/validatorCompiler';
-import errorHandler from '../../validation/errorHandler';
 import {
   AuthorizationError,
   BadRequestError,
@@ -46,10 +44,12 @@ export default async function router(instance) {
     url: '/signup',
     schema: {
       body: signupBodyValidator,
-      response: errorResponse,
+      response: {
+        '4xx': { $ref: '4xx#' },
+        '5xx': { $ref: '5xx#' },
+      },
     },
     validatorCompiler,
-    errorHandler,
     handler: async (req, repl) => {
       req.body.password = await hashPassword(req.body.password);
 
@@ -74,10 +74,12 @@ export default async function router(instance) {
     url: '/signin',
     schema: {
       body: signinBodyValidator,
-      response: errorResponse,
+      response: {
+        '4xx': { $ref: '4xx#' },
+        '5xx': { $ref: '5xx#' },
+      },
     },
     validatorCompiler,
-    errorHandler,
     handler: async (req, repl) => {
       const { email, password } = req.body;
 
@@ -108,10 +110,12 @@ export default async function router(instance) {
     url: '/refresh_token',
     schema: {
       body: refreshBodyValidator,
-      response: errorResponse,
+      response: {
+        '4xx': { $ref: '4xx#' },
+        '5xx': { $ref: '5xx#' },
+      },
     },
     validatorCompiler,
-    errorHandler,
     handler: async (req, repl) => {
       const { refreshToken } = req.body;
 
@@ -141,10 +145,12 @@ export default async function router(instance) {
     method: 'GET',
     url: '/self',
     schema: {
-      response: errorResponse,
+      response: {
+        '4xx': { $ref: '4xx#' },
+        '5xx': { $ref: '5xx#' },
+      },
     },
     validatorCompiler,
-    errorHandler,
     async onRequest(req) {
       await instance.auth({ req });
     },
@@ -179,10 +185,12 @@ export default async function router(instance) {
     method: 'GET',
     url: '/',
     schema: {
-      response: errorResponse,
+      response: {
+        '4xx': { $ref: '4xx#' },
+        '5xx': { $ref: '5xx#' },
+      },
     },
     validatorCompiler,
-    errorHandler,
     async onRequest(req) {
       await instance.auth({ req, isAdminOnly: true });
     },
@@ -276,10 +284,12 @@ export default async function router(instance) {
     method: 'GET',
     url: '/:id',
     schema: {
-      response: errorResponse,
+      response: {
+        '4xx': { $ref: '4xx#' },
+        '5xx': { $ref: '5xx#' },
+      },
     },
     validatorCompiler,
-    errorHandler,
     async onRequest(req) {
       await instance.auth({ req, isAdminOnly: true });
     },
@@ -300,10 +310,12 @@ export default async function router(instance) {
     url: '/:id',
     schema: {
       body: patchBodyValidator,
-      response: errorResponse,
+      response: {
+        '4xx': { $ref: '4xx#' },
+        '5xx': { $ref: '5xx#' },
+      },
     },
     validatorCompiler,
-    errorHandler,
     async onRequest(req) {
       await instance.auth({ req, isAdminOnly: true });
     },
@@ -331,10 +343,12 @@ export default async function router(instance) {
     method: 'DELETE',
     url: '/:id',
     schema: {
-      response: errorResponse,
+      response: {
+        '4xx': { $ref: '4xx#' },
+        '5xx': { $ref: '5xx#' },
+      },
     },
     validatorCompiler,
-    errorHandler,
     async onRequest(req) {
       await instance.auth({ req, isAdminOnly: true });
     },
@@ -356,10 +370,12 @@ export default async function router(instance) {
     url: '/appoint_teacher',
     schema: {
       body: roleBodyValidator,
-      response: errorResponse,
+      response: {
+        '4xx': { $ref: '4xx#' },
+        '5xx': { $ref: '5xx#' },
+      },
     },
     validatorCompiler,
-    errorHandler,
     async onRequest(req) {
       await instance.auth({ req, isAdminOnly: true });
     },
@@ -391,10 +407,12 @@ export default async function router(instance) {
     url: '/remove_teacher',
     schema: {
       body: roleBodyValidator,
-      response: errorResponse,
+      response: {
+        '4xx': { $ref: '4xx#' },
+        '5xx': { $ref: '5xx#' },
+      },
     },
     validatorCompiler,
-    errorHandler,
     async onRequest(req) {
       await instance.auth({ req, isAdminOnly: true });
     },

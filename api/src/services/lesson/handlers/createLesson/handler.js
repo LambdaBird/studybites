@@ -1,67 +1,11 @@
 import { v4 } from 'uuid';
 
-import config from '../../../../config';
-
-import errorResponse from '../../../validation/schemas';
-import errorHandler from '../../../validation/errorHandler';
-
-export const options = {
-  schema: {
-    body: {
-      type: 'object',
-      properties: {
-        lesson: {
-          type: 'object',
-          properties: {
-            name: { type: 'string' },
-            description: { type: ['string', 'null'] },
-            status: { type: 'string', enum: config.lessonStatuses },
-          },
-          required: ['name'],
-        },
-        blocks: { type: 'array', default: [] },
-      },
-      required: ['lesson'],
-    },
-    response: {
-      200: {
-        type: 'object',
-        properties: {
-          lesson: {
-            type: 'object',
-            properties: {
-              id: { type: 'number' },
-              name: { type: 'string' },
-              description: { type: ['string', 'null'] },
-              status: { type: 'string' },
-              createdAt: { type: 'string' },
-              updatedAt: { type: 'string' },
-              authors: { type: 'array' },
-              blocks: { type: ['array', 'null'] },
-            },
-          },
-        },
-      },
-      ...errorResponse,
-    },
-  },
-  errorHandler,
-  async onRequest(req) {
-    await this.auth({ req });
-  },
-  async preHandler({ user: { id: userId } }) {
-    await this.access({
-      userId,
-      roleId: config.roles.TEACHER.id,
-    });
-  },
-};
-
-export async function handler({
+export async function createLessonHandler({
   body: { lesson, blocks },
   user: { id: userId },
 }) {
   const {
+    config,
     models: { Lesson, UserRole, Block, LessonBlockStructure },
   } = this;
 

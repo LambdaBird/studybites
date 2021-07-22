@@ -1,75 +1,12 @@
 import { v4 } from 'uuid';
 
-import config from '../../../../config';
-
-import errorResponse from '../../../validation/schemas';
-import errorHandler from '../../../validation/errorHandler';
-
-export const options = {
-  schema: {
-    params: {
-      type: 'object',
-      properties: {
-        lessonId: { type: 'number' },
-      },
-      required: ['lessonId'],
-    },
-    body: {
-      type: 'object',
-      properties: {
-        lesson: {
-          type: 'object',
-          properties: {
-            name: { type: 'string' },
-            description: { type: ['string', 'null'] },
-            status: { type: 'string', enum: config.lessonStatuses },
-          },
-        },
-        blocks: { type: 'array' },
-      },
-    },
-    response: {
-      200: {
-        type: 'object',
-        properties: {
-          lesson: {
-            type: 'object',
-            properties: {
-              id: { type: 'number' },
-              name: { type: 'string' },
-              description: { type: ['string', 'null'] },
-              status: { type: 'string' },
-              createdAt: { type: 'string' },
-              updatedAt: { type: 'string' },
-              authors: { type: 'array' },
-              blocks: { type: ['array', 'null'] },
-            },
-          },
-        },
-      },
-      ...errorResponse,
-    },
-  },
-  errorHandler,
-  async onRequest(req) {
-    await this.auth({ req });
-  },
-  async preHandler({ user: { id: userId }, params: { lessonId: resourceId } }) {
-    await this.access({
-      userId,
-      resourceId,
-      resourceType: config.resources.LESSON,
-      roleId: config.roles.MAINTAINER.id,
-    });
-  },
-};
-
-export async function handler({
+export async function updateLessonHandler({
   body: { lesson = {}, blocks },
   params: { lessonId },
   user: { id: userId },
 }) {
   const {
+    config,
     knex,
     models: { Lesson, UserRole, Block, LessonBlockStructure },
   } = this;

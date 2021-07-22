@@ -1,17 +1,6 @@
-import config from '../../../../../config';
-
-import errorResponse from '../../../../validation/schemas';
-import errorHandler from '../../../../validation/errorHandler';
-
 export const learnLessonOptions = {
   schema: {
-    params: {
-      type: 'object',
-      properties: {
-        lessonId: { type: 'number' },
-      },
-      required: ['lessonId'],
-    },
+    params: { $ref: 'paramsLessonId#' },
     body: {
       type: 'object',
       additionalProperties: false,
@@ -56,10 +45,10 @@ export const learnLessonOptions = {
       },
     },
     response: {
-      ...errorResponse,
+      '4xx': { $ref: '4xx#' },
+      '5xx': { $ref: '5xx#' },
     },
   },
-  errorHandler,
   async onRequest(req) {
     await this.auth({ req });
   },
@@ -67,8 +56,8 @@ export const learnLessonOptions = {
     await this.access({
       userId,
       resourceId,
-      resourceType: config.resources.LESSON,
-      roleId: config.roles.STUDENT.id,
+      resourceType: this.config.resources.LESSON,
+      roleId: this.config.roles.STUDENT.id,
       status: ['Public', 'Draft'],
     });
   },

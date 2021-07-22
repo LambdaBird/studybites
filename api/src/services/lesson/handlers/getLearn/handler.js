@@ -1,58 +1,7 @@
-import config from '../../../../config';
-
-import errorResponse from '../../../validation/schemas';
-import errorHandler from '../../../validation/errorHandler';
-
-export const options = {
-  schema: {
-    params: {
-      type: 'object',
-      properties: {
-        lessonId: { type: 'number' },
-      },
-      required: ['lessonId'],
-    },
-    response: {
-      200: {
-        type: 'object',
-        properties: {
-          total: { type: 'number' },
-          lesson: {
-            type: 'object',
-            properties: {
-              id: { type: 'number' },
-              name: { type: 'string' },
-              description: { type: ['string', 'null'] },
-              status: { type: 'string' },
-              createdAt: { type: 'string' },
-              updatedAt: { type: 'string' },
-              authors: { type: 'array' },
-              blocks: { type: 'array' },
-            },
-          },
-          isFinal: { type: 'boolean' },
-          isFinished: { type: 'boolean' },
-        },
-        required: ['total', 'lesson'],
-      },
-      ...errorResponse,
-    },
-  },
-  errorHandler,
-  async onRequest(req) {
-    await this.auth({ req });
-  },
-  async preHandler({ user: { id: userId }, params: { lessonId: resourceId } }) {
-    await this.access({
-      userId,
-      resourceId,
-      resourceType: config.resources.LESSON,
-      roleId: config.roles.STUDENT.id,
-    });
-  },
-};
-
-export async function handler({ user: { id: userId }, params: { lessonId } }) {
+export async function getLearnHandler({
+  user: { id: userId },
+  params: { lessonId },
+}) {
   const {
     knex,
     models: { Lesson, Result, LessonBlockStructure },

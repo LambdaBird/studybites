@@ -13,6 +13,8 @@ import Result from './models/Result';
 import userService from './services/user';
 import lessonService from './services/lesson';
 
+import errorsAndValidation from './validation';
+
 export const RESOURCE_NOT_FOUND = {
   fallback: 'errors.not_found',
   errors: [
@@ -25,6 +27,8 @@ export const RESOURCE_NOT_FOUND = {
 
 export default (options = {}) => {
   const app = fastify(options);
+
+  app.register(errorsAndValidation);
 
   app.register(fastifyObjection, {
     connection: process.env.DATABASE_URL,
