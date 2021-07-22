@@ -26,7 +26,7 @@ export const options = {
               status: { type: 'string' },
               createdAt: { type: 'string' },
               updatedAt: { type: 'string' },
-              authors: { type: 'array' },
+              maintainers: { type: 'array' },
               blocks: { type: 'array' },
             },
           },
@@ -63,7 +63,7 @@ export async function handler({ user: { id: userId }, params: { lessonId } }) {
   const lesson = await Lesson.query()
     .first()
     .where({ id: lessonId })
-    .withGraphFetched('authors');
+    .withGraphFetched('maintainers');
   /**
    * get last record from the results table
    */
@@ -145,7 +145,7 @@ export async function handler({ user: { id: userId }, params: { lessonId } }) {
     return block;
   });
 
-  if (!isFinal) {
+  if (!lesson.blocks[lesson.blocks.length - 1].isSolved) {
     delete lesson.blocks[lesson.blocks.length - 1].answer;
     delete lesson.blocks[lesson.blocks.length - 1].weight;
   }

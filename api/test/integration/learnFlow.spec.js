@@ -123,7 +123,7 @@ describe('Learning flow', () => {
       expect(payload).toHaveProperty('total');
       expect(payload).toHaveProperty('lesson');
       expect(payload).toHaveProperty('isFinal');
-      expect(payload.lesson).toHaveProperty('authors');
+      expect(payload.lesson).toHaveProperty('maintainers');
       expect(payload.lesson).toHaveProperty('blocks');
       expect(payload.lesson.blocks).toBeInstanceOf(Array);
       expect(payload.lesson.blocks.length).toBe(0);
@@ -268,12 +268,12 @@ describe('Learning flow', () => {
 
       expect(responseBody).toHaveProperty('lesson');
       expect(responseBody.lesson).toHaveProperty('blocks');
-      expect(responseBody.lesson).toHaveProperty('authors');
+      expect(responseBody.lesson).toHaveProperty('maintainers');
 
       expect(responseBody).toHaveProperty('isFinal');
       expect(responseBody.isFinal).toBe(false);
 
-      expect(responseBody.lesson.authors).toBeInstanceOf(Array);
+      expect(responseBody.lesson.maintainers).toBeInstanceOf(Array);
 
       expect(responseBody.lesson.blocks).toBeInstanceOf(Array);
       expect(responseBody.lesson.blocks).toHaveLength(
@@ -327,12 +327,12 @@ describe('Learning flow', () => {
 
       expect(responseBody).toHaveProperty('lesson');
       expect(responseBody.lesson).toHaveProperty('blocks');
-      expect(responseBody.lesson).toHaveProperty('authors');
+      expect(responseBody.lesson).toHaveProperty('maintainers');
 
       expect(responseBody).toHaveProperty('isFinal');
       expect(responseBody.isFinal).toBe(false);
 
-      expect(responseBody.lesson.authors).toBeInstanceOf(Array);
+      expect(responseBody.lesson.maintainers).toBeInstanceOf(Array);
 
       expect(responseBody.lesson.blocks).toBeInstanceOf(Array);
       expect(responseBody.lesson.blocks).toHaveLength(
@@ -442,12 +442,12 @@ describe('Learning flow', () => {
 
       expect(responseBody).toHaveProperty('lesson');
       expect(responseBody.lesson).toHaveProperty('blocks');
-      expect(responseBody.lesson).toHaveProperty('authors');
+      expect(responseBody.lesson).toHaveProperty('maintainers');
 
       expect(responseBody).toHaveProperty('isFinal');
       expect(responseBody.isFinal).toBe(true);
 
-      expect(responseBody.lesson.authors).toBeInstanceOf(Array);
+      expect(responseBody.lesson.maintainers).toBeInstanceOf(Array);
 
       expect(responseBody.lesson.blocks).toBeInstanceOf(Array);
       expect(responseBody.lesson.blocks).toHaveLength(
@@ -514,7 +514,7 @@ describe('Learning flow', () => {
       });
     });
 
-    it('should finish and return none blocks', async () => {
+    it('should finish and return no blocks', async () => {
       const response = await testContext.studentRequest({
         url: `${lessonToFinish.lesson.id}/learn`,
         body: {
@@ -807,7 +807,7 @@ describe('Learning flow', () => {
       expect(payload).toHaveProperty('total');
       expect(payload).toHaveProperty('lessons');
       expect(payload.lessons).toBeInstanceOf(Array);
-      expect(payload.lessons[0]).toHaveProperty('maintainer');
+      expect(payload.lessons[0]).toHaveProperty('maintainers');
     });
   });
 
@@ -1022,7 +1022,7 @@ describe('Learning flow', () => {
         });
       });
 
-      it('should return none blocks on finish', async () => {
+      it('should return no blocks on finish', async () => {
         const response = await testContext.studentRequest({
           url: `${notFinished.lesson.id}/learn`,
           body: {
