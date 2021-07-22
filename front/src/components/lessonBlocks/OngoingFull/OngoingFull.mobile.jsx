@@ -9,7 +9,7 @@ import * as S from './OngoingFull.mobile.styled';
 
 const OngoingFullMobile = ({ lesson }) => {
   const { t } = useTranslation('user');
-  const { name, description, percentage } = lesson;
+  const { name, description /* percentage */ } = lesson;
 
   const { fullName, firstNameLetter, handleContinueLesson } = useLesson(lesson);
 
@@ -17,7 +17,7 @@ const OngoingFullMobile = ({ lesson }) => {
     <S.Main size="large" wrap={false}>
       <div>
         <S.Image src={lessonImage} alt="Lesson" />
-        <S.ProgressBar percent={Math.round(percentage)} />
+        {/* <S.ProgressBar percent={Math.round(percentage)} /> */}
       </div>
       <Row>
         <S.Title

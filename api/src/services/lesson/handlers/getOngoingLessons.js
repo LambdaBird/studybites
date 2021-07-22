@@ -52,7 +52,7 @@ export async function handler({
     offset,
     limit,
     search,
-  }).debug();
+  });
 
   return { total, lessons };
 }

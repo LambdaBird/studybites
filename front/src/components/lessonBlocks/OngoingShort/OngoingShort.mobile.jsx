@@ -13,7 +13,7 @@ const { Title } = Typography;
 const OngoingShortMobile = ({ lesson }) => {
   const { t } = useTranslation('user');
   const history = useHistory();
-  const { name, id, percentage } = lesson;
+  const { name, id /* percentage */ } = lesson;
 
   const handleContinueLesson = () => {
     history.push(LEARN_PAGE.replace(':id', id));
@@ -23,7 +23,7 @@ const OngoingShortMobile = ({ lesson }) => {
     <S.MainSpace>
       <S.LeftColumn span={8}>
         <S.StyledImage src={lessonImg} alt="Lesson" />
-        <S.ProgressBar percent={Math.round(percentage)} />
+        {/* <S.ProgressBar percent={Math.round(percentage)} /> */}
       </S.LeftColumn>
       <S.RightColumn span={16}>
         <Title
