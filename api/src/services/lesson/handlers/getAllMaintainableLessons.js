@@ -18,7 +18,7 @@ export const options = {
         type: 'object',
         properties: {
           total: { type: 'number' },
-          data: { type: 'array' },
+          lessons: { type: 'array' },
         },
       },
       ...errorResponse,
@@ -44,12 +44,12 @@ export async function handler({
     models: { Lesson },
   } = this;
 
-  const { total, results: data } = await Lesson.getAllMaintainableLessons({
+  const { total, results: lessons } = await Lesson.getAllMaintainableLessons({
     userId,
     offset,
     limit,
     search,
   });
 
-  return { total, data };
+  return { total, lessons };
 }

@@ -270,8 +270,8 @@ describe('Enroll to lesson flow', () => {
 
       expect(response.statusCode).toBe(200);
       expect(payload).toHaveProperty('total');
-      expect(payload).toHaveProperty('data');
-      expect(payload.data[0]).toHaveProperty('maintainers');
+      expect(payload).toHaveProperty('lessons');
+      expect(payload.lessons[0]).toHaveProperty('maintainers');
     });
   });
 
@@ -300,7 +300,7 @@ describe('Enroll to lesson flow', () => {
 
       expect(response.statusCode).toBe(200);
       expect(payload).toHaveProperty('total');
-      expect(payload).toHaveProperty('data');
+      expect(payload).toHaveProperty('lessons');
       expect(payload.total).toBe(1);
     });
 
@@ -314,7 +314,7 @@ describe('Enroll to lesson flow', () => {
 
       expect(response.statusCode).toBe(200);
       expect(payload).toHaveProperty('total');
-      expect(payload).toHaveProperty('data');
+      expect(payload).toHaveProperty('lessons');
       expect(payload.total).toBe(0);
     });
   });

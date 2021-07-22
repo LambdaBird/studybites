@@ -18,7 +18,7 @@ export const options = {
         type: 'object',
         properties: {
           total: { type: 'number' },
-          data: { type: 'array' },
+          lessons: { type: 'array' },
         },
       },
       ...errorResponse,
@@ -39,7 +39,7 @@ export async function handler({
     models: { Lesson },
   } = this;
 
-  const { total, results: data } = await Lesson.getAllPublicLessons({
+  const { total, results: lessons } = await Lesson.getAllPublicLessons({
     knex,
     userId,
     offset,
@@ -47,5 +47,5 @@ export async function handler({
     search,
   });
 
-  return { total, data };
+  return { total, lessons };
 }
