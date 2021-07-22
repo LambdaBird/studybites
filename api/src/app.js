@@ -15,16 +15,6 @@ import lessonService from './services/lesson';
 
 import errorsAndValidation from './validation';
 
-export const RESOURCE_NOT_FOUND = {
-  fallback: 'errors.not_found',
-  errors: [
-    {
-      key: 'route.errors.not_found',
-      message: 'Requested resource not found',
-    },
-  ],
-};
-
 export default (options = {}) => {
   const app = fastify(options);
 
@@ -41,10 +31,6 @@ export default (options = {}) => {
 
   app.register(lessonService, {
     prefix: '/api/v1/lesson',
-  });
-
-  app.all('*', async (_, repl) => {
-    return repl.status(404).send(RESOURCE_NOT_FOUND);
   });
 
   return app;
