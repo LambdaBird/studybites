@@ -29,11 +29,12 @@ export const convertBlocksToChunks = (blocks) => {
 export const createChunksFromBlocks = ({
   blocks,
   isFinished,
+  isFinal,
   isPost = false,
 }) => {
   const isEmptyBlocks = blocks.length === 0;
 
-  if (isEmptyBlocks && !isFinished && !isPost) {
+  if (isEmptyBlocks && !isFinished && !isPost && !isFinal) {
     return [[createStartBlock(false)]];
   }
 
@@ -114,11 +115,17 @@ export const useLearnChunks = ({ lessonId }) => {
 
   useEffect(() => {
     if (getData) {
-      const { lesson: newLesson, isFinished, total: newTotal } = getData;
+      const {
+        isFinal,
+        lesson: newLesson,
+        isFinished,
+        total: newTotal,
+      } = getData;
       setChunks(
         createChunksFromBlocks({
           blocks: newLesson?.blocks,
           isFinished,
+          isFinal,
           isPost: false,
         }),
       );

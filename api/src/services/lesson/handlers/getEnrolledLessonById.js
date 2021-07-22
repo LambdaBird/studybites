@@ -1,7 +1,7 @@
-import config from '../../../../config';
-
 import errorResponse from '../../../validation/schemas';
 import errorHandler from '../../../validation/errorHandler';
+import { NotFoundError } from '../../../validation/errors';
+import { NOT_FOUND } from '../constants';
 
 export const options = {
   schema: {
@@ -38,14 +38,14 @@ export const options = {
   async onRequest(req) {
     await this.auth({ req });
   },
-  async preHandler({ user: { id: userId }, params: { lessonId: resourceId } }) {
+  /* async preHandler({ user: { id: userId }, params: { lessonId: resourceId } }) {
     await this.access({
       userId,
       resourceId,
       resourceType: config.resources.LESSON,
       roleId: config.roles.STUDENT.id,
     });
-  },
+  }, */
 };
 
 export async function handler({ params: { lessonId } }) {
@@ -55,7 +55,12 @@ export async function handler({ params: { lessonId } }) {
 
   const lesson = await Lesson.query()
     .findById(lessonId)
+    .where('status', 'Public')
     .withGraphFetched('maintainers');
+
+  if (!lesson) {
+    throw new NotFoundError(NOT_FOUND);
+  }
 
   return { lesson };
 }

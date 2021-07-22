@@ -145,9 +145,10 @@ export async function handler({ user: { id: userId }, params: { lessonId } }) {
     return block;
   });
 
-  if (!lesson.blocks[lesson.blocks.length - 1].isSolved) {
-    delete lesson.blocks[lesson.blocks.length - 1].answer;
-    delete lesson.blocks[lesson.blocks.length - 1].weight;
+  const lastBlock = lesson.blocks[lesson.blocks.length - 1];
+  if (lastBlock && !lastBlock.isSolved) {
+    delete lastBlock.answer;
+    delete lastBlock.weight;
   }
 
   return { total, lesson, isFinal };
