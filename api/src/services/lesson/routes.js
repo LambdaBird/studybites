@@ -49,9 +49,9 @@ import {
 } from './handlers/enrollToLesson';
 
 import {
-  options as optionsGetAllEnrolledLessons,
-  handler as handlerGetAllEnrolledLessons,
-} from './handlers/getAllEnrolledLessons';
+  options as optionsGetOngoingLessons,
+  handler as handlerGetOngoingLessons,
+} from './handlers/getOngoingLessons';
 
 import {
   options as optionsGetFinishedLessons,
@@ -148,8 +148,8 @@ export default async function router(instance) {
    */
   instance.get(
     '/enrolled/',
-    optionsGetAllEnrolledLessons,
-    handlerGetAllEnrolledLessons,
+    optionsGetOngoingLessons,
+    handlerGetOngoingLessons,
   );
 
   /**

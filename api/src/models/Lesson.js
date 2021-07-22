@@ -293,7 +293,14 @@ class Lesson extends objection.Model {
   /**
    * get all lessons user had enrolled to
    */
-  static getAllEnrolledLessons({ knex, userId, offset: start, limit, search }) {
+  static getOngoingLessons({
+    knex,
+    userId,
+    excludeLessons,
+    offset: start,
+    limit,
+    search,
+  }) {
     const end = start + limit - 1;
 
     return this.query()
@@ -315,6 +322,7 @@ class Lesson extends objection.Model {
       .andWhere('learn.role_id', config.roles.STUDENT.id)
       .andWhere('learn.user_id', userId)
       .andWhere('users_roles.resource_type', config.resources.LESSON)
+      .whereNotIn('lessons.id', excludeLessons)
       .andWhere(
         knex.raw(
           `concat(users_data."firstName", ' ', users_data."lastName", ' ', users_data."firstName", ' ', lessons.name)`,
