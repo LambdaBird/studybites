@@ -23,7 +23,8 @@ const PublicDesktop = ({ lesson }) => {
   const { t } = useTranslation('user');
 
   const { name, description, isEnrolled } = lesson;
-  const { author, handleContinueLesson, handleEnroll } = useLesson(lesson);
+  const { fullName, firstNameLetter, handleContinueLesson, handleEnroll } =
+    useLesson(lesson);
 
   return (
     <>
@@ -32,8 +33,8 @@ const PublicDesktop = ({ lesson }) => {
           <div>
             <LessonImg src={lessonImage} alt="Lesson" />
             <AuthorContainer>
-              <AuthorAvatar>{author?.[0]}</AuthorAvatar>
-              <AuthorName>{author}</AuthorName>
+              <AuthorAvatar>{firstNameLetter}</AuthorAvatar>
+              <AuthorName>{fullName}</AuthorName>
             </AuthorContainer>
           </div>
         </LeftContent>

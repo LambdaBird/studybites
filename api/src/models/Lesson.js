@@ -59,7 +59,7 @@ class Lesson extends objection.Model {
         },
       },
 
-      authors: {
+      maintainers: {
         relation: objection.Model.ManyToManyRelation,
         modelClass: path.join(__dirname, 'User'),
         join: {
@@ -136,7 +136,7 @@ class Lesson extends objection.Model {
   }
 
   /**
-   * get all lessons where status = 'Public' with authors,
+   * get all lessons where status = 'Public' with maintainers,
    * search, pagination and total
    */
   static getAllPublicLessons({ knex, userId, offset, limit, search }) {
@@ -150,7 +150,7 @@ class Lesson extends objection.Model {
           /**
            * using cast to set is_enrolled field to true if user is enrolled to this lesson
            *
-           * using json_agg to aggregate authors (users_data) json data to an array of objects
+           * using json_agg to aggregate maintainers (users_data) json data to an array of objects
            */
           knex.raw(`
             (select cast(case when count(*) > 0 then true else false end as bool)
@@ -159,24 +159,25 @@ class Lesson extends objection.Model {
                 and user_id = ${userId}
                 and resource_type = '${config.resources.LESSON}'
                 and resource_id = lessons.id) is_enrolled,
-            json_agg(users_data) authors
+            json_agg(users_data) maintainers
         `),
         )
         .from(
           knex.raw(`
-            (select id, first_name, last_name from users) users_data
+            (select id, first_name as "firstName", last_name as "lastName" from users) users_data
         `),
         )
         .join('users_roles', 'users_roles.user_id', '=', 'users_data.id')
         .join('lessons', 'lessons.id', '=', 'users_roles.resource_id')
         .where('users_roles.role_id', config.roles.MAINTAINER.id)
         .andWhere('users_roles.resource_type', config.resources.LESSON)
+        .andWhere('lessons.status', 'Public')
         /**
          * using concat to concatenate fields to search through
          */
         .andWhere(
           knex.raw(
-            `concat(users_data.first_name, ' ', users_data.last_name, ' ', users_data.first_name, ' ', lessons.name)`,
+            `concat(users_data."firstName", ' ', users_data."lastName", ' ', users_data."firstName", ' ', lessons.name)`,
           ),
           'ilike',
           `%${search ? search.replace(/ /g, '%') : '%'}%`,
@@ -184,6 +185,42 @@ class Lesson extends objection.Model {
         .groupBy('lessons.id')
         .range(start, end)
     );
+  }
+
+  static getAllFinishedLessons({ knex, userId, offset: start, limit, search }) {
+    const end = start + limit - 1;
+
+    return this.query()
+      .select('lessons.*', knex.raw(`json_agg(users_data) maintainers`))
+      .from(
+        knex.raw(`
+        (select id, first_name as "firstName", last_name as "lastName" from users) users_data
+        `),
+      )
+      .join('users_roles', 'users_roles.user_id', '=', 'users_data.id')
+      .join('lessons', 'lessons.id', '=', 'users_roles.resource_id')
+      .join(
+        knex.raw('users_roles learn'),
+        'learn.resource_id',
+        '=',
+        'lessons.id',
+      )
+      .join('results', 'results.lesson_id', '=', 'lessons.id')
+      .where('users_roles.role_id', config.roles.MAINTAINER.id)
+      .andWhere('learn.role_id', config.roles.STUDENT.id)
+      .andWhere('learn.user_id', userId)
+      .andWhere('users_roles.resource_type', config.resources.LESSON)
+      .andWhere('results.action', 'finish')
+      .andWhere('results.user_id', userId)
+      .andWhere(
+        knex.raw(
+          `concat(users_data."firstName", ' ', users_data."lastName", ' ', users_data."firstName", ' ', lessons.name)`,
+        ),
+        'ilike',
+        `%${search ? search.replace(/ /g, '%') : '%'}%`,
+      )
+      .groupBy('lessons.id')
+      .range(start, end);
   }
 
   /**
@@ -256,14 +293,22 @@ class Lesson extends objection.Model {
   /**
    * get all lessons user had enrolled to
    */
-  static getAllEnrolledLessons({ knex, userId, offset: start, limit, search }) {
+  static getOngoingLessons({
+    knex,
+    userId,
+    excludeLessons,
+    offset: start,
+    limit,
+    search,
+  }) {
     const end = start + limit - 1;
 
     return this.query()
-      .select('lessons.*', knex.raw(`json_agg(users_data) maintainer`))
+      .skipUndefined()
+      .select('lessons.*', knex.raw(`json_agg(users_data) maintainers`))
       .from(
         knex.raw(`
-        (select id, first_name, last_name from users) users_data
+        (select id, first_name as "firstName", last_name as "lastName" from users) users_data
         `),
       )
       .join('users_roles', 'users_roles.user_id', '=', 'users_data.id')
@@ -278,9 +323,10 @@ class Lesson extends objection.Model {
       .andWhere('learn.role_id', config.roles.STUDENT.id)
       .andWhere('learn.user_id', userId)
       .andWhere('users_roles.resource_type', config.resources.LESSON)
+      .whereNotIn('lessons.id', excludeLessons || undefined)
       .andWhere(
         knex.raw(
-          `concat(users_data.first_name, ' ', users_data.last_name, ' ', users_data.first_name, ' ', lessons.name)`,
+          `concat(users_data."firstName", ' ', users_data."lastName", ' ', users_data."firstName", ' ', lessons.name)`,
         ),
         'ilike',
         `%${search ? search.replace(/ /g, '%') : '%'}%`,

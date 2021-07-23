@@ -7,7 +7,7 @@ export async function publicLessonsHandler({
     models: { Lesson },
   } = this;
 
-  const { total, results: data } = await Lesson.getAllPublicLessons({
+  const { total, results: lessons } = await Lesson.getAllPublicLessons({
     knex,
     userId,
     offset,
@@ -15,5 +15,5 @@ export async function publicLessonsHandler({
     search,
   });
 
-  return { total, data };
+  return { total, lessons };
 }

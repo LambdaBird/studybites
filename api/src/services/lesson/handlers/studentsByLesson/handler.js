@@ -17,7 +17,7 @@ export async function studentsByLessonHandler({
     columns.firstName = undefined;
   }
 
-  const data = await UserRole.relatedQuery('users')
+  const students = await UserRole.relatedQuery('users')
     .skipUndefined()
     .for(
       UserRole.query().select('user_id').where({
@@ -45,5 +45,5 @@ export async function studentsByLessonHandler({
     .orWhere(columns.firstName, 'ilike', `%${search}%`)
     .count('*');
 
-  return { total: +count[0].count, data };
+  return { total: +count[0].count, students };
 }

@@ -5,7 +5,7 @@ export async function enrolledLessonHandler({ params: { lessonId } }) {
 
   const lesson = await Lesson.query()
     .findById(lessonId)
-    .withGraphFetched('authors');
+    .withGraphFetched('maintainers');
 
   return { lesson };
 }

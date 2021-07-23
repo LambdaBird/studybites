@@ -5,8 +5,8 @@ import { lessonStatus } from '../../../../validation/schemas';
 
 import { updateLessonOptions } from './options';
 
-const NAME_LENGTH = 'must NOT have fewer than 1 characters';
-const STATUS_ENUM = 'must be equal to one of the allowed values';
+const NAME_LENGTH = 'should NOT be shorter than 1 characters';
+const STATUS_ENUM = 'should be equal to one of the allowed values';
 
 describe('Test updateLesson validation', () => {
   const schema = updateLessonOptions.schema.body;

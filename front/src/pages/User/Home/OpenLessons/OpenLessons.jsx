@@ -37,16 +37,16 @@ const OpenLessons = () => {
     { keepPreviousData: true },
   );
 
-  const { data, total } = useMemo(() => responseData || {}, [responseData]);
+  const { lessons, total } = useMemo(() => responseData || {}, [responseData]);
 
   useEffect(() => {
-    if (data?.length === 0 && total !== 0) {
+    if (lessons?.length === 0 && total !== 0) {
       setCurrentPage(1);
       history.replace({
         search: ``,
       });
     }
-  }, [data, history, total]);
+  }, [lessons, history, total]);
 
   useEffect(() => {
     const { incorrect, page } = getQueryPage(queryPage);
@@ -68,7 +68,7 @@ const OpenLessons = () => {
     [history],
   );
 
-  const isEmpty = !isLoading && total === 0 && data?.length === 0;
+  const isEmpty = !isLoading && total === 0 && lessons?.length === 0;
   const isPaginationDisplayed = !isLoading && total > PAGE_SIZE;
   return (
     <S.Wrapper>
@@ -77,7 +77,7 @@ const OpenLessons = () => {
         <S.StyledSearch searchText={searchText} setSearchText={setSearchText} />
       </S.LessonsHeader>
       <S.LessonsRow>
-        <OpenLessonsBlock isLoading={isLoading} error={error} data={data} />
+        <OpenLessonsBlock isLoading={isLoading} error={error} data={lessons} />
         {isEmpty && (
           <S.EmptyContainer
             image={emptyImg}

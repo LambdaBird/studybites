@@ -150,7 +150,7 @@ const LessonEdit = () => {
       const { blocks } = await editorJSref.current.save();
       const params = {
         lesson: {
-          id: lessonId,
+          id: parseInt(lessonId, 10) || undefined,
           name,
           description,
           status: Statuses.DRAFT,

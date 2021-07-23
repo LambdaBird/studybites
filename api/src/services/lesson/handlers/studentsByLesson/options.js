@@ -7,7 +7,7 @@ export const studentsByLessonOptions = {
         type: 'object',
         properties: {
           total: { type: 'number' },
-          data: { type: 'array' },
+          students: { type: 'array' },
         },
       },
       '4xx': { $ref: '4xx#' },

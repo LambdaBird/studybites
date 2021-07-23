@@ -6,7 +6,7 @@ export const maintainableLessonsOptions = {
         type: 'object',
         properties: {
           total: { type: 'number' },
-          data: { type: 'array' },
+          lessons: { type: 'array' },
         },
       },
       '4xx': { $ref: '4xx#' },

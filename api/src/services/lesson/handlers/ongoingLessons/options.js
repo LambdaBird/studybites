@@ -1,4 +1,4 @@
-export const enrolledLessonsOptions = {
+export const ongoingLessonsOptions = {
   schema: {
     querystring: { $ref: 'lessonSearch#' },
     response: {

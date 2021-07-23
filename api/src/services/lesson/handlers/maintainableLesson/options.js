@@ -14,7 +14,7 @@ export const maintainableLessonOptions = {
               status: { type: 'string' },
               createdAt: { type: 'string' },
               updatedAt: { type: 'string' },
-              authors: { type: 'array' },
+              maintainers: { type: 'array' },
               blocks: { type: 'array' },
             },
           },

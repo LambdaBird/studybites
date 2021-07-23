@@ -46,9 +46,9 @@ import {
 } from './handlers/enrollToLesson';
 
 import {
-  enrolledLessonsOptions,
-  enrolledLessonsHandler,
-} from './handlers/enrolledLessons';
+  ongoingLessonsOptions,
+  ongoingLessonsHandler,
+} from './handlers/ongoingLessons';
 
 import {
   finishedLessonsOptions,
@@ -64,13 +64,13 @@ import { learnLessonOptions, learnLessonHandler } from './handlers/learnLesson';
 
 export default async function router(instance) {
   /**
-   * get all lessons where status = 'Public' with authors,
+   * get all lessons where status = 'Public' with maintainers,
    * search, pagination and total
    */
   instance.get('/', publicLessonsOptions, publicLessonsHandler);
 
   /**
-   * get lesson where status = 'Public' by id with authors, isFinal key, blocks
+   * get lesson where status = 'Public' by id with maintainers, isFinal key, blocks
    * and blocks total
    */
   instance.get('/:lessonId', learnOptions, getLearnHandler);
@@ -120,7 +120,7 @@ export default async function router(instance) {
   instance.put('/maintain/:lessonId', updateLessonOptions, updateLessonHandler);
 
   /**
-   * get enrolled lesson with authors by id
+   * get enrolled lesson with maintainers by id
    */
   instance.get(
     '/enroll/:lessonId',
@@ -140,7 +140,7 @@ export default async function router(instance) {
   /**
    * get all lessons user enrolled to
    */
-  instance.get('/enrolled/', enrolledLessonsOptions, enrolledLessonsHandler);
+  instance.get('/enrolled/', ongoingLessonsOptions, ongoingLessonsHandler);
 
   /**
    * get all finished lessons with search and total

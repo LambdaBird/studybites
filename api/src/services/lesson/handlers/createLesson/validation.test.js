@@ -5,11 +5,11 @@ import { lessonStatus } from '../../../../validation/schemas';
 
 import { createLessonOptions } from './options';
 
-const LESSON_REQUIRED = "must have required property 'lesson'";
-const LESSON_TYPE = 'must be object';
-const NAME_REQUIRED = "must have required property 'name'";
-const NAME_LENGTH = 'must NOT have fewer than 1 characters';
-const STATUS_ENUM = 'must be equal to one of the allowed values';
+const LESSON_REQUIRED = "should have required property 'lesson'";
+const LESSON_TYPE = 'should be object';
+const NAME_REQUIRED = "should have required property 'name'";
+const NAME_LENGTH = 'should NOT be shorter than 1 characters';
+const STATUS_ENUM = 'should be equal to one of the allowed values';
 
 describe('Test createLessonSchema validation', () => {
   const schema = createLessonOptions.schema.body;

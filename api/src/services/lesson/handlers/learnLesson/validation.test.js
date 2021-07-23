@@ -4,10 +4,10 @@ import config from '../../../../../config';
 
 import { learnLessonOptions } from './options';
 
-const ACTION_REQUIRED = "must have required property 'action'";
-const BLOCKID_REQUIRED = "must have required property 'blockId'";
-const REVISION_REQUIRED = "must have required property 'revision'";
-const DATA_REQUIRED = "must have required property 'data'";
+const ACTION_REQUIRED = "should have required property '.action'";
+const BLOCKID_REQUIRED = "should have required property '.blockId'";
+const REVISION_REQUIRED = "should have required property '.revision'";
+const DATA_REQUIRED = "should have required property '.data'";
 
 describe('Test learnLesson validation', () => {
   const ajv = new Ajv(config.ajv);
