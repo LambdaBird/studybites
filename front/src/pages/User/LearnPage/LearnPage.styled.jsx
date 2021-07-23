@@ -27,6 +27,7 @@ export const LearnWrapper = styled.div`
   align-items: center;
   gap: 32px;
   margin: 0 auto;
+  max-width: 614px;
 `;
 
 export const Wrapper = styled.div`
@@ -39,6 +40,7 @@ export const BlockCell = styled(Col).attrs(() => ({
   md: { span: 16 },
   lg: { span: 14 },
 }))`
+  padding-bottom: 1rem;
   display: flex;
   justify-content: center;
 `;
@@ -54,7 +56,6 @@ export const ChunkWrapper = styled.div`
   background-color: ${variables['learn-chunk-background']};
   border-radius: 8px;
   padding: 2rem;
-  max-width: 614px;
 
   @media (max-width: 767px) {
     margin-top: ${(props) => (props.isBottom ? 'auto' : '')};
@@ -72,6 +73,5 @@ export const LessonButton = styled(Button).attrs({
     margin-top: auto;
   }
   width: 100%;
-  max-width: 614px;
   margin-bottom: 1rem;
 `;
