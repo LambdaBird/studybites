@@ -389,7 +389,7 @@ export const createMockedLesson = (id) => {
   const { isFinished, blocks } = createMockedBlocks(id);
   return {
     lesson: {
-      authors: [{ id: 3, firstName: 'George', lastName: 'Bakman' }],
+      author: { id: 3, firstName: 'George', lastName: 'Bakman' },
       blocks,
       id,
       description: 'Lorem description test ipsum',
@@ -411,7 +411,7 @@ export const createMockedResponse = (params) => {
     lesson: {
       answer: answer ? { results: answer } : {},
       data: response ? { response } : undefined,
-      authors: [{ id: 3, firstName: 'George', lastName: 'Bakman' }],
+      author: { id: 3, firstName: 'George', lastName: 'Bakman' },
       blocks,
       id: params.id,
       description: 'Lorem description test ipsum',

@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { act,renderHook } from '@testing-library/react-hooks';
+import { act, renderHook } from '@testing-library/react-hooks';
 
 import {
   createNextBlock,
@@ -87,7 +87,7 @@ describe('Test useLesson', () => {
       ],
     ])('with %s', async (_, payload, expected) => {
       const mockedLesson = {
-        authors: [{ id: 1, firstName: 'George', lastName: 'Bakman' }],
+        author: { id: 1, firstName: 'George', lastName: 'Bakman' },
         blocks: [],
         description: '',
         id: payload.id,
@@ -173,7 +173,7 @@ describe('Test useLesson', () => {
       ],
     ])('with %s', async (_, payload, expected) => {
       const mockedLesson = {
-        authors: [{ id: 1, firstName: 'George', lastName: 'Bakman' }],
+        author: { id: 1, firstName: 'George', lastName: 'Bakman' },
         blocks: payload.beforeBlocks,
         description: '',
         id: payload.id,
@@ -266,7 +266,7 @@ describe('Test useLesson', () => {
       ],
     ])('with %s', async (_, payload, expected) => {
       const mockedLesson = {
-        authors: [{ id: 1, firstName: 'George', lastName: 'Bakman' }],
+        author: { id: 1, firstName: 'George', lastName: 'Bakman' },
         blocks: payload.beforeBlocks,
         description: '',
         id: payload.id,
@@ -512,7 +512,7 @@ describe('Test useLesson', () => {
       ],
     ])('with %s', async (_, payload, expected) => {
       const mockedLesson = {
-        authors: [{ id: 1, firstName: 'George', lastName: 'Bakman' }],
+        author: { id: 1, firstName: 'George', lastName: 'Bakman' },
         blocks: payload.blocks,
         description: '',
         id: payload.id,
@@ -724,7 +724,7 @@ describe('Test useLesson', () => {
       ],
     ])('with %s', async (_, payload, expected) => {
       const mockedLesson = {
-        authors: [{ id: 1, firstName: 'George', lastName: 'Bakman' }],
+        author: { id: 1, firstName: 'George', lastName: 'Bakman' },
         blocks: payload.blocks,
         description: '',
         id: payload.id,

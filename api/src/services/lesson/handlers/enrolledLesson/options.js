@@ -34,12 +34,4 @@ export const enrolledLessonOptions = {
   async onRequest(req) {
     await this.auth({ req });
   },
-  async preHandler({ user: { id: userId }, params: { lessonId: resourceId } }) {
-    await this.access({
-      userId,
-      resourceId,
-      resourceType: this.config.resources.LESSON,
-      roleId: this.config.roles.STUDENT.id,
-    });
-  },
 };

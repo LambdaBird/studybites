@@ -46,13 +46,12 @@ const EnrollModalDesktop = () => {
     ],
     getEnrolledLesson,
   );
-  const { name, maintainers, description } = responseData?.lesson || {
-    maintainers: [
+  const { name, author, description } = responseData?.lesson || {
+    author: 
       {
         firstName: '',
         lastName: '',
       },
-    ],
     name: '',
     description: '',
   };
@@ -63,8 +62,6 @@ const EnrollModalDesktop = () => {
     }
   }, [historyReplaceBack, responseData]);
 
-  const { firstName, lastName } = maintainers?.[0];
-  const author = `${firstName} ${lastName}`;
 
   const onClickStartEnroll = useCallback(async () => {
     await postEnroll(id);
@@ -88,7 +85,7 @@ const EnrollModalDesktop = () => {
           <img width="100%" src={lessonImg} alt="" />
           <S.AuthorContainer>
             <S.AuthorAvatar>{author?.[0]}</S.AuthorAvatar>
-            <S.AuthorName>{author}</S.AuthorName>
+            <S.AuthorName>{`${author.firstName} ${author.lastName}`}</S.AuthorName>
           </S.AuthorContainer>
         </Col>
         <S.NameColumn>

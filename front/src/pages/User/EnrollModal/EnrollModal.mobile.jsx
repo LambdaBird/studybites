@@ -66,19 +66,17 @@ const EnrollModalMobile = () => {
     { keepPreviousData: true },
   );
 
-  const { name, authors, description } = responseData?.lesson || {
-    authors: [
+  const { name, author: authorData, description } = responseData?.lesson || {
+    author:
       {
         firstName: '',
         lastName: '',
       },
-    ],
     name: '',
     description: '',
   };
 
-  const { firstName, lastName } = authors?.[0];
-  const author = `${firstName} ${lastName}`;
+  const author = `${authorData.firstName} ${authorData.lastName}`;
 
   const historyReplaceBack = useCallback(() => {
     history.replace({

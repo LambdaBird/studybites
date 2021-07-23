@@ -10,12 +10,10 @@ const { Text } = Typography;
 const InfoBlock = ({ isLoading, lesson, total }) => {
   const { t } = useTranslation('user');
 
-  const authors = useMemo(
-    () =>
-      lesson.authors
-        ?.map((author) => `${author.firstName} ${author.lastName}`)
-        .join(', ') || '',
-    [lesson.authors],
+  const author = useMemo(
+    () => 
+      `${lesson.author?.firstName} ${lesson.author?.lastName}`,
+    [lesson.author],
   );
 
   return (
@@ -34,7 +32,7 @@ const InfoBlock = ({ isLoading, lesson, total }) => {
           </S.TitleEllipsis>
           <S.StyledRow justify="space-between">
             <Text type="secondary">
-              {t('lesson.by')} {authors}
+              {t('lesson.by')} {author}
             </Text>
             <Text type="secondary">
               {total} {t('lesson.blocks')}
@@ -50,12 +48,11 @@ InfoBlock.propTypes = {
   lesson: PropTypes.shape({
     name: PropTypes.string,
 
-    authors: PropTypes.arrayOf(
+    author: 
       PropTypes.shape({
         firstName: PropTypes.string,
         lastName: PropTypes.string,
       }),
-    ),
   }),
   total: PropTypes.number.isRequired,
   isLoading: PropTypes.bool.isRequired,
