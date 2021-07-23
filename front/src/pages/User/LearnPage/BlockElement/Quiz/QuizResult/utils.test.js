@@ -1,4 +1,4 @@
-import { verifyAnswers } from '@sb-ui/pages/User/LessonPage/QuizBlock/utils';
+import { verifyAnswers } from '@sb-ui/pages/User/LearnPage/BlockElement/Quiz/QuizResult/utils';
 
 describe('QuizBlock utils test', () => {
   describe('verifyAnswers2 function test', () => {

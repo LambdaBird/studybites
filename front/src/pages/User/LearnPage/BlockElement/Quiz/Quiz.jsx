@@ -5,7 +5,7 @@ import {
   BlockIdType,
   QuizBlockAnswerType,
   RevisionType,
-} from '@sb-ui/pages/User/LessonPage/BlockElement/types';
+} from '@sb-ui/pages/User/LearnPage/BlockElement/types';
 
 import QuizAnswer from './QuizAnswer';
 import QuizResult from './QuizResult';

@@ -1,14 +1,14 @@
 import { useMemo } from 'react';
 
 import ColumnDisabledCheckbox from '@sb-ui/components/atoms/ColumnDisabledCheckbox';
-import { ChunkWrapper } from '@sb-ui/pages/User/LearnPage/LearnPage.styled';
-import AnswersResult from '@sb-ui/pages/User/LessonPage/BlockElement/QuizBlockResult/AnswerResult';
 import {
   QuizBlockAnswerType,
   QuizBlockDataType,
-} from '@sb-ui/pages/User/LessonPage/BlockElement/types';
-import { verifyAnswers } from '@sb-ui/pages/User/LessonPage/QuizBlock/utils';
+} from '@sb-ui/pages/User/LearnPage/BlockElement/types';
+import { ChunkWrapper } from '@sb-ui/pages/User/LearnPage/LearnPage.styled';
 
+import AnswersResult from './AnswerResult';
+import { verifyAnswers } from './utils';
 import * as S from './QuizResult.styled';
 
 const QuizResult = ({ data, correctAnswer }) => {

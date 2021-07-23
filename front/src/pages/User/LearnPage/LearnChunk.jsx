@@ -1,6 +1,6 @@
 import * as T from 'prop-types';
 
-import BlockElement from '@sb-ui/pages/User/LessonPage/BlockElement';
+import BlockElement from '@sb-ui/pages/User/LearnPage/BlockElement';
 
 import * as S from './LearnPage.styled';
 

@@ -6,7 +6,6 @@ import { LEARN_PAGE } from '@sb-ui/utils/paths';
 export const useLesson = ({ id, maintainers }) => {
   const history = useHistory();
 
-  console.log(maintainers);
   const fullName = useMemo(
     () => `${maintainers?.[0]?.firstName} ${maintainers?.[0]?.lastName}`.trim(),
     [maintainers],

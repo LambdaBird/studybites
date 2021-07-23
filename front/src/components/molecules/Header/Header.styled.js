@@ -3,15 +3,37 @@ import styled from 'styled-components';
 
 const { Text } = Typography;
 
+export const HEADER_HEIGHT = 56;
+
 export const Container = styled.header`
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   background: white;
-  height: 56px;
+  height: ${HEADER_HEIGHT}px;
+  ${(props) =>
+    props.hideOnScroll &&
+    `
+    width: 100%;
+    position: fixed;
+    top: 0;
+    z-index: 2;
+    & + *{
+      margin-top: ${HEADER_HEIGHT}px;
+    }
+  `}
+  ${(props) =>
+    props.scroll === 'down' &&
+    `transform:translateY(-100%); transition: all 0.3s ease-in-out;
+    `}
+  ${(props) =>
+    props.scroll === 'up' &&
+    `
+    transform:translateY(0); transition: all 0.3s ease-in-out;
+  `};
 `;
 
 export const RowMain = styled(Row)`
   padding: 0 2rem;
-  height: 56px;
+  height: ${HEADER_HEIGHT}px;
 `;
 
 export const Logo = styled.img`
