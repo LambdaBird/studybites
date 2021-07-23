@@ -1,5 +1,6 @@
 import objection from 'objection';
 import path from 'path';
+import config from '../../config';
 
 class UserRole extends objection.Model {
   static get tableName() {
@@ -47,6 +48,17 @@ class UserRole extends objection.Model {
         },
       },
     };
+  }
+
+  static getLessonStudentsCount({ lessonId }) {
+    return this.query()
+      .where({
+        resourceId: lessonId,
+        roleId: config.roles.STUDENT.id,
+        resourceType: config.resources.LESSON,
+      })
+      .count()
+      .first();
   }
 }
 

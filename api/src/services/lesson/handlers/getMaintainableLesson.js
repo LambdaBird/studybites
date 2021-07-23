@@ -30,6 +30,7 @@ export const options = {
               updatedAt: { type: 'string' },
               maintainers: { type: 'array' },
               blocks: { type: 'array' },
+              studentsCount: { type: 'number' },
             },
           },
         },
@@ -53,7 +54,7 @@ export const options = {
 
 export async function handler({ params: { lessonId } }) {
   const {
-    models: { Lesson, LessonBlockStructure },
+    models: { Lesson, LessonBlockStructure, UserRole },
   } = this;
 
   const lesson = await Lesson.query()
@@ -63,6 +64,12 @@ export async function handler({ params: { lessonId } }) {
   if (!lesson) {
     throw new NotFoundError(NOT_FOUND);
   }
+
+  const { count: studentsCount } = await UserRole.getLessonStudentsCount({
+    lessonId,
+  });
+
+  lesson.studentsCount = studentsCount;
 
   try {
     const { parent } = await LessonBlockStructure.query()
