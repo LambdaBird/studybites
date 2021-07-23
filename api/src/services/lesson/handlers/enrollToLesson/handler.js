@@ -7,34 +7,16 @@ export async function enrollToLessonHandler({
   params: { lessonId },
 }) {
   const {
-    config,
+    knex,
     models: { Lesson, UserRole },
   } = this;
 
-  const lesson = await Lesson.query()
-    .findById(lessonId)
-    .where({ status: 'Public' })
-    .whereNotExists(
-      UserRole.query().select().where({
-        userId,
-        roleId: config.roles.STUDENT.id,
-        resourceType: config.resources.LESSON,
-        resourceId: lessonId,
-      }),
-    );
-
+  const lesson = await Lesson.checkIfEnrolled({ knex, lessonId, userId });
   if (!lesson) {
     throw new BadRequestError(INVALID_ENROLL);
   }
 
-  await UserRole.query()
-    .insert({
-      userId,
-      roleId: config.roles.STUDENT.id,
-      resourceType: config.resources.LESSON,
-      resourceId: lesson.id,
-    })
-    .returning('*');
+  await UserRole.enrollToLesson({ userId, lessonId });
 
   return ENROLL_SUCCESS;
 }

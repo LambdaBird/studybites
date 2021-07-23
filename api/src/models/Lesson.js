@@ -135,6 +135,19 @@ class Lesson extends objection.Model {
     };
   }
 
+  static checkIfEnrolled({ knex, lessonId, userId }) {
+    return this.query()
+      .findById(lessonId)
+      .where({ status: 'Public' })
+      .whereNotIn(
+        'id',
+        knex.raw(`
+          select resource_id from users_roles 
+          where user_id = ${userId} and role_id = ${config.roles.STUDENT.id}
+        `),
+      );
+  }
+
   /**
    * get all lessons where status = 'Public' with maintainers,
    * search, pagination and total
@@ -187,6 +200,14 @@ class Lesson extends objection.Model {
     );
   }
 
+  static createLesson({ trx, lesson }) {
+    return this.query(trx).insert(lesson).returning('*');
+  }
+
+  static getLessonWithAuthor({ lessonId }) {
+    return this.query().findById(lessonId).withGraphFetched('maintainers');
+  }
+
   static getAllFinishedLessons({ knex, userId, offset: start, limit, search }) {
     const end = start + limit - 1;
 
@@ -230,6 +251,7 @@ class Lesson extends objection.Model {
   static getAllEnrolledStudents({
     knex,
     userId,
+    lessonId = undefined,
     offset: start,
     limit,
     search,
@@ -238,6 +260,7 @@ class Lesson extends objection.Model {
 
     return (
       this.query()
+        .skipUndefined()
         .select(
           'users.id',
           'users.email',
@@ -253,6 +276,7 @@ class Lesson extends objection.Model {
         )
         .join('users', 'users.id', '=', 'students.user_id')
         .where('users_roles.role_id', config.roles.MAINTAINER.id)
+        .andWhere('lessons.id', lessonId)
         .andWhere('users_roles.user_id', userId)
         .andWhere('students.role_id', config.roles.STUDENT.id)
         /**
@@ -268,6 +292,10 @@ class Lesson extends objection.Model {
         .groupBy('users.id')
         .range(start, end)
     );
+  }
+
+  static updateLesson({ trx, lessonId, lesson }) {
+    return this.query(trx).findById(lessonId).patch(lesson).returning('*');
   }
 
   /**

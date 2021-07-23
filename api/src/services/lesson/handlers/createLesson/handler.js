@@ -8,11 +8,11 @@ export async function createLessonHandler({
 
   try {
     const data = await Lesson.transaction(async (trx) => {
-      const lessonData = await Lesson.query(trx).insert(lesson).returning('*');
+      const lessonData = await Lesson.createLesson({ trx, lesson });
       await UserRole.addMaintainer({ trx, userId, resourceId: lessonData.id });
 
       if (blocks.length) {
-        const blocksData = await Block.query(trx).insert(blocks).returning('*');
+        const blocksData = await Block.createBlocks({ trx, blocks });
         await LessonBlockStructure.insertBlocks({
           trx,
           blocks: blocksData,

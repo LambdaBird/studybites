@@ -7,11 +7,7 @@ export async function ongoingLessonsHandler({
     models: { Lesson, Result },
   } = this;
 
-  const { excludeLessons } = await Result.query()
-    .first()
-    .select(knex.raw(`array_agg(lesson_id) as exclude_lessons`))
-    .where({ userId })
-    .andWhere({ action: 'finish' });
+  const { excludeLessons } = await Result.getFinishedLessons({ knex, userId });
 
   const { total, results: lessons } = await Lesson.getOngoingLessons({
     knex,

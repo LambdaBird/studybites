@@ -32,6 +32,17 @@ class UserRole extends objection.Model {
       .returning('*');
   }
 
+  static enrollToLesson({ userId, lessonId }) {
+    return this.query()
+      .insert({
+        userId,
+        roleId: config.roles.STUDENT.id,
+        resourceType: config.resources.LESSON,
+        resourceId: lessonId,
+      })
+      .returning('*');
+  }
+
   static relationMappings() {
     return {
       users: {

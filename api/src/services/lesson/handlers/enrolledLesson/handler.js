@@ -3,9 +3,7 @@ export async function enrolledLessonHandler({ params: { lessonId } }) {
     models: { Lesson },
   } = this;
 
-  const lesson = await Lesson.query()
-    .findById(lessonId)
-    .withGraphFetched('maintainers');
+  const lesson = await Lesson.getLessonWithAuthor({ lessonId });
 
   return { lesson };
 }

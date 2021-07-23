@@ -1,45 +1,26 @@
 import { v4 } from 'uuid';
 
 export async function updateLessonHandler({
-  body: { lesson = {}, blocks },
+  body: { lesson, blocks },
   params: { lessonId },
-  user: { id: userId },
 }) {
   const {
-    config,
     knex,
-    models: { Lesson, UserRole, Block, LessonBlockStructure },
+    models: { Lesson, Block, LessonBlockStructure },
   } = this;
 
   try {
     const data = await Lesson.transaction(async (trx) => {
-      await UserRole.relatedQuery('lessons')
-        .for(
-          UserRole.query().select().where({
-            userId,
-            roleId: config.roles.MAINTAINER.id,
-            resourceId: lessonId,
-          }),
-        )
-        .patch(lesson)
-        .returning('*');
+      let lessonData;
 
-      const lessonData = await Lesson.query().findById(lessonId);
+      if (lesson) {
+        lessonData = await Lesson.updateLesson({ trx, lessonId, lesson });
+      } else {
+        lessonData = await Lesson.query(trx).findById(lessonId);
+      }
 
       if (blocks) {
-        const revisions = await Block.query(trx)
-          .select(
-            knex.raw(
-              `json_object_agg(grouped.block_id, grouped.revisions) as values`,
-            ),
-          )
-          .from(
-            knex.raw(
-              `(select block_id, array_agg(revision) as revisions from blocks group by block_id) as grouped`,
-            ),
-          );
-
-        const { values } = revisions[0];
+        const { values } = await Block.getRevisions({ trx, knex });
 
         const blocksToInsert = [];
 
@@ -60,34 +41,19 @@ export async function updateLessonHandler({
         }
 
         if (blocksToInsert.length) {
-          const blocksData = await Block.query(trx)
-            .insert(blocksToInsert)
-            .returning('*');
-
+          const blocksData = await Block.createBlocks({
+            trx,
+            blocks: blocksToInsert,
+          });
           lessonData.blocks = blocksData;
         }
 
-        const blockStructure = [];
-
-        for (let i = 0, n = blocks.length; i < n; i += 1) {
-          blockStructure.push({
-            id: v4(),
-            lessonId,
-            blockId: blocks[i].blockId,
-          });
-        }
-
-        for (let i = 0, n = blockStructure.length; i < n; i += 1) {
-          blockStructure[i].parentId = !i ? null : blockStructure[i - 1].id;
-          blockStructure[i].childId =
-            i === n - 1 ? null : blockStructure[i + 1].id;
-        }
-
         await LessonBlockStructure.query(trx).delete().where({ lessonId });
-
-        if (blockStructure.length) {
-          await LessonBlockStructure.query(trx).insert(blockStructure);
-        }
+        await LessonBlockStructure.insertBlocks({
+          trx,
+          blocks,
+          lessonId,
+        });
       }
 
       return lessonData;
