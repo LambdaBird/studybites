@@ -1,5 +1,6 @@
 import { Statistic, Typography } from 'antd';
 import { useContext, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import LearnContext from '@sb-ui/contexts/LearnContext';
 import { verifyAnswers } from '@sb-ui/pages/User/LearnPage/BlockElement/Quiz/QuizResult/utils';
@@ -10,6 +11,7 @@ import * as S from './Results.styled';
 const { Text, Title } = Typography;
 
 const Results = () => {
+  const { t } = useTranslation('user');
   const { chunks } = useContext(LearnContext);
 
   const quizBlocks = useMemo(
@@ -40,20 +42,27 @@ const Results = () => {
   return (
     <S.Row>
       <S.Col>
-        <Title level={3}>Results</Title>
-      </S.Col>
-      <S.Col>
-        <Statistic title="Correct answers in the lesson" value={correctQuiz} />
+        <Title level={3}>{t('lesson.results.title')}</Title>
       </S.Col>
       <S.Col>
         <Statistic
-          title="Total questions in the chapter"
+          title={t('lesson.results.correct_answers')}
+          value={correctQuiz}
+        />
+      </S.Col>
+      <S.Col>
+        <Statistic
+          title={t('lesson.results.total_answers')}
           value={quizBlocks.length}
         />
       </S.Col>
       {quizBlocks.length > 0 && (
         <S.Col>
-          <Text strong>{percentCorrect.toFixed()}% correct answers</Text>
+          <Text strong>
+            {t('lesson.results.percentage', {
+              percentage: percentCorrect.toFixed(),
+            })}
+          </Text>
         </S.Col>
       )}
     </S.Row>
