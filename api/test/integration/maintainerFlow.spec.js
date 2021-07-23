@@ -346,6 +346,10 @@ describe('Maintainer flow', () => {
         credentials: anotherTeacherCredentials,
         body: prepareLessonFromSeed(french, '-notMaintainable'),
       });
+
+      await testContext.studentRequest({
+        url: `lesson/enroll/${lessonToGet.lesson.id}`,
+      });
     });
 
     it('should return an error if the user is not a teacher', async () => {
@@ -373,10 +377,6 @@ describe('Maintainer flow', () => {
     });
 
     it('should return a lesson with blocks and students count', async () => {
-      await testContext.studentRequest({
-        url: `lesson/enroll/${lessonToGet.lesson.id}`,
-      });
-
       const response = await testContext.request({
         url: `lesson/maintain/${lessonToGet.lesson.id}`,
         method: 'GET',
@@ -387,6 +387,7 @@ describe('Maintainer flow', () => {
       expect(payload).toHaveProperty('lesson');
 
       expect(payload.lesson).toHaveProperty('studentsCount');
+      expect(typeof payload.lesson.studentsCount).toBe('number');
       expect(payload.lesson.studentsCount).toBe(1);
 
       expect(payload.lesson).toHaveProperty('blocks');
