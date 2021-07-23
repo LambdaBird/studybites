@@ -59,8 +59,8 @@ class Lesson extends objection.Model {
         },
       },
 
-      maintainers: {
-        relation: objection.Model.ManyToManyRelation,
+      author: {
+        relation: objection.Model.HasOneThroughRelation,
         modelClass: path.join(__dirname, 'User'),
         join: {
           from: 'lessons.id',
@@ -149,7 +149,7 @@ class Lesson extends objection.Model {
   }
 
   /**
-   * get all lessons where status = 'Public' with maintainers,
+   * get all lessons where status = 'Public' with author,
    * search, pagination and total
    */
   static getAllPublicLessons({ knex, userId, offset, limit, search }) {
@@ -162,8 +162,6 @@ class Lesson extends objection.Model {
           'lessons.*',
           /**
            * using cast to set is_enrolled field to true if user is enrolled to this lesson
-           *
-           * using json_agg to aggregate maintainers (users_data) json data to an array of objects
            */
           knex.raw(`
             (select cast(case when count(*) > 0 then true else false end as bool)
@@ -172,15 +170,15 @@ class Lesson extends objection.Model {
                 and user_id = ${userId}
                 and resource_type = '${config.resources.LESSON}'
                 and resource_id = lessons.id) is_enrolled,
-            json_agg(users_data) maintainers
+            json_build_object('id', author.id, 'firstName', author."firstName", 'lastName', author."lastName") author
         `),
         )
         .from(
           knex.raw(`
-            (select id, first_name as "firstName", last_name as "lastName" from users) users_data
+            (select id, first_name as "firstName", last_name as "lastName" from users) author
         `),
         )
-        .join('users_roles', 'users_roles.user_id', '=', 'users_data.id')
+        .join('users_roles', 'users_roles.user_id', '=', 'author.id')
         .join('lessons', 'lessons.id', '=', 'users_roles.resource_id')
         .where('users_roles.role_id', config.roles.MAINTAINER.id)
         .andWhere('users_roles.resource_type', config.resources.LESSON)
@@ -190,12 +188,11 @@ class Lesson extends objection.Model {
          */
         .andWhere(
           knex.raw(
-            `concat(users_data."firstName", ' ', users_data."lastName", ' ', users_data."firstName", ' ', lessons.name)`,
+            `concat(author."firstName", ' ', author."lastName", ' ', author."firstName", ' ', lessons.name)`,
           ),
           'ilike',
           `%${search ? search.replace(/ /g, '%') : '%'}%`,
         )
-        .groupBy('lessons.id')
         .range(start, end)
     );
   }
@@ -205,20 +202,25 @@ class Lesson extends objection.Model {
   }
 
   static getLessonWithAuthor({ lessonId }) {
-    return this.query().findById(lessonId).withGraphFetched('maintainers');
+    return this.query().findById(lessonId).withGraphFetched('author');
   }
 
   static getAllFinishedLessons({ knex, userId, offset: start, limit, search }) {
     const end = start + limit - 1;
 
     return this.query()
-      .select('lessons.*', knex.raw(`json_agg(users_data) maintainers`))
+      .select(
+        'lessons.*',
+        knex.raw(`
+          json_build_object('id', author.id, 'firstName', author."firstName", 'lastName', author."lastName") author
+      `),
+      )
       .from(
         knex.raw(`
-        (select id, first_name as "firstName", last_name as "lastName" from users) users_data
+        (select id, first_name as "firstName", last_name as "lastName" from users) author
         `),
       )
-      .join('users_roles', 'users_roles.user_id', '=', 'users_data.id')
+      .join('users_roles', 'users_roles.user_id', '=', 'author.id')
       .join('lessons', 'lessons.id', '=', 'users_roles.resource_id')
       .join(
         knex.raw('users_roles learn'),
@@ -235,12 +237,11 @@ class Lesson extends objection.Model {
       .andWhere('results.user_id', userId)
       .andWhere(
         knex.raw(
-          `concat(users_data."firstName", ' ', users_data."lastName", ' ', users_data."firstName", ' ', lessons.name)`,
+          `concat(author."firstName", ' ', author."lastName", ' ', author."firstName", ' ', lessons.name)`,
         ),
         'ilike',
         `%${search ? search.replace(/ /g, '%') : '%'}%`,
       )
-      .groupBy('lessons.id')
       .range(start, end);
   }
 
@@ -333,13 +334,18 @@ class Lesson extends objection.Model {
 
     return this.query()
       .skipUndefined()
-      .select('lessons.*', knex.raw(`json_agg(users_data) maintainers`))
+      .select(
+        'lessons.*',
+        knex.raw(`
+          json_build_object('id', author.id, 'firstName', author."firstName", 'lastName', author."lastName") author
+      `),
+      )
       .from(
         knex.raw(`
-        (select id, first_name as "firstName", last_name as "lastName" from users) users_data
+        (select id, first_name as "firstName", last_name as "lastName" from users) author
         `),
       )
-      .join('users_roles', 'users_roles.user_id', '=', 'users_data.id')
+      .join('users_roles', 'users_roles.user_id', '=', 'author.id')
       .join('lessons', 'lessons.id', '=', 'users_roles.resource_id')
       .join(
         knex.raw('users_roles learn'),
@@ -354,12 +360,11 @@ class Lesson extends objection.Model {
       .whereNotIn('lessons.id', excludeLessons || undefined)
       .andWhere(
         knex.raw(
-          `concat(users_data."firstName", ' ', users_data."lastName", ' ', users_data."firstName", ' ', lessons.name)`,
+          `concat(author."firstName", ' ', author."lastName", ' ', author."firstName", ' ', lessons.name)`,
         ),
         'ilike',
         `%${search ? search.replace(/ /g, '%') : '%'}%`,
       )
-      .groupBy('lessons.id')
       .range(start, end);
   }
 
