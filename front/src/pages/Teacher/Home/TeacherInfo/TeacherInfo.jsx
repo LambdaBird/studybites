@@ -16,8 +16,7 @@ const { Title, Text } = Typography;
 
 const TeacherInfo = () => {
   const { t } = useTranslation('teacher');
-  const { data: userResponse } = useQuery(USER_BASE_QUERY, getUser);
-  const user = userResponse?.data || {};
+  const { data: user } = useQuery(USER_BASE_QUERY, getUser);
 
   const { data: lessonsResponseData } = useQuery(
     TEACHER_LESSONS_BASE_KEY,

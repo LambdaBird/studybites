@@ -26,16 +26,8 @@ export const getEnrolledLessons = async ({ queryKey }) => {
 };
 
 export const postEnroll = async (id) => {
-  try {
-    const { status, data } = await api.post(`${PATH}/enroll/${id}`, {});
-    return { status, data };
-  } catch (e) {
-    const { status, data } = e.response;
-    return {
-      status,
-      data,
-    };
-  }
+  const { data } = await api.post(`${PATH}/enroll/${id}`, {});
+  return data;
 };
 
 export const getEnrolledLesson = async ({ queryKey }) => {

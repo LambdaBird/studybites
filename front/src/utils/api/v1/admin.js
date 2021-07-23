@@ -19,27 +19,11 @@ export const getUsers = async ({ queryKey }) => {
 };
 
 export const appointTeacher = async (id) => {
-  try {
-    const { status, data } = await api.post(`${PATH}/appoint_teacher`, { id });
-    return { status, data };
-  } catch (e) {
-    const { status, data } = e.response;
-    return {
-      status,
-      data,
-    };
-  }
+  const { data } = await api.post(`${PATH}/appoint_teacher`, { id });
+  return data;
 };
 
 export const removeTeacher = async (id) => {
-  try {
-    const { status, data } = await api.post(`${PATH}/remove_teacher`, { id });
-    return { status, data };
-  } catch (e) {
-    const { status, data } = e.response;
-    return {
-      status,
-      data,
-    };
-  }
+  const { data } = await api.post(`${PATH}/remove_teacher`, { id });
+  return data;
 };

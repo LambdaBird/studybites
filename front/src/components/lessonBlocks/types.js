@@ -1,23 +1,25 @@
 import PropTypes from 'prop-types';
 
+const MaintainersType = PropTypes.arrayOf(
+  PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    firstName: PropTypes.string.isRequired,
+    lastName: PropTypes.string.isRequired,
+  }),
+);
+
 export const LessonType = PropTypes.shape({
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   description: PropTypes.string,
-  percentage: PropTypes.number.isRequired,
-  maintainer: PropTypes.shape({
-    userInfo: PropTypes.shape({
-      firstName: PropTypes.string.isRequired,
-      lastName: PropTypes.string.isRequired,
-    }),
-  }),
+  maintainers: MaintainersType,
+  percentage: PropTypes.number,
 });
 
 export const PublicLessonType = PropTypes.shape({
   id: PropTypes.number.isRequired,
-  isEnrolled: PropTypes.bool.isRequired,
-  firstName: PropTypes.string.isRequired,
-  lastName: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
+  maintainers: MaintainersType,
+  isEnrolled: PropTypes.bool.isRequired,
 });
