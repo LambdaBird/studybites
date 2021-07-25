@@ -42,12 +42,7 @@ const LessonEdit = () => {
   const inputTitle = useRef(null);
 
   const { data: lessonData, isLoading } = useQuery(
-    [
-      TEACHER_LESSON_BASE_KEY,
-      {
-        id: lessonId,
-      },
-    ],
+    [TEACHER_LESSON_BASE_KEY, { id: lessonId }],
     getLesson,
     {
       enabled: isEditLesson,

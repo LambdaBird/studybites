@@ -43,14 +43,13 @@ const PrivateRoutes = () => {
   const isMobile = useContext(MobileContext);
 
   const isLoggedIn = getJWTAccessToken();
-  const { data: userResponse, isLoading: isUserLoading } = useQuery(
+  const { data: user, isLoading: isUserLoading } = useQuery(
     USER_BASE_QUERY,
     getUser,
     {
       enabled: !!isLoggedIn,
     },
   );
-  const user = userResponse?.data;
 
   if (!isLoggedIn) {
     return <Redirect to={paths.SIGN_IN} />;

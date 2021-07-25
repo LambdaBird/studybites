@@ -11,7 +11,7 @@ import {
 } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
@@ -84,6 +84,44 @@ const Home = () => {
     });
   };
 
+  const onSuccessChangeTeacher = useCallback(
+    (changeData) => {
+      const content = t(changeData.key.replace('.', ':'));
+      message.success({
+        content,
+        key: messageKey,
+        duration: 2,
+      });
+    },
+    [t],
+  );
+
+  const onErrorChangeTeacher = useCallback(
+    ({ error, userId, isTeacher }) => {
+      const errorResponseKey = error.response.data?.errors?.[0]?.key;
+      const errorMessage = errorResponseKey ? t(errorResponseKey) : 'Error';
+      const content = t(errorMessage.replace('.', ':'));
+      message.error({
+        content,
+        key: messageKey,
+        duration: 2,
+      });
+      setTeacherRoleState({
+        ...teacherRoleState,
+        [userId]: !!isTeacher,
+      });
+    },
+    [t, teacherRoleState],
+  );
+
+  const { mutate: mutateRemoveTeacher } = useMutation(removeTeacher, {
+    onSuccess: onSuccessChangeTeacher,
+  });
+
+  const { mutate: mutateAppointTeacher } = useMutation(appointTeacher, {
+    onSuccess: onSuccessChangeTeacher,
+  });
+
   const handleTeacherRoleChange = useCallback(
     ({ isTeacher, userId }) =>
       async () => {
@@ -93,35 +131,22 @@ const Home = () => {
         });
 
         message.loading({ content: 'Loading...', key: messageKey });
-
-        const requestFunc = isTeacher ? removeTeacher : appointTeacher;
-        const response = await requestFunc(userId);
-
-        if (response.status === 200) {
-          const successMessage = t(response.data.key);
-
-          message.success({
-            content: successMessage,
-            key: messageKey,
-            duration: 2,
-          });
+        const mutateOptions = {
+          onError: (error) =>
+            onErrorChangeTeacher({ error, userId, isTeacher }),
+        };
+        if (isTeacher) {
+          mutateRemoveTeacher(userId, mutateOptions);
         } else {
-          const errorMessage = response.data?.errors?.[0]?.key
-            ? t(response.data?.errors?.[0]?.key)
-            : 'Error';
-
-          message.error({
-            content: errorMessage,
-            key: messageKey,
-            duration: 2,
-          });
-          setTeacherRoleState({
-            ...teacherRoleState,
-            [userId]: !!isTeacher,
-          });
+          mutateAppointTeacher(userId, mutateOptions);
         }
       },
-    [teacherRoleState, t],
+    [
+      teacherRoleState,
+      mutateRemoveTeacher,
+      onErrorChangeTeacher,
+      mutateAppointTeacher,
+    ],
   );
 
   const columns = useMemo(

@@ -39,8 +39,7 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
   const location = useLocation();
   const isMobile = useMobile();
 
-  const { data: userResponse } = useQuery(USER_BASE_QUERY, getUser);
-  const user = userResponse?.data || {};
+  const { data: user } = useQuery(USER_BASE_QUERY, getUser);
   const headerRef = useRef(null);
   const [scroll, setScroll] = useState(null);
 
