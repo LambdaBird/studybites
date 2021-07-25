@@ -2,8 +2,8 @@ import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import LearnContext from '@sb-ui/contexts/LearnContext';
-import * as S from '@sb-ui/pages/User/LessonPage/LessonPage.styled';
-import { NEXT_TYPE } from '@sb-ui/pages/User/LessonPage/utils';
+import * as S from '@sb-ui/pages/User/LearnPage/LearnPage.styled';
+import { NEXT_TYPE } from '@sb-ui/pages/User/LearnPage/utils';
 
 import { NextPropType } from '../types';
 

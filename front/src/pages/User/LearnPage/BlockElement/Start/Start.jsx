@@ -2,9 +2,9 @@ import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import LearnContext from '@sb-ui/contexts/LearnContext';
-import { NextPropType } from '@sb-ui/pages/User/LessonPage/BlockElement/types';
-import * as S from '@sb-ui/pages/User/LessonPage/LessonPage.styled';
-import { START_TYPE } from '@sb-ui/pages/User/LessonPage/utils';
+import { NextPropType } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
+import * as S from '@sb-ui/pages/User/LearnPage/LearnPage.styled';
+import { START_TYPE } from '@sb-ui/pages/User/LearnPage/utils';
 
 const Start = ({ isSolved }) => {
   const { handleInteractiveClick, id } = useContext(LearnContext);

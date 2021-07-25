@@ -3,12 +3,12 @@ import { useContext, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import LearnContext from '@sb-ui/contexts/LearnContext';
-import { ChunkWrapper } from '@sb-ui/pages/User/LearnPage/LearnPage.styled';
 import {
   BlockIdType,
   RevisionType,
-} from '@sb-ui/pages/User/LessonPage/BlockElement/types';
-import { RESPONSE_TYPE } from '@sb-ui/pages/User/LessonPage/utils';
+} from '@sb-ui/pages/User/LearnPage/BlockElement/types';
+import { ChunkWrapper } from '@sb-ui/pages/User/LearnPage/LearnPage.styled';
+import { RESPONSE_TYPE } from '@sb-ui/pages/User/LearnPage/utils';
 
 import * as S from './QuizAnswer.styled';
 

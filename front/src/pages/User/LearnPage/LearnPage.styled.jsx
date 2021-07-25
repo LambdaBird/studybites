@@ -1,14 +1,7 @@
-import { Col, Progress as AntdProgress, Row as AntdRow } from 'antd';
+import { Button, Col, Progress as AntdProgress, Row as AntdRow } from 'antd';
 import styled, { createGlobalStyle } from 'styled-components';
 
-import MainHeader from '@sb-ui/components/molecules/Header';
 import variables from '@sb-ui/theme/variables';
-
-export const Header = styled(MainHeader)`
-  position: sticky;
-  top: 0;
-  z-index: 1;
-`;
 
 export const Progress = styled(AntdProgress).attrs({
   trailColor: variables['progress-trail-color'],
@@ -70,4 +63,15 @@ export const ChunkWrapper = styled.div`
   p:last-child {
     margin-bottom: 0;
   }
+`;
+
+export const LessonButton = styled(Button).attrs({
+  size: 'large',
+})`
+  @media (max-width: 767px) {
+    margin-top: auto;
+  }
+  width: 100%;
+  max-width: 614px;
+  margin-bottom: 1rem;
 `;

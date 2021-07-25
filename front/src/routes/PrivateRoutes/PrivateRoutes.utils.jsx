@@ -6,7 +6,6 @@ import {
   EnrollModalDesktop,
   EnrollModalMobile,
   LearnPage,
-  LessonPage,
   UserHome,
   UserLessons,
 } from '@sb-ui/pages/User';
@@ -31,7 +30,6 @@ export const getPrivateRoutes = ({ isMobile }) => [
     permissions: [Roles.SUPER_ADMIN],
     exact: true,
   },
-  { component: LessonPage, path: paths.LESSON_PAGE, exact: true },
   { component: LearnPage, path: paths.LEARN_PAGE, exact: true },
   {
     component: UserLessons,
