@@ -35,5 +35,5 @@ export const postSignIn = async (formData) => {
 export const getUser = async () => {
   const { data } = await api.get(`${PATH}/self`);
 
-  return data || {};
+  return data;
 };

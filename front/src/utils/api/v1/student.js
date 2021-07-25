@@ -26,7 +26,7 @@ export const getEnrolledLessons = async ({ queryKey }) => {
 };
 
 export const postEnroll = async (id) => {
-  const { data } = await api.post(`${PATH}/enroll/${id}`, {});
+  const { data } = await api.post(`${PATH}/enroll/${id}`);
   return data;
 };
 
