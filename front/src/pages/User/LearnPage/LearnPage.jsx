@@ -27,6 +27,7 @@ const LearnPage = () => {
             <LearnContext.Provider
               value={{
                 handleInteractiveClick,
+                chunks,
                 id: lessonId,
               }}
             >
