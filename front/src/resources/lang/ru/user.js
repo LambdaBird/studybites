@@ -47,5 +47,6 @@ export default {
     send: 'Отправить',
     finish: 'Закончить',
     finished: 'Урок закончен',
+    back: 'Назад',
   },
 };

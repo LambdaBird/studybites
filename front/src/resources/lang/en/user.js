@@ -47,5 +47,6 @@ export default {
     send: 'Send',
     finish: 'Finish',
     finished: 'Lesson is finished',
+    back: 'Go back',
   },
 };
