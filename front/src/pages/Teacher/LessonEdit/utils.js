@@ -1,13 +1,13 @@
 import Table from 'editorjs-table';
 import hash from 'object-hash';
 import Delimiter from '@editorjs/delimiter';
-import Embed from '@editorjs/embed';
 import HeaderTool from '@editorjs/header';
 import List from '@editorjs/list';
 import Marker from '@editorjs/marker';
 import Quote from '@editorjs/quote';
 import SimpleImage from '@editorjs/simple-image';
 
+import Embed from '@sb-ui/utils/editorjs/embed-plugin';
 import Next from '@sb-ui/utils/editorjs/next-plugin';
 import Quiz from '@sb-ui/utils/editorjs/quiz-plugin';
 

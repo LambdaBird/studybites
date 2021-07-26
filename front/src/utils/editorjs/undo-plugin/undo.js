@@ -25,7 +25,6 @@ export default class Undo {
     };
 
     const { configuration } = editor;
-
     this.editor = editor;
     this.shouldSaveHistory = true;
     this.readOnly = configuration.readOnly;
