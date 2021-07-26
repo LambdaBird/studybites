@@ -198,7 +198,7 @@ describe('Enroll to lesson flow', () => {
   });
 
   describe('Get enrolled lessons', () => {
-    it('should return lessons with maintainers', async () => {
+    it('should return lessons with author', async () => {
       const response = await testContext.request({
         method: 'GET',
         url: 'lesson/enrolled/',
@@ -209,8 +209,11 @@ describe('Enroll to lesson flow', () => {
       expect(response.statusCode).toBe(200);
       expect(payload).toHaveProperty('total');
       expect(payload).toHaveProperty('lessons');
-      expect(payload.lessons[0]).toHaveProperty('maintainers');
-      expect(payload.lessons[0].maintainers).toBeInstanceOf(Array);
+      expect(payload.lessons[0]).toHaveProperty('author');
+      expect(payload.lessons[0].author).toBeInstanceOf(Object);
+      expect(payload.lessons[0].author).toHaveProperty('id');
+      expect(payload.lessons[0].author).toHaveProperty('firstName');
+      expect(payload.lessons[0].author).toHaveProperty('lastName');
     });
   });
 
@@ -240,7 +243,11 @@ describe('Enroll to lesson flow', () => {
       expect(response.statusCode).toBe(200);
       expect(payload).toHaveProperty('total');
       expect(payload).toHaveProperty('lessons');
-      expect(payload.lessons[0]).toHaveProperty('maintainers');
+      expect(payload.lessons[0]).toHaveProperty('author');
+      expect(payload.lessons[0].author).toBeInstanceOf(Object);
+      expect(payload.lessons[0].author).toHaveProperty('id');
+      expect(payload.lessons[0].author).toHaveProperty('firstName');
+      expect(payload.lessons[0].author).toHaveProperty('lastName');
       expect(payload.total).toBe(1);
     });
 
@@ -260,7 +267,7 @@ describe('Enroll to lesson flow', () => {
   });
 
   describe('Get public lessons', () => {
-    it('should return lessons with maintainers', async () => {
+    it('should return lessons with author', async () => {
       const response = await testContext.request({
         method: 'GET',
         url: 'lesson',
@@ -271,7 +278,11 @@ describe('Enroll to lesson flow', () => {
       expect(response.statusCode).toBe(200);
       expect(payload).toHaveProperty('total');
       expect(payload).toHaveProperty('lessons');
-      expect(payload.lessons[0]).toHaveProperty('maintainers');
+      expect(payload.lessons[0]).toHaveProperty('author');
+      expect(payload.lessons[0].author).toBeInstanceOf(Object);
+      expect(payload.lessons[0].author).toHaveProperty('id');
+      expect(payload.lessons[0].author).toHaveProperty('firstName');
+      expect(payload.lessons[0].author).toHaveProperty('lastName');
     });
   });
 
@@ -347,7 +358,7 @@ describe('Enroll to lesson flow', () => {
       expect(payload.lesson).toBeInstanceOf(Object);
     });
 
-    it('should return a lesson with an array of maintainers', async () => {
+    it('should return a lesson with an array of author', async () => {
       const response = await testContext.request({
         method: 'GET',
         url: `lesson/enroll/${lessonToGet.lesson.id}`,
@@ -355,27 +366,11 @@ describe('Enroll to lesson flow', () => {
 
       const payload = JSON.parse(response.payload);
 
-      expect(payload.lesson).toHaveProperty('maintainers');
-      expect(payload.lesson.maintainers).toBeInstanceOf(Array);
-    });
-
-    it('maintainers should be an array of objects', async () => {
-      const response = await testContext.request({
-        method: 'GET',
-        url: `lesson/enroll/${lessonToGet.lesson.id}`,
-      });
-
-      const payload = JSON.parse(response.payload);
-
-      expect(payload.lesson.maintainers).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            id: expect.any(Number),
-            firstName: expect.any(String),
-            lastName: expect.any(String),
-          }),
-        ]),
-      );
+      expect(payload.lesson).toHaveProperty('author');
+      expect(payload.lesson.author).toBeInstanceOf(Object);
+      expect(payload.lesson.author).toHaveProperty('id');
+      expect(payload.lesson.author).toHaveProperty('firstName');
+      expect(payload.lesson.author).toHaveProperty('lastName');
     });
   });
 });

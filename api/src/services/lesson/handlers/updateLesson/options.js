@@ -28,7 +28,14 @@ export const updateLessonOptions = {
               status: { type: 'string' },
               createdAt: { type: 'string' },
               updatedAt: { type: 'string' },
-              maintainers: { type: 'array' },
+              author: {
+                type: 'object',
+                properties: {
+                  id: { type: 'number' },
+                  firstName: { type: 'string' },
+                  lastName: { type: 'string' },
+                },
+              },
               blocks: { type: ['array', 'null'] },
             },
           },

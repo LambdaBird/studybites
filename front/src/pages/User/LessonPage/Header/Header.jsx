@@ -34,12 +34,11 @@ Header.propTypes = {
   isLoading: PropTypes.bool,
   lesson: PropTypes.shape({
     name: PropTypes.string,
-    authors: PropTypes.arrayOf(
+    author:
       PropTypes.shape({
         firstName: PropTypes.string,
         lastName: PropTypes.string,
       }),
-    ),
   }),
 };
 

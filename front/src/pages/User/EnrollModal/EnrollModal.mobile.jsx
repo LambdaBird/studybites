@@ -1,5 +1,5 @@
 import { Comment, List, Rate, Row, Typography } from 'antd';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useHistory, useParams } from 'react-router-dom';
@@ -66,19 +66,25 @@ const EnrollModalMobile = () => {
     { keepPreviousData: true },
   );
 
-  const { name, authors, description } = responseData?.lesson || {
-    authors: [
+  const { name, author, description } = responseData?.lesson || {
+    author:
       {
         firstName: '',
         lastName: '',
       },
-    ],
     name: '',
     description: '',
   };
 
-  const { firstName, lastName } = authors?.[0];
-  const author = `${firstName} ${lastName}`;
+  const fullName = useMemo(
+    () => `${author.firstName} ${author.lastName}`.trim(),
+    [author],
+  );
+
+  const firstNameLetter = useMemo(
+    () => author.firstName[0] || author.lastName[0],
+    [author],
+  );
 
   const historyReplaceBack = useCallback(() => {
     history.replace({
@@ -102,8 +108,8 @@ const EnrollModalMobile = () => {
       <S.ImageBlock>
         <S.Image src={lessonImage} alt="Lesson" />
         <S.AuthorContainer>
-          <S.AuthorAvatar>{author?.[0]}</S.AuthorAvatar>
-          <S.AuthorName>{author}</S.AuthorName>
+          <S.AuthorAvatar>{firstNameLetter}</S.AuthorAvatar>
+          <S.AuthorName>{fullName}</S.AuthorName>
         </S.AuthorContainer>
       </S.ImageBlock>
       <Row>

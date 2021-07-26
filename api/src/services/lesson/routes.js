@@ -64,13 +64,13 @@ import { learnLessonOptions, learnLessonHandler } from './handlers/learnLesson';
 
 export default async function router(instance) {
   /**
-   * get all lessons where status = 'Public' with maintainers,
+   * get all lessons where status = 'Public' with author,
    * search, pagination and total
    */
   instance.get('/', publicLessonsOptions, publicLessonsHandler);
 
   /**
-   * get lesson where status = 'Public' by id with maintainers, isFinal key, blocks
+   * get lesson where status = 'Public' by id with author, isFinal key, blocks
    * and blocks total
    */
   instance.get('/:lessonId', learnOptions, getLearnHandler);
@@ -120,7 +120,7 @@ export default async function router(instance) {
   instance.put('/maintain/:lessonId', updateLessonOptions, updateLessonHandler);
 
   /**
-   * get enrolled lesson with maintainers by id
+   * get enrolled lesson with author by id
    */
   instance.get(
     '/enroll/:lessonId',

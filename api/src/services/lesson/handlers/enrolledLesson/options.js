@@ -14,7 +14,14 @@ export const enrolledLessonOptions = {
               status: { type: 'string' },
               createdAt: { type: 'string' },
               updatedAt: { type: 'string' },
-              maintainers: { type: 'array' },
+              author: {
+                type: 'object',
+                properties: {
+                  id: { type: 'number' },
+                  firstName: { type: 'string' },
+                  lastName: { type: 'string' },
+                },
+              },
               blocks: { type: ['array', 'null'] },
             },
           },
@@ -26,13 +33,5 @@ export const enrolledLessonOptions = {
   },
   async onRequest(req) {
     await this.auth({ req });
-  },
-  async preHandler({ user: { id: userId }, params: { lessonId: resourceId } }) {
-    await this.access({
-      userId,
-      resourceId,
-      resourceType: this.config.resources.LESSON,
-      roleId: this.config.roles.STUDENT.id,
-    });
   },
 };
