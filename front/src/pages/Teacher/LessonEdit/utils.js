@@ -1,13 +1,13 @@
 import Table from 'editorjs-table';
 import hash from 'object-hash';
 import Delimiter from '@editorjs/delimiter';
-import Embed from '@editorjs/embed';
 import HeaderTool from '@editorjs/header';
 import List from '@editorjs/list';
 import Marker from '@editorjs/marker';
 import Quote from '@editorjs/quote';
 import SimpleImage from '@editorjs/simple-image';
 
+import Embed from '@sb-ui/utils/editorjs/embed-plugin';
 import Next from '@sb-ui/utils/editorjs/next-plugin';
 import Quiz from '@sb-ui/utils/editorjs/quiz-plugin';
 
@@ -71,7 +71,7 @@ export const getConfig = (t) => ({
       config: {
         placeholder: t('editor_js.header.placeholder'),
         levels: [1, 2, 3, 4, 5],
-        defaultLevel: 3,
+        defaultLevel: 2,
       },
     },
     list: {

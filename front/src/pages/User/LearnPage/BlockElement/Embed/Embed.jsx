@@ -2,14 +2,22 @@ import { Col, Row, Typography } from 'antd';
 
 import { EmbedContentType } from '../types';
 
+import * as S from './Embed.styled';
+
 const { Text } = Typography;
 
 const Embed = ({ content }) => {
   const { caption, embed, height } = content.data;
   return (
-    <Row>
+    <Row gutter={[0, 16]}>
       <Col span={24}>
-        <embed height={height} width="100%" title={caption} src={embed} />
+        <S.StyledIframe
+          height={height}
+          width="100%"
+          title={caption}
+          src={embed}
+          allowFullScreen
+        />
       </Col>
       {caption && (
         <Col span={24}>
