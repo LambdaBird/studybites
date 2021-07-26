@@ -9,7 +9,13 @@ const Embed = ({ content }) => {
   return (
     <Row>
       <Col span={24}>
-        <embed height={height} width="100%" title={caption} src={embed} />
+        <iframe
+          height={height}
+          width="100%"
+          title={caption}
+          src={embed}
+          allowFullScreen
+        />
       </Col>
       {caption && (
         <Col span={24}>
