@@ -24,7 +24,7 @@ export async function getLearnHandler({
   /**
    * get lesson
    */
-  const lesson = await Lesson.getLessonWithAuthor({ lessonId });
+  const lesson = await Lesson.getLessonWithProgress({ knex, lessonId });
   /**
    * get last record from the results table
    */

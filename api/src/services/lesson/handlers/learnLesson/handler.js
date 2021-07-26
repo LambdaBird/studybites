@@ -139,10 +139,10 @@ export async function learnLessonHandler({
    */
   if (action === 'finish') {
     const blocks = [];
-    const { count: total } = await LessonBlockStructure.countBlocks({
+    const { count } = await LessonBlockStructure.countBlocks({
       lessonId,
     });
-    return { total, blocks, isFinished: true };
+    return { total: +count, blocks, isFinished: true };
   }
   /**
    * else get the next chunk of blocks

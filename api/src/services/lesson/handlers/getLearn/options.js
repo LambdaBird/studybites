@@ -23,6 +23,8 @@ export const learnOptions = {
                   lastName: { type: 'string' },
                 },
               },
+              interactiveTotal: { type: 'number' },
+              interactivePassed: { type: 'number' },
               blocks: { type: 'array' },
             },
           },

@@ -205,6 +205,22 @@ class Lesson extends objection.Model {
     return this.query().findById(lessonId).withGraphFetched('author');
   }
 
+  static getLessonWithProgress({ knex, lessonId }) {
+    return this.query()
+      .select(
+        'lessons.*',
+        knex.raw(`
+          (select count(*) from results where lesson_id = lessons.id and action in ('next', 'response')) interactive_passed
+        `),
+        knex.raw(`
+          (select count(*) from lesson_block_structure join blocks on blocks.block_id = lesson_block_structure.block_id
+          where blocks.type in ('next', 'quiz') and lesson_block_structure.lesson_id = lessons.id) interactive_total
+        `),
+      )
+      .findById(lessonId)
+      .withGraphFetched('author');
+  }
+
   static getAllFinishedLessons({ knex, userId, offset: start, limit, search }) {
     const end = start + limit - 1;
 
@@ -338,24 +354,31 @@ class Lesson extends objection.Model {
         'lessons.*',
         knex.raw(`
           json_build_object('id', author.id, 'firstName', author."firstName", 'lastName', author."lastName") author
-      `),
+        `),
+        knex.raw(`
+          (select count(*) from results where lesson_id = lessons.id and action in ('next', 'response')) interactive_passed
+        `),
+        knex.raw(`
+          (select count(*) from lesson_block_structure join blocks on blocks.block_id = lesson_block_structure.block_id
+          where blocks.type in ('next', 'quiz') and lesson_block_structure.lesson_id = lessons.id) interactive_total
+        `),
       )
       .from(
         knex.raw(`
-        (select id, first_name as "firstName", last_name as "lastName" from users) author
+          (select id, first_name as "firstName", last_name as "lastName" from users) author
         `),
       )
       .join('users_roles', 'users_roles.user_id', '=', 'author.id')
       .join('lessons', 'lessons.id', '=', 'users_roles.resource_id')
       .join(
-        knex.raw('users_roles learn'),
-        'learn.resource_id',
+        knex.raw('users_roles enrolled'),
+        'enrolled.resource_id',
         '=',
         'lessons.id',
       )
       .where('users_roles.role_id', config.roles.MAINTAINER.id)
-      .andWhere('learn.role_id', config.roles.STUDENT.id)
-      .andWhere('learn.user_id', userId)
+      .andWhere('enrolled.role_id', config.roles.STUDENT.id)
+      .andWhere('enrolled.user_id', userId)
       .andWhere('users_roles.resource_type', config.resources.LESSON)
       .whereNotIn('lessons.id', excludeLessons || undefined)
       .andWhere(
