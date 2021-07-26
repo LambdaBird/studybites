@@ -1,4 +1,5 @@
 import { Button, Col, Row, Typography } from 'antd';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 
@@ -20,11 +21,15 @@ const OngoingShortDesktop = ({ lesson }) => {
     history.push(LEARN_PAGE.replace(':id', id));
   };
 
+  const countPercentage = useMemo(() =>
+    Math.round((interactivePassed / interactiveTotal) * 100), 
+  [interactivePassed, interactiveTotal]);
+
   return (
     <S.MainSpace>
       <S.LeftColumn span={8}>
         <img height={100} src={lessonImg} alt="Lesson" />
-        <S.ProgressBar percent={Math.round((interactivePassed / interactiveTotal) * 100)} />
+        <S.ProgressBar percent={countPercentage} />
       </S.LeftColumn>
       <S.RightColumn span={16}>
         <Title
