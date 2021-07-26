@@ -9,16 +9,16 @@ class Block extends objection.Model {
     return this.query(trx).insert(blocks).returning('*');
   }
 
-  static getRevisions({ trx, knex }) {
+  static getRevisions({ trx }) {
     return this.query(trx)
       .first()
       .select(
-        knex.raw(
+        this.knex().raw(
           `json_object_agg(grouped.block_id, grouped.revisions) as values`,
         ),
       )
       .from(
-        knex.raw(
+        this.knex().raw(
           `(select block_id, array_agg(revision) as revisions from blocks group by block_id) as grouped`,
         ),
       );

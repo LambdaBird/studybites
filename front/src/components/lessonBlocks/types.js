@@ -12,6 +12,7 @@ export const LessonType = PropTypes.shape({
   description: PropTypes.string,
   author: AuthorType,
   percentage: PropTypes.number,
+  isFinished: PropTypes.bool,
 });
 
 export const PublicLessonType = PropTypes.shape({
@@ -21,5 +22,3 @@ export const PublicLessonType = PropTypes.shape({
   author: AuthorType,
   isEnrolled: PropTypes.bool.isRequired,
 });
-
-export const IsFinishedType = PropTypes.bool.isRequired;

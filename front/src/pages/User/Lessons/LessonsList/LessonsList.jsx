@@ -10,7 +10,7 @@ import { PAGE_SIZE } from './constants';
 import { LessonsListPropTypes } from './types';
 import * as S from './LessonsList.styled';
 
-const LessonsList = ({ title, notFound, query, isFinished = false }) => {
+const LessonsList = ({ title, notFound, query }) => {
   const { key: queryKey, func: queryFunc } = query;
   const [currentPage, setCurrentPage] = useState(1);
   const [searchText, setSearchText] = useState(null);
@@ -44,7 +44,7 @@ const LessonsList = ({ title, notFound, query, isFinished = false }) => {
             ))
           : lessons?.map((lesson) => (
               <S.LessonCol key={lesson.id}>
-                <OngoingFullLesson lesson={lesson} isFinished={isFinished} />
+                <OngoingFullLesson lesson={lesson} />
               </S.LessonCol>
             ))}
         {!isLoading && total === 0 && lessons?.length === 0 && (

@@ -107,8 +107,9 @@ export const useLearnChunks = ({ lessonId }) => {
   const onSuccess = useCallback(
     (data) => {
       setChunks((prevChunks) => handleAnswer({ data, prevChunks }));
+      setPassedBlocks(passedBlocks + 1);
     },
-    [setChunks],
+    [setChunks, passedBlocks],
   );
 
   const { mutate: handleInteractiveClick } = useMutation(postLessonById, {
@@ -143,13 +144,8 @@ export const useLearnChunks = ({ lessonId }) => {
     );
   }, [passedBlocks, lesson]);
 
-  const increaseLearnProgress = () => {
-    setPassedBlocks(passedBlocks + 1);
-  };
-
   return {
     handleInteractiveClick,
-    increaseLearnProgress,
     chunks,
     total,
     lesson,

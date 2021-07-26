@@ -8,7 +8,7 @@ import { NEXT_TYPE } from '@sb-ui/pages/User/LearnPage/utils';
 import { NextPropType } from '../types';
 
 const Next = ({ blockId, revision, isSolved }) => {
-  const { handleInteractiveClick, increaseLearnProgress, id } = useContext(LearnContext);
+  const { handleInteractiveClick, id } = useContext(LearnContext);
   const { t } = useTranslation();
   if (isSolved) {
     return null;
@@ -26,7 +26,6 @@ const Next = ({ blockId, revision, isSolved }) => {
             isSolved: true,
           },
         });
-        increaseLearnProgress();
       }}
     >
       {t('user:lesson.next')}

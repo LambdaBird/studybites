@@ -12,8 +12,14 @@ import * as S from './LearnPage.styled';
 
 const LearnPage = () => {
   const { id: lessonId } = useParams();
-  const { handleInteractiveClick, increaseLearnProgress, chunks, isLoading, lesson, total, learnProgress } =
-    useLearnChunks({ lessonId });
+  const {
+    handleInteractiveClick,
+    chunks,
+    isLoading,
+    lesson,
+    total,
+    learnProgress,
+  } = useLearnChunks({ lessonId });
 
   return (
     <>
@@ -25,7 +31,6 @@ const LearnPage = () => {
             <LearnContext.Provider
               value={{
                 handleInteractiveClick,
-                increaseLearnProgress,
                 chunks,
                 id: lessonId,
               }}

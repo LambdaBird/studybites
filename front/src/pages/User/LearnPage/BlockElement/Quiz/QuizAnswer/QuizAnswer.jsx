@@ -14,7 +14,7 @@ import * as S from './QuizAnswer.styled';
 
 const QuizAnswer = ({ blockId, revision, question, answers }) => {
   const { t } = useTranslation('user');
-  const { handleInteractiveClick, increaseLearnProgress, id } = useContext(LearnContext);
+  const { handleInteractiveClick, id } = useContext(LearnContext);
   const [quizCheckbox, setQuizCheckbox] = useState([]);
 
   const options = answers?.map(({ value, correct }, i) => ({
@@ -45,7 +45,6 @@ const QuizAnswer = ({ blockId, revision, question, answers }) => {
                 revision,
                 data: { response: sendAnswers },
               });
-              increaseLearnProgress();
             }}
           >
             {t('lesson.send')}

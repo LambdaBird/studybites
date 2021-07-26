@@ -7,11 +7,10 @@ export async function enrollToLessonHandler({
   params: { lessonId },
 }) {
   const {
-    knex,
     models: { Lesson, UserRole },
   } = this;
 
-  const lesson = await Lesson.checkIfEnrolled({ knex, lessonId, userId });
+  const lesson = await Lesson.checkIfEnrolled({ lessonId, userId });
   if (!lesson) {
     throw new BadRequestError(INVALID_ENROLL);
   }

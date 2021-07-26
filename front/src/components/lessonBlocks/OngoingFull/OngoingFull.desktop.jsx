@@ -2,24 +2,24 @@ import { Button, Row } from 'antd';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { IsFinishedType, LessonType } from '@sb-ui/components/lessonBlocks/types';
+import { LessonType } from '@sb-ui/components/lessonBlocks/types';
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
 
 import { useLesson } from './useLesson';
 import * as S from './OngoingFull.desktop.styled';
 
-const OngoingFullDesktop = ({ lesson, isFinished }) => {
+const OngoingFullDesktop = ({ lesson }) => {
   const { t } = useTranslation('user');
   const { name, description, interactiveTotal, interactivePassed } = lesson;
 
   const { fullName, firstNameLetter, handleContinueLesson } = useLesson(lesson);
 
   const countPercentage = useMemo(() => {
-    if (isFinished) {
-      return 100
+    if (lesson.isFinished) {
+      return 100;
     }
-    return Math.round((interactivePassed / interactiveTotal) * 100)
-  }, [isFinished, interactivePassed, interactiveTotal]);
+    return Math.round((interactivePassed / interactiveTotal) * 100);
+  }, [lesson, interactivePassed, interactiveTotal]);
 
   return (
     <>
@@ -68,7 +68,6 @@ const OngoingFullDesktop = ({ lesson, isFinished }) => {
 
 OngoingFullDesktop.propTypes = {
   lesson: LessonType.isRequired,
-  isFinished: IsFinishedType,
 };
 
 export default OngoingFullDesktop;

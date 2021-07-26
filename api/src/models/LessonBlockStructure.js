@@ -63,15 +63,15 @@ class LessonBlockStructure extends objection.Model {
         },
         modify: (query) => {
           return query
-            .select('b.*')
+            .select('blocks.*')
             .from(
               objection.raw(
-                `(select block_id, MAX(created_at) as created_at from blocks group by block_id) as blocks`,
+                `(select block_id, MAX(created_at) as created_at from blocks group by block_id) latest_revisions`,
               ),
             )
             .join(
               objection.raw(
-                `blocks as b on b.block_id = blocks.block_id and b.created_at = blocks.created_at`,
+                `blocks as blocks on blocks.block_id = latest_revisions.block_id and blocks.created_at = latest_revisions.created_at`,
               ),
             );
         },
