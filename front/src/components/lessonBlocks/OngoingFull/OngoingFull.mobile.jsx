@@ -1,23 +1,31 @@
 import { Row } from 'antd';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { LessonType } from '@sb-ui/components/lessonBlocks/types';
+import { IsFinishedType, LessonType } from '@sb-ui/components/lessonBlocks/types';
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
 
 import { useLesson } from './useLesson';
 import * as S from './OngoingFull.mobile.styled';
 
-const OngoingFullMobile = ({ lesson }) => {
+const OngoingFullMobile = ({ lesson, isFinished }) => {
   const { t } = useTranslation('user');
-  const { name, description /* percentage */ } = lesson;
+  const { name, description, interactiveTotal, interactivePassed } = lesson;
 
   const { fullName, firstNameLetter, handleContinueLesson } = useLesson(lesson);
+
+  const countPercentage = useMemo(() => {
+    if (isFinished) {
+      return 100
+    }
+    return Math.round((interactivePassed / interactiveTotal) * 100)
+  }, [isFinished, interactivePassed, interactiveTotal]);
 
   return (
     <S.Main size="large" wrap={false}>
       <div>
         <S.Image src={lessonImage} alt="Lesson" />
-        {/* <S.ProgressBar percent={Math.round(percentage)} /> */}
+        <S.ProgressBar percent={countPercentage()} />
       </div>
       <Row>
         <S.Title
@@ -54,6 +62,7 @@ const OngoingFullMobile = ({ lesson }) => {
 
 OngoingFullMobile.propTypes = {
   lesson: LessonType.isRequired,
+  isFinished: IsFinishedType,
 };
 
 export default OngoingFullMobile;

@@ -12,14 +12,12 @@ import * as S from './LearnPage.styled';
 
 const LearnPage = () => {
   const { id: lessonId } = useParams();
-  /* const learnProgress = 50; */
-  const { handleInteractiveClick, chunks, isLoading, lesson, total } =
+  const { handleInteractiveClick, increaseLearnProgress, chunks, isLoading, lesson, total, learnProgress } =
     useLearnChunks({ lessonId });
 
   return (
     <>
-      {/* <S.Header bottom={<S.Progress percent={leanProgress} />} /> */}
-      <Header hideOnScroll />
+      <Header hideOnScroll bottom={<S.Progress percent={learnProgress} />} />
       <S.Wrapper>
         <S.GlobalStylesLearnPage />
         <S.Row>
@@ -27,6 +25,7 @@ const LearnPage = () => {
             <LearnContext.Provider
               value={{
                 handleInteractiveClick,
+                increaseLearnProgress,
                 chunks,
                 id: lessonId,
               }}

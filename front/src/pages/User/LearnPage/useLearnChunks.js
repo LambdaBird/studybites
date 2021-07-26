@@ -91,6 +91,8 @@ export const useLearnChunks = ({ lessonId }) => {
   const [chunks, setChunks] = useState([]);
   const [total, setTotal] = useState(0);
   const [lesson, setLesson] = useState({});
+  const [learnProgress, setLearnProgress] = useState(0);
+  const [passedBlocks, setPassedBlocks] = useState(0);
 
   const { data: getData, isLoading } = useQuery(
     [
@@ -131,14 +133,27 @@ export const useLearnChunks = ({ lessonId }) => {
       );
       setTotal(newTotal);
       setLesson(newLesson);
+      setPassedBlocks(newLesson.interactivePassed);
     }
   }, [getData]);
 
+  useEffect(() => {
+    setLearnProgress(
+      Math.round((passedBlocks / lesson.interactiveTotal) * 100),
+    );
+  }, [passedBlocks, lesson]);
+
+  const increaseLearnProgress = () => {
+    setPassedBlocks(passedBlocks + 1);
+  };
+
   return {
     handleInteractiveClick,
+    increaseLearnProgress,
     chunks,
     total,
     lesson,
     isLoading,
+    learnProgress,
   };
 };

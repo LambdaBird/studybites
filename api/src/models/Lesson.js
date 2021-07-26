@@ -229,7 +229,14 @@ class Lesson extends objection.Model {
         'lessons.*',
         knex.raw(`
           json_build_object('id', author.id, 'firstName', author."firstName", 'lastName', author."lastName") author
-      `),
+        `),
+        knex.raw(`
+          (select count(*) from results where lesson_id = lessons.id and action in ('next', 'response')) interactive_passed
+        `),
+        knex.raw(`
+          (select count(*) from lesson_block_structure join blocks on blocks.block_id = lesson_block_structure.block_id
+          where blocks.type in ('next', 'quiz') and lesson_block_structure.lesson_id = lessons.id) interactive_total
+        `),
       )
       .from(
         knex.raw(`

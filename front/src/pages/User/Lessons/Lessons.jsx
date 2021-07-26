@@ -32,6 +32,7 @@ const Lessons = () => {
           key: USER_ENROLLED_LESSONS_FINISHED_BASE_KEY,
           func: getEnrolledLessonsFinished,
         }}
+        isFinished
       />
     </S.MainDiv>
   );

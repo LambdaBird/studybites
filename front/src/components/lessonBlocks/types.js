@@ -21,3 +21,5 @@ export const PublicLessonType = PropTypes.shape({
   author: AuthorType,
   isEnrolled: PropTypes.bool.isRequired,
 });
+
+export const IsFinishedType = PropTypes.bool.isRequired;

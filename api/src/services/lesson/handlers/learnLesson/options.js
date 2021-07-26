@@ -22,6 +22,9 @@ export const learnLessonOptions = {
               required: ['answers'],
             },
             {
+              required: ['response'],
+            },
+            {
               required: ['isSolved'],
             },
           ],
