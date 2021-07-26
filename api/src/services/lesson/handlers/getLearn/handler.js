@@ -34,7 +34,10 @@ export async function getLearnHandler({
    */
   if (!lastResult) {
     lesson.blocks = [];
-    return { total: 0, lesson, isFinal: false };
+    const { count: total } = await LessonBlockStructure.countBlocks({
+      lessonId,
+    });
+    return { total, lesson, isFinal: false };
   }
   /**
    * get results for interactive blocks
