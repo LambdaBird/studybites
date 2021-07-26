@@ -71,7 +71,7 @@ export const getConfig = (t) => ({
       config: {
         placeholder: t('editor_js.header.placeholder'),
         levels: [1, 2, 3, 4, 5],
-        defaultLevel: 3,
+        defaultLevel: 2,
       },
     },
     list: {

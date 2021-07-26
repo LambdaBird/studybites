@@ -9,6 +9,7 @@ import EditorJS from '@editorjs/editorjs';
 
 import Header from '@sb-ui/components/molecules/Header';
 import { Statuses } from '@sb-ui/pages/Teacher/Home/LessonsDashboard/constants';
+import { queryClient } from '@sb-ui/query';
 import {
   createLesson,
   getLesson,
@@ -80,6 +81,10 @@ const LessonEdit = () => {
         }
         undoPluginRef.current.initialize(editorToRender);
       }
+      queryClient.invalidateQueries([
+        TEACHER_LESSON_BASE_KEY,
+        { id: lessonId },
+      ]);
       message.success({
         content: t('editor_js.message.success_updated'),
         duration: 2,

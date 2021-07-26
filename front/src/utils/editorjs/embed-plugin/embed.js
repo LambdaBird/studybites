@@ -13,8 +13,8 @@ export default class Embed {
 
   static get toolbox() {
     return {
-      title: 'Embed',
-      icon: '<svg width="17" height="15" viewBox="0 0 640 512" xmlns="http://www.w3.org/2000/svg"><path d="M278.9 511.5l-61-17.7c-6.4-1.8-10-8.5-8.2-14.9L346.2 8.7c1.8-6.4 8.5-10 14.9-8.2l61 17.7c6.4 1.8 10 8.5 8.2 14.9L293.8 503.3c-1.9 6.4-8.5 10.1-14.9 8.2zm-114-112.2l43.5-46.4c4.6-4.9 4.3-12.7-.8-17.2L117 256l90.6-79.7c5.1-4.5 5.5-12.3.8-17.2l-43.5-46.4c-4.5-4.8-12.1-5.1-17-.5L3.8 247.2c-5.1 4.7-5.1 12.8 0 17.5l144.1 135.1c4.9 4.6 12.5 4.4 17-.5zm327.2.6l144.1-135.1c5.1-4.7 5.1-12.8 0-17.5L492.1 112.1c-4.8-4.5-12.4-4.3-17 .5L431.6 159c-4.6 4.9-4.3 12.7.8 17.2L523 256l-90.6 79.7c-5.1 4.5-5.5 12.3-.8 17.2l43.5 46.4c4.5 4.9 12.1 5.1 17 .6z"/></svg>',
+      title: 'Video',
+      icon: '<svg viewBox="64 64 896 896" focusable="false" data-icon="youtube" width="1.5em" height="1.5em" fill="currentColor" aria-hidden="true"><path d="M960 509.2c0-2.2 0-4.7-.1-7.6-.1-8.1-.3-17.2-.5-26.9-.8-27.9-2.2-55.7-4.4-81.9-3-36.1-7.4-66.2-13.4-88.8a139.52 139.52 0 00-98.3-98.5c-28.3-7.6-83.7-12.3-161.7-15.2-37.1-1.4-76.8-2.3-116.5-2.8-13.9-.2-26.8-.3-38.4-.4h-29.4c-11.6.1-24.5.2-38.4.4-39.7.5-79.4 1.4-116.5 2.8-78 3-133.5 7.7-161.7 15.2A139.35 139.35 0 0082.4 304C76.3 326.6 72 356.7 69 392.8c-2.2 26.2-3.6 54-4.4 81.9-.3 9.7-.4 18.8-.5 26.9 0 2.9-.1 5.4-.1 7.6v5.6c0 2.2 0 4.7.1 7.6.1 8.1.3 17.2.5 26.9.8 27.9 2.2 55.7 4.4 81.9 3 36.1 7.4 66.2 13.4 88.8 12.8 47.9 50.4 85.7 98.3 98.5 28.2 7.6 83.7 12.3 161.7 15.2 37.1 1.4 76.8 2.3 116.5 2.8 13.9.2 26.8.3 38.4.4h29.4c11.6-.1 24.5-.2 38.4-.4 39.7-.5 79.4-1.4 116.5-2.8 78-3 133.5-7.7 161.7-15.2 47.9-12.8 85.5-50.5 98.3-98.5 6.1-22.6 10.4-52.7 13.4-88.8 2.2-26.2 3.6-54 4.4-81.9.3-9.7.4-18.8.5-26.9 0-2.9.1-5.4.1-7.6v-5.6zm-72 5.2c0 2.1 0 4.4-.1 7.1-.1 7.8-.3 16.4-.5 25.7-.7 26.6-2.1 53.2-4.2 77.9-2.7 32.2-6.5 58.6-11.2 76.3-6.2 23.1-24.4 41.4-47.4 47.5-21 5.6-73.9 10.1-145.8 12.8-36.4 1.4-75.6 2.3-114.7 2.8-13.7.2-26.4.3-37.8.3h-28.6l-37.8-.3c-39.1-.5-78.2-1.4-114.7-2.8-71.9-2.8-124.9-7.2-145.8-12.8-23-6.2-41.2-24.4-47.4-47.5-4.7-17.7-8.5-44.1-11.2-76.3-2.1-24.7-3.4-51.3-4.2-77.9-.3-9.3-.4-18-.5-25.7 0-2.7-.1-5.1-.1-7.1v-4.8c0-2.1 0-4.4.1-7.1.1-7.8.3-16.4.5-25.7.7-26.6 2.1-53.2 4.2-77.9 2.7-32.2 6.5-58.6 11.2-76.3 6.2-23.1 24.4-41.4 47.4-47.5 21-5.6 73.9-10.1 145.8-12.8 36.4-1.4 75.6-2.3 114.7-2.8 13.7-.2 26.4-.3 37.8-.3h28.6l37.8.3c39.1.5 78.2 1.4 114.7 2.8 71.9 2.8 124.9 7.2 145.8 12.8 23 6.2 41.2 24.4 47.4 47.5 4.7 17.7 8.5 44.1 11.2 76.3 2.1 24.7 3.4 51.3 4.2 77.9.3 9.3.4 18 .5 25.7 0 2.7.1 5.1.1 7.1v4.8zM423 646l232-135-232-133z"></path></svg>',
     };
   }
 
@@ -45,6 +45,7 @@ export default class Embed {
       id = (ids) => ids.shift(),
     } = SERVICES?.[service] || {};
     const result = regex?.exec(url)?.slice(1);
+    this.isValid = !!result;
     if (result) {
       const embed = embedUrl.replace(/<%= remote_id %>/g, id(result));
       this.data = {
@@ -60,11 +61,14 @@ export default class Embed {
       this.content.firstChild.onload = () => {
         this.content.classList.add(this.CSS.videoLoaded);
       };
+      this.inputCaption.style.display = 'flex';
 
       this.content.firstChild.setAttribute('src', embed);
     } else {
       this.content.innerHTML = '';
+      this.content.style.height = 0;
       this.data = {};
+      this.inputCaption.style.display = 'none';
     }
   }
 
@@ -83,7 +87,7 @@ export default class Embed {
 
     const inputUrl = this.createInput({
       name: 'url',
-      placeholder: 'Input url',
+      placeholder: 'Input video url',
       classList: [this.CSS.input, this.CSS.urlInput],
     });
     inputUrl.addEventListener('input', this.inputUrlChange.bind(this));
@@ -94,9 +98,12 @@ export default class Embed {
 
     const inputCaption = this.createInput({
       name: 'caption',
-      placeholder: 'Input caption',
+      placeholder: 'Input video caption',
       classList: [this.CSS.input],
     });
+    this.inputCaption = inputCaption;
+
+    inputCaption.style.display = 'none';
 
     if (this.data.inputUrl) {
       inputUrl.value = this.data.inputUrl ?? '';
@@ -112,6 +119,9 @@ export default class Embed {
   }
 
   save() {
+    if (!this.elements.url?.value || !this.isValid) {
+      return null;
+    }
     return {
       ...this.data,
       inputUrl: this.elements.url?.value,

@@ -1,9 +1,7 @@
-.embed-tool__content{
-    height: 350px;
-    background-color: grey;
-    margin: 1rem 0;
+.embed-tool__content {
+  margin: 1rem 0;
 }
 
-.embed-tool__video-loaded{
-    background: none;
+.embed-tool__video-loaded {
+  background: none;
 }
