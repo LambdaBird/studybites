@@ -1,7 +1,7 @@
 import { Col, Divider, Modal, Rate, Typography } from 'antd';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 
 import lessonImg from '@sb-ui/resources/img/lesson.svg';
@@ -38,24 +38,21 @@ const EnrollModalDesktop = () => {
   }, [history, id]);
 
   const { data: responseData } = useQuery(
-    [
-      USER_LESSON_MODAL_BASE_KEY,
-      {
-        id,
-      },
-    ],
+    [USER_LESSON_MODAL_BASE_KEY, { id }],
     getEnrolledLesson,
-  );
+    );
+    
+  const { mutate: mutatePostEnroll } = useMutation(postEnroll);
 
- const { name, author, description } = responseData?.lesson || {
+  const { name, author, description } = responseData?.lesson || {
     author:
       {
         firstName: '',
         lastName: '',
       },
-    name: '',
-    description: '',
-  };
+      name: '',
+      description: '',
+    };
 
   const fullName = useMemo(
     () => `${author.firstName} ${author.lastName}`.trim(),
@@ -75,9 +72,10 @@ const EnrollModalDesktop = () => {
 
 
   const onClickStartEnroll = useCallback(async () => {
-    await postEnroll(id);
-    historyPushLesson();
-  }, [id, historyPushLesson]);
+    mutatePostEnroll(id, {
+      onSuccess: historyPushLesson,
+    });
+  }, [mutatePostEnroll, id, historyPushLesson]);
 
   return (
     <Modal

@@ -1,7 +1,7 @@
 import { Comment, List, Rate, Row, Typography } from 'antd';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { DescriptionText } from '@sb-ui/components/lessonBlocks/Public/Public.desktop.styled';
@@ -56,16 +56,13 @@ const EnrollModalMobile = () => {
   }, [history, id]);
 
   const { data: responseData } = useQuery(
-    [
-      USER_LESSON_MODAL_BASE_KEY,
-      {
-        id,
-      },
-    ],
+    [USER_LESSON_MODAL_BASE_KEY, { id }],
     getEnrolledLesson,
     { keepPreviousData: true },
   );
-
+  
+  const { mutate: mutatePostEnroll } = useMutation(postEnroll);
+  
   const { name, author, description } = responseData?.lesson || {
     author:
       {
@@ -98,10 +95,11 @@ const EnrollModalMobile = () => {
     }
   }, [historyReplaceBack, responseData]);
 
-  const onClickStartEnroll = async () => {
-    await postEnroll(id);
-    historyPushLesson();
-  };
+  const onClickStartEnroll = useCallback(async () => {
+    mutatePostEnroll(id, {
+      onSuccess: historyPushLesson,
+    });
+  }, [historyPushLesson, id, mutatePostEnroll]);
 
   return (
     <S.Main>

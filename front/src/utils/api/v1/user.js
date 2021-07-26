@@ -33,18 +33,7 @@ export const postSignIn = async (formData) => {
 };
 
 export const getUser = async () => {
-  try {
-    const { status, data } = await api.get(`${PATH}/self`);
+  const { data } = await api.get(`${PATH}/self`);
 
-    return {
-      status,
-      data,
-    };
-  } catch (e) {
-    const { status, data } = e.response;
-    return {
-      status,
-      data,
-    };
-  }
+  return data;
 };

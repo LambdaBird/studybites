@@ -346,6 +346,10 @@ describe('Maintainer flow', () => {
         credentials: anotherTeacherCredentials,
         body: prepareLessonFromSeed(french, '-notMaintainable'),
       });
+
+      await testContext.studentRequest({
+        url: `lesson/enroll/${lessonToGet.lesson.id}`,
+      });
     });
 
     it('should return an error if the user is not a teacher', async () => {
@@ -372,16 +376,20 @@ describe('Maintainer flow', () => {
       expect(payload.errors[0]).toMatchObject(UNAUTHORIZED);
     });
 
-    it('should return a lesson with blocks', async () => {
+    it('should return a lesson with blocks and students count', async () => {
       const response = await testContext.request({
         url: `lesson/maintain/${lessonToGet.lesson.id}`,
         method: 'GET',
       });
-
       const payload = JSON.parse(response.payload);
 
       expect(response.statusCode).toBe(200);
       expect(payload).toHaveProperty('lesson');
+
+      expect(payload.lesson).toHaveProperty('studentsCount');
+      expect(typeof payload.lesson.studentsCount).toBe('number');
+      expect(payload.lesson.studentsCount).toBe(1);
+
       expect(payload.lesson).toHaveProperty('blocks');
       expect(payload.lesson.blocks).toBeInstanceOf(Array);
       // eslint-disable-next-line no-underscore-dangle

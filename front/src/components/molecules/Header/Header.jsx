@@ -1,5 +1,5 @@
 import { Col, Dropdown, Menu } from 'antd';
-import { useMemo } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { Link, useHistory, useLocation } from 'react-router-dom';
@@ -20,22 +20,28 @@ import {
   USER_LESSONS,
 } from '@sb-ui/utils/paths';
 import { USER_BASE_QUERY } from '@sb-ui/utils/queries';
-import { ChildrenType, ClassNameType } from '@sb-ui/utils/types';
+import {
+  ChildrenType,
+  ClassNameType,
+  HideOnScrollType,
+} from '@sb-ui/utils/types';
 
 import * as S from './Header.styled';
+import { HEADER_HEIGHT } from './Header.styled';
 
 const { SubMenu } = Menu;
 
 const USER_LOGO_FALLBACK = 'X';
 
-const Header = ({ className, bottom, children }) => {
+const Header = ({ className, hideOnScroll, bottom, children }) => {
   const history = useHistory();
   const { t, i18n } = useTranslation(['common', 'user']);
   const location = useLocation();
   const isMobile = useMobile();
 
-  const { data: userResponse } = useQuery(USER_BASE_QUERY, getUser);
-  const user = userResponse?.data || {};
+  const { data: user } = useQuery(USER_BASE_QUERY, getUser);
+  const headerRef = useRef(null);
+  const [scroll, setScroll] = useState(null);
 
   const handleSignOut = () => {
     clearJWT();
@@ -106,9 +112,41 @@ const Header = ({ className, bottom, children }) => {
     [user?.firstName, user?.lastName, isUsername],
   );
 
+  useEffect(() => {
+    if (hideOnScroll !== true || !headerRef) {
+      return () => {};
+    }
+
+    let lastScrollTop = 0;
+    const listener = () => {
+      const scrollTop = window.scrollY;
+
+      if (scrollTop < lastScrollTop) {
+        setScroll('up');
+      } else if (scrollTop > HEADER_HEIGHT) {
+        setScroll('down');
+      }
+      lastScrollTop = scrollTop;
+    };
+
+    window.addEventListener('scroll', listener);
+    return () => {
+      window.removeEventListener('scroll', listener);
+    };
+  }, [headerRef, hideOnScroll]);
+
   return (
-    <S.Container className={className}>
-      <S.RowMain align="middle" justify="space-between">
+    <S.Container
+      className={className}
+      hideOnScroll={hideOnScroll}
+      scroll={scroll}
+      ref={headerRef}
+    >
+      <S.RowMain
+        hideOnScroll={hideOnScroll}
+        align="middle"
+        justify="space-between"
+      >
         <Col>
           <Link to={HOME}>
             <S.Logo src={logo} alt="Logo" />
@@ -134,6 +172,7 @@ Header.propTypes = {
   children: ChildrenType,
   className: ClassNameType,
   bottom: ChildrenType,
+  hideOnScroll: HideOnScrollType,
 };
 
 export default Header;

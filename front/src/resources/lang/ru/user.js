@@ -27,6 +27,12 @@ export default {
     },
   },
   lesson: {
+    results: {
+      title: 'Результаты',
+      correct_answers: 'Правильные ответы в уроке',
+      total_answers: 'Общее количество вопросов в уроке',
+      percentage: '{{percentage}}% правильных ответов',
+    },
     answer_result: {
       correct: 'Правильно !',
       wrong: 'Неправильно. Правильный ответ:',
@@ -41,5 +47,6 @@ export default {
     send: 'Отправить',
     finish: 'Закончить',
     finished: 'Урок закончен',
+    back: 'Назад',
   },
 };

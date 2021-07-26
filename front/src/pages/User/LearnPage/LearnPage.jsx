@@ -2,8 +2,9 @@
 
 import { useParams } from 'react-router-dom';
 
+import Header from '@sb-ui/components/molecules/Header';
 import LearnContext from '@sb-ui/contexts/LearnContext';
-import InfoBlock from '@sb-ui/pages/User/LessonPage/InfoBlock';
+import InfoBlock from '@sb-ui/pages/User/LearnPage/InfoBlock';
 
 import LearnChunk from './LearnChunk';
 import { useLearnChunks } from './useLearnChunks';
@@ -18,7 +19,7 @@ const LearnPage = () => {
   return (
     <>
       {/* <S.Header bottom={<S.Progress percent={leanProgress} />} /> */}
-      <S.Header />
+      <Header hideOnScroll />
       <S.Wrapper>
         <S.GlobalStylesLearnPage />
         <S.Row>
@@ -26,6 +27,7 @@ const LearnPage = () => {
             <LearnContext.Provider
               value={{
                 handleInteractiveClick,
+                chunks,
                 id: lessonId,
               }}
             >

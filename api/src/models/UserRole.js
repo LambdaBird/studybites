@@ -71,6 +71,17 @@ class UserRole extends objection.Model {
       },
     };
   }
+
+  static getLessonStudentsCount({ lessonId }) {
+    return this.query()
+      .where({
+        resourceId: lessonId,
+        roleId: config.roles.STUDENT.id,
+        resourceType: config.resources.LESSON,
+      })
+      .count()
+      .first();
+  }
 }
 
 export default UserRole;

@@ -27,6 +27,12 @@ export default {
     },
   },
   lesson: {
+    results: {
+      title: 'Results',
+      correct_answers: 'Correct answers in the lesson',
+      total_answers: 'Total questions in the chapter',
+      percentage: '{{percentage}}% correct answers',
+    },
     answer_result: {
       correct: 'You`r right !',
       wrong: 'You’re wrong. Correct answer:',
@@ -41,5 +47,6 @@ export default {
     send: 'Send',
     finish: 'Finish',
     finished: 'Lesson is finished',
+    back: 'Go back',
   },
 };

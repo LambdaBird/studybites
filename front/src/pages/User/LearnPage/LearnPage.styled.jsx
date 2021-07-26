@@ -1,14 +1,7 @@
-import { Col, Progress as AntdProgress, Row as AntdRow } from 'antd';
+import { Button, Col, Progress as AntdProgress, Row as AntdRow } from 'antd';
 import styled, { createGlobalStyle } from 'styled-components';
 
-import MainHeader from '@sb-ui/components/molecules/Header';
 import variables from '@sb-ui/theme/variables';
-
-export const Header = styled(MainHeader)`
-  position: sticky;
-  top: 0;
-  z-index: 1;
-`;
 
 export const Progress = styled(AntdProgress).attrs({
   trailColor: variables['progress-trail-color'],
@@ -34,6 +27,7 @@ export const LearnWrapper = styled.div`
   align-items: center;
   gap: 32px;
   margin: 0 auto;
+  max-width: 614px;
 `;
 
 export const Wrapper = styled.div`
@@ -46,6 +40,7 @@ export const BlockCell = styled(Col).attrs(() => ({
   md: { span: 16 },
   lg: { span: 14 },
 }))`
+  padding-bottom: 1rem;
   display: flex;
   justify-content: center;
 `;
@@ -61,7 +56,6 @@ export const ChunkWrapper = styled.div`
   background-color: ${variables['learn-chunk-background']};
   border-radius: 8px;
   padding: 2rem;
-  max-width: 614px;
 
   @media (max-width: 767px) {
     margin-top: ${(props) => (props.isBottom ? 'auto' : '')};
@@ -70,4 +64,14 @@ export const ChunkWrapper = styled.div`
   p:last-child {
     margin-bottom: 0;
   }
+`;
+
+export const LessonButton = styled(Button).attrs({
+  size: 'large',
+})`
+  @media (max-width: 767px) {
+    margin-top: auto;
+  }
+  width: 100%;
+  margin-bottom: 1rem;
 `;
