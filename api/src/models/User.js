@@ -1,50 +1,9 @@
-/* eslint-disable max-classes-per-file */
-
 import objection from 'objection';
 import path from 'path';
 
-import config from '../../config';
+import BaseModel from './BaseModel';
 
-class UserQueryBuilder extends objection.QueryBuilder {
-  getAll(columns, req) {
-    this.skipUndefined()
-      .select([
-        'id',
-        'email',
-        'firstName',
-        'lastName',
-        'isConfirmed',
-        'isSuperAdmin',
-      ])
-      .where(columns.email, 'ilike', `%${req.query.search}%`)
-      .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
-      .whereNot({
-        id: req.user.id,
-      })
-      .where(columns.email, 'ilike', `%${req.query.search}%`)
-      .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
-      .orWhere(columns.lastName, 'ilike', `%${req.query.search}%`)
-      .offset(req.query.offset || 0)
-      .limit(req.query.limit || config.search.USER_SEARCH_LIMIT);
-
-    return this;
-  }
-
-  countAll(columns, req) {
-    this.skipUndefined()
-      .whereNot({
-        id: req.user.id,
-      })
-      .where(columns.email, 'ilike', `%${req.query.search}%`)
-      .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
-      .orWhere(columns.lastName, 'ilike', `%${req.query.search}%`)
-      .count('*');
-
-    return this;
-  }
-}
-
-class User extends objection.Model {
+class User extends BaseModel {
   static get tableName() {
     return 'users';
   }
@@ -65,10 +24,6 @@ class User extends objection.Model {
         updatedAt: { type: 'string' },
       },
     };
-  }
-
-  static get QueryBuilder() {
-    return UserQueryBuilder;
   }
 
   static relationMappings() {

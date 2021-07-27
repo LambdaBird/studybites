@@ -30,3 +30,11 @@ export class BadRequestError extends Error {
     this.errors = errors;
   }
 }
+
+export class ConflictError extends Error {
+  constructor(errors) {
+    super();
+    this.name = 'ConflictError';
+    this.errors = errors;
+  }
+}

@@ -1,6 +1,4 @@
-import { BadRequestError } from '../../../../validation/errors';
-
-import { ENROLL_SUCCESS, INVALID_ENROLL } from '../../constants';
+import { ENROLL_SUCCESS } from '../../constants';
 
 export async function enrollToLessonHandler({
   user: { id: userId },
@@ -10,11 +8,7 @@ export async function enrollToLessonHandler({
     models: { Lesson, UserRole },
   } = this;
 
-  const lesson = await Lesson.checkIfEnrolled({ lessonId, userId });
-  if (!lesson) {
-    throw new BadRequestError(INVALID_ENROLL);
-  }
-
+  await Lesson.checkIfEnrolled({ lessonId, userId });
   await UserRole.enrollToLesson({ userId, lessonId });
 
   return ENROLL_SUCCESS;

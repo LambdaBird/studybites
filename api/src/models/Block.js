@@ -1,8 +1,24 @@
-import objection from 'objection';
+import BaseModel from './BaseModel';
 
-class Block extends objection.Model {
+class Block extends BaseModel {
   static get tableName() {
     return 'blocks';
+  }
+
+  static get jsonSchema() {
+    return {
+      type: 'object',
+      properties: {
+        blockId: { type: 'string' },
+        revision: { type: 'string' },
+        content: { type: 'object' },
+        type: { type: 'string' },
+        answer: { type: 'object' },
+        weight: { type: 'number' },
+        createdAt: { type: 'string' },
+        updatedAt: { type: 'string' },
+      },
+    };
   }
 
   static createBlocks({ trx, blocks }) {
@@ -22,22 +38,6 @@ class Block extends objection.Model {
           `(select block_id, array_agg(revision) as revisions from blocks group by block_id) as grouped`,
         ),
       );
-  }
-
-  static get jsonSchema() {
-    return {
-      type: 'object',
-      properties: {
-        blockId: { type: 'string' },
-        revision: { type: 'string' },
-        content: { type: 'object' },
-        type: { type: 'string' },
-        answer: { type: 'object' },
-        weight: { type: 'number' },
-        createdAt: { type: 'string' },
-        updatedAt: { type: 'string' },
-      },
-    };
   }
 }
 
