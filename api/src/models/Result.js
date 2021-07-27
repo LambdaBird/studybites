@@ -33,25 +33,25 @@ class Result extends objection.Model {
       .orderBy('createdAt', 'desc');
   }
 
-  static getFinishedLessons({ knex, userId }) {
+  static getFinishedLessons({ userId }) {
     return this.query()
       .first()
-      .select(knex.raw(`array_agg(lesson_id) as exclude_lessons`))
+      .select(this.knex().raw(`array_agg(lesson_id) as exclude_lessons`))
       .where({ userId })
       .andWhere({ action: 'finish' });
   }
 
-  static async interactiveBlocksResults({ knex, lessonId, userId }) {
+  static async interactiveBlocksResults({ lessonId, userId }) {
     const results = await Result.query()
       .select('results.data', 'results.blockId', 'results.revision')
       .from(
-        knex.raw(`
+        this.knex().raw(`
           (select block_id, max(created_at) as created_at from results 
           where lesson_id = ${lessonId} and user_id = ${userId} and data is not null group by block_id) as temp
         `),
       )
       .join(
-        knex.raw(
+        this.knex().raw(
           `results on results.block_id = temp.block_id and results.created_at = temp.created_at`,
         ),
       );

@@ -178,6 +178,12 @@ describe('Learning flow', () => {
       expect(payload.lesson).toHaveProperty('blocks');
       expect(payload.lesson.blocks).toBeInstanceOf(Array);
       expect(payload.lesson.blocks.length).toBe(0);
+      expect(payload.lesson).toHaveProperty('interactiveTotal');
+      expect(payload.lesson).toHaveProperty('interactivePassed');
+      expect(payload.lesson.interactiveTotal).toBe(
+        math._blocks._current.length,
+      );
+      expect(payload.lesson.interactivePassed).toBe(0);
     });
 
     it('should return blocks on start', async () => {
@@ -457,10 +463,19 @@ describe('Learning flow', () => {
       expect(responseBody).toHaveProperty('lesson');
       expect(responseBody.lesson).toHaveProperty('blocks');
       expect(responseBody.lesson).toHaveProperty('author');
+      expect(responseBody.lesson).toHaveProperty('interactiveTotal');
+      expect(responseBody.lesson).toHaveProperty('interactivePassed');
       expect(responseBody.lesson.author).toBeInstanceOf(Object);
       expect(responseBody.lesson.author).toHaveProperty('id');
       expect(responseBody.lesson.author).toHaveProperty('firstName');
       expect(responseBody.lesson.author).toHaveProperty('lastName');
+
+      expect(responseBody.lesson.interactiveTotal).toBe(
+        french._blocks._indexesOfInteractive.length,
+      );
+      expect(responseBody.lesson.interactivePassed).toBe(
+        french._blocks._indexesOfInteractive.length,
+      );
 
       expect(responseBody).toHaveProperty('isFinal');
       expect(responseBody.isFinal).toBe(true);
@@ -985,7 +1000,7 @@ describe('Learning flow', () => {
         expect(payload.blocks.length).toBe(0);
 
         expect(payload).toHaveProperty('total');
-        expect(payload.total).toBe(0);
+        expect(payload.total).toBe(math._blocks._current.length);
 
         expect(payload).toHaveProperty('isFinished');
         expect(payload.isFinished).toBe(true);
@@ -1070,7 +1085,7 @@ describe('Learning flow', () => {
         expect(payload.blocks.length).toBe(0);
 
         expect(payload).toHaveProperty('total');
-        expect(payload.total).toBe(0);
+        expect(payload.total).toBe(russian._blocks._current.length);
 
         expect(payload).toHaveProperty('isFinished');
         expect(payload.isFinished).toBe(true);

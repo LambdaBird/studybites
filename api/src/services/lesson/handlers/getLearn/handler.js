@@ -18,13 +18,12 @@ export async function getLearnHandler({
   params: { lessonId },
 }) {
   const {
-    knex,
     models: { Lesson, Result, LessonBlockStructure },
   } = this;
   /**
    * get lesson
    */
-  const lesson = await Lesson.getLessonWithAuthor({ lessonId });
+  const lesson = await Lesson.getLessonWithProgress({ lessonId });
   /**
    * get last record from the results table
    */
@@ -34,13 +33,15 @@ export async function getLearnHandler({
    */
   if (!lastResult) {
     lesson.blocks = [];
-    return { total: 0, lesson, isFinal: false };
+    const { count: total } = await LessonBlockStructure.countBlocks({
+      lessonId,
+    });
+    return { total, lesson, isFinal: false };
   }
   /**
    * get results for interactive blocks
    */
   const dictionary = await Result.interactiveBlocksResults({
-    knex,
     lessonId,
     userId,
   });

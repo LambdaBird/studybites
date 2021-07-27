@@ -37,15 +37,15 @@ const QuizAnswer = ({ blockId, revision, question, answers }) => {
         <S.ColumnCheckbox onChange={setQuizCheckbox} options={options} />
         <S.ButtonWrapper>
           <S.LessonButtonSend
-            onClick={() =>
+            onClick={() => {
               handleInteractiveClick({
                 id,
                 action: RESPONSE_TYPE,
                 blockId,
                 revision,
                 data: { response: sendAnswers },
-              })
-            }
+              });
+            }}
           >
             {t('lesson.send')}
           </S.LessonButtonSend>

@@ -91,6 +91,8 @@ export const useLearnChunks = ({ lessonId }) => {
   const [chunks, setChunks] = useState([]);
   const [total, setTotal] = useState(0);
   const [lesson, setLesson] = useState({});
+  const [learnProgress, setLearnProgress] = useState(0);
+  const [passedBlocks, setPassedBlocks] = useState(0);
 
   const { data: getData, isLoading } = useQuery(
     [
@@ -105,8 +107,9 @@ export const useLearnChunks = ({ lessonId }) => {
   const onSuccess = useCallback(
     (data) => {
       setChunks((prevChunks) => handleAnswer({ data, prevChunks }));
+      setPassedBlocks(passedBlocks + 1);
     },
-    [setChunks],
+    [setChunks, passedBlocks],
   );
 
   const { mutate: handleInteractiveClick } = useMutation(postLessonById, {
@@ -131,8 +134,15 @@ export const useLearnChunks = ({ lessonId }) => {
       );
       setTotal(newTotal);
       setLesson(newLesson);
+      setPassedBlocks(newLesson.interactivePassed);
     }
   }, [getData]);
+
+  useEffect(() => {
+    setLearnProgress(
+      Math.round((passedBlocks / lesson.interactiveTotal) * 100),
+    );
+  }, [passedBlocks, lesson]);
 
   return {
     handleInteractiveClick,
@@ -140,5 +150,6 @@ export const useLearnChunks = ({ lessonId }) => {
     total,
     lesson,
     isLoading,
+    learnProgress,
   };
 };
