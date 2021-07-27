@@ -160,10 +160,16 @@ const LessonEdit = () => {
         },
         blocks: prepareBlocksForApi(blocks),
       };
-
       if (!name) {
         message.error({
           content: t('editor_js.message.error_lesson_name'),
+          duration: 2,
+        });
+        return;
+      }
+      if (params.blocks.length === 0) {
+        message.error({
+          content: t('editor_js.message.error_empty_blocks'),
           duration: 2,
         });
         return;

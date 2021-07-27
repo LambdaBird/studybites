@@ -53,6 +53,7 @@ export default {
       error_created: 'Create error',
       error_updated: 'Update error',
       error_lesson_name: 'Missing lesson name',
+      error_empty_blocks: 'Missing lesson blocks',
     },
     header: {
       placeholder: 'Enter a header',

@@ -81,6 +81,9 @@ export default class Embed {
   }
 
   render() {
+    if (this.data === null) {
+      return null;
+    }
     const container = document.createElement('div');
     this.container = container;
     container.classList.add(this.CSS.container);
@@ -115,12 +118,29 @@ export default class Embed {
     container.appendChild(content);
     container.appendChild(inputCaption);
 
+    inputUrl.addEventListener(
+      'keydown',
+      (event) => {
+        if (event.keyCode === 8) {
+          // BACKSPACE KEY CODE
+          this.backspace(event);
+        }
+      },
+      false,
+    );
+
     return container;
+  }
+
+  backspace() {
+    if (this.elements.url.value.length === 0) {
+      this.api.blocks.delete();
+    }
   }
 
   save() {
     if (!this.elements.url?.value || !this.isValid) {
-      return null;
+      return undefined;
     }
     return {
       ...this.data,
