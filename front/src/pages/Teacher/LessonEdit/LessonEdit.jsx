@@ -1,6 +1,6 @@
 import { Button, Col, Input, message, Row, Typography } from 'antd';
 import DragDrop from 'editorjs-drag-drop';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
 import { useHistory, useParams } from 'react-router-dom';
@@ -190,6 +190,11 @@ const LessonEdit = () => {
     }
   };
 
+  const status = useMemo(
+    () => lessonData?.lesson?.status?.toLocaleLowerCase() || 'none',
+    [lessonData],
+  );
+
   return (
     <>
       <Header>
@@ -215,9 +220,7 @@ const LessonEdit = () => {
               <S.BadgeWrapper>
                 <S.CardBadge>
                   <S.StatusText>
-                    {t(
-                      `lesson_dashboard.status.${lessonData?.lesson.status.toLocaleLowerCase()}`,
-                    )}
+                    {t(`lesson_dashboard.status.${status}`)}
                   </S.StatusText>
                 </S.CardBadge>
               </S.BadgeWrapper>

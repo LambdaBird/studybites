@@ -20,6 +20,7 @@ export default {
       archived: 'Archived',
       public: 'Public',
       private: 'Private',
+      none: 'None',
     },
     status_select: {
       all: 'All statuses',

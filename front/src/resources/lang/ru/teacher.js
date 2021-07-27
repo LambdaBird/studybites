@@ -20,6 +20,7 @@ export default {
       archived: 'Архивирован',
       public: 'Публичный',
       private: 'Приватный',
+      none: 'Отсуствует',
     },
     status_select: {
       all: 'Все статусы',
