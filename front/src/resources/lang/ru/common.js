@@ -12,5 +12,6 @@ export default {
     unauthorized: 'Неправильные данные',
     no_internet: 'Упс, нет интернет соединения',
     internal_server: 'Упс, что то пошло не так',
+    parse_block: 'Ошибка распознания блока',
   },
 };

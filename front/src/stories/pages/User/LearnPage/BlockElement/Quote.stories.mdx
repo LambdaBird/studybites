@@ -1,0 +1,41 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+import Quote from '@sb-ui/pages/User/LearnPage/BlockElement/Quote';
+
+<Meta title="SB/User/LearnPage/BlockElement/Quote" component={Quote} />
+
+# Quote
+
+Component `Quote`
+
+export const Template = (args) => <Quote {...args} />;
+
+<Canvas>
+  <Story
+    name="Quote left"
+    args={{
+      content: {
+        data: {
+          alignment: 'left',
+          caption: 'Author Author',
+          text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab ad, amet aspernatur at beatae consequatur dignissimos ea earum esse eveniet in itaque iusto laudantium minima natus officiis optio placeat porro quasi qui quidem sapiente sit temporibus tenetur velit voluptas voluptates? Aliquam assumenda eveniet labore nesciunt optio quod ullam. Autem ex facere inventore ipsum quae quaerat quo tenetur ullam velit voluptate. Optio ratione sapiente velit. Ad consectetur doloremque facilis harum inventore neque nostrum omnis quas. Accusantium ad amet, autem corporis debitis dolore ducimus eos eum fugit harum ipsam, laboriosam magni maiores minus numquam quisquam quo repellendus rerum tempore temporibus totam voluptatum?',
+        },
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+  <Story
+    name="Quote center"
+    args={{
+      content: {
+        data: {
+          alignment: 'center',
+          caption: 'Author Author',
+          text: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ab ad, amet aspernatur at beatae consequatur dignissimos ea earum esse eveniet in itaque iusto laudantium minima natus officiis optio placeat porro quasi qui quidem sapiente sit temporibus tenetur velit voluptas voluptates? Aliquam assumenda eveniet labore nesciunt optio quod ullam. Autem ex facere inventore ipsum quae quaerat quo tenetur ullam velit voluptate. Optio ratione sapiente velit. Ad consectetur doloremque facilis harum inventore neque nostrum omnis quas. Accusantium ad amet, autem corporis debitis dolore ducimus eos eum fugit harum ipsam, laboriosam magni maiores minus numquam quisquam quo repellendus rerum tempore temporibus totam voluptatum?',
+        },
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>

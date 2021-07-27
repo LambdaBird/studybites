@@ -1,0 +1,25 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+import Finished from '@sb-ui/pages/User/LearnPage/BlockElement/Finished';
+import { LearnContextChunksDecorator } from '@sb-ui/stories/decorators';
+
+<Meta
+  title="SB/User/LearnPage/BlockElement/Finished"
+  decorators={[
+    (Story) => (
+      <LearnContextChunksDecorator chunks={[]}>
+        <Story />
+      </LearnContextChunksDecorator>
+    ),
+  ]}
+  component={Finished}
+/>
+
+# Finished
+
+Component `Finished`
+
+export const Template = (args) => <Finished {...args} />;
+
+<Canvas>
+  <Story name="Finished">{Template.bind({})}</Story>
+</Canvas>

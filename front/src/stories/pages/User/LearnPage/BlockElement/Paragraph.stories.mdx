@@ -1,0 +1,61 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+import Paragraph from '@sb-ui/pages/User/LearnPage/BlockElement/Paragraph';
+
+<Meta title="SB/User/LearnPage/BlockElement/Paragraph" component={Paragraph} />
+
+# Paragraph
+
+Component `Paragraph`
+
+export const Template = (args) => <Paragraph {...args} />;
+
+<Canvas>
+  <Story
+    name="Default text"
+    args={{
+      content: {
+        data: {
+          text: 'Default text',
+        },
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+  <Story
+    name="Bold text"
+    args={{
+      content: {
+        data: {
+          text: '<b>Bold text</b>',
+        },
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+  <Story
+    name="Italic text"
+    args={{
+      content: {
+        data: {
+          text: '<i>Italic text</i>',
+        },
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+  <Story
+    name="Bold italic text"
+    args={{
+      content: {
+        data: {
+          text: '<b><i>Italic text</i></b>',
+        },
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>

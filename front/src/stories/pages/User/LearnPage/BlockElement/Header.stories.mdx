@@ -1,0 +1,26 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+import Header from '@sb-ui/pages/User/LearnPage/BlockElement/Header';
+
+<Meta title="SB/User/LearnPage/BlockElement/Header" component={Header} />
+
+# Header
+
+Component `Header`
+
+export const Template = (args) => <Header {...args} />;
+
+<Canvas>
+  <Story
+    name="Header"
+    args={{
+      content: {
+        data: {
+          text: 'Test text',
+          level: 1,
+        },
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>

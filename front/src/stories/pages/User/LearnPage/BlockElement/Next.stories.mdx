@@ -1,0 +1,40 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+import Next from '@sb-ui/pages/User/LearnPage/BlockElement/Next';
+import { LearnContextDecorator } from '@sb-ui/stories/decorators';
+
+<Meta
+  title="SB/User/LearnPage/BlockElement/Next"
+  decorators={[
+    (Story) => (
+      <LearnContextDecorator>
+        <Story />
+      </LearnContextDecorator>
+    ),
+  ]}
+  component={Next}
+/>
+
+# Next
+
+Component `Next`
+
+export const Template = (args) => <Next {...args} />;
+
+<Canvas>
+  <Story
+    name="Next not solved"
+    args={{
+      isSolved: false,
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+  <Story
+    name="Next solved"
+    args={{
+      isSolved: true,
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>

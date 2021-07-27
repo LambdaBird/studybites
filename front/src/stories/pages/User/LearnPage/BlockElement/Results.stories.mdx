@@ -1,0 +1,29 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+import Results from '@sb-ui/pages/User/LearnPage/BlockElement/Results';
+import { LearnContextChunksDecorator } from '@sb-ui/stories/decorators';
+
+<Meta title="SB/User/LearnPage/BlockElement/Results" component={Results} />
+
+# Results
+
+Component `Results`
+
+export const Template = (args) => <Results {...args} />;
+
+<Canvas>
+  <Story
+    decorators={[
+      (Story) => (
+        <LearnContextChunksDecorator chunks={[]}>
+          <Story />
+        </LearnContextChunksDecorator>
+      ),
+    ]}
+    name="Results"
+    args={{
+      isSolved: false,
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
