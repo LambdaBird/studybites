@@ -517,7 +517,7 @@ describe('Maintainer flow', () => {
         body: prepareLessonFromSeed(french, '-lessonToSearchStudents'),
       });
 
-      await testContext.request({
+      await testContext.studentRequest({
         url: `lesson/enroll/${lessonToSearchStudents.lesson.id}`,
       });
     });

@@ -21,6 +21,28 @@ class UserRole extends objection.Model {
     };
   }
 
+  static async addMaintainer({ trx, userId, resourceId }) {
+    await this.query(trx)
+      .insert({
+        userId,
+        resourceId,
+        roleId: config.roles.MAINTAINER.id,
+        resourceType: config.resources.LESSON,
+      })
+      .returning('*');
+  }
+
+  static enrollToLesson({ userId, lessonId }) {
+    return this.query()
+      .insert({
+        userId,
+        roleId: config.roles.STUDENT.id,
+        resourceType: config.resources.LESSON,
+        resourceId: lessonId,
+      })
+      .returning('*');
+  }
+
   static relationMappings() {
     return {
       users: {

@@ -123,7 +123,11 @@ describe('Learning flow', () => {
       expect(payload).toHaveProperty('total');
       expect(payload).toHaveProperty('lesson');
       expect(payload).toHaveProperty('isFinal');
-      expect(payload.lesson).toHaveProperty('maintainers');
+      expect(payload.lesson).toHaveProperty('author');
+      expect(payload.lesson.author).toBeInstanceOf(Object);
+      expect(payload.lesson.author).toHaveProperty('id');
+      expect(payload.lesson.author).toHaveProperty('firstName');
+      expect(payload.lesson.author).toHaveProperty('lastName');
       expect(payload.lesson).toHaveProperty('blocks');
       expect(payload.lesson.blocks).toBeInstanceOf(Array);
       expect(payload.lesson.blocks.length).toBe(0);
@@ -268,12 +272,14 @@ describe('Learning flow', () => {
 
       expect(responseBody).toHaveProperty('lesson');
       expect(responseBody.lesson).toHaveProperty('blocks');
-      expect(responseBody.lesson).toHaveProperty('maintainers');
+      expect(responseBody.lesson).toHaveProperty('author');
+      expect(responseBody.lesson.author).toBeInstanceOf(Object);
+      expect(responseBody.lesson.author).toHaveProperty('id');
+      expect(responseBody.lesson.author).toHaveProperty('firstName');
+      expect(responseBody.lesson.author).toHaveProperty('lastName');
 
       expect(responseBody).toHaveProperty('isFinal');
       expect(responseBody.isFinal).toBe(false);
-
-      expect(responseBody.lesson.maintainers).toBeInstanceOf(Array);
 
       expect(responseBody.lesson.blocks).toBeInstanceOf(Array);
       expect(responseBody.lesson.blocks).toHaveLength(
@@ -295,6 +301,9 @@ describe('Learning flow', () => {
           revision:
             lessonToNext.lesson.blocks[french._blocks._indexesOfInteractive[0]]
               .revision,
+          data: {
+            isSolved: true,
+          },
         },
       });
 
@@ -327,12 +336,14 @@ describe('Learning flow', () => {
 
       expect(responseBody).toHaveProperty('lesson');
       expect(responseBody.lesson).toHaveProperty('blocks');
-      expect(responseBody.lesson).toHaveProperty('maintainers');
+      expect(responseBody.lesson).toHaveProperty('author');
+      expect(responseBody.lesson.author).toBeInstanceOf(Object);
+      expect(responseBody.lesson.author).toHaveProperty('id');
+      expect(responseBody.lesson.author).toHaveProperty('firstName');
+      expect(responseBody.lesson.author).toHaveProperty('lastName');
 
       expect(responseBody).toHaveProperty('isFinal');
       expect(responseBody.isFinal).toBe(false);
-
-      expect(responseBody.lesson.maintainers).toBeInstanceOf(Array);
 
       expect(responseBody.lesson.blocks).toBeInstanceOf(Array);
       expect(responseBody.lesson.blocks).toHaveLength(
@@ -391,6 +402,9 @@ describe('Learning flow', () => {
             lessonToAnswer.lesson.blocks[
               french._blocks._indexesOfInteractive[0]
             ].revision,
+          data: {
+            isSolved: true,
+          },
         },
       });
     });
@@ -442,12 +456,14 @@ describe('Learning flow', () => {
 
       expect(responseBody).toHaveProperty('lesson');
       expect(responseBody.lesson).toHaveProperty('blocks');
-      expect(responseBody.lesson).toHaveProperty('maintainers');
+      expect(responseBody.lesson).toHaveProperty('author');
+      expect(responseBody.lesson.author).toBeInstanceOf(Object);
+      expect(responseBody.lesson.author).toHaveProperty('id');
+      expect(responseBody.lesson.author).toHaveProperty('firstName');
+      expect(responseBody.lesson.author).toHaveProperty('lastName');
 
       expect(responseBody).toHaveProperty('isFinal');
       expect(responseBody.isFinal).toBe(true);
-
-      expect(responseBody.lesson.maintainers).toBeInstanceOf(Array);
 
       expect(responseBody.lesson.blocks).toBeInstanceOf(Array);
       expect(responseBody.lesson.blocks).toHaveLength(
@@ -492,6 +508,9 @@ describe('Learning flow', () => {
             lessonToFinish.lesson.blocks[
               french._blocks._indexesOfInteractive[0]
             ].revision,
+          data: {
+            isSolved: true,
+          },
         },
       });
 
@@ -613,6 +632,9 @@ describe('Learning flow', () => {
             lessonToAnswer.lesson.blocks[
               french._blocks._indexesOfInteractive[0]
             ].revision,
+          data: {
+            isSolved: true,
+          },
         },
       });
 
@@ -686,6 +708,9 @@ describe('Learning flow', () => {
             lessonToAnswer.lesson.blocks[
               french._blocks._indexesOfInteractive[0]
             ].revision,
+          data: {
+            isSolved: true,
+          },
         },
       });
 
@@ -766,6 +791,9 @@ describe('Learning flow', () => {
             finishedLesson.lesson.blocks[
               french._blocks._indexesOfInteractive[0]
             ].revision,
+          data: {
+            isSolved: true,
+          },
         },
       });
 
@@ -795,7 +823,7 @@ describe('Learning flow', () => {
       });
     });
 
-    it('should return all finished lessons with their maintainers', async () => {
+    it('should return all finished lessons with their author', async () => {
       const response = await testContext.studentRequest({
         url: `enrolled-finished/`,
         method: 'GET',
@@ -807,7 +835,11 @@ describe('Learning flow', () => {
       expect(payload).toHaveProperty('total');
       expect(payload).toHaveProperty('lessons');
       expect(payload.lessons).toBeInstanceOf(Array);
-      expect(payload.lessons[0]).toHaveProperty('maintainers');
+      expect(payload.lessons[0]).toHaveProperty('author');
+      expect(payload.lessons[0].author).toBeInstanceOf(Object);
+      expect(payload.lessons[0].author).toHaveProperty('id');
+      expect(payload.lessons[0].author).toHaveProperty('firstName');
+      expect(payload.lessons[0].author).toHaveProperty('lastName');
     });
   });
 

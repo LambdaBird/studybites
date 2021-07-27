@@ -1,90 +1,84 @@
 import {
-  options as optionsGetAllPublicLessons,
-  handler as handlerGetAllPublicLessons,
-} from './handlers/getAllPublicLessons';
+  publicLessonsOptions,
+  publicLessonsHandler,
+} from './handlers/publicLessons';
+
+import { learnOptions, getLearnHandler } from './handlers/getLearn';
 
 import {
-  options as optionsGetLessonLearn,
-  handler as handlerGetLessonLearn,
-} from './handlers/getLessonLearn';
+  lessonSchemaOptions,
+  lessonSchemaHandler,
+} from './handlers/lessonSchema';
 
 import {
-  options as optionsGetLessonSchema,
-  handler as handlerGetLessonSchema,
-} from './handlers/getLessonSchema';
+  enrolledStudentsOptions,
+  enrolledStudentsHandler,
+} from './handlers/enrolledStudents';
 
 import {
-  options as optionsGetAllEnrolledStudents,
-  handler as handlerGetAllEnrolledStudents,
-} from './handlers/getAllEnrolledStudents';
+  maintainableLessonsOptions,
+  maintainableLessonsHandler,
+} from './handlers/maintainableLessons';
 
 import {
-  options as optionsGetAllMaintainableLessons,
-  handler as handlerGetAllMaintainableLessons,
-} from './handlers/getAllMaintainableLessons';
+  maintainableLessonOptions,
+  maintainableLessonHandler,
+} from './handlers/maintainableLesson';
 
 import {
-  options as optionsGetMaintainableLessonById,
-  handler as handlerGetMaintainableLessonById,
-} from './handlers/getMaintainableLesson';
+  createLessonOptions,
+  createLessonHandler,
+} from './handlers/createLesson';
 
 import {
-  options as optionsCreateNewLesson,
-  handler as handlerCreateNewLesson,
-} from './handlers/createNewLesson';
-
-import {
-  options as optionsUpdateLesson,
-  handler as handlerUpdateLesson,
+  updateLessonOptions,
+  updateLessonHandler,
 } from './handlers/updateLesson';
 
 import {
-  options as optionsGetEnrolledLessonById,
-  handler as handlerGetEnrolledLessonById,
-} from './handlers/getEnrolledLessonById';
+  enrolledLessonOptions,
+  enrolledLessonHandler,
+} from './handlers/enrolledLesson';
 
 import {
-  options as optionsEnrollToLesson,
-  handler as handlerEnrollToLesson,
+  enrollToLessonOptions,
+  enrollToLessonHandler,
 } from './handlers/enrollToLesson';
 
 import {
-  options as optionsGetOngoingLessons,
-  handler as handlerGetOngoingLessons,
-} from './handlers/getOngoingLessons';
+  ongoingLessonsOptions,
+  ongoingLessonsHandler,
+} from './handlers/ongoingLessons';
 
 import {
-  options as optionsGetFinishedLessons,
-  handler as handlerGetFinishedLessons,
-} from './handlers/getFinishedLessons';
+  finishedLessonsOptions,
+  finishedLessonsHandler,
+} from './handlers/finishedLessons';
 
 import {
-  options as optionsGetStudentsByLesson,
-  handler as handlerGetStudentsByLesson,
-} from './handlers/getStudentsByLesson';
+  studentsByLessonOptions,
+  studentsByLessonHandler,
+} from './handlers/studentsByLesson';
 
-import {
-  options as optionsLearnLesson,
-  handler as handlerLearnLesson,
-} from './handlers/learnLesson';
+import { learnLessonOptions, learnLessonHandler } from './handlers/learnLesson';
 
 export default async function router(instance) {
   /**
-   * get all lessons where status = 'Public' with maintainers,
+   * get all lessons where status = 'Public' with author,
    * search, pagination and total
    */
-  instance.get('/', optionsGetAllPublicLessons, handlerGetAllPublicLessons);
+  instance.get('/', publicLessonsOptions, publicLessonsHandler);
 
   /**
-   * get lesson where status = 'Public' by id with maintainers, isFinal key, blocks
+   * get lesson where status = 'Public' by id with author, isFinal key, blocks
    * and blocks total
    */
-  instance.get('/:lessonId', optionsGetLessonLearn, handlerGetLessonLearn);
+  instance.get('/:lessonId', learnOptions, getLearnHandler);
 
   /**
    * get lesson schema
    */
-  instance.options('/', optionsGetLessonSchema, handlerGetLessonSchema);
+  instance.options('/', lessonSchemaOptions, lessonSchemaHandler);
 
   /**
    * get all students enrolled to teacher`s lessons
@@ -92,8 +86,8 @@ export default async function router(instance) {
    */
   instance.get(
     '/maintain/students',
-    optionsGetAllEnrolledStudents,
-    handlerGetAllEnrolledStudents,
+    enrolledStudentsOptions,
+    enrolledStudentsHandler,
   );
 
   /**
@@ -102,8 +96,8 @@ export default async function router(instance) {
    */
   instance.get(
     '/maintain/',
-    optionsGetAllMaintainableLessons,
-    handlerGetAllMaintainableLessons,
+    maintainableLessonsOptions,
+    maintainableLessonsHandler,
   );
 
   /**
@@ -111,27 +105,27 @@ export default async function router(instance) {
    */
   instance.get(
     '/maintain/:lessonId',
-    optionsGetMaintainableLessonById,
-    handlerGetMaintainableLessonById,
+    maintainableLessonOptions,
+    maintainableLessonHandler,
   );
 
   /**
    * create new lesson with status "Draft" by default
    */
-  instance.post('/maintain/', optionsCreateNewLesson, handlerCreateNewLesson);
+  instance.post('/maintain/', createLessonOptions, createLessonHandler);
 
   /**
    * update lesson by id
    */
-  instance.put('/maintain/:lessonId', optionsUpdateLesson, handlerUpdateLesson);
+  instance.put('/maintain/:lessonId', updateLessonOptions, updateLessonHandler);
 
   /**
-   * get enrolled lesson with maintainers by id
+   * get enrolled lesson with author by id
    */
   instance.get(
     '/enroll/:lessonId',
-    optionsGetEnrolledLessonById,
-    handlerGetEnrolledLessonById,
+    enrolledLessonOptions,
+    enrolledLessonHandler,
   );
 
   /**
@@ -139,26 +133,22 @@ export default async function router(instance) {
    */
   instance.post(
     '/enroll/:lessonId',
-    optionsEnrollToLesson,
-    handlerEnrollToLesson,
+    enrollToLessonOptions,
+    enrollToLessonHandler,
   );
 
   /**
    * get all lessons user enrolled to
    */
-  instance.get(
-    '/enrolled/',
-    optionsGetOngoingLessons,
-    handlerGetOngoingLessons,
-  );
+  instance.get('/enrolled/', ongoingLessonsOptions, ongoingLessonsHandler);
 
   /**
    * get all finished lessons with search and total
    */
   instance.get(
     '/enrolled-finished/',
-    optionsGetFinishedLessons,
-    handlerGetFinishedLessons,
+    finishedLessonsOptions,
+    finishedLessonsHandler,
   );
 
   /**
@@ -167,12 +157,12 @@ export default async function router(instance) {
    */
   instance.get(
     '/enrolled/:lessonId',
-    optionsGetStudentsByLesson,
-    handlerGetStudentsByLesson,
+    studentsByLessonOptions,
+    studentsByLessonHandler,
   );
 
   /**
    * lesson learning flow
    */
-  instance.post('/:lessonId/learn', optionsLearnLesson, handlerLearnLesson);
+  instance.post('/:lessonId/learn', learnLessonOptions, learnLessonHandler);
 }
