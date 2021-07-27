@@ -1,8 +1,9 @@
+import PropTypes from 'prop-types';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { action } from '@storybook/addon-actions';
 
 import LearnContext from '@sb-ui/contexts/LearnContext';
 
-// eslint-disable-next-line react/prop-types
 export const LearnContextDecorator = ({ children }) => {
   const handleInteractiveClick = (params) => {
     action('Interactive click')(params);
@@ -16,7 +17,15 @@ export const LearnContextDecorator = ({ children }) => {
   );
 };
 
-// eslint-disable-next-line react/prop-types
+LearnContextDecorator.propTypes = {
+  children: PropTypes.node,
+};
+
 export const LearnContextChunksDecorator = ({ children, chunks }) => (
   <LearnContext.Provider value={{ chunks }}>{children}</LearnContext.Provider>
 );
+
+LearnContextChunksDecorator.propTypes = {
+  children: PropTypes.node,
+  chunks: PropTypes.arrayOf(PropTypes.array),
+};

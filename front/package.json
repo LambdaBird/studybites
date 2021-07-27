@@ -23,7 +23,6 @@
     "@editorjs/marker": "^1.2.2",
     "@editorjs/quote": "^2.4.0",
     "@editorjs/simple-image": "^1.4.1",
-    "@storybook/addon-actions": "^6.3.6",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
@@ -46,6 +45,7 @@
   },
   "devDependencies": {
     "@craco/craco": "^6.1.2",
+    "@storybook/addon-actions": "^6.3.6",
     "@storybook/addon-essentials": "^6.3.4",
     "@storybook/addon-links": "^6.3.4",
     "@storybook/node-logger": "^6.3.4",

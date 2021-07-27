@@ -13,7 +13,7 @@ const Finished = () => {
   return (
     <>
       <Results />
-      <S.LessonButton onClick={history?.goBack}>
+      <S.LessonButton onClick={history.goBack}>
         {t('lesson.back')}
       </S.LessonButton>
     </>
