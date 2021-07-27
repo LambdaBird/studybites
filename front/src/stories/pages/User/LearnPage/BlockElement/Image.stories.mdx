@@ -5,7 +5,7 @@ import Image from '@sb-ui/pages/User/LearnPage/BlockElement/Image';
 
 # Image
 
-Component `Image`
+Component `Image` should use to display image with text (accepts `blockId` and data options `caption`, `url` )
 
 export const Template = (args) => <Image {...args} />;
 
@@ -19,6 +19,32 @@ export const Template = (args) => <Image {...args} />;
           url: 'https://images.unsplash.com/photo-1472457897821-70d3819a0e24?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1049&q=80',
         },
         blockId: 'Test id ',
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+  <Story
+    name="Image (no caption)"
+    args={{
+      content: {
+        data: {
+          url: 'https://images.unsplash.com/photo-1472457897821-70d3819a0e24?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1049&q=80',
+        },
+        blockId: 'Test id',
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+  <Story
+    name="Image (wrong image)"
+    args={{
+      content: {
+        data: {
+          url: 'wrong',
+        },
+        blockId: 'Test id',
       },
     }}
   >

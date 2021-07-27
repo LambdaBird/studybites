@@ -5,8 +5,7 @@ import LearnContext from '@sb-ui/contexts/LearnContext';
 // eslint-disable-next-line react/prop-types
 export const LearnContextDecorator = ({ children }) => {
   const handleInteractiveClick = (params) => {
-    console.log(params);
-    action('test-action');
+    action('Interactive click')(params);
   };
 
   return (

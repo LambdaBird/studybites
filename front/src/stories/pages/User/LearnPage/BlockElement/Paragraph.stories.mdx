@@ -5,7 +5,7 @@ import Paragraph from '@sb-ui/pages/User/LearnPage/BlockElement/Paragraph';
 
 # Paragraph
 
-Component `Paragraph`
+Component `Paragraph` should use to display `<p></p>` text with html tags (bold,italic,link,marker) (accepts data options `text`)
 
 export const Template = (args) => <Paragraph {...args} />;
 
@@ -52,6 +52,30 @@ export const Template = (args) => <Paragraph {...args} />;
       content: {
         data: {
           text: '<b><i>Italic text</i></b>',
+        },
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+  <Story
+    name="Link text"
+    args={{
+      content: {
+        data: {
+          text: '<a href="#">Link text</a>',
+        },
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+  <Story
+    name="Mark text"
+    args={{
+      content: {
+        data: {
+          text: '<mark class="cdx-marker">Mark text</mark>',
         },
       },
     }}
