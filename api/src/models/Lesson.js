@@ -1,9 +1,14 @@
 import objection from 'objection';
 import path from 'path';
 
+import { INVALID_ENROLL, NOT_FOUND } from '../services/lesson/constants';
+import { BadRequestError, NotFoundError } from '../validation/errors';
+
 import config from '../../config';
 
-class Lesson extends objection.Model {
+import BaseModel from './BaseModel';
+
+class Lesson extends BaseModel {
   static get tableName() {
     return 'lessons';
   }
@@ -135,6 +140,12 @@ class Lesson extends objection.Model {
     };
   }
 
+  static findById({ lessonId }) {
+    return this.query()
+      .findById(lessonId)
+      .throwIfNotFound({ error: new NotFoundError(NOT_FOUND) });
+  }
+
   static checkIfEnrolled({ lessonId, userId }) {
     return this.query()
       .findById(lessonId)
@@ -145,7 +156,8 @@ class Lesson extends objection.Model {
           select resource_id from users_roles 
           where user_id = ${userId} and role_id = ${config.roles.STUDENT.id}
         `),
-      );
+      )
+      .throwIfNotFound({ error: new BadRequestError(INVALID_ENROLL) });
   }
 
   /**

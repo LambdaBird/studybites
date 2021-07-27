@@ -1,6 +1,6 @@
-import objection from 'objection';
+import BaseModel from './BaseModel';
 
-class Role extends objection.Model {
+class Role extends BaseModel {
   static get tableName() {
     return 'roles';
   }

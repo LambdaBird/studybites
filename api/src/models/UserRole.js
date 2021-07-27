@@ -1,8 +1,11 @@
 import objection from 'objection';
 import path from 'path';
+
 import config from '../../config';
 
-class UserRole extends objection.Model {
+import BaseModel from './BaseModel';
+
+class UserRole extends BaseModel {
   static get tableName() {
     return 'users_roles';
   }
@@ -19,28 +22,6 @@ class UserRole extends objection.Model {
         updatedAt: { type: 'string' },
       },
     };
-  }
-
-  static async addMaintainer({ trx, userId, resourceId }) {
-    await this.query(trx)
-      .insert({
-        userId,
-        resourceId,
-        roleId: config.roles.MAINTAINER.id,
-        resourceType: config.resources.LESSON,
-      })
-      .returning('*');
-  }
-
-  static enrollToLesson({ userId, lessonId }) {
-    return this.query()
-      .insert({
-        userId,
-        roleId: config.roles.STUDENT.id,
-        resourceType: config.resources.LESSON,
-        resourceId: lessonId,
-      })
-      .returning('*');
   }
 
   static relationMappings() {
@@ -81,6 +62,28 @@ class UserRole extends objection.Model {
       })
       .count()
       .first();
+  }
+
+  static async addMaintainer({ trx, userId, resourceId }) {
+    await this.query(trx)
+      .insert({
+        userId,
+        resourceId,
+        roleId: config.roles.MAINTAINER.id,
+        resourceType: config.resources.LESSON,
+      })
+      .returning('*');
+  }
+
+  static enrollToLesson({ userId, lessonId }) {
+    return this.query()
+      .insert({
+        userId,
+        roleId: config.roles.STUDENT.id,
+        resourceType: config.resources.LESSON,
+        resourceId: lessonId,
+      })
+      .returning('*');
   }
 }
 

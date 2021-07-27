@@ -4,7 +4,9 @@ import { v4 } from 'uuid';
 
 import config from '../../config';
 
-class LessonBlockStructure extends objection.Model {
+import BaseModel from './BaseModel';
+
+class LessonBlockStructure extends BaseModel {
   static get tableName() {
     return 'lesson_block_structure';
   }
