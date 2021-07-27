@@ -92,7 +92,7 @@ describe('Enroll to lesson flow', () => {
       const payload = JSON.parse(response.payload);
 
       expect(response.statusCode).toBe(200);
-      expect(payload).toMatchObject(ENROLL_SUCCESS);
+      expect(payload.message).toBe(ENROLL_SUCCESS);
     });
   });
 
@@ -119,7 +119,8 @@ describe('Enroll to lesson flow', () => {
       const payload = JSON.parse(response.payload);
 
       expect(response.statusCode).toBe(400);
-      expect(payload.errors[0]).toMatchObject(INVALID_ENROLL);
+      expect(payload.statusCode).toBe(400);
+      expect(payload.message).toBe(INVALID_ENROLL);
     });
   });
 
@@ -171,7 +172,8 @@ describe('Enroll to lesson flow', () => {
       const payload = JSON.parse(response.payload);
 
       expect(response.statusCode).toBe(400);
-      expect(payload.errors[0]).toMatchObject(INVALID_ENROLL);
+      expect(payload.statusCode).toBe(400);
+      expect(payload.message).toBe(INVALID_ENROLL);
     });
 
     it('should return an error if try to enroll to archived', async () => {
@@ -182,7 +184,8 @@ describe('Enroll to lesson flow', () => {
       const payload = JSON.parse(response.payload);
 
       expect(response.statusCode).toBe(400);
-      expect(payload.errors[0]).toMatchObject(INVALID_ENROLL);
+      expect(payload.statusCode).toBe(400);
+      expect(payload.message).toBe(INVALID_ENROLL);
     });
 
     it('should return an error if try to enroll to private', async () => {
@@ -193,7 +196,8 @@ describe('Enroll to lesson flow', () => {
       const payload = JSON.parse(response.payload);
 
       expect(response.statusCode).toBe(400);
-      expect(payload.errors[0]).toMatchObject(INVALID_ENROLL);
+      expect(payload.statusCode).toBe(400);
+      expect(payload.message).toBe(INVALID_ENROLL);
     });
   });
 

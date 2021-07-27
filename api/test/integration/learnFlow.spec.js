@@ -237,7 +237,8 @@ describe('Learning flow', () => {
       const payload = JSON.parse(response.payload);
 
       expect(response.statusCode).toBe(400);
-      expect(payload.errors[0]).toMatchObject(INVALID_LEARN);
+      expect(payload.statusCode).toBe(400);
+      expect(payload.message).toBe(INVALID_LEARN);
     });
   });
 
@@ -371,7 +372,8 @@ describe('Learning flow', () => {
       const payload = JSON.parse(response.payload);
 
       expect(response.statusCode).toBe(400);
-      expect(payload.errors[0]).toMatchObject(INVALID_LEARN);
+      expect(payload.statusCode).toBe(400);
+      expect(payload.message).toBe(INVALID_LEARN);
     });
   });
 
@@ -610,7 +612,8 @@ describe('Learning flow', () => {
       const payload = JSON.parse(response.payload);
 
       expect(response.statusCode).toBe(400);
-      expect(payload.errors[0]).toMatchObject(INVALID_LEARN);
+      expect(payload.statusCode).toBe(400);
+      expect(payload.message).toBe(INVALID_LEARN);
     });
   });
 
@@ -686,7 +689,8 @@ describe('Learning flow', () => {
       const payload = JSON.parse(response.payload);
 
       expect(response.statusCode).toBe(401);
-      expect(payload.errors[0]).toMatchObject(UNAUTHORIZED);
+      expect(payload.statusCode).toBe(401);
+      expect(payload.message).toBe(UNAUTHORIZED);
     });
   });
 

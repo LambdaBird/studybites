@@ -5,9 +5,9 @@ import config from '../../../config';
 import validatorCompiler from '../../validation/validatorCompiler';
 import {
   AuthorizationError,
-  BadRequestError,
   NotFoundError,
-  UniqueViolationError,
+  BadRequestError,
+  ConflictError,
 } from '../../validation/errors';
 
 import {
@@ -64,7 +64,7 @@ export default async function router(instance) {
           refreshToken,
         });
       } catch (err) {
-        throw new UniqueViolationError(USER_ALREADY_REGISTERED);
+        throw new ConflictError(USER_ALREADY_REGISTERED);
       }
     },
   });
@@ -352,7 +352,7 @@ export default async function router(instance) {
     async onRequest(req) {
       await instance.auth({ req, isAdminOnly: true });
     },
-    handler: async (req, repl) => {
+    handler: async (req) => {
       const id = validateId(req.params.id, req.user.id);
 
       const result = await User.query().deleteById(id);
@@ -361,7 +361,7 @@ export default async function router(instance) {
         throw new NotFoundError(USER_NOT_FOUND);
       }
 
-      return repl.status(200).send(USER_DELETED);
+      return { message: USER_DELETED };
     },
   });
 
@@ -379,7 +379,7 @@ export default async function router(instance) {
     async onRequest(req) {
       await instance.auth({ req, isAdminOnly: true });
     },
-    handler: async (req, repl) => {
+    handler: async (req) => {
       const id = validateId(req.body.id, req.user.id);
 
       const check = await UserRole.query().findOne({
@@ -398,7 +398,7 @@ export default async function router(instance) {
         })
         .returning('*');
 
-      return repl.status(200).send(ALTER_ROLE_SUCCESS);
+      return { message: ALTER_ROLE_SUCCESS };
     },
   });
 
@@ -416,7 +416,7 @@ export default async function router(instance) {
     async onRequest(req) {
       await instance.auth({ req, isAdminOnly: true });
     },
-    handler: async (req, repl) => {
+    handler: async (req) => {
       const id = validateId(req.body.id, req.user.id);
 
       const result = await UserRole.query().delete().where({
@@ -428,7 +428,7 @@ export default async function router(instance) {
         throw new NotFoundError(USER_ROLE_NOT_FOUND);
       }
 
-      return repl.status(200).send(ALTER_ROLE_SUCCESS);
+      return { message: ALTER_ROLE_SUCCESS };
     },
   });
 }

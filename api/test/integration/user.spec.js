@@ -58,7 +58,8 @@ describe('POST /api/v1/user/signup', () => {
     const payload = JSON.parse(response.payload);
 
     expect(response.statusCode).toBe(409);
-    expect(payload.errors[0]).toMatchObject(USER_ALREADY_REGISTERED);
+    expect(payload.statusCode).toBe(409);
+    expect(payload.message).toBe(USER_ALREADY_REGISTERED);
   });
 });
 
@@ -107,7 +108,8 @@ describe('POST /api/v1/user/signin', () => {
     const payload = JSON.parse(response.payload);
 
     expect(response.statusCode).toBe(401);
-    expect(payload.errors[0]).toMatchObject(UNAUTHORIZED);
+    expect(payload.statusCode).toBe(401);
+    expect(payload.message).toBe(UNAUTHORIZED);
   });
 
   it('should return an error for non-existing user', async () => {
@@ -125,7 +127,8 @@ describe('POST /api/v1/user/signin', () => {
     const payload = JSON.parse(response.payload);
 
     expect(response.statusCode).toBe(401);
-    expect(payload.errors[0]).toMatchObject(UNAUTHORIZED);
+    expect(payload.statusCode).toBe(401);
+    expect(payload.message).toBe(UNAUTHORIZED);
   });
 });
 
@@ -336,7 +339,8 @@ describe('GET /api/v1/user/:id', () => {
     const payload = JSON.parse(response.payload);
 
     expect(response.statusCode).toBe(404);
-    expect(payload.errors[0]).toMatchObject(USER_NOT_FOUND);
+    expect(payload.statusCode).toBe(404);
+    expect(payload.message).toBe(USER_NOT_FOUND);
   });
 });
 
@@ -399,7 +403,8 @@ describe('PATCH /api/v1/user/:id', () => {
     const payload = JSON.parse(response.payload);
 
     expect(response.statusCode).toBe(404);
-    expect(payload.errors[0]).toMatchObject(USER_NOT_FOUND);
+    expect(payload.statusCode).toBe(404);
+    expect(payload.message).toBe(USER_NOT_FOUND);
   });
 });
 
@@ -443,7 +448,7 @@ describe('DELETE /api/v1/user/:id', () => {
     const payload = JSON.parse(response.payload);
 
     expect(response.statusCode).toBe(200);
-    expect(payload).toMatchObject(USER_DELETED);
+    expect(payload.message).toBe(USER_DELETED);
   });
 
   it('should return an error', async () => {
@@ -458,7 +463,8 @@ describe('DELETE /api/v1/user/:id', () => {
     const payload = JSON.parse(response.payload);
 
     expect(response.statusCode).toBe(404);
-    expect(payload.errors[0]).toMatchObject(USER_NOT_FOUND);
+    expect(payload.statusCode).toBe(404);
+    expect(payload.message).toBe(USER_NOT_FOUND);
   });
 });
 
@@ -505,7 +511,7 @@ describe('POST /api/v1/user/appoint_teacher', () => {
     const payload = JSON.parse(response.payload);
 
     expect(response.statusCode).toBe(200);
-    expect(payload).toMatchObject(ALTER_ROLE_SUCCESS);
+    expect(payload.message).toBe(ALTER_ROLE_SUCCESS);
   });
 
   it('should return an error', async () => {
@@ -523,7 +529,8 @@ describe('POST /api/v1/user/appoint_teacher', () => {
     const payload = JSON.parse(response.payload);
 
     expect(response.statusCode).toBe(400);
-    expect(payload.errors[0]).toMatchObject(ALTER_ROLE_FAIL);
+    expect(payload.statusCode).toBe(400);
+    expect(payload.message).toBe(ALTER_ROLE_FAIL);
   });
 });
 
@@ -570,7 +577,7 @@ describe('POST /api/v1/user/remove_teacher', () => {
     const payload = JSON.parse(response.payload);
 
     expect(response.statusCode).toBe(200);
-    expect(payload).toMatchObject(ALTER_ROLE_SUCCESS);
+    expect(payload.message).toBe(ALTER_ROLE_SUCCESS);
   });
 
   it('should return an error', async () => {
@@ -588,6 +595,7 @@ describe('POST /api/v1/user/remove_teacher', () => {
     const payload = JSON.parse(response.payload);
 
     expect(response.statusCode).toBe(404);
-    expect(payload.errors[0]).toMatchObject(USER_ROLE_NOT_FOUND);
+    expect(payload.statusCode).toBe(404);
+    expect(payload.message).toBe(USER_ROLE_NOT_FOUND);
   });
 });

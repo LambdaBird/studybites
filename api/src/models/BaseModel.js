@@ -10,7 +10,7 @@ export default class BaseModel extends objection.Model {
   static query(trx) {
     return super.query(trx).onError(({ constructor, data: { error } }) => {
       if (typeof error === 'object') {
-        throw new error.constructor(error.errors);
+        throw new error.constructor(error.message);
       }
       switch (constructor) {
         case objection.DBError:

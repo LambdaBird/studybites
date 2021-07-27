@@ -11,5 +11,5 @@ export async function enrollToLessonHandler({
   await Lesson.checkIfEnrolled({ lessonId, userId });
   await UserRole.enrollToLesson({ userId, lessonId });
 
-  return ENROLL_SUCCESS;
+  return { message: ENROLL_SUCCESS };
 }

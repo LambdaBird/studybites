@@ -1,32 +1,24 @@
-import { INVALID_STATUS } from '../services/lesson/constants';
+import { ValidationError } from 'yup';
 
-const errorArray = (m) => [].concat(m);
-
-const sendReply = (repl, status, fallback, errors) =>
-  repl.status(status).send({
-    fallback,
-    errors: errorArray(errors),
-  });
-
-const errorHandler = (error, _, reply) => {
-  if (error.validation) {
-    return sendReply(reply, 400, 'errors.validation', INVALID_STATUS);
+export default function errorHandler(
+  { constructor, validation, statusCode, message },
+  _,
+  reply,
+) {
+  if (constructor === ValidationError) {
+    reply.status(400).send({
+      statusCode: 400,
+      message,
+    });
   }
-
-  switch (error.name) {
-    case 'ValidationError':
-      return sendReply(reply, 400, 'errors.validation', error.errors);
-    case 'BadRequestError':
-      return sendReply(reply, 400, 'errors.bad_request', error.errors);
-    case 'AuthorizationError':
-      return sendReply(reply, 401, 'errors.authorization', error.errors);
-    case 'NotFoundError':
-      return sendReply(reply, 404, 'errors.not_found', error.errors);
-    case 'UniqueViolationError':
-      return sendReply(reply, 409, 'errors.unique_violation', error.errors);
-    default:
-      return sendReply(reply, 500, 'errors.internal', error.message);
+  if (validation) {
+    reply.status(400).send({
+      statusCode: 400,
+      message: `${validation[0].keyword}${validation[0].dataPath}`,
+    });
   }
-};
-
-export default errorHandler;
+  if (!statusCode || !message) {
+    reply.status(500).send({ statusCode: 500, message: 'internal' });
+  }
+  reply.status(statusCode).send({ statusCode, message });
+}

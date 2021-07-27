@@ -3,7 +3,6 @@ import { v4 } from 'uuid';
 import build from '../../src/app';
 
 import { UNAUTHORIZED } from '../../src/services/user/constants';
-import { INVALID_STATUS } from '../../src/services/lesson/constants';
 
 import {
   teacherMike,
@@ -106,7 +105,8 @@ describe('Maintainer flow', () => {
       const payload = JSON.parse(response.payload);
 
       expect(response.statusCode).toBe(401);
-      expect(payload.errors[0]).toMatchObject(UNAUTHORIZED);
+      expect(payload.statusCode).toBe(401);
+      expect(payload.message).toBe(UNAUTHORIZED);
     });
 
     it('should return a lesson with blocks', async () => {
@@ -159,7 +159,8 @@ describe('Maintainer flow', () => {
       const payload = JSON.parse(response.payload);
 
       expect(response.statusCode).toBe(400);
-      expect(payload.errors[0]).toMatchObject(INVALID_STATUS);
+      expect(payload.statusCode).toBe(400);
+      expect(payload.message).toBe('enum.lesson.status');
     });
   });
 
@@ -184,7 +185,8 @@ describe('Maintainer flow', () => {
       const payload = JSON.parse(response.payload);
 
       expect(response.statusCode).toBe(401);
-      expect(payload.errors[0]).toMatchObject(UNAUTHORIZED);
+      expect(payload.statusCode).toBe(401);
+      expect(payload.message).toBe(UNAUTHORIZED);
     });
 
     it('should return a lesson with a new name', async () => {
@@ -259,7 +261,8 @@ describe('Maintainer flow', () => {
       const payload = JSON.parse(response.payload);
 
       expect(response.statusCode).toBe(401);
-      expect(payload.errors[0]).toMatchObject(UNAUTHORIZED);
+      expect(payload.statusCode).toBe(401);
+      expect(payload.message).toBe(UNAUTHORIZED);
     });
 
     it('should return no lessons if user does not have any lessons', async () => {
@@ -361,7 +364,8 @@ describe('Maintainer flow', () => {
       const payload = JSON.parse(response.payload);
 
       expect(response.statusCode).toBe(401);
-      expect(payload.errors[0]).toMatchObject(UNAUTHORIZED);
+      expect(payload.statusCode).toBe(401);
+      expect(payload.message).toBe(UNAUTHORIZED);
     });
 
     it('should return an error if the user is not a maintainer of this lesson', async () => {
@@ -373,7 +377,8 @@ describe('Maintainer flow', () => {
       const payload = JSON.parse(response.payload);
 
       expect(response.statusCode).toBe(401);
-      expect(payload.errors[0]).toMatchObject(UNAUTHORIZED);
+      expect(payload.statusCode).toBe(401);
+      expect(payload.message).toBe(UNAUTHORIZED);
     });
 
     it('should return a lesson with blocks and students count', async () => {
@@ -407,7 +412,8 @@ describe('Maintainer flow', () => {
       const payload = JSON.parse(response.payload);
 
       expect(response.statusCode).toBe(401);
-      expect(payload.errors[0]).toMatchObject(UNAUTHORIZED);
+      expect(payload.statusCode).toBe(401);
+      expect(payload.message).toBe(UNAUTHORIZED);
     });
 
     it('should return students with total count', async () => {
@@ -490,7 +496,8 @@ describe('Maintainer flow', () => {
       const payload = JSON.parse(response.payload);
 
       expect(response.statusCode).toBe(401);
-      expect(payload.errors[0]).toMatchObject(UNAUTHORIZED);
+      expect(payload.statusCode).toBe(401);
+      expect(payload.message).toBe(UNAUTHORIZED);
     });
 
     it('should return students with total count', async () => {
