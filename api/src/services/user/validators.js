@@ -1,83 +1,42 @@
 import * as yup from 'yup';
 
-import {
-  propertyTypeError,
-  requiredPropertyError,
-} from '../../validation/helpers';
-
 import { INVALID_EMAIL, INVALID_PASSWORD, INVALID_ID } from './constants';
 
-const emailValidatorSignup = yup
-  .string()
-  .typeError(propertyTypeError('signup', 'email', 'string'))
-  .required(requiredPropertyError('signup', 'email'))
-  .email(INVALID_EMAIL);
+const emailValidatorSignup = yup.string().email(INVALID_EMAIL);
 
 const passwordValidatorSignup = yup
   .string()
-  .typeError(propertyTypeError('signup', 'password', 'string'))
-  .required(requiredPropertyError('signup', 'password'))
   .matches(/^(?=.*\d)(?=.*\D).{5,}$/, {
     message: INVALID_PASSWORD,
   });
 
-const firstNameValidatorSignup = yup
-  .string()
-  .typeError(propertyTypeError('signup', 'firstName', 'string'))
-  .required(requiredPropertyError('signup', 'firstName'));
+const firstNameValidatorSignup = yup.string();
 
-const lastNameValidatorSignup = yup
-  .string()
-  .typeError(propertyTypeError('signup', 'lastName', 'string'))
-  .required(requiredPropertyError('signup', 'lastName'));
+const lastNameValidatorSignup = yup.string();
 
-const emailValidatorSignin = yup
-  .string()
-  .typeError(propertyTypeError('signin', 'email', 'string'))
-  .required(requiredPropertyError('signin', 'email'));
+const emailValidatorSignin = yup.string();
 
-const passwordValidatorSignin = yup
-  .string()
-  .typeError(propertyTypeError('signin', 'password', 'string'))
-  .required(requiredPropertyError('signin', 'password'));
+const passwordValidatorSignin = yup.string();
 
-const emailValidatorPatch = yup
-  .string()
-  .typeError(propertyTypeError('patch', 'email', 'string'))
-  .email(INVALID_EMAIL);
+const emailValidatorPatch = yup.string().email(INVALID_EMAIL);
 
 const passwordValidatorPatch = yup
   .string()
-  .typeError(propertyTypeError('patch', 'password', 'string'))
   .matches(/^(?=.*\d)(?=.*[a-zA-Z]).{5,}$/, {
     message: INVALID_PASSWORD,
   });
 
-const firstNameValidatorPatch = yup
-  .string()
-  .typeError(propertyTypeError('patch', 'firstName', 'string'));
+const firstNameValidatorPatch = yup.string();
 
-const lastNameValidatorPatch = yup
-  .string()
-  .typeError(propertyTypeError('patch', 'lastName', 'string'));
+const lastNameValidatorPatch = yup.string();
 
-const isConfirmedPatch = yup
-  .bool()
-  .typeError(propertyTypeError('patch', 'isConfirmed', 'bool'));
+const isConfirmedPatch = yup.bool();
 
-const isSuperAdminPatch = yup
-  .bool()
-  .typeError(propertyTypeError('patch', 'isSuperAdmin', 'bool'));
+const isSuperAdminPatch = yup.bool();
 
-const idRole = yup
-  .number()
-  .typeError(propertyTypeError('role', 'id', 'integer'))
-  .required(requiredPropertyError('role', 'id'));
+const idRole = yup.number();
 
-const tokenValidatorRefresh = yup
-  .string()
-  .typeError(propertyTypeError('user', 'refreshToken', 'valid'))
-  .required(requiredPropertyError('user', 'refreshToken'));
+const tokenValidatorRefresh = yup.string();
 
 export const signupBodyValidator = yup.object({
   email: emailValidatorSignup,

@@ -2,7 +2,6 @@ import objection, { raw } from 'objection';
 
 import config from '../../../config';
 
-import validatorCompiler from '../../validation/validatorCompiler';
 import {
   AuthorizationError,
   NotFoundError,
@@ -10,14 +9,6 @@ import {
   ConflictError,
 } from '../../validation/errors';
 
-import {
-  signupBodyValidator,
-  signinBodyValidator,
-  patchBodyValidator,
-  validateId,
-  roleBodyValidator,
-  refreshBodyValidator,
-} from './validators';
 import { createAccessToken, createRefreshToken } from './utils';
 import {
   UNAUTHORIZED,
@@ -31,6 +22,7 @@ import {
   USER_ROLE_NOT_FOUND,
   USER_FIELDS,
   REFRESH_TOKEN_EXPIRED,
+  INVALID_ID,
 } from './constants';
 import { hashPassword, comparePasswords } from '../../../utils/salt';
 
@@ -43,13 +35,21 @@ export default async function router(instance) {
     method: 'POST',
     url: '/signup',
     schema: {
-      body: signupBodyValidator,
+      body: {
+        type: 'object',
+        properties: {
+          email: { type: 'string' },
+          password: { type: 'string' },
+          firstName: { type: 'string' },
+          lastName: { type: 'string' },
+        },
+        required: ['email', 'password', 'firstName', 'lastName'],
+      },
       response: {
         '4xx': { $ref: '4xx#' },
         '5xx': { $ref: '5xx#' },
       },
     },
-    validatorCompiler,
     handler: async (req, repl) => {
       req.body.password = await hashPassword(req.body.password);
 
@@ -73,13 +73,19 @@ export default async function router(instance) {
     method: 'POST',
     url: '/signin',
     schema: {
-      body: signinBodyValidator,
+      body: {
+        type: 'object',
+        properties: {
+          email: { type: 'string' },
+          password: { type: 'string' },
+        },
+        required: ['email', 'password'],
+      },
       response: {
         '4xx': { $ref: '4xx#' },
         '5xx': { $ref: '5xx#' },
       },
     },
-    validatorCompiler,
     handler: async (req, repl) => {
       const { email, password } = req.body;
 
@@ -109,13 +115,18 @@ export default async function router(instance) {
     method: 'POST',
     url: '/refresh_token',
     schema: {
-      body: refreshBodyValidator,
+      body: {
+        type: 'object',
+        properties: {
+          refreshToken: { type: 'string' },
+        },
+        required: ['refreshToken'],
+      },
       response: {
         '4xx': { $ref: '4xx#' },
         '5xx': { $ref: '5xx#' },
       },
     },
-    validatorCompiler,
     handler: async (req, repl) => {
       const { refreshToken } = req.body;
 
@@ -150,7 +161,6 @@ export default async function router(instance) {
         '5xx': { $ref: '5xx#' },
       },
     },
-    validatorCompiler,
     async onRequest(req) {
       await instance.auth({ req });
     },
@@ -190,7 +200,6 @@ export default async function router(instance) {
         '5xx': { $ref: '5xx#' },
       },
     },
-    validatorCompiler,
     async onRequest(req) {
       await instance.auth({ req, isAdminOnly: true });
     },
@@ -282,80 +291,121 @@ export default async function router(instance) {
 
   instance.route({
     method: 'GET',
-    url: '/:id',
+    url: '/:userId',
     schema: {
+      params: {
+        type: 'object',
+        properties: {
+          userId: { type: 'number' },
+        },
+        required: ['userId'],
+      },
       response: {
         '4xx': { $ref: '4xx#' },
         '5xx': { $ref: '5xx#' },
       },
     },
-    validatorCompiler,
     async onRequest(req) {
       await instance.auth({ req, isAdminOnly: true });
     },
-    handler: async (req, repl) => {
-      const id = validateId(req.params.id, req.user.id);
+    handler: async ({ params: { userId }, user: { id } }) => {
+      if (userId === id) {
+        throw new BadRequestError(INVALID_ID);
+      }
 
-      const data = await User.query().findById(id).select(USER_ADMIN_FIELDS);
+      const data = await User.query()
+        .findById(userId)
+        .select(USER_ADMIN_FIELDS);
       if (!data) {
         throw new NotFoundError(USER_NOT_FOUND);
       }
 
-      return repl.status(200).send({ data });
+      return { data };
     },
   });
 
   instance.route({
     method: 'PATCH',
-    url: '/:id',
+    url: '/:userId',
     schema: {
-      body: patchBodyValidator,
+      body: {
+        type: 'object',
+        properties: {
+          email: { type: 'string' },
+          password: { type: 'string' },
+          firstName: { type: 'string' },
+          lastName: { type: 'string' },
+          isConfirmed: { type: 'boolean' },
+          isSuperAdmin: { type: 'boolean' },
+        },
+      },
+      params: {
+        type: 'object',
+        properties: {
+          userId: { type: 'number' },
+        },
+        required: ['userId'],
+      },
       response: {
         '4xx': { $ref: '4xx#' },
         '5xx': { $ref: '5xx#' },
       },
     },
-    validatorCompiler,
     async onRequest(req) {
       await instance.auth({ req, isAdminOnly: true });
     },
-    handler: async (req, repl) => {
-      const id = validateId(req.params.id, req.user.id);
+    handler: async ({ params: { userId }, user: { id }, body }) => {
+      if (userId === id) {
+        throw new BadRequestError(INVALID_ID);
+      }
 
-      if (req.body.password) {
-        req.body.password = await hashPassword(req.body.password);
+      let hash;
+      if (body.password) {
+        hash = await hashPassword(body.password);
       }
 
       const data = await User.query()
-        .patch(req.body)
-        .findById(id)
+        .skipUndefined()
+        .patch({
+          ...body,
+          password: hash,
+        })
+        .findById(userId)
         .returning(USER_ADMIN_FIELDS);
 
       if (!data) {
         throw new BadRequestError(INVALID_PATCH);
       }
 
-      return repl.status(200).send({ data });
+      return { data };
     },
   });
 
   instance.route({
     method: 'DELETE',
-    url: '/:id',
+    url: '/:userId',
     schema: {
+      params: {
+        type: 'object',
+        properties: {
+          userId: { type: 'number' },
+        },
+        required: ['userId'],
+      },
       response: {
         '4xx': { $ref: '4xx#' },
         '5xx': { $ref: '5xx#' },
       },
     },
-    validatorCompiler,
     async onRequest(req) {
       await instance.auth({ req, isAdminOnly: true });
     },
-    handler: async (req) => {
-      const id = validateId(req.params.id, req.user.id);
+    handler: async ({ params: { userId }, user: { id } }) => {
+      if (userId === id) {
+        throw new BadRequestError(INVALID_ID);
+      }
 
-      const result = await User.query().deleteById(id);
+      const result = await User.query().deleteById(userId);
 
       if (!result) {
         throw new NotFoundError(USER_NOT_FOUND);
@@ -369,18 +419,25 @@ export default async function router(instance) {
     method: 'POST',
     url: '/appoint_teacher',
     schema: {
-      body: roleBodyValidator,
+      body: {
+        type: 'object',
+        properties: {
+          id: { type: 'number' },
+        },
+        required: ['id'],
+      },
       response: {
         '4xx': { $ref: '4xx#' },
         '5xx': { $ref: '5xx#' },
       },
     },
-    validatorCompiler,
     async onRequest(req) {
       await instance.auth({ req, isAdminOnly: true });
     },
-    handler: async (req) => {
-      const id = validateId(req.body.id, req.user.id);
+    handler: async ({ body: { id }, user: { id: userId } }) => {
+      if (userId === id) {
+        throw new BadRequestError(INVALID_ID);
+      }
 
       const check = await UserRole.query().findOne({
         userId: id,
@@ -406,18 +463,25 @@ export default async function router(instance) {
     method: 'POST',
     url: '/remove_teacher',
     schema: {
-      body: roleBodyValidator,
+      body: {
+        type: 'object',
+        properties: {
+          id: { type: 'number' },
+        },
+        required: ['id'],
+      },
       response: {
         '4xx': { $ref: '4xx#' },
         '5xx': { $ref: '5xx#' },
       },
     },
-    validatorCompiler,
     async onRequest(req) {
       await instance.auth({ req, isAdminOnly: true });
     },
-    handler: async (req) => {
-      const id = validateId(req.body.id, req.user.id);
+    handler: async ({ body: { id }, user: { id: userId } }) => {
+      if (userId === id) {
+        throw new BadRequestError(INVALID_ID);
+      }
 
       const result = await UserRole.query().delete().where({
         userId: id,

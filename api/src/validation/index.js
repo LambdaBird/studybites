@@ -13,15 +13,7 @@ import {
 import errorHandler from './errorHandler';
 import { NotFoundError } from './errors';
 
-export const RESOURCE_NOT_FOUND = {
-  fallback: 'errors.not_found',
-  errors: [
-    {
-      key: 'route.errors.not_found',
-      message: 'Requested resource not found',
-    },
-  ],
-};
+export const RESOURCE_NOT_FOUND = 'route.errors.not_found';
 
 export default fp((instance, opts, next) => {
   instance.decorate('config', config);
