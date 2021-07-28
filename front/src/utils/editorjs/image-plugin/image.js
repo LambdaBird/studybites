@@ -1,12 +1,6 @@
-import './image.css';
+import * as Utils from '../utils';
 
-const toBase64 = (file) =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (error) => reject(error);
-  });
+import './image.css';
 
 export default class Image {
   constructor({ data, api, readOnly }) {
@@ -29,11 +23,10 @@ export default class Image {
     return {
       baseClass: this.api.styles.block,
       input: this.api.styles.input,
-      container: 'embed-tool',
-      content: 'embed-tool__content',
-      caption: 'embed-tool__caption',
-      urlInput: 'embed-tool__urlInput',
-      videoLoaded: 'embed-tool__video-loaded',
+      container: 'image-tool',
+      content: 'image-tool__content',
+      caption: 'image-tool__caption',
+      urlInput: 'image-tool__urlInput',
     };
   }
 
@@ -61,14 +54,6 @@ export default class Image {
     }
   }
 
-  createInput({ name, placeholder, classList = [] }) {
-    const input = document.createElement('input');
-    this.elements[name] = input;
-    input.placeholder = placeholder;
-    input.classList.add(...classList);
-    return input;
-  }
-
   render() {
     if (this.data === null) {
       return null;
@@ -78,7 +63,8 @@ export default class Image {
     this.container = container;
     container.classList.add(this.CSS.container);
 
-    const inputUrl = this.createInput({
+    const inputUrl = Utils.createInput({
+      wrapper: this,
       name: 'url',
       placeholder: 'Input image url',
       classList: [this.CSS.input, this.CSS.urlInput],
@@ -88,13 +74,10 @@ export default class Image {
     const content = document.createElement('img');
     this.content = content;
 
-    // const that = this;
-    /* this.content.onerror = function () {
-      that.error = this.src;
-    }; */
     content.classList.add(this.CSS.content);
 
-    const inputCaption = this.createInput({
+    const inputCaption = Utils.createInput({
+      wrapper: this,
       name: 'caption',
       placeholder: 'Input image caption',
       classList: [this.CSS.input],
@@ -136,29 +119,29 @@ export default class Image {
     return true;
   }
 
-  // eslint-disable-next-line class-methods-use-this
   onPaste(event) {
     const { file, key, data: url } = event.detail;
     if (key === 'image') {
       this.data = {
         url,
       };
-      const oldView = this.container;
-      if (oldView) {
-        oldView.parentNode.replaceChild(this.render(), oldView);
-      }
+      this.renderNew();
     }
 
     if (file) {
-      toBase64(file).then((base) => {
+      Utils.fileToBase64(file).then((base) => {
         this.data = {
           url: base,
         };
-        const oldView = this.container;
-        if (oldView) {
-          oldView.parentNode.replaceChild(this.render(), oldView);
-        }
+        this.renderNew();
       });
+    }
+  }
+
+  renderNew() {
+    const oldView = this.container;
+    if (oldView) {
+      oldView.parentNode.replaceChild(this.render(), oldView);
     }
   }
 
@@ -167,7 +150,7 @@ export default class Image {
       tags: ['IMG'],
       files: {
         mimeTypes: ['image/*'],
-        extensions: ['gif', 'jpg', 'png'], // Or you can specify extensions
+        extensions: ['gif', 'jpg', 'png'],
       },
       patterns: {
         image: /https?:\/\/\S+\.(gif|jpe?g|tiff|png)$/i,
