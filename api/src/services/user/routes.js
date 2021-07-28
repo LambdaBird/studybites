@@ -1,7 +1,5 @@
 import objection, { raw } from 'objection';
 
-import config from '../../../config';
-
 import {
   AuthorizationError,
   NotFoundError,
@@ -10,24 +8,18 @@ import {
 } from '../../validation/errors';
 
 import { createAccessToken, createRefreshToken } from './utils';
-import {
-  UNAUTHORIZED,
-  USER_ALREADY_REGISTERED,
-  USER_NOT_FOUND,
-  USER_ADMIN_FIELDS,
-  USER_DELETED,
-  INVALID_PATCH,
-  ALTER_ROLE_SUCCESS,
-  ALTER_ROLE_FAIL,
-  USER_ROLE_NOT_FOUND,
-  USER_FIELDS,
-  REFRESH_TOKEN_EXPIRED,
-  INVALID_ID,
-} from './constants';
 import { hashPassword, comparePasswords } from '../../../utils/salt';
 
 export default async function router(instance) {
   const {
+    config: {
+      userService: {
+        userServiceErrors: errors,
+        userServiceMessages: messages,
+        userServiceConstants: constants,
+      },
+      globals: { roles, searchLimits },
+    },
     models: { User, UserRole },
   } = instance;
 
@@ -67,7 +59,7 @@ export default async function router(instance) {
           refreshToken,
         });
       } catch (err) {
-        throw new ConflictError(USER_ALREADY_REGISTERED);
+        throw new ConflictError(errors.USER_ERR_ALREADY_REGISTERED);
       }
     },
   });
@@ -96,12 +88,12 @@ export default async function router(instance) {
         email,
       });
       if (!userData) {
-        throw new AuthorizationError(UNAUTHORIZED);
+        throw new AuthorizationError(errors.USER_ERR_UNAUTHORIZED);
       }
 
       const compareResult = await comparePasswords(password, userData.password);
       if (!compareResult) {
-        throw new AuthorizationError(UNAUTHORIZED);
+        throw new AuthorizationError(errors.USER_ERR_UNAUTHORIZED);
       }
 
       const accessToken = createAccessToken(instance, userData);
@@ -136,13 +128,13 @@ export default async function router(instance) {
       const decoded = await instance.jwt.decode(refreshToken);
 
       if (Date.now() >= decoded.exp * 1000) {
-        throw new AuthorizationError(REFRESH_TOKEN_EXPIRED);
+        throw new AuthorizationError(errors.USER_ERR_TOKEN_EXPIRED);
       }
 
       const userData = await User.query().findById(decoded.id);
 
       if (!userData) {
-        throw new AuthorizationError(UNAUTHORIZED);
+        throw new AuthorizationError(errors.USER_ERR_UNAUTHORIZED);
       }
 
       const newAccessToken = createAccessToken(instance, userData);
@@ -170,10 +162,10 @@ export default async function router(instance) {
     handler: async (req, repl) => {
       const userData = await User.query()
         .findById(req.user.id)
-        .select([...USER_FIELDS, 'isSuperAdmin']);
+        .select([...constants.USER_CONST_ALLOWED_USER_FIELDS, 'isSuperAdmin']);
 
       if (!userData) {
-        throw new AuthorizationError(UNAUTHORIZED);
+        throw new AuthorizationError(errors.USER_ERR_UNAUTHORIZED);
       }
 
       const { isSuperAdmin, ...user } = userData;
@@ -182,13 +174,13 @@ export default async function router(instance) {
         .for(UserRole.query().where('user_id', req.user.id))
         .select('name');
 
-      const roles = rolesData.map((role) => role.name);
+      const userRoles = rolesData.map((role) => role.name);
 
       if (isSuperAdmin) {
-        roles.push('SuperAdmin');
+        userRoles.push('SuperAdmin');
       }
 
-      const userWithRoles = { ...user, roles };
+      const userWithRoles = { ...user, roles: userRoles };
 
       return repl.status(200).send(userWithRoles);
     },
@@ -227,9 +219,9 @@ export default async function router(instance) {
       const data = await User.query()
         .skipUndefined()
         .select(
-          USER_ADMIN_FIELDS,
+          constants.USER_CONST_ALLOWED_ADMIN_FIELDS,
           User.relatedQuery('users_roles')
-            .where('role_id', config.roles.TEACHER.id)
+            .where('role_id', roles.TEACHER.id)
             .select(
               raw(`CAST(CASE WHEN COUNT(*) > 0 THEN 1 ELSE 0 END AS INT)`),
             )
@@ -263,7 +255,7 @@ export default async function router(instance) {
           id: req.user.id,
         })
         .offset(req.query.offset || 0)
-        .limit(req.query.limit || config.search.USER_SEARCH_LIMIT);
+        .limit(req.query.limit || searchLimits.USER_SEARCH_LIMIT);
 
       const count = await User.query()
         .skipUndefined()
@@ -313,14 +305,14 @@ export default async function router(instance) {
     },
     handler: async ({ params: { userId }, user: { id } }) => {
       if (userId === id) {
-        throw new BadRequestError(INVALID_ID);
+        throw new BadRequestError(errors.USER_ERR_INVALID_USER_ID);
       }
 
       const data = await User.query()
         .findById(userId)
-        .select(USER_ADMIN_FIELDS);
+        .select(constants.USER_CONST_ALLOWED_ADMIN_FIELDS);
       if (!data) {
-        throw new NotFoundError(USER_NOT_FOUND);
+        throw new NotFoundError(errors.USER_ERR_USER_NOT_FOUND);
       }
 
       return { data };
@@ -362,7 +354,7 @@ export default async function router(instance) {
     },
     handler: async ({ params: { userId }, user: { id }, body }) => {
       if (userId === id) {
-        throw new BadRequestError(INVALID_ID);
+        throw new BadRequestError(errors.USER_ERR_INVALID_USER_ID);
       }
 
       let hash;
@@ -377,10 +369,10 @@ export default async function router(instance) {
           password: hash,
         })
         .findById(userId)
-        .returning(USER_ADMIN_FIELDS);
+        .returning(constants.USER_CONST_ALLOWED_ADMIN_FIELDS);
 
       if (!data) {
-        throw new BadRequestError(INVALID_PATCH);
+        throw new BadRequestError(errors.USER_ERR_INVALID_UPDATE);
       }
 
       return { data };
@@ -408,16 +400,16 @@ export default async function router(instance) {
     },
     handler: async ({ params: { userId }, user: { id } }) => {
       if (userId === id) {
-        throw new BadRequestError(INVALID_ID);
+        throw new BadRequestError(errors.USER_ERR_INVALID_USER_ID);
       }
 
       const result = await User.query().deleteById(userId);
 
       if (!result) {
-        throw new NotFoundError(USER_NOT_FOUND);
+        throw new NotFoundError(errors.USER_ERR_USER_NOT_FOUND);
       }
 
-      return { message: USER_DELETED };
+      return { message: messages.USER_MSG_USER_DELETED };
     },
   });
 
@@ -442,26 +434,26 @@ export default async function router(instance) {
     },
     handler: async ({ body: { id }, user: { id: userId } }) => {
       if (userId === id) {
-        throw new BadRequestError(INVALID_ID);
+        throw new BadRequestError(errors.USER_ERR_INVALID_USER_ID);
       }
 
       const check = await UserRole.query().findOne({
         userId: id,
-        roleId: config.roles.TEACHER.id,
+        roleId: roles.TEACHER.id,
       });
 
       if (check) {
-        throw new BadRequestError(ALTER_ROLE_FAIL);
+        throw new BadRequestError(errors.USER_ERR_FAIL_ALTER_ROLE);
       }
 
       await UserRole.query()
         .insert({
           userId: id,
-          roleId: config.roles.TEACHER.id,
+          roleId: roles.TEACHER.id,
         })
         .returning('*');
 
-      return { message: ALTER_ROLE_SUCCESS };
+      return { message: messages.USER_MSG_SUCCESS_ALTER_ROLE };
     },
   });
 
@@ -486,19 +478,19 @@ export default async function router(instance) {
     },
     handler: async ({ body: { id }, user: { id: userId } }) => {
       if (userId === id) {
-        throw new BadRequestError(INVALID_ID);
+        throw new BadRequestError(errors.USER_ERR_INVALID_USER_ID);
       }
 
       const result = await UserRole.query().delete().where({
         userId: id,
-        roleId: config.roles.TEACHER.id,
+        roleId: roles.TEACHER.id,
       });
 
       if (!result) {
-        throw new NotFoundError(USER_ROLE_NOT_FOUND);
+        throw new NotFoundError(errors.USER_ERR_ROLE_NOT_FOUND);
       }
 
-      return { message: ALTER_ROLE_SUCCESS };
+      return { message: messages.USER_MSG_SUCCESS_ALTER_ROLE };
     },
   });
 }

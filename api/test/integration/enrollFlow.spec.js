@@ -1,9 +1,9 @@
 import build from '../../src/app';
 
 import {
-  ENROLL_SUCCESS,
-  INVALID_ENROLL,
-} from '../../src/services/lesson/constants';
+  lessonServiceErrors as errors,
+  lessonServiceMessages as messages,
+} from '../../src/config';
 
 import { french } from '../../seeds/testData/lessons';
 import {
@@ -92,7 +92,7 @@ describe('Enroll to lesson flow', () => {
       const payload = JSON.parse(response.payload);
 
       expect(response.statusCode).toBe(200);
-      expect(payload.message).toBe(ENROLL_SUCCESS);
+      expect(payload.message).toBe(messages.LESSON_MSG_SUCCESS_ENROLL);
     });
   });
 
@@ -120,7 +120,7 @@ describe('Enroll to lesson flow', () => {
 
       expect(response.statusCode).toBe(400);
       expect(payload.statusCode).toBe(400);
-      expect(payload.message).toBe(INVALID_ENROLL);
+      expect(payload.message).toBe(errors.LESSON_ERR_FAIL_ENROLL);
     });
   });
 
@@ -173,7 +173,7 @@ describe('Enroll to lesson flow', () => {
 
       expect(response.statusCode).toBe(400);
       expect(payload.statusCode).toBe(400);
-      expect(payload.message).toBe(INVALID_ENROLL);
+      expect(payload.message).toBe(errors.LESSON_ERR_FAIL_ENROLL);
     });
 
     it('should return an error if try to enroll to archived', async () => {
@@ -185,7 +185,7 @@ describe('Enroll to lesson flow', () => {
 
       expect(response.statusCode).toBe(400);
       expect(payload.statusCode).toBe(400);
-      expect(payload.message).toBe(INVALID_ENROLL);
+      expect(payload.message).toBe(errors.LESSON_ERR_FAIL_ENROLL);
     });
 
     it('should return an error if try to enroll to private', async () => {
@@ -197,7 +197,7 @@ describe('Enroll to lesson flow', () => {
 
       expect(response.statusCode).toBe(400);
       expect(payload.statusCode).toBe(400);
-      expect(payload.message).toBe(INVALID_ENROLL);
+      expect(payload.message).toBe(errors.LESSON_ERR_FAIL_ENROLL);
     });
   });
 

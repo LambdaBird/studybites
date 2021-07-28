@@ -2,8 +2,6 @@ import { v4 } from 'uuid';
 
 import build from '../../src/app';
 
-import { UNAUTHORIZED } from '../../src/services/user/constants';
-
 import {
   teacherMike,
   teacherNathan,
@@ -13,6 +11,8 @@ import {
 import { french } from '../../seeds/testData/lessons';
 
 import { authorizeUser, createLesson, prepareLessonFromSeed } from './utils';
+
+import { userServiceErrors as errors } from '../../src/config';
 
 describe('Maintainer flow', () => {
   const testContext = {};
@@ -106,7 +106,7 @@ describe('Maintainer flow', () => {
 
       expect(response.statusCode).toBe(401);
       expect(payload.statusCode).toBe(401);
-      expect(payload.message).toBe(UNAUTHORIZED);
+      expect(payload.message).toBe(errors.USER_ERR_UNAUTHORIZED);
     });
 
     it('should return a lesson with blocks', async () => {
@@ -186,7 +186,7 @@ describe('Maintainer flow', () => {
 
       expect(response.statusCode).toBe(401);
       expect(payload.statusCode).toBe(401);
-      expect(payload.message).toBe(UNAUTHORIZED);
+      expect(payload.message).toBe(errors.USER_ERR_UNAUTHORIZED);
     });
 
     it('should return a lesson with a new name', async () => {
@@ -262,7 +262,7 @@ describe('Maintainer flow', () => {
 
       expect(response.statusCode).toBe(401);
       expect(payload.statusCode).toBe(401);
-      expect(payload.message).toBe(UNAUTHORIZED);
+      expect(payload.message).toBe(errors.USER_ERR_UNAUTHORIZED);
     });
 
     it('should return no lessons if user does not have any lessons', async () => {
@@ -365,7 +365,7 @@ describe('Maintainer flow', () => {
 
       expect(response.statusCode).toBe(401);
       expect(payload.statusCode).toBe(401);
-      expect(payload.message).toBe(UNAUTHORIZED);
+      expect(payload.message).toBe(errors.USER_ERR_UNAUTHORIZED);
     });
 
     it('should return an error if the user is not a maintainer of this lesson', async () => {
@@ -378,7 +378,7 @@ describe('Maintainer flow', () => {
 
       expect(response.statusCode).toBe(401);
       expect(payload.statusCode).toBe(401);
-      expect(payload.message).toBe(UNAUTHORIZED);
+      expect(payload.message).toBe(errors.USER_ERR_UNAUTHORIZED);
     });
 
     it('should return a lesson with blocks and students count', async () => {
@@ -413,7 +413,7 @@ describe('Maintainer flow', () => {
 
       expect(response.statusCode).toBe(401);
       expect(payload.statusCode).toBe(401);
-      expect(payload.message).toBe(UNAUTHORIZED);
+      expect(payload.message).toBe(errors.USER_ERR_UNAUTHORIZED);
     });
 
     it('should return students with total count', async () => {
@@ -497,7 +497,7 @@ describe('Maintainer flow', () => {
 
       expect(response.statusCode).toBe(401);
       expect(payload.statusCode).toBe(401);
-      expect(payload.message).toBe(UNAUTHORIZED);
+      expect(payload.message).toBe(errors.USER_ERR_UNAUTHORIZED);
     });
 
     it('should return students with total count', async () => {

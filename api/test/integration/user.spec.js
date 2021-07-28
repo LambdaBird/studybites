@@ -1,13 +1,8 @@
 import build from '../../src/app';
 import {
-  ALTER_ROLE_FAIL,
-  ALTER_ROLE_SUCCESS,
-  UNAUTHORIZED,
-  USER_ALREADY_REGISTERED,
-  USER_DELETED,
-  USER_NOT_FOUND,
-  USER_ROLE_NOT_FOUND,
-} from '../../src/services/user/constants';
+  userServiceErrors as errors,
+  userServiceMessages as messages,
+} from '../../src/config';
 
 describe('POST /api/v1/user/signup', () => {
   const app = build();
@@ -59,7 +54,7 @@ describe('POST /api/v1/user/signup', () => {
 
     expect(response.statusCode).toBe(409);
     expect(payload.statusCode).toBe(409);
-    expect(payload.message).toBe(USER_ALREADY_REGISTERED);
+    expect(payload.message).toBe(errors.USER_ERR_ALREADY_REGISTERED);
   });
 });
 
@@ -109,7 +104,7 @@ describe('POST /api/v1/user/signin', () => {
 
     expect(response.statusCode).toBe(401);
     expect(payload.statusCode).toBe(401);
-    expect(payload.message).toBe(UNAUTHORIZED);
+    expect(payload.message).toBe(errors.USER_ERR_UNAUTHORIZED);
   });
 
   it('should return an error for non-existing user', async () => {
@@ -128,7 +123,7 @@ describe('POST /api/v1/user/signin', () => {
 
     expect(response.statusCode).toBe(401);
     expect(payload.statusCode).toBe(401);
-    expect(payload.message).toBe(UNAUTHORIZED);
+    expect(payload.message).toBe(errors.USER_ERR_UNAUTHORIZED);
   });
 });
 
@@ -340,7 +335,7 @@ describe('GET /api/v1/user/:id', () => {
 
     expect(response.statusCode).toBe(404);
     expect(payload.statusCode).toBe(404);
-    expect(payload.message).toBe(USER_NOT_FOUND);
+    expect(payload.message).toBe(errors.USER_ERR_USER_NOT_FOUND);
   });
 });
 
@@ -404,7 +399,7 @@ describe('PATCH /api/v1/user/:id', () => {
 
     expect(response.statusCode).toBe(404);
     expect(payload.statusCode).toBe(404);
-    expect(payload.message).toBe(USER_NOT_FOUND);
+    expect(payload.message).toBe(errors.USER_ERR_USER_NOT_FOUND);
   });
 });
 
@@ -448,7 +443,7 @@ describe('DELETE /api/v1/user/:id', () => {
     const payload = JSON.parse(response.payload);
 
     expect(response.statusCode).toBe(200);
-    expect(payload.message).toBe(USER_DELETED);
+    expect(payload.message).toBe(messages.USER_MSG_USER_DELETED);
   });
 
   it('should return an error', async () => {
@@ -464,7 +459,7 @@ describe('DELETE /api/v1/user/:id', () => {
 
     expect(response.statusCode).toBe(404);
     expect(payload.statusCode).toBe(404);
-    expect(payload.message).toBe(USER_NOT_FOUND);
+    expect(payload.message).toBe(errors.USER_ERR_USER_NOT_FOUND);
   });
 });
 
@@ -511,7 +506,7 @@ describe('POST /api/v1/user/appoint_teacher', () => {
     const payload = JSON.parse(response.payload);
 
     expect(response.statusCode).toBe(200);
-    expect(payload.message).toBe(ALTER_ROLE_SUCCESS);
+    expect(payload.message).toBe(messages.USER_MSG_SUCCESS_ALTER_ROLE);
   });
 
   it('should return an error', async () => {
@@ -530,7 +525,7 @@ describe('POST /api/v1/user/appoint_teacher', () => {
 
     expect(response.statusCode).toBe(400);
     expect(payload.statusCode).toBe(400);
-    expect(payload.message).toBe(ALTER_ROLE_FAIL);
+    expect(payload.message).toBe(errors.USER_ERR_FAIL_ALTER_ROLE);
   });
 });
 
@@ -577,7 +572,7 @@ describe('POST /api/v1/user/remove_teacher', () => {
     const payload = JSON.parse(response.payload);
 
     expect(response.statusCode).toBe(200);
-    expect(payload.message).toBe(ALTER_ROLE_SUCCESS);
+    expect(payload.message).toBe(messages.USER_MSG_SUCCESS_ALTER_ROLE);
   });
 
   it('should return an error', async () => {
@@ -596,6 +591,6 @@ describe('POST /api/v1/user/remove_teacher', () => {
 
     expect(response.statusCode).toBe(404);
     expect(payload.statusCode).toBe(404);
-    expect(payload.message).toBe(USER_ROLE_NOT_FOUND);
+    expect(payload.message).toBe(errors.USER_ERR_ROLE_NOT_FOUND);
   });
 });

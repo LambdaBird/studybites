@@ -1,4 +1,4 @@
-import config from '../../config';
+import { searchLimits, resources } from '../config';
 
 export const error4xx = {
   type: 'object',
@@ -29,7 +29,7 @@ export const lessonSearch = {
   properties: {
     search: { type: 'string' },
     offset: { type: 'number', default: 0 },
-    limit: { type: 'number', default: config.search.LESSON_SEARCH_LIMIT },
+    limit: { type: 'number', default: searchLimits.LESSON_SEARCH_LIMIT },
   },
 };
 
@@ -38,11 +38,11 @@ export const userSearch = {
   properties: {
     search: { type: 'string' },
     offset: { type: 'number', default: 0 },
-    limit: { type: 'number', default: config.search.USER_SEARCH_LIMIT },
+    limit: { type: 'number', default: searchLimits.USER_SEARCH_LIMIT },
   },
 };
 
 export const lessonStatus = {
   type: 'string',
-  enum: config.lessonStatuses,
+  enum: resources.LESSON.status,
 };

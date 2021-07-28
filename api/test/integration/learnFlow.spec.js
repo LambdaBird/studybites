@@ -9,8 +9,11 @@ import {
 import { math, french, russian } from '../../seeds/testData/lessons';
 
 import { authorizeUser, createLesson, prepareLessonFromSeed } from './utils';
-import { INVALID_LEARN } from '../../src/services/lesson/constants';
-import { UNAUTHORIZED } from '../../src/services/user/constants';
+
+import {
+  lessonServiceErrors as errors,
+  userServiceErrors as userErrors,
+} from '../../src/config';
 
 describe('Learning flow', () => {
   const testContext = {
@@ -238,7 +241,7 @@ describe('Learning flow', () => {
 
       expect(response.statusCode).toBe(400);
       expect(payload.statusCode).toBe(400);
-      expect(payload.message).toBe(INVALID_LEARN);
+      expect(payload.message).toBe(errors.LESSON_ERR_FAIL_LEARN);
     });
   });
 
@@ -373,7 +376,7 @@ describe('Learning flow', () => {
 
       expect(response.statusCode).toBe(400);
       expect(payload.statusCode).toBe(400);
-      expect(payload.message).toBe(INVALID_LEARN);
+      expect(payload.message).toBe(errors.LESSON_ERR_FAIL_LEARN);
     });
   });
 
@@ -613,7 +616,7 @@ describe('Learning flow', () => {
 
       expect(response.statusCode).toBe(400);
       expect(payload.statusCode).toBe(400);
-      expect(payload.message).toBe(INVALID_LEARN);
+      expect(payload.message).toBe(errors.LESSON_ERR_FAIL_LEARN);
     });
   });
 
@@ -690,7 +693,7 @@ describe('Learning flow', () => {
 
       expect(response.statusCode).toBe(401);
       expect(payload.statusCode).toBe(401);
-      expect(payload.message).toBe(UNAUTHORIZED);
+      expect(payload.message).toBe(userErrors.USER_ERR_UNAUTHORIZED);
     });
   });
 
