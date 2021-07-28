@@ -1,3 +1,5 @@
+import { globalErrors } from '../config';
+
 export default function errorHandler(
   { validation, statusCode, message },
   _,
@@ -10,7 +12,10 @@ export default function errorHandler(
     });
   }
   if (!statusCode || !message) {
-    return reply.status(500).send({ statusCode: 500, message: 'internal' });
+    return reply.status(500).send({
+      statusCode: 500,
+      message: globalErrors.GLOBAL_ERR_INTERNAL_SERVER_ERROR,
+    });
   }
   return reply.status(statusCode).send({ statusCode, message });
 }

@@ -1,6 +1,6 @@
 import fp from 'fastify-plugin';
 
-import config from '../config';
+import config, { globalErrors } from '../config';
 
 import {
   error4xx,
@@ -49,7 +49,7 @@ export default fp((instance, opts, next) => {
   instance.setErrorHandler(errorHandler);
 
   instance.setNotFoundHandler(() => {
-    throw new NotFoundError(config.globals.RESOURCE_NOT_FOUND);
+    throw new NotFoundError(globalErrors.GLOBAL_ERR_RESOURCE_NOT_FOUND);
   });
 
   return next();
