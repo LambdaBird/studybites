@@ -215,9 +215,11 @@ const LessonEdit = () => {
               <S.BadgeWrapper>
                 <S.CardBadge>
                   <S.StatusText>
-                    {t(
-                      `lesson_dashboard.status.${lessonData?.lesson.status.toLocaleLowerCase()}`,
-                    )}
+                    {lessonData?.lesson.status
+                      ? t(
+                          `lesson_dashboard.status.${lessonData?.lesson.status.toLocaleLowerCase()}`,
+                        )
+                      : t('lesson_dashboard.status.draft')}
                   </S.StatusText>
                 </S.CardBadge>
               </S.BadgeWrapper>
