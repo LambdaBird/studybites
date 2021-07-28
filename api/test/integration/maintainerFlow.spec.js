@@ -160,7 +160,7 @@ describe('Maintainer flow', () => {
 
       expect(response.statusCode).toBe(400);
       expect(payload.statusCode).toBe(400);
-      expect(payload.message).toBe('enum.lesson.status');
+      expect(payload.message).toBe('validation.enum.lesson.status');
     });
   });
 

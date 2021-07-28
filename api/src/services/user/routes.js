@@ -39,7 +39,7 @@ export default async function router(instance) {
         type: 'object',
         properties: {
           email: { type: 'string' },
-          password: { type: 'string' },
+          password: { type: 'string', pattern: '^(?=.*\\d)(?=.*\\D).{5,}$' },
           firstName: { type: 'string' },
           lastName: { type: 'string' },
         },
@@ -49,6 +49,9 @@ export default async function router(instance) {
         '4xx': { $ref: '4xx#' },
         '5xx': { $ref: '5xx#' },
       },
+    },
+    preHandler: async ({ body: { email } }) => {
+      instance.validateEmail({ email });
     },
     handler: async (req, repl) => {
       req.body.password = await hashPassword(req.body.password);
@@ -332,7 +335,7 @@ export default async function router(instance) {
         type: 'object',
         properties: {
           email: { type: 'string' },
-          password: { type: 'string' },
+          password: { type: 'string', pattern: '^(?=.*\\d)(?=.*\\D).{5,}$' },
           firstName: { type: 'string' },
           lastName: { type: 'string' },
           isConfirmed: { type: 'boolean' },
@@ -353,6 +356,9 @@ export default async function router(instance) {
     },
     async onRequest(req) {
       await instance.auth({ req, isAdminOnly: true });
+    },
+    preHandler: async ({ body: { email } }) => {
+      instance.validateEmail({ email });
     },
     handler: async ({ params: { userId }, user: { id }, body }) => {
       if (userId === id) {
