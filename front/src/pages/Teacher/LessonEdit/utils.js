@@ -5,10 +5,10 @@ import HeaderTool from '@editorjs/header';
 import List from '@editorjs/list';
 import Marker from '@editorjs/marker';
 import Quote from '@editorjs/quote';
-import SimpleImage from '@editorjs/simple-image';
 
 import { BLOCKS_TYPE } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
 import Embed from '@sb-ui/utils/editorjs/embed-plugin';
+import Image from '@sb-ui/utils/editorjs/image-plugin';
 import Next from '@sb-ui/utils/editorjs/next-plugin';
 import Quiz from '@sb-ui/utils/editorjs/quiz-plugin';
 
@@ -40,6 +40,8 @@ export const prepareBlocksDataForApi = (data, type) => {
   return data;
 };
 
+const SKIP_BLOCKS = [BLOCKS_TYPE.EMBED, BLOCKS_TYPE.IMAGE];
+
 export const prepareBlocksForApi = (blocks) =>
   blocks
     .map((block) => {
@@ -60,15 +62,16 @@ export const prepareBlocksForApi = (blocks) =>
         },
       };
     })
-    .filter(
-      (block) =>
-        !(block.type === BLOCKS_TYPE.EMBED && block.content.data === undefined),
+    .filter((block) =>
+      SKIP_BLOCKS.every(
+        (b) => !(block.type === b && block.content.data === undefined),
+      ),
     );
 
 export const getConfig = (t) => ({
   holder: 'editorjs',
   tools: {
-    image: SimpleImage,
+    image: Image,
     next: Next,
     quiz: Quiz,
     embed: Embed,
