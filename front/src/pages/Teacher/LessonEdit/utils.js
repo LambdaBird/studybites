@@ -14,7 +14,7 @@ import Quiz from '@sb-ui/utils/editorjs/quiz-plugin';
 export const QUIZ_TYPE = 'quiz';
 
 export const prepareEditorData = (blocks) =>
-  blocks.map(({ content, answer, type }) =>
+  blocks?.map(({ content, answer, type }) =>
     type === QUIZ_TYPE
       ? {
           ...content,
