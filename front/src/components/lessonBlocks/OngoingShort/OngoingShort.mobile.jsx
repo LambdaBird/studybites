@@ -31,7 +31,7 @@ const OngoingShortMobile = ({ lesson }) => {
     <S.MainSpace>
       <S.LeftColumn span={8}>
         <S.StyledImage src={lessonImg} alt="Lesson" />
-        <S.ProgressBar percent={countPercentage} />
+        <S.ProgressBar percent={countPercentage} status="normal" />
       </S.LeftColumn>
       <S.RightColumn span={16}>
         <Title
