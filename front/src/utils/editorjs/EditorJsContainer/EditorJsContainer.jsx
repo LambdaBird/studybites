@@ -1,71 +1,61 @@
-/* eslint-disable */
-import React from 'react';
+import PropTypes from 'prop-types';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import EditorJS from '@editorjs/editorjs';
 import Paragraph from '@editorjs/paragraph';
 
-class EditorJsContainer extends React.Component {
-  instance;
-  holder = `editor-js-${(
-    Math.floor(Math.random() * 1000) + Date.now()
-  ).toString(36)}`;
+const EditorJsContainer = (props) => {
+  const mounted = useRef();
 
-  componentDidMount() {
-    this.initEditor();
-  }
+  const { children } = props;
+  const holder = useMemo(
+    () =>
+      `editor-js-${(Math.floor(Math.random() * 1000) + Date.now()).toString(
+        36,
+      )}`,
+    [],
+  );
 
-  async componentDidUpdate({ readOnly: prevReadOnly }) {
-    const { enableReInitialize, data, readOnly } = this.props;
-    if (prevReadOnly !== readOnly) {
-      // Toggle readOnly mode
-      this.instance?.readOnly.toggle(readOnly);
-    }
+  const [instance, setInstance] = useState(null);
 
-    if (!enableReInitialize || !data) {
-      return;
-    }
+  const handleChange = useCallback(
+    async (api) => {
+      const { onCompareBlocks, onChange, data } = props;
+      if (!onChange) {
+        return;
+      }
 
-    this.changeData(data);
-  }
+      const newData = await instance.save();
+      const isBlocksEqual = onCompareBlocks?.(newData.blocks, data?.blocks);
 
-  componentWillUnmount() {
-    this.destroyEditor();
-  }
+      if (isBlocksEqual) {
+        return;
+      }
 
-  handleChange = async (api) => {
-    const { onCompareBlocks, onChange, data } = this.props;
-    if (!onChange) {
-      return;
-    }
+      onChange(api, newData);
+    },
+    [instance, props],
+  );
 
-    const newData = await this.instance.save();
-    const isBlocksEqual = onCompareBlocks?.(newData.blocks, data?.blocks);
-
-    if (isBlocksEqual) {
-      return;
-    }
-
-    onChange(api, newData);
-  };
-
-  handleReady = () => {
-    const { onReady } = this.props;
+  const handleReady = useCallback(() => {
+    const { onReady } = props;
     if (!onReady) {
       return;
     }
 
-    onReady(this.instance);
-  };
+    onReady(instance);
+  }, [instance, props]);
 
-  initEditor() {
+  const initEditor = useCallback(() => {
     const {
       instanceRef,
+      // eslint-disable-next-line no-shadow
       children,
       enableReInitialize,
       tools,
       onChange,
       onReady,
-      ...props
-    } = this.props;
+      ...anotherProps
+    } = props;
 
     const extendTools = {
       // default tools
@@ -76,65 +66,91 @@ class EditorJsContainer extends React.Component {
       ...tools,
     };
 
-    this.instance = new EditorJS({
+    const newInstance = new EditorJS({
       tools: extendTools,
-      holder: this.holder,
+      holder,
 
       ...(onReady && {
-        onReady: this.handleReady,
+        onReady: handleReady,
       }),
 
       ...(onChange && {
-        onChange: this.handleChange,
+        onChange: handleChange,
       }),
-      ...props,
+      ...anotherProps,
     });
+
+    setInstance(newInstance);
 
     if (instanceRef) {
-      instanceRef(this.instance);
+      instanceRef(newInstance);
     }
-  }
+  }, [handleChange, handleReady, holder, props]);
 
-  destroyEditor() {
-    return new Promise((resolve, reject) => {
-      if (!this.instance) {
-        resolve();
-        return;
-      }
-
-      this.instance.isReady
-        .then(() => {
-          if (this.instance) {
-            this.instance.destroy();
-            this.instance = undefined;
-          }
-
-          resolve();
-        })
-        .catch(reject);
-    });
-  }
-
-  changeData(data) {
-    if (!this.instance) {
+  const destroyEditor = () => {
+    if (!instance) {
       return;
     }
 
-    this.instance?.isReady
-      .then(() => {
-        this.instance.clear();
-        this.instance.render(data);
-      })
-      .catch(() => {
-        // do nothing
-      });
-  }
+    (async () => {
+      await instance.isReady;
+      if (instance.destroy) {
+        instance.destroy();
+        setInstance(undefined);
+      }
+    })();
+  };
 
-  render() {
-    const { children } = this.props;
+  const changeData = useCallback((data) => {
+    if (instance) {
+      instance?.isReady
+        .then(() => {
+          instance.clear();
+          instance.render(data);
+        })
+        .catch(() => {
+          // do nothing
+        });
+    }
+  }, []);
 
-    return children || <div id={this.holder} />;
-  }
-}
+  useEffect(() => {
+    initEditor();
+    return destroyEditor;
+  }, []);
+
+  useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true;
+    } else {
+      const { enableReInitialize, data } = props;
+
+      if (!enableReInitialize || !data) {
+        return () => {};
+      }
+
+      changeData(data);
+    }
+    return () => {};
+  }, [changeData, props]);
+
+  return children || <div id={holder} />;
+};
+
+EditorJsContainer.propTypes = {
+  children: PropTypes.node,
+  enableReInitialize: PropTypes.bool,
+  readOnly: PropTypes.bool,
+  data: PropTypes.shape({
+    // eslint-disable-next-line react/forbid-prop-types
+    blocks: PropTypes.array,
+  }),
+  // eslint-disable-next-line react/forbid-prop-types
+  tools: PropTypes.object,
+  onChange: PropTypes.func,
+  onReady: PropTypes.func,
+  onCompareBlocks: PropTypes.func,
+  instanceRef: PropTypes.func,
+};
 
 export default EditorJsContainer;
