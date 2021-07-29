@@ -274,7 +274,9 @@ describe('Learning flow', () => {
       expect(statusCode).toBe(200);
 
       expect(responseBody).toHaveProperty('total');
-      expect(responseBody.total).toBe(french._blocks._current.length);
+      expect(responseBody.total).toBe(
+        french._blocks._indexesOfInteractive.length,
+      );
 
       expect(responseBody).toHaveProperty('lesson');
       expect(responseBody.lesson).toHaveProperty('blocks');
@@ -338,7 +340,9 @@ describe('Learning flow', () => {
       expect(statusCode).toBe(200);
 
       expect(responseBody).toHaveProperty('total');
-      expect(responseBody.total).toBe(french._blocks._current.length);
+      expect(responseBody.total).toBe(
+        french._blocks._indexesOfInteractive.length,
+      );
 
       expect(responseBody).toHaveProperty('lesson');
       expect(responseBody.lesson).toHaveProperty('blocks');
@@ -458,7 +462,9 @@ describe('Learning flow', () => {
       expect(statusCode).toBe(200);
 
       expect(responseBody).toHaveProperty('total');
-      expect(responseBody.total).toBe(french._blocks._current.length);
+      expect(responseBody.total).toBe(
+        french._blocks._indexesOfInteractive.length,
+      );
 
       expect(responseBody).toHaveProperty('lesson');
       expect(responseBody.lesson).toHaveProperty('blocks');

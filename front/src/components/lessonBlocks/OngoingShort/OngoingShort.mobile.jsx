@@ -20,9 +20,12 @@ const OngoingShortMobile = ({ lesson }) => {
     history.push(LEARN_PAGE.replace(':id', id));
   };
 
-  const countPercentage = useMemo(() =>
-    Math.round((interactivePassed / interactiveTotal) * 100), 
-  [interactivePassed, interactiveTotal]);
+  const countPercentage = useMemo(() => {
+    if (!lesson.interactiveTotal && lesson.isStarted) {
+      return 100;
+    }
+    return Math.round((interactivePassed / interactiveTotal) * 100);
+  }, [lesson, interactivePassed, interactiveTotal]);
 
   return (
     <S.MainSpace>

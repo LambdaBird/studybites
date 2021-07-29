@@ -27,6 +27,7 @@ export const ongoingLessonsOptions = {
                 },
                 interactiveTotal: { type: 'number' },
                 interactivePassed: { type: 'number' },
+                isStarted: { type: 'boolean' },
               },
             },
           },
