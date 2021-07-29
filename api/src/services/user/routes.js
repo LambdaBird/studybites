@@ -18,7 +18,7 @@ export default async function router(instance) {
         userServiceMessages: messages,
         userServiceConstants: constants,
       },
-      globals: { roles, searchLimits },
+      globals: { roles, searchLimits, patterns },
     },
     models: { User, UserRole },
   } = instance;
@@ -31,7 +31,7 @@ export default async function router(instance) {
         type: 'object',
         properties: {
           email: { type: 'string' },
-          password: { type: 'string', pattern: '^(?=.*\\d)(?=.*\\D).{5,}$' },
+          password: { type: 'string', pattern: patterns.PASSWORD },
           firstName: { type: 'string' },
           lastName: { type: 'string' },
         },
@@ -327,7 +327,7 @@ export default async function router(instance) {
         type: 'object',
         properties: {
           email: { type: 'string' },
-          password: { type: 'string', pattern: '^(?=.*\\d)(?=.*\\D).{5,}$' },
+          password: { type: 'string', pattern: patterns.PASSWORD },
           firstName: { type: 'string' },
           lastName: { type: 'string' },
           isConfirmed: { type: 'boolean' },
