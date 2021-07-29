@@ -1,0 +1,31 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+import Paragraph from '@sb-ui/pages/User/LearnPage/BlockElement/Paragraph';
+
+<Meta title="Blocks/Paragraph" component={Paragraph} />
+
+# Paragraph
+
+Component `Paragraph` should use to display `<p></p>` text with html tags (bold,italic,link,marker) (accepts data options `text`)
+
+export const Template = (args) => <Paragraph {...args} />;
+
+<Canvas>
+  <Story
+    name="Text"
+    args={{
+      content: {
+        data: {
+          text: `Default text
+          <b>Bold text</b>
+          <i>Italic text</i>
+          <b><i>Bold italic text</i></b>
+          <a href="#">Link text</a>
+          <mark class="cdx-marker">Mark text</mark>
+          `,
+        },
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
