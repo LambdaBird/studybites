@@ -1,12 +1,11 @@
 import { Col, Progress, Row } from 'antd';
 import styled from 'styled-components';
 
-import { WHITE_COLOR } from '@sb-ui/resources/styles/Global.styled';
 import variables from '@sb-ui/theme/variables';
 
 export const MainSpace = styled(Row)`
   max-height: 150px;
-  background-color: ${WHITE_COLOR};
+  background-color: ${variables['lesson-block-background']};
   padding: 0.5rem 0.5rem 0;
   flex-wrap: nowrap;
 `;
