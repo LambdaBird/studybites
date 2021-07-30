@@ -4,7 +4,7 @@ export const signUpOptions = {
       type: 'object',
       properties: {
         email: { type: 'string' },
-        password: { type: 'string', pattern: '^(?=.*\\d)(?=.*\\D).{5,}$' },
+        password: { $ref: 'passwordPattern#' },
         firstName: { type: 'string' },
         lastName: { type: 'string' },
       },

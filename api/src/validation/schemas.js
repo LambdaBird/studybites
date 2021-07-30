@@ -1,4 +1,4 @@
-import { searchLimits, resources } from '../config';
+import { searchLimits, resources, patterns } from '../config';
 
 export const error4xx = {
   type: 'object',
@@ -45,4 +45,9 @@ export const userSearch = {
 export const lessonStatus = {
   type: 'string',
   enum: resources.LESSON.status,
+};
+
+export const passwordPattern = {
+  type: 'string',
+  pattern: patterns.PASSWORD,
 };

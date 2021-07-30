@@ -1,11 +1,13 @@
 import Ajv from 'ajv';
 
 import { ajv as ajvConfig } from '../../../../config';
+import { passwordPattern } from '../../../../validation/schemas';
 
 import { signUpOptions } from './options';
 
 describe('Test signIn validation', () => {
   const schema = signUpOptions.schema.body;
+  schema.properties.password = passwordPattern;
 
   const ajv = new Ajv(ajvConfig);
   const validate = ajv.compile(schema);

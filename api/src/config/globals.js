@@ -32,15 +32,34 @@ export const resources = {
 };
 
 export const blockConstants = {
-  INTERACTIVE_BLOCKS: ['next', 'quiz'],
-  ACTIONS: ['start', 'finish', 'resume', 'next', 'response'],
-  INTERACTIVE_ACTIONS: ['next', 'response'],
+  actions: {
+    START: 'start',
+    FINISH: 'finish',
+    NEXT: 'next',
+    RESPONSE: 'response',
+  },
+  get INTERACTIVE_ACTIONS() {
+    return [this.actions.NEXT, this.actions.RESPONSE];
+  },
+  blocks: {
+    PARAGRAPH: 'paragraph',
+    IMAGE: 'image',
+    NEXT: 'next',
+    QUIZ: 'quiz',
+  },
+  get INTERACTIVE_BLOCKS() {
+    return [this.blocks.NEXT, this.blocks.QUIZ];
+  },
 };
 
 export const ajv = {
   removeAdditional: true,
   useDefaults: true,
   coerceTypes: true,
+};
+
+export const patterns = {
+  PASSWORD: '^(?=.*\\d)(?=.*\\D).{5,}$',
 };
 
 export const globalErrors = {
