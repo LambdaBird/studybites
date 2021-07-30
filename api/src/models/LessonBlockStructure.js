@@ -2,7 +2,7 @@ import objection from 'objection';
 import path from 'path';
 import { v4 } from 'uuid';
 
-import config from '../../config';
+import { blockConstants } from '../config';
 
 import BaseModel from './BaseModel';
 
@@ -130,7 +130,7 @@ class LessonBlockStructure extends BaseModel {
     const dictionary = remainingBlocks.map((block) => block.type);
 
     for (let i = 0, n = dictionary.length; i < n; i += 1) {
-      if (config.interactiveBlocks.includes(dictionary[i])) {
+      if (blockConstants.INTERACTIVE_BLOCKS.includes(dictionary[i])) {
         if (fromStart) {
           return {
             chunk: blocks.slice(0, i + 1 + startIndex),

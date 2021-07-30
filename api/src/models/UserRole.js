@@ -1,7 +1,7 @@
 import objection from 'objection';
 import path from 'path';
 
-import config from '../../config';
+import { roles, resources } from '../config';
 
 import BaseModel from './BaseModel';
 
@@ -57,8 +57,8 @@ class UserRole extends BaseModel {
     return this.query()
       .where({
         resourceId: lessonId,
-        roleId: config.roles.STUDENT.id,
-        resourceType: config.resources.LESSON,
+        roleId: roles.STUDENT.id,
+        resourceType: resources.LESSON.name,
       })
       .count()
       .first();
@@ -69,8 +69,8 @@ class UserRole extends BaseModel {
       .insert({
         userId,
         resourceId,
-        roleId: config.roles.MAINTAINER.id,
-        resourceType: config.resources.LESSON,
+        roleId: roles.MAINTAINER.id,
+        resourceType: resources.LESSON.name,
       })
       .returning('*');
   }
@@ -79,8 +79,8 @@ class UserRole extends BaseModel {
     return this.query()
       .insert({
         userId,
-        roleId: config.roles.STUDENT.id,
-        resourceType: config.resources.LESSON,
+        roleId: roles.STUDENT.id,
+        resourceType: resources.LESSON.name,
         resourceId: lessonId,
       })
       .returning('*');

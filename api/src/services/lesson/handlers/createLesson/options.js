@@ -52,7 +52,7 @@ export const createLessonOptions = {
   async preHandler({ user: { id: userId } }) {
     await this.access({
       userId,
-      roleId: this.config.roles.TEACHER.id,
+      roleId: this.config.globals.roles.TEACHER.id,
     });
   },
 };

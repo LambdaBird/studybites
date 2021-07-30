@@ -1,4 +1,4 @@
-import config from '../../config';
+import { roles, resources } from '../../src/config';
 
 import * as lessons from './lessons';
 
@@ -65,70 +65,70 @@ export const users = [
 export const usersRoles = [
   {
     user_id: teacherMike.id,
-    role_id: config.roles.TEACHER.id,
+    role_id: roles.TEACHER.id,
   },
   {
     user_id: teacherNathan.id,
-    role_id: config.roles.TEACHER.id,
+    role_id: roles.TEACHER.id,
   },
   {
     user_id: teacherMike.id,
-    role_id: config.roles.MAINTAINER.id,
-    resource_type: config.resources.LESSON,
+    role_id: roles.MAINTAINER.id,
+    resource_type: resources.LESSON.name,
     resource_id: lessons.math.id,
   },
   {
     user_id: teacherMike.id,
-    role_id: config.roles.MAINTAINER.id,
-    resource_type: config.resources.LESSON,
+    role_id: roles.MAINTAINER.id,
+    resource_type: resources.LESSON.name,
     resource_id: lessons.english.id,
   },
   {
     user_id: teacherMike.id,
-    role_id: config.roles.MAINTAINER.id,
-    resource_type: config.resources.LESSON,
+    role_id: roles.MAINTAINER.id,
+    resource_type: resources.LESSON.name,
     resource_id: lessons.biology.id,
   },
   {
     user_id: teacherMike.id,
-    role_id: config.roles.MAINTAINER.id,
-    resource_type: config.resources.LESSON,
+    role_id: roles.MAINTAINER.id,
+    resource_type: resources.LESSON.name,
     resource_id: lessons.literature.id,
   },
   {
     user_id: teacherMike.id,
-    role_id: config.roles.MAINTAINER.id,
-    resource_type: config.resources.LESSON,
+    role_id: roles.MAINTAINER.id,
+    resource_type: resources.LESSON.name,
     resource_id: lessons.french.id,
   },
   {
     user_id: studentJohn.id,
-    role_id: config.roles.STUDENT.id,
-    resource_type: config.resources.LESSON,
+    role_id: roles.STUDENT.id,
+    resource_type: resources.LESSON.name,
     resource_id: lessons.math.id,
   },
   {
     user_id: studentJohn.id,
-    role_id: config.roles.STUDENT.id,
-    resource_type: config.resources.LESSON,
+    role_id: roles.STUDENT.id,
+    resource_type: resources.LESSON.name,
     resource_id: lessons.english.id,
   },
   {
     user_id: studentJohn.id,
-    role_id: config.roles.STUDENT.id,
-    resource_type: config.resources.LESSON,
+    role_id: roles.STUDENT.id,
+    resource_type: resources.LESSON.name,
     resource_id: lessons.biology.id,
   },
   {
     user_id: studentJohn.id,
-    role_id: config.roles.STUDENT.id,
-    resource_type: config.resources.LESSON,
+    role_id: roles.STUDENT.id,
+    resource_type: resources.LESSON.name,
     resource_id: lessons.french.id,
   },
   {
     user_id: studentJane.id,
-    role_id: config.roles.STUDENT.id,
-    resource_type: config.resources.LESSON,
+    role_id: roles.STUDENT.id,
+    resource_type: resources.LESSON.name,
     resource_id: lessons.math.id,
   },
 ];
