@@ -17,7 +17,7 @@ export const QUIZ_TYPE = 'quiz';
 const MAX_BODY_LENGTH = 4_000_000;
 
 export const prepareEditorData = (blocks) =>
-  blocks.map(({ content, answer, type }) =>
+  blocks?.map(({ content, answer, type }) =>
     type === QUIZ_TYPE
       ? {
           ...content,

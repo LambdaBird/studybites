@@ -1,50 +1,16 @@
-/* eslint-disable max-classes-per-file */
-
 import objection from 'objection';
 import path from 'path';
 
-import config from '../../config';
+import {
+  userServiceErrors as errors,
+  userServiceConstants as constants,
+  roles,
+} from '../config';
+import { AuthorizationError, NotFoundError } from '../validation/errors';
 
-class UserQueryBuilder extends objection.QueryBuilder {
-  getAll(columns, req) {
-    this.skipUndefined()
-      .select([
-        'id',
-        'email',
-        'firstName',
-        'lastName',
-        'isConfirmed',
-        'isSuperAdmin',
-      ])
-      .where(columns.email, 'ilike', `%${req.query.search}%`)
-      .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
-      .whereNot({
-        id: req.user.id,
-      })
-      .where(columns.email, 'ilike', `%${req.query.search}%`)
-      .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
-      .orWhere(columns.lastName, 'ilike', `%${req.query.search}%`)
-      .offset(req.query.offset || 0)
-      .limit(req.query.limit || config.search.USER_SEARCH_LIMIT);
+import BaseModel from './BaseModel';
 
-    return this;
-  }
-
-  countAll(columns, req) {
-    this.skipUndefined()
-      .whereNot({
-        id: req.user.id,
-      })
-      .where(columns.email, 'ilike', `%${req.query.search}%`)
-      .orWhere(columns.firstName, 'ilike', `%${req.query.search}%`)
-      .orWhere(columns.lastName, 'ilike', `%${req.query.search}%`)
-      .count('*');
-
-    return this;
-  }
-}
-
-class User extends objection.Model {
+class User extends BaseModel {
   static get tableName() {
     return 'users';
   }
@@ -67,10 +33,6 @@ class User extends objection.Model {
     };
   }
 
-  static get QueryBuilder() {
-    return UserQueryBuilder;
-  }
-
   static relationMappings() {
     return {
       users_roles: {
@@ -82,6 +44,86 @@ class User extends objection.Model {
         },
       },
     };
+  }
+
+  static createOne({ userData }) {
+    return this.query().insert(userData).returning('*');
+  }
+
+  static updateOne({ userData, userId }) {
+    return this.query()
+      .skipUndefined()
+      .patch(userData)
+      .findById(userId)
+      .returning(constants.USER_CONST_ALLOWED_ADMIN_FIELDS)
+      .throwIfNotFound({ error: errors.USER_ERR_INVALID_UPDATE });
+  }
+
+  static checkIfExist({ id, email }) {
+    return this.query()
+      .first()
+      .skipUndefined()
+      .select('id', 'password')
+      .where({
+        id,
+        email,
+      })
+      .throwIfNotFound({
+        error: new AuthorizationError(errors.USER_ERR_UNAUTHORIZED),
+      });
+  }
+
+  static deleteUser({ userId }) {
+    return this.query()
+      .deleteById(userId)
+      .throwIfNotFound({ error: errors.USER_ERR_USER_NOT_FOUND });
+  }
+
+  static getAllUsers({ userId, offset: start, limit, search }) {
+    const end = start + limit - 1;
+
+    return this.query()
+      .skipUndefined()
+      .select(
+        constants.USER_CONST_ALLOWED_ADMIN_FIELDS,
+        this.knex().raw(`
+        (select cast(case when count(*) > 0 then true else false end as bool) 
+        from users_roles where users_roles.user_id = users.id and users_roles.role_id = ${roles.TEACHER.id}) is_teacher
+      `),
+      )
+      .whereNot('users.id', userId)
+      .andWhere(
+        this.knex().raw(
+          `concat(users.first_name, ' ', users.last_name, ' ', users.first_name, ' ', users.email)`,
+        ),
+        'ilike',
+        `%${search ? search.replace(/ /g, '%') : '%'}%`,
+      )
+      .range(start, end);
+  }
+
+  static getUser({ userId }) {
+    return this.query()
+      .findById(userId)
+      .select(constants.USER_CONST_ALLOWED_ADMIN_FIELDS)
+      .throwIfNotFound({
+        error: new NotFoundError(errors.USER_ERR_USER_NOT_FOUND),
+      });
+  }
+
+  static self({ userId }) {
+    return this.query()
+      .findById(userId)
+      .select(
+        this.knex().raw(`
+          users.id, users.email, users.first_name, users.last_name,
+          array_remove(array_append(array_agg(distinct roles.name) filter (where roles.name is not null), 
+          case when users.is_super_admin then 'SuperAdmin'::varchar end), null) roles
+        `),
+      )
+      .leftJoin('users_roles', 'users_roles.userId', '=', 'users.id')
+      .leftJoin('roles', 'roles.id', '=', 'users_roles.roleId')
+      .groupBy('users.id');
   }
 }
 

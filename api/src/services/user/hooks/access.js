@@ -3,13 +3,6 @@ import {
   BadRequestError,
 } from '../../../validation/errors';
 
-import { UNAUTHORIZED } from '../constants';
-
-export const MISSING_ROLE = {
-  key: 'access.missing_role',
-  message: 'Role is required',
-};
-
 export default async function access({
   userId,
   resourceType,
@@ -17,13 +10,16 @@ export default async function access({
   resourceId,
   status,
 }) {
-  try {
-    const {
-      models: { UserRole, Lesson },
-    } = this;
+  const {
+    config: {
+      userService: { userServiceErrors: errors },
+    },
+    models: { UserRole, Lesson },
+  } = this;
 
+  try {
     if (!roleId) {
-      throw new BadRequestError(MISSING_ROLE);
+      throw new BadRequestError(errors.USER_ERR_MISSING_ROLE);
     }
 
     const userRole = await UserRole.query()
@@ -38,7 +34,7 @@ export default async function access({
       });
 
     if (!userRole) {
-      throw new AuthorizationError(UNAUTHORIZED);
+      throw new AuthorizationError(errors.USER_ERR_UNAUTHORIZED);
     }
 
     if (resourceId && status) {
@@ -47,10 +43,10 @@ export default async function access({
         .whereIn('status', status);
 
       if (!lesson) {
-        throw new AuthorizationError(UNAUTHORIZED);
+        throw new AuthorizationError(errors.USER_ERR_UNAUTHORIZED);
       }
     }
   } catch (error) {
-    throw new AuthorizationError(UNAUTHORIZED);
+    throw new AuthorizationError(errors.USER_ERR_UNAUTHORIZED);
   }
 }

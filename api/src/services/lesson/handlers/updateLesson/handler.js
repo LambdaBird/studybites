@@ -5,7 +5,6 @@ export async function updateLessonHandler({
   params: { lessonId },
 }) {
   const {
-    knex,
     models: { Lesson, Block, LessonBlockStructure },
   } = this;
 
@@ -20,7 +19,7 @@ export async function updateLessonHandler({
       }
 
       if (blocks) {
-        const { values } = await Block.getRevisions({ trx, knex });
+        const { values } = await Block.getRevisions({ trx });
 
         const blocksToInsert = [];
 

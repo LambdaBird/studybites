@@ -1,19 +1,13 @@
 import { Avatar, Col, Progress, Row, Typography } from 'antd';
 import styled from 'styled-components';
 
-import {
-  DESCRIPTION_COLOR,
-  VOLCANO_2,
-  VOLCANO_6,
-  WHITE_COLOR,
-} from '@sb-ui/resources/styles/Global.styled';
 import variables from '@sb-ui/theme/variables';
 
 const { Paragraph, Title } = Typography;
 
 export const MainSpace = styled(Row)`
   height: 12rem;
-  background-color: ${WHITE_COLOR};
+  background-color: ${variables['lesson-block-background']};
 `;
 
 export const LeftContent = styled(Col)`
@@ -35,7 +29,7 @@ export const LessonImg = styled.img`
 
 export const DescriptionText = styled(Paragraph)`
   text-align: justify;
-  color: ${DESCRIPTION_COLOR};
+  color: ${variables['lesson-block-description-color']};
   overflow-wrap: anywhere;
 `;
 
@@ -43,7 +37,7 @@ export const AuthorContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  background-color: ${WHITE_COLOR};
+  background-color: ${variables['lesson-block-background']};
 
   position: absolute;
   left: 1.5rem;
@@ -53,8 +47,8 @@ export const AuthorContainer = styled.div`
 `;
 
 export const AuthorAvatar = styled(Avatar)`
-  color: ${VOLCANO_6};
-  background-color: ${VOLCANO_2};
+  color: ${variables['avatar-second-color']};
+  background-color: ${variables['avatar-first-color']};
 `;
 
 export const AuthorName = styled(Typography.Link)`

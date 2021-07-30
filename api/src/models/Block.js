@@ -1,27 +1,8 @@
-import objection from 'objection';
+import BaseModel from './BaseModel';
 
-class Block extends objection.Model {
+class Block extends BaseModel {
   static get tableName() {
     return 'blocks';
-  }
-
-  static createBlocks({ trx, blocks }) {
-    return this.query(trx).insert(blocks).returning('*');
-  }
-
-  static getRevisions({ trx, knex }) {
-    return this.query(trx)
-      .first()
-      .select(
-        knex.raw(
-          `json_object_agg(grouped.block_id, grouped.revisions) as values`,
-        ),
-      )
-      .from(
-        knex.raw(
-          `(select block_id, array_agg(revision) as revisions from blocks group by block_id) as grouped`,
-        ),
-      );
   }
 
   static get jsonSchema() {
@@ -38,6 +19,25 @@ class Block extends objection.Model {
         updatedAt: { type: 'string' },
       },
     };
+  }
+
+  static createBlocks({ trx, blocks }) {
+    return this.query(trx).insert(blocks).returning('*');
+  }
+
+  static getRevisions({ trx }) {
+    return this.query(trx)
+      .first()
+      .select(
+        this.knex().raw(
+          `json_object_agg(grouped.block_id, grouped.revisions) as values`,
+        ),
+      )
+      .from(
+        this.knex().raw(
+          `(select block_id, array_agg(revision) as revisions from blocks group by block_id) as grouped`,
+        ),
+      );
   }
 }
 

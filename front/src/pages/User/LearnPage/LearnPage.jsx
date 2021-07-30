@@ -1,5 +1,4 @@
 /* eslint no-use-before-define: "off" */
-
 import { useParams } from 'react-router-dom';
 
 import Header from '@sb-ui/components/molecules/Header';
@@ -12,14 +11,22 @@ import * as S from './LearnPage.styled';
 
 const LearnPage = () => {
   const { id: lessonId } = useParams();
-  /* const learnProgress = 50; */
-  const { handleInteractiveClick, chunks, isLoading, lesson, total } =
-    useLearnChunks({ lessonId });
+  const {
+    handleInteractiveClick,
+    chunks,
+    isLoading,
+    lesson,
+    total,
+    learnProgress,
+    progressStatus,
+  } = useLearnChunks({ lessonId });
 
   return (
     <>
-      {/* <S.Header bottom={<S.Progress percent={leanProgress} />} /> */}
-      <Header hideOnScroll />
+      <Header
+        hideOnScroll
+        bottom={<S.Progress percent={learnProgress} status={progressStatus} />}
+      />
       <S.Wrapper>
         <S.GlobalStylesLearnPage />
         <S.Row>

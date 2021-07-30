@@ -1,9 +1,11 @@
 import { Avatar, Dropdown, Menu, Space, Tooltip, Typography } from 'antd';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 import { useHistory } from 'react-router-dom';
 import { EllipsisOutlined } from '@ant-design/icons';
 
+import { StyledAvatar } from '@sb-ui/components/molecules/Header/Header.styled';
 import { Statuses } from '@sb-ui/pages/Teacher/Home/LessonsDashboard/constants';
 import { queryClient } from '@sb-ui/query';
 import lesson from '@sb-ui/resources/img/lesson.svg';
@@ -38,14 +40,24 @@ const menuItems = {
   ],
 };
 
-const Teacher = ({ title, id, students, status }) => {
+const Teacher = ({ title, id, students: studentsData, status }) => {
   const history = useHistory();
+
   const { t } = useTranslation('teacher');
   const updateLessonMutation = useMutation(putLesson, {
     onSuccess: () => {
       queryClient.invalidateQueries(TEACHER_LESSONS_BASE_KEY);
     },
   });
+
+  const students = useMemo(
+    () =>
+      studentsData.map(({ id: studentId, firstName = '', lastName = '' }) => ({
+        id: studentId,
+        name: `${firstName} ${lastName}`,
+      })),
+    [studentsData],
+  );
 
   const handleMenuClick = ({ key }) => {
     if (key === 'archiveLesson') {
@@ -109,7 +121,11 @@ const Teacher = ({ title, id, students, status }) => {
               <Avatar.Group>
                 {students.slice(0, 3).map((el) => (
                   <Tooltip key={el.id} title={el.name} placement="top">
-                    <Avatar src={el.avatar} />
+                    {el.avatar ? (
+                      <Avatar src={el.avatar} />
+                    ) : (
+                      <StyledAvatar>{el.name?.[0]}</StyledAvatar>
+                    )}
                   </Tooltip>
                 ))}
               </Avatar.Group>

@@ -1,14 +1,11 @@
 import Ajv from 'ajv';
 
-import config from '../../config';
+import { ajv as ajvConfig } from '../config';
 
 import { lessonIdParam, lessonSearch, userSearch } from './schemas';
 
-const LESSONID_REQUIRED = "should have required property 'lessonId'";
-const LESSONID_TYPE = 'should be number';
-
 describe('Test lessonIdParam validation', () => {
-  const ajv = new Ajv(config.ajv);
+  const ajv = new Ajv(ajvConfig);
   const validate = ajv.compile(lessonIdParam);
 
   test('should return an error if no lessonId', () => {
@@ -20,7 +17,7 @@ describe('Test lessonIdParam validation', () => {
     if (!valid) {
       expect(validate.errors).toBeInstanceOf(Array);
       expect(validate.errors).toHaveLength(1);
-      expect(validate.errors[0].message).toBe(LESSONID_REQUIRED);
+      expect(validate.errors[0].message).toContain('lessonId');
     }
   });
 
@@ -33,7 +30,7 @@ describe('Test lessonIdParam validation', () => {
     if (!valid) {
       expect(validate.errors).toBeInstanceOf(Array);
       expect(validate.errors).toHaveLength(1);
-      expect(validate.errors[0].message).toBe(LESSONID_TYPE);
+      expect(validate.errors[0].message).toContain('number');
     }
   });
 
@@ -56,19 +53,15 @@ describe('Test lessonIdParam validation', () => {
   });
 });
 
-const SEARCH_TYPE = 'should be string';
-const OFFSET_TYPE = 'should be number';
-const LIMIT_TYPE = 'should be number';
-
 describe('Test lessonSearch validation', () => {
-  const ajv = new Ajv(config.ajv);
+  const ajv = new Ajv(ajvConfig);
   const validate = ajv.compile(lessonSearch);
 
   test.each([
-    ['search', 'a string', SEARCH_TYPE],
-    ['offset', 'a number', OFFSET_TYPE],
-    ['limit', 'a number', LIMIT_TYPE],
-  ])('should return an error if %s is not %', (property, _, expected) => {
+    ['search', 'string'],
+    ['offset', 'number'],
+    ['limit', 'number'],
+  ])('should return an error if %s is not a %', (property, expected) => {
     const data = {
       [property]: [true],
     };
@@ -77,7 +70,7 @@ describe('Test lessonSearch validation', () => {
     if (!valid) {
       expect(validate.errors).toBeInstanceOf(Array);
       expect(validate.errors).toHaveLength(1);
-      expect(validate.errors[0].message).toBe(expected);
+      expect(validate.errors[0].message).toContain(expected);
     }
   });
 
@@ -103,14 +96,14 @@ describe('Test lessonSearch validation', () => {
 });
 
 describe('Test userSearch validation', () => {
-  const ajv = new Ajv(config.ajv);
+  const ajv = new Ajv(ajvConfig);
   const validate = ajv.compile(userSearch);
 
   test.each([
-    ['search', 'a string', SEARCH_TYPE],
-    ['offset', 'a number', OFFSET_TYPE],
-    ['limit', 'a number', LIMIT_TYPE],
-  ])('should return an error if %s is not %', (property, _, expected) => {
+    ['search', 'string'],
+    ['offset', 'number'],
+    ['limit', 'number'],
+  ])('should return an error if %s is not a %', (property, expected) => {
     const data = {
       [property]: [true],
     };
@@ -119,7 +112,7 @@ describe('Test userSearch validation', () => {
     if (!valid) {
       expect(validate.errors).toBeInstanceOf(Array);
       expect(validate.errors).toHaveLength(1);
-      expect(validate.errors[0].message).toBe(expected);
+      expect(validate.errors[0].message).toContain(expected);
     }
   });
 

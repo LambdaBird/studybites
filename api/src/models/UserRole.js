@@ -1,8 +1,12 @@
 import objection from 'objection';
 import path from 'path';
-import config from '../../config';
 
-class UserRole extends objection.Model {
+import { roles, resources, userServiceErrors as errors } from '../config';
+import { BadRequestError, NotFoundError } from '../validation/errors';
+
+import BaseModel from './BaseModel';
+
+class UserRole extends BaseModel {
   static get tableName() {
     return 'users_roles';
   }
@@ -19,28 +23,6 @@ class UserRole extends objection.Model {
         updatedAt: { type: 'string' },
       },
     };
-  }
-
-  static async addMaintainer({ trx, userId, resourceId }) {
-    await this.query(trx)
-      .insert({
-        userId,
-        resourceId,
-        roleId: config.roles.MAINTAINER.id,
-        resourceType: config.resources.LESSON,
-      })
-      .returning('*');
-  }
-
-  static enrollToLesson({ userId, lessonId }) {
-    return this.query()
-      .insert({
-        userId,
-        roleId: config.roles.STUDENT.id,
-        resourceType: config.resources.LESSON,
-        resourceId: lessonId,
-      })
-      .returning('*');
   }
 
   static relationMappings() {
@@ -72,15 +54,71 @@ class UserRole extends objection.Model {
     };
   }
 
+  static async addTeacher({ userId }) {
+    const checkNotPassed = await this.query().findOne({
+      userId,
+      roleId: roles.TEACHER.id,
+    });
+
+    if (checkNotPassed) {
+      throw new BadRequestError(errors.USER_ERR_FAIL_ALTER_ROLE);
+    }
+
+    await this.query()
+      .insert({
+        userId,
+        roleId: roles.TEACHER.id,
+      })
+      .returning('*');
+  }
+
+  static async removeTeacher({ userId }) {
+    const checkPassed = await this.query().findOne({
+      userId,
+      roleId: roles.TEACHER.id,
+    });
+
+    if (!checkPassed) {
+      throw new NotFoundError(errors.USER_ERR_ROLE_NOT_FOUND);
+    }
+
+    await this.query().delete().where({
+      userId,
+      roleId: roles.TEACHER.id,
+    });
+  }
+
   static getLessonStudentsCount({ lessonId }) {
     return this.query()
       .where({
         resourceId: lessonId,
-        roleId: config.roles.STUDENT.id,
-        resourceType: config.resources.LESSON,
+        roleId: roles.STUDENT.id,
+        resourceType: resources.LESSON.name,
       })
       .count()
       .first();
+  }
+
+  static async addMaintainer({ trx, userId, resourceId }) {
+    await this.query(trx)
+      .insert({
+        userId,
+        resourceId,
+        roleId: roles.MAINTAINER.id,
+        resourceType: resources.LESSON.name,
+      })
+      .returning('*');
+  }
+
+  static enrollToLesson({ userId, lessonId }) {
+    return this.query()
+      .insert({
+        userId,
+        roleId: roles.STUDENT.id,
+        resourceType: resources.LESSON.name,
+        resourceId: lessonId,
+      })
+      .returning('*');
   }
 }
 
