@@ -1,16 +1,11 @@
 import Ajv from 'ajv';
 
-import config from '../../../../../config';
+import { ajv as ajvConfig } from '../../../../config';
 
 import { learnLessonOptions } from './options';
 
-const ACTION_REQUIRED = "must have required property 'action'";
-const BLOCKID_REQUIRED = "must have required property 'blockId'";
-const REVISION_REQUIRED = "must have required property 'revision'";
-const DATA_REQUIRED = "must have required property 'data'";
-
 describe('Test learnLesson validation', () => {
-  const ajv = new Ajv(config.ajv);
+  const ajv = new Ajv(ajvConfig);
   const validate = ajv.compile(learnLessonOptions.schema.body);
 
   test('should return an error when no action', () => {
@@ -22,7 +17,7 @@ describe('Test learnLesson validation', () => {
     if (!valid) {
       expect(validate.errors).toBeInstanceOf(Array);
       expect(validate.errors).toHaveLength(1);
-      expect(validate.errors[0].message).toBe(ACTION_REQUIRED);
+      expect(validate.errors[0].message).toContain('action');
     }
   });
 
@@ -45,7 +40,6 @@ describe('Test learnLesson validation', () => {
           answers: [true],
         },
       },
-      BLOCKID_REQUIRED,
     ],
     [
       'revision',
@@ -56,7 +50,6 @@ describe('Test learnLesson validation', () => {
           answers: [true],
         },
       },
-      REVISION_REQUIRED,
     ],
     [
       'data',
@@ -65,14 +58,13 @@ describe('Test learnLesson validation', () => {
         blockId: 'blockId',
         revision: 'revision',
       },
-      DATA_REQUIRED,
     ],
-  ])('should return an error when no %s', (_, payload, expected) => {
+  ])('should return an error when no %s', (expected, payload) => {
     const valid = validate(payload);
     if (!valid) {
       expect(validate.errors).toBeInstanceOf(Array);
       expect(validate.errors).toHaveLength(1);
-      expect(validate.errors[0].message).toBe(expected);
+      expect(validate.errors[0].message).toContain(expected);
     }
   });
 });

@@ -2,6 +2,7 @@ import build from '../../src/app';
 import {
   userServiceErrors as errors,
   userServiceMessages as messages,
+  globalErrors,
 } from '../../src/config';
 
 describe('POST /api/v1/user/signup', () => {
@@ -31,7 +32,7 @@ describe('POST /api/v1/user/signup', () => {
 
     const payload = JSON.parse(response.payload);
 
-    expect(response.statusCode).toBe(201);
+    expect(response.statusCode).toBe(200);
     expect(payload).toHaveProperty('accessToken');
     expect(payload).toHaveProperty('refreshToken');
   });
@@ -54,7 +55,7 @@ describe('POST /api/v1/user/signup', () => {
 
     expect(response.statusCode).toBe(409);
     expect(payload.statusCode).toBe(409);
-    expect(payload.message).toBe(errors.USER_ERR_ALREADY_REGISTERED);
+    expect(payload.message).toBe(globalErrors.GLOBAL_ERR_UNIQUE_VIOLATION);
   });
 });
 

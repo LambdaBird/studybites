@@ -9,6 +9,7 @@ import {
   lessonSearch,
   userSearch,
   lessonStatus,
+  passwordPattern,
 } from './schemas';
 import errorHandler from './errorHandler';
 import { NotFoundError } from './errors';
@@ -44,6 +45,11 @@ export default fp((instance, opts, next) => {
   instance.addSchema({
     $id: 'lessonStatus',
     ...lessonStatus,
+  });
+
+  instance.addSchema({
+    $id: 'passwordPattern',
+    ...passwordPattern,
   });
 
   instance.setErrorHandler(errorHandler);
