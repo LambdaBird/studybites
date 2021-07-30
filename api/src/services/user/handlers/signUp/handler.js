@@ -1,18 +1,20 @@
 import { hashPassword } from '../../../../../utils/salt';
 
-import { createAccessToken, createRefreshToken } from '../../utils';
-
-export async function signUpHandler(req) {
+export async function signUpHandler({ body }) {
   const {
     models: { User },
+    createAccessToken,
+    createRefreshToken,
   } = this;
 
-  req.body.password = await hashPassword(req.body.password);
+  const hash = await hashPassword(body.password);
 
-  const userData = await User.query().insert(req.body).returning('*');
+  const { id } = await User.createOne({
+    userData: { ...body, password: hash },
+  });
 
-  const accessToken = createAccessToken(this, userData);
-  const refreshToken = createRefreshToken(this, userData);
+  const accessToken = createAccessToken(this, id);
+  const refreshToken = createRefreshToken(this, id);
 
   return {
     accessToken,

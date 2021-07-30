@@ -9,10 +9,7 @@ export async function updateUserHandler({
 }) {
   const {
     config: {
-      userService: {
-        userServiceErrors: errors,
-        userServiceConstants: constants,
-      },
+      userService: { userServiceErrors: errors },
     },
     models: { User },
   } = this;
@@ -22,22 +19,15 @@ export async function updateUserHandler({
   }
 
   let hash;
+
   if (body.password) {
     hash = await hashPassword(body.password);
   }
 
-  const data = await User.query()
-    .skipUndefined()
-    .patch({
-      ...body,
-      password: hash,
-    })
-    .findById(userId)
-    .returning(constants.USER_CONST_ALLOWED_ADMIN_FIELDS);
-
-  if (!data) {
-    throw new BadRequestError(errors.USER_ERR_INVALID_UPDATE);
-  }
+  const data = await User.updateOne({
+    userId,
+    userData: { ...body, password: hash },
+  });
 
   return { data };
 }

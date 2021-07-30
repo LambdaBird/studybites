@@ -1,13 +1,13 @@
 import { AuthorizationError } from '../../../../validation/errors';
 
-import { createAccessToken, createRefreshToken } from '../../utils';
-
 export async function refreshTokenHandler(req) {
   const {
     config: {
       userService: { userServiceErrors: errors },
     },
     models: { User },
+    createAccessToken,
+    createRefreshToken,
   } = this;
 
   const { refreshToken } = req.body;

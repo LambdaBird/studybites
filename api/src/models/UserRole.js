@@ -1,7 +1,8 @@
 import objection from 'objection';
 import path from 'path';
 
-import { roles, resources } from '../config';
+import { roles, resources, userServiceErrors as errors } from '../config';
+import { BadRequestError, NotFoundError } from '../validation/errors';
 
 import BaseModel from './BaseModel';
 
@@ -51,6 +52,40 @@ class UserRole extends BaseModel {
         },
       },
     };
+  }
+
+  static async addTeacher({ userId }) {
+    const checkNotPassed = await this.query().findOne({
+      userId,
+      roleId: roles.TEACHER.id,
+    });
+
+    if (checkNotPassed) {
+      throw new BadRequestError(errors.USER_ERR_FAIL_ALTER_ROLE);
+    }
+
+    await this.query()
+      .insert({
+        userId,
+        roleId: roles.TEACHER.id,
+      })
+      .returning('*');
+  }
+
+  static async removeTeacher({ userId }) {
+    const checkPassed = await this.query().findOne({
+      userId,
+      roleId: roles.TEACHER.id,
+    });
+
+    if (!checkPassed) {
+      throw new NotFoundError(errors.USER_ERR_ROLE_NOT_FOUND);
+    }
+
+    await this.query().delete().where({
+      userId,
+      roleId: roles.TEACHER.id,
+    });
   }
 
   static getLessonStudentsCount({ lessonId }) {

@@ -1,35 +1,9 @@
-import { AuthorizationError } from '../../../../validation/errors';
-
-export async function selfHandler(req) {
+export async function selfHandler({ user: { id: userId } }) {
   const {
-    config: {
-      userService: {
-        userServiceConstants: constants,
-        userServiceErrors: errors,
-      },
-    },
-    models: { User, UserRole },
+    models: { User },
   } = this;
 
-  const userData = await User.query()
-    .findById(req.user.id)
-    .select([...constants.USER_CONST_ALLOWED_USER_FIELDS, 'isSuperAdmin']);
+  const user = await User.self({ userId });
 
-  if (!userData) {
-    throw new AuthorizationError(errors.USER_ERR_UNAUTHORIZED);
-  }
-
-  const { isSuperAdmin, ...user } = userData;
-
-  const rolesData = await UserRole.relatedQuery('role')
-    .for(UserRole.query().where('user_id', req.user.id))
-    .select('name');
-
-  const userRoles = rolesData.map((role) => role.name);
-
-  if (isSuperAdmin) {
-    userRoles.push('SuperAdmin');
-  }
-
-  return { ...user, roles: userRoles };
+  return { ...user };
 }

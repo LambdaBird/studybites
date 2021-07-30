@@ -1,4 +1,4 @@
-import { BadRequestError, NotFoundError } from '../../../../validation/errors';
+import { BadRequestError } from '../../../../validation/errors';
 
 export async function removeTeacherHandler({
   body: { id },
@@ -6,7 +6,6 @@ export async function removeTeacherHandler({
 }) {
   const {
     config: {
-      globals: { roles },
       userService: { userServiceErrors: errors, userServiceMessages: messages },
     },
     models: { UserRole },
@@ -16,14 +15,7 @@ export async function removeTeacherHandler({
     throw new BadRequestError(errors.USER_ERR_INVALID_USER_ID);
   }
 
-  const result = await UserRole.query().delete().where({
-    userId: id,
-    roleId: roles.TEACHER.id,
-  });
-
-  if (!result) {
-    throw new NotFoundError(errors.USER_ERR_ROLE_NOT_FOUND);
-  }
+  await UserRole.removeTeacher({ userId: id });
 
   return { message: messages.USER_MSG_SUCCESS_ALTER_ROLE };
 }

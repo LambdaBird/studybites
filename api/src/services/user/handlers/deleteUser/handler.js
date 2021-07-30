@@ -1,4 +1,4 @@
-import { BadRequestError, NotFoundError } from '../../../../validation/errors';
+import { BadRequestError } from '../../../../validation/errors';
 
 export async function deleteUserHandler({ params: { userId }, user: { id } }) {
   const {
@@ -12,11 +12,7 @@ export async function deleteUserHandler({ params: { userId }, user: { id } }) {
     throw new BadRequestError(errors.USER_ERR_INVALID_USER_ID);
   }
 
-  const result = await User.query().deleteById(userId);
-
-  if (!result) {
-    throw new NotFoundError(errors.USER_ERR_USER_NOT_FOUND);
-  }
+  await User.deleteUser({ userId });
 
   return { message: messages.USER_MSG_USER_DELETED };
 }
