@@ -14,6 +14,8 @@ import Quiz from '@sb-ui/utils/editorjs/quiz-plugin';
 
 export const QUIZ_TYPE = 'quiz';
 
+const MAX_BODY_LENGTH = 4_000_000;
+
 export const prepareEditorData = (blocks) =>
   blocks.map(({ content, answer, type }) =>
     type === QUIZ_TYPE
@@ -66,7 +68,8 @@ export const prepareBlocksForApi = (blocks) =>
       SKIP_BLOCKS.every(
         (b) => !(block.type === b && block.content.data === undefined),
       ),
-    );
+    )
+    .filter((block) => JSON.stringify(block).length < MAX_BODY_LENGTH);
 
 export const getConfig = (t) => ({
   holder: 'editorjs',

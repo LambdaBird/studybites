@@ -13,6 +13,15 @@ const errorHandler = (error, _, reply) => {
     return sendReply(reply, 400, 'errors.validation', INVALID_STATUS);
   }
 
+  if (error.name === 'FastifyError') {
+    switch (error.code) {
+      case 'FST_ERR_CTP_BODY_TOO_LARGE':
+        return sendReply(reply, 400, 'errors.bad_request', error.message);
+      default:
+        return sendReply(reply, 500, 'errors.internal', error.message);
+    }
+  }
+
   switch (error.name) {
     case 'ValidationError':
       return sendReply(reply, 400, 'errors.validation', error.errors);

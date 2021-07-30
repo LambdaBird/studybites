@@ -1,14 +1,4 @@
 import { v4 } from 'uuid';
-import { BadRequestError } from '../../../../validation/errors';
-import { INVALID_BLOCK_CONTENT } from '../../constants';
-
-const verifyImageData = (blocks, MAX_LENGTH = 5000) => {
-  return blocks
-    .filter((block) => block.type === 'image')
-    .some((block) => block?.content?.data?.url?.length > MAX_LENGTH);
-};
-
-const MAX_IMAGE_LENGTH = 4_000_000;
 
 export async function updateLessonHandler({
   body: { lesson, blocks },
@@ -18,10 +8,6 @@ export async function updateLessonHandler({
     knex,
     models: { Lesson, Block, LessonBlockStructure },
   } = this;
-
-  if (verifyImageData(blocks, MAX_IMAGE_LENGTH)) {
-    throw new BadRequestError(INVALID_BLOCK_CONTENT);
-  }
 
   try {
     const data = await Lesson.transaction(async (trx) => {
