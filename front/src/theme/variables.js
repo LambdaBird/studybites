@@ -1,5 +1,6 @@
 const variables = {
   'primary-color': '#098C8C',
+  'text-table-header': 'rgba(0, 0, 0, 0.45)',
   'text-color': 'rgba(0, 0, 0, 0.85)',
   'progress-trail-color': 'white',
   'learn-chunk-background': '#f5f5f5',

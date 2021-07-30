@@ -1,4 +1,5 @@
 import { Button, Row } from 'antd';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { LessonType } from '@sb-ui/components/lessonBlocks/types';
@@ -9,9 +10,16 @@ import * as S from './OngoingFull.desktop.styled';
 
 const OngoingFullDesktop = ({ lesson }) => {
   const { t } = useTranslation('user');
-  const { name, description /* percentage */ } = lesson;
+  const { name, description, interactiveTotal, interactivePassed } = lesson;
 
   const { fullName, firstNameLetter, handleContinueLesson } = useLesson(lesson);
+
+  const countPercentage = useMemo(() => {
+    if (lesson.isFinished) {
+      return 100;
+    }
+    return Math.round((interactivePassed / interactiveTotal) * 100);
+  }, [lesson, interactivePassed, interactiveTotal]);
 
   return (
     <>
@@ -23,7 +31,7 @@ const OngoingFullDesktop = ({ lesson }) => {
               <S.AuthorAvatar>{firstNameLetter}</S.AuthorAvatar>
               <S.AuthorName>{fullName}</S.AuthorName>
             </S.AuthorContainer>
-            {/*  <S.ProgressBar percent={Math.round(percentage)} /> */}
+            <S.ProgressBar percent={countPercentage} />
           </div>
         </S.LeftContent>
         <S.RightContent>

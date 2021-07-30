@@ -1,9 +1,14 @@
 import objection from 'objection';
 import path from 'path';
 
+import { INVALID_ENROLL, NOT_FOUND } from '../services/lesson/constants';
+import { BadRequestError, NotFoundError } from '../validation/errors';
+
 import config from '../../config';
 
-class Lesson extends objection.Model {
+import BaseModel from './BaseModel';
+
+class Lesson extends BaseModel {
   static get tableName() {
     return 'lessons';
   }
@@ -135,24 +140,31 @@ class Lesson extends objection.Model {
     };
   }
 
-  static checkIfEnrolled({ knex, lessonId, userId }) {
+  static findById({ lessonId }) {
+    return this.query()
+      .findById(lessonId)
+      .throwIfNotFound({ error: new NotFoundError(NOT_FOUND) });
+  }
+
+  static checkIfEnrolled({ lessonId, userId }) {
     return this.query()
       .findById(lessonId)
       .where({ status: 'Public' })
       .whereNotIn(
         'id',
-        knex.raw(`
+        this.knex().raw(`
           select resource_id from users_roles 
           where user_id = ${userId} and role_id = ${config.roles.STUDENT.id}
         `),
-      );
+      )
+      .throwIfNotFound({ error: new BadRequestError(INVALID_ENROLL) });
   }
 
   /**
    * get all lessons where status = 'Public' with author,
    * search, pagination and total
    */
-  static getAllPublicLessons({ knex, userId, offset, limit, search }) {
+  static getAllPublicLessons({ userId, offset, limit, search }) {
     const start = offset;
     const end = start + limit - 1;
 
@@ -163,7 +175,7 @@ class Lesson extends objection.Model {
           /**
            * using cast to set is_enrolled field to true if user is enrolled to this lesson
            */
-          knex.raw(`
+          this.knex().raw(`
             (select cast(case when count(*) > 0 then true else false end as bool)
               from users_roles
               where role_id = ${config.roles.STUDENT.id}
@@ -174,7 +186,7 @@ class Lesson extends objection.Model {
         `),
         )
         .from(
-          knex.raw(`
+          this.knex().raw(`
             (select id, first_name as "firstName", last_name as "lastName" from users) author
         `),
         )
@@ -187,7 +199,7 @@ class Lesson extends objection.Model {
          * using concat to concatenate fields to search through
          */
         .andWhere(
-          knex.raw(
+          this.knex().raw(
             `concat(author."firstName", ' ', author."lastName", ' ', author."firstName", ' ', lessons.name)`,
           ),
           'ilike',
@@ -205,25 +217,49 @@ class Lesson extends objection.Model {
     return this.query().findById(lessonId).withGraphFetched('author');
   }
 
-  static getAllFinishedLessons({ knex, userId, offset: start, limit, search }) {
+  static getLessonWithProgress({ lessonId }) {
+    return this.query()
+      .select(
+        'lessons.*',
+        this.knex().raw(`
+          (select count(*) from results where lesson_id = lessons.id and action in ('next', 'response')) interactive_passed
+        `),
+        this.knex().raw(`
+          (select count(*) from lesson_block_structure join blocks on blocks.block_id = lesson_block_structure.block_id
+          where blocks.type in ('next', 'quiz') and lesson_block_structure.lesson_id = lessons.id) interactive_total
+        `),
+      )
+      .findById(lessonId)
+      .withGraphFetched('author');
+  }
+
+  static getAllFinishedLessons({ userId, offset: start, limit, search }) {
     const end = start + limit - 1;
 
     return this.query()
       .select(
         'lessons.*',
-        knex.raw(`
+        this.knex().raw(`true is_finished`),
+        this.knex().raw(`
           json_build_object('id', author.id, 'firstName', author."firstName", 'lastName', author."lastName") author
-      `),
+        `),
+        this.knex().raw(`
+          (select count(*) from results where lesson_id = lessons.id and action in ('next', 'response')) interactive_passed
+        `),
+        this.knex().raw(`
+          (select count(*) from lesson_block_structure join blocks on blocks.block_id = lesson_block_structure.block_id
+          where blocks.type in ('next', 'quiz') and lesson_block_structure.lesson_id = lessons.id) interactive_total
+        `),
       )
       .from(
-        knex.raw(`
+        this.knex().raw(`
         (select id, first_name as "firstName", last_name as "lastName" from users) author
         `),
       )
       .join('users_roles', 'users_roles.user_id', '=', 'author.id')
       .join('lessons', 'lessons.id', '=', 'users_roles.resource_id')
       .join(
-        knex.raw('users_roles learn'),
+        this.knex().raw('users_roles learn'),
         'learn.resource_id',
         '=',
         'lessons.id',
@@ -236,7 +272,7 @@ class Lesson extends objection.Model {
       .andWhere('results.action', 'finish')
       .andWhere('results.user_id', userId)
       .andWhere(
-        knex.raw(
+        this.knex().raw(
           `concat(author."firstName", ' ', author."lastName", ' ', author."firstName", ' ', lessons.name)`,
         ),
         'ilike',
@@ -250,7 +286,6 @@ class Lesson extends objection.Model {
    * with search, pagination and total
    */
   static getAllEnrolledStudents({
-    knex,
     userId,
     lessonId = undefined,
     offset: start,
@@ -270,7 +305,7 @@ class Lesson extends objection.Model {
         )
         .join('users_roles', 'users_roles.resource_id', '=', 'lessons.id')
         .join(
-          knex.raw(`users_roles students`),
+          this.knex().raw(`users_roles students`),
           'students.resource_id',
           '=',
           'lessons.id',
@@ -284,7 +319,7 @@ class Lesson extends objection.Model {
          * using concat to concatenate fields to search through
          */
         .andWhere(
-          knex.raw(
+          this.knex().raw(
             `concat(users.email, ' ', users.first_name, ' ', users.last_name, ' ', users.first_name)`,
           ),
           'ilike',
@@ -316,6 +351,7 @@ class Lesson extends objection.Model {
         `%${search ? search.replace(/ /g, '%') : '%'}%`,
       )
       .orderBy('lessons.created_at', 'desc')
+      .withGraphFetched('students')
       .range(start, end);
   }
 
@@ -323,7 +359,6 @@ class Lesson extends objection.Model {
    * get all lessons user had enrolled to
    */
   static getOngoingLessons({
-    knex,
     userId,
     excludeLessons,
     offset: start,
@@ -336,30 +371,37 @@ class Lesson extends objection.Model {
       .skipUndefined()
       .select(
         'lessons.*',
-        knex.raw(`
+        this.knex().raw(`
           json_build_object('id', author.id, 'firstName', author."firstName", 'lastName', author."lastName") author
-      `),
+        `),
+        this.knex().raw(`
+          (select count(*) from results where lesson_id = lessons.id and action in ('next', 'response')) interactive_passed
+        `),
+        this.knex().raw(`
+          (select count(*) from lesson_block_structure join blocks on blocks.block_id = lesson_block_structure.block_id
+          where blocks.type in ('next', 'quiz') and lesson_block_structure.lesson_id = lessons.id) interactive_total
+        `),
       )
       .from(
-        knex.raw(`
-        (select id, first_name as "firstName", last_name as "lastName" from users) author
+        this.knex().raw(`
+          (select id, first_name as "firstName", last_name as "lastName" from users) author
         `),
       )
       .join('users_roles', 'users_roles.user_id', '=', 'author.id')
       .join('lessons', 'lessons.id', '=', 'users_roles.resource_id')
       .join(
-        knex.raw('users_roles learn'),
-        'learn.resource_id',
+        this.knex().raw('users_roles enrolled'),
+        'enrolled.resource_id',
         '=',
         'lessons.id',
       )
       .where('users_roles.role_id', config.roles.MAINTAINER.id)
-      .andWhere('learn.role_id', config.roles.STUDENT.id)
-      .andWhere('learn.user_id', userId)
+      .andWhere('enrolled.role_id', config.roles.STUDENT.id)
+      .andWhere('enrolled.user_id', userId)
       .andWhere('users_roles.resource_type', config.resources.LESSON)
       .whereNotIn('lessons.id', excludeLessons || undefined)
       .andWhere(
-        knex.raw(
+        this.knex().raw(
           `concat(author."firstName", ' ', author."lastName", ' ', author."firstName", ' ', lessons.name)`,
         ),
         'ilike',

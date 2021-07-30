@@ -4,8 +4,8 @@ import config from '../../config';
 
 import { lessonIdParam, lessonSearch, userSearch } from './schemas';
 
-const LESSONID_REQUIRED = "should have required property 'lessonId'";
-const LESSONID_TYPE = 'should be number';
+const LESSONID_REQUIRED = "must have required property 'lessonId'";
+const LESSONID_TYPE = 'must be number';
 
 describe('Test lessonIdParam validation', () => {
   const ajv = new Ajv(config.ajv);
@@ -56,9 +56,9 @@ describe('Test lessonIdParam validation', () => {
   });
 });
 
-const SEARCH_TYPE = 'should be string';
-const OFFSET_TYPE = 'should be number';
-const LIMIT_TYPE = 'should be number';
+const SEARCH_TYPE = 'must be string';
+const OFFSET_TYPE = 'must be number';
+const LIMIT_TYPE = 'must be number';
 
 describe('Test lessonSearch validation', () => {
   const ajv = new Ajv(config.ajv);
