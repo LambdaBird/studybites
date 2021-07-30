@@ -1,0 +1,155 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+import Results from '@sb-ui/pages/User/LearnPage/BlockElement/Results';
+import { LearnContextChunksDecorator } from '@sb-ui/stories/decorators';
+
+<Meta title="SB/User/LearnPage/BlockElement/Results" component={Results} />
+
+# Results
+
+Component `Results` should use to display Results after finish (accepts data options `isSolved`)
+
+export const Template = (args) => <Results {...args} />;
+
+<Canvas>
+  <Story
+    decorators={[
+      (Story) => (
+        <LearnContextChunksDecorator
+          chunks={[
+            [
+              {
+                type: 'quiz',
+                data: {
+                  response: [true, true],
+                },
+                answer: {
+                  results: [true, true],
+                },
+                content: {
+                  data: {
+                    answers: [{ value: '1' }, { value: '2' }],
+                    question: `Answer?`,
+                  },
+                  type: 'quiz',
+                },
+              },
+            ],
+          ]}
+        >
+          <Story />
+        </LearnContextChunksDecorator>
+      ),
+    ]}
+    name="Results all correct"
+    args={{
+      isSolved: false,
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+  <Story
+    decorators={[
+      (Story) => (
+        <LearnContextChunksDecorator
+          chunks={[
+            [
+              {
+                type: 'quiz',
+                data: {
+                  response: [true, false],
+                },
+                answer: {
+                  results: [true, true],
+                },
+                content: {
+                  data: {
+                    answers: [{ value: '1' }, { value: '2' }],
+                    question: `Answer?`,
+                  },
+                  type: 'quiz',
+                },
+              },
+            ],
+            [
+              {
+                type: 'quiz',
+                data: {
+                  response: [true, true],
+                },
+                answer: {
+                  results: [true, true],
+                },
+                content: {
+                  data: {
+                    answers: [{ value: '1' }, { value: '2' }],
+                    question: `Answer?`,
+                  },
+                  type: 'quiz',
+                },
+              },
+            ],
+          ]}
+        >
+          <Story />
+        </LearnContextChunksDecorator>
+      ),
+    ]}
+    name="Results half correct"
+    args={{
+      isSolved: false,
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+  <Story
+    decorators={[
+      (Story) => (
+        <LearnContextChunksDecorator
+          chunks={[
+            [
+              {
+                type: 'quiz',
+                data: {
+                  response: [true, false],
+                },
+                answer: {
+                  results: [true, true],
+                },
+                content: {
+                  data: {
+                    answers: [{ value: '1' }, { value: '2' }],
+                    question: `Answer?`,
+                  },
+                  type: 'quiz',
+                },
+              },
+            ],
+          ]}
+        >
+          <Story />
+        </LearnContextChunksDecorator>
+      ),
+    ]}
+    name="Results no correct"
+    args={{
+      isSolved: false,
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+  <Story
+    decorators={[
+      (Story) => (
+        <LearnContextChunksDecorator chunks={[]}>
+          <Story />
+        </LearnContextChunksDecorator>
+      ),
+    ]}
+    name="Results with empty chunks"
+    args={{
+      isSolved: false,
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>

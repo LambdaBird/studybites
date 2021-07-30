@@ -1,6 +1,6 @@
 import { Button, Col, Input, message, Row, Typography } from 'antd';
 import DragDrop from 'editorjs-drag-drop';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
 import { useHistory, useParams } from 'react-router-dom';
@@ -147,10 +147,16 @@ const LessonEdit = () => {
         },
         blocks: prepareBlocksForApi(blocks),
       };
-
       if (!name) {
         message.error({
           content: t('editor_js.message.error_lesson_name'),
+          duration: 2,
+        });
+        return;
+      }
+      if (params.blocks.length === 0) {
+        message.error({
+          content: t('editor_js.message.error_empty_blocks'),
           duration: 2,
         });
         return;
@@ -176,6 +182,11 @@ const LessonEdit = () => {
       editorJSRef.current?.focus?.();
     }
   };
+
+  const status = useMemo(
+    () => lessonData?.lesson?.status?.toLocaleLowerCase() || 'none',
+    [lessonData],
+  );
 
   return (
     <>

@@ -1,0 +1,40 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+import Start from '@sb-ui/pages/User/LearnPage/BlockElement/Start';
+import { LearnContextDecorator } from '@sb-ui/stories/decorators';
+
+<Meta
+  title="SB/User/LearnPage/BlockElement/Start"
+  decorators={[
+    (Story) => (
+      <LearnContextDecorator>
+        <Story />
+      </LearnContextDecorator>
+    ),
+  ]}
+  component={Start}
+/>
+
+# Start
+
+Component `Start` should use to display Start button (accepts data options `isSolved`)
+
+export const Template = (args) => <Start {...args} />;
+
+<Canvas>
+  <Story
+    name="Start not solved"
+    args={{
+      isSolved: false,
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+  <Story
+    name="Start solved"
+    args={{
+      isSolved: true,
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>

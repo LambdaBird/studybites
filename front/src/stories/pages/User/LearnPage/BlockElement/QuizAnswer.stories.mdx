@@ -1,0 +1,65 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+import Quiz from '@sb-ui/pages/User/LearnPage/BlockElement/Quiz';
+import { LearnContextDecorator } from '@sb-ui/stories/decorators';
+
+<Meta
+  title="SB/User/LearnPage/BlockElement/Quiz/Answer"
+  decorators={[
+    (Story) => (
+      <LearnContextDecorator>
+        <Story />
+      </LearnContextDecorator>
+    ),
+  ]}
+  component={Quiz}
+/>
+
+# Quiz
+
+Component `Quiz` should use to display QuizAnswer `answer: undefined` (accepts data options `question`, `answers`)
+
+export const Template = (args) => <Quiz {...args} />;
+
+<Canvas>
+  <Story
+    name="0 answer"
+    args={{
+      answer: undefined,
+      content: {
+        data: {
+          question: 'Question ?',
+          answers: [],
+        },
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+  <Story
+    name="4 answer"
+    args={{
+      answer: undefined,
+      content: {
+        data: {
+          question: 'Question ?',
+          answers: [
+            {
+              value: '1',
+            },
+            {
+              value: '2',
+            },
+            {
+              value: '3',
+            },
+            {
+              value: '4',
+            },
+          ],
+        },
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
