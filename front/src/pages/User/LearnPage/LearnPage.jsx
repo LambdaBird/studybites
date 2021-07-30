@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import Header from '@sb-ui/components/molecules/Header';
 import LearnContext from '@sb-ui/contexts/LearnContext';
 import InfoBlock from '@sb-ui/pages/User/LearnPage/InfoBlock';
+import { getLessonById, postLessonById } from '@sb-ui/utils/api/v1/student';
 
 import LearnChunk from './LearnChunk';
 import { useLearnChunks } from './useLearnChunks';
@@ -19,7 +20,11 @@ const LearnPage = () => {
     lesson,
     total,
     learnProgress,
-  } = useLearnChunks({ lessonId });
+  } = useLearnChunks({
+    lessonId,
+    getLessonById,
+    postLessonById,
+  });
 
   return (
     <>

@@ -11,8 +11,7 @@ const InfoBlock = ({ isLoading, lesson, total }) => {
   const { t } = useTranslation('user');
 
   const author = useMemo(
-    () => 
-      `${lesson.author?.firstName} ${lesson.author?.lastName}`,
+    () => `${lesson.author?.firstName} ${lesson.author?.lastName}`,
     [lesson.author],
   );
 
@@ -30,6 +29,7 @@ const InfoBlock = ({ isLoading, lesson, total }) => {
           >
             {lesson.name}
           </S.TitleEllipsis>
+          <S.StyledRow>{lesson.description}</S.StyledRow>
           <S.StyledRow justify="space-between">
             <Text type="secondary">
               {t('lesson.by')} {author}
@@ -47,12 +47,11 @@ const InfoBlock = ({ isLoading, lesson, total }) => {
 InfoBlock.propTypes = {
   lesson: PropTypes.shape({
     name: PropTypes.string,
-
-    author: 
-      PropTypes.shape({
-        firstName: PropTypes.string,
-        lastName: PropTypes.string,
-      }),
+    description: PropTypes.string,
+    author: PropTypes.shape({
+      firstName: PropTypes.string,
+      lastName: PropTypes.string,
+    }),
   }),
   total: PropTypes.number.isRequired,
   isLoading: PropTypes.bool.isRequired,

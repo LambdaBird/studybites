@@ -16,7 +16,7 @@ import {
   putLesson,
 } from '@sb-ui/utils/api/v1/teacher';
 import Undo from '@sb-ui/utils/editorjs/undo-plugin';
-import { LESSONS_EDIT } from '@sb-ui/utils/paths';
+import { LESSONS_EDIT, LESSONS_PREVIEW } from '@sb-ui/utils/paths';
 import { TEACHER_LESSON_BASE_KEY } from '@sb-ui/utils/queries';
 
 import { getConfig, prepareBlocksForApi, prepareEditorData } from './utils';
@@ -190,11 +190,17 @@ const LessonEdit = () => {
     }
   };
 
+  const handlePreview = () => {
+    history.push(LESSONS_PREVIEW.replace(':id', lessonId));
+  };
+
   return (
     <>
       <Header>
         <S.HeaderButtons>
-          <Button>{t('lesson_edit.buttons.preview')}</Button>
+          <Button disabled={!isEditLesson} onClick={handlePreview}>
+            {t('lesson_edit.buttons.preview')}
+          </Button>
           <S.PublishButton type="primary">
             {t('lesson_edit.buttons.publish')}
           </S.PublishButton>
