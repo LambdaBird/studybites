@@ -5,11 +5,7 @@ import apiConfig from '@sb-ui/utils/api/config';
 import { getLessonById, postLessonById } from '@sb-ui/utils/api/v1/student';
 import { LESSON_BASE_QUERY } from '@sb-ui/utils/queries';
 
-import {
-  createFinishBlock,
-  createFinished,
-  createStartBlock,
-} from './useLearnChunks.util';
+import { createFinishBlock, createStartBlock } from './useLearnChunks.util';
 
 export const convertBlocksToChunks = (blocks) => {
   let lastIndex = 0;
@@ -29,12 +25,12 @@ export const convertBlocksToChunks = (blocks) => {
 export const createChunksFromBlocks = ({
   blocks,
   isFinished,
-  isFinal,
+  isFinalBlock,
   isPost = false,
 }) => {
   const isEmptyBlocks = blocks.length === 0;
 
-  if (isEmptyBlocks && !isFinished && !isPost && !isFinal) {
+  if (isEmptyBlocks && !isFinished && !isPost && !isFinalBlock) {
     return [[createStartBlock(false)]];
   }
 
@@ -45,22 +41,31 @@ export const createChunksFromBlocks = ({
   );
 
   const chunks = convertBlocksToChunks(blocks);
-  if (isFinished) {
-    if (isLastNonInteractiveBlock && !isEmptyBlocks) {
-      chunks[chunks.length - 1].push(createFinished(false));
-    } else {
-      chunks.push([createFinished(false)]);
-    }
-  } else if (isLastInteractiveResolved || isEmptyBlocks) {
-    chunks.push([createFinishBlock(false)]);
-  } else if (isLastNonInteractiveBlock) {
-    chunks[chunks.length - 1].push(createFinishBlock(false));
+  if (isLastNonInteractiveBlock && !isEmptyBlocks) {
+    chunks[chunks.length - 1].push(createFinishBlock(isFinished));
   }
+  if (isLastInteractiveResolved) {
+    chunks.push([createFinishBlock(isFinished)]);
+  }
+  if (isEmptyBlocks && isFinalBlock) {
+    chunks.push([createFinishBlock(false)]);
+  }
+
+  if (!isPost && isFinished && isEmptyBlocks) {
+    chunks.push([createFinishBlock(true)]);
+  }
+
   return chunks;
 };
 
 export const handleAnswer = ({ data: serverData, prevChunks }) => {
-  const { isFinished, answer, blocks, userAnswer } = serverData;
+  const {
+    isFinished,
+    answer,
+    blocks,
+    userAnswer,
+    isFinal: isFinalBlock,
+  } = serverData;
 
   const lastChunk = prevChunks?.[prevChunks.length - 1];
 
@@ -82,6 +87,7 @@ export const handleAnswer = ({ data: serverData, prevChunks }) => {
     ...createChunksFromBlocks({
       blocks,
       isFinished,
+      isFinalBlock,
       isPost: true,
     }),
   ];
@@ -119,7 +125,7 @@ export const useLearnChunks = ({ lessonId }) => {
   useEffect(() => {
     if (getData) {
       const {
-        isFinal,
+        isFinal: isFinalBlock,
         lesson: newLesson,
         isFinished,
         total: newTotal,
@@ -128,7 +134,7 @@ export const useLearnChunks = ({ lessonId }) => {
         createChunksFromBlocks({
           blocks: newLesson?.blocks,
           isFinished,
-          isFinal,
+          isFinalBlock,
           isPost: false,
         }),
       );
