@@ -249,7 +249,7 @@ class LessonBlockStructure extends BaseModel {
       .count()
       .join('blocks', 'blocks.blockId', '=', 'lesson_block_structure.blockId')
       .where({ lessonId })
-      .whereIn('blocks.type', config.interactiveBlocks);
+      .whereIn('blocks.type', blockConstants.INTERACTIVE_BLOCKS);
 
     if (!+countInteractive) {
       const { count: countAll } = await this.query()

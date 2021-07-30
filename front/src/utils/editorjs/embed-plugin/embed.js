@@ -1,3 +1,5 @@
+import * as Utils from '../utils';
+
 import SERVICES from './services';
 
 import './embed.css';
@@ -72,14 +74,6 @@ export default class Embed {
     }
   }
 
-  createInput({ name, placeholder, classList = [] }) {
-    const input = document.createElement('input');
-    this.elements[name] = input;
-    input.placeholder = placeholder;
-    input.classList.add(...classList);
-    return input;
-  }
-
   render() {
     if (this.data === null) {
       return null;
@@ -88,7 +82,8 @@ export default class Embed {
     this.container = container;
     container.classList.add(this.CSS.container);
 
-    const inputUrl = this.createInput({
+    const inputUrl = Utils.createInput({
+      wrapper: this,
       name: 'url',
       placeholder: 'Input video url',
       classList: [this.CSS.input, this.CSS.urlInput],
@@ -99,7 +94,8 @@ export default class Embed {
     this.content = content;
     content.classList.add(this.CSS.content);
 
-    const inputCaption = this.createInput({
+    const inputCaption = Utils.createInput({
+      wrapper: this,
       name: 'caption',
       placeholder: 'Input video caption',
       classList: [this.CSS.input],

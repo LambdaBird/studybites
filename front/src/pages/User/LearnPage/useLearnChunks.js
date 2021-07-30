@@ -165,7 +165,7 @@ export const useLearnChunks = ({ lessonId }) => {
       setLesson(newLesson);
       setPassedBlocks(newLesson.interactivePassed);
       setProgressStatus(isFinished ? 'success' : 'normal');
-      setIsFinalChunk(isFinal);
+      setIsFinalChunk(isFinalBlock);
       setIsFinishedLesson(isFinished);
     }
   }, [getData]);
