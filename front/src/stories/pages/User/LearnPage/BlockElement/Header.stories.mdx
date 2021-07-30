@@ -1,0 +1,78 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+import Header from '@sb-ui/pages/User/LearnPage/BlockElement/Header';
+
+<Meta title="SB/User/LearnPage/BlockElement/Header" component={Header} />
+
+# Header
+
+Component `Header` should use to display heading text `<h></h>` (accepts data options `text`, `level: {1-5}` )
+
+export const Template = (args) => <Header {...args} />;
+
+<Canvas>
+  <Story
+    name="Header 1"
+    args={{
+      content: {
+        data: {
+          text: 'Header 1',
+          level: 1,
+        },
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+  <Story
+    name="Header 2"
+    args={{
+      content: {
+        data: {
+          text: 'Header 2',
+          level: 2,
+        },
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+  <Story
+    name="Header 3"
+    args={{
+      content: {
+        data: {
+          text: 'Header 3',
+          level: 3,
+        },
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+  <Story
+    name="Header 4"
+    args={{
+      content: {
+        data: {
+          text: 'Header 4',
+          level: 4,
+        },
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+  <Story
+    name="Header 5"
+    args={{
+      content: {
+        data: {
+          text: 'Header 5',
+          level: 5,
+        },
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>

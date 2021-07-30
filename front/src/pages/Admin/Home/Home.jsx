@@ -86,7 +86,7 @@ const Home = () => {
 
   const onSuccessChangeTeacher = useCallback(
     (changeData) => {
-      const content = t(changeData.key.replace('.', ':'));
+      const content = t(changeData.message);
       message.success({
         content,
         key: messageKey,
@@ -98,9 +98,9 @@ const Home = () => {
 
   const onErrorChangeTeacher = useCallback(
     ({ error, userId, isTeacher }) => {
-      const errorResponseKey = error.response.data?.errors?.[0]?.key;
+      const errorResponseKey = error.response.data?.message;
       const errorMessage = errorResponseKey ? t(errorResponseKey) : 'Error';
-      const content = t(errorMessage.replace('.', ':'));
+      const content = t(errorMessage);
       message.error({
         content,
         key: messageKey,

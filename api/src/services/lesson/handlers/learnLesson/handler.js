@@ -1,7 +1,5 @@
 import { BadRequestError } from '../../../../validation/errors';
 
-import { INVALID_LEARN } from '../../constants';
-
 export async function checkAllowed({
   userId,
   lessonId,
@@ -94,7 +92,10 @@ export async function learnLessonHandler({
   body: { action, blockId, revision, data },
 }) {
   const {
-    config,
+    config: {
+      globals,
+      lessonService: { lessonServiceErrors: errors },
+    },
     models: { Result, LessonBlockStructure, Block },
   } = this;
   /**
@@ -110,17 +111,17 @@ export async function learnLessonHandler({
    * allowed will be null if the lesson was finished already
    */
   if (!allowed) {
-    throw new BadRequestError(INVALID_LEARN);
+    throw new BadRequestError(errors.LESSON_ERR_FAIL_LEARN);
   }
   /**
    * check if action != allowed action
    */
   if (action !== allowed.action) {
-    throw new BadRequestError(INVALID_LEARN);
+    throw new BadRequestError(errors.LESSON_ERR_FAIL_LEARN);
   }
-  if (config.interactiveActions.includes(action)) {
+  if (globals.blockConstants.INTERACTIVE_ACTIONS.includes(action)) {
     if (blockId !== allowed.blockId || revision !== allowed.revision) {
-      throw new BadRequestError(INVALID_LEARN);
+      throw new BadRequestError(errors.LESSON_ERR_FAIL_LEARN);
     }
   }
   /**
@@ -134,20 +135,21 @@ export async function learnLessonHandler({
     revision,
     data,
   });
+
+  const { count: total } = await LessonBlockStructure.countBlocks({
+    lessonId,
+  });
   /**
    * get all blocks on finish
    */
   if (action === 'finish') {
     const blocks = [];
-    const { count } = await LessonBlockStructure.countBlocks({
-      lessonId,
-    });
-    return { total: +count, blocks, isFinished: true };
+    return { total, blocks, isFinished: true };
   }
   /**
    * else get the next chunk of blocks
    */
-  const { total, chunk, isFinal } = await LessonBlockStructure.getChunk({
+  const { chunk, isFinal } = await LessonBlockStructure.getChunk({
     lessonId,
     previousBlock: blockId,
   });

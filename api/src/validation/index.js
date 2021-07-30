@@ -1,6 +1,6 @@
 import fp from 'fastify-plugin';
 
-import config from '../../config';
+import config, { globalErrors } from '../config';
 
 import {
   error4xx,
@@ -9,19 +9,10 @@ import {
   lessonSearch,
   userSearch,
   lessonStatus,
+  passwordPattern,
 } from './schemas';
 import errorHandler from './errorHandler';
 import { NotFoundError } from './errors';
-
-export const RESOURCE_NOT_FOUND = {
-  fallback: 'errors.not_found',
-  errors: [
-    {
-      key: 'route.errors.not_found',
-      message: 'Requested resource not found',
-    },
-  ],
-};
 
 export default fp((instance, opts, next) => {
   instance.decorate('config', config);
@@ -56,10 +47,15 @@ export default fp((instance, opts, next) => {
     ...lessonStatus,
   });
 
+  instance.addSchema({
+    $id: 'passwordPattern',
+    ...passwordPattern,
+  });
+
   instance.setErrorHandler(errorHandler);
 
   instance.setNotFoundHandler(() => {
-    throw new NotFoundError(RESOURCE_NOT_FOUND);
+    throw new NotFoundError(globalErrors.GLOBAL_ERR_RESOURCE_NOT_FOUND);
   });
 
   return next();

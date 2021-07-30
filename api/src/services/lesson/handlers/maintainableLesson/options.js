@@ -36,11 +36,13 @@ export const maintainableLessonOptions = {
     await this.auth({ req });
   },
   async preHandler({ user: { id: userId }, params: { lessonId: resourceId } }) {
+    const { resources, roles } = this.config.globals;
+
     await this.access({
       userId,
       resourceId,
-      resourceType: this.config.resources.LESSON,
-      roleId: this.config.roles.MAINTAINER.id,
+      resourceType: resources.LESSON.name,
+      roleId: roles.MAINTAINER.id,
     });
   },
 };

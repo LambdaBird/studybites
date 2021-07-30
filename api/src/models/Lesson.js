@@ -1,10 +1,8 @@
 import objection from 'objection';
 import path from 'path';
 
-import { INVALID_ENROLL, NOT_FOUND } from '../services/lesson/constants';
 import { BadRequestError, NotFoundError } from '../validation/errors';
-
-import config from '../../config';
+import { lessonServiceErrors as errors, roles, resources } from '../config';
 
 import BaseModel from './BaseModel';
 
@@ -49,7 +47,7 @@ class Lesson extends BaseModel {
           return query
             .where({
               resource_type: 'lesson',
-              role_id: config.roles.STUDENT.id,
+              role_id: roles.STUDENT.id,
             })
             .select('id', 'first_name', 'last_name');
         },
@@ -80,7 +78,7 @@ class Lesson extends BaseModel {
         modify: (query) => {
           return query
             .select('id', 'first_name', 'last_name')
-            .where({ role_id: config.roles.MAINTAINER.id });
+            .where({ role_id: roles.MAINTAINER.id });
         },
       },
 
@@ -143,7 +141,9 @@ class Lesson extends BaseModel {
   static findById({ lessonId }) {
     return this.query()
       .findById(lessonId)
-      .throwIfNotFound({ error: new NotFoundError(NOT_FOUND) });
+      .throwIfNotFound({
+        error: new NotFoundError(errors.LESSON_ERR_LESSON_NOT_FOUND),
+      });
   }
 
   static checkIfEnrolled({ lessonId, userId }) {
@@ -154,10 +154,12 @@ class Lesson extends BaseModel {
         'id',
         this.knex().raw(`
           select resource_id from users_roles 
-          where user_id = ${userId} and role_id = ${config.roles.STUDENT.id}
+          where user_id = ${userId} and role_id = ${roles.STUDENT.id}
         `),
       )
-      .throwIfNotFound({ error: new BadRequestError(INVALID_ENROLL) });
+      .throwIfNotFound({
+        error: new BadRequestError(errors.LESSON_ERR_FAIL_ENROLL),
+      });
   }
 
   /**
@@ -178,9 +180,9 @@ class Lesson extends BaseModel {
           this.knex().raw(`
             (select cast(case when count(*) > 0 then true else false end as bool)
               from users_roles
-              where role_id = ${config.roles.STUDENT.id}
+              where role_id = ${roles.STUDENT.id}
                 and user_id = ${userId}
-                and resource_type = '${config.resources.LESSON}'
+                and resource_type = '${resources.LESSON.name}'
                 and resource_id = lessons.id) is_enrolled,
             json_build_object('id', author.id, 'firstName', author."firstName", 'lastName', author."lastName") author
         `),
@@ -192,8 +194,8 @@ class Lesson extends BaseModel {
         )
         .join('users_roles', 'users_roles.user_id', '=', 'author.id')
         .join('lessons', 'lessons.id', '=', 'users_roles.resource_id')
-        .where('users_roles.role_id', config.roles.MAINTAINER.id)
-        .andWhere('users_roles.resource_type', config.resources.LESSON)
+        .where('users_roles.role_id', roles.MAINTAINER.id)
+        .andWhere('users_roles.resource_type', resources.LESSON.name)
         .andWhere('lessons.status', 'Public')
         /**
          * using concat to concatenate fields to search through
@@ -265,10 +267,10 @@ class Lesson extends BaseModel {
         'lessons.id',
       )
       .join('results', 'results.lesson_id', '=', 'lessons.id')
-      .where('users_roles.role_id', config.roles.MAINTAINER.id)
-      .andWhere('learn.role_id', config.roles.STUDENT.id)
+      .where('users_roles.role_id', roles.MAINTAINER.id)
+      .andWhere('learn.role_id', roles.STUDENT.id)
       .andWhere('learn.user_id', userId)
-      .andWhere('users_roles.resource_type', config.resources.LESSON)
+      .andWhere('users_roles.resource_type', resources.LESSON.name)
       .andWhere('results.action', 'finish')
       .andWhere('results.user_id', userId)
       .andWhere(
@@ -311,10 +313,10 @@ class Lesson extends BaseModel {
           'lessons.id',
         )
         .join('users', 'users.id', '=', 'students.user_id')
-        .where('users_roles.role_id', config.roles.MAINTAINER.id)
+        .where('users_roles.role_id', roles.MAINTAINER.id)
         .andWhere('lessons.id', lessonId)
         .andWhere('users_roles.user_id', userId)
-        .andWhere('students.role_id', config.roles.STUDENT.id)
+        .andWhere('students.role_id', roles.STUDENT.id)
         /**
          * using concat to concatenate fields to search through
          */
@@ -343,7 +345,7 @@ class Lesson extends BaseModel {
 
     return this.query()
       .join('users_roles', 'users_roles.resource_id', '=', 'lessons.id')
-      .where('users_roles.role_id', config.roles.MAINTAINER.id)
+      .where('users_roles.role_id', roles.MAINTAINER.id)
       .andWhere('users_roles.user_id', userId)
       .andWhere(
         'lessons.name',
@@ -381,6 +383,10 @@ class Lesson extends BaseModel {
           (select count(*) from lesson_block_structure join blocks on blocks.block_id = lesson_block_structure.block_id
           where blocks.type in ('next', 'quiz') and lesson_block_structure.lesson_id = lessons.id) interactive_total
         `),
+        this.knex().raw(`
+          (select cast(case when count(*) > 0 then true else false end as bool) from results
+          where lesson_id = lessons.id and action = 'start' and user_id = ${userId}) is_started
+        `),
       )
       .from(
         this.knex().raw(`
@@ -395,10 +401,10 @@ class Lesson extends BaseModel {
         '=',
         'lessons.id',
       )
-      .where('users_roles.role_id', config.roles.MAINTAINER.id)
-      .andWhere('enrolled.role_id', config.roles.STUDENT.id)
+      .where('users_roles.role_id', roles.MAINTAINER.id)
+      .andWhere('enrolled.role_id', roles.STUDENT.id)
       .andWhere('enrolled.user_id', userId)
-      .andWhere('users_roles.resource_type', config.resources.LESSON)
+      .andWhere('users_roles.resource_type', resources.LESSON.name)
       .whereNotIn('lessons.id', excludeLessons || undefined)
       .andWhere(
         this.knex().raw(
@@ -431,11 +437,11 @@ class Lesson extends BaseModel {
             .andOn(
               'enrolled.role_id',
               '=',
-              objection.raw('?', [config.roles.STUDENT.id]),
+              objection.raw('?', [roles.STUDENT.id]),
             );
         })
         .withGraphJoined('maintainer.[users(onlyFullName) as userInfo]')
-        .whereIn('maintainer.role_id', [config.roles.MAINTAINER.id])
+        .whereIn('maintainer.role_id', [roles.MAINTAINER.id])
         .modifiers({
           onlyFullName(builder) {
             builder.select('first_name', 'last_name');

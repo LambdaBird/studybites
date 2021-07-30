@@ -1,4 +1,4 @@
-import config from '../config';
+import { roles } from '../src/config';
 import usersData from './data/users';
 import { hashPassword } from '../utils/salt';
 
@@ -14,7 +14,7 @@ export const seed = async (knex) => {
     if (_isTeacher) {
       return knex('users_roles').insert({
         user_id: userData[0],
-        role_id: config.roles.TEACHER.id,
+        role_id: roles.TEACHER.id,
       });
     }
     return userData;

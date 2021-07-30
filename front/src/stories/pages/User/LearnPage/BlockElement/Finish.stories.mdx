@@ -1,0 +1,40 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+import Finish from '@sb-ui/pages/User/LearnPage/BlockElement/Finish';
+import { LearnContextDecorator } from '@sb-ui/stories/decorators';
+
+<Meta
+  title="SB/User/LearnPage/BlockElement/Finish"
+  decorators={[
+    (Story) => (
+      <LearnContextDecorator>
+        <Story />
+      </LearnContextDecorator>
+    ),
+  ]}
+  component={Finish}
+/>
+
+# Finish
+
+Component `Finish` should use to display Finish button (accepts data options `isSolved`)
+
+export const Template = (args) => <Finish {...args} />;
+
+<Canvas>
+  <Story
+    name="Finish not solved"
+    args={{
+      isSolved: false,
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+  <Story
+    name="Finish solved"
+    args={{
+      isSolved: true,
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>

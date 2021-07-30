@@ -56,12 +56,14 @@ export const learnLessonOptions = {
     await this.auth({ req });
   },
   async preHandler({ user: { id: userId }, params: { lessonId: resourceId } }) {
+    const { resources, roles } = this.config.globals;
+
     await this.access({
       userId,
       resourceId,
-      resourceType: this.config.resources.LESSON,
-      roleId: this.config.roles.STUDENT.id,
-      status: ['Public', 'Draft'],
+      resourceType: resources.LESSON.name,
+      roleId: roles.STUDENT.id,
+      status: resources.LESSON.learnStatus,
     });
   },
 };

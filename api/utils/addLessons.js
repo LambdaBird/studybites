@@ -1,4 +1,4 @@
-import config from '../config';
+import { roles, resources } from '../src/config';
 import build from '../src/app';
 
 const addLessons = async ({ name, description, status, userId }) => {
@@ -15,8 +15,8 @@ const addLessons = async ({ name, description, status, userId }) => {
     await UserRole.query(trx)
       .insert({
         userId,
-        roleId: config.roles.MAINTAINER.id,
-        resourceType: config.resources.LESSON,
+        roleId: roles.MAINTAINER.id,
+        resourceType: resources.LESSON.name,
         resourceId: lesson.id,
       })
       .returning('*');

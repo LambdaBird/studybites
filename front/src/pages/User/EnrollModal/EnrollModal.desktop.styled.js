@@ -1,12 +1,7 @@
 import { Avatar, Button, Col, Row, Space, Typography } from 'antd';
 import styled from 'styled-components';
 
-import {
-  DESCRIPTION_COLOR,
-  VOLCANO_2,
-  VOLCANO_6,
-  WHITE_COLOR,
-} from '@sb-ui/resources/styles/Global.styled';
+import variables from '@sb-ui/theme/variables';
 
 const { Text } = Typography;
 
@@ -14,7 +9,7 @@ export const AuthorContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  background-color: ${WHITE_COLOR};
+  background-color: ${variables['lesson-block-background']};
   height: 2.5rem;
   position: absolute;
   left: 1rem;
@@ -74,8 +69,8 @@ export const StartButton = styled(Button)`
 `;
 
 export const AuthorAvatar = styled(Avatar)`
-  color: ${VOLCANO_6};
-  background-color: ${VOLCANO_2};
+  color: ${variables['avatar-second-color']};
+  background-color: ${variables['avatar-first-color']};
 `;
 
 export const AuthorName = styled(Typography.Link)`
@@ -85,5 +80,5 @@ export const AuthorName = styled(Typography.Link)`
 
 export const DescriptionText = styled(Text)`
   text-align: justify;
-  color: ${DESCRIPTION_COLOR};
+  color: ${variables['lesson-block-description-color']};
 `;

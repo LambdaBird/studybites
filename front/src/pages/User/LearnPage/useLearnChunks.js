@@ -24,12 +24,12 @@ export const convertBlocksToChunks = (blocks) => {
 export const createChunksFromBlocks = ({
   blocks,
   isFinished,
-  isFinal,
+  isFinalBlock,
   isPost = false,
 }) => {
   const isEmptyBlocks = blocks.length === 0;
 
-  if (isEmptyBlocks && !isFinished && !isPost && !isFinal) {
+  if (isEmptyBlocks && !isFinished && !isPost && !isFinalBlock) {
     return [[createStartBlock(false)]];
   }
 
@@ -46,7 +46,7 @@ export const createChunksFromBlocks = ({
   if (isLastInteractiveResolved) {
     chunks.push([createFinishBlock(isFinished)]);
   }
-  if (isEmptyBlocks && isFinal) {
+  if (isEmptyBlocks && isFinalBlock) {
     chunks.push([createFinishBlock(false)]);
   }
 
@@ -58,7 +58,13 @@ export const createChunksFromBlocks = ({
 };
 
 export const handleAnswer = ({ data: serverData, prevChunks }) => {
-  const { isFinished, answer, blocks, userAnswer, isFinal } = serverData;
+  const {
+    isFinished,
+    answer,
+    blocks,
+    userAnswer,
+    isFinal: isFinalBlock,
+  } = serverData;
 
   const lastChunk = prevChunks?.[prevChunks.length - 1];
 
@@ -80,7 +86,7 @@ export const handleAnswer = ({ data: serverData, prevChunks }) => {
     ...createChunksFromBlocks({
       blocks,
       isFinished,
-      isFinal,
+      isFinalBlock,
       isPost: true,
     }),
   ];
@@ -92,6 +98,9 @@ export const useLearnChunks = ({ lessonId, getLessonById, postLessonById }) => {
   const [lesson, setLesson] = useState({});
   const [learnProgress, setLearnProgress] = useState(0);
   const [passedBlocks, setPassedBlocks] = useState(0);
+  const [progressStatus, setProgressStatus] = useState('normal');
+  const [isFinalChunk, setIsFinalChunk] = useState(false);
+  const [isFinishedLesson, setIsFinishedLesson] = useState(false);
 
   const { data: getData, isLoading } = useQuery(
     [
@@ -106,19 +115,39 @@ export const useLearnChunks = ({ lessonId, getLessonById, postLessonById }) => {
   const onSuccess = useCallback(
     (data) => {
       setChunks((prevChunks) => handleAnswer({ data, prevChunks }));
-      setPassedBlocks(passedBlocks + 1);
     },
-    [setChunks, passedBlocks],
+    [setChunks],
   );
+
+  const onMutate = useCallback(
+    (data) => {
+      if (data.action === 'start' && !lesson.interactiveTotal) {
+        setIsFinalChunk(true);
+      }
+      if (data.action === 'finish') {
+        setProgressStatus('success');
+      }
+      if (data.action !== 'start' && data.action !== 'finish') {
+        setPassedBlocks((prevPassed) => prevPassed + 1);
+      }
+    },
+    [lesson],
+  );
+
+  const onError = useCallback(() => {
+    setPassedBlocks((prevPassed) => prevPassed - 1);
+  }, []);
 
   const { mutate: handleInteractiveClick } = useMutation(postLessonById, {
     onSuccess,
+    onMutate,
+    onError,
   });
 
   useEffect(() => {
     if (getData) {
       const {
-        isFinal,
+        isFinal: isFinalBlock,
         lesson: newLesson,
         isFinished,
         total: newTotal,
@@ -127,21 +156,28 @@ export const useLearnChunks = ({ lessonId, getLessonById, postLessonById }) => {
         createChunksFromBlocks({
           blocks: newLesson?.blocks,
           isFinished,
-          isFinal,
+          isFinalBlock,
           isPost: false,
         }),
       );
       setTotal(newTotal);
       setLesson(newLesson);
       setPassedBlocks(newLesson.interactivePassed);
+      setProgressStatus(isFinished ? 'success' : 'normal');
+      setIsFinalChunk(isFinalBlock);
+      setIsFinishedLesson(isFinished);
     }
   }, [getData]);
 
   useEffect(() => {
-    setLearnProgress(
-      Math.round((passedBlocks / lesson.interactiveTotal) * 100),
-    );
-  }, [passedBlocks, lesson]);
+    if ((!lesson.interactiveTotal && isFinalChunk) || isFinishedLesson) {
+      setLearnProgress(100);
+    } else {
+      setLearnProgress(
+        Math.round((passedBlocks / lesson.interactiveTotal) * 100),
+      );
+    }
+  }, [isFinalChunk, isFinishedLesson, passedBlocks, lesson]);
 
   return {
     handleInteractiveClick,
@@ -150,5 +186,6 @@ export const useLearnChunks = ({ lessonId, getLessonById, postLessonById }) => {
     lesson,
     isLoading,
     learnProgress,
+    progressStatus,
   };
 };

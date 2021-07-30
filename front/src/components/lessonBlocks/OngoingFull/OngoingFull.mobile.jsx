@@ -15,7 +15,7 @@ const OngoingFullMobile = ({ lesson }) => {
   const { fullName, firstNameLetter, handleContinueLesson } = useLesson(lesson);
 
   const countPercentage = useMemo(() => {
-    if (lesson.isFinished) {
+    if ((!lesson.interactiveTotal && lesson.isStarted) || lesson.isFinished) {
       return 100;
     }
     return Math.round((interactivePassed / interactiveTotal) * 100);
@@ -25,7 +25,10 @@ const OngoingFullMobile = ({ lesson }) => {
     <S.Main size="large" wrap={false}>
       <div>
         <S.Image src={lessonImage} alt="Lesson" />
-        <S.ProgressBar percent={countPercentage()} />
+        <S.ProgressBar
+          percent={countPercentage}
+          status={lesson.isFinished ? 'success' : 'normal'}
+        />
       </div>
       <Row>
         <S.Title

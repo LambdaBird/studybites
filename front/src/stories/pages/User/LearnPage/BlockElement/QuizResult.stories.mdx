@@ -1,0 +1,92 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+import Quiz from '@sb-ui/pages/User/LearnPage/BlockElement/Quiz';
+import { LearnContextDecorator } from '@sb-ui/stories/decorators';
+
+<Meta
+  title="SB/User/LearnPage/BlockElement/Quiz/Result"
+  decorators={[
+    (Story) => (
+      <LearnContextDecorator>
+        <Story />
+      </LearnContextDecorator>
+    ),
+  ]}
+  component={Quiz}
+/>
+
+# Quiz
+
+Component `Quiz` should use to display QuizResult `answer` not `undefined` (accepts `results`,`response` and data options `question`, `answers`)
+
+export const Template = (args) => <Quiz {...args} />;
+
+<Canvas>
+  <Story
+    name="Correct"
+    args={{
+      answer: { results: [true, true] },
+      data: {
+        response: [true, true],
+      },
+      content: {
+        data: {
+          question: 'Question ?',
+          answers: [{ value: '1' }, { value: '2' }],
+        },
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+  <Story
+    name="Incorrect result 1"
+    args={{
+      answer: { results: [true, false] },
+      data: {
+        response: [true, true],
+      },
+      content: {
+        data: {
+          question: 'Question ?',
+          answers: [{ value: '1' }, { value: '2' }],
+        },
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+  <Story
+    name="Incorrect result 2"
+    args={{
+      answer: { results: [false, true] },
+      data: {
+        response: [false, false],
+      },
+      content: {
+        data: {
+          question: 'Question ?',
+          answers: [{ value: '1' }, { value: '2' }],
+        },
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+  <Story
+    name="Correct (empty)"
+    args={{
+      answer: { results: [] },
+      data: {
+        response: [],
+      },
+      content: {
+        data: {
+          question: 'Question ?',
+          answers: [],
+        },
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
