@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 
 import apiConfig from '@sb-ui/utils/api/config';
-import { getLessonById, postLessonById } from '@sb-ui/utils/api/v1/student';
 import { LESSON_BASE_QUERY } from '@sb-ui/utils/queries';
 
 import { createFinishBlock, createStartBlock } from './useLearnChunks.util';
@@ -93,7 +92,7 @@ export const handleAnswer = ({ data: serverData, prevChunks }) => {
   ];
 };
 
-export const useLearnChunks = ({ lessonId }) => {
+export const useLearnChunks = ({ lessonId, getLessonById, postLessonById }) => {
   const [chunks, setChunks] = useState([]);
   const [total, setTotal] = useState(0);
   const [lesson, setLesson] = useState({});
