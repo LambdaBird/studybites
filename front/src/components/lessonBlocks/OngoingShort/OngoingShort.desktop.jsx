@@ -21,15 +21,18 @@ const OngoingShortDesktop = ({ lesson }) => {
     history.push(LEARN_PAGE.replace(':id', id));
   };
 
-  const countPercentage = useMemo(() =>
-    Math.round((interactivePassed / interactiveTotal) * 100), 
-  [interactivePassed, interactiveTotal]);
+  const countPercentage = useMemo(() => {
+    if (!lesson.interactiveTotal && lesson.isStarted) {
+      return 100;
+    }
+    return Math.round((interactivePassed / interactiveTotal) * 100);
+  }, [lesson, interactivePassed, interactiveTotal]);
 
   return (
     <S.MainSpace>
       <S.LeftColumn span={8}>
         <img height={100} src={lessonImg} alt="Lesson" />
-        <S.ProgressBar percent={countPercentage} />
+        <S.ProgressBar percent={countPercentage} status="normal" />
       </S.LeftColumn>
       <S.RightColumn span={16}>
         <Title

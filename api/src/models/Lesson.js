@@ -383,6 +383,10 @@ class Lesson extends BaseModel {
           (select count(*) from lesson_block_structure join blocks on blocks.block_id = lesson_block_structure.block_id
           where blocks.type in ('next', 'quiz') and lesson_block_structure.lesson_id = lessons.id) interactive_total
         `),
+        this.knex().raw(`
+          (select cast(case when count(*) > 0 then true else false end as bool) from results
+          where lesson_id = lessons.id and action = 'start' and user_id = ${userId}) is_started
+        `),
       )
       .from(
         this.knex().raw(`

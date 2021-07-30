@@ -99,6 +99,9 @@ export const useLearnChunks = ({ lessonId }) => {
   const [lesson, setLesson] = useState({});
   const [learnProgress, setLearnProgress] = useState(0);
   const [passedBlocks, setPassedBlocks] = useState(0);
+  const [progressStatus, setProgressStatus] = useState('normal');
+  const [isFinalChunk, setIsFinalChunk] = useState(false);
+  const [isFinishedLesson, setIsFinishedLesson] = useState(false);
 
   const { data: getData, isLoading } = useQuery(
     [
@@ -113,13 +116,33 @@ export const useLearnChunks = ({ lessonId }) => {
   const onSuccess = useCallback(
     (data) => {
       setChunks((prevChunks) => handleAnswer({ data, prevChunks }));
-      setPassedBlocks(passedBlocks + 1);
     },
-    [setChunks, passedBlocks],
+    [setChunks],
   );
+
+  const onMutate = useCallback(
+    (data) => {
+      if (data.action === 'start' && !lesson.interactiveTotal) {
+        setIsFinalChunk(true);
+      }
+      if (data.action === 'finish') {
+        setProgressStatus('success');
+      }
+      if (data.action !== 'start' && data.action !== 'finish') {
+        setPassedBlocks((prevPassed) => prevPassed + 1);
+      }
+    },
+    [lesson],
+  );
+
+  const onError = useCallback(() => {
+    setPassedBlocks((prevPassed) => prevPassed - 1);
+  }, []);
 
   const { mutate: handleInteractiveClick } = useMutation(postLessonById, {
     onSuccess,
+    onMutate,
+    onError,
   });
 
   useEffect(() => {
@@ -141,14 +164,21 @@ export const useLearnChunks = ({ lessonId }) => {
       setTotal(newTotal);
       setLesson(newLesson);
       setPassedBlocks(newLesson.interactivePassed);
+      setProgressStatus(isFinished ? 'success' : 'normal');
+      setIsFinalChunk(isFinal);
+      setIsFinishedLesson(isFinished);
     }
   }, [getData]);
 
   useEffect(() => {
-    setLearnProgress(
-      Math.round((passedBlocks / lesson.interactiveTotal) * 100),
-    );
-  }, [passedBlocks, lesson]);
+    if ((!lesson.interactiveTotal && isFinalChunk) || isFinishedLesson) {
+      setLearnProgress(100);
+    } else {
+      setLearnProgress(
+        Math.round((passedBlocks / lesson.interactiveTotal) * 100),
+      );
+    }
+  }, [isFinalChunk, isFinishedLesson, passedBlocks, lesson]);
 
   return {
     handleInteractiveClick,
@@ -157,5 +187,6 @@ export const useLearnChunks = ({ lessonId }) => {
     lesson,
     isLoading,
     learnProgress,
+    progressStatus,
   };
 };

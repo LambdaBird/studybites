@@ -243,8 +243,27 @@ class LessonBlockStructure extends BaseModel {
     await this.query(trx).insert(blockStructure);
   }
 
-  static countBlocks({ lessonId }) {
-    return this.query().first().count().where({ lessonId });
+  static async countBlocks({ lessonId }) {
+    const { count: countInteractive } = await this.query()
+      .first()
+      .count()
+      .join('blocks', 'blocks.blockId', '=', 'lesson_block_structure.blockId')
+      .where({ lessonId })
+      .whereIn('blocks.type', config.interactiveBlocks);
+
+    if (!+countInteractive) {
+      const { count: countAll } = await this.query()
+        .first()
+        .count()
+        .where({ lessonId });
+
+      if (!+countAll) {
+        return { count: 0 };
+      }
+      return { count: 1 };
+    }
+
+    return { count: +countInteractive };
   }
 }
 

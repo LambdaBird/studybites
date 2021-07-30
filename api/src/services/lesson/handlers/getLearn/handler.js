@@ -28,14 +28,15 @@ export async function getLearnHandler({
    * get last record from the results table
    */
   const lastResult = await Result.getLastResult({ userId, lessonId });
+
+  const { count: total } = await LessonBlockStructure.countBlocks({
+    lessonId,
+  });
   /**
    * if the lesson was not started yet
    */
   if (!lastResult) {
     lesson.blocks = [];
-    const { count: total } = await LessonBlockStructure.countBlocks({
-      lessonId,
-    });
     return { total, lesson, isFinal: false };
   }
   /**
@@ -53,7 +54,7 @@ export async function getLearnHandler({
     lesson.blocks = mapResultToBlock({ blocks, dictionary });
 
     return {
-      total: blocks.length,
+      total,
       lesson,
       isFinished: true,
     };
@@ -61,7 +62,7 @@ export async function getLearnHandler({
   /**
    * else
    */
-  const { total, chunk, isFinal } = await LessonBlockStructure.getChunk({
+  const { chunk, isFinal } = await LessonBlockStructure.getChunk({
     lessonId,
     previousBlock: lastResult.blockId,
     fromStart: true,
