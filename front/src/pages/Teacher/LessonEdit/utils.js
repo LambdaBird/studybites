@@ -7,6 +7,7 @@ import Marker from '@editorjs/marker';
 import Quote from '@editorjs/quote';
 import SimpleImage from '@editorjs/simple-image';
 
+import { BLOCKS_TYPE } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
 import Embed from '@sb-ui/utils/editorjs/embed-plugin';
 import Next from '@sb-ui/utils/editorjs/next-plugin';
 import Quiz from '@sb-ui/utils/editorjs/quiz-plugin';
@@ -40,24 +41,29 @@ export const prepareBlocksDataForApi = (data, type) => {
 };
 
 export const prepareBlocksForApi = (blocks) =>
-  blocks.map((block) => {
-    const { id, type, data } = block;
-    return {
-      type,
-      revision: hash(block),
-      content: {
-        id,
+  blocks
+    .map((block) => {
+      const { id, type, data } = block;
+      return {
         type,
-        data: prepareBlocksDataForApi(data, type),
-      },
-      answer: {
-        results:
-          type === QUIZ_TYPE
-            ? block?.data?.answers?.map((x) => x.correct)
-            : undefined,
-      },
-    };
-  });
+        revision: hash(block),
+        content: {
+          id,
+          type,
+          data: prepareBlocksDataForApi(data, type),
+        },
+        answer: {
+          results:
+            type === QUIZ_TYPE
+              ? block?.data?.answers?.map((x) => x.correct)
+              : undefined,
+        },
+      };
+    })
+    .filter(
+      (block) =>
+        !(block.type === BLOCKS_TYPE.EMBED && block.content.data === undefined),
+    );
 
 export const getConfig = (t) => ({
   holder: 'editorjs',

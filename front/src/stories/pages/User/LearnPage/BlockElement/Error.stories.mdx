@@ -1,0 +1,21 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+import Error from '@sb-ui/pages/User/LearnPage/BlockElement/Error';
+
+<Meta title="SB/User/LearnPage/BlockElement/Error" component={Error} />
+
+# Error
+
+Component `Error` should use to display block that can't render properly (accepts options `blockId`)
+
+export const Template = (args) => <Error {...args} />;
+
+<Canvas>
+  <Story
+    name="Error"
+    args={{
+      blockId: 'test',
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>

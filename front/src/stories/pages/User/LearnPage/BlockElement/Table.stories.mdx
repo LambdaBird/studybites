@@ -1,0 +1,28 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+import Table from '@sb-ui/pages/User/LearnPage/BlockElement/Table';
+
+<Meta title="SB/User/LearnPage/BlockElement/Table" component={Table} />
+
+# Table
+
+Component `Table` should use to display Table (accepts data options `content`)
+
+export const Template = (args) => <Table {...args} />;
+
+<Canvas>
+  <Story
+    name="Table"
+    args={{
+      content: {
+        data: {
+          content: [
+            ['1', '2', '3'],
+            ['4', '5', '6'],
+          ],
+        },
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>

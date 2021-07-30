@@ -1,0 +1,39 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+import List from '@sb-ui/pages/User/LearnPage/BlockElement/List';
+
+<Meta title="SB/User/LearnPage/BlockElement/List" component={List} />
+
+# List
+
+Component `List` should use to display ordered and unordered list (accepts data options `style: {ordered | unordered}`, `items` )
+
+export const Template = (args) => <List {...args} />;
+
+<Canvas>
+  <Story
+    name="List ordered"
+    args={{
+      content: {
+        data: {
+          style: 'ordered',
+          items: ['a', 'b', 'c'],
+        },
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+  <Story
+    name="List unordered"
+    args={{
+      content: {
+        data: {
+          style: 'unordered',
+          items: ['a', 'b', 'c'],
+        },
+      },
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
