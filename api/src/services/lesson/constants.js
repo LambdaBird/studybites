@@ -1,3 +1,8 @@
+export const INVALID_BLOCK_CONTENT = {
+  key: 'lesson.errors.invalid_block_content',
+  message: 'Invalid block content',
+};
+
 export const INVALID_ID = {
   key: 'lesson.errors.invalid_id',
   message: 'Invalid lesson id',
