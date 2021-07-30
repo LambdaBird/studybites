@@ -1,21 +1,15 @@
 import Ajv from 'ajv';
 
-import config from '../../../../../config';
+import { ajv as ajvConfig } from '../../../../config';
 import { lessonStatus } from '../../../../validation/schemas';
 
 import { createLessonOptions } from './options';
-
-const LESSON_REQUIRED = "must have required property 'lesson'";
-const LESSON_TYPE = 'must be object';
-const NAME_REQUIRED = "must have required property 'name'";
-const NAME_LENGTH = 'must NOT have fewer than 1 characters';
-const STATUS_ENUM = 'must be equal to one of the allowed values';
 
 describe('Test createLessonSchema validation', () => {
   const schema = createLessonOptions.schema.body;
   schema.properties.lesson.properties.status = lessonStatus;
 
-  const ajv = new Ajv(config.ajv);
+  const ajv = new Ajv(ajvConfig);
   const validate = ajv.compile(schema);
 
   test('should return an error if no lesson', () => {
@@ -27,7 +21,7 @@ describe('Test createLessonSchema validation', () => {
     if (!valid) {
       expect(validate.errors).toBeInstanceOf(Array);
       expect(validate.errors).toHaveLength(1);
-      expect(validate.errors[0].message).toBe(LESSON_REQUIRED);
+      expect(validate.errors[0].message).toContain('lesson');
     }
   });
 
@@ -40,7 +34,7 @@ describe('Test createLessonSchema validation', () => {
     if (!valid) {
       expect(validate.errors).toBeInstanceOf(Array);
       expect(validate.errors).toHaveLength(1);
-      expect(validate.errors[0].message).toBe(LESSON_TYPE);
+      expect(validate.errors[0].message).toContain('object');
     }
   });
 
@@ -55,7 +49,7 @@ describe('Test createLessonSchema validation', () => {
     if (!valid) {
       expect(validate.errors).toBeInstanceOf(Array);
       expect(validate.errors).toHaveLength(1);
-      expect(validate.errors[0].message).toBe(NAME_REQUIRED);
+      expect(validate.errors[0].message).toContain('name');
     }
   });
 
@@ -70,7 +64,7 @@ describe('Test createLessonSchema validation', () => {
     if (!valid) {
       expect(validate.errors).toBeInstanceOf(Array);
       expect(validate.errors).toHaveLength(1);
-      expect(validate.errors[0].message).toBe(NAME_LENGTH);
+      expect(validate.errors[0].message).toContain('than 1');
     }
   });
 
@@ -97,7 +91,7 @@ describe('Test createLessonSchema validation', () => {
     if (!valid) {
       expect(validate.errors).toBeInstanceOf(Array);
       expect(validate.errors).toHaveLength(1);
-      expect(validate.errors[0].message).toBe(STATUS_ENUM);
+      expect(validate.errors[0].message).toContain('equal');
     }
   });
 
