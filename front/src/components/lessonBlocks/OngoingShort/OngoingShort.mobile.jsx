@@ -1,4 +1,5 @@
 import { Button, Col, Row, Typography } from 'antd';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 
@@ -13,17 +14,24 @@ const { Title } = Typography;
 const OngoingShortMobile = ({ lesson }) => {
   const { t } = useTranslation('user');
   const history = useHistory();
-  const { name, id /* percentage */ } = lesson;
+  const { name, id, interactiveTotal, interactivePassed } = lesson;
 
   const handleContinueLesson = () => {
     history.push(LEARN_PAGE.replace(':id', id));
   };
 
+  const countPercentage = useMemo(() => {
+    if (!lesson.interactiveTotal && lesson.isStarted) {
+      return 100;
+    }
+    return Math.round((interactivePassed / interactiveTotal) * 100);
+  }, [lesson, interactivePassed, interactiveTotal]);
+
   return (
     <S.MainSpace>
       <S.LeftColumn span={8}>
         <S.StyledImage src={lessonImg} alt="Lesson" />
-        {/* <S.ProgressBar percent={Math.round(percentage)} /> */}
+        <S.ProgressBar percent={countPercentage} status="normal" />
       </S.LeftColumn>
       <S.RightColumn span={16}>
         <Title

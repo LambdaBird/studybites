@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
 import { useHistory, useParams } from 'react-router-dom';
 import { RedoOutlined, SaveOutlined, UndoOutlined } from '@ant-design/icons';
-import EditorJS from '@editorjs/editorjs';
 
 import Header from '@sb-ui/components/molecules/Header';
 import { Statuses } from '@sb-ui/pages/Teacher/Home/LessonsDashboard/constants';
@@ -15,8 +14,9 @@ import {
   getLesson,
   putLesson,
 } from '@sb-ui/utils/api/v1/teacher';
+import EditorJs from '@sb-ui/utils/editorjs/EditorJsContainer';
 import Undo from '@sb-ui/utils/editorjs/undo-plugin';
-import { LESSONS_EDIT } from '@sb-ui/utils/paths';
+import { LESSONS_EDIT, LESSONS_PREVIEW } from '@sb-ui/utils/paths';
 import { TEACHER_LESSON_BASE_KEY } from '@sb-ui/utils/queries';
 
 import { getConfig, prepareBlocksForApi, prepareEditorData } from './utils';
@@ -35,12 +35,12 @@ const LessonEdit = () => {
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [editorReady, setEditorReady] = useState(false);
 
-  const editorJSref = useRef(null);
-  const editorContainerRef = useRef(null);
-  const undoPluginRef = useRef(null);
   const inputTitle = useRef(null);
+
+  const editorJSRef = useRef(null);
+  const [dataBlocks, setDataBlocks] = useState(null);
+  const undoPluginRef = useRef(null);
 
   const { data: lessonData, isLoading } = useQuery(
     [TEACHER_LESSON_BASE_KEY, { id: lessonId }],
@@ -69,17 +69,17 @@ const LessonEdit = () => {
 
   const updateLessonMutation = useMutation(putLesson, {
     onSuccess: (data) => {
-      if (editorReady && data) {
+      if (editorJSRef.current && data) {
         const editorToRender = {
           blocks: prepareEditorData(data?.lesson?.blocks),
         };
 
         if (editorToRender.blocks.length === 0) {
-          editorJSref.current.clear();
+          editorJSRef.current?.clear();
         } else {
-          editorJSref.current.render?.(editorToRender);
+          editorJSRef.current?.render?.(editorToRender);
         }
-        undoPluginRef.current.initialize(editorToRender);
+        undoPluginRef.current?.initialize(editorToRender);
       }
       queryClient.invalidateQueries([
         TEACHER_LESSON_BASE_KEY,
@@ -99,25 +99,6 @@ const LessonEdit = () => {
   });
 
   useEffect(() => {
-    editorJSref.current = new EditorJS(getConfig(t));
-    editorJSref.current.isReady.then(() => {
-      setEditorReady(true);
-    });
-  }, [t]);
-
-  useEffect(() => {
-    if (editorReady && editorContainerRef.current) {
-      undoPluginRef.current = new Undo({
-        editor: editorJSref.current,
-        redoButton: 'redo-button',
-        undoButton: 'undo-button',
-      });
-      // eslint-disable-next-line no-new
-      new DragDrop(editorJSref.current);
-    }
-  }, [editorReady, editorContainerRef]);
-
-  useEffect(() => {
     if (inputTitle.current && !isLoading && !lessonData?.lesson.name) {
       setTimeout(() => {
         inputTitle.current.focus();
@@ -135,22 +116,28 @@ const LessonEdit = () => {
   }, [lessonData?.lesson]);
 
   useEffect(() => {
-    if (editorReady && lessonData) {
-      const editorToRender = {
-        blocks: prepareEditorData(lessonData?.lesson?.blocks),
-      };
-      if (editorToRender.blocks.length === 0) {
-        editorJSref.current.clear();
-      } else {
-        editorJSref.current.render?.(editorToRender);
-      }
-      undoPluginRef.current.initialize(editorToRender);
+    if (editorJSRef.current?.configuration) {
+      undoPluginRef.current = new Undo({
+        editor: editorJSRef.current,
+        redoButton: 'redo-button',
+        undoButton: 'undo-button',
+      });
+      // eslint-disable-next-line no-new
+      new DragDrop(editorJSRef.current);
     }
-  }, [editorReady, lessonData]);
+  }, [editorJSRef.current]);
+
+  useEffect(() => {
+    if (lessonData) {
+      setDataBlocks({
+        blocks: prepareEditorData(lessonData?.lesson?.blocks),
+      });
+    }
+  }, [lessonData]);
 
   const handleSave = async () => {
     try {
-      const { blocks } = await editorJSref.current.save();
+      const { blocks } = await editorJSRef.current.save();
       const params = {
         lesson: {
           id: parseInt(lessonId, 10) || undefined,
@@ -160,10 +147,16 @@ const LessonEdit = () => {
         },
         blocks: prepareBlocksForApi(blocks),
       };
-
       if (!name) {
         message.error({
           content: t('editor_js.message.error_lesson_name'),
+          duration: 2,
+        });
+        return;
+      }
+      if (params.blocks.length === 0) {
+        message.error({
+          content: t('editor_js.message.error_empty_blocks'),
           duration: 2,
         });
         return;
@@ -186,15 +179,21 @@ const LessonEdit = () => {
 
   const handleNextLine = (e) => {
     if (e.key === 'Enter') {
-      editorJSref.current.focus();
+      editorJSRef.current?.focus?.();
     }
+  };
+
+  const handlePreview = () => {
+    history.push(LESSONS_PREVIEW.replace(':id', lessonId));
   };
 
   return (
     <>
       <Header>
         <S.HeaderButtons>
-          <Button>{t('lesson_edit.buttons.preview')}</Button>
+          <Button disabled={!isEditLesson} onClick={handlePreview}>
+            {t('lesson_edit.buttons.preview')}
+          </Button>
           <S.PublishButton type="primary">
             {t('lesson_edit.buttons.publish')}
           </S.PublishButton>
@@ -215,13 +214,23 @@ const LessonEdit = () => {
               <S.BadgeWrapper>
                 <S.CardBadge>
                   <S.StatusText>
-                    {t(
-                      `lesson_dashboard.status.${lessonData?.lesson.status.toLocaleLowerCase()}`,
-                    )}
+                    {lessonData?.lesson.status
+                      ? t(
+                          `lesson_dashboard.status.${lessonData?.lesson.status.toLocaleLowerCase()}`,
+                        )
+                      : t('lesson_dashboard.status.draft')}
                   </S.StatusText>
                 </S.CardBadge>
               </S.BadgeWrapper>
-              <div id="editorjs" ref={editorContainerRef} />
+              {dataBlocks && (
+                <EditorJs
+                  tools={getConfig(t).tools}
+                  data={dataBlocks}
+                  instanceRef={(instance) => {
+                    editorJSRef.current = instance;
+                  }}
+                />
+              )}
             </S.EditorWrapper>
           </S.LeftCol>
           <S.RightCol sm={12} md={10} lg={8} xl={6}>

@@ -20,6 +20,7 @@ export default {
       archived: 'Archived',
       public: 'Public',
       private: 'Private',
+      none: 'None',
     },
     status_select: {
       all: 'All statuses',
@@ -52,6 +53,7 @@ export default {
       error_created: 'Create error',
       error_updated: 'Update error',
       error_lesson_name: 'Missing lesson name',
+      error_empty_blocks: 'Missing lesson blocks',
     },
     header: {
       placeholder: 'Enter a header',

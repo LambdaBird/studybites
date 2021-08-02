@@ -1,7 +1,7 @@
 import { Avatar, Empty, Row, Typography } from 'antd';
 import styled from 'styled-components';
 
-import { VOLCANO_2, VOLCANO_6 } from '@sb-ui/resources/styles/Global.styled';
+import variables from '@sb-ui/theme/variables';
 
 const { Title, Text } = Typography;
 
@@ -46,8 +46,8 @@ export const ListHeader = styled.div`
 `;
 
 export const AuthorAvatar = styled(Avatar)`
-  color: ${VOLCANO_6};
-  background-color: ${VOLCANO_2};
+  color: ${variables['avatar-second-color']};
+  background-color: ${variables['avatar-first-color']};
 `;
 
 export const AuthorName = styled(Text)`

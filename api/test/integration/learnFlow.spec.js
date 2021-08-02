@@ -9,8 +9,11 @@ import {
 import { math, french, russian } from '../../seeds/testData/lessons';
 
 import { authorizeUser, createLesson, prepareLessonFromSeed } from './utils';
-import { INVALID_LEARN } from '../../src/services/lesson/constants';
-import { UNAUTHORIZED } from '../../src/services/user/constants';
+
+import {
+  lessonServiceErrors as errors,
+  userServiceErrors as userErrors,
+} from '../../src/config';
 
 describe('Learning flow', () => {
   const testContext = {
@@ -178,6 +181,12 @@ describe('Learning flow', () => {
       expect(payload.lesson).toHaveProperty('blocks');
       expect(payload.lesson.blocks).toBeInstanceOf(Array);
       expect(payload.lesson.blocks.length).toBe(0);
+      expect(payload.lesson).toHaveProperty('interactiveTotal');
+      expect(payload.lesson).toHaveProperty('interactivePassed');
+      expect(payload.lesson.interactiveTotal).toBe(
+        math._blocks._current.length,
+      );
+      expect(payload.lesson.interactivePassed).toBe(0);
     });
 
     it('should return blocks on start', async () => {
@@ -231,7 +240,8 @@ describe('Learning flow', () => {
       const payload = JSON.parse(response.payload);
 
       expect(response.statusCode).toBe(400);
-      expect(payload.errors[0]).toMatchObject(INVALID_LEARN);
+      expect(payload.statusCode).toBe(400);
+      expect(payload.message).toBe(errors.LESSON_ERR_FAIL_LEARN);
     });
   });
 
@@ -268,7 +278,9 @@ describe('Learning flow', () => {
       expect(statusCode).toBe(200);
 
       expect(responseBody).toHaveProperty('total');
-      expect(responseBody.total).toBe(french._blocks._current.length);
+      expect(responseBody.total).toBe(
+        french._blocks._indexesOfInteractive.length,
+      );
 
       expect(responseBody).toHaveProperty('lesson');
       expect(responseBody.lesson).toHaveProperty('blocks');
@@ -332,7 +344,9 @@ describe('Learning flow', () => {
       expect(statusCode).toBe(200);
 
       expect(responseBody).toHaveProperty('total');
-      expect(responseBody.total).toBe(french._blocks._current.length);
+      expect(responseBody.total).toBe(
+        french._blocks._indexesOfInteractive.length,
+      );
 
       expect(responseBody).toHaveProperty('lesson');
       expect(responseBody.lesson).toHaveProperty('blocks');
@@ -365,7 +379,8 @@ describe('Learning flow', () => {
       const payload = JSON.parse(response.payload);
 
       expect(response.statusCode).toBe(400);
-      expect(payload.errors[0]).toMatchObject(INVALID_LEARN);
+      expect(payload.statusCode).toBe(400);
+      expect(payload.message).toBe(errors.LESSON_ERR_FAIL_LEARN);
     });
   });
 
@@ -452,15 +467,26 @@ describe('Learning flow', () => {
       expect(statusCode).toBe(200);
 
       expect(responseBody).toHaveProperty('total');
-      expect(responseBody.total).toBe(french._blocks._current.length);
+      expect(responseBody.total).toBe(
+        french._blocks._indexesOfInteractive.length,
+      );
 
       expect(responseBody).toHaveProperty('lesson');
       expect(responseBody.lesson).toHaveProperty('blocks');
       expect(responseBody.lesson).toHaveProperty('author');
+      expect(responseBody.lesson).toHaveProperty('interactiveTotal');
+      expect(responseBody.lesson).toHaveProperty('interactivePassed');
       expect(responseBody.lesson.author).toBeInstanceOf(Object);
       expect(responseBody.lesson.author).toHaveProperty('id');
       expect(responseBody.lesson.author).toHaveProperty('firstName');
       expect(responseBody.lesson.author).toHaveProperty('lastName');
+
+      expect(responseBody.lesson.interactiveTotal).toBe(
+        french._blocks._indexesOfInteractive.length,
+      );
+      expect(responseBody.lesson.interactivePassed).toBe(
+        french._blocks._indexesOfInteractive.length,
+      );
 
       expect(responseBody).toHaveProperty('isFinal');
       expect(responseBody.isFinal).toBe(true);
@@ -595,7 +621,8 @@ describe('Learning flow', () => {
       const payload = JSON.parse(response.payload);
 
       expect(response.statusCode).toBe(400);
-      expect(payload.errors[0]).toMatchObject(INVALID_LEARN);
+      expect(payload.statusCode).toBe(400);
+      expect(payload.message).toBe(errors.LESSON_ERR_FAIL_LEARN);
     });
   });
 
@@ -671,7 +698,8 @@ describe('Learning flow', () => {
       const payload = JSON.parse(response.payload);
 
       expect(response.statusCode).toBe(401);
-      expect(payload.errors[0]).toMatchObject(UNAUTHORIZED);
+      expect(payload.statusCode).toBe(401);
+      expect(payload.message).toBe(userErrors.USER_ERR_UNAUTHORIZED);
     });
   });
 
@@ -985,7 +1013,7 @@ describe('Learning flow', () => {
         expect(payload.blocks.length).toBe(0);
 
         expect(payload).toHaveProperty('total');
-        expect(payload.total).toBe(0);
+        expect(payload.total).toBe(math._blocks._current.length);
 
         expect(payload).toHaveProperty('isFinished');
         expect(payload.isFinished).toBe(true);
@@ -1070,7 +1098,7 @@ describe('Learning flow', () => {
         expect(payload.blocks.length).toBe(0);
 
         expect(payload).toHaveProperty('total');
-        expect(payload.total).toBe(0);
+        expect(payload.total).toBe(russian._blocks._current.length);
 
         expect(payload).toHaveProperty('isFinished');
         expect(payload.isFinished).toBe(true);

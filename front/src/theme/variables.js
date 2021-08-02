@@ -1,11 +1,17 @@
 const variables = {
   'primary-color': '#098C8C',
+  'text-table-header': 'rgba(0, 0, 0, 0.45)',
   'text-color': 'rgba(0, 0, 0, 0.85)',
   'progress-trail-color': 'white',
   'learn-chunk-background': '#f5f5f5',
   'secondary-text-color': '#595959',
   'placeholder-color': '#bfbfbf',
   'checkbox-disabled': '#8c8c8c',
+  'lesson-block-background': 'white',
+  'lesson-block-description-color': 'rgba(0, 0, 0, 0.45)',
+  'body-background-color': '#f5f5f5',
+  'avatar-first-color': '#ffd8bf',
+  'avatar-second-color': '#fa541c',
 };
 
 module.exports = variables;

@@ -5,7 +5,6 @@ import {
 } from '@sb-ui/pages/User/LearnPage/useLearnChunks';
 import {
   createFinishBlock,
-  createFinished,
   createNextBlock,
   createParagraphBlock,
   createQuizBlock,
@@ -93,13 +92,13 @@ describe('Test useLearnChunks', () => {
       expect(chunks).toStrictEqual([[createStartBlock(false)]]);
     });
 
-    test('should return chunk with finish block when blocks empty (POST request)', () => {
+    test('should return empty blocks when blocks empty (POST request)', () => {
       const chunks = createChunksFromBlocks({
         blocks: [],
         isFinished: false,
         isPost: true,
       });
-      expect(chunks).toStrictEqual([[createFinishBlock(false)]]);
+      expect(chunks).toStrictEqual([]);
     });
 
     test('should return chunk with finish block when blocks without last interactive', () => {
@@ -159,7 +158,7 @@ describe('Test useLearnChunks', () => {
           createParagraphBlock(1, 'Paragraph1'),
           createQuizResultBlock(2, [true, true], [true, true]),
         ],
-        [createFinished(false)],
+        [createFinishBlock(true)],
       ]);
     });
 
@@ -169,7 +168,7 @@ describe('Test useLearnChunks', () => {
         isFinished: true,
         isPost: false,
       });
-      expect(chunks).toStrictEqual([[createFinished(false)]]);
+      expect(chunks).toStrictEqual([[createFinishBlock(true)]]);
     });
   });
 
@@ -178,6 +177,7 @@ describe('Test useLearnChunks', () => {
       const chunks = handleAnswer({
         data: {
           isFinished: false,
+          isFinal: true,
           blocks: [],
         },
         prevChunks: [[createStartBlock(false)]],
@@ -194,11 +194,11 @@ describe('Test useLearnChunks', () => {
           isFinished: true,
           blocks: [],
         },
-        prevChunks: [[createStartBlock(false)]],
+        prevChunks: [[createStartBlock(true)], [createFinishBlock(false)]],
       });
       expect(chunks).toStrictEqual([
         [createStartBlock(true)],
-        [createFinished()],
+        [createFinishBlock(true)],
       ]);
     });
 

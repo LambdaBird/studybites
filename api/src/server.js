@@ -1,6 +1,9 @@
 import build from './app';
 
+const BODY_LIMIT = 4_000_000;
+
 const server = build({
+  bodyLimit: BODY_LIMIT,
   logger: process.env.API_LOGLEVEL || false,
 });
 

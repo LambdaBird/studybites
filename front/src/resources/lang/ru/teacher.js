@@ -20,6 +20,7 @@ export default {
       archived: 'Архивирован',
       public: 'Публичный',
       private: 'Приватный',
+      none: 'Отсуствует',
     },
     status_select: {
       all: 'Все статусы',
@@ -52,6 +53,7 @@ export default {
       error_created: 'Ошибка при создании',
       error_updated: 'Ошибка при обновлении',
       error_lesson_name: 'Отсутствует название урока',
+      error_empty_blocks: 'Отсутствуют блоки урока',
     },
     header: {
       placeholder: 'Введите заголовок',

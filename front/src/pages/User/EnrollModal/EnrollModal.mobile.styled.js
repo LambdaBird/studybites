@@ -1,12 +1,7 @@
 import { Avatar, Button, Row, Space, Typography } from 'antd';
 import styled from 'styled-components';
 
-import {
-  DESCRIPTION_COLOR,
-  VOLCANO_2,
-  VOLCANO_6,
-  WHITE_COLOR,
-} from '@sb-ui/resources/styles/Global.styled';
+import variables from '@sb-ui/theme/variables';
 
 const { Text } = Typography;
 
@@ -15,7 +10,7 @@ export const Main = styled(Row).attrs({
   wrap: false,
 })`
   height: 100vh;
-  background-color: ${WHITE_COLOR};
+  background-color: ${variables['lesson-block-background']};
   padding: 1rem;
   flex-direction: column;
 `;
@@ -37,14 +32,14 @@ export const Title = styled(Typography.Title).attrs({
 
 export const Description = styled(Text)`
   text-align: justify;
-  color: ${DESCRIPTION_COLOR};
+  color: ${variables['lesson-block-description-color']};
 `;
 
 export const AuthorContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-around;
-  background-color: ${WHITE_COLOR};
+  background-color: ${variables['lesson-block-background']};
   height: 2.5rem;
   border-radius: 5px;
   padding: 0.5rem 0.5rem;
@@ -54,8 +49,8 @@ export const AuthorContainer = styled.div`
 `;
 
 export const AuthorAvatar = styled(Avatar)`
-  color: ${VOLCANO_6};
-  background-color: ${VOLCANO_2};
+  color: ${variables['avatar-second-color']};
+  background-color: ${variables['avatar-first-color']};
 `;
 
 export const AuthorName = styled(Typography.Link)`

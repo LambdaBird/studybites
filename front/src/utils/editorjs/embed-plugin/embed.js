@@ -1,3 +1,5 @@
+import * as Utils from '../utils';
+
 import SERVICES from './services';
 
 import './embed.css';
@@ -72,20 +74,16 @@ export default class Embed {
     }
   }
 
-  createInput({ name, placeholder, classList = [] }) {
-    const input = document.createElement('input');
-    this.elements[name] = input;
-    input.placeholder = placeholder;
-    input.classList.add(...classList);
-    return input;
-  }
-
   render() {
+    if (this.data === null) {
+      return null;
+    }
     const container = document.createElement('div');
     this.container = container;
     container.classList.add(this.CSS.container);
 
-    const inputUrl = this.createInput({
+    const inputUrl = Utils.createInput({
+      wrapper: this,
       name: 'url',
       placeholder: 'Input video url',
       classList: [this.CSS.input, this.CSS.urlInput],
@@ -96,7 +94,8 @@ export default class Embed {
     this.content = content;
     content.classList.add(this.CSS.content);
 
-    const inputCaption = this.createInput({
+    const inputCaption = Utils.createInput({
+      wrapper: this,
       name: 'caption',
       placeholder: 'Input video caption',
       classList: [this.CSS.input],
@@ -115,12 +114,29 @@ export default class Embed {
     container.appendChild(content);
     container.appendChild(inputCaption);
 
+    inputUrl.addEventListener(
+      'keydown',
+      (event) => {
+        if (event.keyCode === 8) {
+          // BACKSPACE KEY CODE
+          this.backspace(event);
+        }
+      },
+      false,
+    );
+
     return container;
+  }
+
+  backspace() {
+    if (this.elements.url.value.length === 0) {
+      this.api.blocks.delete();
+    }
   }
 
   save() {
     if (!this.elements.url?.value || !this.isValid) {
-      return null;
+      return undefined;
     }
     return {
       ...this.data,

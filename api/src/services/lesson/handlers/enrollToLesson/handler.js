@@ -1,22 +1,16 @@
-import { BadRequestError } from '../../../../validation/errors';
-
-import { ENROLL_SUCCESS, INVALID_ENROLL } from '../../constants';
-
 export async function enrollToLessonHandler({
   user: { id: userId },
   params: { lessonId },
 }) {
   const {
-    knex,
+    config: {
+      lessonService: { lessonServiceMessages: messages },
+    },
     models: { Lesson, UserRole },
   } = this;
 
-  const lesson = await Lesson.checkIfEnrolled({ knex, lessonId, userId });
-  if (!lesson) {
-    throw new BadRequestError(INVALID_ENROLL);
-  }
-
+  await Lesson.checkIfEnrolled({ lessonId, userId });
   await UserRole.enrollToLesson({ userId, lessonId });
 
-  return ENROLL_SUCCESS;
+  return { message: messages.LESSON_MSG_SUCCESS_ENROLL };
 }

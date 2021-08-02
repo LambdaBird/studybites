@@ -2,7 +2,6 @@ import Delimiter from './Delimiter';
 import Embed from './Embed';
 import Error from './Error';
 import Finish from './Finish';
-import Finished from './Finished';
 import Header from './Header';
 import Image from './Image';
 import List from './List';
@@ -40,8 +39,6 @@ const BlockElement = ({ element }) => {
       return <Finish {...element} />;
     case BLOCKS_TYPE.START:
       return <Start {...element} />;
-    case BLOCKS_TYPE.FINISHED:
-      return <Finished />;
     default:
       return <Error />;
   }

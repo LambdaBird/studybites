@@ -1,10 +1,10 @@
 /* eslint no-use-before-define: "off" */
-
 import { useParams } from 'react-router-dom';
 
 import Header from '@sb-ui/components/molecules/Header';
 import LearnContext from '@sb-ui/contexts/LearnContext';
 import InfoBlock from '@sb-ui/pages/User/LearnPage/InfoBlock';
+import { getLessonById, postLessonById } from '@sb-ui/utils/api/v1/student';
 
 import LearnChunk from './LearnChunk';
 import { useLearnChunks } from './useLearnChunks';
@@ -12,14 +12,26 @@ import * as S from './LearnPage.styled';
 
 const LearnPage = () => {
   const { id: lessonId } = useParams();
-  /* const learnProgress = 50; */
-  const { handleInteractiveClick, chunks, isLoading, lesson, total } =
-    useLearnChunks({ lessonId });
-
+  const {
+    handleInteractiveClick,
+    chunks,
+    isLoading,
+    lesson,
+    total,
+    learnProgress,
+    progressStatus,
+  } = useLearnChunks({
+    lessonId,
+    getLessonById,
+    postLessonById,
+  });
+  
   return (
     <>
-      {/* <S.Header bottom={<S.Progress percent={leanProgress} />} /> */}
-      <Header hideOnScroll />
+      <Header
+        hideOnScroll
+        bottom={<S.Progress percent={learnProgress} status={progressStatus} />}
+      />
       <S.Wrapper>
         <S.GlobalStylesLearnPage />
         <S.Row>

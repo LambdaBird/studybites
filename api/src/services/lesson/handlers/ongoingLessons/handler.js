@@ -3,14 +3,12 @@ export async function ongoingLessonsHandler({
   query: { search, offset, limit },
 }) {
   const {
-    knex,
     models: { Lesson, Result },
   } = this;
 
-  const { excludeLessons } = await Result.getFinishedLessons({ knex, userId });
+  const { excludeLessons } = await Result.getFinishedLessons({ userId });
 
   const { total, results: lessons } = await Lesson.getOngoingLessons({
-    knex,
     userId,
     excludeLessons,
     offset,

@@ -16,7 +16,7 @@ const Next = ({ blockId, revision, isSolved }) => {
 
   return (
     <S.LessonButton
-      onClick={() =>
+      onClick={() => {
         handleInteractiveClick({
           id,
           action: NEXT_TYPE,
@@ -25,8 +25,8 @@ const Next = ({ blockId, revision, isSolved }) => {
           data: {
             isSolved: true,
           },
-        })
-      }
+        });
+      }}
     >
       {t('user:lesson.next')}
     </S.LessonButton>
