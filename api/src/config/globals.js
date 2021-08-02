@@ -25,7 +25,7 @@ export const searchLimits = {
 
 export const resources = {
   LESSON: {
-    name: 'lessons',
+    name: 'lesson',
     status: ['Draft', 'Public', 'Private', 'Archived'],
     learnStatus: ['Public', 'Draft'],
   },
