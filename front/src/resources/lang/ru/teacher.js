@@ -81,4 +81,22 @@ export default {
     },
     description: 'Описание',
   },
+  lesson_students: {
+    title: 'Студенты урока ({{studentsCount}})',
+    table: {
+      full_name: 'Полное имя',
+      email: 'Email',
+      lastActivity: 'Последняя активность',
+      action: 'Действие',
+      edit: 'Изменить',
+      no_data: 'Нет данных',
+      action_remove: 'Удалить',
+    },
+    search: {
+      placeholder: 'Email или имя',
+    },
+    buttons: {
+      invite_student: 'Пригласить студента',
+    },
+  },
 };

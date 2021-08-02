@@ -81,4 +81,22 @@ export default {
     },
     description: 'Description',
   },
+  lesson_students: {
+    title: 'Lesson students ({{studentsCount}})',
+    table: {
+      full_name: 'Full Name',
+      email: 'Email',
+      lastActivity: 'Last activity',
+      action: 'Action',
+      edit: 'Edit',
+      no_data: 'No data',
+      action_remove: 'Remove',
+    },
+    search: {
+      placeholder: 'Email or name',
+    },
+    buttons: {
+      invite_student: 'Invite student',
+    },
+  },
 };

@@ -295,7 +295,6 @@ class Lesson extends BaseModel {
     search,
   }) {
     const end = start + limit - 1;
-
     return (
       this.query()
         .skipUndefined()
@@ -304,6 +303,15 @@ class Lesson extends BaseModel {
           'users.email',
           'users.first_name',
           'users.last_name',
+          lessonId
+            ? this.knex().raw(
+                `(select MAX(created_at) from results where user_id=? and lesson_id=?) as last_activity`,
+                [userId, lessonId],
+              )
+            : this.knex().raw(
+                `(select MAX(created_at) from results where user_id=?) as last_activity`,
+                [userId],
+              ),
         )
         .join('users_roles', 'users_roles.resource_id', '=', 'lessons.id')
         .join(
