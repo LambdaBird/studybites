@@ -18,14 +18,10 @@ export async function refreshTokenHandler(req) {
     throw new AuthorizationError(errors.USER_ERR_TOKEN_EXPIRED);
   }
 
-  const userData = await User.query().findById(decoded.id);
+  const { id } = await User.getUser({ userId: decoded.id });
 
-  if (!userData) {
-    throw new AuthorizationError(errors.USER_ERR_UNAUTHORIZED);
-  }
-
-  const newAccessToken = createAccessToken(this, userData);
-  const newRefreshToken = createRefreshToken(this, userData);
+  const newAccessToken = createAccessToken(this, id);
+  const newRefreshToken = createRefreshToken(this, id);
 
   return {
     accessToken: newAccessToken,
