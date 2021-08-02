@@ -7,6 +7,12 @@ export const updateUserOptions = {
         password: { $ref: 'passwordPattern#' },
         firstName: { type: 'string' },
         lastName: { type: 'string' },
+        settings: {
+          type: 'object',
+          properties: {
+            language: { type: 'string' },
+          },
+        },
         isConfirmed: { type: 'boolean' },
         isSuperAdmin: { type: 'boolean' },
       },

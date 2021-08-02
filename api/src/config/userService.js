@@ -17,7 +17,13 @@ export const userServiceMessages = {
 };
 
 export const userServiceConstants = {
-  USER_CONST_ALLOWED_USER_FIELDS: ['id', 'email', 'firstName', 'lastName'],
+  USER_CONST_ALLOWED_USER_FIELDS: [
+    'id',
+    'email',
+    'firstName',
+    'lastName',
+    'settings',
+  ],
   USER_CONST_ALLOWED_ADMIN_FIELDS: [
     'id',
     'email',

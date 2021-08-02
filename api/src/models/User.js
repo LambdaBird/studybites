@@ -2,9 +2,9 @@ import objection from 'objection';
 import path from 'path';
 
 import {
-  userServiceErrors as errors,
-  userServiceConstants as constants,
   roles,
+  userServiceConstants as constants,
+  userServiceErrors as errors,
 } from '../config';
 import { AuthorizationError, NotFoundError } from '../validation/errors';
 
@@ -27,6 +27,7 @@ class User extends BaseModel {
         isSuperAdmin: { type: 'boolean' },
         description: { type: 'string' },
         isConfirmed: { type: 'boolean' },
+        settings: { type: 'jsonb' },
         createdAt: { type: 'string' },
         updatedAt: { type: 'string' },
       },
@@ -57,6 +58,17 @@ class User extends BaseModel {
       .findById(userId)
       .returning(constants.USER_CONST_ALLOWED_ADMIN_FIELDS)
       .throwIfNotFound({ error: errors.USER_ERR_INVALID_UPDATE });
+  }
+
+  static updateLanguage({ userId, language }) {
+    return this.query()
+      .update({
+        settings: this.knex().raw(
+          `jsonb_set("settings", '{"language"}', '"${language}"')`,
+        ),
+      })
+      .findById(userId)
+      .returning('settings');
   }
 
   static checkIfExist({ id, email }) {
@@ -116,7 +128,7 @@ class User extends BaseModel {
       .findById(userId)
       .select(
         this.knex().raw(`
-          users.id, users.email, users.first_name, users.last_name,
+          users.id, users.email, users.first_name, users.last_name, users.settings,
           array_remove(array_append(array_agg(distinct roles.name) filter (where roles.name is not null), 
           case when users.is_super_admin then 'SuperAdmin'::varchar end), null) roles
         `),

@@ -20,9 +20,13 @@ const resources = {
   ru,
 };
 
+const getLanguage = () =>
+  LANGUAGES_LIST.find((lang) => navigator.language.includes(lang.key))?.key ||
+  'en';
+
 i18n.use(initReactI18next).init({
   resources,
-  lng: 'en',
+  lng: getLanguage(),
   ns: ['admin', 'sign_in', 'sign_up', 'teacher', 'user', 'common'],
   defaultNS: 'common',
   keySeparator: '.',

@@ -37,3 +37,10 @@ export const getUser = async () => {
 
   return data;
 };
+
+export const patchLanguage = async ({ language }) => {
+  const { data } = await api.patch(`${PATH}/language`, {
+    language,
+  });
+  return data;
+};

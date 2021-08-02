@@ -36,13 +36,13 @@ services:
   studybites-front:
     build: ./front
     volumes:
-      - ./front:/front
-      - /front/node_modules
+     - ./front:/front
+     - /front/node_modules
     ports:
-      - '3018:3018'
+     - '3018:3018'
     environment:
-      PORT: 3018
-      API_PORT: 3017
+     PORT: 3018
+     API_PORT: 3017
 
 volumes:
   studybites-db:

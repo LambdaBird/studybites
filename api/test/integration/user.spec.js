@@ -595,3 +595,51 @@ describe('POST /api/v1/user/remove_teacher', () => {
     expect(payload.message).toBe(errors.USER_ERR_ROLE_NOT_FOUND);
   });
 });
+
+describe('PATCH /api/v1/user/language', () => {
+  const app = build();
+
+  let token;
+
+  const credentials = {
+    email: 'admin@test.io',
+    password: 'passwd3',
+  };
+
+  beforeAll(async () => {
+    await app.ready();
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/v1/user/signin',
+      payload: credentials,
+    });
+
+    const data = JSON.parse(response.payload);
+
+    token = data.accessToken;
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
+
+  it('should return a success message', async () => {
+    const response = await app.inject({
+      method: 'PATCH',
+      url: '/api/v1/user/language',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: {
+        language: 'en',
+      },
+    });
+
+    const payload = JSON.parse(response.payload);
+    expect(response.statusCode).toBe(200);
+    expect(payload.settings).toStrictEqual({
+      language: 'en',
+    });
+  });
+});
