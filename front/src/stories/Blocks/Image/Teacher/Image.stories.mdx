@@ -1,0 +1,63 @@
+import { Meta, Story, Canvas, Source } from '@storybook/addon-docs';
+import {
+  EditorJsDecorator,
+  LearnContextDecorator,
+} from '@sb-ui/stories/decorators';
+
+<Meta title="Blocks/Image/Teacher" />
+
+# Image
+
+Tool `Image` renders in Editor js
+
+export const Template = (args) => <div {...args} />;
+
+For example
+
+<Source
+  language="jsx"
+  code={`<EditorJs
+  tools={{
+    image: "...",
+  }}
+  data={{
+    blocks: [
+      {
+        id: "image-id",
+        type: "image",
+        data: {
+          url: "https://images.unsplash.com/photo-1472457897821-70d3819a0e24?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1049&q=80",
+          caption: "Test caption",
+        },
+      },
+    ],
+  }}
+/>;`}
+/>
+
+<Canvas>
+  <Story
+    name="Embed"
+    decorators={[
+      (Story) => (
+        <LearnContextDecorator>
+          <EditorJsDecorator
+            allowedToolbox={['image']}
+            blocks={[
+              {
+                id: 'image-id',
+                type: 'image',
+                data: {
+                  url: 'https://images.unsplash.com/photo-1472457897821-70d3819a0e24?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1049&q=80',
+                  caption: 'Test caption',
+                },
+              },
+            ]}
+          >
+            <Story />
+          </EditorJsDecorator>
+        </LearnContextDecorator>
+      ),
+    ]}
+  />
+</Canvas>

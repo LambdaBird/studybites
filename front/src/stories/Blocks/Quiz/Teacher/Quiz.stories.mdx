@@ -1,0 +1,85 @@
+import { Meta, Story, Canvas, Source } from '@storybook/addon-docs';
+import {
+  EditorJsDecorator,
+  LearnContextDecorator,
+} from '@sb-ui/stories/decorators';
+
+<Meta title="Blocks/Quiz/Teacher/Quiz" />
+
+# Quiz
+
+Tool `Quiz` renders in Editor js
+
+export const Template = (args) => <div {...args} />;
+
+For example
+
+<Source
+  language="jsx"
+  code={`<EditorJs
+  tools={{
+    quiz: '...'
+  }}
+  data={{
+    blocks: [
+      {
+        id: "quiz-id",
+        type: "quiz",
+        data: {
+          question: "Test question 1",
+          answers: [
+            {
+              value: "Option 1",
+            },
+            {
+              value: "Option 2",
+            },
+            {
+              value: "Option 3",
+              correct: true,
+            },
+          ],
+        },
+      },
+    ],
+  }}
+/>;`}
+/>
+
+<Canvas>
+  <Story
+    name="Quiz"
+    decorators={[
+      (Story) => (
+        <LearnContextDecorator>
+          <EditorJsDecorator
+            allowedToolbox={['quiz']}
+            blocks={[
+              {
+                id: 'quiz-id',
+                type: 'quiz',
+                data: {
+                  question: 'Test question 1',
+                  answers: [
+                    {
+                      value: 'Option 1',
+                    },
+                    {
+                      value: 'Option 2',
+                    },
+                    {
+                      value: 'Option 3',
+                      correct: true,
+                    },
+                  ],
+                },
+              },
+            ]}
+          >
+            <Story />
+          </EditorJsDecorator>
+        </LearnContextDecorator>
+      ),
+    ]}
+  />
+</Canvas>
