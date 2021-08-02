@@ -222,7 +222,7 @@ const LessonEdit = () => {
                   </S.StatusText>
                 </S.CardBadge>
               </S.BadgeWrapper>
-              {dataBlocks && (
+              {(!isEditLesson || dataBlocks) && (
                 <EditorJs
                   tools={getConfig(t).tools}
                   data={dataBlocks}
