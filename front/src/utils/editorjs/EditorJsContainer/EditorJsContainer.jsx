@@ -101,6 +101,18 @@ const EditorJsContainer = (props) => {
     })();
   };
 
+  useEffect(() => {
+    const { readOnly } = props;
+
+    instance?.isReady.then(() => {
+      if (readOnly) {
+        instance.readOnly.toggle(true);
+      } else {
+        instance.readOnly.toggle(false);
+      }
+    });
+  }, [instance, props]);
+
   const changeData = useCallback((data) => {
     if (instance) {
       instance?.isReady

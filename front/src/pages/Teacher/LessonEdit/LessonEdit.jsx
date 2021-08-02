@@ -35,6 +35,7 @@ const LessonEdit = () => {
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [isEditorDisabled, setIsEditorDisabled] = useState(true);
 
   const inputTitle = useRef(null);
 
@@ -117,21 +118,31 @@ const LessonEdit = () => {
 
   useEffect(() => {
     if (editorJSRef.current?.configuration) {
-      undoPluginRef.current = new Undo({
-        editor: editorJSRef.current,
-        redoButton: 'redo-button',
-        undoButton: 'undo-button',
-      });
-      // eslint-disable-next-line no-new
-      new DragDrop(editorJSRef.current);
+      if (!isEditorDisabled) {
+        undoPluginRef.current = new Undo({
+          editor: editorJSRef.current,
+          redoButton: 'redo-button',
+          undoButton: 'undo-button',
+        });
+        // eslint-disable-next-line no-new
+        new DragDrop(editorJSRef.current);
+      }
     }
-  }, [editorJSRef.current]);
+  }, [isEditorDisabled]);
 
   useEffect(() => {
     if (lessonData) {
       setDataBlocks({
         blocks: prepareEditorData(lessonData?.lesson?.blocks),
       });
+    }
+  }, [lessonData]);
+
+  useEffect(() => {
+    if (!lessonData?.lesson.status || lessonData?.lesson.status === 'Draft') {
+      setIsEditorDisabled(false);
+    } else {
+      setIsEditorDisabled(true);
     }
   }, [lessonData]);
 
@@ -208,6 +219,7 @@ const LessonEdit = () => {
                 type="text"
                 placeholder={t('lesson_edit.title.placeholder')}
                 value={name}
+                readOnly={isEditorDisabled}
                 onChange={handleInputTitle}
                 onKeyDown={handleNextLine}
               />
@@ -226,6 +238,7 @@ const LessonEdit = () => {
                 <EditorJs
                   tools={getConfig(t).tools}
                   data={dataBlocks}
+                  readOnly={isEditorDisabled}
                   instanceRef={(instance) => {
                     editorJSRef.current = instance;
                   }}
@@ -238,6 +251,7 @@ const LessonEdit = () => {
               <Col span={24}>
                 <S.SaveButton
                   onClick={handleSave}
+                  disabled={isEditorDisabled}
                   icon={<SaveOutlined />}
                   type="primary"
                   size="large"
