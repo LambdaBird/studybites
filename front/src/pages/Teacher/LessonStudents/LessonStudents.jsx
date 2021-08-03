@@ -7,6 +7,7 @@ import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
 import { useTableSearch } from '@sb-ui/hooks/useTableSearch';
 import { getTeacherLessonStudents } from '@sb-ui/utils/api/v1/teacher';
 import { TEACHER_LESSON_STUDENTS_BASE_KEY } from '@sb-ui/utils/queries';
+import { formatDate } from '@sb-ui/utils/utils';
 
 import * as S from './LessonStudents.styled';
 
@@ -49,9 +50,10 @@ const LessonStudents = () => {
         width: '35%',
       },
       {
-        title: t('lesson_students.table.lastActivity'),
+        title: t('lesson_students.table.last_activity'),
         dataIndex: 'lastActivity',
         key: 'lastActivity',
+        render: (x) => formatDate(x) || t('lesson_students.table.not_started'),
         width: '20%',
       },
       {

@@ -86,7 +86,8 @@ export default {
     table: {
       full_name: 'Full Name',
       email: 'Email',
-      lastActivity: 'Last activity',
+      last_activity: 'Last activity',
+      not_started: 'Not started',
       action: 'Action',
       edit: 'Edit',
       no_data: 'No data',

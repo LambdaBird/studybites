@@ -86,7 +86,8 @@ export default {
     table: {
       full_name: 'Полное имя',
       email: 'Email',
-      lastActivity: 'Последняя активность',
+      last_activity: 'Последняя активность',
+      not_started: 'Еще не начато',
       action: 'Действие',
       edit: 'Изменить',
       no_data: 'Нет данных',
