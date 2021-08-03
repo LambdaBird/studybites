@@ -1,9 +1,9 @@
 import { Meta, Story, Canvas } from '@storybook/addon-docs';
-import Start from '@sb-ui/pages/User/LearnPage/BlockElement/Start';
+import Next from '@sb-ui/pages/User/LearnPage/BlockElement/Next';
 import { LearnContextDecorator } from '@sb-ui/stories/decorators';
 
 <Meta
-  title="SB/User/LearnPage/BlockElement/Start"
+  title="Blocks/Next"
   decorators={[
     (Story) => (
       <LearnContextDecorator>
@@ -11,18 +11,18 @@ import { LearnContextDecorator } from '@sb-ui/stories/decorators';
       </LearnContextDecorator>
     ),
   ]}
-  component={Start}
+  component={Next}
 />
 
-# Start
+# Next
 
-Component `Start` should use to display Start button (accepts data options `isSolved`)
+Component `Next` should use to display Next button (accepts data options `isSolved`)
 
-export const Template = (args) => <Start {...args} />;
+export const Template = (args) => <Next {...args} />;
 
 <Canvas>
   <Story
-    name="Start not solved"
+    name="Next not solved"
     args={{
       isSolved: false,
     }}
@@ -30,7 +30,7 @@ export const Template = (args) => <Start {...args} />;
     {Template.bind({})}
   </Story>
   <Story
-    name="Start solved"
+    name="Next solved"
     args={{
       isSolved: true,
     }}

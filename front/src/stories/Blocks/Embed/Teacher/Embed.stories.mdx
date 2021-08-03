@@ -1,0 +1,73 @@
+import { Meta, Story, Canvas, Source } from '@storybook/addon-docs';
+import {
+  EditorJsDecorator,
+  LearnContextDecorator,
+} from '@sb-ui/stories/decorators';
+
+<Meta title="Blocks/Embed/Teacher" />
+
+# Embed
+
+Tool `Embed` renders in Editor js
+
+export const Template = (args) => <div {...args} />;
+
+For example
+
+<Source
+  language="jsx"
+  code={`<EditorJs
+  tools={{
+    embed: "...",
+  }}
+  data={{
+    blocks: [
+      {
+        id: 'embed-id',
+        type: 'embed',
+        data: {
+          service: 'youtube',
+          source: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+          embed: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+          width: 580,
+          height: 320,
+          inputUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+          caption: 'Video caption',
+        },
+      },
+    ],
+  }}
+/>;`}
+/>
+
+<Canvas>
+  <Story
+    name="Embed"
+    decorators={[
+      (Story) => (
+        <LearnContextDecorator>
+          <EditorJsDecorator
+            allowedToolbox={['embed']}
+            blocks={[
+              {
+                id: 'embed-id',
+                type: 'embed',
+                data: {
+                  service: 'youtube',
+                  source: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+                  embed: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+                  width: 580,
+                  height: 320,
+                  inputUrl: 'https://www.youtube.com/embed/dQw4w9WgXcQ',
+                  caption: 'Video caption',
+                },
+              },
+            ]}
+          >
+            <Story />
+          </EditorJsDecorator>
+        </LearnContextDecorator>
+      ),
+    ]}
+  />
+</Canvas>

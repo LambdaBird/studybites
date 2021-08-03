@@ -3,7 +3,7 @@ import Quiz from '@sb-ui/pages/User/LearnPage/BlockElement/Quiz';
 import { LearnContextDecorator } from '@sb-ui/stories/decorators';
 
 <Meta
-  title="SB/User/LearnPage/BlockElement/Quiz/Answer"
+  title="Blocks/Quiz/Student/Answer"
   decorators={[
     (Story) => (
       <LearnContextDecorator>
@@ -31,6 +31,8 @@ export const Template = (args) => <Quiz {...args} />;
           answers: [],
         },
       },
+      blockId: 'Test id',
+      revision: 'Test revision',
     }}
   >
     {Template.bind({})}
@@ -58,6 +60,8 @@ export const Template = (args) => <Quiz {...args} />;
           ],
         },
       },
+      blockId: 'Test id',
+      revision: 'Test revision',
     }}
   >
     {Template.bind({})}
