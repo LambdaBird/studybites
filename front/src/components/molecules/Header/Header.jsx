@@ -140,8 +140,8 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
   }, [headerRef, hideOnScroll]);
 
   useEffect(() => {
-    if (user?.settings?.language) {
-      i18n.changeLanguage(user?.settings?.language);
+    if (user?.language) {
+      i18n.changeLanguage(user?.language);
     }
   }, [i18n, user]);
 

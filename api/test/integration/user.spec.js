@@ -638,8 +638,6 @@ describe('PATCH /api/v1/user/language', () => {
 
     const payload = JSON.parse(response.payload);
     expect(response.statusCode).toBe(200);
-    expect(payload.settings).toStrictEqual({
-      language: 'en',
-    });
+    expect(payload.language).toEqual('en');
   });
 });

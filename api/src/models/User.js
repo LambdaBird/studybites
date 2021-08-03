@@ -27,7 +27,7 @@ class User extends BaseModel {
         isSuperAdmin: { type: 'boolean' },
         description: { type: 'string' },
         isConfirmed: { type: 'boolean' },
-        settings: { type: 'jsonb' },
+        language: { type: 'string' },
         createdAt: { type: 'string' },
         updatedAt: { type: 'string' },
       },
@@ -62,13 +62,9 @@ class User extends BaseModel {
 
   static updateLanguage({ userId, language }) {
     return this.query()
-      .update({
-        settings: this.knex().raw(
-          `jsonb_set("settings", '{"language"}', '"${language}"')`,
-        ),
-      })
+      .patch({ language })
       .findById(userId)
-      .returning('settings');
+      .returning('language');
   }
 
   static checkIfExist({ id, email }) {
@@ -128,7 +124,7 @@ class User extends BaseModel {
       .findById(userId)
       .select(
         this.knex().raw(`
-          users.id, users.email, users.first_name, users.last_name, users.settings,
+          users.id, users.email, users.first_name, users.last_name, users.language,
           array_remove(array_append(array_agg(distinct roles.name) filter (where roles.name is not null), 
           case when users.is_super_admin then 'SuperAdmin'::varchar end), null) roles
         `),

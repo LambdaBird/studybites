@@ -11,5 +11,5 @@ export async function updateUserLanguageHandler({
     language,
   });
 
-  return { settings: data?.settings };
+  return { language: data?.language };
 }

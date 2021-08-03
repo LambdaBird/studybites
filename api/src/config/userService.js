@@ -22,7 +22,7 @@ export const userServiceConstants = {
     'email',
     'firstName',
     'lastName',
-    'settings',
+    'language',
   ],
   USER_CONST_ALLOWED_ADMIN_FIELDS: [
     'id',
