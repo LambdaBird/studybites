@@ -1,7 +1,7 @@
 import { Col, Dropdown, Menu } from 'antd';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { DownOutlined } from '@ant-design/icons';
 
@@ -9,7 +9,7 @@ import useMobile from '@sb-ui/hooks/useMobile';
 import { LANGUAGES_LIST } from '@sb-ui/i18n';
 import { queryClient } from '@sb-ui/query';
 import logo from '@sb-ui/resources/img/logo.svg';
-import { getUser } from '@sb-ui/utils/api/v1/user';
+import { getUser, patchLanguage } from '@sb-ui/utils/api/v1/user';
 import { Roles } from '@sb-ui/utils/constants';
 import { clearJWT } from '@sb-ui/utils/jwt';
 import {
@@ -49,11 +49,15 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
     history.push(SIGN_IN);
   };
 
+  const { mutate: changeLanguage } = useMutation(patchLanguage);
+
   const handleMenuClick = ({ key }) => {
     if (key === 'signOut') {
       handleSignOut();
     } else if (key.startsWith('language')) {
-      i18n.changeLanguage(key.split('-')?.[1]);
+      const language = key.split('-')?.[1];
+      i18n.changeLanguage(language);
+      changeLanguage({ language });
     }
   };
 
@@ -134,6 +138,12 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
       window.removeEventListener('scroll', listener);
     };
   }, [headerRef, hideOnScroll]);
+
+  useEffect(() => {
+    if (user?.language) {
+      i18n.changeLanguage(user?.language);
+    }
+  }, [i18n, user]);
 
   return (
     <S.Container

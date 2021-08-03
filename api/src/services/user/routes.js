@@ -23,6 +23,10 @@ import {
   removeTeacherHandler,
   removeTeacherOptions,
 } from './handlers/removeTeacher';
+import {
+  updateUserLanguageHandler,
+  updateUserLanguageOptions,
+} from './handlers/updateUserLanguage';
 
 export default async function router(instance) {
   instance.post('/signup', signUpOptions, signUpHandler);
@@ -44,4 +48,10 @@ export default async function router(instance) {
   instance.post('/appoint_teacher', addTeacherOptions, addTeacherHandler);
 
   instance.post('/remove_teacher', removeTeacherOptions, removeTeacherHandler);
+
+  instance.patch(
+    '/language',
+    updateUserLanguageOptions,
+    updateUserLanguageHandler,
+  );
 }

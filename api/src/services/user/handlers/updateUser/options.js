@@ -7,6 +7,7 @@ export const updateUserOptions = {
         password: { $ref: 'passwordPattern#' },
         firstName: { type: 'string' },
         lastName: { type: 'string' },
+        language: { enum: ['en', 'ru'] },
         isConfirmed: { type: 'boolean' },
         isSuperAdmin: { type: 'boolean' },
       },
