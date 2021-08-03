@@ -1,72 +1,38 @@
 import { Button, Col, Empty, Row, Space, Table, Typography } from 'antd';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useQuery } from 'react-query';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
+import { useTableSearch } from '@sb-ui/hooks/useTableSearch';
 import { getTeacherLessonStudents } from '@sb-ui/utils/api/v1/teacher';
 import { TEACHER_LESSON_STUDENTS_BASE_KEY } from '@sb-ui/utils/queries';
-import { getQueryPage } from '@sb-ui/utils/utils';
 
 import * as S from './LessonStudents.styled';
 
 const PAGE_SIZE = 10;
 
 const LessonStudents = () => {
-  const { t } = useTranslation('teacher');
   const { id: lessonId } = useParams();
-  const location = useLocation();
-  const queryPage = useMemo(() => location.search, [location]);
-  const history = useHistory();
-  const [search, setSearch] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
+  const { t } = useTranslation('teacher');
 
   const {
-    data: responseData,
+    setSearch,
+    data: students,
+    total,
+    onChangeLessonsPage,
     isLoading,
     isPreviousData,
-  } = useQuery(
-    [
-      TEACHER_LESSON_STUDENTS_BASE_KEY,
-      {
-        lessonId,
-        offset: (currentPage - 1) * PAGE_SIZE,
-        limit: PAGE_SIZE,
-        search,
-      },
-    ],
-    getTeacherLessonStudents,
-    { keepPreviousData: true },
-  );
-
-  const { students, total } = responseData || {};
-
-  useEffect(() => {
-    if (students?.length === 0 && total !== 0) {
-      setCurrentPage(1);
-      history.replace({
-        search: ``,
-      });
-    }
-  }, [students, history, total]);
-
-  useEffect(() => {
-    const { incorrect, page } = getQueryPage(queryPage);
-    setCurrentPage(page);
-    if (incorrect || page === 1) {
-      history.replace({
-        search: ``,
-      });
-    }
-  }, [history, queryPage]);
-
-  const onChangeLessonsPage = ({ current }) => {
-    setCurrentPage(current);
-    history.push({
-      search: `?page=${current}`,
-    });
-  };
+    currentPage,
+  } = useTableSearch({
+    dataKey: 'students',
+    baseKey: TEACHER_LESSON_STUDENTS_BASE_KEY,
+    getFunc: getTeacherLessonStudents,
+    pageSize: PAGE_SIZE,
+    params: {
+      lessonId,
+    },
+  });
 
   const columns = useMemo(
     () => [

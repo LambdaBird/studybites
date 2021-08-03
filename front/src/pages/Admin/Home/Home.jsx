@@ -9,19 +9,18 @@ import {
   Table,
   Typography,
 } from 'antd';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useMutation, useQuery } from 'react-query';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useMutation } from 'react-query';
 
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
+import { useTableSearch } from '@sb-ui/hooks/useTableSearch';
 import {
   appointTeacher,
   getUsers,
   removeTeacher,
 } from '@sb-ui/utils/api/v1/admin';
 import { ADMIN_USERS_BASE_KEY } from '@sb-ui/utils/queries';
-import { getQueryPage } from '@sb-ui/utils/utils';
 
 import * as S from './Home.styled';
 
@@ -33,56 +32,19 @@ const Home = () => {
   const { t } = useTranslation('admin');
   const [teacherRoleState, setTeacherRoleState] = useState({});
 
-  const location = useLocation();
-  const queryPage = useMemo(() => location.search, [location]);
-  const history = useHistory();
-  const [search, setSearch] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-
   const {
-    data: responseData,
+    setSearch,
+    data,
+    total,
+    onChangeLessonsPage,
     isLoading,
     isPreviousData,
-  } = useQuery(
-    [
-      ADMIN_USERS_BASE_KEY,
-      {
-        offset: (currentPage - 1) * PAGE_SIZE,
-        limit: PAGE_SIZE,
-        search,
-      },
-    ],
-    getUsers,
-    { keepPreviousData: true },
-  );
-
-  const { data, total } = responseData || {};
-
-  useEffect(() => {
-    if (data?.length === 0 && total !== 0) {
-      setCurrentPage(1);
-      history.replace({
-        search: ``,
-      });
-    }
-  }, [data, history, total]);
-
-  useEffect(() => {
-    const { incorrect, page } = getQueryPage(queryPage);
-    setCurrentPage(page);
-    if (incorrect || page === 1) {
-      history.replace({
-        search: ``,
-      });
-    }
-  }, [history, queryPage]);
-
-  const onChangeLessonsPage = ({ current }) => {
-    setCurrentPage(current);
-    history.push({
-      search: `?page=${current}`,
-    });
-  };
+    currentPage,
+  } = useTableSearch({
+    baseKey: ADMIN_USERS_BASE_KEY,
+    getFunc: getUsers,
+    pageSize: PAGE_SIZE,
+  });
 
   const onSuccessChangeTeacher = useCallback(
     (changeData) => {
