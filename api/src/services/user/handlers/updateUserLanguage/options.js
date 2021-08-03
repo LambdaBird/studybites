@@ -3,7 +3,7 @@ export const updateUserLanguageOptions = {
     body: {
       type: 'object',
       properties: {
-        language: { type: 'string' },
+        language: { enum: ['en', 'ru'] },
       },
     },
 
@@ -14,8 +14,5 @@ export const updateUserLanguageOptions = {
   },
   async onRequest(req) {
     await this.auth({ req });
-  },
-  async preHandler({ body: { email } }) {
-    this.validateEmail({ email });
   },
 };
