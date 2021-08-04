@@ -51,6 +51,25 @@ class User extends BaseModel {
           to: 'results.userId',
         },
       },
+      lessons: {
+        relation: objection.Model.ManyToManyRelation,
+        modelClass: path.join(__dirname, 'Lesson'),
+        join: {
+          from: 'users.id',
+          through: {
+            modelClass: path.join(__dirname, 'UserRole'),
+            from: 'users_roles.user_id',
+            to: 'users_roles.resource_id',
+          },
+          to: 'lessons.id',
+        },
+        modify: (query) => {
+          return query.where({
+            resource_type: 'lesson',
+            role_id: roles.STUDENT.id,
+          });
+        },
+      },
     };
   }
 
@@ -103,52 +122,6 @@ class User extends BaseModel {
       .andWhere(
         this.knex().raw(
           `concat(users.first_name, ' ', users.last_name, ' ', users.first_name, ' ', users.email)`,
-        ),
-        'ilike',
-        `%${search ? search.replace(/ /g, '%') : '%'}%`,
-      )
-      .range(start, end);
-  }
-
-  static getAllStudentsOfTeacher({ userId, offset: start, limit, search }) {
-    const end = start + limit - 1;
-    return this.query()
-      .skipUndefined()
-      .select('users.id', 'users.email', 'users.first_name', 'users.last_name')
-      .innerJoin('users_roles', 'users_roles.user_id', '=', 'users.id')
-      .innerJoin(
-        'users_roles as T',
-        'T.resource_id',
-        '=',
-        'users_roles.resource_id',
-      )
-      .andWhere('users_roles.role_id', roles.STUDENT.id)
-      .andWhere('T.role_id', roles.MAINTAINER.id)
-      .andWhere('T.user_id', userId)
-      .groupBy('users.id')
-      .andWhere(
-        this.knex().raw(
-          `concat(users.email, ' ', users.first_name, ' ', users.last_name, ' ', users.first_name)`,
-        ),
-        'ilike',
-        `%${search ? search.replace(/ /g, '%') : '%'}%`,
-      )
-      .range(start, end);
-  }
-
-  static getAllStudentsOfLesson({ lessonId, offset: start, limit, search }) {
-    const end = start + limit - 1;
-    return this.query()
-      .skipUndefined()
-      .select('users.id', 'users.email', 'users.first_name', 'users.last_name')
-      .innerJoin('users_roles', 'users.id', '=', 'users_roles.user_id')
-      .where('users_roles.resource_type', 'lesson')
-      .andWhere('users_roles.resource_id', lessonId)
-      .andWhere('users_roles.role_id', roles.STUDENT.id)
-      .groupBy('users.id')
-      .andWhere(
-        this.knex().raw(
-          `concat(users.email, ' ', users.first_name, ' ', users.last_name, ' ', users.first_name)`,
         ),
         'ilike',
         `%${search ? search.replace(/ /g, '%') : '%'}%`,

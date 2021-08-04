@@ -12,6 +12,5 @@ export async function enrolledStudentsHandler({
     limit,
     search,
   });
-
   return { total, students };
 }

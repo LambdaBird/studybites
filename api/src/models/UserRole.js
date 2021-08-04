@@ -39,7 +39,7 @@ class UserRole extends BaseModel {
         relation: objection.Model.BelongsToOneRelation,
         modelClass: path.join(__dirname, 'Lesson'),
         join: {
-          from: 'users_roles.resource_id',
+          from: 'users_roles.resourceId',
           to: 'lessons.id',
         },
       },
@@ -87,7 +87,20 @@ class UserRole extends BaseModel {
     const end = start + limit - 1;
     return this.query()
       .skipUndefined()
-      .select('users.id', 'users.email', 'users.first_name', 'users.last_name')
+      .select(
+        'users.id',
+        'users.email',
+        'users.first_name',
+        'users.last_name',
+        this.knex().raw(
+          `(SELECT JSON_AGG(src) AS Lessons FROM
+          (select * from lessons
+    inner join users_roles on lessons.id=users_roles.resource_id
+    inner join users_roles as T on T.user_id=${userId} and T.role_id=${roles.MAINTAINER.id} 
+    and T.resource_id=users_roles.resource_id
+    and users_roles.user_id=users.id and users_roles.role_id=${roles.STUDENT.id}) src)`,
+        ),
+      )
       .innerJoin(
         'users_roles as T',
         'users_roles.resource_id',
