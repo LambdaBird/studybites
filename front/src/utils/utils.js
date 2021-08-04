@@ -77,6 +77,7 @@ export const skeletonArray = (size) =>
   }));
 
 export const formatDate = (date) =>
+  date &&
   new Intl.DateTimeFormat('en-US', {
     hour: 'numeric',
     minute: 'numeric',

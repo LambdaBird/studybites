@@ -4,16 +4,20 @@ export async function studentsByLessonHandler({
   query: { search, offset, limit },
 }) {
   const {
-    models: { Lesson },
+    models: { User },
   } = this;
 
-  const { total, results: students } = await Lesson.getAllEnrolledStudents({
+  const { total, results: students } = await User.getAllStudentsOfLesson({
     userId,
     lessonId,
     offset,
     limit,
     search,
-  });
+  })
+    .withGraphFetched('results')
+    .modifyGraph('results', (builder) => {
+      builder.where('lessonId', lessonId);
+    });
 
   return { total, students };
 }
