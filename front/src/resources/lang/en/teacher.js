@@ -69,6 +69,7 @@ export default {
       back: 'Back',
       forward: 'Forward',
       preview: 'Preview',
+      move_to_draft: 'Move to draft',
     },
     title: {
       placeholder: 'Lesson title',
@@ -80,5 +81,9 @@ export default {
       archive: 'Archive',
     },
     description: 'Description',
+    publish_modal: {
+      title: 'The lesson is now available to all students',
+      ok: 'Ok',
+    },
   },
 };

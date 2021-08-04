@@ -118,3 +118,7 @@ export const StatusText = styled(Typography.Text)`
   font-size: 1rem;
   color: ${variables['secondary-text-color']};
 `;
+
+export const JoinText = styled.div`
+  margin-bottom: 0.5rem;
+`;
