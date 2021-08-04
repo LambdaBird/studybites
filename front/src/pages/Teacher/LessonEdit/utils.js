@@ -1,4 +1,4 @@
-// import Table from 'editorjs-table';
+import Table from 'editorjs-table';
 import hash from 'object-hash';
 import Delimiter from '@editorjs/delimiter';
 import HeaderTool from '@editorjs/header';
@@ -93,7 +93,7 @@ export const getConfig = (t) => ({
     quote: Quote,
     delimiter: Delimiter,
     marker: Marker,
-    // table: Table,
+    table: Table,
   },
   i18n: {
     messages: {

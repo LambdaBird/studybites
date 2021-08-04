@@ -6527,10 +6527,9 @@ editorjs-drag-drop@^0.1.3:
   resolved "https://registry.yarnpkg.com/editorjs-drag-drop/-/editorjs-drag-drop-0.1.3.tgz#a9a581af5b20a0d736fc25b44cc9a34e46c2e483"
   integrity sha512-63XhyWWkEaWVHgMDAqPsE63YC2thGah8fFjxgoKZ9Tm+6huiS+VTjP2Kpx1FzOR9/xdE/56XYfiC65PI7rUvkA==
 
-editorjs-table@^1.4.10:
+"editorjs-table@git://github.com/LambdaBird/editorjs-table.git":
   version "1.4.10"
-  resolved "https://registry.yarnpkg.com/editorjs-table/-/editorjs-table-1.4.10.tgz#2714d91054732fc827087c705ceb2641a16d3ed2"
-  integrity sha512-jRpgqnimReXXtMLhjXWQ2M+qkOLNqCvKfoiExpZtzPThTFNtSPrE6WZ/HhTsOA2BMkZSejoLcf4KUYvRa5dZYw==
+  resolved "git://github.com/LambdaBird/editorjs-table.git#d74a187358df375e0f6ad5fa0fa25eeeafdef6c8"
 
 ee-first@1.1.1:
   version "1.1.1"
