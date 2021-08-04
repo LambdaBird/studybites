@@ -43,6 +43,14 @@ class User extends BaseModel {
           to: 'users_roles.user_id',
         },
       },
+      results: {
+        relation: objection.Model.HasManyRelation,
+        modelClass: path.join(__dirname, 'Result'),
+        join: {
+          from: 'users.id',
+          to: 'results.userId',
+        },
+      },
     };
   }
 
@@ -95,6 +103,52 @@ class User extends BaseModel {
       .andWhere(
         this.knex().raw(
           `concat(users.first_name, ' ', users.last_name, ' ', users.first_name, ' ', users.email)`,
+        ),
+        'ilike',
+        `%${search ? search.replace(/ /g, '%') : '%'}%`,
+      )
+      .range(start, end);
+  }
+
+  static getAllStudentsOfTeacher({ userId, offset: start, limit, search }) {
+    const end = start + limit - 1;
+    return this.query()
+      .skipUndefined()
+      .select('users.id', 'users.email', 'users.first_name', 'users.last_name')
+      .innerJoin('users_roles', 'users_roles.user_id', '=', 'users.id')
+      .innerJoin(
+        'users_roles as T',
+        'T.resource_id',
+        '=',
+        'users_roles.resource_id',
+      )
+      .andWhere('users_roles.role_id', roles.STUDENT.id)
+      .andWhere('T.role_id', roles.MAINTAINER.id)
+      .andWhere('T.user_id', userId)
+      .groupBy('users.id')
+      .andWhere(
+        this.knex().raw(
+          `concat(users.email, ' ', users.first_name, ' ', users.last_name, ' ', users.first_name)`,
+        ),
+        'ilike',
+        `%${search ? search.replace(/ /g, '%') : '%'}%`,
+      )
+      .range(start, end);
+  }
+
+  static getAllStudentsOfLesson({ lessonId, offset: start, limit, search }) {
+    const end = start + limit - 1;
+    return this.query()
+      .skipUndefined()
+      .select('users.id', 'users.email', 'users.first_name', 'users.last_name')
+      .innerJoin('users_roles', 'users.id', '=', 'users_roles.user_id')
+      .where('users_roles.resource_type', 'lesson')
+      .andWhere('users_roles.resource_id', lessonId)
+      .andWhere('users_roles.role_id', roles.STUDENT.id)
+      .groupBy('users.id')
+      .andWhere(
+        this.knex().raw(
+          `concat(users.email, ' ', users.first_name, ' ', users.last_name, ' ', users.first_name)`,
         ),
         'ilike',
         `%${search ? search.replace(/ /g, '%') : '%'}%`,

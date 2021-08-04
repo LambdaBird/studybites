@@ -6,6 +6,7 @@ import {
   LessonPreview,
   LessonStudents,
   TeacherHome,
+  TeacherStudents,
 } from '@sb-ui/pages/Teacher';
 import {
   EnrollModalDesktop,
@@ -59,6 +60,12 @@ export const getPrivateRoutes = ({ isMobile }) => [
   {
     component: TeacherHome,
     path: paths.TEACHER_HOME,
+    permissions: [Roles.TEACHER],
+    exact: true,
+  },
+  {
+    component: TeacherStudents,
+    path: paths.TEACHER_STUDENTS,
     permissions: [Roles.TEACHER],
     exact: true,
   },
