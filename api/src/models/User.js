@@ -129,8 +129,8 @@ class User extends BaseModel {
           case when users.is_super_admin then 'SuperAdmin'::varchar end), null) roles
         `),
       )
-      .leftJoin('users_roles', 'users_roles.userId', '=', 'users.id')
-      .leftJoin('roles', 'roles.id', '=', 'users_roles.roleId')
+      .leftJoin('users_roles', 'users_roles.user_id', '=', 'users.id')
+      .leftJoin('roles', 'roles.id', '=', 'users_roles.role_id')
       .groupBy('users.id');
   }
 }

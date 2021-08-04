@@ -47,7 +47,9 @@ export async function updateLessonHandler({
           lessonData.blocks = blocksData;
         }
 
-        await LessonBlockStructure.query(trx).delete().where({ lessonId });
+        await LessonBlockStructure.query(trx)
+          .delete()
+          .where({ lesson_id: lessonId });
         await LessonBlockStructure.insertBlocks({
           trx,
           blocks,

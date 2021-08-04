@@ -27,10 +27,10 @@ export default async function access({
       .select()
       .skipUndefined()
       .where({
-        userId,
-        roleId,
-        resourceType,
-        resourceId,
+        user_id: userId,
+        role_id: roleId,
+        resource_type: resourceType,
+        resource_id: resourceId,
       });
 
     if (!userRole) {

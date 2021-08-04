@@ -8,6 +8,10 @@ import {
 } from '../validation/errors';
 
 export default class BaseModel extends objection.Model {
+  static get columnNameMappers() {
+    return objection.snakeCaseMappers();
+  }
+
   static query(trx) {
     return super.query(trx).onError(({ constructor, data: { error } = {} }) => {
       if (typeof error === 'object') {

@@ -20,16 +20,16 @@ export const userServiceConstants = {
   USER_CONST_ALLOWED_USER_FIELDS: [
     'id',
     'email',
-    'firstName',
-    'lastName',
+    'first_name',
+    'last_name',
     'language',
   ],
   USER_CONST_ALLOWED_ADMIN_FIELDS: [
     'id',
     'email',
-    'firstName',
-    'lastName',
-    'isConfirmed',
-    'isSuperAdmin',
+    'first_name',
+    'last_name',
+    'is_confirmed',
+    'is_super_admin',
   ],
 };

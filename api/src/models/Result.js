@@ -27,23 +27,23 @@ class Result extends BaseModel {
     return this.query()
       .first()
       .where({
-        userId,
-        lessonId,
+        user_id: userId,
+        lesson_id: lessonId,
       })
-      .orderBy('createdAt', 'desc');
+      .orderBy('created_at', 'desc');
   }
 
   static getFinishedLessons({ userId }) {
     return this.query()
       .first()
       .select(this.knex().raw(`array_agg(lesson_id) as exclude_lessons`))
-      .where({ userId })
+      .where({ user_id: userId })
       .andWhere({ action: 'finish' });
   }
 
   static async interactiveBlocksResults({ lessonId, userId }) {
     const results = await Result.query()
-      .select('results.data', 'results.blockId', 'results.revision')
+      .select('results.data', 'results.block_id', 'results.revision')
       .from(
         this.knex().raw(`
           (select block_id, max(created_at) as created_at from results 
