@@ -305,12 +305,10 @@ class Lesson extends BaseModel {
           'users.last_name',
           lessonId
             ? this.knex().raw(
-                `(select MAX(created_at) from results where user_id=? and lesson_id=?) as last_activity`,
-                [userId, lessonId],
+                `(select MAX(created_at) from results where user_id=${userId} and lesson_id=${lessonId}) as last_activity`,
               )
             : this.knex().raw(
-                `(select MAX(created_at) from results where user_id=?) as last_activity`,
-                [userId],
+                `(select MAX(created_at) from results where user_id=${userId}) as last_activity`,
               ),
         )
         .join('users_roles', 'users_roles.resource_id', '=', 'lessons.id')
