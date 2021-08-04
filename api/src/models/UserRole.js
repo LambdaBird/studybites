@@ -94,7 +94,7 @@ class UserRole extends BaseModel {
         'users.last_name',
         this.knex().raw(
           `(SELECT JSON_AGG(src) AS Lessons FROM
-          (select * from lessons
+          (select lessons.id,lessons.name from lessons
     inner join users_roles on lessons.id=users_roles.resource_id
     inner join users_roles as T on T.user_id=${userId} and T.role_id=${roles.MAINTAINER.id} 
     and T.resource_id=users_roles.resource_id
@@ -111,7 +111,7 @@ class UserRole extends BaseModel {
       .where('users_roles.user_id', userId)
       .andWhere('users_roles.role_id', roles.MAINTAINER.id)
       .andWhere('T.role_id', roles.STUDENT.id)
-      .groupBy('users.id')
+      .groupBy('users.id', 'users_roles.user_id')
       .andWhere(
         this.knex().raw(
           `concat(users.email, ' ', users.first_name, ' ', users.last_name, ' ', users.first_name)`,

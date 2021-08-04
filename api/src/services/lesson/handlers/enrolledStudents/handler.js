@@ -11,6 +11,7 @@ export async function enrolledStudentsHandler({
     offset,
     limit,
     search,
-  });
+  }).withGraphFetched('results');
+
   return { total, students };
 }
