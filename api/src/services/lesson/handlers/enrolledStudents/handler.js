@@ -3,10 +3,10 @@ export async function enrolledStudentsHandler({
   query: { search, offset, limit },
 }) {
   const {
-    models: { User },
+    models: { UserRole },
   } = this;
 
-  const { total, results: students } = await User.getAllStudentsOfTeacher({
+  const { total, results: students } = await UserRole.getAllStudentsOfTeacher({
     userId,
     offset,
     limit,

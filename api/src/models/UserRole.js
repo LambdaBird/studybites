@@ -51,7 +51,62 @@ class UserRole extends BaseModel {
           to: 'roles.id',
         },
       },
+      results: {
+        relation: objection.Model.HasManyRelation,
+        modelClass: path.join(__dirname, 'Result'),
+        join: {
+          from: 'users_roles.userId',
+          to: 'results.userId',
+        },
+      },
     };
+  }
+
+  static getAllStudentsOfLesson({ lessonId, offset: start, limit, search }) {
+    const end = start + limit - 1;
+    return this.query()
+      .skipUndefined()
+
+      .select('users.id', 'users.email', 'users.first_name', 'users.last_name')
+      .innerJoin('users', 'users.id', '=', 'users_roles.user_id')
+      .where('users_roles.resource_type', 'lesson')
+      .andWhere('users_roles.resource_id', lessonId)
+      .andWhere('users_roles.role_id', roles.STUDENT.id)
+      .groupBy('users.id', 'users_roles.user_id')
+      .andWhere(
+        this.knex().raw(
+          `concat(users.email, ' ', users.first_name, ' ', users.last_name, ' ', users.first_name)`,
+        ),
+        'ilike',
+        `%${search ? search.replace(/ /g, '%') : '%'}%`,
+      )
+      .range(start, end);
+  }
+
+  static getAllStudentsOfTeacher({ userId, offset: start, limit, search }) {
+    const end = start + limit - 1;
+    return this.query()
+      .skipUndefined()
+      .select('users.id', 'users.email', 'users.first_name', 'users.last_name')
+      .innerJoin(
+        'users_roles as T',
+        'users_roles.resource_id',
+        '=',
+        'T.resource_id',
+      )
+      .innerJoin('users', 'users.id', '=', 'T.user_id')
+      .where('users_roles.user_id', userId)
+      .andWhere('users_roles.role_id', roles.MAINTAINER.id)
+      .andWhere('T.role_id', roles.STUDENT.id)
+      .groupBy('users.id')
+      .andWhere(
+        this.knex().raw(
+          `concat(users.email, ' ', users.first_name, ' ', users.last_name, ' ', users.first_name)`,
+        ),
+        'ilike',
+        `%${search ? search.replace(/ /g, '%') : '%'}%`,
+      )
+      .range(start, end);
   }
 
   static async addTeacher({ userId }) {
