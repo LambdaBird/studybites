@@ -69,6 +69,7 @@ export default {
       back: 'Назад',
       forward: 'Вперед',
       preview: 'Предпросмотр',
+      move_to_draft: 'Вернуть в черновики',
     },
     title: {
       placeholder: 'Название урока',
@@ -80,5 +81,9 @@ export default {
       archive: 'Архив',
     },
     description: 'Описание',
+    publish_modal: {
+      title: 'Теперь урок доступен всем студентам',
+      ok: 'Ок',
+    },
   },
 };

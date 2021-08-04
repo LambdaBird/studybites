@@ -2,6 +2,14 @@
 import './next.css';
 
 export default class Next {
+  constructor({ readOnly }) {
+    this.readOnly = readOnly;
+  }
+
+  static get isReadOnlySupported() {
+    return true;
+  }
+
   static get toolbox() {
     return {
       title: 'Next',

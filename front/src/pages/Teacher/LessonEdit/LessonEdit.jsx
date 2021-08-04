@@ -1,4 +1,4 @@
-import { Button, Col, Input, message, Row, Typography } from 'antd';
+import { Button, Col, Input, message, Modal, Row, Typography } from 'antd';
 import DragDrop from 'editorjs-drag-drop';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -35,6 +35,7 @@ const LessonEdit = () => {
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [isEditorDisabled, setIsEditorDisabled] = useState(false);
 
   const inputTitle = useRef(null);
 
@@ -116,7 +117,7 @@ const LessonEdit = () => {
   }, [lessonData?.lesson]);
 
   useEffect(() => {
-    if (editorJSRef.current?.configuration) {
+    if (editorJSRef.current?.configuration && !isEditorDisabled) {
       undoPluginRef.current = new Undo({
         editor: editorJSRef.current,
         redoButton: 'redo-button',
@@ -125,13 +126,18 @@ const LessonEdit = () => {
       // eslint-disable-next-line no-new
       new DragDrop(editorJSRef.current);
     }
-  }, [editorJSRef.current]);
+  }, [isEditorDisabled]);
 
   useEffect(() => {
     if (lessonData) {
       setDataBlocks({
         blocks: prepareEditorData(lessonData?.lesson?.blocks),
       });
+      if (!lessonData.lesson.status || lessonData?.lesson.status === 'Draft') {
+        setIsEditorDisabled(false);
+      } else {
+        setIsEditorDisabled(true);
+      }
     }
   }, [lessonData]);
 
@@ -170,6 +176,35 @@ const LessonEdit = () => {
     }
   };
 
+  const { mutateAsync: updateLessonStatus, isLoading: isUpdateInProgress } =
+    useMutation(putLesson, {
+      onSuccess: () => {
+        queryClient.invalidateQueries([
+          TEACHER_LESSON_BASE_KEY,
+          {
+            id: lessonId,
+          },
+        ]);
+      },
+    });
+
+  const handlePublish = async () => {
+    await updateLessonStatus({
+      lesson: { id: +lessonId, status: Statuses.PUBLIC },
+    });
+    Modal.success({
+      width: 480,
+      title: t('lesson_edit.publish_modal.title'),
+      okText: t('lesson_edit.publish_modal.ok'),
+    });
+  };
+
+  const handleDraft = async () => {
+    await updateLessonStatus({
+      lesson: { id: +lessonId, status: Statuses.DRAFT },
+    });
+  };
+
   const handleInputTitle = (e) => {
     const newText = e.target.value;
     if (newText.length < MAX_NAME_LENGTH) {
@@ -194,9 +229,23 @@ const LessonEdit = () => {
           <Button disabled={!isEditLesson} onClick={handlePreview}>
             {t('lesson_edit.buttons.preview')}
           </Button>
-          <S.PublishButton type="primary">
-            {t('lesson_edit.buttons.publish')}
-          </S.PublishButton>
+          {lessonData?.lesson.status === Statuses.PUBLIC ? (
+            <S.PublishButton
+              type="primary"
+              onClick={handleDraft}
+              loading={isUpdateInProgress}
+            >
+              {t('lesson_edit.buttons.move_to_draft')}
+            </S.PublishButton>
+          ) : (
+            <S.PublishButton
+              type="primary"
+              onClick={handlePublish}
+              loading={isUpdateInProgress}
+            >
+              {t('lesson_edit.buttons.publish')}
+            </S.PublishButton>
+          )}
         </S.HeaderButtons>
       </Header>
       <S.Page>
@@ -208,6 +257,7 @@ const LessonEdit = () => {
                 type="text"
                 placeholder={t('lesson_edit.title.placeholder')}
                 value={name}
+                readOnly={isEditorDisabled}
                 onChange={handleInputTitle}
                 onKeyDown={handleNextLine}
               />
@@ -226,6 +276,7 @@ const LessonEdit = () => {
                 <EditorJs
                   tools={getConfig(t).tools}
                   data={dataBlocks}
+                  readOnly={isEditorDisabled}
                   instanceRef={(instance) => {
                     editorJSRef.current = instance;
                   }}
@@ -238,6 +289,7 @@ const LessonEdit = () => {
               <Col span={24}>
                 <S.SaveButton
                   onClick={handleSave}
+                  disabled={isEditorDisabled}
                   icon={<SaveOutlined />}
                   type="primary"
                   size="large"

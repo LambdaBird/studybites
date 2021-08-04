@@ -101,6 +101,17 @@ const EditorJsContainer = (props) => {
     })();
   };
 
+  useEffect(() => {
+    instance?.isReady.then(() => {
+      if (props.readOnly) {
+        instance.readOnly.toggle(true);
+      } else {
+        instance.readOnly.toggle(false);
+      }
+    });
+    // eslint-disable-next-line react/destructuring-assignment
+  }, [instance, props.readOnly]);
+
   const changeData = useCallback((data) => {
     if (instance) {
       instance?.isReady
