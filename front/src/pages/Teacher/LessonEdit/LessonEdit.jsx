@@ -35,7 +35,7 @@ const LessonEdit = () => {
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [isEditorDisabled, setIsEditorDisabled] = useState(true);
+  const [isEditorDisabled, setIsEditorDisabled] = useState(false);
 
   const inputTitle = useRef(null);
 
@@ -117,16 +117,14 @@ const LessonEdit = () => {
   }, [lessonData?.lesson]);
 
   useEffect(() => {
-    if (editorJSRef.current?.configuration) {
-      if (!isEditorDisabled) {
-        undoPluginRef.current = new Undo({
-          editor: editorJSRef.current,
-          redoButton: 'redo-button',
-          undoButton: 'undo-button',
-        });
-        // eslint-disable-next-line no-new
-        new DragDrop(editorJSRef.current);
-      }
+    if (editorJSRef.current?.configuration && !isEditorDisabled) {
+      undoPluginRef.current = new Undo({
+        editor: editorJSRef.current,
+        redoButton: 'redo-button',
+        undoButton: 'undo-button',
+      });
+      // eslint-disable-next-line no-new
+      new DragDrop(editorJSRef.current);
     }
   }, [isEditorDisabled]);
 
@@ -135,14 +133,11 @@ const LessonEdit = () => {
       setDataBlocks({
         blocks: prepareEditorData(lessonData?.lesson?.blocks),
       });
-    }
-  }, [lessonData]);
-
-  useEffect(() => {
-    if (!lessonData?.lesson.status || lessonData?.lesson.status === 'Draft') {
-      setIsEditorDisabled(false);
-    } else {
-      setIsEditorDisabled(true);
+      if (!lessonData.lesson.status || lessonData?.lesson.status === 'Draft') {
+        setIsEditorDisabled(false);
+      } else {
+        setIsEditorDisabled(true);
+      }
     }
   }, [lessonData]);
 
