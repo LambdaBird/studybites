@@ -128,10 +128,10 @@ export async function learnLessonHandler({
    * write action to the results table
    */
   await Result.query().insert({
-    userId,
-    lessonId,
+    user_id: userId,
+    lesson_id: lessonId,
     action,
-    blockId,
+    block_id: blockId,
     revision,
     data,
   });
@@ -160,7 +160,7 @@ export async function learnLessonHandler({
     const { answer } = await Block.query()
       .select('answer')
       .first()
-      .where({ blockId, revision });
+      .where({ block_id: blockId, revision });
     return { total, blocks: chunk, isFinal, userAnswer: data, answer };
   }
 

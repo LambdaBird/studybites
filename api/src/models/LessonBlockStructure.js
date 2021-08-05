@@ -168,7 +168,7 @@ class LessonBlockStructure extends BaseModel {
         'blocks.block_id',
       )
       .where({
-        lessonId,
+        lesson_id: lessonId,
       })
       .andWhere(this.knex().raw(`recent.created_at = blocks.created_at`))
       .orderBy(
@@ -230,14 +230,15 @@ class LessonBlockStructure extends BaseModel {
     for (let i = 0, n = blocks.length; i < n; i += 1) {
       blockStructure.push({
         id: v4(),
-        lessonId,
-        blockId: blocks[i].blockId,
+        lesson_id: lessonId,
+        block_id: blocks[i].blockId,
       });
     }
 
     for (let i = 0, n = blockStructure.length; i < n; i += 1) {
-      blockStructure[i].parentId = !i ? null : blockStructure[i - 1].id;
-      blockStructure[i].childId = i === n - 1 ? null : blockStructure[i + 1].id;
+      blockStructure[i].parent_id = !i ? null : blockStructure[i - 1].id;
+      blockStructure[i].child_id =
+        i === n - 1 ? null : blockStructure[i + 1].id;
     }
 
     await this.query(trx).insert(blockStructure);
@@ -247,15 +248,15 @@ class LessonBlockStructure extends BaseModel {
     const { count: countInteractive } = await this.query()
       .first()
       .count()
-      .join('blocks', 'blocks.blockId', '=', 'lesson_block_structure.blockId')
-      .where({ lessonId })
+      .join('blocks', 'blocks.block_id', '=', 'lesson_block_structure.block_id')
+      .where({ lesson_id: lessonId })
       .whereIn('blocks.type', blockConstants.INTERACTIVE_BLOCKS);
 
     if (!+countInteractive) {
       const { count: countAll } = await this.query()
         .first()
         .count()
-        .where({ lessonId });
+        .where({ lesson_id: lessonId });
 
       if (!+countAll) {
         return { count: 0 };

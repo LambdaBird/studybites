@@ -56,8 +56,8 @@ class UserRole extends BaseModel {
 
   static async addTeacher({ userId }) {
     const checkNotPassed = await this.query().findOne({
-      userId,
-      roleId: roles.TEACHER.id,
+      user_id: userId,
+      role_id: roles.TEACHER.id,
     });
 
     if (checkNotPassed) {
@@ -66,16 +66,16 @@ class UserRole extends BaseModel {
 
     await this.query()
       .insert({
-        userId,
-        roleId: roles.TEACHER.id,
+        user_id: userId,
+        role_id: roles.TEACHER.id,
       })
       .returning('*');
   }
 
   static async removeTeacher({ userId }) {
     const checkPassed = await this.query().findOne({
-      userId,
-      roleId: roles.TEACHER.id,
+      user_id: userId,
+      role_id: roles.TEACHER.id,
     });
 
     if (!checkPassed) {
@@ -83,17 +83,17 @@ class UserRole extends BaseModel {
     }
 
     await this.query().delete().where({
-      userId,
-      roleId: roles.TEACHER.id,
+      user_id: userId,
+      role_id: roles.TEACHER.id,
     });
   }
 
   static getLessonStudentsCount({ lessonId }) {
     return this.query()
       .where({
-        resourceId: lessonId,
-        roleId: roles.STUDENT.id,
-        resourceType: resources.LESSON.name,
+        resource_id: lessonId,
+        role_id: roles.STUDENT.id,
+        resource_type: resources.LESSON.name,
       })
       .count()
       .first();
@@ -102,10 +102,10 @@ class UserRole extends BaseModel {
   static async addMaintainer({ trx, userId, resourceId }) {
     await this.query(trx)
       .insert({
-        userId,
-        resourceId,
-        roleId: roles.MAINTAINER.id,
-        resourceType: resources.LESSON.name,
+        user_id: userId,
+        resource_id: resourceId,
+        role_id: roles.MAINTAINER.id,
+        resource_type: resources.LESSON.name,
       })
       .returning('*');
   }
@@ -113,10 +113,10 @@ class UserRole extends BaseModel {
   static enrollToLesson({ userId, lessonId }) {
     return this.query()
       .insert({
-        userId,
-        roleId: roles.STUDENT.id,
-        resourceType: resources.LESSON.name,
-        resourceId: lessonId,
+        user_id: userId,
+        role_id: roles.STUDENT.id,
+        resource_type: resources.LESSON.name,
+        resource_id: lessonId,
       })
       .returning('*');
   }

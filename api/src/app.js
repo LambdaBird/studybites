@@ -1,6 +1,5 @@
 import fastify from 'fastify';
-
-import fastifyObjection from './plugins/fastifyObjection';
+import fastifyObjection from 'fastify-objection';
 
 import User from './models/User';
 import Role from './models/Role';
