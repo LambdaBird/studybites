@@ -77,7 +77,7 @@ class UserRole extends BaseModel {
           `concat(users.email, ' ', users.first_name, ' ', users.last_name, ' ', users.first_name)`,
         ),
         'ilike',
-        `%${search ? search.replace(/ /g, '%') : '%'}%`,
+        search ? `%${search.replace(/ /g, '%')}%` : undefined,
       )
       .range(start, end)
       .withGraphFetched('results')
@@ -107,7 +107,7 @@ class UserRole extends BaseModel {
           `concat(users.email, ' ', users.first_name, ' ', users.last_name, ' ', users.first_name)`,
         ),
         'ilike',
-        `%${search ? search.replace(/ /g, '%') : '%'}%`,
+        search ? `%${search.replace(/ /g, '%')}%` : undefined,
       )
       .range(start, end);
   }
