@@ -89,29 +89,43 @@ class UserRole extends BaseModel {
       .skipUndefined()
       .select(
         'users.id',
-        'users.email',
         'users.first_name',
         'users.last_name',
-        this.knex().raw(
-          `(SELECT JSON_AGG(src) AS Lessons FROM
-          (select lessons.id,lessons.name from lessons
-    inner join users_roles on lessons.id=users_roles.resource_id
-    inner join users_roles as T on T.user_id=${userId} and T.role_id=${roles.MAINTAINER.id} 
-    and T.resource_id=users_roles.resource_id
-    and users_roles.user_id=users.id and users_roles.role_id=${roles.STUDENT.id}) src)`,
-        ),
+        'users.email',
+        this.knex().raw(`
+          json_agg(distinct jsonb_build_object('id', lessons.id, 'name', lessons.name)) lessons
+        `),
+        this.knex().raw(`
+          json_agg(
+          jsonb_build_object(         
+          'id', results.id,
+          'action', results.action,
+          'data', results.data,
+          'userId', results.user_id,
+          'lessonId', results.lesson_id,
+          'blockId', results.block_id,
+          'revision', results.revision,
+          'correctness', results.correctness,
+          'meta', results.meta,
+          'createdAt', results.created_at
+          )) results
+        `),
       )
-      .innerJoin(
-        'users_roles as T',
-        'users_roles.resource_id',
-        '=',
-        'T.resource_id',
+      .join('lessons', 'lessons.id', '=', 'users_roles.resource_id')
+      .join(
+        this.knex().raw(`
+        users_roles students on students.resource_id = lessons.id
+      `),
       )
-      .innerJoin('users', 'users.id', '=', 'T.user_id')
+      .join('users', 'users.id', '=', 'students.user_id')
+      .leftJoin(
+        this.knex().raw(`
+        results on results.user_id = users.id and results.lesson_id = lessons.id
+      `),
+      )
       .where('users_roles.user_id', userId)
       .andWhere('users_roles.role_id', roles.MAINTAINER.id)
-      .andWhere('T.role_id', roles.STUDENT.id)
-      .groupBy('users.id', 'users_roles.user_id')
+      .andWhere('students.role_id', roles.STUDENT.id)
       .andWhere(
         this.knex().raw(
           `concat(users.email, ' ', users.first_name, ' ', users.last_name, ' ', users.first_name)`,
@@ -119,6 +133,7 @@ class UserRole extends BaseModel {
         'ilike',
         `%${search ? search.replace(/ /g, '%') : '%'}%`,
       )
+      .groupBy('users.id')
       .range(start, end);
   }
 
