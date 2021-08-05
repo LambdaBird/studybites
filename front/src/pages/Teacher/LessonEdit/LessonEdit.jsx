@@ -1,6 +1,6 @@
 import { Button, Col, Input, message, Modal, Row, Typography } from 'antd';
 import DragDrop from 'editorjs-drag-drop';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
 import { useHistory, useParams } from 'react-router-dom';
@@ -28,7 +28,9 @@ const MAX_NAME_LENGTH = 255;
 
 const LessonEdit = () => {
   const { id: lessonId } = useParams();
-  const isEditLesson = !!lessonId;
+
+  const isEditLesson = useMemo(() => lessonId !== 'new', []);
+  const isCurrentlyEditing = lessonId !== 'new';
 
   const { t } = useTranslation('teacher');
   const history = useHistory();
@@ -168,7 +170,7 @@ const LessonEdit = () => {
         return;
       }
 
-      if (isEditLesson) updateLessonMutation.mutate(params);
+      if (isCurrentlyEditing) updateLessonMutation.mutate(params);
       else createLessonMutation.mutate(params);
     } catch (e) {
       // eslint-disable-next-line no-console
