@@ -1,4 +1,4 @@
-import { Result } from 'antd';
+import { Button, Result } from 'antd';
 import React from 'react';
 import { withTranslation } from 'react-i18next';
 
@@ -16,6 +16,12 @@ class ErrorBoundary extends React.Component {
     return { hasError: true };
   }
 
+  // eslint-disable-next-line class-methods-use-this
+  handleRefreshClick() {
+    // eslint-disable-next-line no-restricted-globals
+    location.reload();
+  }
+
   render() {
     const { hasError } = this.state;
     const { t, children } = this.props;
@@ -24,8 +30,13 @@ class ErrorBoundary extends React.Component {
         <S.ErrorWrapper>
           <Result
             status="500"
-            title={t('errors.boundary_title')}
-            subTitle={t('errors.boundary_subtitle')}
+            title={t('errors_page.boundary_title')}
+            subTitle={t('errors_page.boundary_subtitle')}
+            extra={
+              <Button type="primary" onClick={this.handleRefreshClick}>
+                {t('errors_page.refresh_page_button')}
+              </Button>
+            }
           />
         </S.ErrorWrapper>
       );

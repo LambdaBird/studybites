@@ -7,11 +7,17 @@ export default {
     language: 'Выберите язык',
   },
   errors: {
-    boundary_title: 'Упс',
-    boundary_subtitle: 'Что то пошло не так',
     unauthorized: 'Неправильные данные',
     no_internet: 'Упс, нет интернет соединения',
     internal_server: 'Упс, что то пошло не так',
     parse_block: 'Ошибка распознания блока',
+  },
+  errors_page: {
+    boundary_title: 'Упс',
+    boundary_subtitle: 'Что то пошло не так',
+    not_exist: 'Простите, страница которую вы посетили не существует',
+    restricted: 'Простите, у вас нет прав для этой страницы',
+    back_home_button: 'Назад на Главную',
+    refresh_page_button: 'Обновить страницу',
   },
 };
