@@ -1,4 +1,5 @@
 import { Statistic, Typography } from 'antd';
+import PropTypes from 'prop-types';
 import { useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -10,7 +11,7 @@ import * as S from './Results.styled';
 
 const { Text, Title } = Typography;
 
-const Results = () => {
+const Results = ({ callbackRef }) => {
   const { t } = useTranslation('user');
   const { chunks } = useContext(LearnContext);
 
@@ -40,7 +41,7 @@ const Results = () => {
   );
 
   return (
-    <S.Row>
+    <S.Row ref={callbackRef}>
       <S.Col>
         <Title level={3}>{t('lesson.results.title')}</Title>
       </S.Col>
@@ -67,6 +68,10 @@ const Results = () => {
       )}
     </S.Row>
   );
+};
+
+Results.propTypes = {
+  callbackRef: PropTypes.func,
 };
 
 export default Results;
