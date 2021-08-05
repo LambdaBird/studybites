@@ -13,11 +13,7 @@ export async function studentsByLessonHandler({
     offset,
     limit,
     search,
-  })
-    .withGraphFetched('results')
-    .modifyGraph('results', (builder) => {
-      builder.where('lessonId', lessonId);
-    });
+  });
 
   return { total, students };
 }

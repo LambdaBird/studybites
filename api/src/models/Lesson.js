@@ -283,61 +283,6 @@ class Lesson extends BaseModel {
       .range(start, end);
   }
 
-  /**
-   * get all students enrolled to teacher`s lessons
-   * with search, pagination and total
-   */
-  static getAllEnrolledStudents({
-    userId,
-    lessonId = undefined,
-    offset: start,
-    limit,
-    search,
-  }) {
-    const end = start + limit - 1;
-    return (
-      this.query()
-        .skipUndefined()
-        .select(
-          'users.id',
-          'users.email',
-          'users.first_name',
-          'users.last_name',
-          lessonId
-            ? this.knex().raw(
-                `(select MAX(created_at) from results where user_id=${userId} and lesson_id=${lessonId}) as last_activity`,
-              )
-            : this.knex().raw(
-                `(select MAX(created_at) from results where user_id=${userId}) as last_activity`,
-              ),
-        )
-        .join('users_roles', 'users_roles.resource_id', '=', 'lessons.id')
-        .join(
-          this.knex().raw(`users_roles students`),
-          'students.resource_id',
-          '=',
-          'lessons.id',
-        )
-        .join('users', 'users.id', '=', 'students.user_id')
-        .where('users_roles.role_id', roles.MAINTAINER.id)
-        .andWhere('lessons.id', lessonId)
-        .andWhere('users_roles.user_id', userId)
-        .andWhere('students.role_id', roles.STUDENT.id)
-        /**
-         * using concat to concatenate fields to search through
-         */
-        .andWhere(
-          this.knex().raw(
-            `concat(users.email, ' ', users.first_name, ' ', users.last_name, ' ', users.first_name)`,
-          ),
-          'ilike',
-          `%${search ? search.replace(/ /g, '%') : '%'}%`,
-        )
-        .groupBy('users.id')
-        .range(start, end)
-    );
-  }
-
   static updateLesson({ trx, lessonId, lesson }) {
     return this.query(trx).findById(lessonId).patch(lesson).returning('*');
   }
@@ -420,59 +365,6 @@ class Lesson extends BaseModel {
         `%${search ? search.replace(/ /g, '%') : '%'}%`,
       )
       .range(start, end);
-  }
-
-  static getAllEnrolled({ columns, search, userId }) {
-    const [firstName, lastName] = search?.split(' ') || [];
-    return (
-      this.query()
-        .skipUndefined()
-        .select(
-          objection.raw(
-            `"lessons"."id" as "id", "lessons"."name" as "name", "lessons"."description" as "description","lessons"."status" as "status", "lessons"."created_at" as "created_at", "lessons"."updated_at" as "updated_at"`,
-          ),
-        )
-        .leftJoin('users_roles as enrolled', (builder) => {
-          builder
-            .on('enrolled.resource_id', '=', 'lessons.id')
-            .andOn(
-              'enrolled.resource_type',
-              '=',
-              objection.raw('?', ['lesson']),
-            )
-            .andOn(
-              'enrolled.role_id',
-              '=',
-              objection.raw('?', [roles.STUDENT.id]),
-            );
-        })
-        .withGraphJoined('maintainer.[users(onlyFullName) as userInfo]')
-        .whereIn('maintainer.role_id', [roles.MAINTAINER.id])
-        .modifiers({
-          onlyFullName(builder) {
-            builder.select('first_name', 'last_name');
-          },
-        })
-        .where('enrolled.user_id', userId)
-        // eslint-disable-next-line func-names
-        .where(function () {
-          // eslint-disable-next-line func-names
-          this.where(function () {
-            this.skipUndefined()
-              .where(columns.name, 'ilike', `%${search}%`)
-              .orWhere(columns.firstName, 'ilike', `%${search}%`)
-              .orWhere(columns.lastName, 'ilike', `%${search}%`);
-          }).modify((queryBuilder) => {
-            if (firstName && lastName) {
-              queryBuilder.orWhere(
-                objection.raw(`concat(first_name,' ',last_name)`),
-                'ilike',
-                `%${firstName}% %${lastName}%`,
-              );
-            }
-          });
-        })
-    );
   }
 }
 

@@ -66,10 +66,9 @@ class UserRole extends BaseModel {
     const end = start + limit - 1;
     return this.query()
       .skipUndefined()
-
       .select('users.id', 'users.email', 'users.first_name', 'users.last_name')
       .innerJoin('users', 'users.id', '=', 'users_roles.user_id')
-      .where('users_roles.resource_type', 'lesson')
+      .where('users_roles.resource_type', resources.LESSON.name)
       .andWhere('users_roles.resource_id', lessonId)
       .andWhere('users_roles.role_id', roles.STUDENT.id)
       .groupBy('users.id', 'users_roles.user_id')
@@ -80,7 +79,11 @@ class UserRole extends BaseModel {
         'ilike',
         `%${search ? search.replace(/ /g, '%') : '%'}%`,
       )
-      .range(start, end);
+      .range(start, end)
+      .withGraphFetched('results')
+      .modifyGraph('results', (builder) => {
+        builder.where('lessonId', lessonId);
+      });
   }
 
   static getAllStudentsOfTeacher({ userId, offset: start, limit, search }) {
