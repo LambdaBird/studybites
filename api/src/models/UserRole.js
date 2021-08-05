@@ -95,21 +95,7 @@ class UserRole extends BaseModel {
         this.knex().raw(`
           json_agg(distinct jsonb_build_object('id', lessons.id, 'name', lessons.name)) lessons
         `),
-        this.knex().raw(`
-          json_agg(
-          jsonb_build_object(         
-          'id', results.id,
-          'action', results.action,
-          'data', results.data,
-          'userId', results.user_id,
-          'lessonId', results.lesson_id,
-          'blockId', results.block_id,
-          'revision', results.revision,
-          'correctness', results.correctness,
-          'meta', results.meta,
-          'createdAt', results.created_at
-          )) results
-        `),
+        this.knex().raw(`MAX(results.created_at) as last_activity`),
       )
       .join('lessons', 'lessons.id', '=', 'users_roles.resource_id')
       .join(

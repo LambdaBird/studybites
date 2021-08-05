@@ -1,8 +1,9 @@
 import { Tag } from 'antd';
+import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
-import { LessonsType } from '@sb-ui/components/lessonBlocks/types';
+import { LessonType } from '@sb-ui/components/lessonBlocks/types';
 import { LESSONS_EDIT } from '@sb-ui/utils/paths';
 
 const MAX_DISPLAYED_LESSONS = 4;
@@ -25,7 +26,7 @@ const LessonsTags = ({ lessons }) => {
 };
 
 LessonsTags.propTypes = {
-  lessons: LessonsType,
+  lessons: PropTypes.arrayOf(LessonType),
 };
 
 export default LessonsTags;

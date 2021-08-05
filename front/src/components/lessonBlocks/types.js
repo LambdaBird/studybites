@@ -15,8 +15,6 @@ export const LessonType = PropTypes.shape({
   isFinished: PropTypes.bool,
 });
 
-export const LessonsType = PropTypes.arrayOf(LessonType);
-
 export const PublicLessonType = PropTypes.shape({
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,

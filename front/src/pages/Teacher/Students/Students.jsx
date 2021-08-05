@@ -52,14 +52,10 @@ const Students = () => {
       },
       {
         title: t('students.table.last_activity'),
-        dataIndex: 'results',
-        key: 'results',
-        render: (results) => {
-          const lastActivity = results?.slice(-1)?.[0]?.createdAt;
-          return (
-            formatDate(lastActivity) || t('lesson_students.table.not_started')
-          );
-        },
+        dataIndex: 'lastActivity',
+        key: 'lastActivity',
+        render: (lastActivity) =>
+          formatDate(lastActivity) || t('lesson_students.table.not_started'),
         width: '20%',
       },
       {
