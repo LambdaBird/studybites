@@ -27,23 +27,33 @@ export default class Image {
       content: 'image-tool__content',
       caption: 'image-tool__caption',
       urlInput: 'image-tool__urlInput',
+      error: 'image-tool__error',
     };
   }
 
   inputUrlChange() {
     const value = this.elements?.url?.value;
     this.content.src = value;
+
+    const urlInput = this.elements?.url;
+    urlInput.style.borderColor = '';
+
     this.content.onload = () => {
       this.error = false;
+      this.elements.error.style.display = 'none';
       this.inputCaption.style.display = '';
       this.content.style.display = '';
+      this.content.style.height = '';
+      urlInput.style.borderColor = '';
     };
 
     this.content.onerror = () => {
       this.error = true;
+      this.elements.error.style.display = '';
       this.content.style.display = 'none';
       this.data = {};
       this.inputCaption.style.display = 'none';
+      urlInput.style.borderColor = 'red';
     };
 
     if (value.length === 0) {
@@ -70,11 +80,20 @@ export default class Image {
       classList: [this.CSS.input, this.CSS.urlInput],
     });
     inputUrl.addEventListener('input', this.inputUrlChange.bind(this));
+    inputUrl.addEventListener('click', () => {
+      inputUrl.select();
+    });
 
     const content = document.createElement('img');
     this.content = content;
 
     content.classList.add(this.CSS.content);
+
+    const error = document.createElement('div');
+    error.innerText = 'Please enter correct image url';
+    error.style.display = 'none';
+    error.classList.add(this.CSS.error);
+    this.elements.error = error;
 
     const inputCaption = Utils.createInput({
       wrapper: this,
@@ -94,6 +113,7 @@ export default class Image {
 
     container.appendChild(inputUrl);
     container.appendChild(content);
+    container.appendChild(error);
     container.appendChild(inputCaption);
 
     inputUrl.addEventListener(
@@ -120,21 +140,12 @@ export default class Image {
   }
 
   onPaste(event) {
-    const { file, key, data: url } = event.detail;
+    const { key, data: url } = event.detail;
     if (key === 'image') {
       this.data = {
         url,
       };
       this.renderNew();
-    }
-
-    if (file) {
-      Utils.fileToBase64(file).then((base) => {
-        this.data = {
-          url: base,
-        };
-        this.renderNew();
-      });
     }
   }
 
@@ -148,14 +159,15 @@ export default class Image {
   static get pasteConfig() {
     return {
       tags: ['IMG'],
-      files: {
-        mimeTypes: ['image/*'],
-        extensions: ['gif', 'jpg', 'png'],
-      },
+
       patterns: {
         image: /https?:\/\/\S+\.(gif|jpe?g|tiff|png)$/i,
       },
     };
+  }
+
+  static get enableLineBreaks() {
+    return true;
   }
 
   save() {
