@@ -2,7 +2,12 @@ import objection from 'objection';
 import path from 'path';
 
 import { BadRequestError, NotFoundError } from '../validation/errors';
-import { lessonServiceErrors as errors, roles, resources } from '../config';
+import {
+  lessonServiceErrors as errors,
+  roles,
+  resources,
+  blockConstants,
+} from '../config';
 
 import BaseModel from './BaseModel';
 
@@ -197,6 +202,13 @@ class Lesson extends BaseModel {
         .where('users_roles.role_id', roles.MAINTAINER.id)
         .andWhere('users_roles.resource_type', resources.LESSON.name)
         .andWhere('lessons.status', 'Public')
+        .andWhere(
+          'lessons.id',
+          'not in',
+          this.knex().raw(
+            `select lesson_id from results where user_id=${userId} and action='${blockConstants.actions.FINISH}'`,
+          ),
+        )
         /**
          * using concat to concatenate fields to search through
          */
