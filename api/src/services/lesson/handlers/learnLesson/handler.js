@@ -86,6 +86,41 @@ export async function checkAllowed({
   }
 }
 
+async function getCorrectness({
+  Block,
+  blockId,
+  revision,
+  userResponse,
+  error,
+}) {
+  const { answer, type, weight } = await Block.getBlock({ blockId, revision });
+
+  switch (type) {
+    case 'quiz': {
+      const n = answer.results.length;
+      if (n !== userResponse.length) {
+        throw new BadRequestError(error);
+      }
+
+      let correctUserAnswers = 0;
+      let correctAnswers = 0;
+
+      for (let i = 0; i < n; i += 1) {
+        if (answer.results[i]) {
+          correctAnswers += 1;
+          if (answer.results[i] === userResponse[i]) {
+            correctUserAnswers += 1;
+          }
+        }
+      }
+
+      return (correctUserAnswers / correctAnswers) * weight;
+    }
+    default:
+      return 0;
+  }
+}
+
 export async function learnLessonHandler({
   user: { id: userId },
   params: { lessonId },
@@ -124,16 +159,29 @@ export async function learnLessonHandler({
       throw new BadRequestError(errors.LESSON_ERR_FAIL_LEARN);
     }
   }
+
+  let correctness;
+  if (action === 'response') {
+    correctness = await getCorrectness({
+      Block,
+      blockId,
+      revision,
+      userResponse: data.response,
+      error: errors.LESSON_ERR_FAIL_LEARN,
+    });
+  }
+
   /**
    * write action to the results table
    */
-  await Result.query().insert({
-    user_id: userId,
-    lesson_id: lessonId,
+  await Result.insertOne({
+    userId,
+    lessonId,
     action,
-    block_id: blockId,
+    blockId,
     revision,
     data,
+    correctness,
   });
 
   const { count: total } = await LessonBlockStructure.countBlocks({
