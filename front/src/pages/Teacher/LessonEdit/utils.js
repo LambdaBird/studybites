@@ -7,6 +7,7 @@ import Marker from '@editorjs/marker';
 import Quote from '@editorjs/quote';
 
 import { BLOCKS_TYPE } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
+import ClosedQuestion from '@sb-ui/utils/editorjs/closed-question-plugin';
 import Embed from '@sb-ui/utils/editorjs/embed-plugin';
 import Image from '@sb-ui/utils/editorjs/image-plugin';
 import Next from '@sb-ui/utils/editorjs/next-plugin';
@@ -42,7 +43,11 @@ export const prepareBlocksDataForApi = (data, type) => {
   return data;
 };
 
-const SKIP_BLOCKS = [BLOCKS_TYPE.EMBED, BLOCKS_TYPE.IMAGE];
+const SKIP_BLOCKS = [
+  BLOCKS_TYPE.EMBED,
+  BLOCKS_TYPE.IMAGE,
+  BLOCKS_TYPE.CLOSED_QUESTION,
+];
 
 export const prepareBlocksForApi = (blocks) =>
   blocks
@@ -94,6 +99,7 @@ export const getConfig = (t) => ({
     delimiter: Delimiter,
     marker: Marker,
     table: Table,
+    closedQuestion: ClosedQuestion,
   },
   i18n: {
     messages: {
