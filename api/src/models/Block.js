@@ -21,6 +21,10 @@ class Block extends BaseModel {
     };
   }
 
+  static getBlock({ blockId, revision }) {
+    return this.query().first().where({ block_id: blockId, revision });
+  }
+
   static createBlocks({ trx, blocks }) {
     return this.query(trx).insert(blocks).returning('*');
   }
