@@ -92,11 +92,12 @@ async function getCorrectness({
   revision,
   userResponse,
   error,
+  blocks,
 }) {
   const { answer, type, weight } = await Block.getBlock({ blockId, revision });
 
   switch (type) {
-    case 'quiz': {
+    case blocks.QUIZ: {
       const n = answer.results.length;
       if (n !== userResponse.length) {
         throw new BadRequestError(error);
@@ -116,6 +117,17 @@ async function getCorrectness({
 
       return (correctUserAnswers / correctAnswers) * weight;
     }
+    case blocks.CLOSED_QUESTION: {
+      if (!userResponse.text) {
+        throw new BadRequestError(error);
+      }
+
+      if (answer.results.includes(userResponse.text)) {
+        return 1;
+      }
+
+      return 0;
+    }
     default:
       return 0;
   }
@@ -128,7 +140,9 @@ export async function learnLessonHandler({
 }) {
   const {
     config: {
-      globals,
+      globals: {
+        blockConstants: { blocks: blockConstants, INTERACTIVE_ACTIONS },
+      },
       lessonService: { lessonServiceErrors: errors },
     },
     models: { Result, LessonBlockStructure, Block },
@@ -154,7 +168,7 @@ export async function learnLessonHandler({
   if (action !== allowed.action) {
     throw new BadRequestError(errors.LESSON_ERR_FAIL_LEARN);
   }
-  if (globals.blockConstants.INTERACTIVE_ACTIONS.includes(action)) {
+  if (INTERACTIVE_ACTIONS.includes(action)) {
     if (blockId !== allowed.blockId || revision !== allowed.revision) {
       throw new BadRequestError(errors.LESSON_ERR_FAIL_LEARN);
     }
@@ -168,6 +182,7 @@ export async function learnLessonHandler({
       revision,
       userResponse: data.response,
       error: errors.LESSON_ERR_FAIL_LEARN,
+      blocks: blockConstants,
     });
   }
 
