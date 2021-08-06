@@ -11,8 +11,6 @@
     margin: 0 8px 8px 0;
     color: #000000d9;
     font-variant: tabular-nums;
-    list-style: none;
-    font-feature-settings: "tnum";
     display: inline-block;
     height: auto;
     padding: 0 7px;
@@ -37,16 +35,44 @@
     margin-left: 4px;
 }
 
-.closed-question-tool__answer-tag span svg{
+.closed-question-tool__answer-remove svg{
     vertical-align: -0.125em;
-
 }
 
-.closed-question-tool__answer-tag span:hover{
+.closed-question-tool__answer-remove{
     cursor: pointer;
     color: #00000073;
 }
 
 .closed-question-tool__answer-wrapper{
     margin-top: 0.5rem;
+}
+
+
+.closed-question-tool__tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.closed-question-tool__tooltip .closed-question-tool__tooltipText {
+    visibility: hidden;
+    background-color: black;
+    overflow-x: hidden;
+    color: #fff;
+    text-align: center;
+    padding: 10px;
+    border-radius: 6px;
+    bottom: 100%;
+    max-width: 1000px;
+    height: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    position: absolute;
+    z-index: 1;
+}
+
+.closed-question-tool__tooltip:hover .closed-question-tool__tooltipText{
+    visibility: visible;
+    cursor: auto;
+    color: #fff;
 }

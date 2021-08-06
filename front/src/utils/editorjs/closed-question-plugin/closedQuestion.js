@@ -2,6 +2,14 @@ import * as Utils from '../utils';
 
 import './closedQuestion.css';
 
+const MAX_ANSWER_LENGTH = 50;
+
+function createElementFromHTML(htmlString) {
+  const div = document.createElement('div');
+  div.innerHTML = htmlString.trim();
+  return div.firstChild;
+}
+
 export default class ClosedQuestion {
   constructor({ data, api, readOnly }) {
     this.api = api;
@@ -28,6 +36,9 @@ export default class ClosedQuestion {
       answerInput: 'closed-question-tool__answer-input',
       answerTag: 'closed-question-tool__answer-tag',
       answerWrapper: 'closed-question-tool__answer-wrapper',
+      answerRemove: 'closed-question-tool__answer-remove',
+      tooltip: 'closed-question-tool__tooltip',
+      tooltipText: 'closed-question-tool__tooltipText',
     };
   }
 
@@ -43,8 +54,8 @@ export default class ClosedQuestion {
       classList: [this.CSS.input, this.CSS.questionInput],
     });
 
-    if (this.data.questionInput) {
-      questionInput.value = this.data.questionInput;
+    if (this.data.question) {
+      questionInput.value = this.data.question;
     }
 
     const answerInput = Utils.createInput({
@@ -97,9 +108,11 @@ export default class ClosedQuestion {
     });
     answerTags.forEach((answerTag) => {
       this.elements.answerWrapper.appendChild(answerTag);
-      answerTag.childNodes[1].addEventListener('click', () => {
-        this.removeTag(answerTag);
-      });
+      answerTag
+        .querySelector(`.${this.CSS.answerRemove}`)
+        .addEventListener('click', () => {
+          this.removeTag(answerTag);
+        });
     });
     if (answerTags.length === 0) {
       const noneText = document.createElement('span');
@@ -109,9 +122,12 @@ export default class ClosedQuestion {
   }
 
   removeTag(tag) {
-    const filteredAnswers = this.answers.filter(
-      (answer) => answer !== tag?.innerText?.trim(),
-    );
+    const filteredAnswers = this.answers.filter((answer) => {
+      const tagValue =
+        tag.querySelector(`.${this.CSS.tooltipText}`)?.innerHTML ||
+        tag?.innerText?.trim();
+      return answer !== tagValue;
+    });
     if (this.answers) {
       this.answers = filteredAnswers;
     }
@@ -147,12 +163,31 @@ export default class ClosedQuestion {
   createTag(text) {
     const wrapper = document.createElement('span');
     wrapper.classList.add(this.CSS.answerTag);
-    wrapper.innerHTML = `${text}<span>
+    let displayText = createElementFromHTML(`<span>${text}</span>`);
+    if (text.length > MAX_ANSWER_LENGTH) {
+      const textDiv = document.createElement('div');
+      textDiv.innerText = text;
+      displayText = document.createElement('div');
+      displayText.classList.add(this.CSS.tooltip);
+      const textSpan = document.createElement('span');
+      textSpan.innerText = `${text.slice(0, MAX_ANSWER_LENGTH)}...`;
+      const tooltiptext = document.createElement('div');
+      tooltiptext.classList.add(this.CSS.tooltipText);
+      tooltiptext.innerText = text;
+
+      displayText.appendChild(textSpan);
+      displayText.appendChild(tooltiptext);
+    }
+
+    const removeSpan =
+      createElementFromHTML(`<span class="${this.CSS.answerRemove}">
        <svg viewBox="64 64 896 896" focusable="false" data-icon="close" width="10px" height="10px" fill="currentColor" aria-hidden="true">
         <path d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"></path>
        </svg>
       </span>
-    `;
+    `);
+    wrapper.appendChild(displayText);
+    wrapper.appendChild(removeSpan);
     return wrapper;
   }
 
@@ -167,7 +202,7 @@ export default class ClosedQuestion {
       return undefined;
     }
     return {
-      questionInput,
+      question: questionInput,
       answers,
     };
   }
