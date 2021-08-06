@@ -202,9 +202,8 @@ class Lesson extends BaseModel {
         .where('users_roles.role_id', roles.MAINTAINER.id)
         .andWhere('users_roles.resource_type', resources.LESSON.name)
         .andWhere('lessons.status', 'Public')
-        .andWhere(
+        .whereNotIn(
           'lessons.id',
-          'not in',
           this.knex().raw(
             `select lesson_id from results where user_id=${userId} and action='${blockConstants.actions.FINISH}'`,
           ),
