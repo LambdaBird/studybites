@@ -44,6 +44,33 @@ class User extends BaseModel {
           to: 'users_roles.user_id',
         },
       },
+      results: {
+        relation: objection.Model.HasManyRelation,
+        modelClass: path.join(__dirname, 'Result'),
+        join: {
+          from: 'users.id',
+          to: 'results.userId',
+        },
+      },
+      lessons: {
+        relation: objection.Model.ManyToManyRelation,
+        modelClass: path.join(__dirname, 'Lesson'),
+        join: {
+          from: 'users.id',
+          through: {
+            modelClass: path.join(__dirname, 'UserRole'),
+            from: 'users_roles.user_id',
+            to: 'users_roles.resource_id',
+          },
+          to: 'lessons.id',
+        },
+        modify: (query) => {
+          return query.where({
+            resource_type: 'lesson',
+            role_id: roles.STUDENT.id,
+          });
+        },
+      },
     };
   }
 

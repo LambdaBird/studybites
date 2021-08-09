@@ -39,7 +39,7 @@ class UserRole extends BaseModel {
         relation: objection.Model.BelongsToOneRelation,
         modelClass: path.join(__dirname, 'Lesson'),
         join: {
-          from: 'users_roles.resource_id',
+          from: 'users_roles.resourceId',
           to: 'lessons.id',
         },
       },
@@ -51,7 +51,79 @@ class UserRole extends BaseModel {
           to: 'roles.id',
         },
       },
+      results: {
+        relation: objection.Model.HasManyRelation,
+        modelClass: path.join(__dirname, 'Result'),
+        join: {
+          from: 'users_roles.userId',
+          to: 'results.userId',
+        },
+      },
     };
+  }
+
+  static getAllStudentsOfLesson({ lessonId, offset: start, limit, search }) {
+    const end = start + limit - 1;
+    return this.query()
+      .skipUndefined()
+      .select('users.id', 'users.email', 'users.first_name', 'users.last_name')
+      .innerJoin('users', 'users.id', '=', 'users_roles.user_id')
+      .where('users_roles.resource_type', resources.LESSON.name)
+      .andWhere('users_roles.resource_id', lessonId)
+      .andWhere('users_roles.role_id', roles.STUDENT.id)
+      .groupBy('users.id', 'users_roles.user_id')
+      .andWhere(
+        this.knex().raw(
+          `concat(users.email, ' ', users.first_name, ' ', users.last_name, ' ', users.first_name)`,
+        ),
+        'ilike',
+        search ? `%${search.replace(/ /g, '%')}%` : undefined,
+      )
+      .range(start, end)
+      .withGraphFetched('results')
+      .modifyGraph('results', (builder) => {
+        builder.where('lessonId', lessonId);
+      });
+  }
+
+  static getAllStudentsOfTeacher({ userId, offset: start, limit, search }) {
+    const end = start + limit - 1;
+    return this.query()
+      .skipUndefined()
+      .select(
+        'users.id',
+        'users.first_name',
+        'users.last_name',
+        'users.email',
+        this.knex().raw(`
+          json_agg(distinct jsonb_build_object('id', lessons.id, 'name', lessons.name)) lessons
+        `),
+        this.knex().raw(`MAX(results.created_at) as last_activity`),
+      )
+      .join('lessons', 'lessons.id', '=', 'users_roles.resource_id')
+      .join(
+        this.knex().raw(`
+        users_roles students on students.resource_id = lessons.id
+      `),
+      )
+      .join('users', 'users.id', '=', 'students.user_id')
+      .leftJoin(
+        this.knex().raw(`
+        results on results.user_id = users.id and results.lesson_id = lessons.id
+      `),
+      )
+      .where('users_roles.user_id', userId)
+      .andWhere('users_roles.role_id', roles.MAINTAINER.id)
+      .andWhere('students.role_id', roles.STUDENT.id)
+      .andWhere(
+        this.knex().raw(
+          `concat(users.email, ' ', users.first_name, ' ', users.last_name, ' ', users.first_name)`,
+        ),
+        'ilike',
+        search ? `%${search.replace(/ /g, '%')}%` : undefined,
+      )
+      .groupBy('users.id')
+      .range(start, end);
   }
 
   static async addTeacher({ userId }) {

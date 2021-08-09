@@ -1,7 +1,13 @@
 import { matchPath } from 'react-router-dom';
 
 import { AdminHome } from '@sb-ui/pages/Admin';
-import { LessonEdit, LessonPreview, TeacherHome } from '@sb-ui/pages/Teacher';
+import {
+  LessonEdit,
+  LessonPreview,
+  LessonStudents,
+  TeacherHome,
+  TeacherStudents,
+} from '@sb-ui/pages/Teacher';
 import {
   EnrollModalDesktop,
   EnrollModalMobile,
@@ -54,6 +60,18 @@ export const getPrivateRoutes = ({ isMobile }) => [
   {
     component: TeacherHome,
     path: paths.TEACHER_HOME,
+    permissions: [Roles.TEACHER],
+    exact: true,
+  },
+  {
+    component: TeacherStudents,
+    path: paths.TEACHER_STUDENTS,
+    permissions: [Roles.TEACHER],
+    exact: true,
+  },
+  {
+    component: LessonStudents,
+    path: paths.TEACHER_LESSONS_STUDENTS,
     permissions: [Roles.TEACHER],
     exact: true,
   },

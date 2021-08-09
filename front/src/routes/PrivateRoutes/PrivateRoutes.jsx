@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import { useQuery } from 'react-query';
 import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 
+import ErrorPage from '@sb-ui/components/ErrorPage';
 import Header from '@sb-ui/components/molecules/Header';
 import MobileContext from '@sb-ui/contexts/MobileContext';
 import { getUser } from '@sb-ui/utils/api/v1/user';
@@ -72,7 +73,7 @@ const PrivateRoutes = () => {
         </Route>
         {renderRoutes(allowedRoutes)}
         <Route path="*">
-          <h1>Not Found</h1>
+          <ErrorPage status="404" />
         </Route>
       </Switch>
     </>

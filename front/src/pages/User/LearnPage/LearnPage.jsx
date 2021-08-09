@@ -25,7 +25,7 @@ const LearnPage = () => {
     getLessonById,
     postLessonById,
   });
-  
+
   return (
     <>
       <Header
