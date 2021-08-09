@@ -13,10 +13,13 @@ const Finish = ({ isSolved }) => {
   const history = useHistory();
   const { t } = useTranslation('user');
   const { handleInteractiveClick, id } = useContext(LearnContext);
+
+  const callbackRef = (node) => node?.scrollIntoView({ behavior: 'smooth' });
+
   if (isSolved) {
     return (
       <>
-        <Results />
+        <Results callbackRef={callbackRef} />
         <S.LessonButton onClick={history.goBack}>
           {t('lesson.back')}
         </S.LessonButton>
