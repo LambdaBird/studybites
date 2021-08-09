@@ -16,7 +16,11 @@ import {
 } from '@sb-ui/utils/api/v1/teacher';
 import EditorJs from '@sb-ui/utils/editorjs/EditorJsContainer';
 import Undo from '@sb-ui/utils/editorjs/undo-plugin';
-import { LESSONS_EDIT, LESSONS_PREVIEW } from '@sb-ui/utils/paths';
+import {
+  LESSONS_EDIT,
+  LESSONS_PREVIEW,
+  TEACHER_LESSONS_STUDENTS,
+} from '@sb-ui/utils/paths';
 import { TEACHER_LESSON_BASE_KEY } from '@sb-ui/utils/queries';
 
 import { getConfig, prepareBlocksForApi, prepareEditorData } from './utils';
@@ -222,6 +226,10 @@ const LessonEdit = () => {
     history.push(LESSONS_PREVIEW.replace(':id', lessonId));
   };
 
+  const handleStudentsClick = () => {
+    history.push(TEACHER_LESSONS_STUDENTS.replace(':id', lessonId));
+  };
+
   return (
     <>
       <Header>
@@ -323,7 +331,7 @@ const LessonEdit = () => {
                 </S.TextLink>
               </Col>
               <S.StudentsCol span={24}>
-                <S.TextLink underline>
+                <S.TextLink onClick={handleStudentsClick} underline>
                   {t('lesson_edit.links.students')}
                 </S.TextLink>
                 <S.StudentsCount

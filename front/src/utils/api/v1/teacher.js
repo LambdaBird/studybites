@@ -41,3 +41,23 @@ export const getTeacherStudents = async ({ queryKey }) => {
 
   return data;
 };
+
+export const getTeacherLessonStudents = async ({ queryKey }) => {
+  const [, { lessonId, offset, limit, search }] = queryKey;
+
+  const { data } = await api.get(`${PATH}/enrolled/${lessonId}`, {
+    params: {
+      offset,
+      limit,
+      search,
+    },
+  });
+
+  return {
+    ...data,
+    students: data.students.map((x) => ({
+      ...x,
+      fullName: `${x.firstName} ${x.lastName}`,
+    })),
+  };
+};

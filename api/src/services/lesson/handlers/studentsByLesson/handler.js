@@ -4,10 +4,10 @@ export async function studentsByLessonHandler({
   query: { search, offset, limit },
 }) {
   const {
-    models: { Lesson },
+    models: { UserRole },
   } = this;
 
-  const { total, results: students } = await Lesson.getAllEnrolledStudents({
+  const { total, results: students } = await UserRole.getAllStudentsOfLesson({
     userId,
     lessonId,
     offset,
