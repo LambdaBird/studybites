@@ -66,7 +66,7 @@ export default class Image {
     const inputUrl = Utils.createInput({
       wrapper: this,
       name: 'url',
-      placeholder: 'Input image url',
+      placeholder: this.api.i18n.t('input'),
       classList: [this.CSS.input, this.CSS.urlInput],
     });
     inputUrl.addEventListener('input', this.inputUrlChange.bind(this));
@@ -79,7 +79,7 @@ export default class Image {
     const inputCaption = Utils.createInput({
       wrapper: this,
       name: 'caption',
-      placeholder: 'Input image caption',
+      placeholder: this.api.i18n.t('caption'),
       classList: [this.CSS.input],
     });
     this.inputCaption = inputCaption;

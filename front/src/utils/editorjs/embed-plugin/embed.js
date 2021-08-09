@@ -85,7 +85,7 @@ export default class Embed {
     const inputUrl = Utils.createInput({
       wrapper: this,
       name: 'url',
-      placeholder: 'Input video url',
+      placeholder: this.api.i18n.t('input'),
       classList: [this.CSS.input, this.CSS.urlInput],
     });
     inputUrl.addEventListener('input', this.inputUrlChange.bind(this));
@@ -97,7 +97,7 @@ export default class Embed {
     const inputCaption = Utils.createInput({
       wrapper: this,
       name: 'caption',
-      placeholder: 'Input video caption',
+      placeholder: this.api.i18n.t('caption'),
       classList: [this.CSS.input],
     });
     this.inputCaption = inputCaption;
