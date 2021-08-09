@@ -16,8 +16,7 @@ class ErrorBoundary extends React.Component {
     return { hasError: true };
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  handleRefreshClick() {
+  static handleRefreshClick() {
     // eslint-disable-next-line no-restricted-globals
     location.reload();
   }
