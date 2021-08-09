@@ -42,16 +42,19 @@ export const prepareEditorData = (blocks) =>
   });
 
 export const prepareBlocksDataForApi = (data, type) => {
+  if (!data) {
+    return null;
+  }
+  const { answers, ...sendData } = data || {};
   if (type === BLOCKS_TYPE.QUIZ) {
     return {
-      ...data,
-      answers: data?.answers.map(({ value }) => ({ value })),
+      ...sendData,
+      answers: answers.map(({ value }) => ({ value })),
     };
   }
   if (type === BLOCKS_TYPE.CLOSED_QUESTION) {
     return {
-      ...data,
-      answers: undefined,
+      ...sendData,
     };
   }
   return data;
@@ -72,7 +75,7 @@ export const prepareBlocksForApi = (blocks) =>
         answer.results = block?.data?.answers?.map((x) => x.correct);
       }
       if (type === BLOCKS_TYPE.CLOSED_QUESTION) {
-        answer.results = block?.data.answers;
+        answer.results = block?.data?.answers;
       }
       return {
         type,
@@ -85,9 +88,10 @@ export const prepareBlocksForApi = (blocks) =>
         answer,
       };
     })
+
     .filter((block) =>
       SKIP_BLOCKS.every(
-        (b) => !(block.type === b && block.content.data === undefined),
+        (b) => !(block.type === b && block.content.data === null),
       ),
     )
     .filter((block) => JSON.stringify(block).length < MAX_BODY_LENGTH);

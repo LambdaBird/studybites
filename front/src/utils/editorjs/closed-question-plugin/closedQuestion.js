@@ -199,7 +199,7 @@ export default class ClosedQuestion {
     const questionInput = this.elements?.questionInput?.value;
     const { answers } = this;
     if (!questionInput || answers?.length === 0) {
-      return undefined;
+      return null;
     }
     return {
       question: questionInput,

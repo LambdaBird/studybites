@@ -160,7 +160,7 @@ export default class Image {
 
   save() {
     if (!this.elements.url?.value || this.error) {
-      return undefined;
+      return null;
     }
     return {
       ...this.data,
