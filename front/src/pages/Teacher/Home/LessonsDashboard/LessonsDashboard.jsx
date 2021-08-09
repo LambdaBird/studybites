@@ -7,7 +7,7 @@ import { PlusOutlined } from '@ant-design/icons';
 
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
 import { getTeacherLessons } from '@sb-ui/utils/api/v1/teacher';
-import { LESSONS_EDIT } from '@sb-ui/utils/paths';
+import { LESSONS_NEW } from '@sb-ui/utils/paths';
 import { TEACHER_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
 import { skeletonArray } from '@sb-ui/utils/utils';
 
@@ -46,7 +46,7 @@ const LessonsDashboard = () => {
   const { lessons, total } = responseData || {};
 
   const handleCreateLesson = () => {
-    history.push(LESSONS_EDIT.replace(':id', 'new'));
+    history.push(LESSONS_NEW);
   };
 
   return (
