@@ -35,6 +35,7 @@ export const prepareEditorData = (blocks) =>
         data: {
           ...content?.data,
           answers: answer?.results,
+          explanation: answer?.explanation,
         },
       };
     }
@@ -45,7 +46,7 @@ export const prepareBlocksDataForApi = (data, type) => {
   if (!data) {
     return null;
   }
-  const { answers, ...sendData } = data || {};
+  const { answers, explanation, ...sendData } = data || {};
   if (type === BLOCKS_TYPE.QUIZ) {
     return {
       ...sendData,
@@ -75,6 +76,7 @@ export const prepareBlocksForApi = (blocks) =>
         answer.results = block?.data?.answers?.map((x) => x.correct);
       }
       if (type === BLOCKS_TYPE.CLOSED_QUESTION) {
+        answer.explanation = block?.data?.explanation;
         answer.results = block?.data?.answers;
       }
       return {
@@ -88,7 +90,6 @@ export const prepareBlocksForApi = (blocks) =>
         answer,
       };
     })
-
     .filter((block) =>
       SKIP_BLOCKS.every(
         (b) => !(block.type === b && block.content.data === null),

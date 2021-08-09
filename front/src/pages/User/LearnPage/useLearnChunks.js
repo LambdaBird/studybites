@@ -73,7 +73,7 @@ export const handleAnswer = ({ data: serverData, prevChunks }) => {
   const lastChunk = prevChunks?.[prevChunks.length - 1];
 
   const interactiveBlock = lastChunk[lastChunk.length - 1];
-  if (answer?.results?.length > 0) {
+  if (Object.keys(answer || {}).length > 0) {
     interactiveBlock.answer = answer;
     applyResultsToInteractiveBlock(interactiveBlock, userAnswer);
   }

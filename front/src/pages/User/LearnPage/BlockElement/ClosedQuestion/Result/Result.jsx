@@ -12,12 +12,12 @@ import AnswerResult from './AnswerResult';
 const Result = ({ correctAnswer, data }) => {
   const { question, answer } = data;
   const results = correctAnswer?.results;
-
+  const explanation = correctAnswer?.explanation;
   const isCorrect = useMemo(
     () =>
       results?.some(
         (result) =>
-          result?.trim()?.toLowerCase() === answer.trim().toLowerCase(),
+          result?.trim()?.toLowerCase() === answer?.trim()?.toLowerCase(),
       ),
     [answer, results],
   );
@@ -29,7 +29,11 @@ const Result = ({ correctAnswer, data }) => {
       </ChunkWrapper>
       <ChunkWrapper>{answer}</ChunkWrapper>
       <ChunkWrapper>
-        <AnswerResult correct={isCorrect} results={results} />
+        <AnswerResult
+          correct={isCorrect}
+          results={results}
+          explanation={explanation}
+        />
       </ChunkWrapper>
     </>
   );

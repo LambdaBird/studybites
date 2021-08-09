@@ -10,33 +10,48 @@ import * as S from './Results.styled';
 
 const { Text, Title } = Typography;
 
+const interactiveAnswerTypes = [BLOCKS_TYPE.QUIZ, BLOCKS_TYPE.CLOSED_QUESTION];
+
 const Results = () => {
   const { t } = useTranslation('user');
   const { chunks } = useContext(LearnContext);
 
-  const quizBlocks = useMemo(
+  const interactiveAnswerBlocks = useMemo(
     () =>
-      chunks?.flat()?.filter((block) => block.type === BLOCKS_TYPE.QUIZ) || [],
+      chunks
+        ?.flat()
+        ?.filter((block) => interactiveAnswerTypes.includes(block.type)) || [],
     [chunks],
   );
 
-  const correctQuiz = useMemo(
+  const correctInteractiveAnswer = useMemo(
     () =>
-      quizBlocks
-        .map(({ data, answer, content }) => {
-          const userAnswer =
-            data?.response?.map((x) => ({ correct: x })) ||
-            content?.data?.answers;
-          const { correct } = verifyAnswers(userAnswer, answer?.results);
-          return correct;
+      interactiveAnswerBlocks
+        .map(({ type, data, answer, content }) => {
+          if (type === BLOCKS_TYPE.QUIZ) {
+            const userAnswer =
+              data?.response?.map((x) => ({ correct: x })) ||
+              content?.data?.answers;
+            const { correct } = verifyAnswers(userAnswer, answer?.results);
+            return correct;
+          }
+          if (type === BLOCKS_TYPE.CLOSED_QUESTION) {
+            const userAnswer = content?.data?.answer;
+            return answer?.results?.some(
+              (result) =>
+                result.trim().toLowerCase() ===
+                userAnswer?.trim()?.toLowerCase(),
+            );
+          }
+          return false;
         })
         .filter((x) => x)?.length,
-    [quizBlocks],
+    [interactiveAnswerBlocks],
   );
 
   const percentCorrect = useMemo(
-    () => (correctQuiz / quizBlocks.length) * 100,
-    [correctQuiz, quizBlocks.length],
+    () => (correctInteractiveAnswer / interactiveAnswerBlocks.length) * 100,
+    [correctInteractiveAnswer, interactiveAnswerBlocks.length],
   );
 
   return (
@@ -47,16 +62,16 @@ const Results = () => {
       <S.Col>
         <Statistic
           title={t('lesson.results.correct_answers')}
-          value={correctQuiz}
+          value={correctInteractiveAnswer}
         />
       </S.Col>
       <S.Col>
         <Statistic
           title={t('lesson.results.total_answers')}
-          value={quizBlocks.length}
+          value={interactiveAnswerBlocks.length}
         />
       </S.Col>
-      {quizBlocks.length > 0 && (
+      {interactiveAnswerBlocks.length > 0 && (
         <S.Col>
           <Text strong>
             {t('lesson.results.percentage', {
