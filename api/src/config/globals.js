@@ -46,9 +46,10 @@ export const blockConstants = {
     IMAGE: 'image',
     NEXT: 'next',
     QUIZ: 'quiz',
+    CLOSED: 'closedQuestion',
   },
   get INTERACTIVE_BLOCKS() {
-    return [this.blocks.NEXT, this.blocks.QUIZ];
+    return [this.blocks.NEXT, this.blocks.QUIZ, this.blocks.CLOSED];
   },
 };
 

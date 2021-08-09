@@ -79,6 +79,14 @@ export async function checkAllowed({
           revision: block.revision,
         },
       };
+    case 'closedQuestion':
+      return {
+        allowed: {
+          action: 'response',
+          blockId: block.blockId,
+          revision: block.revision,
+        },
+      };
     default:
       return {
         allowed: { action: 'finish' },
