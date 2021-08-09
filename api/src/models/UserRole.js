@@ -39,7 +39,7 @@ class UserRole extends BaseModel {
         relation: objection.Model.BelongsToOneRelation,
         modelClass: path.join(__dirname, 'Lesson'),
         join: {
-          from: 'users_roles.resource_id',
+          from: 'users_roles.resourceId',
           to: 'lessons.id',
         },
       },
@@ -90,18 +90,31 @@ class UserRole extends BaseModel {
     const end = start + limit - 1;
     return this.query()
       .skipUndefined()
-      .select('users.id', 'users.email', 'users.first_name', 'users.last_name')
-      .innerJoin(
-        'users_roles as T',
-        'users_roles.resource_id',
-        '=',
-        'T.resource_id',
+      .select(
+        'users.id',
+        'users.first_name',
+        'users.last_name',
+        'users.email',
+        this.knex().raw(`
+          json_agg(distinct jsonb_build_object('id', lessons.id, 'name', lessons.name)) lessons
+        `),
+        this.knex().raw(`MAX(results.created_at) as last_activity`),
       )
-      .innerJoin('users', 'users.id', '=', 'T.user_id')
+      .join('lessons', 'lessons.id', '=', 'users_roles.resource_id')
+      .join(
+        this.knex().raw(`
+        users_roles students on students.resource_id = lessons.id
+      `),
+      )
+      .join('users', 'users.id', '=', 'students.user_id')
+      .leftJoin(
+        this.knex().raw(`
+        results on results.user_id = users.id and results.lesson_id = lessons.id
+      `),
+      )
       .where('users_roles.user_id', userId)
       .andWhere('users_roles.role_id', roles.MAINTAINER.id)
-      .andWhere('T.role_id', roles.STUDENT.id)
-      .groupBy('users.id')
+      .andWhere('students.role_id', roles.STUDENT.id)
       .andWhere(
         this.knex().raw(
           `concat(users.email, ' ', users.first_name, ' ', users.last_name, ' ', users.first_name)`,
@@ -109,6 +122,7 @@ class UserRole extends BaseModel {
         'ilike',
         search ? `%${search.replace(/ /g, '%')}%` : undefined,
       )
+      .groupBy('users.id')
       .range(start, end);
   }
 

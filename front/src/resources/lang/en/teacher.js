@@ -105,4 +105,22 @@ export default {
       invite_student: 'Invite student',
     },
   },
+  students: {
+    title: 'Lessons students ({{studentsCount}})',
+    table: {
+      full_name: 'Full Name',
+      email: 'Email',
+      last_activity: 'Last activity',
+      not_started: 'Not started',
+      no_data: 'No data',
+      lessons: 'Lessons',
+      no_lessons: 'No lessons',
+    },
+    search: {
+      placeholder: 'Email or name',
+    },
+    buttons: {
+      invite_student: 'Invite student',
+    },
+  },
 };

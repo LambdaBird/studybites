@@ -39,7 +39,13 @@ export const getTeacherStudents = async ({ queryKey }) => {
     params: paramsData,
   });
 
-  return data;
+  return {
+    ...data,
+    students: data.students.map((x) => ({
+      ...x,
+      fullName: `${x.firstName || ''} ${x.lastName || ''}`,
+    })),
+  };
 };
 
 export const getTeacherLessonStudents = async ({ queryKey }) => {
@@ -57,7 +63,7 @@ export const getTeacherLessonStudents = async ({ queryKey }) => {
     ...data,
     students: data.students.map((x) => ({
       ...x,
-      fullName: `${x.firstName} ${x.lastName}`,
+      fullName: `${x.firstName || ''} ${x.lastName || ''}`,
     })),
   };
 };

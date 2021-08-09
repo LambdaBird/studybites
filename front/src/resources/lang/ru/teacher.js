@@ -105,4 +105,22 @@ export default {
       invite_student: 'Пригласить студента',
     },
   },
+  students: {
+    title: 'Студенты уроков ({{studentsCount}})',
+    table: {
+      full_name: 'Полное имя',
+      email: 'Email',
+      last_activity: 'Последняя активность',
+      not_started: 'Еще не начато',
+      no_data: 'Нет данных',
+      lessons: 'Уроки',
+      no_lessons: 'Нет уроков',
+    },
+    search: {
+      placeholder: 'Email или имя',
+    },
+    buttons: {
+      invite_student: 'Пригласить студента',
+    },
+  },
 };
