@@ -14,6 +14,7 @@ export const BLOCKS_TYPE = {
   FINISHED: 'finished',
   NEXT: 'next',
   START: 'start',
+  CLOSED_QUESTION: 'closedQuestion',
 };
 
 export const BlockContentType = PropTypes.shape({
