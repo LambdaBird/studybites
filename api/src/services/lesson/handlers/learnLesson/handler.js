@@ -1,5 +1,7 @@
 import { BadRequestError } from '../../../../validation/errors';
 
+const WRONG_ASWER_WEIGHT = -0.5;
+
 export async function checkAllowed({
   userId,
   lessonId,
@@ -86,35 +88,40 @@ export async function checkAllowed({
   }
 }
 
+function getQuizCorrectness({ solution, userResponse, blockWeight, error }) {
+  if (solution.length !== userResponse.length) {
+    throw new BadRequestError(error);
+  }
+
+  const numberOfRightAnswers = solution.filter(Boolean).length;
+
+  const mark = userResponse.reduce((correctness, answer, index) => {
+    return (
+      correctness + +answer * (solution[index] ? 1 : 1 * WRONG_ASWER_WEIGHT)
+    );
+  }, 0);
+
+  return blockWeight * Math.max(mark / numberOfRightAnswers, 0);
+}
+
 async function getCorrectness({
   Block,
   blockId,
   revision,
   userResponse,
+  blocks,
   error,
 }) {
   const { answer, type, weight } = await Block.getBlock({ blockId, revision });
 
   switch (type) {
-    case 'quiz': {
-      const n = answer.results.length;
-      if (n !== userResponse.length) {
-        throw new BadRequestError(error);
-      }
-
-      let correctUserAnswers = 0;
-      let correctAnswers = 0;
-
-      for (let i = 0; i < n; i += 1) {
-        if (answer.results[i]) {
-          correctAnswers += 1;
-          if (answer.results[i] === userResponse[i]) {
-            correctUserAnswers += 1;
-          }
-        }
-      }
-
-      return (correctUserAnswers / correctAnswers) * weight;
+    case blocks.QUIZ: {
+      return getQuizCorrectness({
+        solution: answer,
+        userResponse,
+        blockWeight: weight,
+        error,
+      });
     }
     default:
       return 0;
@@ -128,7 +135,9 @@ export async function learnLessonHandler({
 }) {
   const {
     config: {
-      globals,
+      globals: {
+        blockConstants: { blocks: blockConstants, INTERACTIVE_ACTIONS },
+      },
       lessonService: { lessonServiceErrors: errors },
     },
     models: { Result, LessonBlockStructure, Block },
@@ -154,7 +163,7 @@ export async function learnLessonHandler({
   if (action !== allowed.action) {
     throw new BadRequestError(errors.LESSON_ERR_FAIL_LEARN);
   }
-  if (globals.blockConstants.INTERACTIVE_ACTIONS.includes(action)) {
+  if (INTERACTIVE_ACTIONS.includes(action)) {
     if (blockId !== allowed.blockId || revision !== allowed.revision) {
       throw new BadRequestError(errors.LESSON_ERR_FAIL_LEARN);
     }
@@ -167,6 +176,7 @@ export async function learnLessonHandler({
       blockId,
       revision,
       userResponse: data.response,
+      blocks: blockConstants,
       error: errors.LESSON_ERR_FAIL_LEARN,
     });
   }
