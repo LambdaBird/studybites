@@ -12,6 +12,7 @@ import Quote from './Quote';
 import Start from './Start';
 import Table from './Table';
 import { BlockElementProps, BLOCKS_TYPE } from './types';
+import Warning from './Warning';
 
 const BlockElement = ({ element }) => {
   switch (element.content.type) {
@@ -19,6 +20,8 @@ const BlockElement = ({ element }) => {
       return <Paragraph {...element} />;
     case BLOCKS_TYPE.QUIZ:
       return <Quiz {...element} />; //
+    case BLOCKS_TYPE.WARNING:
+      return <Warning {...element} />;
     case BLOCKS_TYPE.EMBED:
       return <Embed {...element} />;
     case BLOCKS_TYPE.IMAGE:

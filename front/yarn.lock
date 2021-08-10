@@ -1442,6 +1442,11 @@
   resolved "https://registry.yarnpkg.com/@editorjs/quote/-/quote-2.4.0.tgz#effe570f9055831a230e0417fafa6091a6169a47"
   integrity sha512-IWOBWjL2ngPP63GcIAltyD9kc7OVZFma4kS+T5JRHvKKDspYsnmrxsbRmCPc+coZQzqPxXHkiOZuNMdmGX/Y3w==
 
+"@editorjs/warning@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@editorjs/warning/-/warning-1.2.0.tgz#245a2286a2e996512ac345275b64fa638e319f5e"
+  integrity sha512-CMIsB+b8Ti8/duOzYfKn1upFEEMxj821RDyBbDx8iku4DRql524VnAErvd00sYnFpKKbXNOF4oQnBo/7bDIzPQ==
+
 "@emotion/cache@^10.0.27":
   version "10.0.29"
   resolved "https://registry.yarnpkg.com/@emotion/cache/-/cache-10.0.29.tgz#87e7e64f412c060102d589fe7c6dc042e6f9d1e0"
