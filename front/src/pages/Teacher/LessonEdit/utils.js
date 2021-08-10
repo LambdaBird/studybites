@@ -79,10 +79,19 @@ export const prepareBlocksForApi = (blocks) =>
 export const getConfig = (t) => ({
   holder: 'editorjs',
   tools: {
-    image: Image,
+    image: {
+      class: Image,
+      inlineToolbar: true,
+    },
     next: Next,
-    quiz: Quiz,
-    embed: Embed,
+    quiz: {
+      class: Quiz,
+      inlineToolbar: true,
+    },
+    embed: {
+      class: Embed,
+      inlineToolbar: true,
+    },
     header: {
       class: HeaderTool,
       config: {
@@ -90,16 +99,26 @@ export const getConfig = (t) => ({
         levels: [1, 2, 3, 4, 5],
         defaultLevel: 2,
       },
+      inlineToolbar: true,
     },
     list: {
       class: List,
       inlineToolbar: true,
     },
-    quote: Quote,
+    quote: {
+      class: Quote,
+      inlineToolbar: true,
+    },
     delimiter: Delimiter,
     marker: Marker,
-    table: Table,
-    closedQuestion: ClosedQuestion,
+    table: {
+      class: Table,
+      inlineToolbar: true,
+    },
+    closedQuestion: {
+      class: ClosedQuestion,
+      inlineToolbar: true,
+    },
   },
   i18n: {
     messages: {

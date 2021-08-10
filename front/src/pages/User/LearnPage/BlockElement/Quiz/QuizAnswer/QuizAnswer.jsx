@@ -8,7 +8,7 @@ import {
   RevisionType,
 } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
 import { ChunkWrapper } from '@sb-ui/pages/User/LearnPage/LearnPage.styled';
-import { RESPONSE_TYPE } from '@sb-ui/pages/User/LearnPage/utils';
+import { htmlToReact, RESPONSE_TYPE } from '@sb-ui/pages/User/LearnPage/utils';
 
 import * as S from './QuizAnswer.styled';
 
@@ -18,7 +18,7 @@ const QuizAnswer = ({ blockId, revision, question, answers }) => {
   const [quizCheckbox, setQuizCheckbox] = useState([]);
 
   const options = answers?.map(({ value, correct }, i) => ({
-    label: value,
+    label: htmlToReact(value),
     value: i,
     correct,
   }));
