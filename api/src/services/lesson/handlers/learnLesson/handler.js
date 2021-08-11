@@ -1,5 +1,7 @@
 import { BadRequestError } from '../../../../validation/errors';
 
+import { getCorrectness } from './correctnessCalculation';
+
 export async function checkAllowed({
   userId,
   lessonId,
@@ -86,53 +88,6 @@ export async function checkAllowed({
   }
 }
 
-async function getCorrectness({
-  Block,
-  blockId,
-  revision,
-  userResponse,
-  error,
-  blocks,
-}) {
-  const { answer, type, weight } = await Block.getBlock({ blockId, revision });
-
-  switch (type) {
-    case blocks.QUIZ: {
-      const n = answer.results.length;
-      if (n !== userResponse.length) {
-        throw new BadRequestError(error);
-      }
-
-      let correctUserAnswers = 0;
-      let correctAnswers = 0;
-
-      for (let i = 0; i < n; i += 1) {
-        if (answer.results[i]) {
-          correctAnswers += 1;
-          if (answer.results[i] === userResponse[i]) {
-            correctUserAnswers += 1;
-          }
-        }
-      }
-
-      return (correctUserAnswers / correctAnswers) * weight;
-    }
-    case blocks.CLOSED_QUESTION: {
-      if (!userResponse.text) {
-        throw new BadRequestError(error);
-      }
-
-      if (answer.results.includes(userResponse.text)) {
-        return 1;
-      }
-
-      return 0;
-    }
-    default:
-      return 0;
-  }
-}
-
 export async function learnLessonHandler({
   user: { id: userId },
   params: { lessonId },
@@ -181,8 +136,9 @@ export async function learnLessonHandler({
       blockId,
       revision,
       userResponse: data.response,
-      error: errors.LESSON_ERR_FAIL_LEARN,
       blocks: blockConstants,
+      BadRequestError,
+      error: errors.LESSON_ERR_FAIL_LEARN,
     });
   }
 
