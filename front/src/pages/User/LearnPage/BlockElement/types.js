@@ -5,6 +5,7 @@ export const BLOCKS_TYPE = {
   QUIZ: 'quiz',
   EMBED: 'embed',
   IMAGE: 'image',
+  MATCH: 'match',
   LIST: 'list',
   HEADER: 'header',
   QUOTE: 'quote',

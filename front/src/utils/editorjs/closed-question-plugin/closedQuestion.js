@@ -4,12 +4,6 @@ import './closedQuestion.css';
 
 const MAX_ANSWER_LENGTH = 50;
 
-function createElementFromHTML(htmlString) {
-  const div = document.createElement('div');
-  div.innerHTML = htmlString.trim();
-  return div.firstChild;
-}
-
 export default class ClosedQuestion {
   constructor({ data, api, readOnly }) {
     this.api = api;
@@ -163,7 +157,7 @@ export default class ClosedQuestion {
   createTag(text) {
     const wrapper = document.createElement('span');
     wrapper.classList.add(this.CSS.answerTag);
-    let displayText = createElementFromHTML(`<span>${text}</span>`);
+    let displayText = Utils.createElementFromHTML(`<span>${text}</span>`);
     if (text.length > MAX_ANSWER_LENGTH) {
       const textDiv = document.createElement('div');
       textDiv.innerText = text;
@@ -180,7 +174,7 @@ export default class ClosedQuestion {
     }
 
     const removeSpan =
-      createElementFromHTML(`<span class="${this.CSS.answerRemove}">
+      Utils.createElementFromHTML(`<span class="${this.CSS.answerRemove}">
        <svg viewBox="64 64 896 896" focusable="false" data-icon="close" width="10px" height="10px" fill="currentColor" aria-hidden="true">
         <path d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"></path>
        </svg>

@@ -10,34 +10,57 @@ import { BLOCKS_TYPE } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
 import ClosedQuestion from '@sb-ui/utils/editorjs/closed-question-plugin';
 import Embed from '@sb-ui/utils/editorjs/embed-plugin';
 import Image from '@sb-ui/utils/editorjs/image-plugin';
+import Match from '@sb-ui/utils/editorjs/match-plugin';
 import Next from '@sb-ui/utils/editorjs/next-plugin';
 import Quiz from '@sb-ui/utils/editorjs/quiz-plugin';
-
-export const QUIZ_TYPE = 'quiz';
+import { shuffleArray } from '@sb-ui/utils/utils';
 
 const MAX_BODY_LENGTH = 4_000_000;
 
 export const prepareEditorData = (blocks) =>
-  blocks?.map(({ content, answer, type }) =>
-    type === QUIZ_TYPE
-      ? {
-          ...content,
-          data: {
-            ...content?.data,
-            answers: content?.data?.answers?.map(({ value }, i) => ({
-              value,
-              correct: answer?.results[i],
-            })),
-          },
-        }
-      : content,
-  );
+  blocks?.map(({ content, answer, type }) => {
+    if (type === BLOCKS_TYPE.QUIZ) {
+      return {
+        ...content,
+        data: {
+          ...content?.data,
+          answers: content?.data?.answers?.map(({ value }, i) => ({
+            value,
+            correct: answer?.results[i],
+          })),
+        },
+      };
+    }
+    if (type === BLOCKS_TYPE.MATCH) {
+      return {
+        ...content,
+        data: {
+          values: answer?.results,
+        },
+      };
+    }
+    return content;
+  });
 
 export const prepareBlocksDataForApi = (data, type) => {
-  if (type === QUIZ_TYPE) {
+  if (!data) {
+    return null;
+  }
+  if (type === BLOCKS_TYPE.QUIZ) {
     return {
       ...data,
       answers: data?.answers.map(({ value }) => ({ value })),
+    };
+  }
+  if (type === BLOCKS_TYPE.MATCH) {
+    const toValues = data.values.map((value) => value.to);
+    shuffleArray(toValues);
+    return {
+      ...data,
+      values: data?.values.map((value, index) => ({
+        ...value,
+        to: toValues[index],
+      })),
     };
   }
   return data;
@@ -47,12 +70,20 @@ const SKIP_BLOCKS = [
   BLOCKS_TYPE.EMBED,
   BLOCKS_TYPE.IMAGE,
   BLOCKS_TYPE.CLOSED_QUESTION,
+  BLOCKS_TYPE.MATCH,
 ];
 
 export const prepareBlocksForApi = (blocks) =>
   blocks
     .map((block) => {
       const { id, type, data } = block;
+      const answer = {};
+      if (type === BLOCKS_TYPE.QUIZ) {
+        answer.results = block?.data?.answers?.map((x) => x.correct);
+      }
+      if (type === BLOCKS_TYPE.MATCH) {
+        answer.results = block?.data?.values;
+      }
       return {
         type,
         revision: hash(block),
@@ -61,17 +92,12 @@ export const prepareBlocksForApi = (blocks) =>
           type,
           data: prepareBlocksDataForApi(data, type),
         },
-        answer: {
-          results:
-            type === QUIZ_TYPE
-              ? block?.data?.answers?.map((x) => x.correct)
-              : undefined,
-        },
+        answer,
       };
     })
     .filter((block) =>
       SKIP_BLOCKS.every(
-        (b) => !(block.type === b && block.content.data === undefined),
+        (b) => !(block.type === b && block.content.data === null),
       ),
     )
     .filter((block) => JSON.stringify(block).length < MAX_BODY_LENGTH);
@@ -83,6 +109,10 @@ export const getConfig = (t) => ({
     next: Next,
     quiz: Quiz,
     embed: Embed,
+    match: {
+      class: Match,
+      inlineToolbar: true,
+    },
     header: {
       class: HeaderTool,
       config: {
