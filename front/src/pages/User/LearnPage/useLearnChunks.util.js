@@ -1,4 +1,23 @@
+import { BLOCKS_TYPE } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
 import { sleep } from '@sb-ui/utils';
+
+export const applyResultsToInteractiveBlock = (
+  interactiveBlock,
+  userAnswer,
+) => {
+  if (interactiveBlock.type === BLOCKS_TYPE.QUIZ) {
+    // eslint-disable-next-line no-param-reassign
+    interactiveBlock.content.data.answers =
+      interactiveBlock.content.data.answers.map((x, i) => ({
+        ...x,
+        correct: userAnswer?.response[i],
+      }));
+  }
+  if (interactiveBlock.type === BLOCKS_TYPE.MATCH) {
+    // eslint-disable-next-line no-param-reassign
+    interactiveBlock.content.data.answer = userAnswer?.response;
+  }
+};
 
 export const createFinished = () => ({
   blockId: `block-finished-id`,

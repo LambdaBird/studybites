@@ -43,6 +43,34 @@ export const QuizBlockDataType = PropTypes.shape({
 export const QuizBlockAnswerType = PropTypes.shape({
   results: PropTypes.arrayOf(PropTypes.bool),
 });
+
+export const MatchBlockDataType = PropTypes.shape({
+  answers: PropTypes.arrayOf(
+    PropTypes.shape({
+      from: PropTypes.string,
+      to: PropTypes.string,
+    }),
+  ),
+});
+
+export const MatchResponseDataType = PropTypes.shape({
+  response: PropTypes.arrayOf(
+    PropTypes.shape({
+      from: PropTypes.string,
+      to: PropTypes.string,
+    }),
+  ),
+});
+
+export const MatchBlockAnswerType = PropTypes.shape({
+  results: PropTypes.arrayOf(
+    PropTypes.shape({
+      from: PropTypes.string,
+      to: PropTypes.string,
+    }),
+  ),
+});
+
 export const EmbedContentType = PropTypes.shape({
   data: PropTypes.shape({
     caption: PropTypes.string,

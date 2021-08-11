@@ -1,4 +1,5 @@
 import { BadRequestError } from '../../../../validation/errors';
+import { blockConstants } from '../../../../config';
 
 export async function checkAllowed({
   userId,
@@ -79,6 +80,15 @@ export async function checkAllowed({
           revision: block.revision,
         },
       };
+    case blockConstants.blocks.MATCH: {
+      return {
+        allowed: {
+          action: 'response',
+          blockId: block.blockId,
+          revision: block.revision,
+        },
+      };
+    }
     default:
       return {
         allowed: { action: 'finish' },

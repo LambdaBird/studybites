@@ -1,4 +1,4 @@
-export const apiInteractiveBlocks = ['quiz', 'next'];
+export const apiInteractiveBlocks = ['quiz', 'next', 'match'];
 
 const findChunk = ({ blocks, startIndex, fromStart = false }) => {
   let remainingBlocks = blocks;

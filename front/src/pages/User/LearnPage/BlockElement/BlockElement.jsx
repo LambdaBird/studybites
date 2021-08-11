@@ -5,6 +5,7 @@ import Finish from './Finish';
 import Header from './Header';
 import Image from './Image';
 import List from './List';
+import Match from './Match';
 import Next from './Next';
 import Paragraph from './Paragraph';
 import Quiz from './Quiz';
@@ -33,6 +34,8 @@ const BlockElement = ({ element }) => {
       return <Delimiter {...element} />;
     case BLOCKS_TYPE.TABLE:
       return <Table {...element} />;
+    case BLOCKS_TYPE.MATCH:
+      return <Match {...element} />;
     case BLOCKS_TYPE.NEXT:
       return <Next {...element} />;
     case BLOCKS_TYPE.FINISH:
