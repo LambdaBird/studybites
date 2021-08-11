@@ -1,6 +1,6 @@
 import { BadRequestError } from '../../../../validation/errors';
 
-const WRONG_ASWER_WEIGHT = -0.5;
+import { getCorrectness } from './correctnessCalculation';
 
 export async function checkAllowed({
   userId,
@@ -88,46 +88,6 @@ export async function checkAllowed({
   }
 }
 
-function getQuizCorrectness({ solution, userResponse, blockWeight, error }) {
-  if (solution.length !== userResponse.length) {
-    throw new BadRequestError(error);
-  }
-
-  const numberOfRightAnswers = solution.filter(Boolean).length;
-
-  const mark = userResponse.reduce((correctness, answer, index) => {
-    return (
-      correctness + +answer * (solution[index] ? 1 : 1 * WRONG_ASWER_WEIGHT)
-    );
-  }, 0);
-
-  return blockWeight * Math.max(mark / numberOfRightAnswers, 0);
-}
-
-async function getCorrectness({
-  Block,
-  blockId,
-  revision,
-  userResponse,
-  blocks,
-  error,
-}) {
-  const { answer, type, weight } = await Block.getBlock({ blockId, revision });
-
-  switch (type) {
-    case blocks.QUIZ: {
-      return getQuizCorrectness({
-        solution: answer,
-        userResponse,
-        blockWeight: weight,
-        error,
-      });
-    }
-    default:
-      return 0;
-  }
-}
-
 export async function learnLessonHandler({
   user: { id: userId },
   params: { lessonId },
@@ -177,6 +137,7 @@ export async function learnLessonHandler({
       revision,
       userResponse: data.response,
       blocks: blockConstants,
+      BadRequestError,
       error: errors.LESSON_ERR_FAIL_LEARN,
     });
   }
