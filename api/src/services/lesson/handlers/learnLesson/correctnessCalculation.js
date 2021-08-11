@@ -22,6 +22,14 @@ function getQuizCorrectness({
   return blockWeight * Math.max(mark / numberOfRightAnswers, 0);
 }
 
+function getClosedQuestionCorrectness({ solution, userResponse, blockWeight }) {
+  if (solution.includes(userResponse)) {
+    return blockWeight;
+  }
+
+  return 0;
+}
+
 export async function getCorrectness({
   Block,
   blockId,
@@ -36,11 +44,18 @@ export async function getCorrectness({
   switch (type) {
     case blocks.QUIZ: {
       return getQuizCorrectness({
-        solution: answer,
+        solution: answer.results,
         userResponse,
         blockWeight: weight,
         BadRequestError,
         error,
+      });
+    }
+    case blocks.CLOSED_QUESTION: {
+      return getClosedQuestionCorrectness({
+        solution: answer.results,
+        userResponse,
+        blockWeight: weight,
       });
     }
     default:
