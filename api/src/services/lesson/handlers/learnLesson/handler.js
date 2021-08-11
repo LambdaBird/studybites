@@ -1,4 +1,5 @@
 import { BadRequestError } from '../../../../validation/errors';
+import { blockConstants } from '../../../../config';
 
 export async function checkAllowed({
   userId,
@@ -63,7 +64,7 @@ export async function checkAllowed({
    * find allowed action based on blocks type
    */
   switch (block.type) {
-    case 'next':
+    case blockConstants.blocks.NEXT:
       return {
         allowed: {
           action: 'next',
@@ -71,7 +72,7 @@ export async function checkAllowed({
           revision: block.revision,
         },
       };
-    case 'quiz':
+    case blockConstants.blocks.QUIZ:
       return {
         allowed: {
           action: 'response',
@@ -79,7 +80,7 @@ export async function checkAllowed({
           revision: block.revision,
         },
       };
-    case 'closedQuestion':
+    case blockConstants.blocks.CLOSED:
       return {
         allowed: {
           action: 'response',
