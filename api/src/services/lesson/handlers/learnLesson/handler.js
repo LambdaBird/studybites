@@ -7,6 +7,7 @@ export async function checkAllowed({
   lessonId,
   Result,
   LessonBlockStructure,
+  blockConstants,
 }) {
   /**
    * variable for the last block of a chunk
@@ -56,7 +57,7 @@ export async function checkAllowed({
   /**
    * if block is undefined -> finish
    */
-  if (!block) {
+  if (!block || blockConstants.STATIC_BLOCKS.includes(block.type)) {
     return {
       allowed: { action: 'finish' },
     };
@@ -64,28 +65,30 @@ export async function checkAllowed({
   /**
    * find allowed action based on blocks type
    */
-  switch (block.type) {
-    case 'next':
-      return {
-        allowed: {
-          action: 'next',
-          blockId: block.blockId,
-          revision: block.revision,
-        },
-      };
-    case 'quiz':
-      return {
-        allowed: {
-          action: 'response',
-          blockId: block.blockId,
-          revision: block.revision,
-        },
-      };
-    default:
-      return {
-        allowed: { action: 'finish' },
-      };
+
+  if (block.type === blockConstants.blocks.NEXT) {
+    return {
+      allowed: {
+        action: 'next',
+        blockId: block.blockId,
+        revision: block.revision,
+      },
+    };
   }
+
+  if (blockConstants.INTERACTIVE_BLOCKS.includes(block.type)) {
+    return {
+      allowed: {
+        action: 'response',
+        blockId: block.blockId,
+        revision: block.revision,
+      },
+    };
+  }
+
+  return {
+    allowed: null,
+  };
 }
 
 export async function learnLessonHandler({
@@ -96,7 +99,7 @@ export async function learnLessonHandler({
   const {
     config: {
       globals: {
-        blockConstants: { blocks: blockConstants, INTERACTIVE_ACTIONS },
+        blockConstants,
       },
       lessonService: { lessonServiceErrors: errors },
     },
@@ -110,6 +113,7 @@ export async function learnLessonHandler({
     lessonId,
     Result,
     LessonBlockStructure,
+    blockConstants,
   });
   /**
    * allowed will be null if the lesson was finished already
@@ -123,7 +127,7 @@ export async function learnLessonHandler({
   if (action !== allowed.action) {
     throw new BadRequestError(errors.LESSON_ERR_FAIL_LEARN);
   }
-  if (INTERACTIVE_ACTIONS.includes(action)) {
+  if (blockConstants.INTERACTIVE_ACTIONS.includes(action)) {
     if (blockId !== allowed.blockId || revision !== allowed.revision) {
       throw new BadRequestError(errors.LESSON_ERR_FAIL_LEARN);
     }
@@ -136,7 +140,7 @@ export async function learnLessonHandler({
       blockId,
       revision,
       userResponse: data.response,
-      blocks: blockConstants,
+      blocks: blockConstants.blocks,
       BadRequestError,
       error: errors.LESSON_ERR_FAIL_LEARN,
     });
