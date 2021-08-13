@@ -17,29 +17,30 @@ const MAX_BODY_LENGTH = 4_000_000;
 
 export const prepareEditorData = (blocks) =>
   blocks?.map(({ content, answer, type }) => {
-    if (type === BLOCKS_TYPE.QUIZ) {
-      return {
-        ...content,
-        data: {
-          ...content?.data,
-          answers: content?.data?.answers?.map(({ value }, i) => ({
-            value,
-            correct: answer?.results[i],
-          })),
-        },
-      };
+    switch (type) {
+      case BLOCKS_TYPE.QUIZ:
+        return {
+          ...content,
+          data: {
+            ...content?.data,
+            answers: content?.data?.answers?.map(({ value }, i) => ({
+              value,
+              correct: answer?.results[i],
+            })),
+          },
+        };
+      case BLOCKS_TYPE.CLOSED_QUESTION:
+        return {
+          ...content,
+          data: {
+            ...content?.data,
+            answers: answer?.results,
+            explanation: answer?.explanation,
+          },
+        };
+      default:
+        return content;
     }
-    if (type === BLOCKS_TYPE.CLOSED_QUESTION) {
-      return {
-        ...content,
-        data: {
-          ...content?.data,
-          answers: answer?.results,
-          explanation: answer?.explanation,
-        },
-      };
-    }
-    return content;
   });
 
 export const prepareBlocksDataForApi = (data, type) => {
@@ -47,18 +48,19 @@ export const prepareBlocksDataForApi = (data, type) => {
     return null;
   }
   const { answers, explanation, ...sendData } = data || {};
-  if (type === BLOCKS_TYPE.QUIZ) {
-    return {
-      ...sendData,
-      answers: answers.map(({ value }) => ({ value })),
-    };
+  switch (type) {
+    case BLOCKS_TYPE.QUIZ:
+      return {
+        ...sendData,
+        answers: answers.map(({ value }) => ({ value })),
+      };
+    case BLOCKS_TYPE.CLOSED_QUESTION:
+      return {
+        ...sendData,
+      };
+    default:
+      return data;
   }
-  if (type === BLOCKS_TYPE.CLOSED_QUESTION) {
-    return {
-      ...sendData,
-    };
-  }
-  return data;
 };
 
 const SKIP_BLOCKS = [
@@ -72,13 +74,19 @@ export const prepareBlocksForApi = (blocks) =>
     .map((block) => {
       const { id, type, data } = block;
       const answer = {};
-      if (type === BLOCKS_TYPE.QUIZ) {
-        answer.results = block?.data?.answers?.map((x) => x.correct);
+
+      switch (type) {
+        case BLOCKS_TYPE.QUIZ:
+          answer.results = block?.data?.answers?.map((x) => x.correct);
+          break;
+        case BLOCKS_TYPE.CLOSED_QUESTION:    
+          answer.explanation = block?.data?.explanation;
+          answer.results = block?.data?.answers;
+          break;
+        default:
+          break;
       }
-      if (type === BLOCKS_TYPE.CLOSED_QUESTION) {
-        answer.explanation = block?.data?.explanation;
-        answer.results = block?.data?.answers;
-      }
+
       return {
         type,
         revision: hash(block),

@@ -29,11 +29,19 @@ export async function updateLessonHandler({
           if (revision && !blockId) {
             // eslint-disable-next-line no-param-reassign
             blocks[i].blockId = v4();
+            if (!blocks[i].weight) {
+              // eslint-disable-next-line no-param-reassign
+              blocks[i].weight = 1;
+            }
             blocksToInsert.push(blocks[i]);
           }
 
           if (revision && blockId) {
             if (values[blockId] && !values[blockId].includes(revision)) {
+              if (!blocks[i].weight) {
+                // eslint-disable-next-line no-param-reassign
+                blocks[i].weight = 1;
+              }
               blocksToInsert.push(blocks[i]);
             }
           }
