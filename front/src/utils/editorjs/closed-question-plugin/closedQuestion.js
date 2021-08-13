@@ -47,15 +47,15 @@ export default class ClosedQuestion {
     this.container = container;
     container.classList.add(this.CSS.container);
 
-    const questionInput = Utils.createInput({
-      wrapper: this,
-      name: 'questionInput',
-      placeholder: 'Input your question',
-      classList: [this.CSS.input, this.CSS.questionInput],
-    });
+    const questionInput = document.createElement('div');
+    questionInput.classList.add(this.CSS.input);
+    questionInput.classList.add(this.CSS.questionInput);
+    questionInput.contentEditable = 'true';
+    questionInput.setAttribute('placeholder', 'Input your question');
+    this.elements.questionInput = questionInput;
 
     if (this.data.question) {
-      questionInput.value = this.data.question;
+      questionInput.innerHTML = this.data.question;
     }
 
     const answerInput = Utils.createInput({
@@ -196,7 +196,7 @@ export default class ClosedQuestion {
   }
 
   save() {
-    const questionInput = this.elements?.questionInput?.value;
+    const questionInput = this.elements?.questionInput?.innerHTML;
     const { answers } = this;
     if (!questionInput || answers?.length === 0) {
       return undefined;

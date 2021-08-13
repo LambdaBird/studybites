@@ -95,19 +95,20 @@ export default class Image {
     error.classList.add(this.CSS.error);
     this.elements.error = error;
 
-    const inputCaption = Utils.createInput({
-      wrapper: this,
-      name: 'caption',
-      placeholder: 'Input image caption',
-      classList: [this.CSS.input],
-    });
+    const inputCaption = document.createElement('div');
+    inputCaption.classList.add(this.CSS.input);
+    inputCaption.classList.add(this.CSS.caption);
+    inputCaption.contentEditable = 'true';
+    inputCaption.setAttribute('placeholder', 'Input image caption');
+
+    this.elements.caption = inputCaption;
     this.inputCaption = inputCaption;
 
     inputCaption.style.display = 'none';
 
     if (this.data.url) {
       inputUrl.value = this.data.url ?? '';
-      inputCaption.value = this.data.caption ?? '';
+      inputCaption.innerHTML = this.data.caption ?? '';
       this.inputUrlChange();
     }
 
@@ -177,7 +178,7 @@ export default class Image {
     return {
       ...this.data,
       url: this.elements.url?.value,
-      caption: this.elements.caption?.value,
+      caption: this.elements.caption?.innerHTML,
     };
   }
 }

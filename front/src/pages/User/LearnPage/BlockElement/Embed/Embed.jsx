@@ -1,5 +1,7 @@
 import { Col, Row, Typography } from 'antd';
 
+import { htmlToReact } from '@sb-ui/pages/User/LearnPage/utils';
+
 import { EmbedContentType } from '../types';
 
 import * as S from './Embed.styled';
@@ -21,7 +23,7 @@ const Embed = ({ content }) => {
       </Col>
       {caption && (
         <Col span={24}>
-          <Text type="">{caption}</Text>
+          <Text>{htmlToReact(caption)}</Text>
         </Col>
       )}
     </Row>

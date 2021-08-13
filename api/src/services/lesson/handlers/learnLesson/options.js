@@ -14,7 +14,7 @@ export const learnLessonOptions = {
           properties: {
             question: { type: 'string' },
             answers: { type: 'array' },
-            response: { type: 'array' },
+            response: { type: ['array', 'string'] },
             isSolved: { type: 'boolean' },
           },
           oneOf: [

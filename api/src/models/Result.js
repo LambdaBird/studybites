@@ -62,6 +62,26 @@ class Result extends BaseModel {
       return result;
     }, {});
   }
+
+  static insertOne({
+    userId,
+    lessonId,
+    action,
+    blockId,
+    revision,
+    data,
+    correctness,
+  }) {
+    return this.query().skipUndefined().insert({
+      user_id: userId,
+      lesson_id: lessonId,
+      action,
+      block_id: blockId,
+      revision,
+      data,
+      correctness,
+    });
+  }
 }
 
 export default Result;

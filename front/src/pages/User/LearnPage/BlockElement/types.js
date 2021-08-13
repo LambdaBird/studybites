@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 export const BLOCKS_TYPE = {
   PARAGRAPH: 'paragraph',
   QUIZ: 'quiz',
+  CODE: 'code',
   EMBED: 'embed',
   IMAGE: 'image',
   LIST: 'list',
@@ -56,6 +57,10 @@ export const WarningContentType = PropTypes.shape({
     message: PropTypes.string,
     title: PropTypes.string,
   }),
+});
+
+export const CodeContentType = PropTypes.shape({
+  code: PropTypes.string,
 });
 
 export const ImageContentType = PropTypes.shape({

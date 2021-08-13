@@ -5,3 +5,7 @@
 .embed-tool__video-loaded {
   background: none;
 }
+
+.embed-tool__caption{
+  display: inline-block;
+}

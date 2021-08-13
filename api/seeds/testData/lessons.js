@@ -16,7 +16,7 @@ export const math = {
             },
             type: 'quiz',
             answer: {
-              data: 1,
+              results: [true, false, false],
             },
             revision: '06421c44-a853-4708-8f40-81c55a0e8861',
           },
@@ -133,7 +133,7 @@ export const french = {
             },
             type: 'quiz',
             answer: {
-              data: 1,
+              results: [true, false, false],
             },
             revision: '06421c44-a853-4708-8f40-81c55a0e8862',
           },

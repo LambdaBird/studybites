@@ -1,5 +1,7 @@
 import { BadRequestError } from '../../../../validation/errors';
 
+import { getCorrectness } from './correctnessCalculation';
+
 export async function checkAllowed({
   userId,
   lessonId,
@@ -93,7 +95,9 @@ export async function learnLessonHandler({
 }) {
   const {
     config: {
-      globals,
+      globals: {
+        blockConstants: { blocks: blockConstants, INTERACTIVE_ACTIONS },
+      },
       lessonService: { lessonServiceErrors: errors },
     },
     models: { Result, LessonBlockStructure, Block },
@@ -119,21 +123,36 @@ export async function learnLessonHandler({
   if (action !== allowed.action) {
     throw new BadRequestError(errors.LESSON_ERR_FAIL_LEARN);
   }
-  if (globals.blockConstants.INTERACTIVE_ACTIONS.includes(action)) {
+  if (INTERACTIVE_ACTIONS.includes(action)) {
     if (blockId !== allowed.blockId || revision !== allowed.revision) {
       throw new BadRequestError(errors.LESSON_ERR_FAIL_LEARN);
     }
   }
+
+  let correctness;
+  if (action === 'response') {
+    correctness = await getCorrectness({
+      Block,
+      blockId,
+      revision,
+      userResponse: data.response,
+      blocks: blockConstants,
+      BadRequestError,
+      error: errors.LESSON_ERR_FAIL_LEARN,
+    });
+  }
+
   /**
    * write action to the results table
    */
-  await Result.query().insert({
-    user_id: userId,
-    lesson_id: lessonId,
+  await Result.insertOne({
+    userId,
+    lessonId,
     action,
-    block_id: blockId,
+    blockId,
     revision,
     data,
+    correctness,
   });
 
   const { count: total } = await LessonBlockStructure.countBlocks({

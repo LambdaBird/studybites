@@ -1,3 +1,4 @@
+import Code from './Code';
 import Delimiter from './Delimiter';
 import Embed from './Embed';
 import Error from './Error';
@@ -22,6 +23,8 @@ const BlockElement = ({ element }) => {
       return <Quiz {...element} />; //
     case BLOCKS_TYPE.WARNING:
       return <Warning {...element} />;
+    case BLOCKS_TYPE.CODE:
+      return <Code {...element} />;
     case BLOCKS_TYPE.EMBED:
       return <Embed {...element} />;
     case BLOCKS_TYPE.IMAGE:

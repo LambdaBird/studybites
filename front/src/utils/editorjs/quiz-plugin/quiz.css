@@ -56,11 +56,9 @@
 
 [contenteditable=true]:empty:before{
     content: attr(placeholder);
-    color: #bfbfbf;
+    color: grey;
     pointer-events: none;
 }
-
-
 
 .quiz-tool__item--checked{
     background: var(--color-bg-checked);
