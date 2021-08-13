@@ -233,7 +233,7 @@ export default class Quiz {
   save() {
     const question = this.items[0].querySelector(`.${this.CSS.question}`);
     const answers = this.items.slice(1).map((answerItem) => ({
-      value: this.getItemInput(answerItem).innerText,
+      value: this.getItemInput(answerItem).innerHTML,
       correct: this.getItemChecked(answerItem),
     }));
     return {

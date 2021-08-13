@@ -40,19 +40,18 @@ const EnrollModalDesktop = () => {
   const { data: responseData } = useQuery(
     [USER_LESSON_MODAL_BASE_KEY, { id }],
     getEnrolledLesson,
-    );
-    
+  );
+
   const { mutate: mutatePostEnroll } = useMutation(postEnroll);
 
   const { name, author, description } = responseData?.lesson || {
-    author:
-      {
-        firstName: '',
-        lastName: '',
-      },
-      name: '',
-      description: '',
-    };
+    author: {
+      firstName: '',
+      lastName: '',
+    },
+    name: '',
+    description: '',
+  };
 
   const fullName = useMemo(
     () => `${author.firstName} ${author.lastName}`.trim(),
@@ -60,7 +59,7 @@ const EnrollModalDesktop = () => {
   );
 
   const firstNameLetter = useMemo(
-    () => author.firstName.[0] || author.lastName.[0],
+    () => author.firstName?.[0] || author.lastName?.[0],
     [author],
   );
 
@@ -69,7 +68,6 @@ const EnrollModalDesktop = () => {
       historyReplaceBack();
     }
   }, [historyReplaceBack, responseData]);
-
 
   const onClickStartEnroll = useCallback(async () => {
     mutatePostEnroll(id, {
