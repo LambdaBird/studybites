@@ -19,10 +19,11 @@ export const IconTitle = styled.div`
   }
 `;
 
-export const Icon = styled.span.attrs({
-  ariaLabel: 'hand-up',
+export const Icon = styled.span.attrs((props) => ({
+  children: props.children || props.emoji,
+  'aria-label': 'hand-up',
   role: 'img',
-})`
+}))`
   font-size: large;
 `;
 

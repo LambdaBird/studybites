@@ -7,8 +7,7 @@ const Warning = ({ content }) => {
   return (
     <S.Wrapper>
       <S.IconTitle>
-        {/* eslint-disable-next-line jsx-a11y/accessible-emoji */}
-        <S.Icon>☝</S.Icon>
+        <S.Icon emoji="☝" />
         <S.Title>{title}</S.Title>
       </S.IconTitle>
       <S.Message>{message}</S.Message>
