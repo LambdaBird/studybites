@@ -7,7 +7,7 @@ import * as S from '@sb-ui/pages/User/LearnPage/BlockElement/Quiz/QuizResult/Ans
 
 const { Text } = Typography;
 
-const AnswerResult = ({ correct, results }) => {
+const AnswerResult = ({ correct, results, explanation }) => {
   const { t } = useTranslation('user');
   return (
     <>
@@ -21,8 +21,8 @@ const AnswerResult = ({ correct, results }) => {
           <S.AnswerWrapper>
             <Text>
               {`${t('lesson.answer_result.wrong')} ${
-                results ? results?.join(', ') : ''
-              }`}
+                results ? `${results?.join(', ')}.` : ''
+              } ${explanation || ''}`}
             </Text>
             <CloseCircleTwoTone twoToneColor="#F5222D" />
           </S.AnswerWrapper>
@@ -34,6 +34,7 @@ const AnswerResult = ({ correct, results }) => {
 
 AnswerResult.propTypes = {
   results: PropTypes.arrayOf(PropTypes.string),
+  explanation: PropTypes.string,
   correct: PropTypes.bool,
 };
 

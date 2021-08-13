@@ -65,6 +65,16 @@ export default class ClosedQuestion {
       classList: [this.CSS.input, this.CSS.answerInput],
     });
 
+    const explanationInput = Utils.createInput({
+      wrapper: this,
+      name: 'explanationInput',
+      placeholder: 'Input your answer explanation (optional)',
+      classList: [this.CSS.input, this.CSS.answerInput],
+    });
+    if (this.data.explanation) {
+      explanationInput.value = this.data.explanation;
+    }
+
     const answerWrapper = document.createElement('div');
     this.elements.answerWrapper = answerWrapper;
     answerWrapper.classList.add(this.CSS.answerWrapper);
@@ -89,6 +99,7 @@ export default class ClosedQuestion {
 
     container.appendChild(questionInput);
     container.appendChild(answerInput);
+    container.appendChild(explanationInput);
     container.appendChild(answerWrapper);
 
     return container;
@@ -154,7 +165,7 @@ export default class ClosedQuestion {
           answer?.trim()?.toLowerCase() === value.trim()?.toLowerCase(),
       )
     ) {
-      this.answers.push(value);
+      this.answers.push(value.trim());
       this.renderTags();
     }
     this.elements.answerInput.value = '';
@@ -196,13 +207,15 @@ export default class ClosedQuestion {
   }
 
   save() {
-    const questionInput = this.elements?.questionInput?.innerHTML;
+    const question = this.elements?.questionInput?.innerHTML;
+    const explanation = this.elements?.explanationInput?.value;
     const { answers } = this;
-    if (!questionInput || answers?.length === 0) {
+    if (!question || answers?.length === 0) {
       return null;
     }
     return {
-      question: questionInput,
+      question,
+      explanation,
       answers,
     };
   }
