@@ -1,7 +1,13 @@
 import { matchPath } from 'react-router-dom';
 
 import { AdminHome } from '@sb-ui/pages/Admin';
-import { LessonEdit, LessonPreview, TeacherHome } from '@sb-ui/pages/Teacher';
+import {
+  LessonEdit,
+  LessonPreview,
+  LessonStudents,
+  TeacherHome,
+  TeacherStudents,
+} from '@sb-ui/pages/Teacher';
 import {
   EnrollModalDesktop,
   EnrollModalMobile,
@@ -11,9 +17,9 @@ import {
 } from '@sb-ui/pages/User';
 import { Roles } from '@sb-ui/utils/constants';
 import * as paths from '@sb-ui/utils/paths';
-import { LEARN_PAGE, LESSONS_EDIT, LESSONS_NEW } from '@sb-ui/utils/paths';
+import { LEARN_PAGE, LESSONS_EDIT } from '@sb-ui/utils/paths';
 
-const SKIP_HEADER = [LESSONS_NEW, LESSONS_EDIT, LEARN_PAGE];
+const SKIP_HEADER = [LESSONS_EDIT, LEARN_PAGE];
 
 export const checkPermission = (roles, permissions) => {
   if (!permissions) return true;
@@ -58,8 +64,14 @@ export const getPrivateRoutes = ({ isMobile }) => [
     exact: true,
   },
   {
-    component: LessonEdit,
-    path: paths.LESSONS_NEW,
+    component: TeacherStudents,
+    path: paths.TEACHER_STUDENTS,
+    permissions: [Roles.TEACHER],
+    exact: true,
+  },
+  {
+    component: LessonStudents,
+    path: paths.TEACHER_LESSONS_STUDENTS,
     permissions: [Roles.TEACHER],
     exact: true,
   },

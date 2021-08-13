@@ -75,3 +75,14 @@ export const skeletonArray = (size) =>
   [...new Array(size)].map((_, index) => ({
     id: `skeleton ${index}`,
   }));
+
+export const formatDate = (date) =>
+  date &&
+  new Intl.DateTimeFormat('en-US', {
+    hour: 'numeric',
+    minute: 'numeric',
+    second: 'numeric',
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  }).format(new Date(date));

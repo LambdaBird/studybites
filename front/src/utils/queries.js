@@ -13,7 +13,7 @@ export const LESSON_BASE_QUERY = 'user/lesson';
 export const TEACHER_LESSONS_BASE_KEY = 'teacher/lessons';
 export const TEACHER_STUDENTS_BASE_KEY = 'teacher/students';
 export const TEACHER_LESSON_BASE_KEY = 'teacher/lesson';
-export const TEACHER_LESSON_PREVIEW_BASE_KEY = 'teacher/lesson/preview';
+export const TEACHER_LESSON_STUDENTS_BASE_KEY = 'teacher/lesson/students';
 
 // ADMIN
 export const ADMIN_USERS_BASE_KEY = 'admin/users';
