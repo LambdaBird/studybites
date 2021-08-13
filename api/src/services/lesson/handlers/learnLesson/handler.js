@@ -1,4 +1,5 @@
 import { BadRequestError } from '../../../../validation/errors';
+import { blockConstants } from '../../../../config';
 
 import { getCorrectness } from './correctnessCalculation';
 
@@ -65,7 +66,6 @@ export async function checkAllowed({
   /**
    * find allowed action based on blocks type
    */
-
   if (block.type === blockConstants.blocks.NEXT) {
     return {
       allowed: {

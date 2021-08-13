@@ -40,6 +40,7 @@ export default {
     errors: {
       not_found: 'Lesson not found',
     },
+    input_answer: 'Type an answer...',
     by: 'By',
     blocks: 'blocks',
     start: 'Start',

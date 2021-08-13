@@ -1,3 +1,6 @@
+import PropTypes from 'prop-types';
+
+import ClosedQuestion from './ClosedQuestion';
 import Code from './Code';
 import Delimiter from './Delimiter';
 import Embed from './Embed';
@@ -12,7 +15,13 @@ import Quiz from './Quiz';
 import Quote from './Quote';
 import Start from './Start';
 import Table from './Table';
-import { BlockElementProps, BLOCKS_TYPE } from './types';
+import {
+  BlockContentType,
+  BlockIdType,
+  BLOCKS_TYPE,
+  ClosedQuestionBlockAnswerType,
+  QuizBlockAnswerType,
+} from './types';
 
 const BlockElement = ({ element }) => {
   switch (element.content.type) {
@@ -32,6 +41,8 @@ const BlockElement = ({ element }) => {
       return <Header {...element} />;
     case BLOCKS_TYPE.QUOTE:
       return <Quote {...element} />;
+    case BLOCKS_TYPE.CLOSED_QUESTION:
+      return <ClosedQuestion {...element} />;
     case BLOCKS_TYPE.DELIMITER:
       return <Delimiter {...element} />;
     case BLOCKS_TYPE.TABLE:
@@ -47,6 +58,15 @@ const BlockElement = ({ element }) => {
   }
 };
 
-BlockElement.propTypes = BlockElementProps;
+BlockElement.propTypes = {
+  element: PropTypes.shape({
+    content: BlockContentType,
+    blockId: BlockIdType,
+    answer: PropTypes.oneOfType([
+      QuizBlockAnswerType,
+      ClosedQuestionBlockAnswerType,
+    ]),
+  }),
+};
 
 export default BlockElement;
