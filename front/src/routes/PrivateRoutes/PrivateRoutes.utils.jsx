@@ -17,9 +17,9 @@ import {
 } from '@sb-ui/pages/User';
 import { Roles } from '@sb-ui/utils/constants';
 import * as paths from '@sb-ui/utils/paths';
-import { LEARN_PAGE, LESSONS_EDIT, LESSONS_NEW } from '@sb-ui/utils/paths';
+import { LEARN_PAGE, LESSONS_EDIT } from '@sb-ui/utils/paths';
 
-const SKIP_HEADER = [LESSONS_NEW, LESSONS_EDIT, LEARN_PAGE];
+const SKIP_HEADER = [LESSONS_EDIT, LEARN_PAGE];
 
 export const checkPermission = (roles, permissions) => {
   if (!permissions) return true;
@@ -72,12 +72,6 @@ export const getPrivateRoutes = ({ isMobile }) => [
   {
     component: LessonStudents,
     path: paths.TEACHER_LESSONS_STUDENTS,
-    permissions: [Roles.TEACHER],
-    exact: true,
-  },
-  {
-    component: LessonEdit,
-    path: paths.LESSONS_NEW,
     permissions: [Roles.TEACHER],
     exact: true,
   },

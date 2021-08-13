@@ -438,7 +438,7 @@ describe('Learning flow', () => {
               french._blocks._indexesOfInteractive[1]
             ].revision,
           data: {
-            answers: ['my answer'],
+            response: [true, false, false],
           },
         },
       });
@@ -553,7 +553,7 @@ describe('Learning flow', () => {
               french._blocks._indexesOfInteractive[1]
             ].revision,
           data: {
-            answers: ['my answer'],
+            response: [true, false, false],
           },
         },
       });
@@ -613,7 +613,7 @@ describe('Learning flow', () => {
               french._blocks._indexesOfInteractive[1]
             ].revision,
           data: {
-            answers: ['my answer'],
+            response: [true, false, false],
           },
         },
       });
@@ -690,7 +690,7 @@ describe('Learning flow', () => {
               french._blocks._indexesOfInteractive[1]
             ].revision,
           data: {
-            answers: ['my answer'],
+            response: [true, false, false],
           },
         },
       });
@@ -767,7 +767,7 @@ describe('Learning flow', () => {
               french._blocks._indexesOfInteractive[1]
             ].revision,
           data: {
-            answers: ['my answer'],
+            response: [true, false, false],
           },
         },
       });
@@ -838,7 +838,7 @@ describe('Learning flow', () => {
               french._blocks._indexesOfInteractive[1]
             ].revision,
           data: {
-            answers: ['my answer'],
+            response: [true, false, false],
           },
         },
       });
@@ -940,7 +940,7 @@ describe('Learning flow', () => {
             blockId: notAnswered.lesson.blocks[0].blockId,
             revision: notAnswered.lesson.blocks[0].revision,
             data: {
-              answers: ['my answer'],
+              response: [true, false, false],
             },
           },
         });
@@ -991,7 +991,7 @@ describe('Learning flow', () => {
             blockId: notFinished.lesson.blocks[0].blockId,
             revision: notFinished.lesson.blocks[0].revision,
             data: {
-              answers: ['my answer'],
+              response: [true, false, false],
             },
           },
         });
