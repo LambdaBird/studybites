@@ -1,5 +1,6 @@
 import Table from 'editorjs-table';
 import hash from 'object-hash';
+import CodeTool from '@editorjs/code';
 import Delimiter from '@editorjs/delimiter';
 import HeaderTool from '@editorjs/header';
 import List from '@editorjs/list';
@@ -100,6 +101,7 @@ export const getConfig = (t) => ({
     marker: Marker,
     table: Table,
     closedQuestion: ClosedQuestion,
+    code: CodeTool,
   },
   i18n: {
     messages: {
