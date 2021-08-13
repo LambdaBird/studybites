@@ -15,14 +15,13 @@ import Image from '@sb-ui/utils/editorjs/image-plugin';
 import Next from '@sb-ui/utils/editorjs/next-plugin';
 import Quiz from '@sb-ui/utils/editorjs/quiz-plugin';
 
-export const QUIZ_TYPE = 'quiz';
-
 const MAX_BODY_LENGTH = 4_000_000;
 
 export const prepareEditorData = (blocks) =>
-  blocks?.map(({ content, answer, type }) =>
-    type === QUIZ_TYPE
-      ? {
+  blocks?.map(({ content, answer, type }) => {
+    switch (type) {
+      case BLOCKS_TYPE.QUIZ:
+        return {
           ...content,
           data: {
             ...content?.data,
@@ -31,18 +30,39 @@ export const prepareEditorData = (blocks) =>
               correct: answer?.results[i],
             })),
           },
-        }
-      : content,
-  );
+        };
+      case BLOCKS_TYPE.CLOSED_QUESTION:
+        return {
+          ...content,
+          data: {
+            ...content?.data,
+            answers: answer?.results,
+            explanation: answer?.explanation,
+          },
+        };
+      default:
+        return content;
+    }
+  });
 
 export const prepareBlocksDataForApi = (data, type) => {
-  if (type === QUIZ_TYPE) {
-    return {
-      ...data,
-      answers: data?.answers.map(({ value }) => ({ value })),
-    };
+  if (!data) {
+    return null;
   }
-  return data;
+  const { answers, explanation, ...sendData } = data || {};
+  switch (type) {
+    case BLOCKS_TYPE.QUIZ:
+      return {
+        ...sendData,
+        answers: answers.map(({ value }) => ({ value })),
+      };
+    case BLOCKS_TYPE.CLOSED_QUESTION:
+      return {
+        ...sendData,
+      };
+    default:
+      return data;
+  }
 };
 
 const SKIP_BLOCKS = [
@@ -55,6 +75,20 @@ export const prepareBlocksForApi = (blocks) =>
   blocks
     .map((block) => {
       const { id, type, data } = block;
+      const answer = {};
+
+      switch (type) {
+        case BLOCKS_TYPE.QUIZ:
+          answer.results = block?.data?.answers?.map((x) => x.correct);
+          break;
+        case BLOCKS_TYPE.CLOSED_QUESTION:    
+          answer.explanation = block?.data?.explanation;
+          answer.results = block?.data?.answers;
+          break;
+        default:
+          break;
+      }
+
       return {
         type,
         revision: hash(block),
@@ -63,17 +97,12 @@ export const prepareBlocksForApi = (blocks) =>
           type,
           data: prepareBlocksDataForApi(data, type),
         },
-        answer: {
-          results:
-            type === QUIZ_TYPE
-              ? block?.data?.answers?.map((x) => x.correct)
-              : undefined,
-        },
+        answer,
       };
     })
     .filter((block) =>
       SKIP_BLOCKS.every(
-        (b) => !(block.type === b && block.content.data === undefined),
+        (b) => !(block.type === b && block.content.data === null),
       ),
     )
     .filter((block) => JSON.stringify(block).length < MAX_BODY_LENGTH);

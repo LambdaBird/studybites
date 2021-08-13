@@ -136,7 +136,7 @@ export default class Embed {
 
   save() {
     if (!this.elements.url?.value || !this.isValid) {
-      return undefined;
+      return null;
     }
     return {
       ...this.data,
