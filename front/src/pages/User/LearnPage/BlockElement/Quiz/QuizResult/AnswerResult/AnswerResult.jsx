@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons';
 
 import ColumnDisabledCheckbox from '@sb-ui/components/atoms/ColumnDisabledCheckbox';
+import { htmlToReact } from '@sb-ui/pages/User/LearnPage/utils';
 
 import * as S from './AnswerResult.styled';
 
@@ -16,7 +17,7 @@ const AnswerResult = ({ correct, result }) => {
   const options = useMemo(
     () =>
       result?.map((x, i) => ({
-        label: x.value,
+        label: htmlToReact(x.value),
         value: i,
       })),
     [result],

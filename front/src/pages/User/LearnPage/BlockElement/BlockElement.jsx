@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 
 import ClosedQuestion from './ClosedQuestion';
+import Code from './Code';
 import Delimiter from './Delimiter';
 import Embed from './Embed';
 import Error from './Error';
@@ -27,7 +28,9 @@ const BlockElement = ({ element }) => {
     case BLOCKS_TYPE.PARAGRAPH:
       return <Paragraph {...element} />;
     case BLOCKS_TYPE.QUIZ:
-      return <Quiz {...element} />; //
+      return <Quiz {...element} />;
+    case BLOCKS_TYPE.CODE:
+      return <Code {...element} />;
     case BLOCKS_TYPE.EMBED:
       return <Embed {...element} />;
     case BLOCKS_TYPE.IMAGE:

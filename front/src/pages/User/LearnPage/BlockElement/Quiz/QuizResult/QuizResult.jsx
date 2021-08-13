@@ -6,6 +6,7 @@ import {
   QuizBlockDataType,
 } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
 import { ChunkWrapper } from '@sb-ui/pages/User/LearnPage/LearnPage.styled';
+import { htmlToReact } from '@sb-ui/pages/User/LearnPage/utils';
 
 import AnswersResult from './AnswerResult';
 import { verifyAnswers } from './utils';
@@ -15,7 +16,7 @@ const QuizResult = ({ data, correctAnswer }) => {
   const { question, answers } = data;
 
   const options = answers?.map(({ value, correct }, i) => ({
-    label: value,
+    label: htmlToReact(value),
     value: i,
     correct,
   }));

@@ -1,5 +1,7 @@
 import { Col, Row, Typography } from 'antd';
 
+import { htmlToReact } from '@sb-ui/pages/User/LearnPage/utils';
+
 import { BlockIdType, ImageContentType } from '../types';
 
 const { Text } = Typography;
@@ -13,7 +15,7 @@ const Image = ({ content, blockId }) => {
       </Col>
       {caption && (
         <Col span={24}>
-          <Text type="">{caption}</Text>
+          <Text>{htmlToReact(caption)}</Text>
         </Col>
       )}
     </Row>

@@ -11,3 +11,7 @@
 .image-tool{
     margin-top: 1rem;
 }
+
+.image-tool__caption{
+    display: inline-block;
+}

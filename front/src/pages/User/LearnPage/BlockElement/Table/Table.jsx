@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 
 import useMobile from '@sb-ui/hooks/useMobile';
+import { htmlToReact } from '@sb-ui/pages/User/LearnPage/utils';
 
 import { TableContentType } from '../types';
 
@@ -35,13 +36,13 @@ const Table = ({ content }) => {
               {headers.length === 0 &&
                 row.map((_, index) => (
                   // eslint-disable-next-line react/no-array-index-key
-                  <S.Block key={index}>{row[index]}</S.Block>
+                  <S.Block key={index}>{htmlToReact(row[index])}</S.Block>
                 ))}
               {headers.map((header, index) => (
                 // eslint-disable-next-line react/no-array-index-key
                 <S.Block key={index}>
-                  <S.BlockHeader>{header}</S.BlockHeader>
-                  <S.BlockData>{row[index]}</S.BlockData>
+                  <S.BlockHeader>{htmlToReact(header)}</S.BlockHeader>
+                  <S.BlockData>{htmlToReact(row[index])}</S.BlockData>
                 </S.Block>
               ))}
             </S.CustomMobileTable>
@@ -56,7 +57,7 @@ const Table = ({ content }) => {
       <S.CustomTable>
         <thead>
           {headers.map((header) => (
-            <th>{header}</th>
+            <th>{htmlToReact(header)}</th>
           ))}
         </thead>
         <tbody>
@@ -65,7 +66,7 @@ const Table = ({ content }) => {
             <tr key={rowIndex}>
               {row?.map((col, colIndex) => (
                 // eslint-disable-next-line react/no-array-index-key
-                <td key={`${rowIndex}-${colIndex}`}>{col}</td>
+                <td key={`${rowIndex}-${colIndex}`}>{htmlToReact(col)}</td>
               ))}
             </tr>
           ))}
