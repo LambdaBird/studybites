@@ -13,6 +13,7 @@ export const BLOCKS_TYPE = {
   TABLE: 'table',
   FINISH: 'finish',
   FINISHED: 'finished',
+  WARNING: 'warning',
   NEXT: 'next',
   START: 'start',
   CLOSED_QUESTION: 'closedQuestion',
@@ -67,6 +68,13 @@ export const EmbedContentType = PropTypes.shape({
     caption: PropTypes.string,
     embed: PropTypes.string,
     height: PropTypes.string,
+  }),
+});
+
+export const WarningContentType = PropTypes.shape({
+  data: PropTypes.shape({
+    message: PropTypes.string,
+    title: PropTypes.string,
   }),
 });
 

@@ -6,6 +6,7 @@ import HeaderTool from '@editorjs/header';
 import List from '@editorjs/list';
 import Marker from '@editorjs/marker';
 import Quote from '@editorjs/quote';
+import Warning from '@editorjs/warning';
 
 import { BLOCKS_TYPE } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
 import ClosedQuestion from '@sb-ui/utils/editorjs/closed-question-plugin';
@@ -121,6 +122,14 @@ export const getConfig = (t) => ({
     embed: {
       class: Embed,
       inlineToolbar: true,
+    },
+    warning: {
+      class: Warning,
+      inlineToolbar: true,
+      config: {
+        titlePlaceholder: t('editor_js.tools.warning_title'),
+        messagePlaceholder: t('editor_js.tools.warning_message'),
+      },
     },
     header: {
       class: HeaderTool,

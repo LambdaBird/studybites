@@ -15,7 +15,9 @@ import Quiz from './Quiz';
 import Quote from './Quote';
 import Start from './Start';
 import Table from './Table';
+import Warning from './Warning';
 import {
+  BlockElementProps,
   BlockContentType,
   BlockIdType,
   BLOCKS_TYPE,
@@ -28,7 +30,9 @@ const BlockElement = ({ element }) => {
     case BLOCKS_TYPE.PARAGRAPH:
       return <Paragraph {...element} />;
     case BLOCKS_TYPE.QUIZ:
-      return <Quiz {...element} />;
+      return <Quiz {...element} />; //
+    case BLOCKS_TYPE.WARNING:
+      return <Warning {...element} />;
     case BLOCKS_TYPE.CODE:
       return <Code {...element} />;
     case BLOCKS_TYPE.EMBED:

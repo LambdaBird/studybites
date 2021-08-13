@@ -61,6 +61,10 @@ export default {
     toolbar: {
       toolbox_add: 'Add',
     },
+    tools: {
+      warning_title: 'Title',
+      warning_message: 'Message',
+    },
   },
   lesson_edit: {
     buttons: {
