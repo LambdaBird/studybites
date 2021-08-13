@@ -2,11 +2,6 @@ import { Typography } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons';
 
-import {
-  ArrowConnectImg,
-  MatchLine,
-  MatchWrapper,
-} from '@sb-ui/pages/User/LearnPage/BlockElement/Match/Answer/Answer.styled';
 import { verifyAnswers } from '@sb-ui/pages/User/LearnPage/BlockElement/Match/Result/utils';
 import {
   MatchBlockAnswerType,
@@ -27,16 +22,16 @@ const Result = ({ correctAnswer, data }) => {
   return (
     <>
       <ChunkWrapper>
-        <MatchWrapper>
+        <S.MatchWrapper>
           {results?.map(({ correct: correctResult, from, to }, index) => (
             // eslint-disable-next-line react/no-array-index-key
-            <MatchLine key={index}>
+            <S.MatchLine key={index}>
               <S.MatchBlock correct={correctResult}>{from}</S.MatchBlock>
-              <ArrowConnectImg />
+              <S.ArrowConnectImg />
               <S.MatchBlock correct={correctResult}>{to}</S.MatchBlock>
-            </MatchLine>
+            </S.MatchLine>
           ))}
-        </MatchWrapper>
+        </S.MatchWrapper>
       </ChunkWrapper>
       <ChunkWrapper>
         {correct ? (
@@ -51,16 +46,16 @@ const Result = ({ correctAnswer, data }) => {
                 <Text>{t('lesson.answer_result.wrong')}</Text>
                 <CloseCircleTwoTone twoToneColor="#F5222D" />
               </S.AnswerWrapperWrongTitle>
-              <MatchWrapper>
+              <S.MatchWrapper>
                 {correctAnswer?.results?.map(({ from, to }, index) => (
                   // eslint-disable-next-line react/no-array-index-key
-                  <MatchLine key={index}>
+                  <S.MatchLine key={index}>
                     <S.MatchBlockResult>{from}</S.MatchBlockResult>
-                    <ArrowConnectImg />
+                    <S.ArrowConnectImg />
                     <S.MatchBlockResult>{to}</S.MatchBlockResult>
-                  </MatchLine>
+                  </S.MatchLine>
                 ))}
-              </MatchWrapper>
+              </S.MatchWrapper>
             </S.AnswerWrapperWrong>
           </>
         )}

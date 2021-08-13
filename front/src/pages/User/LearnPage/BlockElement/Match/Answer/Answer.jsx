@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { createRef, useCallback, useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import LearnContext from '@sb-ui/contexts/LearnContext';
@@ -11,57 +11,100 @@ import { RESPONSE_TYPE } from '@sb-ui/pages/User/LearnPage/utils';
 
 import * as S from './Answer.styled';
 
-const swapBlocks = (blocks, from1, from2, to1, to2) => {
-  const from1Block = blocks.find((x) => x.id === from1);
-  const to1Block = blocks.find((x) => x.id === to1);
-  const from2Block = blocks.find((x) => x.id === from2);
-  const to2Block = blocks.find((x) => x.id === to2);
+const swapBlocks = (blocks, from, to) => {
+  const newBlocks = blocks.map((x) => ({ ...x }));
+  const fromIndex = newBlocks.findIndex((x) => x.id === from);
+  const toIndex = newBlocks.findIndex((x) => x.id === to);
 
-  const tempFrom = from1Block.from;
-  from1Block.from = from2Block.from;
-  from2Block.from = tempFrom;
-  const tempTo = to1Block.to;
-  to1Block.to = to2Block.to;
-  to2Block.to = tempTo;
+  [newBlocks[fromIndex], newBlocks[toIndex]] = [
+    newBlocks[toIndex],
+    newBlocks[fromIndex],
+  ];
+  return newBlocks;
 };
 
-const moveBlocksToTop = (blocks, from, to) => {
-  const firstNotSelectedBlock = blocks.find((x) => x.selected !== true);
-  swapBlocks(
-    blocks,
-    from,
-    firstNotSelectedBlock.id,
-    to,
-    firstNotSelectedBlock.id,
-  );
-  firstNotSelectedBlock.selected = true;
-  return blocks;
+const selectedFunction = (x) => x.selected !== true;
+
+const moveBlocksToTop = (from, to, fromId, toId) => {
+  const firstNotSelectedFrom = from.find(selectedFunction);
+  const firstNotSelectedTo = to.find(selectedFunction);
+
+  const newFrom = swapBlocks(from, fromId, firstNotSelectedFrom.id);
+  const newTo = swapBlocks(to, toId, firstNotSelectedTo.id);
+  const firstNotSelectedNewFrom = newFrom.find(selectedFunction);
+  const firstNotSelectedNewTo = newTo.find(selectedFunction);
+  if (firstNotSelectedNewFrom && firstNotSelectedNewTo) {
+    firstNotSelectedNewFrom.selected = true;
+    firstNotSelectedNewTo.selected = true;
+  }
+
+  return [newFrom, newTo];
 };
 
 const Answer = ({ blockId, revision, values }) => {
   const { t } = useTranslation('user');
   const { handleInteractiveClick, id: lessonId } = useContext(LearnContext);
 
-  const [matches, setMatches] = useState(
-    values.map((x, i) => ({
-      ...x,
-      id: i + 1,
+  const [from, setFrom] = useState(
+    values.map(({ from: fromValue }, i) => ({
+      ref: createRef(),
+      value: fromValue,
+      id: `from-${i + 1}`,
+      selected: false,
+    })),
+  );
+
+  const [to, setTo] = useState(
+    values.map(({ to: toValue }, i) => ({
+      ref: createRef(),
+      value: toValue,
+      id: `to-${i + 1}`,
+      selected: false,
     })),
   );
 
   const [first, setFirst] = useState(null);
   const [second, setSecond] = useState(null);
 
+  const getMaxBlockHeight = useCallback(
+    (index) =>
+      Math.max(
+        to[index]?.ref.current?.clientHeight,
+        from[index]?.ref.current?.clientHeight,
+      ),
+    [from, to],
+  );
+
+  const unselectBlock = useCallback((setFunc, id) => {
+    setFunc((prev) => {
+      const old = prev.slice();
+      old.find((x) => x.id === id).selected = false;
+      return old;
+    });
+  }, []);
+
+  const removeSelected = useCallback(
+    (id) => {
+      if (id.startsWith('from')) {
+        const indexFrom = from.findIndex((x) => x.id === id);
+        unselectBlock(setFrom, id);
+        unselectBlock(setTo, to[indexFrom].id);
+      } else if (id.startsWith('to')) {
+        const indexTo = to.findIndex((x) => x.id === id);
+        unselectBlock(setFrom, from[indexTo].id);
+        unselectBlock(setTo, id);
+      }
+    },
+    [from, unselectBlock, to],
+  );
+
   const handleBlockClick = useCallback(
     (id, isFirst) => {
       const setFunc = isFirst ? setFirst : setSecond;
-      if (matches.find((x) => x.id === id).selected) {
-        setMatches((prev) => {
-          const oldMatches = prev.slice();
-          oldMatches.find((x) => x.id === id).selected = false;
-          return oldMatches;
-        });
-
+      const isFromSelected = from.find((x) => x.id === id)?.selected;
+      const isToSelected = to.find((x) => x.id === id)?.selected;
+      if (isFromSelected || isToSelected) {
+        removeSelected(id);
         if (isFirst ? second : first) {
           setFunc(id);
         }
@@ -74,37 +117,58 @@ const Answer = ({ blockId, revision, values }) => {
         return id;
       });
     },
-    [first, matches, second],
+    [first, from, removeSelected, second, to],
   );
 
   useEffect(() => {
     if (first && second) {
       setFirst(null);
       setSecond(null);
-      setMatches(moveBlocksToTop(matches, first, second));
+      const [newFrom, newTo] = moveBlocksToTop(from, to, first, second);
+      setFrom(newFrom);
+      setTo(newTo);
     }
-  }, [first, matches, second]);
+  }, [first, from, second, to]);
 
   return (
     <>
       <S.MatchWrapper>
-        {matches.map(({ selected, id, from, to }) => (
-          <S.MatchLine key={id}>
-            <S.MatchBlock
-              selected={selected || first === id}
-              onClick={() => handleBlockClick(id, true)}
-            >
-              {from}
-            </S.MatchBlock>
-            {selected && <S.ArrowConnectImg />}
-            <S.MatchBlock
-              selected={selected || second === id}
-              onClick={() => handleBlockClick(id, false)}
-            >
-              {to}
-            </S.MatchBlock>
-          </S.MatchLine>
-        ))}
+        <S.MatchColumn>
+          {from.map(({ ref, selected, id, value }, index) => (
+            <S.MatchBlockWrapper height={getMaxBlockHeight(index)} key={id}>
+              <S.MatchBlock
+                ref={ref}
+                selected={selected || first === id}
+                onClick={() => handleBlockClick(id, true)}
+              >
+                {value}
+              </S.MatchBlock>
+            </S.MatchBlockWrapper>
+          ))}
+        </S.MatchColumn>
+        <S.MatchMiddle>
+          {from.map(
+            ({ selected }, index) =>
+              selected && (
+                <S.ArrowConnectWrapper height={getMaxBlockHeight(index)}>
+                  <S.ArrowConnectImg />
+                </S.ArrowConnectWrapper>
+              ),
+          )}
+        </S.MatchMiddle>
+        <S.MatchColumn>
+          {to.map(({ ref, selected, id, value }, index) => (
+            <S.MatchBlockWrapper height={getMaxBlockHeight(index)} key={id}>
+              <S.MatchBlock
+                ref={ref}
+                selected={selected || second === id}
+                onClick={() => handleBlockClick(id, false)}
+              >
+                {value}
+              </S.MatchBlock>
+            </S.MatchBlockWrapper>
+          ))}
+        </S.MatchColumn>
       </S.MatchWrapper>
       <S.ButtonWrapper>
         <S.LessonButtonSend
@@ -114,7 +178,12 @@ const Answer = ({ blockId, revision, values }) => {
               action: RESPONSE_TYPE,
               blockId,
               revision,
-              data: { response: matches.map(({ from, to }) => ({ from, to })) },
+              data: {
+                response: from.map(({ value: fromValue }, index) => ({
+                  from: fromValue,
+                  to: to[index].value,
+                })),
+              },
             });
           }}
         >
