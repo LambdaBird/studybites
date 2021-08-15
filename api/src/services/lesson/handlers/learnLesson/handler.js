@@ -1,5 +1,4 @@
 import { BadRequestError } from '../../../../validation/errors';
-import { blockConstants } from '../../../../config';
 
 import { getCorrectness } from './correctnessCalculation';
 
@@ -98,9 +97,7 @@ export async function learnLessonHandler({
 }) {
   const {
     config: {
-      globals: {
-        blockConstants,
-      },
+      globals: { blockConstants },
       lessonService: { lessonServiceErrors: errors },
     },
     models: { Result, LessonBlockStructure, Block },
