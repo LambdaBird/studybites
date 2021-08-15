@@ -15,15 +15,14 @@ import Quiz from './Quiz';
 import Quote from './Quote';
 import Start from './Start';
 import Table from './Table';
-import Warning from './Warning';
 import {
-  BlockElementProps,
   BlockContentType,
   BlockIdType,
   BLOCKS_TYPE,
   ClosedQuestionBlockAnswerType,
   QuizBlockAnswerType,
 } from './types';
+import Warning from './Warning';
 
 const BlockElement = ({ element }) => {
   switch (element.content.type) {
