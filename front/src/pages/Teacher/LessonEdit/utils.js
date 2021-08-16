@@ -81,7 +81,7 @@ export const prepareBlocksForApi = (blocks) =>
         case BLOCKS_TYPE.QUIZ:
           answer.results = block?.data?.answers?.map((x) => x.correct);
           break;
-        case BLOCKS_TYPE.CLOSED_QUESTION:    
+        case BLOCKS_TYPE.CLOSED_QUESTION:
           answer.explanation = block?.data?.explanation;
           answer.results = block?.data?.answers;
           break;
@@ -110,17 +110,21 @@ export const prepareBlocksForApi = (blocks) =>
 export const getConfig = (t) => ({
   holder: 'editorjs',
   tools: {
+    next: Next,
     image: {
       class: Image,
       inlineToolbar: true,
     },
-    next: Next,
+    embed: {
+      class: Embed,
+      inlineToolbar: true,
+    },
     quiz: {
       class: Quiz,
       inlineToolbar: true,
     },
-    embed: {
-      class: Embed,
+    closedQuestion: {
+      class: ClosedQuestion,
       inlineToolbar: true,
     },
     warning: {
@@ -153,10 +157,6 @@ export const getConfig = (t) => ({
 
     table: {
       class: Table,
-      inlineToolbar: true,
-    },
-    closedQuestion: {
-      class: ClosedQuestion,
       inlineToolbar: true,
     },
     code: CodeTool,
