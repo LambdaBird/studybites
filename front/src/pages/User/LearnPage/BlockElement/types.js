@@ -27,11 +27,21 @@ export const BlockContentType = PropTypes.shape({
 export const BlockIdType = PropTypes.string.isRequired;
 export const RevisionType = PropTypes.string.isRequired;
 export const QuestionType = PropTypes.string.isRequired;
+export const TextType = PropTypes.string.isRequired;
 
 export const ParagraphContentType = PropTypes.shape({
   data: PropTypes.shape({
     text: PropTypes.string,
   }),
+});
+
+export const FillTheGapBlockDataType = PropTypes.shape({
+  answers: PropTypes.arrayOf(PropTypes.string),
+  text: PropTypes.string.isRequired,
+});
+
+export const FillTheGapBlockAnswerType = PropTypes.shape({
+  results: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
 });
 
 export const ClosedQuestionBlockDataType = PropTypes.shape({

@@ -36,9 +36,14 @@ export default {
     answer_result: {
       correct: 'Правильно !',
       wrong: 'Неправильно. Правильный ответ:',
+      partially_wrong: 'Частично правильно. Правильный ответ:',
     },
     errors: {
       not_found: 'Урок не найден',
+    },
+    input_answer: 'Впишите ответ...',
+    input_fill_gap: {
+      placeholder: 'пример',
     },
     by: 'От',
     blocks: 'блоков',
