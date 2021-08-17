@@ -17,6 +17,7 @@ export const BLOCKS_TYPE = {
   NEXT: 'next',
   START: 'start',
   CLOSED_QUESTION: 'closedQuestion',
+  FILL_THE_GAP: 'fillTheGap',
 };
 
 export const BlockContentType = PropTypes.shape({
