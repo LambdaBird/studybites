@@ -65,10 +65,6 @@ export default class Image {
   }
 
   render() {
-    if (this.data === null) {
-      return null;
-    }
-
     const container = document.createElement('div');
     this.container = container;
     container.classList.add(this.CSS.container);
@@ -78,6 +74,7 @@ export default class Image {
       name: 'url',
       placeholder: 'Input image url',
       classList: [this.CSS.input, this.CSS.urlInput],
+      readOnly: this.readOnly,
     });
     inputUrl.addEventListener('input', this.inputUrlChange.bind(this));
     inputUrl.addEventListener('click', () => {
@@ -98,7 +95,9 @@ export default class Image {
     const inputCaption = document.createElement('div');
     inputCaption.classList.add(this.CSS.input);
     inputCaption.classList.add(this.CSS.caption);
-    inputCaption.contentEditable = 'true';
+    if (!this.readOnly) {
+      inputCaption.contentEditable = 'true';
+    }
     inputCaption.setAttribute('placeholder', 'Input image caption');
 
     this.elements.caption = inputCaption;
@@ -173,7 +172,7 @@ export default class Image {
 
   save() {
     if (!this.elements.url?.value || this.error) {
-      return null;
+      return undefined;
     }
     return {
       ...this.data,

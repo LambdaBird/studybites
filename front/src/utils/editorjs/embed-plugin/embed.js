@@ -87,6 +87,7 @@ export default class Embed {
       name: 'url',
       placeholder: 'Input video url',
       classList: [this.CSS.input, this.CSS.urlInput],
+      readOnly: this.readOnly,
     });
     inputUrl.addEventListener('input', this.inputUrlChange.bind(this));
 
@@ -97,7 +98,9 @@ export default class Embed {
     const inputCaption = document.createElement('div');
     inputCaption.classList.add(this.CSS.input);
     inputCaption.classList.add(this.CSS.caption);
-    inputCaption.contentEditable = 'true';
+    if (!this.readOnly) {
+      inputCaption.contentEditable = 'true';
+    }
     inputCaption.setAttribute('placeholder', 'Input video caption');
     this.elements.caption = inputCaption;
     this.inputCaption = inputCaption;
@@ -136,7 +139,7 @@ export default class Embed {
 
   save() {
     if (!this.elements.url?.value || !this.isValid) {
-      return null;
+      return undefined;
     }
     return {
       ...this.data,

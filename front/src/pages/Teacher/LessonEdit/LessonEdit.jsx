@@ -1,5 +1,4 @@
 import { Button, Col, Input, message, Modal, Row, Typography } from 'antd';
-import DragDrop from 'editorjs-drag-drop';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
@@ -15,7 +14,6 @@ import {
   putLesson,
 } from '@sb-ui/utils/api/v1/teacher';
 import EditorJs from '@sb-ui/utils/editorjs/EditorJsContainer';
-import Undo from '@sb-ui/utils/editorjs/undo-plugin';
 import {
   LESSONS_EDIT,
   LESSONS_PREVIEW,
@@ -123,18 +121,6 @@ const LessonEdit = () => {
   }, [lessonData?.lesson]);
 
   useEffect(() => {
-    if (editorJSRef.current?.configuration && !isEditorDisabled) {
-      undoPluginRef.current = new Undo({
-        editor: editorJSRef.current,
-        redoButton: 'redo-button',
-        undoButton: 'undo-button',
-      });
-      // eslint-disable-next-line no-new
-      new DragDrop(editorJSRef.current);
-    }
-  }, [isEditorDisabled]);
-
-  useEffect(() => {
     if (lessonData) {
       setDataBlocks({
         blocks: prepareEditorData(lessonData?.lesson?.blocks),
@@ -232,6 +218,23 @@ const LessonEdit = () => {
     history.push(TEACHER_LESSONS_STUDENTS.replace(':id', lessonId));
   };
 
+  const isRenderEditor = useMemo(
+    () => !isEditLesson || dataBlocks,
+    [dataBlocks, isEditLesson],
+  );
+
+  const editorJsProps = useMemo(
+    () => ({
+      ref: undoPluginRef,
+      tools: getConfig(t).tools,
+      data: dataBlocks,
+      instanceRef: (instance) => {
+        editorJSRef.current = instance;
+      },
+    }),
+    [dataBlocks, t],
+  );
+
   return (
     <>
       <Header>
@@ -282,15 +285,11 @@ const LessonEdit = () => {
                   </S.StatusText>
                 </S.CardBadge>
               </S.BadgeWrapper>
-              {(!isEditLesson || dataBlocks) && (
-                <EditorJs
-                  tools={getConfig(t).tools}
-                  data={dataBlocks}
-                  readOnly={isEditorDisabled}
-                  instanceRef={(instance) => {
-                    editorJSRef.current = instance;
-                  }}
-                />
+              {isRenderEditor && isEditorDisabled === true && (
+                <EditorJs {...editorJsProps} readOnly />
+              )}
+              {isRenderEditor && isEditorDisabled === false && (
+                <EditorJs {...editorJsProps} readOnly={false} />
               )}
             </S.EditorWrapper>
           </S.LeftCol>

@@ -1,9 +1,19 @@
+import DragDrop from 'editorjs-drag-drop';
 import PropTypes from 'prop-types';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import EditorJS from '@editorjs/editorjs';
 import Paragraph from '@editorjs/paragraph';
 
-const EditorJsContainer = (props) => {
+import Undo from '@sb-ui/utils/editorjs/undo-plugin';
+
+const EditorJsContainer = forwardRef((props, ref) => {
   const mounted = useRef();
 
   const { children } = props;
@@ -36,14 +46,21 @@ const EditorJsContainer = (props) => {
     [instance, props],
   );
 
-  const handleReady = useCallback(() => {
-    const { onReady } = props;
-    if (!onReady) {
-      return;
-    }
-
-    onReady(instance);
-  }, [instance, props]);
+  const handleReady = useCallback(
+    (editor) => {
+      if (editor) {
+        // eslint-disable-next-line no-param-reassign
+        ref.current = new Undo({
+          editor,
+          redoButton: 'redo-button',
+          undoButton: 'undo-button',
+        });
+        // eslint-disable-next-line no-new
+        new DragDrop(editor);
+      }
+    },
+    [ref],
+  );
 
   const initEditor = useCallback(() => {
     const {
@@ -53,7 +70,6 @@ const EditorJsContainer = (props) => {
       enableReInitialize,
       tools,
       onChange,
-      onReady,
       ...anotherProps
     } = props;
 
@@ -70,9 +86,7 @@ const EditorJsContainer = (props) => {
       tools: extendTools,
       holder,
 
-      ...(onReady && {
-        onReady: handleReady,
-      }),
+      onReady: () => handleReady(newInstance),
 
       ...(onChange && {
         onChange: handleChange,
@@ -100,17 +114,6 @@ const EditorJsContainer = (props) => {
       }
     })();
   };
-
-  useEffect(() => {
-    instance?.isReady.then(() => {
-      if (props.readOnly) {
-        instance.readOnly.toggle(true);
-      } else {
-        instance.readOnly.toggle(false);
-      }
-    });
-    // eslint-disable-next-line react/destructuring-assignment
-  }, [instance, props.readOnly]);
 
   const changeData = useCallback((data) => {
     if (instance) {
@@ -146,7 +149,7 @@ const EditorJsContainer = (props) => {
   }, [changeData, props]);
 
   return children || <div id={holder} />;
-};
+});
 
 EditorJsContainer.propTypes = {
   children: PropTypes.node,
