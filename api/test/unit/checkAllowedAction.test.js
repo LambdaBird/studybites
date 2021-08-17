@@ -1,4 +1,5 @@
 import { checkAllowed } from '../../src/services/lesson/handlers/learnLesson';
+import { blockConstants } from '../../src/config';
 
 describe('checkAllowed returns allowed action based on the last Results record', () => {
   const Result = jest.fn();
@@ -20,6 +21,7 @@ describe('checkAllowed returns allowed action based on the last Results record',
         lessonId: 1,
         Result,
         LessonBlockStructure,
+        blockConstants,
       });
 
       expect(allowed).toHaveProperty('action');
@@ -45,6 +47,7 @@ describe('checkAllowed returns allowed action based on the last Results record',
         lessonId: 1,
         Result,
         LessonBlockStructure,
+        blockConstants,
       });
 
       expect(allowed).toBe(null);
@@ -77,6 +80,7 @@ describe('checkAllowed returns allowed action based on the last Results record',
           lessonId: 1,
           Result,
           LessonBlockStructure,
+          blockConstants,
         });
 
         expect(allowed).toHaveProperty('action');
@@ -102,6 +106,7 @@ describe('checkAllowed returns allowed action based on the last Results record',
           lessonId: 1,
           Result,
           LessonBlockStructure,
+          blockConstants,
         });
 
         expect(allowed).toHaveProperty('action');
@@ -135,6 +140,7 @@ describe('checkAllowed returns allowed action based on the last Results record',
         lessonId: 1,
         Result,
         LessonBlockStructure,
+        blockConstants,
       });
 
       expect(allowed).toHaveProperty('action');

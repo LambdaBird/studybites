@@ -1,3 +1,5 @@
+import { htmlToReact } from '@sb-ui/pages/User/LearnPage/utils';
+
 import { ListContentType } from '../types';
 
 const List = ({ content }) => {
@@ -7,7 +9,7 @@ const List = ({ content }) => {
       <ol>
         {items.map((item, index) => (
           // eslint-disable-next-line react/no-array-index-key
-          <li key={index}>{item}</li>
+          <li key={index}>{htmlToReact(item)}</li>
         ))}
       </ol>
     );
@@ -18,7 +20,7 @@ const List = ({ content }) => {
       <ul>
         {items.map((item, index) => (
           // eslint-disable-next-line react/no-array-index-key
-          <li key={index}>{item}</li>
+          <li key={index}>{htmlToReact(item)}</li>
         ))}
       </ul>
     );

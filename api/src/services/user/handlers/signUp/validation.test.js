@@ -15,7 +15,11 @@ describe('Test signIn validation', () => {
   test.each([
     [
       'email',
-      { password: 'password', firstName: 'firstName', lastName: 'lastName' },
+      {
+        password: 'password123#E',
+        firstName: 'firstName',
+        lastName: 'lastName',
+      },
     ],
     [
       'password',
@@ -23,11 +27,19 @@ describe('Test signIn validation', () => {
     ],
     [
       'firstName',
-      { email: 'email@test.io', password: 'password', lastName: 'lastName' },
+      {
+        email: 'email@test.io',
+        password: 'password123#E',
+        lastName: 'lastName',
+      },
     ],
     [
       'lastName',
-      { email: 'email@test.io', password: 'password', firstName: 'firstName' },
+      {
+        email: 'email@test.io',
+        password: 'password123#E',
+        firstName: 'firstName',
+      },
     ],
   ])('should return an error if no %s', (expected, payload) => {
     const valid = validate(payload);

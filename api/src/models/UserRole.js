@@ -55,8 +55,8 @@ class UserRole extends BaseModel {
         relation: objection.Model.HasManyRelation,
         modelClass: path.join(__dirname, 'Result'),
         join: {
-          from: 'users_roles.userId',
-          to: 'results.userId',
+          from: 'users_roles.user_id',
+          to: 'results.user_id',
         },
       },
     };
@@ -82,7 +82,7 @@ class UserRole extends BaseModel {
       .range(start, end)
       .withGraphFetched('results')
       .modifyGraph('results', (builder) => {
-        builder.where('lessonId', lessonId);
+        builder.where('lesson_id', lessonId);
       });
   }
 

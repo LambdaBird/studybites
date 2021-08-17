@@ -1,13 +1,10 @@
-import HtmlToReact from 'html-to-react';
+import { htmlToReact } from '@sb-ui/pages/User/LearnPage/utils';
 
 import { ParagraphContentType } from '../types';
 
-const HtmlToReactParser = HtmlToReact.Parser;
-
 const Paragraph = ({ content }) => {
   const htmlInput = content?.data?.text;
-  const htmlToReactParser = new HtmlToReactParser();
-  return <p>{htmlToReactParser.parse(htmlInput)}</p>;
+  return <p>{htmlToReact(htmlInput)}</p>;
 };
 
 Paragraph.propTypes = {
