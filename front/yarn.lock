@@ -1398,10 +1398,9 @@
   resolved "https://registry.yarnpkg.com/@ctrl/tinycolor/-/tinycolor-3.4.0.tgz#c3c5ae543c897caa9c2a68630bed355be5f9990f"
   integrity sha512-JZButFdZ1+/xAfpguQHoabIXkcqRRKpMrWKBkpEZZyxfY9C1DpADFB8PEqGSTeFr135SaTRfKqGKx5xSCLI7ZQ==
 
-"@editorjs/code@^2.7.0":
+"@editorjs/code@git://github.com/LambdaBird/code.git#feature/improve_i18n_support":
   version "2.7.0"
-  resolved "https://registry.yarnpkg.com/@editorjs/code/-/code-2.7.0.tgz#0a21de9ac15e4533605ffcc80969513ab2142ac5"
-  integrity sha512-gXtTce915fHp3H9i4IqhTxEDbbkT2heFfYiW/bhFHsCmZDpyGzfZxi94kmrEqDmbxXjV49ZZ6GZbR26If13KJw==
+  resolved "git://github.com/LambdaBird/code.git#81ba215f4bed3c2135ec6818709f9ce319a69e3f"
 
 "@editorjs/delimiter@^1.2.0":
   version "1.2.0"
@@ -1422,10 +1421,9 @@
   resolved "https://registry.yarnpkg.com/@editorjs/embed/-/embed-2.4.6.tgz#7db8bc84d90c947d1fff037c96973d587168692e"
   integrity sha512-c/1TzBBMrU1hpPHRWXlVanBhgyoPZvE2A3qHt23rMVxJVvzu13Zozj0ZOO8pL1XGcubf+Yvalxu7AURn7X3jPw==
 
-"@editorjs/header@^2.6.1":
+"@editorjs/header@git://github.com/LambdaBird/header.git#feature/improve_i18n_support":
   version "2.6.1"
-  resolved "https://registry.yarnpkg.com/@editorjs/header/-/header-2.6.1.tgz#454a46e4dbb32ae3aa1db4d22b0ddf2cc36c3134"
-  integrity sha512-EsnyVFv5uThpU9tbQ/dUPFCQoa/sBFy2n+9tN3wOXJGx7sjea4fdcacJ2UYhO+7pCgZ+aSgmMOyGLYHUFbchvA==
+  resolved "git://github.com/LambdaBird/header.git#c32366d7270d38b4d9cb9d1d6346879e0445de8a"
 
 "@editorjs/list@^1.6.2":
   version "1.6.2"
@@ -1442,15 +1440,13 @@
   resolved "https://registry.yarnpkg.com/@editorjs/paragraph/-/paragraph-2.8.0.tgz#11cc381fcafaf8b9160517ce65d59eee93fc4af9"
   integrity sha512-z6w5ZR0ru3p/IjxJW/tb7OcSnVttkZukQMIsnBMX1FIKc1BNdr7NwM1YoCyTl4OnC90YfL0xgES6/20/W267pw==
 
-"@editorjs/quote@^2.4.0":
+"@editorjs/quote@git://github.com/LambdaBird/quote.git#feature/improve_i18n_support":
   version "2.4.0"
-  resolved "https://registry.yarnpkg.com/@editorjs/quote/-/quote-2.4.0.tgz#effe570f9055831a230e0417fafa6091a6169a47"
-  integrity sha512-IWOBWjL2ngPP63GcIAltyD9kc7OVZFma4kS+T5JRHvKKDspYsnmrxsbRmCPc+coZQzqPxXHkiOZuNMdmGX/Y3w==
+  resolved "git://github.com/LambdaBird/quote.git#3d299095dcf9aa301b91240d0512259a1563306e"
 
-"@editorjs/warning@^1.2.0":
+"@editorjs/warning@git://github.com/LambdaBird/warning.git#feature/improve_i18n_support":
   version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@editorjs/warning/-/warning-1.2.0.tgz#245a2286a2e996512ac345275b64fa638e319f5e"
-  integrity sha512-CMIsB+b8Ti8/duOzYfKn1upFEEMxj821RDyBbDx8iku4DRql524VnAErvd00sYnFpKKbXNOF4oQnBo/7bDIzPQ==
+  resolved "git://github.com/LambdaBird/warning.git#a46114675fa507f132594e005a388c093b0d307e"
 
 "@emotion/cache@^10.0.27":
   version "10.0.29"
@@ -6537,9 +6533,9 @@ editorjs-drag-drop@^0.1.3:
   resolved "https://registry.yarnpkg.com/editorjs-drag-drop/-/editorjs-drag-drop-0.1.3.tgz#a9a581af5b20a0d736fc25b44cc9a34e46c2e483"
   integrity sha512-63XhyWWkEaWVHgMDAqPsE63YC2thGah8fFjxgoKZ9Tm+6huiS+VTjP2Kpx1FzOR9/xdE/56XYfiC65PI7rUvkA==
 
-"editorjs-table@git://github.com/LambdaBird/editorjs-table.git":
+"editorjs-table@git://github.com/LambdaBird/editorjs-table.git#feature/i18n_support":
   version "1.4.10"
-  resolved "git://github.com/LambdaBird/editorjs-table.git#d74a187358df375e0f6ad5fa0fa25eeeafdef6c8"
+  resolved "git://github.com/LambdaBird/editorjs-table.git#32f9c8e139cbe90fe09bc33bacd0a411f121e816"
 
 ee-first@1.1.1:
   version "1.1.1"

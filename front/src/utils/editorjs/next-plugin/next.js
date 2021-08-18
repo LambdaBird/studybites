@@ -2,7 +2,8 @@
 import './next.css';
 
 export default class Next {
-  constructor({ readOnly }) {
+  constructor({ api, readOnly }) {
+    this.api = api;
     this.readOnly = readOnly;
   }
 
@@ -32,7 +33,7 @@ export default class Next {
     wrapper.classList.add('next-tool__wrapper');
     const button = document.createElement('button');
     button.classList.add(this.CSS.baseClass);
-    button.innerText = 'Next';
+    button.innerText = this.api.i18n.t('button');
 
     wrapper.appendChild(button);
     return wrapper;
