@@ -11,11 +11,14 @@ export const StyledTitle = styled(Title).attrs({
 
 export const Container = styled.div`
   height: 100%;
+  width: 100%;
+  max-width: 448px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   margin: 0 auto 16rem;
+  padding: 1rem;
 `;
 
 export const SignInFormContainer = styled.div`
