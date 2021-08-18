@@ -42,6 +42,7 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
   const { data: user } = useQuery(USER_BASE_QUERY, getUser);
   const headerRef = useRef(null);
   const [scroll, setScroll] = useState(null);
+  const [visible, setVisible] = useState(false);
 
   const handleSignOut = () => {
     clearJWT();
@@ -52,6 +53,7 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
   const { mutate: changeLanguage } = useMutation(patchLanguage);
 
   const handleMenuClick = ({ key }) => {
+    setVisible(false);
     if (key === 'signOut') {
       handleSignOut();
     } else if (key.startsWith('language')) {
@@ -88,11 +90,19 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
       <Menu.Item key="profile">{t('header.profile')}</Menu.Item>
       {user?.roles?.includes(Roles.TEACHER) && getTeacherMenu()}
 
-      <SubMenu title={t('header.language')}>
-        {LANGUAGES_LIST.map(({ key, value }) => (
-          <Menu.Item key={`language-${key}`}>{value}</Menu.Item>
-        ))}
-      </SubMenu>
+      {isMobile ? (
+        <Menu.ItemGroup title={t('header.language')}>
+          {LANGUAGES_LIST.map(({ key, value }) => (
+            <Menu.Item key={`language-${key}`}>{value}</Menu.Item>
+          ))}
+        </Menu.ItemGroup>
+      ) : (
+        <SubMenu title={t('header.language')}>
+          {LANGUAGES_LIST.map(({ key, value }) => (
+            <Menu.Item key={`language-${key}`}>{value}</Menu.Item>
+          ))}
+        </SubMenu>
+      )}
 
       <Menu.Divider />
       <Menu.Item key="signOut">{t('header.sign_out')}</Menu.Item>
@@ -146,35 +156,41 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
   }, [i18n, user]);
 
   return (
-    <S.Container
-      className={className}
-      hideOnScroll={hideOnScroll}
-      scroll={scroll}
-      ref={headerRef}
-    >
-      <S.RowMain
+    <>
+      <S.Container
+        className={className}
         hideOnScroll={hideOnScroll}
-        align="middle"
-        justify="space-between"
+        scroll={scroll}
+        ref={headerRef}
       >
-        <Col>
-          <Link to={HOME}>
-            <S.Logo src={logo} alt="Logo" />
-          </Link>
-        </Col>
-        {children}
-        <Col>
-          <Dropdown overlay={menu} trigger={['click']}>
-            <S.Profile data-testid="profile">
-              <S.StyledAvatar>{firstNameLetter}</S.StyledAvatar>
-              {!isMobile && <S.StyledName>{fullName}</S.StyledName>}
-              <DownOutlined />
-            </S.Profile>
-          </Dropdown>
-        </Col>
-      </S.RowMain>
-      {bottom}
-    </S.Container>
+        <S.RowMain hideOnScroll={hideOnScroll}>
+          <Col>
+            <Link to={HOME}>
+              <S.Logo src={logo} alt="Logo" />
+            </Link>
+          </Col>
+          {children}
+          <Col>
+            <Dropdown
+              overlayClassName={isMobile ? 'header-dropdown-mobile' : ''}
+              overlay={menu}
+              onVisibleChange={(newVisible) => {
+                setVisible(newVisible);
+              }}
+              trigger={['click']}
+            >
+              <S.Profile data-testid="profile">
+                <S.StyledAvatar>{firstNameLetter}</S.StyledAvatar>
+                {!isMobile && <S.StyledName>{fullName}</S.StyledName>}
+                {isMobile ? <S.MenuOutlined /> : <DownOutlined />}
+              </S.Profile>
+            </Dropdown>
+          </Col>
+        </S.RowMain>
+        {bottom}
+      </S.Container>
+      {isMobile && visible && <S.DropdownBackground />}
+    </>
   );
 };
 
