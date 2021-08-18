@@ -64,5 +64,23 @@ export default {
       delete_col: 'Delete column',
       delete_row: 'Delete row',
     },
+    closed_question: {
+      title: 'Closed Question',
+      question: 'Input question',
+      answer: 'Input answer',
+      explanation: 'Input answer explanation (optional)',
+      tag_title: 'Answers: ',
+      example: 'Example',
+      none: 'none',
+    },
+    warning: {
+      title: 'Warning',
+      placeholder: 'Title',
+      message: 'Message',
+    },
+    code: {
+      title: 'Code',
+      placeholder: 'Enter a code',
+    },
   },
 };

@@ -119,6 +119,9 @@ const EditorJsContainer = (props) => {
             Quote: t('tools.quote.title'),
             Delimiter: t('tools.delimiter.title'),
             Table: t('tools.table.title'),
+            'Closed Question': t('tools.closed_question.title'),
+            Warning: t('tools.warning.title'),
+            Code: t('tools.code.title'),
           },
           tools: {
             stub: {
@@ -154,6 +157,21 @@ const EditorJsContainer = (props) => {
               row_after: t('tools.table.row_after'),
               delete_col: t('tools.table.delete_col'),
               delete_row: t('tools.table.delete_row'),
+            },
+            closedQuestion: {
+              question: t('tools.closed_question.question'),
+              answer: t('tools.closed_question.answer'),
+              explanation: t('tools.closed_question.explanation'),
+              tag_title: t('tools.closed_question.tag_title'),
+              example: t('tools.closed_question.example'),
+              none: t('tools.closed_question.none'),
+            },
+            warning: {
+              placeholder: t('tools.warning.placeholder'),
+              message: t('tools.warning.message'),
+            },
+            code: {
+              placeholder: t('tools.code.placeholder'),
             },
           },
         },
@@ -217,12 +235,14 @@ const EditorJsContainer = (props) => {
       const { enableReInitialize, data } = props;
 
       if (!enableReInitialize || !data) {
-        return () => {};
+        return () => {
+        };
       }
 
       changeData(data);
     }
-    return () => {};
+    return () => {
+    };
   }, [changeData, props]);
 
   return children || <div id={holder} />;

@@ -17,7 +17,7 @@ export default class ClosedQuestion {
     this.readOnly = readOnly;
     this.container = null;
     this.elements = [];
-    this.answers = ['Example'];
+    this.answers = [this.api.i18n.t('example')];
   }
 
   static get toolbox() {
@@ -51,7 +51,7 @@ export default class ClosedQuestion {
     questionInput.classList.add(this.CSS.input);
     questionInput.classList.add(this.CSS.questionInput);
     questionInput.contentEditable = 'true';
-    questionInput.setAttribute('placeholder', 'Input your question');
+    questionInput.setAttribute('placeholder', this.api.i18n.t('question'));
     this.elements.questionInput = questionInput;
 
     if (this.data.question) {
@@ -61,14 +61,14 @@ export default class ClosedQuestion {
     const answerInput = Utils.createInput({
       wrapper: this,
       name: 'answerInput',
-      placeholder: 'Input your answer',
+      placeholder: this.api.i18n.t('answer'),
       classList: [this.CSS.input, this.CSS.answerInput],
     });
 
     const explanationInput = Utils.createInput({
       wrapper: this,
       name: 'explanationInput',
-      placeholder: 'Input your answer explanation (optional)',
+      placeholder: this.api.i18n.t('explanation'),
       classList: [this.CSS.input, this.CSS.answerInput],
     });
     if (this.data.explanation) {
@@ -78,7 +78,7 @@ export default class ClosedQuestion {
     const answerWrapper = document.createElement('div');
     this.elements.answerWrapper = answerWrapper;
     answerWrapper.classList.add(this.CSS.answerWrapper);
-    answerWrapper.innerText = 'Answers: ';
+    answerWrapper.innerText = this.api.i18n.t('tag_title');
 
     if (this.data.answers) {
       this.answers = this.data.answers;
@@ -127,7 +127,7 @@ export default class ClosedQuestion {
     });
     if (answerTags.length === 0) {
       const noneText = document.createElement('span');
-      noneText.innerText = 'none';
+      noneText.innerText = this.api.i18n.t('none');
       this.elements.answerWrapper.appendChild(noneText);
     }
   }
@@ -191,9 +191,9 @@ export default class ClosedQuestion {
     }
 
     const removeSpan =
-      createElementFromHTML(`<span class="${this.CSS.answerRemove}">
-       <svg viewBox="64 64 896 896" focusable="false" data-icon="close" width="10px" height="10px" fill="currentColor" aria-hidden="true">
-        <path d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"></path>
+      createElementFromHTML(`<span class='${this.CSS.answerRemove}'>
+       <svg viewBox='64 64 896 896' focusable='false' data-icon='close' width='10px' height='10px' fill='currentColor' aria-hidden='true'>
+        <path d='M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z'></path>
        </svg>
       </span>
     `);

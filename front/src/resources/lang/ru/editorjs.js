@@ -64,5 +64,23 @@ export default {
       delete_col: 'Удалить столбец',
       delete_row: 'Удалить ряд',
     },
+    closed_question: {
+      title: 'Закрытый вопрос',
+      question: 'Введите вопрос',
+      answer: 'Введите ответ',
+      explanation: 'Введите объяснение (опционально)',
+      tag_title: 'Ответы: ',
+      example: 'Пример',
+      none: 'пусто',
+    },
+    warning: {
+      title: 'Предупреждение',
+      placeholder: 'Заголовок',
+      message: 'Сообщение',
+    },
+    code: {
+      title: 'Код',
+      placeholder: 'Введите код',
+    },
   },
 };
