@@ -61,6 +61,10 @@ export default {
     toolbar: {
       toolbox_add: 'Add',
     },
+    tools: {
+      warning_title: 'Title',
+      warning_message: 'Message',
+    },
   },
   lesson_edit: {
     buttons: {
@@ -84,6 +88,43 @@ export default {
     publish_modal: {
       title: 'The lesson is now available to all students',
       ok: 'Ok',
+    },
+  },
+  lesson_students: {
+    title: 'Lesson students ({{studentsCount}})',
+    table: {
+      full_name: 'Full Name',
+      email: 'Email',
+      last_activity: 'Last activity',
+      not_started: 'Not started',
+      action: 'Action',
+      edit: 'Edit',
+      no_data: 'No data',
+      action_remove: 'Remove',
+    },
+    search: {
+      placeholder: 'Email or name',
+    },
+    buttons: {
+      invite_student: 'Invite student',
+    },
+  },
+  students: {
+    title: 'Lessons students ({{studentsCount}})',
+    table: {
+      full_name: 'Full Name',
+      email: 'Email',
+      last_activity: 'Last activity',
+      not_started: 'Not started',
+      no_data: 'No data',
+      lessons: 'Lessons',
+      no_lessons: 'No lessons',
+    },
+    search: {
+      placeholder: 'Email or name',
+    },
+    buttons: {
+      invite_student: 'Invite student',
     },
   },
 };

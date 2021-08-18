@@ -61,6 +61,10 @@ export default {
     toolbar: {
       toolbox_add: 'Добавить',
     },
+    tools: {
+      warning_title: 'Заголовок',
+      warning_message: 'Сообщение',
+    },
   },
   lesson_edit: {
     buttons: {
@@ -84,6 +88,43 @@ export default {
     publish_modal: {
       title: 'Теперь урок доступен всем студентам',
       ok: 'Ок',
+    },
+  },
+  lesson_students: {
+    title: 'Студенты урока ({{studentsCount}})',
+    table: {
+      full_name: 'Полное имя',
+      email: 'Email',
+      last_activity: 'Последняя активность',
+      not_started: 'Еще не начато',
+      action: 'Действие',
+      edit: 'Изменить',
+      no_data: 'Нет данных',
+      action_remove: 'Удалить',
+    },
+    search: {
+      placeholder: 'Email или имя',
+    },
+    buttons: {
+      invite_student: 'Пригласить студента',
+    },
+  },
+  students: {
+    title: 'Студенты уроков ({{studentsCount}})',
+    table: {
+      full_name: 'Полное имя',
+      email: 'Email',
+      last_activity: 'Последняя активность',
+      not_started: 'Еще не начато',
+      no_data: 'Нет данных',
+      lessons: 'Уроки',
+      no_lessons: 'Нет уроков',
+    },
+    search: {
+      placeholder: 'Email или имя',
+    },
+    buttons: {
+      invite_student: 'Пригласить студента',
     },
   },
 };

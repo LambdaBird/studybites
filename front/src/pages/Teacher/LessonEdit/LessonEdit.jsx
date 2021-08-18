@@ -1,6 +1,6 @@
 import { Button, Col, Input, message, Modal, Row, Typography } from 'antd';
 import DragDrop from 'editorjs-drag-drop';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
 import { useHistory, useParams } from 'react-router-dom';
@@ -16,7 +16,11 @@ import {
 } from '@sb-ui/utils/api/v1/teacher';
 import EditorJs from '@sb-ui/utils/editorjs/EditorJsContainer';
 import Undo from '@sb-ui/utils/editorjs/undo-plugin';
-import { LESSONS_EDIT, LESSONS_PREVIEW } from '@sb-ui/utils/paths';
+import {
+  LESSONS_EDIT,
+  LESSONS_PREVIEW,
+  TEACHER_LESSONS_STUDENTS,
+} from '@sb-ui/utils/paths';
 import { TEACHER_LESSON_BASE_KEY } from '@sb-ui/utils/queries';
 
 import { getConfig, prepareBlocksForApi, prepareEditorData } from './utils';
@@ -28,7 +32,9 @@ const MAX_NAME_LENGTH = 255;
 
 const LessonEdit = () => {
   const { id: lessonId } = useParams();
-  const isEditLesson = !!lessonId;
+
+  const isEditLesson = useMemo(() => lessonId !== 'new', []);
+  const isCurrentlyEditing = lessonId !== 'new';
 
   const { t } = useTranslation('teacher');
   const history = useHistory();
@@ -168,7 +174,7 @@ const LessonEdit = () => {
         return;
       }
 
-      if (isEditLesson) updateLessonMutation.mutate(params);
+      if (isCurrentlyEditing) updateLessonMutation.mutate(params);
       else createLessonMutation.mutate(params);
     } catch (e) {
       // eslint-disable-next-line no-console
@@ -220,6 +226,10 @@ const LessonEdit = () => {
 
   const handlePreview = () => {
     history.push(LESSONS_PREVIEW.replace(':id', lessonId));
+  };
+
+  const handleStudentsClick = () => {
+    history.push(TEACHER_LESSONS_STUDENTS.replace(':id', lessonId));
   };
 
   return (
@@ -323,7 +333,7 @@ const LessonEdit = () => {
                 </S.TextLink>
               </Col>
               <S.StudentsCol span={24}>
-                <S.TextLink underline>
+                <S.TextLink onClick={handleStudentsClick} underline>
                   {t('lesson_edit.links.students')}
                 </S.TextLink>
                 <S.StudentsCount

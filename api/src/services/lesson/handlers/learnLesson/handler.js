@@ -1,10 +1,13 @@
 import { BadRequestError } from '../../../../validation/errors';
 
+import { getCorrectness } from './correctnessCalculation';
+
 export async function checkAllowed({
   userId,
   lessonId,
   Result,
   LessonBlockStructure,
+  blockConstants,
 }) {
   /**
    * variable for the last block of a chunk
@@ -54,7 +57,7 @@ export async function checkAllowed({
   /**
    * if block is undefined -> finish
    */
-  if (!block) {
+  if (!block || blockConstants.STATIC_BLOCKS.includes(block.type)) {
     return {
       allowed: { action: 'finish' },
     };
@@ -62,28 +65,29 @@ export async function checkAllowed({
   /**
    * find allowed action based on blocks type
    */
-  switch (block.type) {
-    case 'next':
-      return {
-        allowed: {
-          action: 'next',
-          blockId: block.blockId,
-          revision: block.revision,
-        },
-      };
-    case 'quiz':
-      return {
-        allowed: {
-          action: 'response',
-          blockId: block.blockId,
-          revision: block.revision,
-        },
-      };
-    default:
-      return {
-        allowed: { action: 'finish' },
-      };
+  if (block.type === blockConstants.blocks.NEXT) {
+    return {
+      allowed: {
+        action: 'next',
+        blockId: block.blockId,
+        revision: block.revision,
+      },
+    };
   }
+
+  if (blockConstants.INTERACTIVE_BLOCKS.includes(block.type)) {
+    return {
+      allowed: {
+        action: 'response',
+        blockId: block.blockId,
+        revision: block.revision,
+      },
+    };
+  }
+
+  return {
+    allowed: null,
+  };
 }
 
 export async function learnLessonHandler({
@@ -93,7 +97,7 @@ export async function learnLessonHandler({
 }) {
   const {
     config: {
-      globals,
+      globals: { blockConstants },
       lessonService: { lessonServiceErrors: errors },
     },
     models: { Result, LessonBlockStructure, Block },
@@ -106,6 +110,7 @@ export async function learnLessonHandler({
     lessonId,
     Result,
     LessonBlockStructure,
+    blockConstants,
   });
   /**
    * allowed will be null if the lesson was finished already
@@ -119,21 +124,36 @@ export async function learnLessonHandler({
   if (action !== allowed.action) {
     throw new BadRequestError(errors.LESSON_ERR_FAIL_LEARN);
   }
-  if (globals.blockConstants.INTERACTIVE_ACTIONS.includes(action)) {
+  if (blockConstants.INTERACTIVE_ACTIONS.includes(action)) {
     if (blockId !== allowed.blockId || revision !== allowed.revision) {
       throw new BadRequestError(errors.LESSON_ERR_FAIL_LEARN);
     }
   }
+
+  let correctness;
+  if (action === 'response') {
+    correctness = await getCorrectness({
+      Block,
+      blockId,
+      revision,
+      userResponse: data.response,
+      blocks: blockConstants.blocks,
+      BadRequestError,
+      error: errors.LESSON_ERR_FAIL_LEARN,
+    });
+  }
+
   /**
    * write action to the results table
    */
-  await Result.query().insert({
-    user_id: userId,
-    lesson_id: lessonId,
+  await Result.insertOne({
+    userId,
+    lessonId,
     action,
-    block_id: blockId,
+    blockId,
     revision,
     data,
+    correctness,
   });
 
   const { count: total } = await LessonBlockStructure.countBlocks({

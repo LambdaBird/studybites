@@ -1,8 +1,7 @@
-/* eslint-disable */
-
 import {
   BlockContentType,
   BlockIdType,
+  BlockResponseDataType,
   QuizBlockAnswerType,
   RevisionType,
 } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
@@ -34,6 +33,7 @@ Quiz.propTypes = {
   revision: RevisionType,
   content: BlockContentType,
   answer: QuizBlockAnswerType,
+  data: BlockResponseDataType,
 };
 
 export default Quiz;

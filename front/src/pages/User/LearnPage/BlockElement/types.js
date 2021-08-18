@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 export const BLOCKS_TYPE = {
   PARAGRAPH: 'paragraph',
   QUIZ: 'quiz',
+  CODE: 'code',
   EMBED: 'embed',
   IMAGE: 'image',
   LIST: 'list',
@@ -12,8 +13,10 @@ export const BLOCKS_TYPE = {
   TABLE: 'table',
   FINISH: 'finish',
   FINISHED: 'finished',
+  WARNING: 'warning',
   NEXT: 'next',
   START: 'start',
+  CLOSED_QUESTION: 'closedQuestion',
 };
 
 export const BlockContentType = PropTypes.shape({
@@ -22,11 +25,21 @@ export const BlockContentType = PropTypes.shape({
 
 export const BlockIdType = PropTypes.string.isRequired;
 export const RevisionType = PropTypes.string.isRequired;
+export const QuestionType = PropTypes.string.isRequired;
 
 export const ParagraphContentType = PropTypes.shape({
   data: PropTypes.shape({
     text: PropTypes.string,
   }),
+});
+
+export const ClosedQuestionBlockDataType = PropTypes.shape({
+  answer: PropTypes.string.isRequired,
+  question: PropTypes.string.isRequired,
+});
+
+export const ClosedQuestionBlockAnswerType = PropTypes.shape({
+  results: PropTypes.arrayOf(PropTypes.string),
 });
 
 export const QuizBlockDataType = PropTypes.shape({
@@ -41,12 +54,32 @@ export const QuizBlockDataType = PropTypes.shape({
 export const QuizBlockAnswerType = PropTypes.shape({
   results: PropTypes.arrayOf(PropTypes.bool),
 });
+
+export const ClosedQuestionResponseDataType = PropTypes.shape({
+  response: PropTypes.string,
+});
+
+export const BlockResponseDataType = PropTypes.shape({
+  response: PropTypes.arrayOf(PropTypes.bool),
+});
+
 export const EmbedContentType = PropTypes.shape({
   data: PropTypes.shape({
     caption: PropTypes.string,
     embed: PropTypes.string,
     height: PropTypes.string,
   }),
+});
+
+export const WarningContentType = PropTypes.shape({
+  data: PropTypes.shape({
+    message: PropTypes.string,
+    title: PropTypes.string,
+  }),
+});
+
+export const CodeContentType = PropTypes.shape({
+  code: PropTypes.string,
 });
 
 export const ImageContentType = PropTypes.shape({
@@ -87,13 +120,5 @@ export const HeaderContentType = PropTypes.shape({
 export const NextPropType = {
   response: PropTypes.shape({
     isSolved: PropTypes.bool,
-  }),
-};
-
-export const BlockElementProps = {
-  element: PropTypes.shape({
-    content: BlockContentType,
-    blockId: BlockIdType,
-    answer: QuizBlockAnswerType,
   }),
 };
