@@ -32,6 +32,25 @@ export const resources = {
 };
 
 export const blockConstants = {
+  blocks: {
+    PARAGRAPH: 'paragraph',
+    IMAGE: 'image',
+    EMBED: 'embed',
+    HEADER: 'header',
+    LIST: 'list',
+    QUOTE: 'quote',
+    DELIMITER: 'delimiter',
+    MARKER: 'marker',
+    TABLE: 'table',
+
+    NEXT: 'next',
+    QUIZ: 'quiz',
+    CLOSED_QUESTION: 'closedQuestion',
+    MATCH: 'match',
+  },
+  get BLOCKS_LIST() {
+    return Object.values(this.blocks);
+  },
   actions: {
     START: 'start',
     FINISH: 'finish',
@@ -41,15 +60,18 @@ export const blockConstants = {
   get INTERACTIVE_ACTIONS() {
     return [this.actions.NEXT, this.actions.RESPONSE];
   },
-  blocks: {
-    PARAGRAPH: 'paragraph',
-    IMAGE: 'image',
-    NEXT: 'next',
-    QUIZ: 'quiz',
-    MATCH: 'match',
-  },
   get INTERACTIVE_BLOCKS() {
-    return [this.blocks.NEXT, this.blocks.QUIZ, this.blocks.MATCH];
+    return [
+      this.blocks.QUIZ,
+      this.blocks.NEXT,
+      this.blocks.CLOSED_QUESTION,
+      this.blocks.MATCH,
+    ];
+  },
+  get STATIC_BLOCKS() {
+    return this.BLOCKS_LIST.filter(
+      (name) => !this.INTERACTIVE_BLOCKS.includes(name),
+    );
   },
 };
 

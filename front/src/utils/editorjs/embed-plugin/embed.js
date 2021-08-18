@@ -94,19 +94,19 @@ export default class Embed {
     this.content = content;
     content.classList.add(this.CSS.content);
 
-    const inputCaption = Utils.createInput({
-      wrapper: this,
-      name: 'caption',
-      placeholder: 'Input video caption',
-      classList: [this.CSS.input],
-    });
+    const inputCaption = document.createElement('div');
+    inputCaption.classList.add(this.CSS.input);
+    inputCaption.classList.add(this.CSS.caption);
+    inputCaption.contentEditable = 'true';
+    inputCaption.setAttribute('placeholder', 'Input video caption');
+    this.elements.caption = inputCaption;
     this.inputCaption = inputCaption;
 
     inputCaption.style.display = 'none';
 
     if (this.data.inputUrl) {
       inputUrl.value = this.data.inputUrl ?? '';
-      inputCaption.value = this.data.caption ?? '';
+      inputCaption.innerHTML = this.data.caption ?? '';
       this.inputUrlChange();
     }
 
@@ -136,12 +136,12 @@ export default class Embed {
 
   save() {
     if (!this.elements.url?.value || !this.isValid) {
-      return undefined;
+      return null;
     }
     return {
       ...this.data,
       inputUrl: this.elements.url?.value,
-      caption: this.elements.caption?.value,
+      caption: this.elements.caption?.innerHTML,
     };
   }
 

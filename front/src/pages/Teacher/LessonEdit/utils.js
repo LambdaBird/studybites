@@ -1,10 +1,12 @@
 import Table from 'editorjs-table';
 import hash from 'object-hash';
+import CodeTool from '@editorjs/code';
 import Delimiter from '@editorjs/delimiter';
 import HeaderTool from '@editorjs/header';
 import List from '@editorjs/list';
 import Marker from '@editorjs/marker';
 import Quote from '@editorjs/quote';
+import Warning from '@editorjs/warning';
 
 import { BLOCKS_TYPE } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
 import ClosedQuestion from '@sb-ui/utils/editorjs/closed-question-plugin';
@@ -19,51 +21,68 @@ const MAX_BODY_LENGTH = 4_000_000;
 
 export const prepareEditorData = (blocks) =>
   blocks?.map(({ content, answer, type }) => {
-    if (type === BLOCKS_TYPE.QUIZ) {
-      return {
-        ...content,
-        data: {
-          ...content?.data,
-          answers: content?.data?.answers?.map(({ value }, i) => ({
-            value,
-            correct: answer?.results[i],
-          })),
-        },
-      };
+    switch (type) {
+      case BLOCKS_TYPE.QUIZ:
+        return {
+          ...content,
+          data: {
+            ...content?.data,
+            answers: content?.data?.answers?.map(({ value }, i) => ({
+              value,
+              correct: answer?.results[i],
+            })),
+          },
+        };
+      case BLOCKS_TYPE.CLOSED_QUESTION:
+        return {
+          ...content,
+          data: {
+            ...content?.data,
+            answers: answer?.results,
+            explanation: answer?.explanation,
+          },
+        };
+      case BLOCKS_TYPE.MATCH:
+        return {
+          ...content,
+          data: {
+            values: answer?.results,
+          },
+        };
+      default:
+        return content;
     }
-    if (type === BLOCKS_TYPE.MATCH) {
-      return {
-        ...content,
-        data: {
-          values: answer?.results,
-        },
-      };
-    }
-    return content;
   });
 
 export const prepareBlocksDataForApi = (data, type) => {
   if (!data) {
     return null;
   }
-  if (type === BLOCKS_TYPE.QUIZ) {
-    return {
-      ...data,
-      answers: data?.answers.map(({ value }) => ({ value })),
-    };
+  const { answers, explanation, ...sendData } = data || {};
+  switch (type) {
+    case BLOCKS_TYPE.QUIZ:
+      return {
+        ...sendData,
+        answers: answers.map(({ value }) => ({ value })),
+      };
+    case BLOCKS_TYPE.CLOSED_QUESTION:
+      return {
+        ...sendData,
+      };
+    case BLOCKS_TYPE.MATCH:
+      // eslint-disable-next-line no-case-declarations
+      const toValues = data.values.map((value) => value.to);
+      shuffleArray(toValues);
+      return {
+        ...data,
+        values: data?.values.map((value, index) => ({
+          ...value,
+          to: toValues[index],
+        })),
+      };
+    default:
+      return data;
   }
-  if (type === BLOCKS_TYPE.MATCH) {
-    const toValues = data.values.map((value) => value.to);
-    shuffleArray(toValues);
-    return {
-      ...data,
-      values: data?.values.map((value, index) => ({
-        ...value,
-        to: toValues[index],
-      })),
-    };
-  }
-  return data;
 };
 
 const SKIP_BLOCKS = [
@@ -78,12 +97,22 @@ export const prepareBlocksForApi = (blocks) =>
     .map((block) => {
       const { id, type, data } = block;
       const answer = {};
-      if (type === BLOCKS_TYPE.QUIZ) {
-        answer.results = block?.data?.answers?.map((x) => x.correct);
+
+      switch (type) {
+        case BLOCKS_TYPE.QUIZ:
+          answer.results = block?.data?.answers?.map((x) => x.correct);
+          break;
+        case BLOCKS_TYPE.CLOSED_QUESTION:
+          answer.explanation = block?.data?.explanation;
+          answer.results = block?.data?.answers;
+          break;
+        case BLOCKS_TYPE.MATCH:
+          answer.results = block?.data?.values;
+          break;
+        default:
+          break;
       }
-      if (type === BLOCKS_TYPE.MATCH) {
-        answer.results = block?.data?.values;
-      }
+
       return {
         type,
         revision: hash(block),
@@ -105,10 +134,31 @@ export const prepareBlocksForApi = (blocks) =>
 export const getConfig = (t) => ({
   holder: 'editorjs',
   tools: {
-    image: Image,
     next: Next,
-    quiz: Quiz,
-    embed: Embed,
+    image: {
+      class: Image,
+      inlineToolbar: true,
+    },
+    embed: {
+      class: Embed,
+      inlineToolbar: true,
+    },
+    quiz: {
+      class: Quiz,
+      inlineToolbar: true,
+    },
+    closedQuestion: {
+      class: ClosedQuestion,
+      inlineToolbar: true,
+    },
+    warning: {
+      class: Warning,
+      inlineToolbar: true,
+      config: {
+        titlePlaceholder: t('editor_js.tools.warning_title'),
+        messagePlaceholder: t('editor_js.tools.warning_message'),
+      },
+    },
     match: {
       class: Match,
       inlineToolbar: true,
@@ -120,16 +170,24 @@ export const getConfig = (t) => ({
         levels: [1, 2, 3, 4, 5],
         defaultLevel: 2,
       },
+      inlineToolbar: true,
     },
     list: {
       class: List,
       inlineToolbar: true,
     },
-    quote: Quote,
+    quote: {
+      class: Quote,
+      inlineToolbar: true,
+    },
     delimiter: Delimiter,
     marker: Marker,
-    table: Table,
-    closedQuestion: ClosedQuestion,
+
+    table: {
+      class: Table,
+      inlineToolbar: true,
+    },
+    code: CodeTool,
   },
   i18n: {
     messages: {

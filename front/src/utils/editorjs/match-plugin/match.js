@@ -62,8 +62,10 @@ export default class Match {
         );
       });
     } else {
-      const blockLine = this.createBlockLine({});
-      inputsWrapper.appendChild(blockLine);
+      const firstBlockLine = this.createBlockLine({ number: 1 });
+      const secondBlockLine = this.createBlockLine({ number: 2 });
+      inputsWrapper.appendChild(firstBlockLine);
+      inputsWrapper.appendChild(secondBlockLine);
     }
 
     container.appendChild(hint);

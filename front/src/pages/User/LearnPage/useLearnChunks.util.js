@@ -5,17 +5,21 @@ export const applyResultsToInteractiveBlock = (
   interactiveBlock,
   userAnswer,
 ) => {
-  if (interactiveBlock.type === BLOCKS_TYPE.QUIZ) {
-    // eslint-disable-next-line no-param-reassign
-    interactiveBlock.content.data.answers =
-      interactiveBlock.content.data.answers.map((x, i) => ({
-        ...x,
-        correct: userAnswer?.response[i],
-      }));
-  }
-  if (interactiveBlock.type === BLOCKS_TYPE.MATCH) {
-    // eslint-disable-next-line no-param-reassign
-    interactiveBlock.content.data.answer = userAnswer?.response;
+  /* eslint-disable no-param-reassign */
+  switch (interactiveBlock.type){
+    case BLOCKS_TYPE.QUIZ:
+      interactiveBlock.content.data.answers =
+        interactiveBlock.content.data.answers.map((x, i) => ({
+          ...x,
+          correct: userAnswer?.response[i],
+        }));
+      break;
+    case BLOCKS_TYPE.CLOSED_QUESTION:
+    case BLOCKS_TYPE.MATCH:
+      interactiveBlock.content.data.answer = userAnswer?.response;
+      break;
+    default:
+      break;
   }
 };
 

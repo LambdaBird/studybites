@@ -12,6 +12,8 @@ const variables = {
   'body-background-color': '#f5f5f5',
   'avatar-first-color': '#ffd8bf',
   'avatar-second-color': '#fa541c',
+  'button-send-background': '#f0f0f0',
+  'button-send-color': '#1890ff',
 };
 
 module.exports = variables;
