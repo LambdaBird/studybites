@@ -2,7 +2,7 @@ export default {
   no_account: 'Don’t have an account? Sign up!',
   forgot_password: 'Forgot password?',
   button: 'Sign in',
-  title: 'Sign in to your account',
+  title: 'Sign in',
   email: {
     placeholder: 'Email',
     error: 'Please enter email',
