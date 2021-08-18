@@ -60,7 +60,9 @@ export default class FillTheGap {
 
     this.input = document.createElement('div');
     this.input.classList.add(this.CSS.input);
-    this.input.contentEditable = 'true';
+    if (!this.readOnly) {
+      this.input.contentEditable = 'true';
+    }
 
     if (this.data.text) {
       this.data.answers.forEach((answer) => {
