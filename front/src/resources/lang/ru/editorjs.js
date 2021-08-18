@@ -3,6 +3,9 @@ export default {
     toolbox: {
       add: 'Добавить',
     },
+    converter: {
+      convert_to: 'Конвертировать в',
+    },
   },
   block_tunes: {
     toggler: {
@@ -81,6 +84,18 @@ export default {
     code: {
       title: 'Код',
       placeholder: 'Введите код',
+    },
+    marker: {
+      title: 'Маркер',
+    },
+    bold: {
+      title: 'Жирный',
+    },
+    italic: {
+      title: 'Курсив',
+    },
+    link: {
+      title: 'Ссылка',
     },
   },
 };

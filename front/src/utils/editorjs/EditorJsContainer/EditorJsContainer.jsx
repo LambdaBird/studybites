@@ -90,6 +90,12 @@ const EditorJsContainer = (props) => {
                 Add: t('toolbar.toolbox.add'),
               },
             },
+            inlineToolbar: {
+              converter: {
+                'Convert to': t('toolbar.converter.convert_to'),
+              },
+            }
+            ,
             blockTunes: {
               toggler: {
                 'Click to tune': t('block_tunes.toggler.tune'),
@@ -122,6 +128,10 @@ const EditorJsContainer = (props) => {
             'Closed Question': t('tools.closed_question.title'),
             Warning: t('tools.warning.title'),
             Code: t('tools.code.title'),
+            Marker: t('tools.marker.title'),
+            Bold: t('tools.bold.title'),
+            Italic: t('tools.italic.title'),
+            Link: t('tools.link.title'),
           },
           tools: {
             stub: {
