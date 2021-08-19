@@ -189,20 +189,5 @@ export const getConfig = (t) => ({
     },
     code: CodeTool,
   },
-  i18n: {
-    messages: {
-      ui: {
-        toolbar: {
-          toolbox: {
-            Add: t('editor_js.toolbar.toolbox_add'),
-          },
-        },
-      },
-      toolNames: {
-        Text: t('editor_js.tool_names.text'),
-        Next: t('editor_js.tool_names.next'),
-      },
-    },
-  },
   plugins: [],
 });

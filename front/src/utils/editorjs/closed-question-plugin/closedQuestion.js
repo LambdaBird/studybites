@@ -11,7 +11,7 @@ export default class ClosedQuestion {
     this.readOnly = readOnly;
     this.container = null;
     this.elements = [];
-    this.answers = ['Example'];
+    this.answers = [this.api.i18n.t('example')];
   }
 
   static get toolbox() {
@@ -45,7 +45,7 @@ export default class ClosedQuestion {
     questionInput.classList.add(this.CSS.input);
     questionInput.classList.add(this.CSS.questionInput);
     questionInput.contentEditable = 'true';
-    questionInput.setAttribute('placeholder', 'Input your question');
+    questionInput.setAttribute('placeholder', this.api.i18n.t('question'));
     this.elements.questionInput = questionInput;
 
     if (this.data.question) {
@@ -55,14 +55,14 @@ export default class ClosedQuestion {
     const answerInput = Utils.createInput({
       wrapper: this,
       name: 'answerInput',
-      placeholder: 'Input your answer',
+      placeholder: this.api.i18n.t('answer'),
       classList: [this.CSS.input, this.CSS.answerInput],
     });
 
     const explanationInput = Utils.createInput({
       wrapper: this,
       name: 'explanationInput',
-      placeholder: 'Input your answer explanation (optional)',
+      placeholder: this.api.i18n.t('explanation'),
       classList: [this.CSS.input, this.CSS.answerInput],
     });
     if (this.data.explanation) {
@@ -72,7 +72,7 @@ export default class ClosedQuestion {
     const answerWrapper = document.createElement('div');
     this.elements.answerWrapper = answerWrapper;
     answerWrapper.classList.add(this.CSS.answerWrapper);
-    answerWrapper.innerText = 'Answers: ';
+    answerWrapper.innerText = this.api.i18n.t('tag_title');
 
     if (this.data.answers) {
       this.answers = this.data.answers;
@@ -121,7 +121,7 @@ export default class ClosedQuestion {
     });
     if (answerTags.length === 0) {
       const noneText = document.createElement('span');
-      noneText.innerText = 'none';
+      noneText.innerText = this.api.i18n.t('none');
       this.elements.answerWrapper.appendChild(noneText);
     }
   }
