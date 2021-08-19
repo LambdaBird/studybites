@@ -1,6 +1,15 @@
-export const CORRECT_ALL = 'all';
-export const CORRECT_PARTIAL = 'partial';
-export const CORRECT_NONE = 'none';
+import { CORRECT_ALL, CORRECT_NONE, CORRECT_PARTIAL } from './constants';
+
+const getCorrect = (result) => {
+  if (result.every((x) => x.correct)) {
+    return CORRECT_ALL;
+  }
+  if (result.every((x) => !x.correct)) {
+    return CORRECT_NONE;
+  }
+  return CORRECT_PARTIAL;
+};
+
 export const verifyAnswers = (results, answers) => {
   const result = answers.map((answer, index) => {
     if (
@@ -19,15 +28,8 @@ export const verifyAnswers = (results, answers) => {
     };
   });
 
-  let correct = CORRECT_PARTIAL;
-  if (result.every((x) => x.correct)) {
-    correct = CORRECT_ALL;
-  } else if (result.every((x) => !x.correct)) {
-    correct = CORRECT_NONE;
-  }
-
   return {
-    correct,
+    correct: getCorrect(result),
     result,
   };
 };
