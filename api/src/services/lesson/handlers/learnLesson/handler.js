@@ -93,7 +93,7 @@ export async function checkAllowed({
 export async function learnLessonHandler({
   user: { id: userId },
   params: { lessonId },
-  body: { action, blockId, revision, data },
+  body: { action, blockId, revision, reply },
 }) {
   const {
     config: {
@@ -136,7 +136,7 @@ export async function learnLessonHandler({
       Block,
       blockId,
       revision,
-      userResponse: data.response,
+      userResponse: reply.response,
       blocks: blockConstants.blocks,
       BadRequestError,
       error: errors.LESSON_ERR_FAIL_LEARN,
@@ -152,7 +152,7 @@ export async function learnLessonHandler({
     action,
     blockId,
     revision,
-    data,
+    data: reply,
     correctness,
   });
 
@@ -181,7 +181,7 @@ export async function learnLessonHandler({
       .select('answer')
       .first()
       .where({ block_id: blockId, revision });
-    return { total, blocks: chunk, isFinal, userAnswer: data, answer };
+    return { total, blocks: chunk, isFinal, reply, answer };
   }
 
   return { total, blocks: chunk, isFinal };

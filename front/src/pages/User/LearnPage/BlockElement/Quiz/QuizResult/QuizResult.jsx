@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 
 import ColumnDisabledCheckbox from '@sb-ui/components/atoms/ColumnDisabledCheckbox';
 import {
+  BlockResponseDataType,
   QuizBlockAnswerType,
   QuizBlockDataType,
 } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
@@ -12,8 +13,15 @@ import AnswersResult from './AnswerResult';
 import { verifyAnswers } from './utils';
 import * as S from './QuizResult.styled';
 
-const QuizResult = ({ data, correctAnswer }) => {
-  const { question, answers } = data;
+const QuizResult = ({ answer, data, reply }) => {
+  const newData = {
+    question: data.question,
+    answers: data.answers.map((x, i) => ({
+      ...x,
+      correct: reply.response[i],
+    })),
+  };
+  const { question, answers } = newData;
 
   const options = answers?.map(({ value, correct }, i) => ({
     label: htmlToReact(value),
@@ -21,7 +29,7 @@ const QuizResult = ({ data, correctAnswer }) => {
     correct,
   }));
 
-  const { correct, result } = verifyAnswers(answers, correctAnswer?.results);
+  const { correct, result } = verifyAnswers(answers, answer?.results);
 
   const defaultValueAnswers = useMemo(
     () =>
@@ -48,7 +56,8 @@ const QuizResult = ({ data, correctAnswer }) => {
 
 QuizResult.propTypes = {
   data: QuizBlockDataType,
-  correctAnswer: QuizBlockAnswerType,
+  answer: QuizBlockAnswerType,
+  reply: BlockResponseDataType,
 };
 
 export default QuizResult;
