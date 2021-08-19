@@ -1,5 +1,5 @@
 import { Alert, Form, Input } from 'antd';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 
@@ -18,6 +18,8 @@ const SignUpForm = () => {
   const { password, passwordValidator } = usePasswordInput();
 
   const [auth, error, setError, loading] = useAuthentication(postSignUp);
+
+  const [message, setMessage] = useState('');
 
   const handleSubmit = async (formData) => {
     await auth(formData);
@@ -65,32 +67,39 @@ const SignUpForm = () => {
   };
 
   return (
-    <Form layout="vertical" size="large" onFinish={handleSubmit}>
+    <Form layout='vertical' size='large' onFinish={handleSubmit}>
       {error && (
         <Form.Item>
           <Alert
             onClose={() => setError(null)}
             message={error}
-            type="error"
+            type='error'
             showIcon
             closable
           />
         </Form.Item>
       )}
 
-      <Form.Item name="firstName" rules={formRules.firstName}>
+      <Form.Item name='firstName' rules={formRules.firstName}>
         <Input placeholder={t('first_name.placeholder')} />
       </Form.Item>
 
-      <Form.Item name="lastName" rules={formRules.lastName}>
+      <Form.Item name='lastName' rules={formRules.lastName}>
         <Input placeholder={t('last_name.placeholder')} />
       </Form.Item>
 
-      <Form.Item name="email" rules={formRules.email}>
+      <Form.Item name='email' rules={formRules.email} help={<div>{message}</div>}>
         <Input placeholder={t('email.placeholder')} />
       </Form.Item>
+      <Form.Item shouldUpdate noStyle>
+        {
+          ({ getFieldError }) => {
+            setMessage(getFieldError('email')[0]);
+          }
+        }
+      </Form.Item>
 
-      <Form.Item name="password" rules={formRules.password}>
+      <Form.Item name='password' rules={formRules.password}>
         <div>
           <Input.Password placeholder={t('password.placeholder')} />
           <PasswordStrengthIndicator value={password} />
