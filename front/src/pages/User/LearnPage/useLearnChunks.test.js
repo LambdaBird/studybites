@@ -9,7 +9,6 @@ import {
   createParagraphBlock,
   createQuizBlock,
   createQuizResultBlock,
-  createQuizResultNoDataBlock,
   createStartBlock,
 } from '@sb-ui/pages/User/LearnPage/useLearnChunks.util';
 
@@ -236,7 +235,7 @@ describe('Test useLearnChunks', () => {
           answer: {
             results: [true, true],
           },
-          userAnswer: {
+          reply: {
             response: [true, true],
           },
           blocks: [
@@ -256,7 +255,7 @@ describe('Test useLearnChunks', () => {
         [
           createStartBlock(true),
           createParagraphBlock(1, 'Paragraph1'),
-          createQuizResultNoDataBlock(2, [true, true], [true, true]),
+          createQuizResultBlock(2, [true, true], [true, true]),
         ],
         [createParagraphBlock(3, 'Paragraph2'), createNextBlock(4, false)],
       ]);
