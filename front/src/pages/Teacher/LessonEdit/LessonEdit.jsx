@@ -333,7 +333,7 @@ const LessonEdit = () => {
                 </S.TextLink>
               </Col>
               <S.StudentsCol span={24}>
-                <S.TextLink onClick={handleStudentsClick} underline>
+                <S.TextLink onClick={handleStudentsClick} underline disabled={!isCurrentlyEditing}>
                   {t('lesson_edit.links.students')}
                 </S.TextLink>
                 <S.StudentsCount
