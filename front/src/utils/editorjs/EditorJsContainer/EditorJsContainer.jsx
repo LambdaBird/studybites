@@ -131,6 +131,7 @@ const EditorJsContainer = (props) => {
             Bold: t('tools.bold.title'),
             Italic: t('tools.italic.title'),
             Link: t('tools.link.title'),
+            Constructor: t('tools.constructor.title'),
           },
           tools: {
             stub: {
@@ -181,6 +182,10 @@ const EditorJsContainer = (props) => {
             },
             code: {
               placeholder: t('tools.code.placeholder'),
+            },
+            constructor: {
+              question: t('tools.constructor.question'),
+              answer: t('tools.constructor.answer'),
             },
           },
         },

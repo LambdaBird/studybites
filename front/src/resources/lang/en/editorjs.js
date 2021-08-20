@@ -97,5 +97,10 @@ export default {
     link: {
       title: 'Link',
     },
+    constructor: {
+      title: 'Constructor',
+      question: 'Question',
+      answer: 'Words',
+    },
   },
 };
