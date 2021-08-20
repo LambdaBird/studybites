@@ -60,15 +60,14 @@ const EnrollModalMobile = () => {
     getEnrolledLesson,
     { keepPreviousData: true },
   );
-  
+
   const { mutate: mutatePostEnroll } = useMutation(postEnroll);
-  
+
   const { name, author, description } = responseData?.lesson || {
-    author:
-      {
-        firstName: '',
-        lastName: '',
-      },
+    author: {
+      firstName: '',
+      lastName: '',
+    },
     name: '',
     description: '',
   };

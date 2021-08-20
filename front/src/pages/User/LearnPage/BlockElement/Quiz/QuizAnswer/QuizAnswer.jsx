@@ -43,7 +43,7 @@ const QuizAnswer = ({ blockId, revision, question, answers }) => {
                 action: RESPONSE_TYPE,
                 blockId,
                 revision,
-                data: { response: sendAnswers },
+                reply: { response: sendAnswers },
               });
             }}
           >

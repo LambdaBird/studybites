@@ -76,7 +76,7 @@ export default class Image {
     const inputUrl = Utils.createInput({
       wrapper: this,
       name: 'url',
-      placeholder: 'Input image url',
+      placeholder: this.api.i18n.t('input'),
       classList: [this.CSS.input, this.CSS.urlInput],
     });
     inputUrl.addEventListener('input', this.inputUrlChange.bind(this));
@@ -99,7 +99,7 @@ export default class Image {
     inputCaption.classList.add(this.CSS.input);
     inputCaption.classList.add(this.CSS.caption);
     inputCaption.contentEditable = 'true';
-    inputCaption.setAttribute('placeholder', 'Input image caption');
+    inputCaption.setAttribute('placeholder', this.api.i18n.t('caption'));
 
     this.elements.caption = inputCaption;
     this.inputCaption = inputCaption;

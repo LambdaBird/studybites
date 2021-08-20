@@ -2,6 +2,7 @@ import {
   BlockContentType,
   BlockIdType,
   ClosedQuestionBlockAnswerType,
+  ClosedQuestionBlockReplyType,
   ClosedQuestionResponseDataType,
   RevisionType,
 } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
@@ -9,18 +10,11 @@ import {
 import Answer from './Answer';
 import Result from './Result';
 
-const ClosedQuestion = ({ blockId, revision, answer, content, data }) => {
+const ClosedQuestion = ({ blockId, revision, answer, content, reply }) => {
   if (!answer) {
     return <Answer blockId={blockId} revision={revision} {...content?.data} />;
   }
-  const newData = {
-    question: content.data.question,
-    answer: content.data.answer,
-  };
-  if (data?.response !== undefined) {
-    newData.answer = data.response;
-  }
-  return <Result correctAnswer={answer} data={newData} />;
+  return <Result answer={answer} data={content.data} reply={reply} />;
 };
 
 ClosedQuestion.propTypes = {
@@ -29,6 +23,7 @@ ClosedQuestion.propTypes = {
   content: BlockContentType,
   answer: ClosedQuestionBlockAnswerType,
   data: ClosedQuestionResponseDataType,
+  reply: ClosedQuestionBlockReplyType,
 };
 
 export default ClosedQuestion;
