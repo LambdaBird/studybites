@@ -88,8 +88,9 @@ const EditorJsContainer = (props) => {
   }, [handleChange, handleReady, holder, props]);
 
   const destroyEditor = () => {
-    const codexTooltips = Array.from(document.querySelectorAll('.ct--bottom'));
-    codexTooltips.forEach((codexTooltip) => codexTooltip.remove());
+    Array.from(document.querySelectorAll('.ct--bottom')).forEach(
+      (codexTooltip) => codexTooltip.remove(),
+    );
 
     if (!instance) {
       return;
