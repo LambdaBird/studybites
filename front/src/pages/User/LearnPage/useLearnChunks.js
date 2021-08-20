@@ -4,11 +4,7 @@ import { useMutation, useQuery } from 'react-query';
 import apiConfig from '@sb-ui/utils/api/config';
 import { LESSON_BASE_QUERY } from '@sb-ui/utils/queries';
 
-import {
-  applyResultsToInteractiveBlock,
-  createFinishBlock,
-  createStartBlock,
-} from './useLearnChunks.util';
+import { createFinishBlock, createStartBlock } from './useLearnChunks.util';
 
 export const convertBlocksToChunks = (blocks) => {
   let lastIndex = 0;
@@ -66,7 +62,7 @@ export const handleAnswer = ({ data: serverData, prevChunks }) => {
     isFinished,
     answer,
     blocks,
-    userAnswer,
+    reply,
     isFinal: isFinalBlock,
   } = serverData;
 
@@ -75,7 +71,7 @@ export const handleAnswer = ({ data: serverData, prevChunks }) => {
   const interactiveBlock = lastChunk[lastChunk.length - 1];
   if (Object.keys(answer || {}).length > 0) {
     interactiveBlock.answer = answer;
-    applyResultsToInteractiveBlock(interactiveBlock, userAnswer);
+    interactiveBlock.reply = reply;
   }
 
   if (interactiveBlock) {
