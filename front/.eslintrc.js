@@ -16,6 +16,13 @@ module.exports = {
     'react/require-default-props': 'off',
     'simple-import-sort/imports': 'error',
     'simple-import-sort/exports': 'error',
+    'prettier/prettier': [
+      'error',
+      {
+        singleQuote: true,
+        trailingComma: 'all',
+      },
+    ],
   },
   overrides: [
     {
