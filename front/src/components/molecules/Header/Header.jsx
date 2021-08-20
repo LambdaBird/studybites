@@ -1,4 +1,4 @@
-import { Button, Col, Dropdown, Menu } from 'antd';
+import { Col, Dropdown, Menu } from 'antd';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
@@ -204,9 +204,9 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
       >
         <S.RowMain hideOnScroll={hideOnScroll}>
           <Col>
-            <Button type="link" onClick={handleHomeClick}>
+            <S.LogoLink onClick={handleHomeClick}>
               <S.Logo src={logo} alt="Logo" />
-            </Button>
+            </S.LogoLink>
           </Col>
           {children}
           <Col>

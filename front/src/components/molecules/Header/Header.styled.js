@@ -37,6 +37,9 @@ export const RowMain = styled(Row).attrs({
   justify: 'space-between',
 })`
   padding: 0 2rem;
+  @media (max-width: 767px) {
+    padding: 0 1rem;
+  }
   height: ${HEADER_HEIGHT}px;
 `;
 
@@ -84,4 +87,8 @@ export const MenuWrapper = styled.div`
   transition: transform 0.3s ease-in-out;
   transform: ${(props) =>
     props.visible ? `translateY(${HEADER_HEIGHT}px)` : 'translateY(-100%)'};
+`;
+
+export const LogoLink = styled.div`
+  cursor: pointer;
 `;
