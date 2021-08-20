@@ -236,7 +236,7 @@ const LessonEdit = () => {
     <>
       <Header>
         <S.HeaderButtons>
-          <Button disabled={!isEditLesson} onClick={handlePreview}>
+          <Button disabled={!isCurrentlyEditing} onClick={handlePreview}>
             {t('lesson_edit.buttons.preview')}
           </Button>
           {lessonData?.lesson.status === Statuses.PUBLIC ? (
