@@ -67,39 +67,41 @@ const SignUpForm = () => {
   };
 
   return (
-    <Form layout='vertical' size='large' onFinish={handleSubmit}>
+    <Form layout="vertical" size="large" onFinish={handleSubmit}>
       {error && (
         <Form.Item>
           <Alert
             onClose={() => setError(null)}
             message={error}
-            type='error'
+            type="error"
             showIcon
             closable
           />
         </Form.Item>
       )}
 
-      <Form.Item name='firstName' rules={formRules.firstName}>
+      <Form.Item name="firstName" rules={formRules.firstName}>
         <Input placeholder={t('first_name.placeholder')} />
       </Form.Item>
 
-      <Form.Item name='lastName' rules={formRules.lastName}>
+      <Form.Item name="lastName" rules={formRules.lastName}>
         <Input placeholder={t('last_name.placeholder')} />
       </Form.Item>
 
-      <Form.Item name='email' rules={formRules.email} help={<div>{message}</div>}>
+      <Form.Item
+        name="email"
+        rules={formRules.email}
+        help={<div>{message}</div>}
+      >
         <Input placeholder={t('email.placeholder')} />
       </Form.Item>
       <Form.Item shouldUpdate noStyle>
-        {
-          ({ getFieldError }) => {
-            setMessage(getFieldError('email')[0]);
-          }
-        }
+        {({ getFieldError }) => {
+          setMessage(getFieldError('email')[0]);
+        }}
       </Form.Item>
 
-      <Form.Item name='password' rules={formRules.password}>
+      <Form.Item name="password" rules={formRules.password}>
         <div>
           <Input.Password placeholder={t('password.placeholder')} />
           <PasswordStrengthIndicator value={password} />

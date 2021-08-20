@@ -46,38 +46,40 @@ const SignInForm = () => {
   };
 
   return (
-    <Form layout='vertical' size='large' onFinish={handleSubmit}>
+    <Form layout="vertical" size="large" onFinish={handleSubmit}>
       {error && (
         <Form.Item>
           <Alert
             onClose={() => setError(null)}
             message={error}
-            type='error'
+            type="error"
             showIcon
             closable
           />
         </Form.Item>
       )}
 
-      <Form.Item name='email' rules={formRules.email} help={<div>{message}</div>}>
+      <Form.Item
+        name="email"
+        rules={formRules.email}
+        help={<div>{message}</div>}
+      >
         <Input placeholder={t('email.placeholder')} />
       </Form.Item>
       <Form.Item shouldUpdate noStyle>
-        {
-          ({ getFieldError }) => {
-            setMessage(getFieldError('email')[0]);
-          }
-        }
+        {({ getFieldError }) => {
+          setMessage(getFieldError('email')[0]);
+        }}
       </Form.Item>
       <S.FormItemAlignEnd
-        name='password'
+        name="password"
         rules={formRules.password}
         extra={<S.LinkButton>{t('forgot_password')}</S.LinkButton>}
       >
         <Input.Password placeholder={t('password.placeholder')} />
       </S.FormItemAlignEnd>
 
-      <S.SubmitButton loading={loading} type='primary' htmlType='submit'>
+      <S.SubmitButton loading={loading} type="primary" htmlType="submit">
         {t('button')}
       </S.SubmitButton>
       <S.DivAlignCenter>

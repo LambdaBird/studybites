@@ -94,8 +94,7 @@ const EditorJsContainer = (props) => {
               converter: {
                 'Convert to': t('toolbar.converter.convert_to'),
               },
-            }
-            ,
+            },
             blockTunes: {
               toggler: {
                 'Click to tune': t('block_tunes.toggler.tune'),
@@ -245,14 +244,12 @@ const EditorJsContainer = (props) => {
       const { enableReInitialize, data } = props;
 
       if (!enableReInitialize || !data) {
-        return () => {
-        };
+        return () => {};
       }
 
       changeData(data);
     }
-    return () => {
-    };
+    return () => {};
   }, [changeData, props]);
 
   return children || <div id={holder} />;
