@@ -1,7 +1,12 @@
 const path = require('path');
 
 module.exports = {
-  extends: ['react-app', 'airbnb', 'plugin:jsx-a11y/recommended', 'prettier'],
+  extends: [
+    'react-app',
+    'airbnb',
+    'plugin:jsx-a11y/recommended',
+    'plugin:prettier/recommended',
+  ],
   plugins: ['react', 'jsx-a11y', 'simple-import-sort'],
   rules: {
     'import/prefer-default-export': 'off',
