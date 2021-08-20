@@ -1,5 +1,5 @@
-import { Col, Dropdown, Menu } from 'antd';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { Button, Col, Dropdown, Menu } from 'antd';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
 import { Link, useHistory, useLocation } from 'react-router-dom';
@@ -44,26 +44,29 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
   const [scroll, setScroll] = useState(null);
   const [visible, setVisible] = useState(false);
 
-  const handleSignOut = () => {
+  const handleSignOut = useCallback(() => {
     clearJWT();
     queryClient.resetQueries();
     history.push(SIGN_IN);
-  };
+  }, [history]);
 
   const { mutate: changeLanguage } = useMutation(patchLanguage);
 
-  const handleMenuClick = ({ key }) => {
-    setVisible(false);
-    if (key === 'signOut') {
-      handleSignOut();
-    } else if (key.startsWith('language')) {
-      const language = key.split('-')?.[1];
-      i18n.changeLanguage(language);
-      changeLanguage({ language });
-    }
-  };
+  const handleMenuClick = useCallback(
+    ({ key }) => {
+      setVisible(false);
+      if (key === 'signOut') {
+        handleSignOut();
+      } else if (key.startsWith('language')) {
+        const language = key.split('-')?.[1];
+        i18n.changeLanguage(language);
+        changeLanguage({ language });
+      }
+    },
+    [changeLanguage, handleSignOut, i18n],
+  );
 
-  const getTeacherMenu = () => {
+  const getTeacherMenu = useCallback(() => {
     if (location.pathname.includes(USER_HOME)) {
       return (
         <>
@@ -83,30 +86,33 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
         <Link to={USER_HOME}>{t('header.switch_student')}</Link>
       </Menu.Item>
     );
-  };
+  }, [location.pathname, t]);
 
-  const menu = (
-    <Menu onClick={handleMenuClick}>
-      <Menu.Item key="profile">{t('header.profile')}</Menu.Item>
-      {user?.roles?.includes(Roles.TEACHER) && getTeacherMenu()}
+  const menu = useMemo(
+    () => (
+      <S.Menu onClick={handleMenuClick}>
+        <Menu.Item key="profile">{t('header.profile')}</Menu.Item>
+        {user?.roles?.includes(Roles.TEACHER) && getTeacherMenu()}
 
-      {isMobile ? (
-        <Menu.ItemGroup title={t('header.language')}>
-          {LANGUAGES_LIST.map(({ key, value }) => (
-            <Menu.Item key={`language-${key}`}>{value}</Menu.Item>
-          ))}
-        </Menu.ItemGroup>
-      ) : (
-        <SubMenu title={t('header.language')}>
-          {LANGUAGES_LIST.map(({ key, value }) => (
-            <Menu.Item key={`language-${key}`}>{value}</Menu.Item>
-          ))}
-        </SubMenu>
-      )}
+        {isMobile ? (
+          <Menu.ItemGroup title={t('header.language')}>
+            {LANGUAGES_LIST.map(({ key, value }) => (
+              <Menu.Item key={`language-${key}`}>{value}</Menu.Item>
+            ))}
+          </Menu.ItemGroup>
+        ) : (
+          <SubMenu title={t('header.language')}>
+            {LANGUAGES_LIST.map(({ key, value }) => (
+              <Menu.Item key={`language-${key}`}>{value}</Menu.Item>
+            ))}
+          </SubMenu>
+        )}
 
-      <Menu.Divider />
-      <Menu.Item key="signOut">{t('header.sign_out')}</Menu.Item>
-    </Menu>
+        <Menu.Divider />
+        <Menu.Item key="signOut">{t('header.sign_out')}</Menu.Item>
+      </S.Menu>
+    ),
+    [getTeacherMenu, handleMenuClick, isMobile, t, user?.roles],
   );
 
   const isUsername = useMemo(
@@ -155,6 +161,38 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
     }
   }, [i18n, user]);
 
+  const handleHomeClick = useCallback(() => {
+    if (isMobile && visible === true) {
+      setVisible(false);
+    }
+    history.push(HOME);
+  }, [history, isMobile, visible]);
+
+  const handleHeaderClick = useCallback(() => {
+    if (isMobile && visible === true) {
+      setVisible(false);
+    }
+  }, [isMobile, visible]);
+
+  const handleMenuBackgroundClick = useCallback(() => {
+    setVisible(false);
+  }, []);
+
+  const handleMenuWrapperClick = useCallback(() => {
+    setVisible((prev) => !prev);
+  }, []);
+
+  const profileContent = useMemo(
+    () => (
+      <S.Profile data-testid="profile">
+        <S.StyledAvatar>{firstNameLetter}</S.StyledAvatar>
+        {!isMobile && <S.StyledName>{fullName}</S.StyledName>}
+        {isMobile ? <S.MenuOutlined /> : <DownOutlined />}
+      </S.Profile>
+    ),
+    [firstNameLetter, fullName, isMobile],
+  );
+
   return (
     <>
       <S.Container
@@ -162,34 +200,42 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
         hideOnScroll={hideOnScroll}
         scroll={scroll}
         ref={headerRef}
+        onClick={handleHeaderClick}
       >
         <S.RowMain hideOnScroll={hideOnScroll}>
           <Col>
-            <Link to={HOME}>
+            <Button type="link" onClick={handleHomeClick}>
               <S.Logo src={logo} alt="Logo" />
-            </Link>
+            </Button>
           </Col>
           {children}
           <Col>
-            <Dropdown
-              overlayClassName={isMobile ? 'header-dropdown-mobile' : ''}
-              overlay={menu}
-              onVisibleChange={(newVisible) => {
-                setVisible(newVisible);
-              }}
-              trigger={['click']}
-            >
-              <S.Profile data-testid="profile">
-                <S.StyledAvatar>{firstNameLetter}</S.StyledAvatar>
-                {!isMobile && <S.StyledName>{fullName}</S.StyledName>}
-                {isMobile ? <S.MenuOutlined /> : <DownOutlined />}
-              </S.Profile>
-            </Dropdown>
+            {isMobile ? (
+              // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
+              <div onClick={handleMenuWrapperClick}>{profileContent}</div>
+            ) : (
+              <Dropdown
+                overlay={menu}
+                onVisibleChange={(newVisible) => {
+                  setVisible(newVisible);
+                }}
+                trigger={['click']}
+              >
+                {profileContent}
+              </Dropdown>
+            )}
           </Col>
         </S.RowMain>
         {bottom}
       </S.Container>
-      {isMobile && visible && <S.DropdownBackground />}
+      {isMobile && (
+        <>
+          <S.MenuWrapper visible={visible}>{visible && menu}</S.MenuWrapper>
+          {visible && (
+            <S.DropdownBackground onClick={handleMenuBackgroundClick} />
+          )}
+        </>
+      )}
     </>
   );
 };
