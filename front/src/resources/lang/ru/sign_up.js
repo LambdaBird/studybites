@@ -1,6 +1,6 @@
 export default {
   have_account: 'Уже есть аккаунт? Ввойдите!',
-  title: 'Зарегистрируйтесь в своей учетной записи',
+  title: 'Регистрация',
   first_name: {
     placeholder: 'Имя',
     error: 'Введите свое имя',

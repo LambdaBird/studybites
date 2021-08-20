@@ -40,6 +40,7 @@ export default {
     errors: {
       not_found: 'Урок не найден',
     },
+    input_answer: 'Введите ответ...',
     by: 'От',
     blocks: 'блоков',
     start: 'Начать',
