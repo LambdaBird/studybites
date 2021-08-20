@@ -145,11 +145,11 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
 
   useEffect(() => {
     if (user?.language) {
-      const newLanguage = getStorageLanguage();
-      if (newLanguage) {
+      const storageLanguage = getStorageLanguage();
+      if (storageLanguage) {
         removeStorageLanguage();
-        i18n.changeLanguage(newLanguage);
-        changeLanguage({ language: newLanguage });
+        i18n.changeLanguage(storageLanguage);
+        changeLanguage({ language: storageLanguage });
       } else {
         i18n.changeLanguage(user?.language);
       }
