@@ -241,7 +241,7 @@ const LessonEdit = () => {
           </Button>
           {lessonData?.lesson.status === Statuses.PUBLIC ? (
             <S.PublishButton
-              type='primary'
+              type="primary"
               onClick={handleDraft}
               loading={isUpdateInProgress}
             >
@@ -249,7 +249,7 @@ const LessonEdit = () => {
             </S.PublishButton>
           ) : (
             <S.PublishButton
-              type='primary'
+              type="primary"
               onClick={handlePublish}
               loading={isUpdateInProgress}
             >
@@ -259,12 +259,12 @@ const LessonEdit = () => {
         </S.HeaderButtons>
       </Header>
       <S.Page>
-        <S.StyledRow align='top'>
+        <S.StyledRow align="top">
           <S.LeftCol sm={12} md={14} lg={16} xl={18}>
             <S.EditorWrapper>
               <S.InputTitle
                 ref={inputTitle}
-                type='text'
+                type="text"
                 placeholder={t('lesson_edit.title.placeholder')}
                 value={name}
                 readOnly={isEditorDisabled}
@@ -276,8 +276,8 @@ const LessonEdit = () => {
                   <S.StatusText>
                     {lessonData?.lesson.status
                       ? t(
-                        `lesson_dashboard.status.${lessonData?.lesson.status.toLocaleLowerCase()}`,
-                      )
+                          `lesson_dashboard.status.${lessonData?.lesson.status.toLocaleLowerCase()}`,
+                        )
                       : t('lesson_dashboard.status.draft')}
                   </S.StatusText>
                 </S.CardBadge>
@@ -301,26 +301,26 @@ const LessonEdit = () => {
                   onClick={handleSave}
                   disabled={isEditorDisabled}
                   icon={<SaveOutlined />}
-                  type='primary'
-                  size='large'
+                  type="primary"
+                  size="large"
                 >
                   {t('lesson_edit.buttons.save')}
                 </S.SaveButton>
               </Col>
               <Col span={12}>
                 <S.MoveButton
-                  id='undo-button'
+                  id="undo-button"
                   icon={<UndoOutlined />}
-                  size='medium'
+                  size="medium"
                 >
                   {t('lesson_edit.buttons.back')}
                 </S.MoveButton>
               </Col>
               <Col span={12}>
                 <S.MoveButton
-                  id='redo-button'
+                  id="redo-button"
                   icon={<RedoOutlined />}
-                  size='medium'
+                  size="medium"
                 >
                   {t('lesson_edit.buttons.forward')}
                 </S.MoveButton>
@@ -333,7 +333,11 @@ const LessonEdit = () => {
                 </S.TextLink>
               </Col>
               <S.StudentsCol span={24}>
-                <S.TextLink onClick={handleStudentsClick} underline disabled={!isCurrentlyEditing}>
+                <S.TextLink
+                  onClick={handleStudentsClick}
+                  underline
+                  disabled={!isCurrentlyEditing}
+                >
                   {t('lesson_edit.links.students')}
                 </S.TextLink>
                 <S.StudentsCount
@@ -347,7 +351,7 @@ const LessonEdit = () => {
                 </S.TextLink>
               </Col>
               <Col span={24}>
-                <Typography.Link type='danger' underline>
+                <Typography.Link type="danger" underline>
                   {t('lesson_edit.links.archive')}
                 </Typography.Link>
               </Col>
