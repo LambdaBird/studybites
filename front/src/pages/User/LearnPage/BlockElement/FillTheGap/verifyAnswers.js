@@ -11,6 +11,9 @@ const getCorrect = (result) => {
 };
 
 export const verifyAnswers = (results, answers) => {
+  if (!results || !answers) {
+    return {};
+  }
   const result = answers.map((answer, index) => {
     if (
       results[index].find(

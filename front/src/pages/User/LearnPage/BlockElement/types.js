@@ -28,6 +28,7 @@ export const BlockIdType = PropTypes.string.isRequired;
 export const RevisionType = PropTypes.string.isRequired;
 export const QuestionType = PropTypes.string.isRequired;
 export const TextType = PropTypes.string.isRequired;
+export const SolvedType = PropTypes.bool;
 
 export const ParagraphContentType = PropTypes.shape({
   data: PropTypes.shape({

@@ -10,6 +10,7 @@ import {
   FillTheGapBlockAnswerType,
   FillTheGapBlockDataType,
   RevisionType,
+  SolvedType,
 } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
 import { ChunkWrapper } from '@sb-ui/pages/User/LearnPage/LearnPage.styled';
 import { RESPONSE_TYPE } from '@sb-ui/pages/User/LearnPage/utils';
@@ -17,7 +18,14 @@ import { RESPONSE_TYPE } from '@sb-ui/pages/User/LearnPage/utils';
 import Inputs from './Inputs';
 import * as S from './FillTheGap.styled';
 
-const FillTheGap = ({ blockId, revision, answer, content, data }) => {
+const FillTheGap = ({
+  blockId,
+  revision,
+  answer = {},
+  content,
+  data,
+  isSolved,
+}) => {
   const { t } = useTranslation('user');
   const { handleInteractiveClick, id } = useContext(LearnContext);
 
@@ -43,30 +51,28 @@ const FillTheGap = ({ blockId, revision, answer, content, data }) => {
     newData.answers = data.response;
   }
   const { text, answers } = newData;
-  if (!answer) {
-    return (
-      <>
-        <ChunkWrapper>
-          <Inputs text={content.data.text} onData={setResponse} />
-        </ChunkWrapper>
-        <S.LessonButton onClick={handleSendClick}>
-          {t('lesson.send')}
-        </S.LessonButton>
-      </>
-    );
-  }
-
   const { results } = answer;
+
   const { correct, result } = verifyAnswers(results, answers);
 
   return (
     <>
       <ChunkWrapper>
-        <Inputs text={text} disabled />
+        <Inputs
+          text={isSolved ? text : content.data.text}
+          onData={setResponse}
+          disabled={isSolved}
+        />
       </ChunkWrapper>
-      <ChunkWrapper>
-        <Result correct={correct} result={result} text={text} />
-      </ChunkWrapper>
+      {isSolved ? (
+        <ChunkWrapper>
+          <Result correct={correct} result={result} text={text} />
+        </ChunkWrapper>
+      ) : (
+        <S.LessonButton onClick={handleSendClick}>
+          {t('lesson.send')}
+        </S.LessonButton>
+      )}
     </>
   );
 };
@@ -77,6 +83,7 @@ FillTheGap.propTypes = {
   content: BlockContentType,
   answer: FillTheGapBlockAnswerType,
   data: FillTheGapBlockDataType,
+  isSolved: SolvedType,
 };
 
 export default FillTheGap;
