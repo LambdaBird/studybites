@@ -12,10 +12,6 @@ export const GlobalStyles = createGlobalStyle`
     display: flex;
     flex-direction: column;
   }
-  .header-dropdown-mobile{
-    top: 56px !important;
-    width: 100%;
-  }
 
   body{
     background-color: ${variables['body-background-color']}; 

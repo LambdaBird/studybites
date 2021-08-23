@@ -42,7 +42,7 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
   const { data: user } = useQuery(USER_BASE_QUERY, getUser);
   const headerRef = useRef(null);
   const [scroll, setScroll] = useState(null);
-  const [visible, setVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
   const handleSignOut = useCallback(() => {
     clearJWT();
@@ -54,7 +54,7 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
 
   const handleMenuClick = useCallback(
     ({ key }) => {
-      setVisible(false);
+      setIsVisible(false);
       if (key === 'signOut') {
         handleSignOut();
       } else if (key.startsWith('language')) {
@@ -162,24 +162,24 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
   }, [i18n, user]);
 
   const handleHomeClick = useCallback(() => {
-    if (isMobile && visible === true) {
-      setVisible(false);
+    if (isMobile && isVisible) {
+      setIsVisible(false);
     }
     history.push(HOME);
-  }, [history, isMobile, visible]);
+  }, [history, isMobile, isVisible]);
 
   const handleHeaderClick = useCallback(() => {
-    if (isMobile && visible === true) {
-      setVisible(false);
+    if (isMobile && isVisible) {
+      setIsVisible(false);
     }
-  }, [isMobile, visible]);
+  }, [isMobile, isVisible]);
 
   const handleMenuBackgroundClick = useCallback(() => {
-    setVisible(false);
+    setIsVisible(false);
   }, []);
 
   const handleMenuWrapperClick = useCallback(() => {
-    setVisible((prev) => !prev);
+    setIsVisible((prev) => !prev);
   }, []);
 
   const profileContent = useMemo(
@@ -217,7 +217,7 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
               <Dropdown
                 overlay={menu}
                 onVisibleChange={(newVisible) => {
-                  setVisible(newVisible);
+                  setIsVisible(newVisible);
                 }}
                 trigger={['click']}
               >
@@ -230,8 +230,8 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
       </S.Container>
       {isMobile && (
         <>
-          <S.MenuWrapper visible={visible}>{visible && menu}</S.MenuWrapper>
-          {visible && (
+          <S.MenuWrapper visible={isVisible}>{isVisible && menu}</S.MenuWrapper>
+          {isVisible && (
             <S.DropdownBackground onClick={handleMenuBackgroundClick} />
           )}
         </>

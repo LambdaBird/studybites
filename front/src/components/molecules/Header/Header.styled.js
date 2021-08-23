@@ -73,7 +73,7 @@ export const DropdownBackground = styled.div`
 `;
 
 export const MenuOutlined = styled(MenuOutlinedAntd)`
-  font-size: 20px;
+  font-size: 1.25rem;
 `;
 
 export const Menu = styled(MenuAntd)`
