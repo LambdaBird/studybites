@@ -1,15 +1,8 @@
 import PropTypes from 'prop-types';
-import { createRef, useCallback, useContext, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { createRef, useCallback, useEffect, useState } from 'react';
 
-import LearnContext from '@sb-ui/contexts/LearnContext';
-import {
-  BlockIdType,
-  RevisionType,
-} from '@sb-ui/pages/User/LearnPage/BlockElement/types';
-import { RESPONSE_TYPE } from '@sb-ui/pages/User/LearnPage/utils';
-
-import * as S from './Answer.styled';
+import { MATCH_BLOCK_TYPE, MatchBlock } from './MatchBlock';
+import * as S from './Select.styled';
 
 const swapBlocks = (blocks, from, to) => {
   const newBlocks = blocks.map((x) => ({ ...x }));
@@ -41,25 +34,24 @@ const moveBlocksToTop = (from, to, fromId, toId) => {
   return [newFrom, newTo];
 };
 
-const Answer = ({ blockId, revision, values }) => {
-  const { t } = useTranslation('user');
-  const { handleInteractiveClick, id: lessonId } = useContext(LearnContext);
-
+const Select = ({ values, onData = () => {}, disabled, showCorrect }) => {
   const [from, setFrom] = useState(
-    values.map(({ from: fromValue }, i) => ({
+    values.map(({ from: fromValue, correct = null }, i) => ({
       ref: createRef(),
       value: fromValue,
       id: `from-${i + 1}`,
       selected: false,
+      correct,
     })),
   );
 
   const [to, setTo] = useState(
-    values.map(({ to: toValue }, i) => ({
+    values.map(({ to: toValue, correct = null }, i) => ({
       ref: createRef(),
       value: toValue,
       id: `to-${i + 1}`,
       selected: false,
+      correct,
     })),
   );
 
@@ -110,6 +102,7 @@ const Answer = ({ blockId, revision, values }) => {
         }
         return;
       }
+
       setFunc((prev) => {
         if (prev === id) {
           return null;
@@ -121,6 +114,15 @@ const Answer = ({ blockId, revision, values }) => {
   );
 
   useEffect(() => {
+    if (disabled) {
+      return;
+    }
+    onData(
+      from.map(({ value: fromValue }, index) => ({
+        from: fromValue,
+        to: to[index].value,
+      })),
+    );
     if (first && second) {
       setFirst(null);
       setSecond(null);
@@ -128,81 +130,99 @@ const Answer = ({ blockId, revision, values }) => {
       setFrom(newFrom);
       setTo(newTo);
     }
-  }, [first, from, second, to]);
+  }, [disabled, first, from, onData, second, to]);
+
+  const getBlockType = useCallback(
+    (correct) => {
+      if (showCorrect) {
+        return MATCH_BLOCK_TYPE.NORMAL;
+      }
+      if (correct !== null) {
+        return MATCH_BLOCK_TYPE.RESULT;
+      }
+      return MATCH_BLOCK_TYPE.SELECT;
+    },
+    [showCorrect],
+  );
+
+  useEffect(() => {
+    setFrom((prev) =>
+      values.map(({ from: fromValue, correct = null }, i) => ({
+        ref: prev[i].ref,
+        value: fromValue,
+        id: `from-${i + 1}`,
+        selected: false,
+        correct,
+      })),
+    );
+    setTo((prev) =>
+      values.map(({ to: toValue, correct = null }, i) => ({
+        ref: prev[i].ref,
+        value: toValue,
+        id: `to-${i + 1}`,
+        selected: false,
+        correct,
+      })),
+    );
+  }, [values]);
 
   return (
-    <>
-      <S.MatchWrapper>
-        <S.MatchColumn>
-          {from.map(({ ref, selected, id, value }, index) => (
-            <S.MatchBlockWrapper height={getMaxBlockHeight(index)} key={id}>
-              <S.MatchBlock
-                ref={ref}
-                selected={selected || first === id}
-                onClick={() => handleBlockClick(id, true)}
-              >
-                {value}
-              </S.MatchBlock>
-            </S.MatchBlockWrapper>
-          ))}
-        </S.MatchColumn>
-        <S.MatchMiddle>
-          {from.map(
-            ({ selected }, index) =>
-              selected && (
-                <S.ArrowConnectWrapper height={getMaxBlockHeight(index)}>
-                  <S.ArrowConnectImg />
-                </S.ArrowConnectWrapper>
-              ),
-          )}
-        </S.MatchMiddle>
-        <S.MatchColumn>
-          {to.map(({ ref, selected, id, value }, index) => (
-            <S.MatchBlockWrapper height={getMaxBlockHeight(index)} key={id}>
-              <S.MatchBlock
-                ref={ref}
-                selected={selected || second === id}
-                onClick={() => handleBlockClick(id, false)}
-              >
-                {value}
-              </S.MatchBlock>
-            </S.MatchBlockWrapper>
-          ))}
-        </S.MatchColumn>
-      </S.MatchWrapper>
-      <S.ButtonWrapper>
-        <S.LessonButtonSend
-          onClick={() => {
-            handleInteractiveClick({
-              id: lessonId,
-              action: RESPONSE_TYPE,
-              blockId,
-              revision,
-              data: {
-                response: from.map(({ value: fromValue }, index) => ({
-                  from: fromValue,
-                  to: to[index].value,
-                })),
-              },
-            });
-          }}
-        >
-          {t('lesson.send')}
-        </S.LessonButtonSend>
-      </S.ButtonWrapper>
-    </>
+    <S.MatchWrapper>
+      <S.MatchColumn disableAllAnimations={disabled}>
+        {from.map(({ ref, correct, selected, id, value }, index) => (
+          <S.MatchBlockWrapper height={getMaxBlockHeight(index)} key={id}>
+            <MatchBlock
+              ref={ref}
+              type={getBlockType(correct)}
+              selected={selected || first === id}
+              correct={correct}
+              onClick={!disabled ? () => handleBlockClick(id, true) : null}
+            >
+              {value}
+            </MatchBlock>
+          </S.MatchBlockWrapper>
+        ))}
+      </S.MatchColumn>
+      <S.MatchMiddle>
+        {from.map(
+          ({ selected }, index) =>
+            (selected || disabled) && (
+              <S.ArrowConnectWrapper height={getMaxBlockHeight(index)}>
+                <S.ArrowConnectImg />
+              </S.ArrowConnectWrapper>
+            ),
+        )}
+      </S.MatchMiddle>
+      <S.MatchColumn disableAllAnimations={disabled}>
+        {to.map(({ ref, correct, selected, id, value }, index) => (
+          <S.MatchBlockWrapper height={getMaxBlockHeight(index)} key={id}>
+            <MatchBlock
+              ref={ref}
+              type={getBlockType(correct)}
+              selected={selected || first === id}
+              correct={correct}
+              onClick={!disabled ? () => handleBlockClick(id, false) : null}
+            >
+              {value}
+            </MatchBlock>
+          </S.MatchBlockWrapper>
+        ))}
+      </S.MatchColumn>
+    </S.MatchWrapper>
   );
 };
 
-Answer.propTypes = {
-  blockId: BlockIdType,
-  revision: RevisionType,
+Select.propTypes = {
+  onData: PropTypes.func,
+  disabled: PropTypes.bool,
+  showCorrect: PropTypes.bool,
   values: PropTypes.arrayOf(
     PropTypes.shape({
       from: PropTypes.string,
       to: PropTypes.string,
+      correct: PropTypes.bool,
     }),
   ),
 };
 
-export default Answer;
+export default Select;
