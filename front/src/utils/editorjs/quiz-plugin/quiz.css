@@ -54,7 +54,7 @@
     padding: var(--padding) 0;
 }
 
-[contenteditable=true]:empty:before{
+.codex-editor div[placeholder]:empty:before{
     content: attr(placeholder);
     color: grey;
     pointer-events: none;

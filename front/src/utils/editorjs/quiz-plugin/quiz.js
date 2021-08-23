@@ -40,6 +40,7 @@ export default class Quiz {
 
   get CSS() {
     return {
+      input: this.api.styles.input,
       baseClass: 'quiz-tool__base',
       questionWrapper: 'quiz-tool__wrapper-question',
       question: 'quiz-tool__question',
@@ -71,6 +72,7 @@ export default class Quiz {
       questionInput.classList.remove('ant-input-affix-wrapper-focused');
     });
     this.elements.question.appendChild(questionInput);
+    this.elements.question.classList.add(this.CSS.input);
     this.elements.question.classList.add('ant-input-affix-wrapper');
     this.elements.question.classList.add('quiz-tool__wrapper-question');
 
@@ -129,7 +131,7 @@ export default class Quiz {
 
   toggleCheckbox(event) {
     const { target } = event;
-    if (target.classList.contains(this.CSS.checkbox)) {
+    if (target.classList.contains(this.CSS.checkbox) && !this.readOnly) {
       target.classList.toggle(this.CSS.itemChecked);
     }
   }
