@@ -239,7 +239,7 @@ const LessonEdit = () => {
     <>
       <Header>
         <S.HeaderButtons>
-          <Button disabled={!isEditLesson} onClick={handlePreview}>
+          <Button disabled={!isCurrentlyEditing} onClick={handlePreview}>
             {t('lesson_edit.buttons.preview')}
           </Button>
           {lessonData?.lesson.status === Statuses.PUBLIC ? (
@@ -332,7 +332,11 @@ const LessonEdit = () => {
                 </S.TextLink>
               </Col>
               <S.StudentsCol span={24}>
-                <S.TextLink onClick={handleStudentsClick} underline>
+                <S.TextLink
+                  onClick={handleStudentsClick}
+                  underline
+                  disabled={!isCurrentlyEditing}
+                >
                   {t('lesson_edit.links.students')}
                 </S.TextLink>
                 <S.StudentsCount

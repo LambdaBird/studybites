@@ -313,7 +313,7 @@ describe('Learning flow', () => {
           revision:
             lessonToNext.lesson.blocks[french._blocks._indexesOfInteractive[0]]
               .revision,
-          data: {
+          reply: {
             isSolved: true,
           },
         },
@@ -417,7 +417,7 @@ describe('Learning flow', () => {
             lessonToAnswer.lesson.blocks[
               french._blocks._indexesOfInteractive[0]
             ].revision,
-          data: {
+          reply: {
             isSolved: true,
           },
         },
@@ -437,12 +437,11 @@ describe('Learning flow', () => {
             lessonToAnswer.lesson.blocks[
               french._blocks._indexesOfInteractive[1]
             ].revision,
-          data: {
+          reply: {
             response: [true, false, false],
           },
         },
       });
-
       const payload = JSON.parse(response.payload);
 
       expect(response.statusCode).toBe(200);
@@ -450,7 +449,7 @@ describe('Learning flow', () => {
       expect(payload).toHaveProperty('isFinal');
       expect(payload).toHaveProperty('blocks');
       expect(payload).toHaveProperty('answer');
-      expect(payload).toHaveProperty('userAnswer');
+      expect(payload).toHaveProperty('reply');
       expect(payload.blocks).toBeInstanceOf(Array);
       expect(payload.blocks.length).toBe(1);
       expect(payload.isFinal).toBe(true);
@@ -534,7 +533,7 @@ describe('Learning flow', () => {
             lessonToFinish.lesson.blocks[
               french._blocks._indexesOfInteractive[0]
             ].revision,
-          data: {
+          reply: {
             isSolved: true,
           },
         },
@@ -552,7 +551,7 @@ describe('Learning flow', () => {
             lessonToFinish.lesson.blocks[
               french._blocks._indexesOfInteractive[1]
             ].revision,
-          data: {
+          reply: {
             response: [true, false, false],
           },
         },
@@ -612,7 +611,7 @@ describe('Learning flow', () => {
             lessonToAnswer.lesson.blocks[
               french._blocks._indexesOfInteractive[1]
             ].revision,
-          data: {
+          reply: {
             response: [true, false, false],
           },
         },
@@ -659,7 +658,7 @@ describe('Learning flow', () => {
             lessonToAnswer.lesson.blocks[
               french._blocks._indexesOfInteractive[0]
             ].revision,
-          data: {
+          reply: {
             isSolved: true,
           },
         },
@@ -689,7 +688,7 @@ describe('Learning flow', () => {
             lessonToAnswer.lesson.blocks[
               french._blocks._indexesOfInteractive[1]
             ].revision,
-          data: {
+          reply: {
             response: [true, false, false],
           },
         },
@@ -736,7 +735,7 @@ describe('Learning flow', () => {
             lessonToAnswer.lesson.blocks[
               french._blocks._indexesOfInteractive[0]
             ].revision,
-          data: {
+          reply: {
             isSolved: true,
           },
         },
@@ -766,7 +765,7 @@ describe('Learning flow', () => {
             lessonToAnswer.lesson.blocks[
               french._blocks._indexesOfInteractive[1]
             ].revision,
-          data: {
+          reply: {
             response: [true, false, false],
           },
         },
@@ -779,7 +778,7 @@ describe('Learning flow', () => {
       expect(payload).toHaveProperty('isFinal');
       expect(payload).toHaveProperty('blocks');
       expect(payload).toHaveProperty('answer');
-      expect(payload).toHaveProperty('userAnswer');
+      expect(payload).toHaveProperty('reply');
       expect(payload.blocks).toBeInstanceOf(Array);
       expect(payload.blocks.length).toBe(1);
       expect(payload.isFinal).toBe(true);
@@ -819,7 +818,7 @@ describe('Learning flow', () => {
             finishedLesson.lesson.blocks[
               french._blocks._indexesOfInteractive[0]
             ].revision,
-          data: {
+          reply: {
             isSolved: true,
           },
         },
@@ -837,7 +836,7 @@ describe('Learning flow', () => {
             finishedLesson.lesson.blocks[
               french._blocks._indexesOfInteractive[1]
             ].revision,
-          data: {
+          reply: {
             response: [true, false, false],
           },
         },
@@ -932,14 +931,14 @@ describe('Learning flow', () => {
         });
       });
 
-      it('should return answer and userAnswer', async () => {
+      it('should return answer and reply', async () => {
         const response = await testContext.studentRequest({
           url: `${notAnswered.lesson.id}/learn`,
           body: {
             action: 'response',
             blockId: notAnswered.lesson.blocks[0].blockId,
             revision: notAnswered.lesson.blocks[0].revision,
-            data: {
+            reply: {
               response: [true, false, false],
             },
           },
@@ -959,7 +958,7 @@ describe('Learning flow', () => {
         expect(payload.isFinal).toBe(true);
 
         expect(payload).toHaveProperty('answer');
-        expect(payload).toHaveProperty('userAnswer');
+        expect(payload).toHaveProperty('reply');
       });
     });
 
@@ -990,7 +989,7 @@ describe('Learning flow', () => {
             action: 'response',
             blockId: notFinished.lesson.blocks[0].blockId,
             revision: notFinished.lesson.blocks[0].revision,
-            data: {
+            reply: {
               response: [true, false, false],
             },
           },

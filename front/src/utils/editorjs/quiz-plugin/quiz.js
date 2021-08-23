@@ -62,7 +62,7 @@ export default class Quiz {
 
     const questionInput = document.createElement('input');
     questionInput.classList.add(this.CSS.question);
-    questionInput.placeholder = 'Question';
+    questionInput.placeholder = this.api.i18n.t('question');
     questionInput.type = 'text';
     questionInput.classList.add('ant-input');
     questionInput.addEventListener('focusin', () => {
@@ -76,7 +76,7 @@ export default class Quiz {
     this.elements.question.classList.add('ant-input-affix-wrapper');
     this.elements.question.classList.add('quiz-tool__wrapper-question');
 
-    this.elements.question.placeholder = 'Question';
+    this.elements.question.placeholder = this.api.i18n.t('question');
     if (question) {
       questionInput.value = question;
     }
@@ -143,7 +143,7 @@ export default class Quiz {
       innerHTML: item.value ? item.value : '',
       contentEditable: !this.readOnly,
     });
-    textField.setAttribute('placeholder', 'Type answer');
+    textField.setAttribute('placeholder', this.api.i18n.t('answer'));
 
     if (item.correct) {
       checkbox.classList.add(this.CSS.itemChecked);

@@ -8,6 +8,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import { useTranslation } from 'react-i18next';
 import EditorJS from '@editorjs/editorjs';
 import Paragraph from '@editorjs/paragraph';
 
@@ -15,6 +16,7 @@ import Undo from '@sb-ui/utils/editorjs/undo-plugin';
 
 const EditorJsContainer = forwardRef((props, ref) => {
   const mounted = useRef();
+  const { t } = useTranslation('editorjs');
 
   const { children } = props;
   const holder = useMemo(
@@ -70,6 +72,7 @@ const EditorJsContainer = forwardRef((props, ref) => {
       enableReInitialize,
       tools,
       onChange,
+      onReady,
       ...anotherProps
     } = props;
 
@@ -92,6 +95,110 @@ const EditorJsContainer = forwardRef((props, ref) => {
         onChange: handleChange,
       }),
       ...anotherProps,
+
+      i18n: {
+        messages: {
+          ui: {
+            toolbar: {
+              toolbox: {
+                Add: t('toolbar.toolbox.add'),
+              },
+            },
+            inlineToolbar: {
+              converter: {
+                'Convert to': t('toolbar.converter.convert_to'),
+              },
+            },
+            blockTunes: {
+              toggler: {
+                'Click to tune': t('block_tunes.toggler.tune'),
+                'or drag to move': t('block_tunes.toggler.drag'),
+              },
+            },
+          },
+          blockTunes: {
+            delete: {
+              Delete: t('block_tunes.actions.delete'),
+            },
+            moveUp: {
+              'Move up': t('block_tunes.actions.move_up'),
+            },
+            moveDown: {
+              'Move down': t('block_tunes.actions.move_down'),
+            },
+          },
+          toolNames: {
+            Text: t('tools.text.title'),
+            Image: t('tools.image.title'),
+            Next: t('tools.next.title'),
+            Quiz: t('tools.quiz.title'),
+            Video: t('tools.video.title'),
+            Heading: t('tools.heading.title'),
+            List: t('tools.list.title'),
+            Quote: t('tools.quote.title'),
+            Delimiter: t('tools.delimiter.title'),
+            Table: t('tools.table.title'),
+            'Closed Question': t('tools.closed_question.title'),
+            Warning: t('tools.warning.title'),
+            Code: t('tools.code.title'),
+            Marker: t('tools.marker.title'),
+            Bold: t('tools.bold.title'),
+            Italic: t('tools.italic.title'),
+            Link: t('tools.link.title'),
+          },
+          tools: {
+            stub: {
+              'The block can not be displayed correctly.':
+                t('tools.stub.title'),
+            },
+            image: {
+              input: t('tools.image.input'),
+              caption: t('tools.image.caption'),
+            },
+            next: {
+              button: t('tools.next.title'),
+            },
+            quiz: {
+              question: t('tools.quiz.question'),
+              answer: t('tools.quiz.answer'),
+            },
+            embed: {
+              input: t('tools.video.input'),
+              caption: t('tools.video.caption'),
+            },
+            header: {
+              input: t('tools.heading.input'),
+            },
+            quote: {
+              input: t('tools.quote.input'),
+              caption: t('tools.quote.caption'),
+            },
+            table: {
+              col_before: t('tools.table.col_before'),
+              col_after: t('tools.table.col_after'),
+              row_before: t('tools.table.row_before'),
+              row_after: t('tools.table.row_after'),
+              delete_col: t('tools.table.delete_col'),
+              delete_row: t('tools.table.delete_row'),
+            },
+            closedQuestion: {
+              question: t('tools.closed_question.question'),
+              answer: t('tools.closed_question.answer'),
+              explanation: t('tools.closed_question.explanation'),
+              tag_title: t('tools.closed_question.tag_title'),
+              example: t('tools.closed_question.example'),
+              none: t('tools.closed_question.none'),
+            },
+            warning: {
+              placeholder: t('tools.warning.placeholder'),
+              message: t('tools.warning.message'),
+            },
+            code: {
+              placeholder: t('tools.code.placeholder'),
+            },
+          },
+        },
+      },
     });
 
     setInstance(newInstance);
@@ -99,9 +206,13 @@ const EditorJsContainer = forwardRef((props, ref) => {
     if (instanceRef) {
       instanceRef(newInstance);
     }
-  }, [handleChange, handleReady, holder, props]);
+  }, [handleChange, handleReady, holder, props, t]);
 
   const destroyEditor = () => {
+    Array.from(document.querySelectorAll('.ct--bottom')).forEach(
+      (codexTooltip) => codexTooltip.remove(),
+    );
+
     if (!instance) {
       return;
     }
