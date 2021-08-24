@@ -7,9 +7,9 @@ import React, {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import * as S from './Inputs.styled';
+import * as S from './GapsInput.styled';
 
-const Inputs = ({ text, onData = () => {}, disabled, result }) => {
+const GapsInput = ({ text, onData = () => {}, disabled, result }) => {
   const { t } = useTranslation('user');
   const chunks = useMemo(
     () => text?.split('{{ # }}').map((value, key) => ({ key, value })),
@@ -65,4 +65,4 @@ const Inputs = ({ text, onData = () => {}, disabled, result }) => {
   });
 };
 
-export default Inputs;
+export default GapsInput;

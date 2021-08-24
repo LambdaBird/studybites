@@ -1,7 +1,7 @@
 import { Typography } from 'antd';
 import PropTypes from 'prop-types';
 
-import Inputs from '@sb-ui/pages/User/LearnPage/BlockElement/FillTheGap/Inputs';
+import GapsInput from '@sb-ui/pages/User/LearnPage/BlockElement/FillTheGap/GapsInput';
 
 import { CORRECT_ALL, CORRECT_NONE, CORRECT_PARTIAL } from '../constants';
 
@@ -22,7 +22,7 @@ const Result = ({ correct, result, text }) => {
       {correct === CORRECT_NONE && <WrongTitle />}
       <S.ResultWrapper>
         <Text italic>
-          <Inputs text={text} result={result} />
+          <GapsInput text={text} result={result} />
         </Text>
       </S.ResultWrapper>
     </>

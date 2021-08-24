@@ -73,7 +73,8 @@ export default class FillTheGap {
       });
       this.input.innerHTML = this.data.text;
     } else {
-      this.input.innerText = 'Here is an example of a sentence with {{ empty, vacant, blank }} spaces that a {{ learner, student }} will need to fill in.';
+      this.input.innerText =
+        'Here is an example of a sentence with {{ empty, vacant, blank }} spaces that a {{ learner, student }} will need to fill in.';
     }
 
     container.appendChild(hint);

@@ -15,7 +15,7 @@ import {
 import { ChunkWrapper } from '@sb-ui/pages/User/LearnPage/LearnPage.styled';
 import { RESPONSE_TYPE } from '@sb-ui/pages/User/LearnPage/utils';
 
-import Inputs from './Inputs';
+import GapsInput from './GapsInput';
 import * as S from './FillTheGap.styled';
 
 const FillTheGap = ({
@@ -23,7 +23,7 @@ const FillTheGap = ({
   revision,
   answer = {},
   content,
-  data,
+  reply = {},
   isSolved,
 }) => {
   const { t } = useTranslation('user');
@@ -37,32 +37,21 @@ const FillTheGap = ({
       action: RESPONSE_TYPE,
       revision,
       blockId,
-      data: {
+      reply: {
         response,
       },
     });
   }, [blockId, handleInteractiveClick, id, response, revision]);
 
-  const newData = {
-    text: content.data.text,
-    answers: content.data.answers,
-  };
-  if (data?.response !== undefined) {
-    newData.answers = data.response;
-  }
-  const { text, answers } = newData;
+  const { text } = content.data;
   const { results } = answer;
 
-  const { correct, result } = verifyAnswers(results, answers);
+  const { correct, result } = verifyAnswers(results, reply.response);
 
   return (
     <>
       <ChunkWrapper>
-        <Inputs
-          text={isSolved ? text : content.data.text}
-          onData={setResponse}
-          disabled={isSolved}
-        />
+        <GapsInput text={text} onData={setResponse} disabled={isSolved} />
       </ChunkWrapper>
       {isSolved ? (
         <ChunkWrapper>
@@ -82,7 +71,7 @@ FillTheGap.propTypes = {
   revision: RevisionType,
   content: BlockContentType,
   answer: FillTheGapBlockAnswerType,
-  data: FillTheGapBlockDataType,
+  reply: FillTheGapBlockDataType,
   isSolved: SolvedType,
 };
 
