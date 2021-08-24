@@ -41,7 +41,7 @@ export default {
     errors: {
       not_found: 'Урок не найден',
     },
-    input_answer: 'Впишите ответ...',
+    input_answer: 'Введите ответ...',
     input_fill_gap: {
       placeholder: 'пример',
     },

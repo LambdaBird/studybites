@@ -9,7 +9,7 @@ import './mocks/matchMedia';
 import Header from '../components/molecules/Header';
 import SignIn from '../pages/SignIn';
 import { postSignIn } from '../utils/api/v1/user';
-import { clearJWT,getJWTAccessToken, setJWT } from '../utils/jwt';
+import { clearJWT, getJWTAccessToken, setJWT } from '../utils/jwt';
 
 jest.mock('react-router-dom');
 jest.mock('../utils/jwt');

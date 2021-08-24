@@ -34,11 +34,10 @@ export default {
       percentage: '{{percentage}}% correct answers',
     },
     answer_result: {
-      correct: 'You`r right !',
-      wrong: 'You’re wrong. Correct answer:',
+      correct: 'You are right!',
+      wrong: 'You are wrong. The correct answer is:',
       partially_wrong: 'You’re partially right. Correct answer:',
     },
-
     errors: {
       not_found: 'Lesson not found',
     },

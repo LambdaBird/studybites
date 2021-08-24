@@ -17,13 +17,13 @@ export default class ClosedQuestion {
     this.readOnly = readOnly;
     this.container = null;
     this.elements = [];
-    this.answers = ['Example'];
+    this.answers = [this.api.i18n.t('example')];
   }
 
   static get toolbox() {
     return {
       title: 'Closed Question',
-      icon: '<svg width="15" height="15" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><path d="M7.5 15a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15zm0-2.394a5.106 5.106 0 1 0 0-10.212 5.106 5.106 0 0 0 0 10.212zm-.675-4.665l2.708-2.708 1.392 1.392-2.708 2.708-1.392 1.391-2.971-2.971L5.245 6.36l1.58 1.58z"/></svg>',
+      icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3C6.5 3 2 6.6 2 11C2 13.2 3.1 15.2 4.8 16.5C4.8 17.1 4.4 18.7 2 21C4.4 20.9 6.6 20 8.5 18.5C9.6 18.8 10.8 19 12 19C17.5 19 22 15.4 22 11C22 6.6 17.5 3 12 3ZM12 17C7.6 17 4 14.3 4 11C4 7.7 7.6 5 12 5C16.4 5 20 7.7 20 11C20 14.3 16.4 17 12 17ZM12.2 6.5C11.3 6.5 10.6 6.7 10.1 7C9.5 7.4 9.2 8 9.3 8.7H11.3C11.3 8.4 11.4 8.2 11.6 8.1C11.8 8 12 7.9 12.3 7.9C12.6 7.9 12.9 8 13.1 8.2C13.3 8.4 13.4 8.6 13.4 8.9C13.4 9.2 13.3 9.4 13.2 9.6C13 9.8 12.8 10 12.6 10.1C12.1 10.4 11.7 10.7 11.5 10.9C11.1 11.2 11 11.5 11 12H13C13 11.7 13.1 11.5 13.1 11.3C13.2 11.1 13.4 11 13.6 10.8C14.1 10.6 14.4 10.3 14.7 9.9C15 9.5 15.1 9.1 15.1 8.7C15.1 8 14.8 7.4 14.3 7C13.9 6.7 13.1 6.5 12.2 6.5V6.5ZM11 13V15H13V13H11Z" fill="currentColor"/></svg>',
     };
   }
 
@@ -50,8 +50,10 @@ export default class ClosedQuestion {
     const questionInput = document.createElement('div');
     questionInput.classList.add(this.CSS.input);
     questionInput.classList.add(this.CSS.questionInput);
-    questionInput.contentEditable = 'true';
-    questionInput.setAttribute('placeholder', 'Input your question');
+    if (!this.readOnly) {
+      questionInput.contentEditable = 'true';
+    }
+    questionInput.setAttribute('placeholder', this.api.i18n.t('question'));
     this.elements.questionInput = questionInput;
 
     if (this.data.question) {
@@ -61,15 +63,17 @@ export default class ClosedQuestion {
     const answerInput = Utils.createInput({
       wrapper: this,
       name: 'answerInput',
-      placeholder: 'Input your answer',
+      placeholder: this.api.i18n.t('answer'),
       classList: [this.CSS.input, this.CSS.answerInput],
+      readOnly: this.readOnly,
     });
 
     const explanationInput = Utils.createInput({
       wrapper: this,
       name: 'explanationInput',
-      placeholder: 'Input your answer explanation (optional)',
+      placeholder: this.api.i18n.t('explanation'),
       classList: [this.CSS.input, this.CSS.answerInput],
+      readOnly: this.readOnly,
     });
     if (this.data.explanation) {
       explanationInput.value = this.data.explanation;
@@ -78,7 +82,7 @@ export default class ClosedQuestion {
     const answerWrapper = document.createElement('div');
     this.elements.answerWrapper = answerWrapper;
     answerWrapper.classList.add(this.CSS.answerWrapper);
-    answerWrapper.innerText = 'Answers: ';
+    answerWrapper.innerText = this.api.i18n.t('tag_title');
 
     if (this.data.answers) {
       this.answers = this.data.answers;
@@ -127,12 +131,15 @@ export default class ClosedQuestion {
     });
     if (answerTags.length === 0) {
       const noneText = document.createElement('span');
-      noneText.innerText = 'none';
+      noneText.innerText = this.api.i18n.t('none');
       this.elements.answerWrapper.appendChild(noneText);
     }
   }
 
   removeTag(tag) {
+    if (this.readOnly) {
+      return;
+    }
     const filteredAnswers = this.answers.filter((answer) => {
       const tagValue =
         tag.querySelector(`.${this.CSS.tooltipText}`)?.innerHTML ||
@@ -191,9 +198,9 @@ export default class ClosedQuestion {
     }
 
     const removeSpan =
-      createElementFromHTML(`<span class="${this.CSS.answerRemove}">
-       <svg viewBox="64 64 896 896" focusable="false" data-icon="close" width="10px" height="10px" fill="currentColor" aria-hidden="true">
-        <path d="M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z"></path>
+      createElementFromHTML(`<span class='${this.CSS.answerRemove}'>
+       <svg viewBox='64 64 896 896' focusable='false' data-icon='close' width='10px' height='10px' fill='currentColor' aria-hidden='true'>
+        <path d='M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z'></path>
        </svg>
       </span>
     `);

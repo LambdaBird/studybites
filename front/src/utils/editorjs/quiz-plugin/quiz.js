@@ -40,6 +40,7 @@ export default class Quiz {
 
   get CSS() {
     return {
+      input: this.api.styles.input,
       baseClass: 'quiz-tool__base',
       questionWrapper: 'quiz-tool__wrapper-question',
       question: 'quiz-tool__question',
@@ -61,7 +62,7 @@ export default class Quiz {
 
     const questionInput = document.createElement('input');
     questionInput.classList.add(this.CSS.question);
-    questionInput.placeholder = 'Question';
+    questionInput.placeholder = this.api.i18n.t('question');
     questionInput.type = 'text';
     questionInput.classList.add('ant-input');
     questionInput.addEventListener('focusin', () => {
@@ -71,10 +72,11 @@ export default class Quiz {
       questionInput.classList.remove('ant-input-affix-wrapper-focused');
     });
     this.elements.question.appendChild(questionInput);
+    this.elements.question.classList.add(this.CSS.input);
     this.elements.question.classList.add('ant-input-affix-wrapper');
     this.elements.question.classList.add('quiz-tool__wrapper-question');
 
-    this.elements.question.placeholder = 'Question';
+    this.elements.question.placeholder = this.api.i18n.t('question');
     if (question) {
       questionInput.value = question;
     }
@@ -129,7 +131,7 @@ export default class Quiz {
 
   toggleCheckbox(event) {
     const { target } = event;
-    if (target.classList.contains(this.CSS.checkbox)) {
+    if (target.classList.contains(this.CSS.checkbox) && !this.readOnly) {
       target.classList.toggle(this.CSS.itemChecked);
     }
   }
@@ -141,7 +143,7 @@ export default class Quiz {
       innerHTML: item.value ? item.value : '',
       contentEditable: !this.readOnly,
     });
-    textField.setAttribute('placeholder', 'Type answer');
+    textField.setAttribute('placeholder', this.api.i18n.t('answer'));
 
     if (item.correct) {
       checkbox.classList.add(this.CSS.itemChecked);

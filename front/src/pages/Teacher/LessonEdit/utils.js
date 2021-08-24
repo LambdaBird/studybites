@@ -123,17 +123,21 @@ export const prepareBlocksForApi = (blocks) =>
 export const getConfig = (t) => ({
   holder: 'editorjs',
   tools: {
+    next: Next,
     image: {
       class: Image,
       inlineToolbar: true,
     },
-    next: Next,
+    embed: {
+      class: Embed,
+      inlineToolbar: true,
+    },
     quiz: {
       class: Quiz,
       inlineToolbar: true,
     },
-    embed: {
-      class: Embed,
+    closedQuestion: {
+      class: ClosedQuestion,
       inlineToolbar: true,
     },
     warning: {
@@ -168,27 +172,8 @@ export const getConfig = (t) => ({
       class: Table,
       inlineToolbar: true,
     },
-    closedQuestion: {
-      class: ClosedQuestion,
-      inlineToolbar: true,
-    },
     code: CodeTool,
     fillTheGap: FillTheGap,
-  },
-  i18n: {
-    messages: {
-      ui: {
-        toolbar: {
-          toolbox: {
-            Add: t('editor_js.toolbar.toolbox_add'),
-          },
-        },
-      },
-      toolNames: {
-        Text: t('editor_js.tool_names.text'),
-        Next: t('editor_js.tool_names.next'),
-      },
-    },
   },
   plugins: [],
 });
