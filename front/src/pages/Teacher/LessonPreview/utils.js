@@ -1,4 +1,6 @@
-export const apiInteractiveBlocks = ['quiz', 'next'];
+import { BLOCKS_TYPE } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
+
+export const apiInteractiveBlocks = ['quiz', 'next', BLOCKS_TYPE.CONSTRUCTOR];
 
 const findChunk = ({ blocks, startIndex, fromStart = false }) => {
   let remainingBlocks = blocks;

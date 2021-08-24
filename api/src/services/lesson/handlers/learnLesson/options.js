@@ -17,6 +17,7 @@ export const learnLessonOptions = {
             response: { type: ['array', 'string'] },
             isSolved: { type: 'boolean' },
             value: { type: 'string' },
+            words: { type: ['array'] },
           },
           oneOf: [
             {
@@ -30,6 +31,9 @@ export const learnLessonOptions = {
             },
             {
               required: ['value'],
+            },
+            {
+              required: ['words'],
             },
           ],
         },

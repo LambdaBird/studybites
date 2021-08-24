@@ -9,11 +9,15 @@ const variables = {
   'checkbox-disabled': '#8c8c8c',
   'lesson-block-background': 'white',
   'lesson-block-description-color': 'rgba(0, 0, 0, 0.45)',
+  'lesson-block-constructor-word-background': '#d9d9d9',
+  'lesson-block-constructor-word-underline': '#bfbfbf',
   'body-background-color': '#f5f5f5',
   'avatar-first-color': '#ffd8bf',
   'avatar-second-color': '#fa541c',
   'button-send-background': '#f0f0f0',
   'button-send-color': '#1890ff',
+  'border-color-base': '#d9d9d9',
+  'background-color-light': '#fafafa',
 };
 
 module.exports = variables;

@@ -47,7 +47,7 @@ export const prepareEditorData = (blocks) =>
           ...content,
           data: {
             ...content?.data,
-            answers: answer?.results,
+            answers: answer?.words,
           },
         };
       default:
@@ -101,7 +101,7 @@ export const prepareBlocksForApi = (blocks) =>
           answer.results = block?.data?.answers;
           break;
         case BLOCKS_TYPE.CONSTRUCTOR:
-          answer.results = block?.data?.answers;
+          answer.words = block?.data?.answers;
           break;
         default:
           break;

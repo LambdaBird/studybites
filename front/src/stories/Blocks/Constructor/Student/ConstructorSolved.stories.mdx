@@ -1,0 +1,68 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+import { LearnContextDecorator } from '@sb-ui/stories/decorators';
+import Constructor from '@sb-ui/pages/User/LearnPage/BlockElement/Constructor';
+
+<Meta
+  title="Blocks/Constructor/Student/Solved"
+  decorators={[
+    (Story) => (
+      <LearnContextDecorator>
+        <Story />
+      </LearnContextDecorator>
+    ),
+  ]}
+  component={Constructor}
+/>
+
+# Constructor
+
+Component `Constructor` should use to display ConstructorAnswer `answer: { words: StringArray } reply: { words: StringArray}` (accepts data options `question`, `words`)
+
+export const Template = (args) => <Constructor {...args} />;
+
+<Canvas>
+  <Story
+    name="Correct"
+    args={{
+      answer: {
+        words: ['a', 'b', 'c', 'd', 'e', 'f'],
+      },
+      reply: {
+        words: ['a', 'b', 'c', 'd', 'e', 'f'],
+      },
+      content: {
+        data: {
+          question: 'Дизайн должен быть в порядке.',
+          words: ['a', 'c', 'd', 'b', 'e', 'f'],
+        },
+      },
+      isSolved: true,
+      blockId: 'Test id',
+      revision: 'Test revision',
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+  <Story
+    name="Wrong"
+    args={{
+      answer: {
+        words: ['a', 'b', 'c', 'd', 'e', 'f'],
+      },
+      reply: {
+        words: ['a', 'b', 'c'],
+      },
+      content: {
+        data: {
+          question: 'Дизайн должен быть в порядке.',
+          words: ['a', 'c', 'd', 'b', 'e', 'f'],
+        },
+      },
+      isSolved: true,
+      blockId: 'Test id',
+      revision: 'Test revision',
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
