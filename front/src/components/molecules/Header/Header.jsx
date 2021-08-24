@@ -6,7 +6,11 @@ import { Link, useHistory, useLocation } from 'react-router-dom';
 import { DownOutlined } from '@ant-design/icons';
 
 import useMobile from '@sb-ui/hooks/useMobile';
-import { LANGUAGES_LIST } from '@sb-ui/i18n';
+import {
+  getStorageLanguage,
+  LANGUAGES_LIST,
+  removeStorageLanguage,
+} from '@sb-ui/i18n';
 import { queryClient } from '@sb-ui/query';
 import logo from '@sb-ui/resources/img/logo.svg';
 import { getUser, patchLanguage } from '@sb-ui/utils/api/v1/user';
@@ -141,7 +145,14 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
 
   useEffect(() => {
     if (user?.language) {
-      i18n.changeLanguage(user?.language);
+      const storageLanguage = getStorageLanguage();
+      if (storageLanguage) {
+        removeStorageLanguage();
+        i18n.changeLanguage(storageLanguage);
+        changeLanguage({ language: storageLanguage });
+      } else {
+        i18n.changeLanguage(user?.language);
+      }
     }
   }, [i18n, user]);
 
