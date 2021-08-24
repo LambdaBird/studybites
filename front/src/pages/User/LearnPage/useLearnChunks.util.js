@@ -1,27 +1,4 @@
-import { BLOCKS_TYPE } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
 import { sleep } from '@sb-ui/utils';
-
-export const applyResultsToInteractiveBlock = (
-  interactiveBlock,
-  userAnswer,
-) => {
-  /* eslint-disable no-param-reassign */
-  switch (interactiveBlock.type){
-    case BLOCKS_TYPE.QUIZ:
-      interactiveBlock.content.data.answers =
-        interactiveBlock.content.data.answers.map((x, i) => ({
-          ...x,
-          correct: userAnswer?.response[i],
-        }));
-      break;
-    case BLOCKS_TYPE.CLOSED_QUESTION:
-    case BLOCKS_TYPE.MATCH:
-      interactiveBlock.content.data.answer = userAnswer?.response;
-      break;
-    default:
-      break;
-  }
-};
 
 export const createFinished = () => ({
   blockId: `block-finished-id`,
@@ -97,14 +74,13 @@ export const createFinishBlock = (isSolved) => ({
   answer: {},
 });
 
-export const createQuizResultNoDataBlock = (id, results, response) => ({
+export const createQuizResultBlock = (id, results, response) => ({
   answer: { results },
   blockId: `block-${id}`,
   content: {
     data: {
       answers: results.map((x, i) => ({
         value: `Value ${i + 1}`,
-        correct: response[i],
       })),
       question: `Answer for question ${id}?`,
     },
@@ -114,11 +90,7 @@ export const createQuizResultNoDataBlock = (id, results, response) => ({
   isSolved: true,
   revision: `hashTest${id}`,
   type: 'quiz',
-});
-
-export const createQuizResultBlock = (id, results, response) => ({
-  ...createQuizResultNoDataBlock(id, results, response),
-  data: {
+  reply: {
     response,
   },
 });
@@ -433,7 +405,7 @@ export const createMockedResponse = (params) => {
   return {
     lesson: {
       answer: answer ? { results: answer } : {},
-      data: response ? { response } : undefined,
+      reply: response ? { response } : undefined,
       author: { id: 3, firstName: 'George', lastName: 'Bakman' },
       blocks,
       id: params.id,

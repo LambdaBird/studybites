@@ -35,12 +35,15 @@ export const ParagraphContentType = PropTypes.shape({
 });
 
 export const ClosedQuestionBlockDataType = PropTypes.shape({
-  answer: PropTypes.string.isRequired,
   question: PropTypes.string.isRequired,
 });
 
 export const ClosedQuestionBlockAnswerType = PropTypes.shape({
   results: PropTypes.arrayOf(PropTypes.string),
+});
+
+export const ClosedQuestionBlockReplyType = PropTypes.shape({
+  value: PropTypes.string.isRequired,
 });
 
 export const QuizBlockDataType = PropTypes.shape({
@@ -56,6 +59,10 @@ export const QuizBlockAnswerType = PropTypes.shape({
   results: PropTypes.arrayOf(PropTypes.bool),
 });
 
+export const QuizBlockReplyType = PropTypes.shape({
+  results: PropTypes.arrayOf(PropTypes.bool),
+});
+
 export const ClosedQuestionResponseDataType = PropTypes.shape({
   response: PropTypes.string,
 });
@@ -63,7 +70,6 @@ export const ClosedQuestionResponseDataType = PropTypes.shape({
 export const BlockResponseDataType = PropTypes.shape({
   response: PropTypes.arrayOf(PropTypes.bool),
 });
-
 
 export const MatchBlockDataType = PropTypes.shape({
   answers: PropTypes.arrayOf(

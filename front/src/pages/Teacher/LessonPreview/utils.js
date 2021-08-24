@@ -1,4 +1,11 @@
-export const apiInteractiveBlocks = ['quiz', 'next', 'match'];
+import { BLOCKS_TYPE } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
+
+export const apiInteractiveBlocks = [
+  BLOCKS_TYPE.QUIZ,
+  BLOCKS_TYPE.NEXT,
+  BLOCKS_TYPE.CLOSED_QUESTION,
+  BLOCKS_TYPE.MATCH,
+];
 
 const findChunk = ({ blocks, startIndex, fromStart = false }) => {
   let remainingBlocks = blocks;
@@ -57,7 +64,7 @@ const getChunk = ({ blocks, previousBlock = null, fromStart = false }) => {
 
 export const postLessonByIdPreview = (data) => (props) => {
   const { lesson } = data || {};
-  const { action, blockId, data: dataResponse } = props;
+  const { action, blockId, reply: dataResponse } = props;
 
   const { chunk, isFinal } = getChunk({
     blocks: lesson.blocks,
@@ -82,7 +89,7 @@ export const postLessonByIdPreview = (data) => (props) => {
     return {
       blocks: newChunk,
       isFinal,
-      userAnswer: dataResponse,
+      reply: dataResponse,
       answer: quizBlock.answer,
     };
   }

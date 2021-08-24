@@ -1,6 +1,7 @@
 /* eslint-disable camelcase */
 import admin from './admin';
 import common from './common';
+import editorjs from './editorjs';
 import sign_in from './sign_in';
 import sign_up from './sign_up';
 import teacher from './teacher';
@@ -13,4 +14,5 @@ export default {
   user,
   common,
   teacher,
+  editorjs,
 };

@@ -1,5 +1,5 @@
 import { Alert, Form, Input } from 'antd';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 
@@ -35,6 +35,8 @@ const SignInForm = () => {
   );
   const [auth, error, setError, loading] = useAuthentication(postSignIn);
 
+  const [message, setMessage] = useState('');
+
   const onClickNoAccount = () => {
     history.push(SIGN_UP);
   };
@@ -57,8 +59,17 @@ const SignInForm = () => {
         </Form.Item>
       )}
 
-      <Form.Item name="email" rules={formRules.email}>
+      <Form.Item
+        name="email"
+        rules={formRules.email}
+        help={<div>{message}</div>}
+      >
         <Input placeholder={t('email.placeholder')} />
+      </Form.Item>
+      <Form.Item shouldUpdate noStyle>
+        {({ getFieldError }) => {
+          setMessage(getFieldError('email')[0]);
+        }}
       </Form.Item>
       <S.FormItemAlignEnd
         name="password"

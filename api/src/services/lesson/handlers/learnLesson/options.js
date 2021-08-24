@@ -8,7 +8,7 @@ export const learnLessonOptions = {
         action: { type: 'string' },
         blockId: { type: 'string' },
         revision: { type: 'string' },
-        data: {
+        reply: {
           type: 'object',
           additionalProperties: false,
           properties: {
@@ -16,6 +16,7 @@ export const learnLessonOptions = {
             answers: { type: 'array' },
             response: { type: ['array', 'string'] },
             isSolved: { type: 'boolean' },
+            value: { type: 'string' },
           },
           oneOf: [
             {
@@ -26,6 +27,9 @@ export const learnLessonOptions = {
             },
             {
               required: ['isSolved'],
+            },
+            {
+              required: ['value'],
             },
           ],
         },
@@ -39,12 +43,12 @@ export const learnLessonOptions = {
         properties: {
           blockId: { type: 'null', const: null },
           revision: { type: 'null', const: null },
-          data: { type: 'null', const: null },
+          reply: { type: 'null', const: null },
         },
         required: ['action'],
       },
       else: {
-        required: ['action', 'blockId', 'revision', 'data'],
+        required: ['action', 'blockId', 'revision', 'reply'],
       },
     },
     response: {

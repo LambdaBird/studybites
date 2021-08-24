@@ -19,6 +19,15 @@ import { shuffleArray } from '@sb-ui/utils/utils';
 
 const MAX_BODY_LENGTH = 4_000_000;
 
+const prepareMatchValues = (values) => {
+  const toValues = values.map((value) => value.to);
+  shuffleArray(toValues);
+  return values.map((value, index) => ({
+    ...value,
+    to: toValues[index],
+  }));
+};
+
 export const prepareEditorData = (blocks) =>
   blocks?.map(({ content, answer, type }) => {
     switch (type) {
@@ -70,16 +79,11 @@ export const prepareBlocksDataForApi = (data, type) => {
         ...sendData,
       };
     case BLOCKS_TYPE.MATCH:
-      // eslint-disable-next-line no-case-declarations
-      const toValues = data.values.map((value) => value.to);
-      shuffleArray(toValues);
       return {
         ...data,
-        values: data?.values.map((value, index) => ({
-          ...value,
-          to: toValues[index],
-        })),
+        values: prepareMatchValues(data.values),
       };
+
     default:
       return data;
   }
@@ -92,27 +96,30 @@ const SKIP_BLOCKS = [
   BLOCKS_TYPE.MATCH,
 ];
 
+export const makeAnswerForBlock = (block) => {
+  switch (block.type) {
+    case BLOCKS_TYPE.QUIZ:
+      return {
+        results: block?.data?.answers?.map((x) => x.correct),
+      };
+    case BLOCKS_TYPE.CLOSED_QUESTION:
+      return {
+        explanation: block?.data?.explanation,
+        results: block?.data?.answers,
+      };
+    case BLOCKS_TYPE.MATCH:
+      return {
+        results: block?.data?.values,
+      };
+    default:
+      return {};
+  }
+};
+
 export const prepareBlocksForApi = (blocks) =>
   blocks
     .map((block) => {
       const { id, type, data } = block;
-      const answer = {};
-
-      switch (type) {
-        case BLOCKS_TYPE.QUIZ:
-          answer.results = block?.data?.answers?.map((x) => x.correct);
-          break;
-        case BLOCKS_TYPE.CLOSED_QUESTION:
-          answer.explanation = block?.data?.explanation;
-          answer.results = block?.data?.answers;
-          break;
-        case BLOCKS_TYPE.MATCH:
-          answer.results = block?.data?.values;
-          break;
-        default:
-          break;
-      }
-
       return {
         type,
         revision: hash(block),
@@ -121,7 +128,7 @@ export const prepareBlocksForApi = (blocks) =>
           type,
           data: prepareBlocksDataForApi(data, type),
         },
-        answer,
+        answer: makeAnswerForBlock(block),
       };
     })
     .filter((block) =>
@@ -188,21 +195,6 @@ export const getConfig = (t) => ({
       inlineToolbar: true,
     },
     code: CodeTool,
-  },
-  i18n: {
-    messages: {
-      ui: {
-        toolbar: {
-          toolbox: {
-            Add: t('editor_js.toolbar.toolbox_add'),
-          },
-        },
-      },
-      toolNames: {
-        Text: t('editor_js.tool_names.text'),
-        Next: t('editor_js.tool_names.next'),
-      },
-    },
   },
   plugins: [],
 });

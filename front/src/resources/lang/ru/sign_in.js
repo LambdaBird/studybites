@@ -1,12 +1,12 @@
 export default {
   no_account: 'Нет аккаунта? Зарегестрируйтесь!',
   forgot_password: 'Забыли пароль?',
-  button: 'Ввойти',
-  title: 'Ввойти в свой акаунт',
+  button: 'Войти',
+  title: 'Вход',
   email: {
     placeholder: 'Email',
     error: 'Введите email',
-    validation: 'Email не валидный',
+    validation: 'Некорректный формат email',
   },
   password: {
     placeholder: 'Пароль',
