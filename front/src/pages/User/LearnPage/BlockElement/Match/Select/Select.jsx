@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { createRef, useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { MATCH_BLOCK_TYPE, MatchBlock } from './MatchBlock';
 import * as S from './Select.styled';
@@ -34,27 +34,14 @@ const moveBlocksToTop = (from, to, fromId, toId) => {
   return [newFrom, newTo];
 };
 
-const Select = ({ values, onData = () => {}, disabled, showCorrect }) => {
-  const [from, setFrom] = useState(
-    values.map(({ from: fromValue, correct = null }, i) => ({
-      ref: createRef(),
-      value: fromValue,
-      id: `from-${i + 1}`,
-      selected: false,
-      correct,
-    })),
-  );
-
-  const [to, setTo] = useState(
-    values.map(({ to: toValue, correct = null }, i) => ({
-      ref: createRef(),
-      value: toValue,
-      id: `to-${i + 1}`,
-      selected: false,
-      correct,
-    })),
-  );
-
+const Select = ({
+  from,
+  setFrom = () => {},
+  to,
+  setTo = () => {},
+  disabled,
+  showCorrect,
+}) => {
   const [first, setFirst] = useState(null);
   const [second, setSecond] = useState(null);
 
@@ -87,7 +74,7 @@ const Select = ({ values, onData = () => {}, disabled, showCorrect }) => {
         unselectBlock(setTo, id);
       }
     },
-    [from, unselectBlock, to],
+    [from, unselectBlock, setFrom, setTo, to],
   );
 
   const handleBlockClick = useCallback(
@@ -117,12 +104,6 @@ const Select = ({ values, onData = () => {}, disabled, showCorrect }) => {
     if (disabled) {
       return;
     }
-    onData(
-      from.map(({ value: fromValue }, index) => ({
-        from: fromValue,
-        to: to[index].value,
-      })),
-    );
     if (first && second) {
       setFirst(null);
       setSecond(null);
@@ -130,7 +111,7 @@ const Select = ({ values, onData = () => {}, disabled, showCorrect }) => {
       setFrom(newFrom);
       setTo(newTo);
     }
-  }, [disabled, first, from, onData, second, to]);
+  }, [disabled, first, from, second, setFrom, setTo, to]);
 
   const getBlockType = useCallback(
     (correct) => {
@@ -144,6 +125,7 @@ const Select = ({ values, onData = () => {}, disabled, showCorrect }) => {
     },
     [showCorrect],
   );
+  /*
 
   useEffect(() => {
     setFrom((prev) =>
@@ -165,11 +147,12 @@ const Select = ({ values, onData = () => {}, disabled, showCorrect }) => {
       })),
     );
   }, [values]);
+*/
 
   return (
     <S.MatchWrapper>
       <S.MatchColumn disableAllAnimations={disabled}>
-        {from.map(({ ref, correct, selected, id, value }, index) => (
+        {from?.map(({ ref, correct, selected, id, value }, index) => (
           <S.MatchBlockWrapper height={getMaxBlockHeight(index)} key={id}>
             <MatchBlock
               ref={ref}
@@ -184,7 +167,7 @@ const Select = ({ values, onData = () => {}, disabled, showCorrect }) => {
         ))}
       </S.MatchColumn>
       <S.MatchMiddle>
-        {from.map(
+        {from?.map(
           ({ selected }, index) =>
             (selected || disabled) && (
               <S.ArrowConnectWrapper height={getMaxBlockHeight(index)}>
@@ -194,7 +177,7 @@ const Select = ({ values, onData = () => {}, disabled, showCorrect }) => {
         )}
       </S.MatchMiddle>
       <S.MatchColumn disableAllAnimations={disabled}>
-        {to.map(({ ref, correct, selected, id, value }, index) => (
+        {to?.map(({ ref, correct, selected, id, value }, index) => (
           <S.MatchBlockWrapper height={getMaxBlockHeight(index)} key={id}>
             <MatchBlock
               ref={ref}
@@ -213,16 +196,34 @@ const Select = ({ values, onData = () => {}, disabled, showCorrect }) => {
 };
 
 Select.propTypes = {
-  onData: PropTypes.func,
   disabled: PropTypes.bool,
   showCorrect: PropTypes.bool,
-  values: PropTypes.arrayOf(
+  from: PropTypes.arrayOf(
     PropTypes.shape({
-      from: PropTypes.string,
-      to: PropTypes.string,
+      ref: PropTypes.oneOfType([
+        PropTypes.func,
+        PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
+      ]),
+      value: PropTypes.string,
+      id: PropTypes.number,
+      selected: PropTypes.bool,
       correct: PropTypes.bool,
     }),
   ),
+  setFrom: PropTypes.func,
+  to: PropTypes.arrayOf(
+    PropTypes.shape({
+      ref: PropTypes.oneOfType([
+        PropTypes.func,
+        PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
+      ]),
+      value: PropTypes.string,
+      id: PropTypes.number,
+      selected: PropTypes.bool,
+      correct: PropTypes.bool,
+    }),
+  ),
+  setTo: PropTypes.func,
 };
 
 export default Select;

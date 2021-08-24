@@ -1,4 +1,7 @@
 export const verifyAnswers = (results, answers) => {
+  if (!results || !answers) {
+    return {};
+  }
   results?.forEach(({ from, to }) => {
     const correctAnswer = answers.find((x) => x.from === from && x.to === to);
     if (correctAnswer) {

@@ -1,16 +1,18 @@
 import { Typography } from 'antd';
-import { useContext, useState } from 'react';
+import { useCallback, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons';
 
 import LearnContext from '@sb-ui/contexts/LearnContext';
 import Select from '@sb-ui/pages/User/LearnPage/BlockElement/Match/Select/Select';
+import { useMatch } from '@sb-ui/pages/User/LearnPage/BlockElement/Match/useMatch';
 import {
   BlockContentType,
   BlockIdType,
   MatchBlockAnswerType,
   MatchResponseDataType,
   RevisionType,
+  SolvedType,
 } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
 import { ChunkWrapper } from '@sb-ui/pages/User/LearnPage/LearnPage.styled';
 import { RESPONSE_TYPE } from '@sb-ui/pages/User/LearnPage/utils';
@@ -20,27 +22,41 @@ import * as S from './Match.styled';
 
 const { Text } = Typography;
 
-const Match = ({ blockId, revision, answer, content, data }) => {
+const Match = ({ blockId, revision, answer, content, reply, isSolved }) => {
   const { t } = useTranslation('user');
   const { handleInteractiveClick, id: lessonId } = useContext(LearnContext);
-  const [response, setResponse] = useState([]);
-  const handleSendClick = () => {
+
+  const { from, setFrom, to, setTo } = useMatch(content.data.values);
+
+  const { correct, results } = useMemo(
+    () => verifyAnswers(answer?.results, reply?.response),
+    [answer?.results, reply?.response],
+  );
+
+  const handleSendClick = useCallback(() => {
     handleInteractiveClick({
       id: lessonId,
       action: RESPONSE_TYPE,
       blockId,
       revision,
-      data: {
-        response,
+      reply: {
+        response: from.map(({ value: fromValue }, index) => ({
+          from: fromValue,
+          to: to[index].value,
+        })),
       },
     });
-  };
+  }, [blockId, from, handleInteractiveClick, lessonId, revision, to]);
 
-  if (!answer) {
+  const result = useMatch(results);
+
+  const correctResult = useMatch(answer?.results);
+
+  if (!isSolved) {
     return (
       <>
         <ChunkWrapper>
-          <Select values={content.data.values} onData={setResponse} />
+          <Select from={from} to={to} setFrom={setFrom} setTo={setTo} />
         </ChunkWrapper>
         <S.ButtonWrapper>
           <S.LessonButtonSend onClick={handleSendClick}>
@@ -51,18 +67,10 @@ const Match = ({ blockId, revision, answer, content, data }) => {
     );
   }
 
-  const newData = {
-    answer: content.data.answer,
-  };
-  if (data?.response) {
-    newData.answer = data.response;
-  }
-
-  const { correct, results } = verifyAnswers(answer?.results, newData?.answer);
   return (
     <>
       <ChunkWrapper>
-        <Select values={results} disabled />
+        <Select {...result} disabled />
       </ChunkWrapper>
       <ChunkWrapper>
         {correct ? (
@@ -78,7 +86,7 @@ const Match = ({ blockId, revision, answer, content, data }) => {
                 <CloseCircleTwoTone twoToneColor="#F5222D" />
               </S.AnswerWrapperWrongTitle>
               <S.MatchWrapper>
-                <Select values={answer.results} disabled showCorrect />
+                <Select {...correctResult} disabled showCorrect />
               </S.MatchWrapper>
             </S.AnswerWrapperWrong>
           </>
@@ -93,7 +101,8 @@ Match.propTypes = {
   revision: RevisionType,
   content: BlockContentType,
   answer: MatchBlockAnswerType,
-  data: MatchResponseDataType,
+  reply: MatchResponseDataType,
+  isSolved: SolvedType,
 };
 
 export default Match;
