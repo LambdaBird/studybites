@@ -17,6 +17,7 @@ export default class Constructor {
     this.readOnly = readOnly;
     this.elements = {};
     this.answers = this.data.answers || [];
+    this.words = this.data.words || [];
   }
 
   static get toolbox() {
@@ -38,6 +39,8 @@ export default class Constructor {
       answerRemove: 'constructor-tool__answer-remove',
       tooltip: 'constructor-tool__tooltip',
       tooltipText: 'constructor-tool__tooltipText',
+      additionalInput: 'constructor-tool__additional-input',
+      hint: 'constructor-tool__hint',
     };
   }
 
@@ -46,7 +49,8 @@ export default class Constructor {
   }
 
   renderTags() {
-    const answerTags = this.answers.map((text) => this.createTag({ text }));
+    const words = [...new Set([...this.answers, ...this.words])];
+    const answerTags = words.map((text) => this.createTag({ text }));
     const spans = Array.from(this.elements.tagsWrapper.childNodes).filter(
       (x) => x.tagName === 'SPAN',
     );
@@ -76,10 +80,22 @@ export default class Constructor {
     if (this.data.answers) {
       this.data.answers = filteredAnswers;
     }
+    const filteredWords = this.words.filter((answer) => {
+      const tagValue =
+        tag.querySelector(`.${this.CSS.tooltipText}`)?.innerHTML ||
+        tag?.innerText?.trim();
+      return answer !== tagValue;
+    });
+    if (this.words) {
+      this.words = filteredWords;
+    }
+    if (this.data.words) {
+      this.data.words = filteredWords;
+    }
     this.renderTags();
   }
 
-  handleEnterKey({ event }) {
+  handleEnterAnswer({ event }) {
     event.preventDefault();
     const value = this.elements?.answerInput?.value;
     if (
@@ -90,9 +106,26 @@ export default class Constructor {
       )
     ) {
       this.answers.push(value.trim());
+      this.words.push(value.trim());
       this.renderTags();
     }
     this.elements.answerInput.value = '';
+  }
+
+  handleEnterWord({ event }) {
+    event.preventDefault();
+    const value = this.elements?.additionalInput?.value;
+    if (
+      value &&
+      !this.words.find(
+        (answer) =>
+          answer?.trim()?.toLowerCase() === value.trim()?.toLowerCase(),
+      )
+    ) {
+      this.words.push(value.trim());
+      this.renderTags();
+    }
+    this.elements.additionalInput.value = '';
   }
 
   createTag({ text }) {
@@ -132,20 +165,25 @@ export default class Constructor {
 
   save() {
     const question = this.elements.questionInput.innerText;
-    const { answers } = this;
+    const { answers, words } = this;
 
-    if (!question || answers?.length === 0) {
+    if (!question || !answers?.length || !words?.length) {
       return null;
     }
     return {
       question,
       answers,
+      words,
     };
   }
 
   render() {
     const container = document.createElement('div');
     container.classList.add(this.CSS.container);
+
+    const hint = document.createElement('span');
+    hint.innerText = '* Words will be shuffled for students after save';
+    hint.classList.add(this.CSS.hint);
 
     this.elements.questionInput = document.createElement('div');
     this.elements.questionInput.classList.add(this.CSS.input);
@@ -167,7 +205,7 @@ export default class Constructor {
 
     this.elements.answerInput.onkeydown = (event) => {
       if (event.key === 'Enter') {
-        this.handleEnterKey({ event });
+        this.handleEnterAnswer({ event });
       }
     };
 
@@ -176,9 +214,22 @@ export default class Constructor {
 
     this.renderTags();
 
+    this.elements.additionalInput = document.createElement('input');
+    this.elements.additionalInput.classList.add(this.CSS.input);
+    this.elements.additionalInput.classList.add(this.CSS.additionalInput);
+    this.elements.additionalInput.placeholder = this.api.i18n.t('answer');
+
+    this.elements.additionalInput.onkeydown = (event) => {
+      if (event.key === 'Enter') {
+        this.handleEnterWord({ event });
+      }
+    };
+
+    container.appendChild(hint);
     container.appendChild(this.elements.questionInput);
     container.appendChild(this.elements.answerInput);
     container.appendChild(this.elements.tagsWrapper);
+    container.appendChild(this.elements.additionalInput);
 
     return container;
   }

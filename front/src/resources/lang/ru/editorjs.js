@@ -100,7 +100,8 @@ export default {
     constructor: {
       title: 'Конструктор',
       question: 'Вопрос',
-      answer: 'Слова',
+      answer: 'Введите слова и нажмите Enter',
+      additional: 'Дополнительные слова',
     },
   },
 };

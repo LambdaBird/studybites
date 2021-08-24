@@ -59,7 +59,7 @@ export const prepareBlocksDataForApi = (data, type) => {
   if (!data) {
     return null;
   }
-  const { answers, explanation, ...sendData } = data || {};
+  const { answers, words, explanation, ...sendData } = data || {};
   switch (type) {
     case BLOCKS_TYPE.QUIZ:
       return {
@@ -73,7 +73,7 @@ export const prepareBlocksDataForApi = (data, type) => {
     case BLOCKS_TYPE.CONSTRUCTOR:
       return {
         ...sendData,
-        words: shuffleArray([...answers]),
+        words: shuffleArray(words),
       };
     default:
       return data;

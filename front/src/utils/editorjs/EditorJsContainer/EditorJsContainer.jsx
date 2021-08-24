@@ -186,6 +186,7 @@ const EditorJsContainer = (props) => {
             constructor: {
               question: t('tools.constructor.question'),
               answer: t('tools.constructor.answer'),
+              additional: t('tools.constructor.additional'),
             },
           },
         },
