@@ -1,7 +1,7 @@
 {
   "name": "studybites-api",
   "version": "0.0.1",
-  "license": "Apache License 2.0",
+  "license": "Apache-2.0",
   "main": "server.js",
   "scripts": {
     "dev": "./bootstrap",

@@ -1,13 +1,22 @@
+import DragDrop from 'editorjs-drag-drop';
 import PropTypes from 'prop-types';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  forwardRef,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import EditorJS from '@editorjs/editorjs';
 import Paragraph from '@editorjs/paragraph';
 
-const EditorJsContainer = (props) => {
-  const { t } = useTranslation('editorjs');
+import Undo from '@sb-ui/utils/editorjs/undo-plugin';
 
+const EditorJsContainer = forwardRef((props, ref) => {
   const mounted = useRef();
+  const { t } = useTranslation('editorjs');
 
   const { children } = props;
   const holder = useMemo(
@@ -39,14 +48,21 @@ const EditorJsContainer = (props) => {
     [instance, props],
   );
 
-  const handleReady = useCallback(() => {
-    const { onReady } = props;
-    if (!onReady) {
-      return;
-    }
-
-    onReady(instance);
-  }, [instance, props]);
+  const handleReady = useCallback(
+    (editor) => {
+      if (editor) {
+        // eslint-disable-next-line no-param-reassign
+        ref.current = new Undo({
+          editor,
+          redoButton: 'redo-button',
+          undoButton: 'undo-button',
+        });
+        // eslint-disable-next-line no-new
+        new DragDrop(editor);
+      }
+    },
+    [ref],
+  );
 
   const initEditor = useCallback(() => {
     const {
@@ -73,9 +89,7 @@ const EditorJsContainer = (props) => {
       tools: extendTools,
       holder,
 
-      ...(onReady && {
-        onReady: handleReady,
-      }),
+      onReady: () => handleReady(newInstance),
 
       ...(onChange && {
         onChange: handleChange,
@@ -94,8 +108,7 @@ const EditorJsContainer = (props) => {
               converter: {
                 'Convert to': t('toolbar.converter.convert_to'),
               },
-            }
-            ,
+            },
             blockTunes: {
               toggler: {
                 'Click to tune': t('block_tunes.toggler.tune'),
@@ -196,6 +209,10 @@ const EditorJsContainer = (props) => {
   }, [handleChange, handleReady, holder, props, t]);
 
   const destroyEditor = () => {
+    Array.from(document.querySelectorAll('.ct--bottom')).forEach(
+      (codexTooltip) => codexTooltip.remove(),
+    );
+
     if (!instance) {
       return;
     }
@@ -208,17 +225,6 @@ const EditorJsContainer = (props) => {
       }
     })();
   };
-
-  useEffect(() => {
-    instance?.isReady.then(() => {
-      if (props.readOnly) {
-        instance.readOnly.toggle(true);
-      } else {
-        instance.readOnly.toggle(false);
-      }
-    });
-    // eslint-disable-next-line react/destructuring-assignment
-  }, [instance, props.readOnly]);
 
   const changeData = useCallback((data) => {
     if (instance) {
@@ -245,18 +251,16 @@ const EditorJsContainer = (props) => {
       const { enableReInitialize, data } = props;
 
       if (!enableReInitialize || !data) {
-        return () => {
-        };
+        return () => {};
       }
 
       changeData(data);
     }
-    return () => {
-    };
+    return () => {};
   }, [changeData, props]);
 
   return children || <div id={holder} />;
-};
+});
 
 EditorJsContainer.propTypes = {
   children: PropTypes.node,
