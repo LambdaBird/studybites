@@ -14,20 +14,23 @@ export const verifyAnswers = (results, answers) => {
   if (!results || !answers) {
     return {};
   }
-  const result = answers.map((answer, index) => {
+  const result = answers.map((answer) => {
     if (
-      results[index].find(
-        (res) => res.trim().toLowerCase() === answer.trim().toLowerCase(),
-      )
+      results
+        .find((x) => x.id === answer.id)
+        .value.find(
+          (res) =>
+            res.trim().toLowerCase() === answer.value.trim().toLowerCase(),
+        )
     ) {
       return {
         correct: true,
-        value: answer,
+        ...answer,
       };
     }
     return {
       correct: false,
-      value: results[index]?.[0],
+      ...results.find((x) => x.id === answer.id),
     };
   });
 

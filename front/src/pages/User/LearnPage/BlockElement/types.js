@@ -36,13 +36,24 @@ export const ParagraphContentType = PropTypes.shape({
   }),
 });
 
-export const FillTheGapBlockDataType = PropTypes.shape({
-  answers: PropTypes.arrayOf(PropTypes.string),
-  text: PropTypes.string.isRequired,
+export const FillTheGapBlockReplyType = PropTypes.shape({
+  response: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.string,
+      id: PropTypes.number,
+      type: PropTypes.oneOf(['text', 'input']),
+    }),
+  ),
 });
 
 export const FillTheGapBlockAnswerType = PropTypes.shape({
-  results: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
+  results: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.arrayOf(PropTypes.string),
+      id: PropTypes.number,
+      type: PropTypes.oneOf(['text', 'input']),
+    }),
+  ),
 });
 
 export const ClosedQuestionBlockDataType = PropTypes.shape({

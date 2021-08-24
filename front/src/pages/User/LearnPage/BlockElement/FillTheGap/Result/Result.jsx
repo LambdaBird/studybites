@@ -12,7 +12,7 @@ import * as S from './Result.styled';
 
 const { Text } = Typography;
 
-const Result = ({ correct, result, text }) => {
+const Result = ({ correct, result, gaps }) => {
   if (correct === CORRECT_ALL) {
     return <CorrectTitle />;
   }
@@ -22,7 +22,7 @@ const Result = ({ correct, result, text }) => {
       {correct === CORRECT_NONE && <WrongTitle />}
       <S.ResultWrapper>
         <Text italic>
-          <GapsInput text={text} result={result} />
+          <GapsInput gaps={gaps} result={result} />
         </Text>
       </S.ResultWrapper>
     </>
@@ -34,10 +34,21 @@ Result.propTypes = {
   result: PropTypes.arrayOf(
     PropTypes.shape({
       correct: PropTypes.bool,
-      value: PropTypes.string,
+      value: PropTypes.oneOfType([
+        PropTypes.arrayOf(PropTypes.string),
+        PropTypes.string,
+      ]),
+      id: PropTypes.number,
+      type: PropTypes.oneOf(['text', 'input']),
     }),
   ),
-  text: PropTypes.string,
+  gaps: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.string,
+      id: PropTypes.number,
+      type: PropTypes.oneOf(['text', 'input']),
+    }),
+  ),
 };
 
 export default Result;

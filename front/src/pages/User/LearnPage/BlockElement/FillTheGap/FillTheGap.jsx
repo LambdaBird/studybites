@@ -8,7 +8,7 @@ import {
   BlockContentType,
   BlockIdType,
   FillTheGapBlockAnswerType,
-  FillTheGapBlockDataType,
+  FillTheGapBlockReplyType,
   RevisionType,
   SolvedType,
 } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
@@ -29,7 +29,17 @@ const FillTheGap = ({
   const { t } = useTranslation('user');
   const { handleInteractiveClick, id } = useContext(LearnContext);
 
-  const [response, setResponse] = useState([]);
+  const { tokens } = content.data;
+
+  const [gapsInput, setGapsInput] = useState(
+    tokens?.map((token) => {
+      const input = reply.response?.find((x) => x.id === token.id);
+      return {
+        ...token,
+        value: input ? input.value : token.value,
+      };
+    }),
+  );
 
   const handleSendClick = useCallback(() => {
     handleInteractiveClick({
@@ -38,12 +48,11 @@ const FillTheGap = ({
       revision,
       blockId,
       reply: {
-        response,
+        response: gapsInput.filter((gap) => gap.type === 'input'),
       },
     });
-  }, [blockId, handleInteractiveClick, id, response, revision]);
+  }, [blockId, gapsInput, handleInteractiveClick, id, revision]);
 
-  const { text } = content.data;
   const { results } = answer;
 
   const { correct, result } = verifyAnswers(results, reply.response);
@@ -51,11 +60,15 @@ const FillTheGap = ({
   return (
     <>
       <ChunkWrapper>
-        <GapsInput text={text} onData={setResponse} disabled={isSolved} />
+        <GapsInput
+          gaps={gapsInput}
+          setGaps={setGapsInput}
+          disabled={isSolved}
+        />
       </ChunkWrapper>
       {isSolved ? (
         <ChunkWrapper>
-          <Result correct={correct} result={result} text={text} />
+          <Result correct={correct} result={result} gaps={gapsInput} />
         </ChunkWrapper>
       ) : (
         <S.LessonButton onClick={handleSendClick}>
@@ -71,7 +84,7 @@ FillTheGap.propTypes = {
   revision: RevisionType,
   content: BlockContentType,
   answer: FillTheGapBlockAnswerType,
-  reply: FillTheGapBlockDataType,
+  reply: FillTheGapBlockReplyType,
   isSolved: SolvedType,
 };
 
