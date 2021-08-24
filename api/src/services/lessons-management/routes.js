@@ -1,15 +1,19 @@
 import getAllLessons from './controllers/getAllLessons';
 import createLesson from './controllers/createLesson';
+import lessonsOptions from './controllers/lessonsOptions';
 import getLessonById from './controllers/getLessonById';
 import updateLesson from './controllers/updateLesson';
 import deleteLesson from './controllers/deleteLesson';
+import lessonOptions from './controllers/lessonOptions';
 import getStudentsByLesson from './controllers/getStudentsByLesson';
+import lessonStudentsOptions from './controllers/lessonStudentsOptions';
 import getAllStudents from './controllers/getAllStudents';
+import studentsOptions from './controllers/studentsOptions';
 
 export async function router(instance) {
   instance.get('/lessons', getAllLessons.options, getAllLessons.handler);
   instance.post('/lessons', createLesson.options, createLesson.handler);
-  // instance.options('/lessons');
+  instance.options('/lessons', lessonsOptions.options, lessonsOptions.handler);
 
   instance.get(
     '/lessons/:lessonId',
@@ -26,15 +30,27 @@ export async function router(instance) {
     deleteLesson.options,
     deleteLesson.handler,
   );
-  // instance.options('/lessons/:lessonId');
+  instance.options(
+    '/lessons/:lessonId',
+    lessonOptions.options,
+    lessonOptions.handler,
+  );
 
   instance.get(
     '/lessons/:lessonId/students',
     getStudentsByLesson.options,
     getStudentsByLesson.handler,
   );
-  // instance.options('/lessons/:lessonId/students');
+  instance.options(
+    '/lessons/:lessonId/students',
+    lessonStudentsOptions.options,
+    lessonStudentsOptions.handler,
+  );
 
   instance.get('/students', getAllStudents.options, getAllStudents.handler);
-  // instance.options('/students');
+  instance.options(
+    '/students',
+    studentsOptions.options,
+    studentsOptions.handler,
+  );
 }

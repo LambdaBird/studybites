@@ -1,11 +1,6 @@
+import { lessonIdParam, userSearch } from '../../../validation/schemas';
+
 const options = {
-  schema: {
-    params: { $ref: 'paramsLessonId#' },
-    response: {
-      '4xx': { $ref: '4xx#' },
-      '5xx': { $ref: '5xx#' },
-    }
-  },
   async onRequest(req) {
     await this.auth({ req });
   },
@@ -22,7 +17,12 @@ const options = {
 };
 
 async function handler() {
-  return { message: 'Not implemented' };
+  return {
+    GET: {
+      params: lessonIdParam,
+      querystring: userSearch,
+    },
+  };
 }
 
 export default { options, handler };
