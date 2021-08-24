@@ -1,7 +1,7 @@
-import getAllLessons from './controllers/getAllLessons';
+import getLessons from './controllers/getLessons';
 import createLesson from './controllers/createLesson';
 import lessonsOptions from './controllers/lessonsOptions';
-import getLessonById from './controllers/getLessonById';
+import getLesson from './controllers/getLesson';
 import updateLesson from './controllers/updateLesson';
 import deleteLesson from './controllers/deleteLesson';
 import lessonOptions from './controllers/lessonOptions';
@@ -11,15 +11,11 @@ import getAllStudents from './controllers/getAllStudents';
 import studentsOptions from './controllers/studentsOptions';
 
 export async function router(instance) {
-  instance.get('/lessons', getAllLessons.options, getAllLessons.handler);
+  instance.get('/lessons', getLessons.options, getLessons.handler);
   instance.post('/lessons', createLesson.options, createLesson.handler);
   instance.options('/lessons', lessonsOptions.options, lessonsOptions.handler);
 
-  instance.get(
-    '/lessons/:lessonId',
-    getLessonById.options,
-    getLessonById.handler,
-  );
+  instance.get('/lessons/:lessonId', getLesson.options, getLesson.handler);
   instance.put(
     '/lessons/:lessonId',
     updateLesson.options,
