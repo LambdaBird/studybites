@@ -53,14 +53,20 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
   const { mutate: changeLanguage } = useMutation(patchLanguage);
 
   const handleMenuClick = useCallback(
-    ({ key }) => {
+    ({ key, keyPath }) => {
       setIsVisible(false);
-      if (key === 'signOut') {
-        handleSignOut();
-      } else if (key.startsWith('language')) {
-        const language = key.split('-')?.[1];
-        i18n.changeLanguage(language);
-        changeLanguage({ language });
+      const lastKey = keyPath?.[keyPath.length - 1];
+      const language = key?.split('-')?.[1];
+      switch (lastKey) {
+        case 'signOut':
+          handleSignOut();
+          break;
+        case 'language':
+          i18n.changeLanguage(language);
+          changeLanguage({ language });
+          break;
+        default:
+          break;
       }
     },
     [changeLanguage, handleSignOut, i18n],
@@ -88,6 +94,12 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
     );
   }, [location.pathname, t]);
 
+  const languageSubMenu = useMemo(() => {
+    return LANGUAGES_LIST.map(({ key, value }) => (
+      <Menu.Item key={`language-${key}`}>{value}</Menu.Item>
+    ));
+  }, []);
+
   const menu = useMemo(
     () => (
       <S.Menu onClick={handleMenuClick}>
@@ -95,16 +107,12 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
         {user?.roles?.includes(Roles.TEACHER) && getTeacherMenu()}
 
         {isMobile ? (
-          <Menu.ItemGroup title={t('header.language')}>
-            {LANGUAGES_LIST.map(({ key, value }) => (
-              <Menu.Item key={`language-${key}`}>{value}</Menu.Item>
-            ))}
+          <Menu.ItemGroup key="language" title={t('header.language')}>
+            {languageSubMenu}
           </Menu.ItemGroup>
         ) : (
-          <SubMenu title={t('header.language')}>
-            {LANGUAGES_LIST.map(({ key, value }) => (
-              <Menu.Item key={`language-${key}`}>{value}</Menu.Item>
-            ))}
+          <SubMenu key="language" title={t('header.language')}>
+            {languageSubMenu}
           </SubMenu>
         )}
 
@@ -211,8 +219,13 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
           {children}
           <Col>
             {isMobile ? (
-              // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-static-element-interactions
-              <div onClick={handleMenuWrapperClick}>{profileContent}</div>
+              <div
+                onClick={handleMenuWrapperClick}
+                aria-hidden="true"
+                role="button"
+              >
+                {profileContent}
+              </div>
             ) : (
               <Dropdown
                 overlay={menu}
