@@ -43,7 +43,7 @@ class Result extends BaseModel {
 
   static async interactiveBlocksResults({ lessonId, userId }) {
     const results = await Result.query()
-      .select('results.data', 'results.block_id', 'results.revision')
+      .select('results.data as reply', 'results.block_id', 'results.revision')
       .from(
         this.knex().raw(`
           (select block_id, max(created_at) as created_at from results 

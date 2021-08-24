@@ -64,7 +64,7 @@ const getChunk = ({ blocks, previousBlock = null, fromStart = false }) => {
 
 export const postLessonByIdPreview = (data) => (props) => {
   const { lesson } = data || {};
-  const { action, blockId, data: dataResponse } = props;
+  const { action, blockId, reply: dataResponse } = props;
 
   const { chunk, isFinal } = getChunk({
     blocks: lesson.blocks,
@@ -89,7 +89,7 @@ export const postLessonByIdPreview = (data) => (props) => {
     return {
       blocks: newChunk,
       isFinal,
-      userAnswer: dataResponse,
+      reply: dataResponse,
       answer: quizBlock.answer,
     };
   }

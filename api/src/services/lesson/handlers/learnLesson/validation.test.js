@@ -52,7 +52,7 @@ describe('Test learnLesson validation', () => {
       },
     ],
     [
-      'data',
+      'reply',
       {
         action: 'response',
         blockId: 'blockId',

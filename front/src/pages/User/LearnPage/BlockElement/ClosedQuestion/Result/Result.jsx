@@ -4,22 +4,24 @@ import * as S from '@sb-ui/pages/User/LearnPage/BlockElement/Quiz/QuizResult/Qui
 import {
   ClosedQuestionBlockAnswerType,
   ClosedQuestionBlockDataType,
+  ClosedQuestionBlockReplyType,
 } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
 import { ChunkWrapper } from '@sb-ui/pages/User/LearnPage/LearnPage.styled';
 
 import AnswerResult from './AnswerResult';
 
-const Result = ({ correctAnswer, data }) => {
-  const { question, answer } = data;
-  const results = correctAnswer?.results;
-  const explanation = correctAnswer?.explanation;
+const Result = ({ answer, data, reply }) => {
+  const { question } = data;
+  const { results, explanation } = answer;
+  const { value: userValue } = reply;
+
   const isCorrect = useMemo(
     () =>
       results?.some(
         (result) =>
-          result?.trim()?.toLowerCase() === answer?.trim()?.toLowerCase(),
+          result?.trim()?.toLowerCase() === userValue.trim()?.toLowerCase(),
       ),
-    [answer, results],
+    [userValue, results],
   );
 
   return (
@@ -27,7 +29,7 @@ const Result = ({ correctAnswer, data }) => {
       <ChunkWrapper>
         <S.Question>{question}</S.Question>
       </ChunkWrapper>
-      <ChunkWrapper>{answer}</ChunkWrapper>
+      <ChunkWrapper>{userValue}</ChunkWrapper>
       <ChunkWrapper>
         <AnswerResult
           correct={isCorrect}
@@ -40,7 +42,8 @@ const Result = ({ correctAnswer, data }) => {
 };
 Result.propTypes = {
   data: ClosedQuestionBlockDataType,
-  correctAnswer: ClosedQuestionBlockAnswerType,
+  answer: ClosedQuestionBlockAnswerType,
+  reply: ClosedQuestionBlockReplyType,
 };
 
 export default Result;

@@ -46,7 +46,9 @@ export default class ClosedQuestion {
     const questionInput = document.createElement('div');
     questionInput.classList.add(this.CSS.input);
     questionInput.classList.add(this.CSS.questionInput);
-    questionInput.contentEditable = 'true';
+    if (!this.readOnly) {
+      questionInput.contentEditable = 'true';
+    }
     questionInput.setAttribute('placeholder', this.api.i18n.t('question'));
     this.elements.questionInput = questionInput;
 
@@ -59,6 +61,7 @@ export default class ClosedQuestion {
       name: 'answerInput',
       placeholder: this.api.i18n.t('answer'),
       classList: [this.CSS.input, this.CSS.answerInput],
+      readOnly: this.readOnly,
     });
 
     const explanationInput = Utils.createInput({
@@ -66,6 +69,7 @@ export default class ClosedQuestion {
       name: 'explanationInput',
       placeholder: this.api.i18n.t('explanation'),
       classList: [this.CSS.input, this.CSS.answerInput],
+      readOnly: this.readOnly,
     });
     if (this.data.explanation) {
       explanationInput.value = this.data.explanation;
@@ -129,6 +133,9 @@ export default class ClosedQuestion {
   }
 
   removeTag(tag) {
+    if (this.readOnly) {
+      return;
+    }
     const filteredAnswers = this.answers.filter((answer) => {
       const tagValue =
         tag.querySelector(`.${this.CSS.tooltipText}`)?.innerHTML ||

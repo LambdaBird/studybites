@@ -36,7 +36,7 @@ const Answer = ({ blockId, revision, question }) => {
               action: RESPONSE_TYPE,
               blockId,
               revision,
-              data: { response: input },
+              reply: { value: input },
             });
           }}
         >
