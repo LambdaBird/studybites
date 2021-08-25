@@ -1,33 +1,45 @@
-const WRONG_ASWER_WEIGHT = -0.5;
+const WRONG_ANSWER_WEIGHT = -0.5;
 
 function getQuizCorrectness({
   solution,
-  userResponse,
+  userResponse: { response },
   blockWeight,
   BadRequestError,
   error,
 }) {
-  if (solution.length !== userResponse.length) {
+  if (solution.length !== response.length) {
     throw new BadRequestError(error);
   }
 
   const numberOfRightAnswers = solution.filter(Boolean).length;
 
-  const mark = userResponse.reduce((correctness, answer, index) => {
+  const mark = response.reduce((correctness, answer, index) => {
     return (
-      correctness + +answer * (solution[index] ? 1 : 1 * WRONG_ASWER_WEIGHT)
+      correctness + +answer * (solution[index] ? 1 : 1 * WRONG_ANSWER_WEIGHT)
     );
   }, 0);
 
   return blockWeight * Math.max(mark / numberOfRightAnswers, 0);
 }
 
-function getClosedQuestionCorrectness({ solution, userResponse, blockWeight }) {
-  if (solution.includes(userResponse)) {
+function getClosedQuestionCorrectness({
+  solution,
+  userResponse: { response },
+  blockWeight,
+}) {
+  if (solution.includes(response)) {
     return blockWeight;
   }
 
   return 0;
+}
+
+function getConstructorCorrectness({
+  solution,
+  userResponse: { words },
+  blockWeight,
+}) {
+  return JSON.stringify(solution) === JSON.stringify(words) ? blockWeight : 0;
 }
 
 export async function getCorrectness({
@@ -53,6 +65,13 @@ export async function getCorrectness({
     }
     case blocks.CLOSED_QUESTION: {
       return getClosedQuestionCorrectness({
+        solution: answer.results,
+        userResponse,
+        blockWeight: weight,
+      });
+    }
+    case blocks.CONSTRUCTOR: {
+      return getConstructorCorrectness({
         solution: answer.results,
         userResponse,
         blockWeight: weight,
