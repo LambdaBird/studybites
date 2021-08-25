@@ -3,6 +3,10 @@ import styled from 'styled-components';
 
 const { Text } = Typography;
 
+export const CheckboxText = styled.span`
+  overflow-wrap: anywhere;
+`;
+
 export const LessonButtonSend = styled(Button).attrs({
   size: 'large',
 })`
