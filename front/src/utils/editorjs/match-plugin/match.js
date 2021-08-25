@@ -98,6 +98,17 @@ export default class Match {
       </button>`);
   }
 
+  createInput(value, placeholder) {
+    const input = document.createElement('div');
+    input.classList.add(this.CSS.input);
+    input.innerHTML = value;
+    if (!this.readOnly) {
+      input.contentEditable = 'true';
+    }
+    input.setAttribute('placeholder', this.api.i18n.t(placeholder));
+    return input;
+  }
+
   createBlockLine({ number = 1, left = '', right = '' }) {
     const wrapper = document.createElement('div');
     wrapper.classList.add(this.CSS.matchLine);
@@ -105,31 +116,12 @@ export default class Match {
     const numberElement = document.createElement('div');
     numberElement.innerText = `${number}.`;
 
-    const firstInput = document.createElement('div');
-    firstInput.classList.add(this.CSS.input);
-    firstInput.innerHTML = left;
-    if (!this.readOnly) {
-      firstInput.contentEditable = 'true';
-    }
-    firstInput.setAttribute(
-      'placeholder',
-      this.api.i18n.t('input_left_placeholder'),
-    );
-
-    const secondInput = document.createElement('div');
-    secondInput.classList.add(this.CSS.input);
-    secondInput.innerHTML = right;
-    if (!this.readOnly) {
-      secondInput.contentEditable = 'true';
-    }
-    secondInput.setAttribute(
-      'placeholder',
-      this.api.i18n.t('input_right_placeholder'),
-    );
+    const leftInput = this.createInput(left, 'input_left_placeholder');
+    const rightInput = this.createInput(right, 'input_right_placeholder');
 
     wrapper.appendChild(numberElement);
-    wrapper.appendChild(firstInput);
-    wrapper.appendChild(secondInput);
+    wrapper.appendChild(leftInput);
+    wrapper.appendChild(rightInput);
     this.prepareInputs();
     return wrapper;
   }
