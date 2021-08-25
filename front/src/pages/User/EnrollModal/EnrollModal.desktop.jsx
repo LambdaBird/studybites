@@ -5,7 +5,7 @@ import { useMutation, useQuery } from 'react-query';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 
 import lessonImg from '@sb-ui/resources/img/lesson.svg';
-import { getEnrolledLesson, postEnroll } from '@sb-ui/utils/api/v1/student';
+import { getLessonById, postEnroll } from '@sb-ui/utils/api/v1/student';
 import { LEARN_PAGE, USER_HOME } from '@sb-ui/utils/paths';
 import { USER_LESSON_MODAL_BASE_KEY } from '@sb-ui/utils/queries';
 
@@ -39,7 +39,7 @@ const EnrollModalDesktop = () => {
 
   const { data: responseData } = useQuery(
     [USER_LESSON_MODAL_BASE_KEY, { id }],
-    getEnrolledLesson,
+    getLessonById,
   );
 
   const { mutate: mutatePostEnroll } = useMutation(postEnroll);
