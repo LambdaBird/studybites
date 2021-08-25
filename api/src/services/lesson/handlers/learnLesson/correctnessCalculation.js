@@ -39,7 +39,10 @@ function getConstructorCorrectness({
   userResponse: { words },
   blockWeight,
 }) {
-  return JSON.stringify(solution) === JSON.stringify(words) ? blockWeight : 0;
+  return solution.length === words.length &&
+    solution.every((word, index) => word === words[index])
+    ? blockWeight
+    : 0;
 }
 
 export async function getCorrectness({
