@@ -8,6 +8,7 @@ import Lesson from './models/Lesson';
 import Block from './models/Block';
 import LessonBlockStructure from './models/LessonBlockStructure';
 import Result from './models/Result';
+import Keyword from './models/Keyword';
 
 import userService from './services/user';
 import lessonService from './services/lesson';
@@ -21,7 +22,16 @@ export default (options = {}) => {
 
   app.register(fastifyObjection, {
     connection: process.env.DATABASE_URL,
-    models: [User, Role, UserRole, Lesson, Block, LessonBlockStructure, Result],
+    models: [
+      User,
+      Role,
+      UserRole,
+      Lesson,
+      Block,
+      LessonBlockStructure,
+      Result,
+      Keyword,
+    ],
   });
 
   app.register(userService, {
