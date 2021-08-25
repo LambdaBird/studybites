@@ -1,5 +1,7 @@
 import * as Utils from '../utils';
 
+import { icon, plusIcon } from './resources';
+
 import './match.css';
 
 export default class Match {
@@ -14,7 +16,7 @@ export default class Match {
   static get toolbox() {
     return {
       title: 'Match',
-      icon: '<svg width="15" height="15" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><path d="M7.5 15a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15zm0-2.394a5.106 5.106 0 1 0 0-10.212 5.106 5.106 0 0 0 0 10.212zm-.675-4.665l2.708-2.708 1.392 1.392-2.708 2.708-1.392 1.391-2.971-2.971L5.245 6.36l1.58 1.58z"/></svg>',
+      icon,
     };
   }
 
@@ -36,7 +38,7 @@ export default class Match {
     container.classList.add(this.CSS.container);
 
     const hint = document.createElement('span');
-    hint.innerText = '* Words will be shuffled for students after save';
+    hint.innerText = this.api.i18n.t('hint');
     hint.classList.add(this.CSS.hint);
 
     const addLineButton = this.createAddButton();
@@ -52,12 +54,12 @@ export default class Match {
     }
 
     if (this.data.values?.length > 0) {
-      this.data.values.forEach(({ from, to }, index) => {
+      this.data.values.forEach(({ left, right }, index) => {
         inputsWrapper.appendChild(
           this.createBlockLine({
             number: index + 1,
-            from,
-            to,
+            left,
+            right,
           }),
         );
       });
@@ -86,37 +88,44 @@ export default class Match {
 
   createAddButton() {
     return Utils.createElementFromHTML(`
-      <button type="button" class="ant-btn ant-btn-link ${this.CSS.addLineButton}">
+      <button type="button" class="ant-btn ant-btn-link ${
+        this.CSS.addLineButton
+      }">
         <span  role="img" aria-label="plus" class="anticon anticon-plus">
-          <svg viewBox="64 64 896 896" focusable="false" data-icon="plus" width="1em" height="1em" fill="currentColor"
-          aria-hidden="true"><defs><style></style></defs><path
-          d="M482 152h60q8 0 8 8v704q0 8-8 8h-60q-8 0-8-8V160q0-8 8-8z"></path><path
-          d="M176 474h672q8 0 8 8v60q0 8-8 8H176q-8 0-8-8v-60q0-8 8-8z"></path>
-          </svg>
+         ${plusIcon}
         </span>
-        <span>Add line</span>
+        <span>${this.api.i18n.t('add_line')}</span>
       </button>`);
   }
 
-  createBlockLine({ number = 1, from = '', to = '' }) {
+  createBlockLine({ number = 1, left = '', right = '' }) {
     const wrapper = document.createElement('div');
     wrapper.classList.add(this.CSS.matchLine);
+
     const numberElement = document.createElement('div');
     numberElement.innerText = `${number}.`;
+
     const firstInput = document.createElement('div');
     firstInput.classList.add(this.CSS.input);
-    firstInput.innerHTML = from;
+    firstInput.innerHTML = left;
     if (!this.readOnly) {
       firstInput.contentEditable = 'true';
     }
-    firstInput.setAttribute('placeholder', 'Input your left value');
+    firstInput.setAttribute(
+      'placeholder',
+      this.api.i18n.t('input_left_placeholder'),
+    );
+
     const secondInput = document.createElement('div');
     secondInput.classList.add(this.CSS.input);
-    secondInput.innerHTML = to;
+    secondInput.innerHTML = right;
     if (!this.readOnly) {
       secondInput.contentEditable = 'true';
     }
-    secondInput.setAttribute('placeholder', 'Input your right value');
+    secondInput.setAttribute(
+      'placeholder',
+      this.api.i18n.t('input_right_placeholder'),
+    );
 
     wrapper.appendChild(numberElement);
     wrapper.appendChild(firstInput);
@@ -143,18 +152,17 @@ export default class Match {
   prepareInputs() {
     const lines = Array.from(this.inputsWrapper?.childNodes);
     return lines.map((line) => {
-      const x = Array.from(line?.childNodes);
-      const [from, to] = [x[1], x[2]];
+      const [, left, right] = [...Array.from(line?.childNodes)];
       return {
-        from: from?.innerHTML,
-        to: to?.innerHTML,
+        left: left?.innerHTML,
+        right: right?.innerHTML,
       };
     });
   }
 
   save() {
     const inputsValue = this.prepareInputs().filter(
-      ({ from, to }) => from.length !== 0 || to.length !== 0,
+      ({ left, right }) => left.length !== 0 || right.length !== 0,
     );
     if (inputsValue.length === 0) {
       return null;

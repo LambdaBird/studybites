@@ -20,11 +20,11 @@ import { shuffleArray } from '@sb-ui/utils/utils';
 const MAX_BODY_LENGTH = 4_000_000;
 
 const prepareMatchValues = (values) => {
-  const toValues = values.map((value) => value.to);
-  shuffleArray(toValues);
+  const rightValues = values.map((value) => value.right);
+  const shuffledRightValues = shuffleArray(rightValues);
   return values.map((value, index) => ({
     ...value,
-    to: toValues[index],
+    right: shuffledRightValues[index],
   }));
 };
 
