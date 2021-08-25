@@ -136,7 +136,7 @@ export async function learnLessonHandler({
       Block,
       blockId,
       revision,
-      userResponse: reply.response,
+      userResponse: reply,
       blocks: blockConstants.blocks,
       BadRequestError,
       error: errors.LESSON_ERR_FAIL_LEARN,
