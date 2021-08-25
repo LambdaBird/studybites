@@ -76,6 +76,12 @@ export default {
       example: 'Пример',
       none: 'пусто',
     },
+    match: {
+      input_left_placeholder: 'Введите левое значение',
+      input_right_placeholder: 'Введите правое значение',
+      hint: '* Слова будут перемешаны для студентов после сохранение',
+      add_line: 'Добавить строку',
+    },
     warning: {
       title: 'Предупреждение',
       placeholder: 'Заголовок',

@@ -6,6 +6,7 @@ export const BLOCKS_TYPE = {
   CODE: 'code',
   EMBED: 'embed',
   IMAGE: 'image',
+  MATCH: 'match',
   LIST: 'list',
   HEADER: 'header',
   QUOTE: 'quote',
