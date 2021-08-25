@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { forwardRef } from 'react';
 
-import * as S from './Select.styled';
+import * as S from './MatchSelect.styled';
 
 export const MATCH_BLOCK_TYPE = {
   RESULT: 'result',

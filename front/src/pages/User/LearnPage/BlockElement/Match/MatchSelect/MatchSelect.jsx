@@ -2,7 +2,8 @@ import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
 
 import { MATCH_BLOCK_TYPE, MatchBlock } from './MatchBlock';
-import * as S from './Select.styled';
+import { MatchSelectBlockType } from './types';
+import * as S from './MatchSelect.styled';
 
 const swapBlocks = (blocks, left, right) => {
   const newBlocks = blocks.map((x) => ({ ...x }));
@@ -34,7 +35,7 @@ const moveBlocksToTop = (left, right, leftId, rightId) => {
   return [newLeft, newRight];
 };
 
-const Select = ({
+const MatchSelect = ({
   left,
   setLeft = () => {},
   right,
@@ -172,35 +173,13 @@ const Select = ({
   );
 };
 
-Select.propTypes = {
+MatchSelect.propTypes = {
   disabled: PropTypes.bool,
   showCorrect: PropTypes.bool,
-  left: PropTypes.arrayOf(
-    PropTypes.shape({
-      ref: PropTypes.oneOfType([
-        PropTypes.func,
-        PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
-      ]),
-      value: PropTypes.string,
-      id: PropTypes.number,
-      selected: PropTypes.bool,
-      correct: PropTypes.bool,
-    }),
-  ),
+  left: MatchSelectBlockType,
   setLeft: PropTypes.func,
-  right: PropTypes.arrayOf(
-    PropTypes.shape({
-      ref: PropTypes.oneOfType([
-        PropTypes.func,
-        PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
-      ]),
-      value: PropTypes.string,
-      id: PropTypes.number,
-      selected: PropTypes.bool,
-      correct: PropTypes.bool,
-    }),
-  ),
+  right: MatchSelectBlockType,
   setRight: PropTypes.func,
 };
 
-export default Select;
+export default MatchSelect;

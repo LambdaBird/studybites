@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons';
 
 import LearnContext from '@sb-ui/contexts/LearnContext';
-import Select from '@sb-ui/pages/User/LearnPage/BlockElement/Match/Select/Select';
+import MatchSelect from '@sb-ui/pages/User/LearnPage/BlockElement/Match/MatchSelect/MatchSelect';
 import { useMatch } from '@sb-ui/pages/User/LearnPage/BlockElement/Match/useMatch';
 import {
   BlockContentType,
@@ -56,7 +56,7 @@ const Match = ({ blockId, revision, answer, content, reply, isSolved }) => {
     return (
       <>
         <ChunkWrapper>
-          <Select
+          <MatchSelect
             left={left}
             right={right}
             setLeft={setLeft}
@@ -75,7 +75,7 @@ const Match = ({ blockId, revision, answer, content, reply, isSolved }) => {
   return (
     <>
       <ChunkWrapper>
-        <Select {...result} disabled />
+        <MatchSelect {...result} disabled />
       </ChunkWrapper>
       <ChunkWrapper>
         {correct ? (
@@ -91,7 +91,7 @@ const Match = ({ blockId, revision, answer, content, reply, isSolved }) => {
                 <CloseCircleTwoTone twoToneColor="#F5222D" />
               </S.AnswerWrapperWrongTitle>
               <S.MatchWrapper>
-                <Select {...correctResult} disabled showCorrect />
+                <MatchSelect {...correctResult} disabled showCorrect />
               </S.MatchWrapper>
             </S.AnswerWrapperWrong>
           </>
