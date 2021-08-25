@@ -33,6 +33,22 @@ const { SubMenu } = Menu;
 
 const USER_LOGO_FALLBACK = 'X';
 
+const MENU_KEYS = {
+  TEACHER_HOME: 'teacherHome',
+  STUDENT_HOME: 'studentHome',
+  VIEW_ALL_MY_LESSONS: 'viewAllMyLessons',
+  PROFILE: 'profile',
+  LANGUAGE: 'language',
+  SIGN_OUT: 'signOut',
+};
+
+const MENU_LANGUAGES_LIST = new Map(
+  LANGUAGES_LIST.map((language) => [
+    `${MENU_KEYS.LANGUAGE}-${language.key}`,
+    language,
+  ]),
+);
+
 const Header = ({ className, hideOnScroll, bottom, children }) => {
   const history = useHistory();
   const { t, i18n } = useTranslation(['common', 'user']);
@@ -55,15 +71,15 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
   const handleMenuClick = useCallback(
     ({ key, keyPath }) => {
       setIsVisible(false);
-      const lastKey = keyPath?.[keyPath.length - 1];
-      const language = key?.split('-')?.[1];
-      switch (lastKey) {
-        case 'signOut':
+      const upperKey = keyPath?.[keyPath.length - 1];
+      const { key: languageCode } = MENU_LANGUAGES_LIST.get(key) || {};
+      switch (upperKey) {
+        case MENU_KEYS.SIGN_OUT:
           handleSignOut();
           break;
-        case 'language':
-          i18n.changeLanguage(language);
-          changeLanguage({ language });
+        case MENU_KEYS.LANGUAGE:
+          i18n.changeLanguage(languageCode);
+          changeLanguage({ language: languageCode });
           break;
         default:
           break;
@@ -76,10 +92,10 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
     if (location.pathname.includes(USER_HOME)) {
       return (
         <>
-          <Menu.Item key="teacherHome">
+          <Menu.Item key={MENU_KEYS.TEACHER_HOME}>
             <Link to={TEACHER_HOME}>{t('header.switch_teacher')}</Link>
           </Menu.Item>
-          <Menu.Item key="viewAllMyLessons">
+          <Menu.Item key={MENU_KEYS.VIEW_ALL_MY_LESSONS}>
             <Link to={USER_LESSONS}>
               {t('user:home.ongoing_lessons.view_all_lessons')}
             </Link>
@@ -88,7 +104,7 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
       );
     }
     return (
-      <Menu.Item key="studentHome">
+      <Menu.Item key={MENU_KEYS.STUDENT_HOME}>
         <Link to={USER_HOME}>{t('header.switch_student')}</Link>
       </Menu.Item>
     );
@@ -96,31 +112,38 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
 
   const languageSubMenu = useMemo(() => {
     return LANGUAGES_LIST.map(({ key, value }) => (
-      <Menu.Item key={`language-${key}`}>{value}</Menu.Item>
+      <Menu.Item key={`${MENU_KEYS.LANGUAGE}-${key}`}>{value}</Menu.Item>
     ));
   }, []);
 
   const menu = useMemo(
     () => (
       <S.Menu onClick={handleMenuClick}>
-        <Menu.Item key="profile">{t('header.profile')}</Menu.Item>
+        <Menu.Item key={MENU_KEYS.PROFILE}>{t('header.profile')}</Menu.Item>
         {user?.roles?.includes(Roles.TEACHER) && getTeacherMenu()}
 
         {isMobile ? (
-          <Menu.ItemGroup key="language" title={t('header.language')}>
+          <Menu.ItemGroup key={MENU_KEYS.LANGUAGE} title={t('header.language')}>
             {languageSubMenu}
           </Menu.ItemGroup>
         ) : (
-          <SubMenu key="language" title={t('header.language')}>
+          <SubMenu key={MENU_KEYS.LANGUAGE} title={t('header.language')}>
             {languageSubMenu}
           </SubMenu>
         )}
 
         <Menu.Divider />
-        <Menu.Item key="signOut">{t('header.sign_out')}</Menu.Item>
+        <Menu.Item key={MENU_KEYS.SIGN_OUT}>{t('header.sign_out')}</Menu.Item>
       </S.Menu>
     ),
-    [getTeacherMenu, handleMenuClick, isMobile, t, user?.roles],
+    [
+      getTeacherMenu,
+      handleMenuClick,
+      isMobile,
+      languageSubMenu,
+      t,
+      user?.roles,
+    ],
   );
 
   const isUsername = useMemo(
