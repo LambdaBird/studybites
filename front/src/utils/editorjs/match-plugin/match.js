@@ -98,14 +98,14 @@ export default class Match {
       </button>`);
   }
 
-  createInput(value, placeholder) {
+  createInput(value, placeholderKey) {
     const input = document.createElement('div');
     input.classList.add(this.CSS.input);
     input.innerHTML = value;
     if (!this.readOnly) {
       input.contentEditable = 'true';
     }
-    input.setAttribute('placeholder', this.api.i18n.t(placeholder));
+    input.setAttribute('placeholder', this.api.i18n.t(placeholderKey));
     return input;
   }
 

@@ -88,11 +88,10 @@ export const formatDate = (date) =>
   }).format(new Date(date));
 
 export const shuffleArray = (array) => {
-  const arrayCopy = array.slice();
-  arrayCopy.forEach((element, i) => {
+  const shuffledArray = array.slice();
+  for (let i = 0; i < shuffledArray.length; i += 1) {
     const j = Math.floor(Math.random() * (i + 1));
-    // eslint-disable-next-line no-param-reassign
-    [arrayCopy[i], arrayCopy[j]] = [arrayCopy[j], arrayCopy[i]];
-  });
-  return arrayCopy;
+    [shuffledArray[i], shuffledArray[j]] = [shuffledArray[j], shuffledArray[i]];
+  }
+  return shuffledArray;
 };
