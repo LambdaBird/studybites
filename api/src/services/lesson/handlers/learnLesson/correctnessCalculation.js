@@ -42,11 +42,12 @@ function getFillTheGapCorrectness({ solution, userResponse, blockWeight }) {
     }),
     {},
   );
-  const results = solution.map(
+  return solution.every(
     (answer) =>
-      !!(replies[answer.id] && answer.value.includes(replies[answer.id].value)),
-  );
-  return results.includes(false) ? 0 : blockWeight;
+      replies[answer.id] && answer.value.includes(replies[answer.id].value),
+  )
+    ? blockWeight
+    : 0;
 }
 
 export async function getCorrectness({
