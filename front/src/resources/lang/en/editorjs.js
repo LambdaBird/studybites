@@ -76,6 +76,12 @@ export default {
       example: 'Example',
       none: 'none',
     },
+    match: {
+      input_left_placeholder: 'Input your left value',
+      input_right_placeholder: 'Input your right value',
+      hint: '* Words will be shuffled for students after save',
+      add_line: 'Add line',
+    },
     warning: {
       title: 'Warning',
       placeholder: 'Title',
