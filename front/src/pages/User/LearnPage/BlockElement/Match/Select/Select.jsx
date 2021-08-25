@@ -4,41 +4,41 @@ import { useCallback, useEffect, useState } from 'react';
 import { MATCH_BLOCK_TYPE, MatchBlock } from './MatchBlock';
 import * as S from './Select.styled';
 
-const swapBlocks = (blocks, from, to) => {
+const swapBlocks = (blocks, left, right) => {
   const newBlocks = blocks.map((x) => ({ ...x }));
-  const fromIndex = newBlocks.findIndex((x) => x.id === from);
-  const toIndex = newBlocks.findIndex((x) => x.id === to);
+  const leftIndex = newBlocks.findIndex((x) => x.id === left);
+  const rightIndex = newBlocks.findIndex((x) => x.id === right);
 
-  [newBlocks[fromIndex], newBlocks[toIndex]] = [
-    newBlocks[toIndex],
-    newBlocks[fromIndex],
+  [newBlocks[leftIndex], newBlocks[rightIndex]] = [
+    newBlocks[rightIndex],
+    newBlocks[leftIndex],
   ];
   return newBlocks;
 };
 
 const selectedFunction = (x) => x.selected !== true;
 
-const moveBlocksToTop = (from, to, fromId, toId) => {
-  const firstNotSelectedFrom = from.find(selectedFunction);
-  const firstNotSelectedTo = to.find(selectedFunction);
+const moveBlocksToTop = (left, right, leftId, rightId) => {
+  const firstNotSelectedLeft = left.find(selectedFunction);
+  const firstNotSelectedRight = right.find(selectedFunction);
 
-  const newFrom = swapBlocks(from, fromId, firstNotSelectedFrom.id);
-  const newTo = swapBlocks(to, toId, firstNotSelectedTo.id);
-  const firstNotSelectedNewFrom = newFrom.find(selectedFunction);
-  const firstNotSelectedNewTo = newTo.find(selectedFunction);
-  if (firstNotSelectedNewFrom && firstNotSelectedNewTo) {
-    firstNotSelectedNewFrom.selected = true;
-    firstNotSelectedNewTo.selected = true;
+  const newLeft = swapBlocks(left, leftId, firstNotSelectedLeft.id);
+  const newRight = swapBlocks(right, rightId, firstNotSelectedRight.id);
+  const firstNotSelectedNewLeft = newLeft.find(selectedFunction);
+  const firstNotSelectedNewRight = newRight.find(selectedFunction);
+  if (firstNotSelectedNewLeft && firstNotSelectedNewRight) {
+    firstNotSelectedNewLeft.selected = true;
+    firstNotSelectedNewRight.selected = true;
   }
 
-  return [newFrom, newTo];
+  return [newLeft, newRight];
 };
 
 const Select = ({
-  from,
-  setFrom = () => {},
-  to,
-  setTo = () => {},
+  left,
+  setLeft = () => {},
+  right,
+  setRight = () => {},
   disabled,
   showCorrect,
 }) => {
@@ -48,10 +48,10 @@ const Select = ({
   const getMaxBlockHeight = useCallback(
     (index) =>
       Math.max(
-        to[index]?.ref.current?.clientHeight,
-        from[index]?.ref.current?.clientHeight,
+        right[index]?.ref.current?.clientHeight,
+        left[index]?.ref.current?.clientHeight,
       ),
-    [from, to],
+    [left, right],
   );
 
   const unselectBlock = useCallback((setFunc, id) => {
@@ -64,25 +64,25 @@ const Select = ({
 
   const removeSelected = useCallback(
     (id) => {
-      if (id.startsWith('from')) {
-        const indexFrom = from.findIndex((x) => x.id === id);
-        unselectBlock(setFrom, id);
-        unselectBlock(setTo, to[indexFrom].id);
-      } else if (id.startsWith('to')) {
-        const indexTo = to.findIndex((x) => x.id === id);
-        unselectBlock(setFrom, from[indexTo].id);
-        unselectBlock(setTo, id);
+      if (id.startsWith('left')) {
+        const indexLeft = left.findIndex((x) => x.id === id);
+        unselectBlock(setLeft, id);
+        unselectBlock(setRight, right[indexLeft].id);
+      } else if (id.startsWith('right')) {
+        const indexRight = right.findIndex((x) => x.id === id);
+        unselectBlock(setLeft, left[indexRight].id);
+        unselectBlock(setRight, id);
       }
     },
-    [from, unselectBlock, setFrom, setTo, to],
+    [left, unselectBlock, setLeft, setRight, right],
   );
 
   const handleBlockClick = useCallback(
     (id, isFirst) => {
       const setFunc = isFirst ? setFirst : setSecond;
-      const isFromSelected = from.find((x) => x.id === id)?.selected;
-      const isToSelected = to.find((x) => x.id === id)?.selected;
-      if (isFromSelected || isToSelected) {
+      const isLeftSelected = left.find((x) => x.id === id)?.selected;
+      const isRightSelected = right.find((x) => x.id === id)?.selected;
+      if (isLeftSelected || isRightSelected) {
         removeSelected(id);
         if (isFirst ? second : first) {
           setFunc(id);
@@ -97,7 +97,7 @@ const Select = ({
         return id;
       });
     },
-    [first, from, removeSelected, second, to],
+    [first, left, removeSelected, right, second],
   );
 
   useEffect(() => {
@@ -107,11 +107,11 @@ const Select = ({
     if (first && second) {
       setFirst(null);
       setSecond(null);
-      const [newFrom, newTo] = moveBlocksToTop(from, to, first, second);
-      setFrom(newFrom);
-      setTo(newTo);
+      const [newLeft, newRight] = moveBlocksToTop(left, right, first, second);
+      setLeft(newLeft);
+      setRight(newRight);
     }
-  }, [disabled, first, from, second, setFrom, setTo, to]);
+  }, [disabled, first, left, right, second, setLeft, setRight]);
 
   const getBlockType = useCallback(
     (correct) => {
@@ -125,34 +125,11 @@ const Select = ({
     },
     [showCorrect],
   );
-  /*
-
-  useEffect(() => {
-    setFrom((prev) =>
-      values.map(({ from: fromValue, correct = null }, i) => ({
-        ref: prev[i].ref,
-        value: fromValue,
-        id: `from-${i + 1}`,
-        selected: false,
-        correct,
-      })),
-    );
-    setTo((prev) =>
-      values.map(({ to: toValue, correct = null }, i) => ({
-        ref: prev[i].ref,
-        value: toValue,
-        id: `to-${i + 1}`,
-        selected: false,
-        correct,
-      })),
-    );
-  }, [values]);
-*/
 
   return (
     <S.MatchWrapper>
       <S.MatchColumn disableAllAnimations={disabled}>
-        {from?.map(({ ref, correct, selected, id, value }, index) => (
+        {left?.map(({ ref, correct, selected, id, value }, index) => (
           <S.MatchBlockWrapper height={getMaxBlockHeight(index)} key={id}>
             <MatchBlock
               ref={ref}
@@ -167,7 +144,7 @@ const Select = ({
         ))}
       </S.MatchColumn>
       <S.MatchMiddle>
-        {from?.map(
+        {left?.map(
           ({ selected }, index) =>
             (selected || disabled) && (
               <S.ArrowConnectWrapper height={getMaxBlockHeight(index)}>
@@ -177,7 +154,7 @@ const Select = ({
         )}
       </S.MatchMiddle>
       <S.MatchColumn disableAllAnimations={disabled}>
-        {to?.map(({ ref, correct, selected, id, value }, index) => (
+        {right?.map(({ ref, correct, selected, id, value }, index) => (
           <S.MatchBlockWrapper height={getMaxBlockHeight(index)} key={id}>
             <MatchBlock
               ref={ref}
@@ -198,7 +175,7 @@ const Select = ({
 Select.propTypes = {
   disabled: PropTypes.bool,
   showCorrect: PropTypes.bool,
-  from: PropTypes.arrayOf(
+  left: PropTypes.arrayOf(
     PropTypes.shape({
       ref: PropTypes.oneOfType([
         PropTypes.func,
@@ -210,8 +187,8 @@ Select.propTypes = {
       correct: PropTypes.bool,
     }),
   ),
-  setFrom: PropTypes.func,
-  to: PropTypes.arrayOf(
+  setLeft: PropTypes.func,
+  right: PropTypes.arrayOf(
     PropTypes.shape({
       ref: PropTypes.oneOfType([
         PropTypes.func,
@@ -223,7 +200,7 @@ Select.propTypes = {
       correct: PropTypes.bool,
     }),
   ),
-  setTo: PropTypes.func,
+  setRight: PropTypes.func,
 };
 
 export default Select;

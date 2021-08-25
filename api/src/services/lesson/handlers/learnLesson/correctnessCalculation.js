@@ -32,8 +32,8 @@ function getClosedQuestionCorrectness({ solution, userResponse, blockWeight }) {
 
 function getMatchCorrectness({ solution, userResponse, blockWeight }) {
   const correctAnswer = userResponse
-    ?.map(({ from, to }) => {
-      return solution.find((x) => x.from === from && x.to === to);
+    ?.map(({ left, right }) => {
+      return solution.find((x) => x.left === left && x.right === right);
     })
     ?.filter((x) => !!x);
 

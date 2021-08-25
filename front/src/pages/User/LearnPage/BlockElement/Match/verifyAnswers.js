@@ -2,8 +2,10 @@ export const verifyAnswers = (results, answers) => {
   if (!results || !answers) {
     return {};
   }
-  results?.forEach(({ from, to }) => {
-    const correctAnswer = answers.find((x) => x.from === from && x.to === to);
+  results?.forEach(({ left, right }) => {
+    const correctAnswer = answers.find(
+      (x) => x.left === left && x.right === right,
+    );
     if (correctAnswer) {
       correctAnswer.correct = true;
     }

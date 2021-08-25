@@ -1,7 +1,7 @@
 import { createRef, useCallback, useEffect, useState } from 'react';
 
-const FROM = 'from';
-const TO = 'to';
+const LEFT = 'left';
+const RIGHT = 'right';
 
 export const useMatch = (values) => {
   const convertId = useCallback((convertValues, id) => {
@@ -26,15 +26,15 @@ export const useMatch = (values) => {
     [],
   );
 
-  const [from, setFrom] = useState(convertId(values, FROM));
-  const [to, setTo] = useState(convertId(values, TO));
+  const [left, setLeft] = useState(convertId(values, LEFT));
+  const [right, setRight] = useState(convertId(values, RIGHT));
 
   useEffect(() => {
     if (values) {
-      setFrom((prev) => convertPrevId(values, prev, FROM));
-      setTo((prev) => convertPrevId(values, prev, TO));
+      setLeft((prev) => convertPrevId(values, prev, LEFT));
+      setRight((prev) => convertPrevId(values, prev, RIGHT));
     }
   }, [convertPrevId, values]);
 
-  return { from, setFrom, to, setTo };
+  return { left, setLeft, right, setRight };
 };

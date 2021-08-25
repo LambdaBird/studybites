@@ -26,7 +26,7 @@ const Match = ({ blockId, revision, answer, content, reply, isSolved }) => {
   const { t } = useTranslation('user');
   const { handleInteractiveClick, id: lessonId } = useContext(LearnContext);
 
-  const { from, setFrom, to, setTo } = useMatch(content.data.values);
+  const { left, setLeft, right, setRight } = useMatch(content.data.values);
 
   const { correct, results } = useMemo(
     () => verifyAnswers(answer?.results, reply?.response),
@@ -40,13 +40,13 @@ const Match = ({ blockId, revision, answer, content, reply, isSolved }) => {
       blockId,
       revision,
       reply: {
-        response: from.map(({ value: fromValue }, index) => ({
-          from: fromValue,
-          to: to[index].value,
+        response: left.map(({ value: leftValue }, index) => ({
+          left: leftValue,
+          right: right[index].value,
         })),
       },
     });
-  }, [blockId, from, handleInteractiveClick, lessonId, revision, to]);
+  }, [blockId, handleInteractiveClick, left, lessonId, revision, right]);
 
   const result = useMatch(results);
 
@@ -56,7 +56,12 @@ const Match = ({ blockId, revision, answer, content, reply, isSolved }) => {
     return (
       <>
         <ChunkWrapper>
-          <Select from={from} to={to} setFrom={setFrom} setTo={setTo} />
+          <Select
+            left={left}
+            right={right}
+            setLeft={setLeft}
+            setRight={setRight}
+          />
         </ChunkWrapper>
         <S.ButtonWrapper>
           <S.LessonButtonSend onClick={handleSendClick}>
