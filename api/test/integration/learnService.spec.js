@@ -21,7 +21,7 @@ describe('Learning flow', () => {
     teacherToken: null,
     studentToken: null,
     teacherRequest: async () => {},
-    studentRequest: async () => {},
+    enrollRequest: async () => {},
   };
 
   const teacherCredentials = {
@@ -54,28 +54,24 @@ describe('Learning flow', () => {
     testContext.teacherRequest = async ({ url, method = 'POST', body }) => {
       return testContext.app.inject({
         method,
-        url: `/api/v1/lesson/${url}`,
+        url: `/api/v1/lessons-management/${url}`,
         headers: {
           authorization: `Bearer ${testContext.teacherToken}`,
         },
         body,
       });
     };
-    testContext.studentRequest = async ({ url, method = 'POST', body }) => {
+    testContext.enrollRequest = async ({ url, method = 'POST', body }) => {
       return testContext.app.inject({
         method,
-        url: `/api/v1/lesson/${url}`,
+        url: `/api/v1/lessons/${url}`,
         headers: {
           authorization: `Bearer ${testContext.studentToken}`,
         },
         body,
       });
     };
-    testContext.learnServiceRequest = async ({
-      url,
-      method = 'POST',
-      body,
-    }) => {
+    testContext.studentRequest = async ({ url, method = 'POST', body }) => {
       return testContext.app.inject({
         method,
         url: `/api/v1/learn/${url}`,
@@ -108,13 +104,13 @@ describe('Learning flow', () => {
         body: prepareLessonFromSeed(math, '-notStartedLesson'),
       });
 
-      await testContext.studentRequest({
-        url: `enroll/${notStartedLesson.lesson.id}`,
+      await testContext.enrollRequest({
+        url: `${notStartedLesson.lesson.id}/enroll`,
       });
     });
 
     it('should return error for not enrolled user', async () => {
-      const response = await testContext.learnServiceRequest({
+      const response = await testContext.studentRequest({
         url: `lessons/${notEnrolledLesson.lesson.id}`,
         method: 'GET',
       });
@@ -128,7 +124,7 @@ describe('Learning flow', () => {
     });
 
     it('should return no blocks for not started lesson', async () => {
-      const response = await testContext.learnServiceRequest({
+      const response = await testContext.studentRequest({
         url: `lessons/${notStartedLesson.lesson.id}`,
         method: 'GET',
       });
@@ -162,11 +158,11 @@ describe('Learning flow', () => {
         body: prepareLessonFromSeed(math, '-notStartedLesson'),
       });
 
-      await testContext.studentRequest({
-        url: `enroll/${notStartedLesson.lesson.id}`,
+      await testContext.enrollRequest({
+        url: `${notStartedLesson.lesson.id}/enroll`,
       });
 
-      await testContext.learnServiceRequest({
+      await testContext.studentRequest({
         url: `lessons/${notStartedLesson.lesson.id}`,
         method: 'GET',
       });
@@ -177,13 +173,13 @@ describe('Learning flow', () => {
         body: prepareLessonFromSeed(french, '-lessonToStart'),
       });
 
-      await testContext.studentRequest({
-        url: `enroll/${lessonToStart.lesson.id}`,
+      await testContext.enrollRequest({
+        url: `${lessonToStart.lesson.id}/enroll`,
       });
     });
 
     it('get request should not change state of enrolled lesson', async () => {
-      const response = await testContext.learnServiceRequest({
+      const response = await testContext.studentRequest({
         url: `lessons/${notStartedLesson.lesson.id}`,
         method: 'GET',
       });
@@ -204,7 +200,7 @@ describe('Learning flow', () => {
     });
 
     it('should return blocks on start', async () => {
-      const response = await testContext.learnServiceRequest({
+      const response = await testContext.studentRequest({
         url: `lessons/${lessonToStart.lesson.id}/reply`,
         body: {
           action: 'start',
@@ -231,11 +227,11 @@ describe('Learning flow', () => {
         body: prepareLessonFromSeed(french, '-notFinishedLesson'),
       });
 
-      await testContext.studentRequest({
-        url: `enroll/${notFinishedLesson.lesson.id}`,
+      await testContext.enrollRequest({
+        url: `${notFinishedLesson.lesson.id}/enroll`,
       });
 
-      await testContext.learnServiceRequest({
+      await testContext.studentRequest({
         url: `lessons/${notFinishedLesson.lesson.id}/reply`,
         body: {
           action: 'start',
@@ -244,7 +240,7 @@ describe('Learning flow', () => {
     });
 
     it('should return an error if learn flow was not finished yet', async () => {
-      const response = await testContext.learnServiceRequest({
+      const response = await testContext.studentRequest({
         url: `lessons/${notFinishedLesson.lesson.id}/reply`,
         body: {
           action: 'finish',
@@ -269,11 +265,11 @@ describe('Learning flow', () => {
         body: prepareLessonFromSeed(french),
       });
 
-      await testContext.studentRequest({
-        url: `enroll/${lessonToNext.lesson.id}`,
+      await testContext.enrollRequest({
+        url: `${lessonToNext.lesson.id}/enroll`,
       });
 
-      await testContext.learnServiceRequest({
+      await testContext.studentRequest({
         url: `lessons/${lessonToNext.lesson.id}/reply`,
         body: {
           action: 'start',
@@ -282,7 +278,7 @@ describe('Learning flow', () => {
     });
 
     it('should return a lesson with a chunk of blocks to the "next"', async () => {
-      const { statusCode, payload } = await testContext.learnServiceRequest({
+      const { statusCode, payload } = await testContext.studentRequest({
         method: 'GET',
         url: `lessons/${lessonToNext.lesson.id}`,
       });
@@ -317,7 +313,7 @@ describe('Learning flow', () => {
     });
 
     it('should return a lesson with blocks to the next interactive block', async () => {
-      const response = await testContext.learnServiceRequest({
+      const response = await testContext.studentRequest({
         url: `lessons/${lessonToNext.lesson.id}/reply`,
         body: {
           action: 'next',
@@ -348,7 +344,7 @@ describe('Learning flow', () => {
     });
 
     it('should return a lesson with a chunk of blocks the "next" to the "quiz" block', async () => {
-      const { statusCode, payload } = await testContext.learnServiceRequest({
+      const { statusCode, payload } = await testContext.studentRequest({
         method: 'GET',
         url: `lessons/${lessonToNext.lesson.id}`,
       });
@@ -383,7 +379,7 @@ describe('Learning flow', () => {
     });
 
     it('should not be able to finish this lesson yet', async () => {
-      const response = await testContext.learnServiceRequest({
+      const response = await testContext.studentRequest({
         url: `lessons/${lessonToNext.lesson.id}/reply`,
         body: {
           action: 'finish',
@@ -408,18 +404,18 @@ describe('Learning flow', () => {
         body: prepareLessonFromSeed(french, '-lessonToAnswer'),
       });
 
-      await testContext.studentRequest({
-        url: `enroll/${lessonToAnswer.lesson.id}`,
+      await testContext.enrollRequest({
+        url: `${lessonToAnswer.lesson.id}/enroll`,
       });
 
-      await testContext.learnServiceRequest({
+      await testContext.studentRequest({
         url: `lessons/${lessonToAnswer.lesson.id}/reply`,
         body: {
           action: 'start',
         },
       });
 
-      await testContext.learnServiceRequest({
+      await testContext.studentRequest({
         url: `lessons/${lessonToAnswer.lesson.id}/reply`,
         body: {
           action: 'next',
@@ -439,7 +435,7 @@ describe('Learning flow', () => {
     });
 
     it('should return a lesson with blocks to the next interactive block, and answer', async () => {
-      const response = await testContext.learnServiceRequest({
+      const response = await testContext.studentRequest({
         url: `lessons/${lessonToAnswer.lesson.id}/reply`,
         body: {
           action: 'response',
@@ -470,7 +466,7 @@ describe('Learning flow', () => {
     });
 
     it('should return a lesson with a chunk of blocks from the "quiz" to the last block', async () => {
-      const { statusCode, payload } = await testContext.learnServiceRequest({
+      const { statusCode, payload } = await testContext.studentRequest({
         method: 'GET',
         url: `lessons/${lessonToAnswer.lesson.id}`,
       });
@@ -524,18 +520,18 @@ describe('Learning flow', () => {
         body: prepareLessonFromSeed(french, '-lessonToFinish'),
       });
 
-      await testContext.studentRequest({
-        url: `enroll/${lessonToFinish.lesson.id}`,
+      await testContext.enrollRequest({
+        url: `${lessonToFinish.lesson.id}/enroll`,
       });
 
-      await testContext.learnServiceRequest({
+      await testContext.studentRequest({
         url: `lessons/${lessonToFinish.lesson.id}/reply`,
         body: {
           action: 'start',
         },
       });
 
-      await testContext.learnServiceRequest({
+      await testContext.studentRequest({
         url: `lessons/${lessonToFinish.lesson.id}/reply`,
         body: {
           action: 'next',
@@ -553,7 +549,7 @@ describe('Learning flow', () => {
         },
       });
 
-      await testContext.learnServiceRequest({
+      await testContext.studentRequest({
         url: `lessons/${lessonToFinish.lesson.id}/reply`,
         body: {
           action: 'response',
@@ -573,7 +569,7 @@ describe('Learning flow', () => {
     });
 
     it('should finish and return no blocks', async () => {
-      const response = await testContext.learnServiceRequest({
+      const response = await testContext.studentRequest({
         url: `lessons/${lessonToFinish.lesson.id}/reply`,
         body: {
           action: 'finish',
@@ -600,11 +596,11 @@ describe('Learning flow', () => {
         body: prepareLessonFromSeed(french, '-lessonToAnswerBeforeNext'),
       });
 
-      await testContext.studentRequest({
-        url: `enroll/${lessonToAnswer.lesson.id}`,
+      await testContext.enrollRequest({
+        url: `${lessonToAnswer.lesson.id}/enroll`,
       });
 
-      await testContext.learnServiceRequest({
+      await testContext.studentRequest({
         url: `lessons/${lessonToAnswer.lesson.id}/reply`,
         body: {
           action: 'start',
@@ -613,7 +609,7 @@ describe('Learning flow', () => {
     });
 
     it('should return an error', async () => {
-      const response = await testContext.learnServiceRequest({
+      const response = await testContext.studentRequest({
         url: `lessons/${lessonToAnswer.lesson.id}/reply`,
         body: {
           action: 'response',
@@ -649,18 +645,18 @@ describe('Learning flow', () => {
         body: prepareLessonFromSeed(french, '-lessonToAnswerArchived'),
       });
 
-      await testContext.studentRequest({
-        url: `enroll/${lessonToAnswer.lesson.id}`,
+      await testContext.enrollRequest({
+        url: `${lessonToAnswer.lesson.id}/enroll`,
       });
 
-      await testContext.learnServiceRequest({
+      await testContext.studentRequest({
         url: `lessons/${lessonToAnswer.lesson.id}/reply`,
         body: {
           action: 'start',
         },
       });
 
-      await testContext.learnServiceRequest({
+      await testContext.studentRequest({
         url: `lessons/${lessonToAnswer.lesson.id}/reply`,
         body: {
           action: 'next',
@@ -680,7 +676,7 @@ describe('Learning flow', () => {
 
       await testContext.teacherRequest({
         method: 'PUT',
-        url: `maintain/${lessonToAnswer.lesson.id}`,
+        url: `lessons/${lessonToAnswer.lesson.id}`,
         body: {
           lesson: {
             status: 'Archived',
@@ -690,7 +686,7 @@ describe('Learning flow', () => {
     });
 
     it('should return an error', async () => {
-      const response = await testContext.learnServiceRequest({
+      const response = await testContext.studentRequest({
         url: `lessons/${lessonToAnswer.lesson.id}/reply`,
         body: {
           action: 'response',
@@ -726,18 +722,18 @@ describe('Learning flow', () => {
         body: prepareLessonFromSeed(french, '-lessonToAnswerDraft'),
       });
 
-      await testContext.studentRequest({
-        url: `enroll/${lessonToAnswer.lesson.id}`,
+      await testContext.enrollRequest({
+        url: `${lessonToAnswer.lesson.id}/enroll`,
       });
 
-      await testContext.learnServiceRequest({
+      await testContext.studentRequest({
         url: `lessons/${lessonToAnswer.lesson.id}/reply`,
         body: {
           action: 'start',
         },
       });
 
-      await testContext.learnServiceRequest({
+      await testContext.studentRequest({
         url: `lessons/${lessonToAnswer.lesson.id}/reply`,
         body: {
           action: 'next',
@@ -757,7 +753,7 @@ describe('Learning flow', () => {
 
       await testContext.teacherRequest({
         method: 'PUT',
-        url: `maintain/${lessonToAnswer.lesson.id}`,
+        url: `lessons/${lessonToAnswer.lesson.id}`,
         body: {
           lesson: {
             status: 'Draft',
@@ -767,7 +763,7 @@ describe('Learning flow', () => {
     });
 
     it('should return no error', async () => {
-      const response = await testContext.learnServiceRequest({
+      const response = await testContext.studentRequest({
         url: `lessons/${lessonToAnswer.lesson.id}/reply`,
         body: {
           action: 'response',
@@ -809,18 +805,18 @@ describe('Learning flow', () => {
         body: prepareLessonFromSeed(french, '-finishedLesson'),
       });
 
-      await testContext.studentRequest({
-        url: `enroll/${finishedLesson.lesson.id}`,
+      await testContext.enrollRequest({
+        url: `${finishedLesson.lesson.id}/enroll`,
       });
 
-      await testContext.learnServiceRequest({
+      await testContext.studentRequest({
         url: `lessons/${finishedLesson.lesson.id}/reply`,
         body: {
           action: 'start',
         },
       });
 
-      await testContext.learnServiceRequest({
+      await testContext.studentRequest({
         url: `lessons/${finishedLesson.lesson.id}/reply`,
         body: {
           action: 'next',
@@ -838,7 +834,7 @@ describe('Learning flow', () => {
         },
       });
 
-      await testContext.learnServiceRequest({
+      await testContext.studentRequest({
         url: `lessons/${finishedLesson.lesson.id}/reply`,
         body: {
           action: 'response',
@@ -856,7 +852,7 @@ describe('Learning flow', () => {
         },
       });
 
-      await testContext.learnServiceRequest({
+      await testContext.studentRequest({
         url: `lessons/${finishedLesson.lesson.id}/reply`,
         body: {
           action: 'finish',
@@ -865,7 +861,7 @@ describe('Learning flow', () => {
     });
 
     it('should return all finished lessons with their author', async () => {
-      const response = await testContext.learnServiceRequest({
+      const response = await testContext.studentRequest({
         url: `lessons?progress=finished`,
         method: 'GET',
       });
@@ -895,13 +891,13 @@ describe('Learning flow', () => {
           body: prepareLessonFromSeed(math),
         });
 
-        await testContext.studentRequest({
-          url: `enroll/${notStarted.lesson.id}`,
+        await testContext.enrollRequest({
+          url: `${notStarted.lesson.id}/enroll`,
         });
       });
 
       it('should return one block', async () => {
-        const response = await testContext.learnServiceRequest({
+        const response = await testContext.studentRequest({
           url: `lessons/${notStarted.lesson.id}/reply`,
           body: {
             action: 'start',
@@ -933,11 +929,11 @@ describe('Learning flow', () => {
           body: prepareLessonFromSeed(math),
         });
 
-        await testContext.studentRequest({
-          url: `enroll/${notAnswered.lesson.id}`,
+        await testContext.enrollRequest({
+          url: `${notAnswered.lesson.id}/enroll`,
         });
 
-        await testContext.learnServiceRequest({
+        await testContext.studentRequest({
           url: `lessons/${notAnswered.lesson.id}/reply`,
           body: {
             action: 'start',
@@ -946,7 +942,7 @@ describe('Learning flow', () => {
       });
 
       it('should return answer and reply', async () => {
-        const response = await testContext.learnServiceRequest({
+        const response = await testContext.studentRequest({
           url: `lessons/${notAnswered.lesson.id}/reply`,
           body: {
             action: 'response',
@@ -986,18 +982,18 @@ describe('Learning flow', () => {
           body: prepareLessonFromSeed(math),
         });
 
-        await testContext.studentRequest({
-          url: `enroll/${notFinished.lesson.id}`,
+        await testContext.enrollRequest({
+          url: `${notFinished.lesson.id}/enroll`,
         });
 
-        await testContext.learnServiceRequest({
+        await testContext.studentRequest({
           url: `lessons/${notFinished.lesson.id}/reply`,
           body: {
             action: 'start',
           },
         });
 
-        await testContext.learnServiceRequest({
+        await testContext.studentRequest({
           url: `lessons/${notFinished.lesson.id}/reply`,
           body: {
             action: 'response',
@@ -1011,7 +1007,7 @@ describe('Learning flow', () => {
       });
 
       it('should return no blocks on finish', async () => {
-        const response = await testContext.learnServiceRequest({
+        const response = await testContext.studentRequest({
           url: `lessons/${notFinished.lesson.id}/reply`,
           body: {
             action: 'finish',
@@ -1045,13 +1041,13 @@ describe('Learning flow', () => {
           body: prepareLessonFromSeed(russian),
         });
 
-        await testContext.studentRequest({
-          url: `enroll/${notStarted.lesson.id}`,
+        await testContext.enrollRequest({
+          url: `${notStarted.lesson.id}/enroll`,
         });
       });
 
       it('should return one block', async () => {
-        const response = await testContext.learnServiceRequest({
+        const response = await testContext.studentRequest({
           url: `lessons/${notStarted.lesson.id}/reply`,
           body: {
             action: 'start',
@@ -1083,11 +1079,11 @@ describe('Learning flow', () => {
           body: prepareLessonFromSeed(russian),
         });
 
-        await testContext.studentRequest({
-          url: `enroll/${notFinished.lesson.id}`,
+        await testContext.enrollRequest({
+          url: `${notFinished.lesson.id}/enroll`,
         });
 
-        await testContext.learnServiceRequest({
+        await testContext.studentRequest({
           url: `lessons/${notFinished.lesson.id}/reply`,
           body: {
             action: 'start',
@@ -1096,7 +1092,7 @@ describe('Learning flow', () => {
       });
 
       it('should return no blocks on finish', async () => {
-        const response = await testContext.learnServiceRequest({
+        const response = await testContext.studentRequest({
           url: `lessons/${notFinished.lesson.id}/reply`,
           body: {
             action: 'finish',
