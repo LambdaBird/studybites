@@ -11,7 +11,7 @@ import Result from './models/Result';
 
 import userService from './services/user';
 import lessonService from './services/lesson';
-import { lessonsManagementService } from './services/lessons-management';
+import lessonsManagementService from './services/lessons-management';
 
 import errorsAndValidation from './validation';
 
