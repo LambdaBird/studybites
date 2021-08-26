@@ -12,6 +12,7 @@ import Keyword from './models/Keyword';
 
 import userService from './services/user';
 import lessonService from './services/lesson';
+import { keywordsService } from './services/keywords';
 
 import errorsAndValidation from './validation';
 
@@ -40,6 +41,10 @@ export default (options = {}) => {
 
   app.register(lessonService, {
     prefix: '/api/v1/lesson',
+  });
+
+  app.register(keywordsService, {
+    prefix: '/api/v1/keywords',
   });
 
   return app;
