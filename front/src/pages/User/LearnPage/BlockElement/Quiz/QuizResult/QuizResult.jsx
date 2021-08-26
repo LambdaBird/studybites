@@ -11,6 +11,7 @@ import { htmlToReact } from '@sb-ui/pages/User/LearnPage/utils';
 
 import AnswersResult from './AnswerResult';
 import { verifyAnswers } from './utils';
+import { CheckboxText } from '../QuizAnswer/QuizAnswer.styled';
 import * as S from './QuizResult.styled';
 
 const QuizResult = ({ answer, data, reply }) => {
@@ -24,7 +25,7 @@ const QuizResult = ({ answer, data, reply }) => {
   const { question, answers } = newData;
 
   const options = answers?.map(({ value, correct }, i) => ({
-    label: htmlToReact(value),
+    label: <CheckboxText>{htmlToReact(value)}</CheckboxText>,
     value: i,
     correct,
   }));

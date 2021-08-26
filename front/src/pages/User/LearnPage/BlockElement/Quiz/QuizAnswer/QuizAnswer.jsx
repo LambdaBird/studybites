@@ -18,7 +18,7 @@ const QuizAnswer = ({ blockId, revision, question, answers }) => {
   const [quizCheckbox, setQuizCheckbox] = useState([]);
 
   const options = answers?.map(({ value, correct }, i) => ({
-    label: htmlToReact(value),
+    label: <S.CheckboxText>{htmlToReact(value)}</S.CheckboxText>,
     value: i,
     correct,
   }));

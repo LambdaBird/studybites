@@ -7,6 +7,7 @@ import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons';
 import ColumnDisabledCheckbox from '@sb-ui/components/atoms/ColumnDisabledCheckbox';
 import { htmlToReact } from '@sb-ui/pages/User/LearnPage/utils';
 
+import { CheckboxText } from '../../QuizAnswer/QuizAnswer.styled';
 import * as S from './AnswerResult.styled';
 
 const { Text } = Typography;
@@ -17,7 +18,7 @@ const AnswerResult = ({ correct, result }) => {
   const options = useMemo(
     () =>
       result?.map((x, i) => ({
-        label: htmlToReact(x.value),
+        label: <CheckboxText>{htmlToReact(x.value)}</CheckboxText>,
         value: i,
       })),
     [result],
