@@ -68,24 +68,31 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
 
   const { mutate: changeLanguage } = useMutation(patchLanguage);
 
+  const handleMenuLanguageClick = useCallback(
+    (key) => {
+      const { key: languageCode } = MENU_LANGUAGES_LIST.get(key) || {};
+      i18n.changeLanguage(languageCode);
+      changeLanguage({ language: languageCode });
+    },
+    [changeLanguage, i18n],
+  );
+
   const handleMenuClick = useCallback(
     ({ key, keyPath }) => {
       setIsVisible(false);
       const upperKey = keyPath?.[keyPath.length - 1];
-      const { key: languageCode } = MENU_LANGUAGES_LIST.get(key) || {};
       switch (upperKey) {
         case MENU_KEYS.SIGN_OUT:
           handleSignOut();
           break;
         case MENU_KEYS.LANGUAGE:
-          i18n.changeLanguage(languageCode);
-          changeLanguage({ language: languageCode });
+          handleMenuLanguageClick(key);
           break;
         default:
           break;
       }
     },
-    [changeLanguage, handleSignOut, i18n],
+    [handleMenuLanguageClick, handleSignOut],
   );
 
   const getTeacherMenu = useCallback(() => {
@@ -243,9 +250,10 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
           <Col>
             {isMobile ? (
               <div
+                onKeyDown={handleMenuWrapperClick}
                 onClick={handleMenuWrapperClick}
-                aria-hidden="true"
                 role="button"
+                tabIndex={0}
               >
                 {profileContent}
               </div>
