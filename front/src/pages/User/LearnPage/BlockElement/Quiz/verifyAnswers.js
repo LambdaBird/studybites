@@ -11,6 +11,9 @@ const diff = (a, b) => {
 };
 
 export const verifyAnswers = (answers, correctAnswers) => {
+  if (!answers || !correctAnswers) {
+    return {};
+  }
   if (answers.length !== correctAnswers.length) {
     return {
       result: [],
