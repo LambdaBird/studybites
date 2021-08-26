@@ -11,6 +11,7 @@ import Result from './models/Result';
 
 import userService from './services/user';
 import lessonService from './services/lesson';
+import lessonsService from './services/lessons';
 import learnService from './services/learn';
 import lessonsManagementService from './services/lessons-management';
 
@@ -32,6 +33,10 @@ export default (options = {}) => {
 
   app.register(lessonService, {
     prefix: '/api/v1/lesson',
+  });
+
+  app.register(lessonsService, {
+    prefix: '/api/v1/lessons',
   });
 
   app.register(learnService, {
