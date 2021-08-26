@@ -1,7 +1,5 @@
 import { BadRequestError } from '../../../../validation/errors';
 
-import { getCorrectness } from './correctnessCalculation';
-
 export async function checkAllowed({
   userId,
   lessonId,
@@ -132,15 +130,15 @@ export async function learnLessonHandler({
 
   let correctness;
   if (action === 'response') {
-    correctness = await getCorrectness({
-      Block,
+    const getCorrectnessResult = await Block.getCorrectness({
       blockId,
       revision,
-      userResponse: reply.response,
-      blocks: blockConstants.blocks,
-      BadRequestError,
-      error: errors.LESSON_ERR_FAIL_LEARN,
+      userResponse: reply,
     });
+    if (getCorrectnessResult.error) {
+      throw new BadRequestError(errors.LESSON_ERR_FAIL_LEARN);
+    }
+    correctness = getCorrectnessResult.correctness;
   }
 
   /**
