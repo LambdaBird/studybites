@@ -1,5 +1,10 @@
 import BaseModel from './BaseModel';
 
+import { blockConstants } from '../config';
+
+import { getQuizCorrectness } from './blocks/quiz';
+import { getClosedQuestionCorrectness } from './blocks/closedQuestion';
+
 class Block extends BaseModel {
   static get tableName() {
     return 'blocks';
@@ -42,6 +47,32 @@ class Block extends BaseModel {
           `(select block_id, array_agg(revision) as revisions from blocks group by block_id) as grouped`,
         ),
       );
+  }
+
+  static async getCorrectness({ blockId, revision, userResponse }) {
+    const { answer, type, weight } = await Block.getBlock({
+      blockId,
+      revision,
+    });
+
+    switch (type) {
+      case blockConstants.blocks.QUIZ: {
+        return getQuizCorrectness({
+          solution: answer.results,
+          userResponse,
+          blockWeight: weight,
+        });
+      }
+      case blockConstants.blocks.CLOSED_QUESTION: {
+        return getClosedQuestionCorrectness({
+          solution: answer.results,
+          userResponse,
+          blockWeight: weight,
+        });
+      }
+      default:
+        return { error: null, correctness: 0 };
+    }
   }
 }
 
