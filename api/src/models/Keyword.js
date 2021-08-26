@@ -2,6 +2,7 @@ import objection from 'objection';
 import path from 'path';
 
 import BaseModel from './BaseModel';
+import { roles } from '../config';
 
 export default class Keyword extends BaseModel {
   static get tableName() {
@@ -30,6 +31,11 @@ export default class Keyword extends BaseModel {
             to: 'resource_keywords.resource_id',
           },
           to: 'lessons.id',
+        },
+        modify: (query) => {
+          return query.where({
+            resource_type: 'lesson',
+          });
         },
       },
     };
