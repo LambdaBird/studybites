@@ -34,4 +34,18 @@ export default class Keyword extends BaseModel {
       },
     };
   }
+
+  static getAll({ search, offset, limit }) {
+    const start = offset;
+    const end = start + limit - 1;
+
+    return this.query()
+      .skipUndefined()
+      .where(
+        'name',
+        'ilike',
+        search ? `%${search.replace(/ /g, '%')}%` : undefined,
+      )
+      .range(start, end);
+  }
 }

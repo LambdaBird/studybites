@@ -42,6 +42,15 @@ export const userSearch = {
   },
 };
 
+export const keywordSearch = {
+  type: 'object',
+  properties: {
+    search: { type: 'string' },
+    offset: { type: 'number', default: 0 },
+    limit: { type: 'number', default: searchLimits.KEYWORD_SEARCH_LIMIT },
+  },
+};
+
 export const lessonStatus = {
   type: 'string',
   enum: resources.LESSON.status,
