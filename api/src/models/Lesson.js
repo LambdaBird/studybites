@@ -23,6 +23,7 @@ class Lesson extends BaseModel {
         id: { type: 'integer' },
         name: { type: 'string' },
         description: { type: 'string' },
+        image: { type: 'string' },
         status: {
           type: 'string',
           enum: ['Draft', 'Public', 'Private', 'Archived'],

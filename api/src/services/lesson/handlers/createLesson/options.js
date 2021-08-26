@@ -8,6 +8,7 @@ export const createLessonOptions = {
           properties: {
             name: { type: 'string', minLength: 1 },
             description: { type: ['string', 'null'] },
+            image: { type: ['string', 'null'] },
             status: { $ref: 'lessonStatus#' },
           },
           required: ['name'],
@@ -26,6 +27,7 @@ export const createLessonOptions = {
               id: { type: 'number' },
               name: { type: 'string' },
               description: { type: ['string', 'null'] },
+              image: { type: ['string', 'null'] },
               status: { type: 'string' },
               createdAt: { type: 'string' },
               updatedAt: { type: 'string' },

@@ -11,6 +11,7 @@ export const maintainableLessonOptions = {
               id: { type: 'number' },
               name: { type: 'string' },
               description: { type: ['string', 'null'] },
+              image: { type: ['string', 'null'] },
               status: { type: 'string' },
               studentsCount: { type: 'number' },
               createdAt: { type: 'string' },
