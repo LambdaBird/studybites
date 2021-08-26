@@ -65,3 +65,7 @@ export const Word = styled.div`
   cursor: ${(props) => (props.selected ? 'default' : 'pointer')};
   user-select: none;
 `;
+
+export const WordDisabled = styled(Word)`
+  cursor: default;
+`;

@@ -1,4 +1,4 @@
-import * as S from './Select.styled';
+import * as S from './ConstructorSelect.styled';
 
 const SelectedWords = ({
   selectedWordsId,
@@ -10,17 +10,14 @@ const SelectedWords = ({
     return words
       ?.map((word, index) => ({ word, key: index }))
       ?.map(({ word, key }) => {
-        return <S.Word key={`${word}-${key}`}>{word}</S.Word>;
+        return <S.WordDisabled key={`${word}-${key}`}>{word}</S.WordDisabled>;
       });
   }
 
   return selectedWordsId.map((wordId) => {
     const { id, value } = words.find((x) => x.id === wordId);
     return (
-      <S.Word
-        key={id}
-        onClick={disabled ? null : () => handleWordRemoveClick(wordId)}
-      >
+      <S.Word key={id} onClick={() => handleWordRemoveClick(wordId)}>
         {value}
       </S.Word>
     );

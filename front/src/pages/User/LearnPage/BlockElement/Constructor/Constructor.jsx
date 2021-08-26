@@ -12,7 +12,7 @@ import {
 } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
 import { ChunkWrapper } from '@sb-ui/pages/User/LearnPage/LearnPage.styled';
 
-import Select from './Select';
+import ConstructorSelect from './ConstructorSelect';
 import { verifyAnswers } from './verifyAnswers';
 import * as S from './Constructor.styled';
 
@@ -41,17 +41,12 @@ const Constructor = ({
       <ChunkWrapper>
         <S.Description>{t('editorjs:tools.constructor.title')}</S.Description>
         <S.Question>{question}</S.Question>
-        {isSolved ? (
-          <Select
-            words={userWords}
-            question={selectProps.question}
-            additionalLines={selectProps.additionalLines}
-            setAdditionalLines={selectProps.setAdditionalLines}
-            disabled
-          />
-        ) : (
-          <Select {...selectProps} />
-        )}
+
+        <ConstructorSelect
+          {...selectProps}
+          words={isSolved ? userWords : selectProps.words}
+          disabled={isSolved}
+        />
       </ChunkWrapper>
 
       {isSolved ? (

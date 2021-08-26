@@ -18,6 +18,8 @@ const variables = {
   'button-send-color': '#1890ff',
   'border-color-base': '#d9d9d9',
   'background-color-light': '#fafafa',
+  'success-color': '#52c41a',
+  'wrong-color': '#f5222d',
 };
 
 module.exports = variables;

@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons';
 
 import * as S from '@sb-ui/pages/User/LearnPage/BlockElement/Quiz/QuizResult/AnswerResult/AnswerResult.styled';
+import variables from '@sb-ui/theme/variables';
 
 const { Text } = Typography;
 
@@ -12,20 +13,19 @@ const Result = ({ correct, results }) => {
 
   return (
     <>
-      {correct ? (
-        <S.AnswerWrapper>
-          <Text>{t('lesson.answer_result.correct')}</Text>
-          <CheckCircleTwoTone twoToneColor="#52c41a" />
-        </S.AnswerWrapper>
-      ) : (
-        <>
-          <S.AnswerWrapper>
-            <Text>{t('lesson.answer_result.wrong')}</Text>
-            <CloseCircleTwoTone twoToneColor="#F5222D" />
-          </S.AnswerWrapper>
-          <Text italic>{results.join(' ')}</Text>
-        </>
-      )}
+      <S.AnswerWrapper>
+        <Text>
+          {correct
+            ? t('lesson.answer_result.correct')
+            : t('lesson.answer_result.wrong')}
+        </Text>
+        {correct ? (
+          <CheckCircleTwoTone twoToneColor={variables['success-color']} />
+        ) : (
+          <CloseCircleTwoTone twoToneColor={variables['wrong-color']} />
+        )}
+      </S.AnswerWrapper>
+      {!correct && <Text italic>{results.join(' ')}</Text>}
     </>
   );
 };

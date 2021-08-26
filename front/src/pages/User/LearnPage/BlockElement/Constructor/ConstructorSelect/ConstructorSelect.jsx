@@ -1,17 +1,16 @@
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useRef } from 'react';
 
-import SelectedWords from '@sb-ui/pages/User/LearnPage/BlockElement/Constructor/Select/SelectedWords';
-
-import * as S from './Select.styled';
+import SelectedWords from './SelectedWords';
+import * as S from './ConstructorSelect.styled';
 import {
   BORDER,
   HEIGHT_GAP,
   HEIGHT_GAP_SELECTED,
   HEIGHT_WORD,
-} from './Select.styled';
+} from './ConstructorSelect.styled';
 
-const Select = ({
+const ConstructorSelect = ({
   words,
   setWords = () => {},
   additionalLines,
@@ -58,16 +57,14 @@ const Select = ({
 
   const handleWordRemoveClick = useCallback(
     (wordId) => {
-      setSelectedWordsId((prev) => [...prev.filter((x) => x !== wordId)]);
+      setSelectedWordsId((prev) => prev.filter((x) => x !== wordId));
       setWordSelected(wordId, false);
     },
     [setSelectedWordsId, setWordSelected],
   );
 
   const resizeHandler = useCallback(() => {
-    setAdditionalLines(
-      new Array(calculateCountLines() - 1).fill(null).map((_, index) => index),
-    );
+    setAdditionalLines([...new Array(calculateCountLines() - 1).keys()]);
   }, [calculateCountLines, setAdditionalLines]);
 
   useEffect(() => {
@@ -89,15 +86,12 @@ const Select = ({
       <S.LineWrapper>
         <S.Line>
           <S.WordsWrapperSelected ref={selectedWordsRef}>
-            {disabled ? (
-              <SelectedWords words={words} disabled />
-            ) : (
-              <SelectedWords
-                words={words}
-                selectedWordsId={selectedWordsId}
-                handleWordRemoveClick={handleWordRemoveClick}
-              />
-            )}
+            <SelectedWords
+              words={words}
+              selectedWordsId={selectedWordsId}
+              handleWordRemoveClick={handleWordRemoveClick}
+              disabled={disabled}
+            />
           </S.WordsWrapperSelected>
         </S.Line>
         {additionalLines?.map((line) => (
@@ -121,7 +115,7 @@ const Select = ({
   );
 };
 
-Select.propTypes = {
+ConstructorSelect.propTypes = {
   words: PropTypes.oneOfType([
     PropTypes.arrayOf(
       PropTypes.shape({
@@ -140,4 +134,4 @@ Select.propTypes = {
   disabled: PropTypes.bool,
 };
 
-export default Select;
+export default ConstructorSelect;
