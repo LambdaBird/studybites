@@ -27,11 +27,33 @@ export const BlockContentType = PropTypes.shape({
 export const BlockIdType = PropTypes.string.isRequired;
 export const RevisionType = PropTypes.string.isRequired;
 export const QuestionType = PropTypes.string.isRequired;
+export const TextType = PropTypes.string.isRequired;
+export const SolvedType = PropTypes.bool;
 
 export const ParagraphContentType = PropTypes.shape({
   data: PropTypes.shape({
     text: PropTypes.string,
   }),
+});
+
+export const FillTheGapBlockReplyType = PropTypes.shape({
+  response: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.string,
+      id: PropTypes.number,
+      type: PropTypes.oneOf(['text', 'input']),
+    }),
+  ),
+});
+
+export const FillTheGapBlockAnswerType = PropTypes.shape({
+  results: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.arrayOf(PropTypes.string),
+      id: PropTypes.number,
+      type: PropTypes.oneOf(['text', 'input']),
+    }),
+  ),
 });
 
 export const ClosedQuestionBlockDataType = PropTypes.shape({

@@ -41,12 +41,26 @@ export default class FillTheGap {
       match.replace(/\s/g, '').replace('{{', '').replace('}}', ''),
     );
     answers = answers.map((entry) => entry.split(','));
-
     const text = this.input.innerHTML.replace(this.bracketsRegexp, '{{ # }}');
+    const tokens = text.split('{{ # }}');
+    const tokensData = tokens.reduce((prev, token, index) => {
+      const answer = answers[index];
+      const tokenData = [
+        ...prev,
+        { value: token, id: prev.length + 1, type: 'text' },
+      ];
+      if (answer) {
+        tokenData.push({ value: answer, id: prev.length + 2, type: 'input' });
+      }
+      return tokenData;
+    }, []);
 
     return {
-      text,
-      answers,
+      tokens: tokensData.map((a) => ({
+        ...a,
+        value: a.type === 'input' ? '' : a.value,
+      })),
+      answers: tokensData.filter((a) => a.type === 'input'),
     };
   };
 
@@ -64,16 +78,27 @@ export default class FillTheGap {
       this.input.contentEditable = 'true';
     }
 
-    if (this.data.text) {
-      this.data.answers.forEach((answer) => {
-        this.data.text = this.data.text.replace(
-          '{{ # }}',
-          `{{ ${answer.join(', ')} }}`,
-        );
-      });
-      this.input.innerHTML = this.data.text;
+    if (this.data.tokens) {
+      this.data.tokens = this.data.tokens.map(({ value, type, id }) => ({
+        id,
+        type,
+        value:
+          type === 'input'
+            ? this.data.answers.find((answer) => answer.id === id).value
+            : value,
+      }));
+
+      this.input.innerHTML = this.data.tokens
+        .map(({ type, value }) => {
+          if (type === 'input') {
+            return `{{ ${value.join(', ')} }}`;
+          }
+          return value;
+        })
+        .join('');
     } else {
-      this.input.innerText = 'Here is an example of a sentence with {{ empty, vacant, blank }} spaces that a {{ learner, student }} will need to fill in.';
+      this.input.innerText =
+        'Here is an example of a sentence with {{ empty, vacant, blank }} spaces that a {{ learner, student }} will need to fill in.';
     }
 
     container.appendChild(hint);
