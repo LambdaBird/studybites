@@ -30,6 +30,16 @@ function getClosedQuestionCorrectness({ solution, userResponse, blockWeight }) {
   return 0;
 }
 
+function getMatchCorrectness({ solution, userResponse, blockWeight }) {
+  const correctAnswer = userResponse
+    ?.map(({ left, right }) => {
+      return solution.find((x) => x.left === left && x.right === right);
+    })
+    ?.filter((x) => !!x);
+
+  return blockWeight * Math.max(correctAnswer / solution.length, 0);
+}
+
 export async function getCorrectness({
   Block,
   blockId,
@@ -53,6 +63,13 @@ export async function getCorrectness({
     }
     case blocks.CLOSED_QUESTION: {
       return getClosedQuestionCorrectness({
+        solution: answer.results,
+        userResponse,
+        blockWeight: weight,
+      });
+    }
+    case blocks.MATCH: {
+      return getMatchCorrectness({
         solution: answer.results,
         userResponse,
         blockWeight: weight,

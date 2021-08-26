@@ -46,6 +46,7 @@ export const blockConstants = {
     NEXT: 'next',
     QUIZ: 'quiz',
     CLOSED_QUESTION: 'closedQuestion',
+    MATCH: 'match',
   },
   get BLOCKS_LIST() {
     return Object.values(this.blocks);
@@ -60,7 +61,12 @@ export const blockConstants = {
     return [this.actions.NEXT, this.actions.RESPONSE];
   },
   get INTERACTIVE_BLOCKS() {
-    return [this.blocks.NEXT, this.blocks.QUIZ, this.blocks.CLOSED_QUESTION];
+    return [
+      this.blocks.QUIZ,
+      this.blocks.NEXT,
+      this.blocks.CLOSED_QUESTION,
+      this.blocks.MATCH,
+    ];
   },
   get STATIC_BLOCKS() {
     return this.BLOCKS_LIST.filter(
