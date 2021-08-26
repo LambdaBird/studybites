@@ -68,17 +68,6 @@ describe('Maintainer flow', () => {
       });
     };
 
-    testContext.anotherRequest = async ({ url, method = 'POST', body }) => {
-      return testContext.app.inject({
-        method,
-        url: `/api/v1/lessons-management/${url}`,
-        headers: {
-          Authorization: `Bearer ${testContext.anotherToken}`,
-        },
-        body,
-      });
-    };
-
     testContext.studentRequest = async ({ url, method = 'POST', body }) => {
       return testContext.app.inject({
         method,
@@ -263,20 +252,6 @@ describe('Maintainer flow', () => {
       expect(response.statusCode).toBe(401);
       expect(payload.statusCode).toBe(401);
       expect(payload.message).toBe(errors.USER_ERR_UNAUTHORIZED);
-    });
-
-    it('should return no lessons if user does not have any lessons', async () => {
-      const response = await testContext.anotherRequest({
-        method: 'GET',
-        url: 'lessons',
-      });
-
-      const payload = JSON.parse(response.payload);
-
-      expect(response.statusCode).toBe(200);
-      expect(payload).toHaveProperty('total');
-      expect(payload).toHaveProperty('lessons');
-      expect(payload.total).toBe(0);
     });
 
     it('should return lessons with total count', async () => {
