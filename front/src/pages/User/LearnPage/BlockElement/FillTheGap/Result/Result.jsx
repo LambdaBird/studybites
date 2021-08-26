@@ -5,26 +5,22 @@ import GapsInput from '@sb-ui/pages/User/LearnPage/BlockElement/FillTheGap/GapsI
 
 import { CORRECT_ALL, CORRECT_NONE, CORRECT_PARTIAL } from '../constants';
 
-import CorrectTitle from './CorrectTitle';
-import PartialCorrectTitle from './PartialCorrectTitle';
-import WrongTitle from './WrongTitle';
+import ResultTitle from './ResultTitle';
 import * as S from './Result.styled';
 
 const { Text } = Typography;
 
 const Result = ({ correct, result, gaps }) => {
-  if (correct === CORRECT_ALL) {
-    return <CorrectTitle />;
-  }
   return (
     <>
-      {correct === CORRECT_PARTIAL && <PartialCorrectTitle />}
-      {correct === CORRECT_NONE && <WrongTitle />}
-      <S.ResultWrapper>
-        <Text italic>
-          <GapsInput gaps={gaps} result={result} />
-        </Text>
-      </S.ResultWrapper>
+      <ResultTitle correct={correct} />
+      {correct !== CORRECT_ALL && (
+        <S.ResultWrapper>
+          <Text italic>
+            <GapsInput gaps={gaps} result={result} />
+          </Text>
+        </S.ResultWrapper>
+      )}
     </>
   );
 };
