@@ -10,10 +10,12 @@ import Warning from '@editorjs/warning';
 
 import { BLOCKS_TYPE } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
 import ClosedQuestion from '@sb-ui/utils/editorjs/closed-question-plugin';
+import Constructor from '@sb-ui/utils/editorjs/constructor-plugin';
 import Embed from '@sb-ui/utils/editorjs/embed-plugin';
 import Image from '@sb-ui/utils/editorjs/image-plugin';
 import Next from '@sb-ui/utils/editorjs/next-plugin';
 import Quiz from '@sb-ui/utils/editorjs/quiz-plugin';
+import { shuffleArray } from '@sb-ui/utils/utils';
 
 const MAX_BODY_LENGTH = 4_000_000;
 
@@ -40,6 +42,14 @@ export const prepareEditorData = (blocks) =>
             explanation: answer?.explanation,
           },
         };
+      case BLOCKS_TYPE.CONSTRUCTOR:
+        return {
+          ...content,
+          data: {
+            ...content?.data,
+            answers: answer?.results,
+          },
+        };
       default:
         return content;
     }
@@ -49,7 +59,7 @@ export const prepareBlocksDataForApi = (data, type) => {
   if (!data) {
     return null;
   }
-  const { answers, explanation, ...sendData } = data || {};
+  const { answers, words, explanation, ...sendData } = data || {};
   switch (type) {
     case BLOCKS_TYPE.QUIZ:
       return {
@@ -59,6 +69,11 @@ export const prepareBlocksDataForApi = (data, type) => {
     case BLOCKS_TYPE.CLOSED_QUESTION:
       return {
         ...sendData,
+      };
+    case BLOCKS_TYPE.CONSTRUCTOR:
+      return {
+        ...sendData,
+        words: shuffleArray(words),
       };
     default:
       return data;
@@ -83,6 +98,9 @@ export const prepareBlocksForApi = (blocks) =>
           break;
         case BLOCKS_TYPE.CLOSED_QUESTION:
           answer.explanation = block?.data?.explanation;
+          answer.results = block?.data?.answers;
+          break;
+        case BLOCKS_TYPE.CONSTRUCTOR:
           answer.results = block?.data?.answers;
           break;
         default:
@@ -160,6 +178,7 @@ export const getConfig = (t) => ({
       inlineToolbar: true,
     },
     code: CodeTool,
+    constructor: Constructor,
   },
   plugins: [],
 });
