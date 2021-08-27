@@ -28,7 +28,7 @@ export const createLesson = async ({ app, credentials, body }) => {
 
   const response = await app.inject({
     method: 'POST',
-    url: '/api/v1/lesson/maintain/',
+    url: '/api/v1/lessons-management/lessons',
     headers: {
       Authorization: `Bearer ${token}`,
     },
