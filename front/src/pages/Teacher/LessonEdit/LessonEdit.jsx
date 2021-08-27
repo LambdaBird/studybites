@@ -56,6 +56,18 @@ const LessonEdit = () => {
     },
   );
 
+  const [keywords, setKeywords] = useState([]);
+  useEffect(() => {
+    if (lessonData?.keywords) {
+      setKeywords(
+        lessonData.keywords.map((keyword) => ({
+          value: keyword,
+          label: keyword,
+        })),
+      );
+    }
+  }, [lessonData]);
+
   const createLessonMutation = useMutation(createLesson, {
     onSuccess: (data) => {
       const { id } = data?.lesson;
@@ -144,6 +156,7 @@ const LessonEdit = () => {
           description,
           status: Statuses.DRAFT,
         },
+        keywords: keywords.map((keyword) => keyword.value),
         blocks: prepareBlocksForApi(blocks),
       };
       if (!name) {
@@ -370,7 +383,7 @@ const LessonEdit = () => {
             <Row gutter={[0, 16]}>
               <Col span={24}>Keywords</Col>
               <Col span={24}>
-                <KeywordsSelect />
+                <KeywordsSelect values={keywords} setValues={setKeywords} />
               </Col>
             </Row>
           </S.RightCol>
