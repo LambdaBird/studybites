@@ -88,7 +88,11 @@ export const handleAnswer = ({ data: serverData, prevChunks }) => {
   ];
 };
 
-export const useLearnChunks = ({ lessonId, getLessonById, postLessonById }) => {
+export const useLearnChunks = ({
+  lessonId,
+  getEnrolledLesson,
+  postLessonById,
+}) => {
   const [chunks, setChunks] = useState([]);
   const [total, setTotal] = useState(0);
   const [lesson, setLesson] = useState({});
@@ -105,7 +109,7 @@ export const useLearnChunks = ({ lessonId, getLessonById, postLessonById }) => {
         id: lessonId,
       },
     ],
-    getLessonById,
+    getEnrolledLesson,
   );
 
   const onSuccess = useCallback(

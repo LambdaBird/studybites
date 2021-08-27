@@ -105,7 +105,7 @@ describe('UserRole methods', () => {
         });
 
         await testContext.studentRequest({
-          url: `lesson/enroll/${oneEnrolled.lesson.id}`,
+          url: `lessons/${oneEnrolled.lesson.id}/enroll`,
         });
       });
 
@@ -130,7 +130,7 @@ describe('UserRole methods', () => {
         });
 
         await testContext.teacherRequest({
-          url: `lesson/enroll/${selfEnrolled.lesson.id}`,
+          url: `lessons/${selfEnrolled.lesson.id}/enroll`,
         });
       });
 
