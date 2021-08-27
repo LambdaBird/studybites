@@ -6,7 +6,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { RedoOutlined, SaveOutlined, UndoOutlined } from '@ant-design/icons';
 
 import Header from '@sb-ui/components/molecules/Header';
-import Select from '@sb-ui/components/molecules/Select';
+import KeywordsSelect from '@sb-ui/components/molecules/KeywordsSelect';
 import { Statuses } from '@sb-ui/pages/Teacher/Home/LessonsDashboard/constants';
 import { queryClient } from '@sb-ui/query';
 import {
@@ -370,7 +370,7 @@ const LessonEdit = () => {
             <Row gutter={[0, 16]}>
               <Col span={24}>Keywords</Col>
               <Col span={24}>
-                <Select />
+                <KeywordsSelect />
               </Col>
             </Row>
           </S.RightCol>

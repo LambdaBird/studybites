@@ -2,7 +2,7 @@ import AsyncSelect from 'react-select/async-creatable';
 
 import { getKeywords } from '@sb-ui/utils/api/v1/keywords';
 
-const Select = () => (
+const KeywordsSelect = () => (
   <AsyncSelect
     cacheOptions
     isMulti
@@ -14,4 +14,4 @@ const Select = () => (
   />
 );
 
-export default Select;
+export default KeywordsSelect;
