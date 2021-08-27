@@ -6,6 +6,7 @@ const Select = () => (
   <AsyncSelect
     cacheOptions
     isMulti
+    defaultOptions
     loadOptions={async (search) => {
       const keywords = await getKeywords({ search });
       return keywords;
