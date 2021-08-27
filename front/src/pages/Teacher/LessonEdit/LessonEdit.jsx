@@ -8,7 +8,6 @@ import { RedoOutlined, SaveOutlined, UndoOutlined } from '@ant-design/icons';
 
 import Header from '@sb-ui/components/molecules/Header';
 import { Statuses } from '@sb-ui/pages/Teacher/Home/LessonsDashboard/constants';
-import { PAGE_SIZE } from '@sb-ui/pages/User/Lessons/LessonsList/constants';
 import { queryClient } from '@sb-ui/query';
 import { getKeywords } from '@sb-ui/utils/api/v1/keywords';
 import {
@@ -22,10 +21,7 @@ import {
   LESSONS_PREVIEW,
   TEACHER_LESSONS_STUDENTS,
 } from '@sb-ui/utils/paths';
-import {
-  KEYWORDS_BASE_KEY,
-  TEACHER_LESSON_BASE_KEY,
-} from '@sb-ui/utils/queries';
+import { TEACHER_LESSON_BASE_KEY } from '@sb-ui/utils/queries';
 
 import { getConfig, prepareBlocksForApi, prepareEditorData } from './utils';
 import * as S from './LessonEdit.styled';
@@ -59,20 +55,6 @@ const LessonEdit = () => {
     {
       enabled: isEditLesson,
     },
-  );
-
-  const [query, setQuery] = useState('');
-  const { data: keywords } = useQuery(
-    [
-      KEYWORDS_BASE_KEY,
-      {
-        offset: 0,
-        limit: PAGE_SIZE,
-        search: query,
-      },
-    ],
-    getKeywords,
-    { keepPreviousData: true },
   );
 
   const createLessonMutation = useMutation(createLesson, {
@@ -392,9 +374,10 @@ const LessonEdit = () => {
                 <Select
                   cacheOptions
                   isMulti
-                  loadOptions={async () => keywords}
-                  defaultOptions={keywords}
-                  onInputChange={(value) => setQuery(value)}
+                  loadOptions={async (search) => {
+                    const keywords = await getKeywords({ search });
+                    return keywords;
+                  }}
                 />
               </Col>
             </Row>
