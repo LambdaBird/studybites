@@ -4,7 +4,7 @@ import { useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import LearnContext from '@sb-ui/contexts/LearnContext';
-import { verifyAnswers } from '@sb-ui/pages/User/LearnPage/BlockElement/Quiz/QuizResult/utils';
+import { verifyAnswers } from '@sb-ui/pages/User/LearnPage/BlockElement/Quiz/verifyAnswers';
 import { BLOCKS_TYPE } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
 
 import * as S from './Results.styled';
@@ -28,10 +28,10 @@ const Results = ({ callbackRef }) => {
   const correctInteractiveAnswer = useMemo(
     () =>
       interactiveAnswerBlocks
-        .map(({ type, data, answer, content }) => {
+        .map(({ type, reply, answer, content }) => {
           if (type === BLOCKS_TYPE.QUIZ) {
             const userAnswer =
-              data?.response?.map((x) => ({ correct: x })) ||
+              reply?.response?.map((x) => ({ correct: x })) ||
               content?.data?.answers;
             const { correct } = verifyAnswers(userAnswer, answer?.results);
             return correct;
