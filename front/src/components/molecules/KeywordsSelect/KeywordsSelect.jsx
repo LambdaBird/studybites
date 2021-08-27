@@ -1,23 +1,18 @@
 import PropTypes from 'prop-types';
 import AsyncSelect from 'react-select/async-creatable';
 
-import { getKeywords } from '@sb-ui/utils/api/v1/keywords';
+import { fetchKeywords } from '@sb-ui/utils/api/v1/keywords';
 
-const KeywordsSelect = ({ values, setValues }) => {
-  return (
-    <AsyncSelect
-      cacheOptions
-      isMulti
-      defaultOptions
-      value={values}
-      onChange={(selected) => setValues(selected)}
-      loadOptions={async (search) => {
-        const keywords = await getKeywords({ search });
-        return keywords;
-      }}
-    />
-  );
-};
+const KeywordsSelect = ({ values, setValues }) => (
+  <AsyncSelect
+    cacheOptions
+    isMulti
+    defaultOptions
+    value={values}
+    onChange={(selected) => setValues(selected)}
+    loadOptions={(search) => fetchKeywords({ search })}
+  />
+);
 
 KeywordsSelect.propTypes = {
   values: PropTypes.arrayOf(
