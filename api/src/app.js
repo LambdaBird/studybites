@@ -9,6 +9,7 @@ import Block from './models/Block';
 import LessonBlockStructure from './models/LessonBlockStructure';
 import Result from './models/Result';
 import Keyword from './models/Keyword';
+import ResourceKeyword from './models/ResourceKeyword';
 
 import userService from './services/user';
 import lessonService from './services/lesson';
@@ -32,6 +33,7 @@ export default (options = {}) => {
       LessonBlockStructure,
       Result,
       Keyword,
+      ResourceKeyword,
     ],
   });
 

@@ -179,6 +179,11 @@ class Lesson extends BaseModel {
       this.query()
         .select(
           'lessons.*',
+          this.knex().raw(`
+            (select json_agg(keywords.name) from resource_keywords 
+            join keywords on keywords.id = resource_keywords.keyword_id 
+            where resource_keywords.resource_id = lessons.id and resource_keywords.resource_type = 'lesson') keywords
+          `),
           /**
            * using cast to set is_enrolled field to true if user is enrolled to this lesson
            */
@@ -252,6 +257,11 @@ class Lesson extends BaseModel {
     return this.query()
       .select(
         'lessons.*',
+        this.knex().raw(`
+          (select json_agg(keywords.name) from resource_keywords 
+          join keywords on keywords.id = resource_keywords.keyword_id 
+          where resource_keywords.resource_id = lessons.id and resource_keywords.resource_type = 'lesson') keywords
+        `),
         this.knex().raw(`true is_finished`),
         this.knex().raw(`
           json_build_object('id', author.id, 'firstName', author."firstName", 'lastName', author."lastName") author
@@ -335,6 +345,11 @@ class Lesson extends BaseModel {
       .skipUndefined()
       .select(
         'lessons.*',
+        this.knex().raw(`
+          (select json_agg(keywords.name) from resource_keywords 
+          join keywords on keywords.id = resource_keywords.keyword_id 
+          where resource_keywords.resource_id = lessons.id and resource_keywords.resource_type = 'lesson') keywords
+        `),
         this.knex().raw(`
           json_build_object('id', author.id, 'firstName', author."firstName", 'lastName', author."lastName") author
         `),

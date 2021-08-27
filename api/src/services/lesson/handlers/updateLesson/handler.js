@@ -1,11 +1,14 @@
 import { v4 } from 'uuid';
 
 export async function updateLessonHandler({
-  body: { lesson, blocks },
+  body: { lesson, blocks, keywords },
   params: { lessonId },
 }) {
   const {
-    models: { Lesson, Block, LessonBlockStructure },
+    models: { Lesson, Block, LessonBlockStructure, Keyword, ResourceKeyword },
+    config: {
+      globals: { resources },
+    },
   } = this;
 
   try {
@@ -16,6 +19,18 @@ export async function updateLessonHandler({
         lessonData = await Lesson.updateLesson({ trx, lessonId, lesson });
       } else {
         lessonData = await Lesson.query(trx).findById(lessonId);
+      }
+
+      if (keywords) {
+        await Keyword.createMany({ trx, keywords });
+        const keywordsIds = await Keyword.getId({ trx, keywords });
+        const resourceKeywords = keywordsIds.map((keyword) => ({
+          keywordId: keyword.keywordId,
+          resourceId: lessonData.id,
+          resourceType: resources.LESSON.name,
+        }));
+        await ResourceKeyword.deleteMany({ trx, resourceId: lessonData.id });
+        await ResourceKeyword.createMany({ trx, resourceKeywords });
       }
 
       if (blocks) {

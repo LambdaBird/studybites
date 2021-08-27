@@ -48,4 +48,13 @@ export default class Keyword extends BaseModel {
       )
       .range(start, end);
   }
+
+  static createMany({ trx, keywords }) {
+    const keywordsToInsert = keywords.map((keyword) => ({ name: keyword }));
+    return this.query(trx).insert(keywordsToInsert).onConflict('name').ignore();
+  }
+
+  static getId({ trx, keywords }) {
+    return this.query(trx).select('id as keyword_id').whereIn('name', keywords);
+  }
 }
