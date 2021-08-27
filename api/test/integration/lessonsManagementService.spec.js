@@ -326,7 +326,7 @@ describe('Maintainer flow', () => {
       });
 
       await testContext.studentRequest({
-        url: `lesson/enroll/${lessonToGet.lesson.id}`,
+        url: `lessons/${lessonToGet.lesson.id}/enroll`,
       });
     });
 
@@ -414,7 +414,7 @@ describe('Maintainer flow', () => {
       });
 
       await testContext.studentRequest({
-        url: `lesson/enroll/${lessonToEnroll.lesson.id}`,
+        url: `lessons/${lessonToEnroll.lesson.id}/enroll`,
       });
     });
 
@@ -500,7 +500,7 @@ describe('Maintainer flow', () => {
       });
 
       await testContext.studentRequest({
-        url: `lesson/enroll/${lessonToSearchStudents.lesson.id}`,
+        url: `lessons/${lessonToSearchStudents.lesson.id}/enroll`,
       });
     });
 

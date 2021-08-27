@@ -56,17 +56,6 @@ describe('Enroll to lesson flow', () => {
         body,
       });
     };
-
-    testContext.teacherRequest = async ({ url, method = 'POST', body }) => {
-      return testContext.app.inject({
-        method,
-        url: `/api/v1/${url}`,
-        headers: {
-          Authorization: `Bearer ${testContext.teacherToken}`,
-        },
-        body,
-      });
-    };
   });
 
   afterAll(async () => {
