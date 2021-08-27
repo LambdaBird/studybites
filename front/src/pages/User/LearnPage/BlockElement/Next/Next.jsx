@@ -22,7 +22,7 @@ const Next = ({ blockId, revision, isSolved }) => {
           action: NEXT_TYPE,
           revision,
           blockId,
-          data: {
+          reply: {
             isSolved: true,
           },
         });

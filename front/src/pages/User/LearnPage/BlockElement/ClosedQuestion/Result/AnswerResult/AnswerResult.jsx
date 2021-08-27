@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons';
 
-import * as S from '@sb-ui/pages/User/LearnPage/BlockElement/Quiz/QuizResult/AnswerResult/AnswerResult.styled';
+import * as S from '@sb-ui/pages/User/LearnPage/BlockElement/Quiz/Quiz.styled';
 
 const { Text } = Typography;
 
