@@ -3,13 +3,12 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
 import { useHistory, useParams } from 'react-router-dom';
-import Select from 'react-select/async-creatable';
 import { RedoOutlined, SaveOutlined, UndoOutlined } from '@ant-design/icons';
 
 import Header from '@sb-ui/components/molecules/Header';
+import Select from '@sb-ui/components/molecules/Select';
 import { Statuses } from '@sb-ui/pages/Teacher/Home/LessonsDashboard/constants';
 import { queryClient } from '@sb-ui/query';
-import { getKeywords } from '@sb-ui/utils/api/v1/keywords';
 import {
   createLesson,
   getLesson,
@@ -371,14 +370,7 @@ const LessonEdit = () => {
             <Row gutter={[0, 16]}>
               <Col span={24}>Keywords</Col>
               <Col span={24}>
-                <Select
-                  cacheOptions
-                  isMulti
-                  loadOptions={async (search) => {
-                    const keywords = await getKeywords({ search });
-                    return keywords;
-                  }}
-                />
+                <Select />
               </Col>
             </Row>
           </S.RightCol>
