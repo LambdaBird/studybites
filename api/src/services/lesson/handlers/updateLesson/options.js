@@ -9,6 +9,7 @@ export const updateLessonOptions = {
           properties: {
             name: { type: 'string', minLength: 1 },
             description: { type: ['string', 'null'] },
+            image: { type: ['string', 'null'] },
             status: { $ref: 'lessonStatus#' },
           },
         },
@@ -25,6 +26,7 @@ export const updateLessonOptions = {
               id: { type: 'number' },
               name: { type: 'string' },
               description: { type: ['string', 'null'] },
+              image: { type: ['string', 'null'] },
               status: { type: 'string' },
               createdAt: { type: 'string' },
               updatedAt: { type: 'string' },
