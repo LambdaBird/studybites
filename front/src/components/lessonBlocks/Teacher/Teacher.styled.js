@@ -1,4 +1,4 @@
-import { Badge, Button, Col, Row, Typography } from 'antd';
+import { Badge, Button, Col, Image, Row, Typography } from 'antd';
 import styled from 'styled-components';
 
 import variables from '@sb-ui/theme/variables';
@@ -18,9 +18,11 @@ export const CardDescription = styled(Col)`
   padding: 0.5rem 1rem 0.5rem 1rem;
 `;
 
-export const CardImage = styled.img`
-  height: 100%;
-  width: 100%;
+export const CardImage = styled(Image).attrs({
+  height: '100%',
+  width: '100%',
+  preview: false,
+})`
   object-fit: cover;
 `;
 

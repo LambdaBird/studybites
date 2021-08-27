@@ -75,6 +75,11 @@ export default {
       preview: 'Preview',
       move_to_draft: 'Move to draft',
     },
+    cover_image: {
+      title: 'Cover image link',
+      input_placeholder: 'Your image link',
+      not_found: 'Not found',
+    },
     title: {
       placeholder: 'Lesson title',
     },
@@ -84,7 +89,10 @@ export default {
       analytics: 'Analytics',
       archive: 'Archive',
     },
-    description: 'Description',
+    description: {
+      title: 'Description',
+      placeholder: 'Your description',
+    },
     publish_modal: {
       title: 'The lesson is now available to all students',
       ok: 'Ok',
