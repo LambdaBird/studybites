@@ -1,3 +1,11 @@
+import { BLOCKS_TYPE } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
+
 export default {
-  interactiveBlocks: ['next', 'quiz', 'closedQuestion', 'finish'],
+  interactiveBlocks: [
+    BLOCKS_TYPE.NEXT,
+    BLOCKS_TYPE.QUIZ,
+    BLOCKS_TYPE.CLOSED_QUESTION,
+    BLOCKS_TYPE.CONSTRUCTOR,
+    BLOCKS_TYPE.FINISH,
+  ],
 };

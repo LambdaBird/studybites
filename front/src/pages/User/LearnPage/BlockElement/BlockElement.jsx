@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 
 import ClosedQuestion from './ClosedQuestion';
 import Code from './Code';
+import Constructor from './Constructor';
 import Delimiter from './Delimiter';
 import Embed from './Embed';
 import Error from './Error';
@@ -50,6 +51,8 @@ const BlockElement = ({ element }) => {
       return <Delimiter {...element} />;
     case BLOCKS_TYPE.TABLE:
       return <Table {...element} />;
+    case BLOCKS_TYPE.CONSTRUCTOR:
+      return <Constructor {...element} />;
     case BLOCKS_TYPE.NEXT:
       return <Next {...element} />;
     case BLOCKS_TYPE.FINISH:
