@@ -1,6 +1,6 @@
 export default {
   have_account: 'Already have an account? Sign in!',
-  title: 'Sign up to your account',
+  title: 'Sign up',
   first_name: {
     placeholder: 'First name',
     error: 'Please input your first name!',

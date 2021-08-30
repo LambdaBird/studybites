@@ -1,5 +1,5 @@
 import { Alert, Form, Input } from 'antd';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 
@@ -18,6 +18,8 @@ const SignUpForm = () => {
   const { password, passwordValidator } = usePasswordInput();
 
   const [auth, error, setError, loading] = useAuthentication(postSignUp);
+
+  const [message, setMessage] = useState('');
 
   const handleSubmit = async (formData) => {
     await auth(formData);
@@ -86,8 +88,17 @@ const SignUpForm = () => {
         <Input placeholder={t('last_name.placeholder')} />
       </Form.Item>
 
-      <Form.Item name="email" rules={formRules.email}>
+      <Form.Item
+        name="email"
+        rules={formRules.email}
+        help={<div>{message}</div>}
+      >
         <Input placeholder={t('email.placeholder')} />
+      </Form.Item>
+      <Form.Item shouldUpdate noStyle>
+        {({ getFieldError }) => {
+          setMessage(getFieldError('email')[0]);
+        }}
       </Form.Item>
 
       <Form.Item name="password" rules={formRules.password}>

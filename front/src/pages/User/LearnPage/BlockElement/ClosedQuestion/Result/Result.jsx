@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 
-import * as S from '@sb-ui/pages/User/LearnPage/BlockElement/Quiz/QuizResult/QuizResult.styled';
+import * as S from '@sb-ui/pages/User/LearnPage/BlockElement/Quiz/Quiz.styled';
 import {
   ClosedQuestionBlockAnswerType,
   ClosedQuestionBlockDataType,
