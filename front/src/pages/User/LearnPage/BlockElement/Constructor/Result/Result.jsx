@@ -1,29 +1,22 @@
 import { Typography } from 'antd';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons';
 
-import * as S from '@sb-ui/pages/User/LearnPage/BlockElement/Quiz/QuizResult/AnswerResult/AnswerResult.styled';
-import variables from '@sb-ui/theme/variables';
+import * as S from './Result.styled';
 
 const { Text } = Typography;
 
 const Result = ({ correct, results }) => {
   const { t } = useTranslation('user');
+  const titleKey = correct
+    ? `lesson.answer_result.correct`
+    : `lesson.answer_result.wrong`;
 
   return (
     <>
       <S.AnswerWrapper>
-        <Text>
-          {correct
-            ? t('lesson.answer_result.correct')
-            : t('lesson.answer_result.wrong')}
-        </Text>
-        {correct ? (
-          <CheckCircleTwoTone twoToneColor={variables['success-color']} />
-        ) : (
-          <CloseCircleTwoTone twoToneColor={variables['wrong-color']} />
-        )}
+        <Text>{t(titleKey)}</Text>
+        {correct ? <S.SuccessCircle /> : <S.FailCircle />}
       </S.AnswerWrapper>
       {!correct && <Text italic>{results.join(' ')}</Text>}
     </>
