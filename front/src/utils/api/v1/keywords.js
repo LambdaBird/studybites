@@ -3,7 +3,7 @@ import api from '@sb-ui/utils/api';
 
 const PATH = '/api/v1/keywords';
 
-export const fetchKeywords = async ({ search }) => {
+export const fetchKeywords = async ({ search = '' } = {}) => {
   const {
     data: { keywords },
   } = await api.get(`${PATH}`, {

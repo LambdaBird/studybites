@@ -1,5 +1,6 @@
 import fastify from 'fastify';
 import fastifyObjection from 'fastify-objection';
+import qs from 'qs';
 
 import User from './models/User';
 import Role from './models/Role';
@@ -18,7 +19,15 @@ import { keywordsService } from './services/keywords';
 import errorsAndValidation from './validation';
 
 export default (options = {}) => {
-  const app = fastify(options);
+  const app = fastify({
+    ...options,
+    querystringParser: (str) => qs.parse(str),
+    ajv: {
+      customOptions: {
+        coerceTypes: 'array',
+      },
+    },
+  });
 
   app.register(errorsAndValidation);
 

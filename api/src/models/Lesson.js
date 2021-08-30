@@ -82,8 +82,28 @@ class Lesson extends BaseModel {
         },
         modify: (query) => {
           return query
-            .select('id', 'first_name', 'last_name')
-            .where({ role_id: roles.MAINTAINER.id });
+            .where({
+              role_id: roles.MAINTAINER.id,
+              resource_type: resources.LESSON.name,
+            })
+            .select('id', 'first_name', 'last_name');
+        },
+      },
+
+      keywords: {
+        relation: objection.Model.ManyToManyRelation,
+        modelClass: path.join(__dirname, 'Keyword'),
+        join: {
+          from: 'lessons.id',
+          through: {
+            modelClass: path.join(__dirname, 'ResourceKeyword'),
+            from: 'resource_keywords.resource_id',
+            to: 'resource_keywords.keyword_id',
+          },
+          to: 'keywords.id',
+        },
+        modify: (query) => {
+          return query.where({ resource_type: resources.LESSON.name });
         },
       },
 
@@ -171,60 +191,48 @@ class Lesson extends BaseModel {
    * get all lessons where status = 'Public' with author,
    * search, pagination and total
    */
-  static getAllPublicLessons({ userId, offset, limit, search }) {
-    const start = offset;
+  static getAllPublicLessons({ userId, offset: start, limit, search, tags }) {
     const end = start + limit - 1;
 
-    return (
-      this.query()
-        .select(
-          'lessons.*',
-          this.knex().raw(`
-            (select json_agg(keywords.name) from resource_keywords 
-            join keywords on keywords.id = resource_keywords.keyword_id 
-            where resource_keywords.resource_id = lessons.id and resource_keywords.resource_type = 'lesson') keywords
-          `),
-          /**
-           * using cast to set is_enrolled field to true if user is enrolled to this lesson
-           */
-          this.knex().raw(`
-            (select cast(case when count(*) > 0 then true else false end as bool)
+    return this.query()
+      .skipUndefined()
+      .select(
+        'lessons.*',
+        this.knex().raw(`
+        (select cast(case when count(*) > 0 then true else false end as bool)
               from users_roles
               where role_id = ${roles.STUDENT.id}
                 and user_id = ${userId}
                 and resource_type = '${resources.LESSON.name}'
-                and resource_id = lessons.id) is_enrolled,
-            json_build_object('id', author.id, 'firstName', author."firstName", 'lastName', author."lastName") author
+                and resource_id = lessons.id) is_enrolled
         `),
-        )
-        .from(
-          this.knex().raw(`
-            (select id, first_name as "firstName", last_name as "lastName" from users) author
+        this.knex().raw(`
+          json_agg(json_build_object('id', keywords.id, 'name', keywords.name)) keywords
         `),
-        )
-        .join('users_roles', 'users_roles.user_id', '=', 'author.id')
-        .join('lessons', 'lessons.id', '=', 'users_roles.resource_id')
-        .where('users_roles.role_id', roles.MAINTAINER.id)
-        .andWhere('users_roles.resource_type', resources.LESSON.name)
-        .andWhere('lessons.status', 'Public')
-        .whereNotIn(
-          'lessons.id',
-          this.knex().raw(
-            `select lesson_id from results where user_id=${userId} and action='${blockConstants.actions.FINISH}'`,
-          ),
-        )
-        /**
-         * using concat to concatenate fields to search through
-         */
-        .andWhere(
-          this.knex().raw(
-            `concat(author."firstName", ' ', author."lastName", ' ', author."firstName", ' ', lessons.name)`,
-          ),
-          'ilike',
-          `%${search ? search.replace(/ /g, '%') : '%'}%`,
-        )
-        .range(start, end)
-    );
+      )
+      [tags ? 'innerJoin' : 'leftJoin'](
+        'resource_keywords',
+        'resource_keywords.resource_id',
+        '=',
+        'lessons.id',
+      )
+      .leftJoin('keywords', 'keywords.id', '=', 'resource_keywords.keyword_id')
+      .withGraphFetched('author')
+      .where('lessons.status', 'Public')
+      .whereIn('keywords.name', tags)
+      .andWhere(
+        'lessons.name',
+        'ilike',
+        search ? `%${search.replace(/ /g, '%')}%` : undefined,
+      )
+      .whereNotIn(
+        'lessons.id',
+        this.knex().raw(
+          `select lesson_id from results where user_id = ${userId} and action = '${blockConstants.actions.FINISH}'`,
+        ),
+      )
+      .groupBy('lessons.id')
+      .range(start, end);
   }
 
   static createLesson({ trx, lesson }) {
@@ -251,21 +259,14 @@ class Lesson extends BaseModel {
       .withGraphFetched('author');
   }
 
-  static getAllFinishedLessons({ userId, offset: start, limit, search }) {
+  static getAllFinishedLessons({ userId, offset: start, limit, search, tags }) {
     const end = start + limit - 1;
 
     return this.query()
+      .skipUndefined()
       .select(
         'lessons.*',
-        this.knex().raw(`
-          (select json_agg(keywords.name) from resource_keywords 
-          join keywords on keywords.id = resource_keywords.keyword_id 
-          where resource_keywords.resource_id = lessons.id and resource_keywords.resource_type = 'lesson') keywords
-        `),
         this.knex().raw(`true is_finished`),
-        this.knex().raw(`
-          json_build_object('id', author.id, 'firstName', author."firstName", 'lastName', author."lastName") author
-        `),
         this.knex().raw(`
           (select count(*) from results where lesson_id = lessons.id and action in ('next', 'response')) interactive_passed
         `),
@@ -273,14 +274,21 @@ class Lesson extends BaseModel {
           (select count(*) from lesson_block_structure join blocks on blocks.block_id = lesson_block_structure.block_id
           where blocks.type in ('next', 'quiz') and lesson_block_structure.lesson_id = lessons.id) interactive_total
         `),
-      )
-      .from(
         this.knex().raw(`
-        (select id, first_name as "firstName", last_name as "lastName" from users) author
+          (select cast(case when count(*) > 0 then true else false end as bool) from results
+          where lesson_id = lessons.id and action = 'start' and user_id = ${userId}) is_started
+        `),
+        this.knex().raw(`
+          json_agg(json_build_object('id', keywords.id, 'name', keywords.name)) keywords
         `),
       )
-      .join('users_roles', 'users_roles.user_id', '=', 'author.id')
-      .join('lessons', 'lessons.id', '=', 'users_roles.resource_id')
+      [tags ? 'innerJoin' : 'leftJoin'](
+        'resource_keywords',
+        'resource_keywords.resource_id',
+        '=',
+        'lessons.id',
+      )
+      .leftJoin('keywords', 'keywords.id', '=', 'resource_keywords.keyword_id')
       .join(
         this.knex().raw('users_roles learn'),
         'learn.resource_id',
@@ -288,19 +296,18 @@ class Lesson extends BaseModel {
         'lessons.id',
       )
       .join('results', 'results.lesson_id', '=', 'lessons.id')
-      .where('users_roles.role_id', roles.MAINTAINER.id)
+      .withGraphFetched('author')
       .andWhere('learn.role_id', roles.STUDENT.id)
       .andWhere('learn.user_id', userId)
-      .andWhere('users_roles.resource_type', resources.LESSON.name)
+      .whereIn('keywords.name', tags)
       .andWhere('results.action', 'finish')
       .andWhere('results.user_id', userId)
       .andWhere(
-        this.knex().raw(
-          `concat(author."firstName", ' ', author."lastName", ' ', author."firstName", ' ', lessons.name)`,
-        ),
+        'lessons.name',
         'ilike',
-        `%${search ? search.replace(/ /g, '%') : '%'}%`,
+        search ? `%${search.replace(/ /g, '%')}%` : undefined,
       )
+      .groupBy('lessons.id')
       .range(start, end);
   }
 
@@ -312,20 +319,42 @@ class Lesson extends BaseModel {
    * get all lessons that teacher is maintaining
    * with search, pagination and total
    */
-  static getAllMaintainableLessons({ userId, offset: start, limit, search }) {
+  static getAllMaintainableLessons({
+    userId,
+    offset: start,
+    limit,
+    search,
+    tags,
+  }) {
     const end = start + limit - 1;
 
     return this.query()
+      .skipUndefined()
+      .select(
+        'lessons.*',
+        this.knex().raw(`
+          json_agg(json_build_object('id', keywords.id, 'name', keywords.name)) keywords
+        `),
+      )
       .join('users_roles', 'users_roles.resource_id', '=', 'lessons.id')
+      [tags ? 'innerJoin' : 'leftJoin'](
+        'resource_keywords',
+        'resource_keywords.resource_id',
+        '=',
+        'lessons.id',
+      )
+      .leftJoin('keywords', 'keywords.id', '=', 'resource_keywords.keyword_id')
+      .withGraphFetched('students')
       .where('users_roles.role_id', roles.MAINTAINER.id)
       .andWhere('users_roles.user_id', userId)
+      .whereIn('keywords.name', tags)
       .andWhere(
         'lessons.name',
         'ilike',
-        `%${search ? search.replace(/ /g, '%') : '%'}%`,
+        search ? `%${search.replace(/ /g, '%')}%` : undefined,
       )
       .orderBy('lessons.created_at', 'desc')
-      .withGraphFetched('students')
+      .groupBy('lessons.id')
       .range(start, end);
   }
 
@@ -338,6 +367,7 @@ class Lesson extends BaseModel {
     offset: start,
     limit,
     search,
+    tags,
   }) {
     const end = start + limit - 1;
 
@@ -345,14 +375,6 @@ class Lesson extends BaseModel {
       .skipUndefined()
       .select(
         'lessons.*',
-        this.knex().raw(`
-          (select json_agg(keywords.name) from resource_keywords 
-          join keywords on keywords.id = resource_keywords.keyword_id 
-          where resource_keywords.resource_id = lessons.id and resource_keywords.resource_type = 'lesson') keywords
-        `),
-        this.knex().raw(`
-          json_build_object('id', author.id, 'firstName', author."firstName", 'lastName', author."lastName") author
-        `),
         this.knex().raw(`
           (select count(*) from results where lesson_id = lessons.id and action in ('next', 'response')) interactive_passed
         `),
@@ -364,32 +386,41 @@ class Lesson extends BaseModel {
           (select cast(case when count(*) > 0 then true else false end as bool) from results
           where lesson_id = lessons.id and action = 'start' and user_id = ${userId}) is_started
         `),
-      )
-      .from(
         this.knex().raw(`
-          (select id, first_name as "firstName", last_name as "lastName" from users) author
+          json_agg(json_build_object('id', keywords.id, 'name', keywords.name)) keywords
         `),
       )
-      .join('users_roles', 'users_roles.user_id', '=', 'author.id')
-      .join('lessons', 'lessons.id', '=', 'users_roles.resource_id')
+      [tags ? 'innerJoin' : 'leftJoin'](
+        'resource_keywords',
+        'resource_keywords.resource_id',
+        '=',
+        'lessons.id',
+      )
+      .leftJoin('keywords', 'keywords.id', '=', 'resource_keywords.keyword_id')
       .join(
         this.knex().raw('users_roles enrolled'),
         'enrolled.resource_id',
         '=',
         'lessons.id',
       )
-      .where('users_roles.role_id', roles.MAINTAINER.id)
+      .withGraphFetched('author')
+      .where('lessons.status', 'Public')
       .andWhere('enrolled.role_id', roles.STUDENT.id)
       .andWhere('enrolled.user_id', userId)
-      .andWhere('users_roles.resource_type', resources.LESSON.name)
+      .whereIn('keywords.name', tags)
       .whereNotIn('lessons.id', excludeLessons || undefined)
       .andWhere(
-        this.knex().raw(
-          `concat(author."firstName", ' ', author."lastName", ' ', author."firstName", ' ', lessons.name)`,
-        ),
+        'lessons.name',
         'ilike',
-        `%${search ? search.replace(/ /g, '%') : '%'}%`,
+        search ? `%${search.replace(/ /g, '%')}%` : undefined,
       )
+      .whereNotIn(
+        'lessons.id',
+        this.knex().raw(
+          `select lesson_id from results where user_id = ${userId} and action = '${blockConstants.actions.FINISH}'`,
+        ),
+      )
+      .groupBy('lessons.id')
       .range(start, end);
   }
 }

@@ -1,6 +1,6 @@
 export async function finishedLessonsHandler({
   user: { id: userId },
-  query: { search, offset, limit },
+  query: { search, offset, limit, tags },
 }) {
   const {
     models: { Lesson },
@@ -11,6 +11,7 @@ export async function finishedLessonsHandler({
     offset,
     limit,
     search,
+    tags,
   });
 
   return { total, lessons };
