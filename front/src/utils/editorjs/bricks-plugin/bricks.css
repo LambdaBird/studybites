@@ -6,12 +6,34 @@
     margin-bottom: 1rem;
 }
 
-.bricks-tool__answer-input {
+
+
+.bricks-tool__input-wrapper{
     margin-top: 1rem;
+    display: flex;
+    width: 100%;
+    align-items: center;
 }
 
-.bricks-tool__additional-input {
+.bricks-tool__input-wrapper input{
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+
+}
+
+.bricks-tool__additional-input-wrapper {
     margin-top: 0.25rem;
+}
+
+.bricks-tool__input-enter-button{
+    box-sizing: content-box;
+    border: 1px solid rgba(201,201,204,.48);
+    cursor:pointer;
+    background-color: #FAFAFA;
+    border-left: none;
+    padding: 10px;
+    height: 22px;
+    width: 22px;
 }
 
 .bricks-tool__hint {

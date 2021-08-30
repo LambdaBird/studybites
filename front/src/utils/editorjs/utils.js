@@ -23,3 +23,10 @@ export const fileToBase64 = (file) =>
     reader.onload = () => resolve(reader.result);
     reader.onerror = (error) => reject(error);
   });
+
+export const sanitizeBlocks = {
+  b: true,
+  i: true,
+  a: true,
+  mark: true,
+};

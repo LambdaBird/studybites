@@ -9,6 +9,7 @@ import {
   SolvedType,
 } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
 import { ChunkWrapper } from '@sb-ui/pages/User/LearnPage/LearnPage.styled';
+import { htmlToReact } from '@sb-ui/pages/User/LearnPage/utils';
 
 import AnswerResult from './Result/Result';
 import BricksSelect from './BricksSelect';
@@ -40,7 +41,7 @@ const Bricks = ({
     <>
       <ChunkWrapper>
         <S.Description>{t('editorjs:tools.bricks.title')}</S.Description>
-        <S.Question>{question}</S.Question>
+        <S.Question>{htmlToReact(question)}</S.Question>
 
         <BricksSelect
           {...selectProps}

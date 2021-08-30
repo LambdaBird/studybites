@@ -1,4 +1,6 @@
-import { icon, removeIcon } from './resources';
+import { sanitizeBlocks } from '@sb-ui/utils/editorjs/utils';
+
+import { enterIcon, icon, removeIcon } from './resources';
 
 import './bricks.css';
 
@@ -32,14 +34,15 @@ export default class Bricks {
       baseClass: this.api.styles.block,
       input: this.api.styles.input,
       container: 'bricks-tool',
+      inputWrapper: 'bricks-tool__input-wrapper',
+      inputEnterButton: 'bricks-tool__input-enter-button',
       questionInput: 'bricks-tool__question-input',
-      answerInput: 'bricks-tool__answer-input',
       answerTag: 'bricks-tool__answer-tag',
       tagsWrapper: 'bricks-tool__tags-wrapper',
       answerRemove: 'bricks-tool__answer-remove',
       tooltip: 'bricks-tool__tooltip',
       tooltipText: 'bricks-tool__tooltipText',
-      additionalInput: 'bricks-tool__additional-input',
+      additionalInputWrapper: 'bricks-tool__additional-input-wrapper',
       hint: 'bricks-tool__hint',
     };
   }
@@ -96,7 +99,7 @@ export default class Bricks {
   }
 
   handleEnterAnswer({ event }) {
-    event.preventDefault();
+    event?.preventDefault?.();
     const value = this.elements?.answerInput?.value;
     if (
       value &&
@@ -113,7 +116,7 @@ export default class Bricks {
   }
 
   handleEnterWord({ event }) {
-    event.preventDefault();
+    event?.preventDefault?.();
     const value = this.elements?.additionalInput?.value;
     if (
       value &&
@@ -163,12 +166,20 @@ export default class Bricks {
     return true;
   }
 
+  static get sanitize() {
+    return {
+      div: true,
+      br: true,
+      ...sanitizeBlocks,
+    };
+  }
+
   save() {
-    const question = this.elements.questionInput.innerText;
+    const question = this.elements.questionInput.innerHTML;
     const { answers, words } = this;
 
-    if (!question || !answers?.length || !words?.length) {
-      return null;
+    if (!question || !answers?.length) {
+      return undefined;
     }
     return {
       question,
@@ -177,9 +188,15 @@ export default class Bricks {
     };
   }
 
-  createWordsInput({ className, placeholderKey, handleEnter }) {
+  createWordsInput({ name, className, placeholderKey, handleEnter }) {
+    const inputWrapper = document.createElement('div');
+    inputWrapper.classList.add(this.CSS.inputWrapper);
+    if (className) {
+      inputWrapper.classList.add(className);
+    }
     const input = document.createElement('input');
-    input.classList.add(this.CSS.input, className);
+    this.elements[name] = input;
+    input.classList.add(this.CSS.input);
     input.placeholder = this.api.i18n.t(placeholderKey);
 
     input.onkeydown = (event) => {
@@ -187,7 +204,16 @@ export default class Bricks {
         handleEnter({ event });
       }
     };
-    return input;
+
+    const enterButton = document.createElement('div');
+    enterButton.classList.add(this.CSS.inputEnterButton);
+    enterButton.innerHTML = enterIcon;
+    enterButton.addEventListener('click', () => {
+      handleEnter({});
+    });
+    inputWrapper.appendChild(input);
+    inputWrapper.appendChild(enterButton);
+    return inputWrapper;
   }
 
   render() {
@@ -208,11 +234,11 @@ export default class Bricks {
     );
 
     if (this.data.question) {
-      this.elements.questionInput.innerText = this.data.question;
+      this.elements.questionInput.innerHTML = this.data.question;
     }
 
-    this.elements.answerInput = this.createWordsInput({
-      className: this.CSS.answerInput,
+    const answerInputWrapper = this.createWordsInput({
+      name: 'answerInput',
       placeholderKey: 'answer',
       handleEnter: this.handleEnterAnswer.bind(this),
     });
@@ -222,17 +248,18 @@ export default class Bricks {
 
     this.renderTags();
 
-    this.elements.additionalInput = this.createWordsInput({
-      className: this.CSS.additionalInput,
+    const additionalInputWrapper = this.createWordsInput({
+      name: 'additionalInput',
+      className: this.CSS.additionalInputWrapper,
       placeholderKey: 'additional',
       handleEnter: this.handleEnterWord.bind(this),
     });
 
     container.appendChild(hint);
     container.appendChild(this.elements.questionInput);
-    container.appendChild(this.elements.answerInput);
+    container.appendChild(answerInputWrapper);
     container.appendChild(this.elements.tagsWrapper);
-    container.appendChild(this.elements.additionalInput);
+    container.appendChild(additionalInputWrapper);
 
     return container;
   }

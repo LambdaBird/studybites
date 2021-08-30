@@ -47,7 +47,7 @@ export const prepareEditorData = (blocks) =>
           ...content,
           data: {
             ...content?.data,
-            answers: answer?.results,
+            answers: answer?.words,
           },
         };
       default:
@@ -84,6 +84,7 @@ const SKIP_BLOCKS = [
   BLOCKS_TYPE.EMBED,
   BLOCKS_TYPE.IMAGE,
   BLOCKS_TYPE.CLOSED_QUESTION,
+  BLOCKS_TYPE.BRICKS,
 ];
 
 export const prepareBlocksForApi = (blocks) =>
@@ -101,7 +102,7 @@ export const prepareBlocksForApi = (blocks) =>
           answer.results = block?.data?.answers;
           break;
         case BLOCKS_TYPE.BRICKS:
-          answer.results = block?.data?.answers;
+          answer.words = block?.data?.answers;
           break;
         default:
           break;

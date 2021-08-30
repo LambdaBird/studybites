@@ -73,7 +73,7 @@ class Block extends BaseModel {
       }
       case blockConstants.blocks.BRICKS: {
         return getBricksCorrectness({
-          solution: answer.results,
+          solution: answer.words,
           userResponse,
           blockWeight: weight,
         });
