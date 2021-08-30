@@ -2,7 +2,7 @@ import { Row } from 'antd';
 import { useTranslation } from 'react-i18next';
 
 import { PublicLessonType } from '@sb-ui/components/lessonBlocks/types';
-import lessonImage from '@sb-ui/resources/img/lesson.svg';
+import DefaultLessonImage from '@sb-ui/resources/img/lesson.svg';
 
 import { useLesson } from './useLesson';
 import * as S from './Public.mobile.styled';
@@ -10,15 +10,19 @@ import * as S from './Public.mobile.styled';
 const PublicMobile = ({ lesson }) => {
   const { t } = useTranslation('user');
 
-  const { name, description, isEnrolled } = lesson;
+  const { name, description, isEnrolled, image } = lesson;
   const { fullName, firstNameLetter, handleContinueLesson, handleEnroll } =
     useLesson(lesson);
 
   return (
     <S.Main size="large" wrap={false}>
-      <div style={{ height: '9rem' }}>
-        <S.Image src={lessonImage} alt="Lesson" />
-      </div>
+      <S.ImageWrapper>
+        <S.Image
+          fallback={DefaultLessonImage}
+          src={image || DefaultLessonImage}
+          alt="Lesson"
+        />
+      </S.ImageWrapper>
       <Row>
         <S.Title
           ellipsis={{
