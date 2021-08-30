@@ -29,7 +29,7 @@ const FillTheGap = ({
   const { t } = useTranslation('user');
   const { handleInteractiveClick, id } = useContext(LearnContext);
 
-  const { tokens } = content.data;
+  const { tokens } = content.data || {};
 
   const [gapsInput, setGapsInput] = useState(
     tokens?.map((token) => {
@@ -48,7 +48,7 @@ const FillTheGap = ({
       revision,
       blockId,
       reply: {
-        response: gapsInput.filter((gap) => gap.type === 'input'),
+        response: gapsInput?.filter((gap) => gap.type === 'input'),
       },
     });
   }, [blockId, gapsInput, handleInteractiveClick, id, revision]);
