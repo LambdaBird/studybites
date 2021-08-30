@@ -6,6 +6,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { RedoOutlined, SaveOutlined, UndoOutlined } from '@ant-design/icons';
 
 import Header from '@sb-ui/components/molecules/Header';
+import KeywordsSelect from '@sb-ui/components/molecules/KeywordsSelect';
 import { Statuses } from '@sb-ui/pages/Teacher/Home/LessonsDashboard/constants';
 import { queryClient } from '@sb-ui/query';
 import {
@@ -364,6 +365,12 @@ const LessonEdit = () => {
                   showCount
                   maxLength={140}
                 />
+              </Col>
+            </Row>
+            <Row gutter={[0, 16]}>
+              <Col span={24}>Keywords</Col>
+              <Col span={24}>
+                <KeywordsSelect />
               </Col>
             </Row>
           </S.RightCol>
