@@ -1,16 +1,13 @@
 import AsyncSelect from 'react-select/async-creatable';
 
-import { getKeywords } from '@sb-ui/utils/api/v1/keywords';
+import { fetchKeywords } from '@sb-ui/utils/api/v1/keywords';
 
 const KeywordsSelect = () => (
   <AsyncSelect
     cacheOptions
     isMulti
     defaultOptions
-    loadOptions={async (search) => {
-      const keywords = await getKeywords({ search });
-      return keywords;
-    }}
+    loadOptions={(search) => fetchKeywords({ search })}
   />
 );
 
