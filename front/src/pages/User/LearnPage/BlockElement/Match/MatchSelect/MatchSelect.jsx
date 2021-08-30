@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
 
+import { htmlToReact } from '@sb-ui/pages/User/LearnPage/utils';
+
 import { MATCH_BLOCK_TYPE, MatchBlock } from './MatchBlock';
 import { MatchSelectBlockType } from './types';
 import * as S from './MatchSelect.styled';
@@ -51,7 +53,7 @@ const MatchSelect = ({
       Math.max(
         right[index]?.ref.current?.clientHeight,
         left[index]?.ref.current?.clientHeight,
-      ),
+      ) || '',
     [left, right],
   );
 
@@ -139,20 +141,17 @@ const MatchSelect = ({
               correct={correct}
               onClick={!disabled ? () => handleBlockClick(id, true) : null}
             >
-              {value}
+              {htmlToReact(value)}
             </MatchBlock>
           </S.MatchBlockWrapper>
         ))}
       </S.MatchColumn>
       <S.MatchMiddle>
-        {left?.map(
-          ({ selected }, index) =>
-            (selected || disabled) && (
-              <S.ArrowConnectWrapper height={getMaxBlockHeight(index)}>
-                <S.ArrowConnectImg />
-              </S.ArrowConnectWrapper>
-            ),
-        )}
+        {left?.map(({ selected, id }, index) => (
+          <S.ArrowConnectWrapper key={id} height={getMaxBlockHeight(index)}>
+            {(selected || disabled) && <S.ArrowConnectImg />}
+          </S.ArrowConnectWrapper>
+        ))}
       </S.MatchMiddle>
       <S.MatchColumn disableAllAnimations={disabled}>
         {right?.map(({ ref, correct, selected, id, value }, index) => (
@@ -160,11 +159,11 @@ const MatchSelect = ({
             <MatchBlock
               ref={ref}
               type={getBlockType(correct)}
-              selected={selected || first === id}
+              selected={selected || second === id}
               correct={correct}
               onClick={!disabled ? () => handleBlockClick(id, false) : null}
             >
-              {value}
+              {htmlToReact(value)}
             </MatchBlock>
           </S.MatchBlockWrapper>
         ))}

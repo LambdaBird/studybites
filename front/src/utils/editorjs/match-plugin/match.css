@@ -5,6 +5,10 @@
     margin-top: 1rem;
 }
 
+.match-tool__input{
+    overflow-wrap: anywhere;
+}
+
 .match-tool__hint{
     cursor: default;
     user-select: none;
