@@ -1,9 +1,9 @@
 import { Meta, Story, Canvas } from '@storybook/addon-docs';
 import { LearnContextDecorator } from '@sb-ui/stories/decorators';
-import Constructor from '@sb-ui/pages/User/LearnPage/BlockElement/Constructor';
+import Bricks from '@sb-ui/pages/User/LearnPage/BlockElement/Bricks';
 
 <Meta
-  title="Blocks/Constructor/Student/Solved"
+  title="Blocks/Bricks/Student/Solved"
   decorators={[
     (Story) => (
       <LearnContextDecorator>
@@ -11,14 +11,14 @@ import Constructor from '@sb-ui/pages/User/LearnPage/BlockElement/Constructor';
       </LearnContextDecorator>
     ),
   ]}
-  component={Constructor}
+  component={Bricks}
 />
 
-# Constructor
+# Bricks
 
-Component `Constructor` should use to display ConstructorAnswer `answer: { words: StringArray } reply: { words: StringArray}` (accepts data options `question`, `words`)
+Component `Bricks` should use to display BricksAnswer `answer: { words: StringArray } reply: { words: StringArray}` (accepts data options `question`, `words`)
 
-export const Template = (args) => <Constructor {...args} />;
+export const Template = (args) => <Bricks {...args} />;
 
 <Canvas>
   <Story

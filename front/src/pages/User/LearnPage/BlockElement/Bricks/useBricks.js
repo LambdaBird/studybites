@@ -3,7 +3,7 @@ import { useCallback, useContext, useState } from 'react';
 import LearnContext from '@sb-ui/contexts/LearnContext';
 import { RESPONSE_TYPE } from '@sb-ui/pages/User/LearnPage/utils';
 
-export const useConstructor = ({ blockId, revision, content }) => {
+export const useBricks = ({ blockId, revision, content }) => {
   const { handleInteractiveClick, id } = useContext(LearnContext);
   const { words: dataWords, question } = content.data;
 

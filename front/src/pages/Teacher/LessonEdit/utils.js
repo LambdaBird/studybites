@@ -9,8 +9,8 @@ import Quote from '@editorjs/quote';
 import Warning from '@editorjs/warning';
 
 import { BLOCKS_TYPE } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
+import Bricks from '@sb-ui/utils/editorjs/bricks-plugin';
 import ClosedQuestion from '@sb-ui/utils/editorjs/closed-question-plugin';
-import Constructor from '@sb-ui/utils/editorjs/constructor-plugin';
 import Embed from '@sb-ui/utils/editorjs/embed-plugin';
 import Image from '@sb-ui/utils/editorjs/image-plugin';
 import Next from '@sb-ui/utils/editorjs/next-plugin';
@@ -42,12 +42,12 @@ export const prepareEditorData = (blocks) =>
             explanation: answer?.explanation,
           },
         };
-      case BLOCKS_TYPE.CONSTRUCTOR:
+      case BLOCKS_TYPE.BRICKS:
         return {
           ...content,
           data: {
             ...content?.data,
-            answers: answer?.words,
+            answers: answer?.results,
           },
         };
       default:
@@ -70,7 +70,7 @@ export const prepareBlocksDataForApi = (data, type) => {
       return {
         ...sendData,
       };
-    case BLOCKS_TYPE.CONSTRUCTOR:
+    case BLOCKS_TYPE.BRICKS:
       return {
         ...sendData,
         words: shuffleArray(words),
@@ -100,8 +100,8 @@ export const prepareBlocksForApi = (blocks) =>
           answer.explanation = block?.data?.explanation;
           answer.results = block?.data?.answers;
           break;
-        case BLOCKS_TYPE.CONSTRUCTOR:
-          answer.words = block?.data?.answers;
+        case BLOCKS_TYPE.BRICKS:
+          answer.results = block?.data?.answers;
           break;
         default:
           break;
@@ -178,7 +178,10 @@ export const getConfig = (t) => ({
       inlineToolbar: true,
     },
     code: CodeTool,
-    constructor: Constructor,
+    bricks: {
+      class: Bricks,
+      inlineToolbar: true,
+    },
   },
   plugins: [],
 });

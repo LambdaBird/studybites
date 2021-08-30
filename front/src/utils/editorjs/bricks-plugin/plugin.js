@@ -1,6 +1,6 @@
 import { icon, removeIcon } from './resources';
 
-import './constructor.css';
+import './bricks.css';
 
 const MAX_ANSWER_LENGTH = 50;
 
@@ -10,7 +10,7 @@ function createElementFromHTML(htmlString) {
   return div.firstChild;
 }
 
-export default class Constructor {
+export default class Bricks {
   constructor({ data, api, readOnly }) {
     this.api = api;
     this.data = data;
@@ -22,7 +22,7 @@ export default class Constructor {
 
   static get toolbox() {
     return {
-      title: 'Constructor',
+      title: 'Bricks',
       icon,
     };
   }
@@ -31,16 +31,16 @@ export default class Constructor {
     return {
       baseClass: this.api.styles.block,
       input: this.api.styles.input,
-      container: 'constructor-tool',
-      questionInput: 'constructor-tool__question-input',
-      answerInput: 'constructor-tool__answer-input',
-      answerTag: 'constructor-tool__answer-tag',
-      tagsWrapper: 'constructor-tool__tags-wrapper',
-      answerRemove: 'constructor-tool__answer-remove',
-      tooltip: 'constructor-tool__tooltip',
-      tooltipText: 'constructor-tool__tooltipText',
-      additionalInput: 'constructor-tool__additional-input',
-      hint: 'constructor-tool__hint',
+      container: 'bricks-tool',
+      questionInput: 'bricks-tool__question-input',
+      answerInput: 'bricks-tool__answer-input',
+      answerTag: 'bricks-tool__answer-tag',
+      tagsWrapper: 'bricks-tool__tags-wrapper',
+      answerRemove: 'bricks-tool__answer-remove',
+      tooltip: 'bricks-tool__tooltip',
+      tooltipText: 'bricks-tool__tooltipText',
+      additionalInput: 'bricks-tool__additional-input',
+      hint: 'bricks-tool__hint',
     };
   }
 
@@ -177,6 +177,19 @@ export default class Constructor {
     };
   }
 
+  createWordsInput({ className, placeholderKey, handleEnter }) {
+    const input = document.createElement('input');
+    input.classList.add(this.CSS.input, className);
+    input.placeholder = this.api.i18n.t(placeholderKey);
+
+    input.onkeydown = (event) => {
+      if (event.key === 'Enter') {
+        handleEnter({ event });
+      }
+    };
+    return input;
+  }
+
   render() {
     const container = document.createElement('div');
     container.classList.add(this.CSS.container);
@@ -198,32 +211,22 @@ export default class Constructor {
       this.elements.questionInput.innerText = this.data.question;
     }
 
-    this.elements.answerInput = document.createElement('input');
-    this.elements.answerInput.classList.add(this.CSS.input);
-    this.elements.answerInput.classList.add(this.CSS.answerInput);
-    this.elements.answerInput.placeholder = this.api.i18n.t('answer');
-
-    this.elements.answerInput.onkeydown = (event) => {
-      if (event.key === 'Enter') {
-        this.handleEnterAnswer({ event });
-      }
-    };
+    this.elements.answerInput = this.createWordsInput({
+      className: this.CSS.answerInput,
+      placeholderKey: 'answer',
+      handleEnter: this.handleEnterAnswer.bind(this),
+    });
 
     this.elements.tagsWrapper = document.createElement('div');
     this.elements.tagsWrapper.classList.add(this.CSS.tagsWrapper);
 
     this.renderTags();
 
-    this.elements.additionalInput = document.createElement('input');
-    this.elements.additionalInput.classList.add(this.CSS.input);
-    this.elements.additionalInput.classList.add(this.CSS.additionalInput);
-    this.elements.additionalInput.placeholder = this.api.i18n.t('answer');
-
-    this.elements.additionalInput.onkeydown = (event) => {
-      if (event.key === 'Enter') {
-        this.handleEnterWord({ event });
-      }
-    };
+    this.elements.additionalInput = this.createWordsInput({
+      className: this.CSS.additionalInput,
+      placeholderKey: 'additional',
+      handleEnter: this.handleEnterWord.bind(this),
+    });
 
     container.appendChild(hint);
     container.appendChild(this.elements.questionInput);

@@ -1,4 +1,4 @@
-import * as S from './ConstructorSelect.styled';
+import * as S from './BricksSelect.styled';
 
 const SelectedWords = ({
   selectedWordsId,
