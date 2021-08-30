@@ -2,6 +2,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { htmlToReact } from '@sb-ui/pages/User/LearnPage/utils';
+
 import * as S from './GapsInput.styled';
 
 const GapsInput = ({ gaps, setGaps, disabled, result }) => {
@@ -17,9 +19,9 @@ const GapsInput = ({ gaps, setGaps, disabled, result }) => {
 
   return (
     <S.Wrapper>
-      {gaps.map(({ value, id, type }) => {
+      {gaps?.map(({ value, id, type }) => {
         if (type === 'text') {
-          return <span key={id}>{value}</span>;
+          return <span key={id}>{htmlToReact(value)}</span>;
         }
         if (result) {
           const { value: resultValue, correct: correctValue } =

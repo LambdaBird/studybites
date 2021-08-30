@@ -1,3 +1,5 @@
+import { stripHTML } from '@sb-ui/utils/editorjs/utils';
+
 import { icon } from './resources';
 
 import './fillTheGap.css';
@@ -34,24 +36,30 @@ export default class FillTheGap {
   }
 
   save = () => {
-    const regexpMatches = this.input.innerHTML.match(this.bracketsRegexp);
-    if (!regexpMatches) {
-      return null;
+    const inputHTML = this.input.innerHTML;
+    const regexpMatches = inputHTML.match(this.bracketsRegexp);
+    if (inputHTML.trim().length === 0) {
+      return undefined;
     }
 
-    let answers = regexpMatches.map((match) =>
-      match.replace(/\s/g, '').replace('{{', '').replace('}}', ''),
-    );
-    answers = answers.map((entry) => entry.split(','));
-    const text = this.input.innerHTML.replace(this.bracketsRegexp, '{{ # }}');
+    const answers = regexpMatches
+      ?.map((match) => stripHTML(match))
+      ?.map((match) =>
+        match.replace('{{', '').replace('}}', '').trim().split(','),
+      )
+      ?.map((phrases) => phrases.map((phrase) => phrase.trim()))
+      ?.map((phrases) => phrases.filter((phrase) => phrase))
+      ?.map((answer) => [...new Set([...answer])]);
+
+    const text = inputHTML.replace(this.bracketsRegexp, '{{ # }}');
     const tokens = text.split('{{ # }}');
     const tokensData = tokens.reduce((prev, token, index) => {
-      const answer = answers[index];
+      const answer = answers?.[index];
       const tokenData = [
         ...prev,
         { value: token, id: prev.length + 1, type: 'text' },
       ];
-      if (answer) {
+      if (answer && answer.length > 0) {
         tokenData.push({ value: answer, id: prev.length + 2, type: 'input' });
       }
       return tokenData;
@@ -66,16 +74,24 @@ export default class FillTheGap {
     };
   };
 
+  static get sanitize() {
+    return {
+      div: true,
+      br: true,
+    };
+  }
+
   render() {
     const container = document.createElement('div');
     container.classList.add(this.CSS.container);
 
     const hint = document.createElement('span');
-    hint.innerText = '* Text inside {{ }} will be hidden for students';
+    hint.innerText = this.api.i18n.t('hint');
     hint.classList.add(this.CSS.hint);
 
     this.input = document.createElement('div');
     this.input.classList.add(this.CSS.input);
+    this.input.setAttribute('placeholder', this.api.i18n.t('placeholder'));
     if (!this.readOnly) {
       this.input.contentEditable = 'true';
     }

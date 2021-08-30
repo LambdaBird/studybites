@@ -79,6 +79,7 @@ const SKIP_BLOCKS = [
   BLOCKS_TYPE.EMBED,
   BLOCKS_TYPE.IMAGE,
   BLOCKS_TYPE.CLOSED_QUESTION,
+  BLOCKS_TYPE.FILL_THE_GAP,
 ];
 
 export const prepareBlocksForApi = (blocks) =>
@@ -173,7 +174,10 @@ export const getConfig = (t) => ({
       inlineToolbar: true,
     },
     code: CodeTool,
-    fillTheGap: FillTheGap,
+    fillTheGap: {
+      class: FillTheGap,
+      inlineToolbar: true,
+    },
   },
   plugins: [],
 });
