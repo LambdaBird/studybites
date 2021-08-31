@@ -1,4 +1,3 @@
-import { Popover } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { SearchOutlined } from '@ant-design/icons';
 
@@ -7,7 +6,13 @@ import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
 import { SearchPropTypes } from './types';
 import * as S from './Search.mobile.styled';
 
-const SearchMobile = ({ setSearchText, searchText, className, placement }) => {
+const SearchMobile = ({
+  setSearchText,
+  searchText,
+  className,
+  placement,
+  marginRight,
+}) => {
   const { t } = useTranslation('user');
 
   const onSearchChange = (data) => {
@@ -16,7 +21,8 @@ const SearchMobile = ({ setSearchText, searchText, className, placement }) => {
 
   return (
     <>
-      <Popover
+      <S.Popover
+        marginRight={marginRight}
         placement={placement}
         content={
           <DebouncedSearch
@@ -28,7 +34,6 @@ const SearchMobile = ({ setSearchText, searchText, className, placement }) => {
             size="large"
           />
         }
-        trigger="click"
       >
         <S.StyledSearchButton
           shape="circle"
@@ -36,7 +41,7 @@ const SearchMobile = ({ setSearchText, searchText, className, placement }) => {
           size="large"
           $isActive={!!searchText}
         />
-      </Popover>
+      </S.Popover>
     </>
   );
 };
