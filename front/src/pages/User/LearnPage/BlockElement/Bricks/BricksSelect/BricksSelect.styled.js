@@ -33,8 +33,7 @@ export const LineWrapper = styled.div`
 export const Line = styled.div`
   width: 100%;
   height: 2rem;
-  border-bottom: 1px solid
-    ${variables['lesson-block-constructor-word-underline']};
+  border-bottom: 1px solid ${variables['lesson-block-bricks-word-underline']};
 `;
 
 export const WordsWrapperSelected = styled.div`
@@ -55,12 +54,12 @@ export const Word = styled.div`
   border: ${BORDER}px solid ${variables['border-color-base']};
   background-color: ${(props) =>
     props.selected
-      ? variables['lesson-block-constructor-word-background']
+      ? variables['lesson-block-bricks-word-background']
       : variables['background-color-light']};
   padding: 0 1rem;
   color: ${(props) =>
     props.selected
-      ? variables['lesson-block-constructor-word-background']
+      ? variables['lesson-block-bricks-word-background']
       : 'inherit'};
   cursor: ${(props) => (props.selected ? 'default' : 'pointer')};
   user-select: none;

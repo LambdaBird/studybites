@@ -1,4 +1,4 @@
-export function getConstructorCorrectness({
+export function getBricksCorrectness({
   solution,
   userResponse: { words },
   blockWeight,

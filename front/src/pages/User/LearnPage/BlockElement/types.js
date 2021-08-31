@@ -17,7 +17,7 @@ export const BLOCKS_TYPE = {
   NEXT: 'next',
   START: 'start',
   CLOSED_QUESTION: 'closedQuestion',
-  CONSTRUCTOR: 'constructor',
+  BRICKS: 'bricks',
 };
 
 export const BlockContentType = PropTypes.shape({
@@ -47,11 +47,11 @@ export const ClosedQuestionBlockReplyType = PropTypes.shape({
   value: PropTypes.string.isRequired,
 });
 
-export const ConstructorBlockAnswerType = PropTypes.shape({
+export const BricksBlockAnswerType = PropTypes.shape({
   words: PropTypes.arrayOf(PropTypes.string),
 });
 
-export const ConstructorBlockReplyType = PropTypes.shape({
+export const BricksBlockReplyType = PropTypes.shape({
   words: PropTypes.arrayOf(PropTypes.string),
 });
 

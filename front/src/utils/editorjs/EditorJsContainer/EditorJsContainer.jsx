@@ -145,7 +145,7 @@ const EditorJsContainer = forwardRef((props, ref) => {
             Bold: t('tools.bold.title'),
             Italic: t('tools.italic.title'),
             Link: t('tools.link.title'),
-            Constructor: t('tools.constructor.title'),
+            Bricks: t('tools.bricks.title'),
           },
           tools: {
             stub: {
@@ -197,10 +197,10 @@ const EditorJsContainer = forwardRef((props, ref) => {
             code: {
               placeholder: t('tools.code.placeholder'),
             },
-            constructor: {
-              question: t('tools.constructor.question'),
-              answer: t('tools.constructor.answer'),
-              additional: t('tools.constructor.additional'),
+            bricks: {
+              question: t('tools.bricks.question'),
+              answer: t('tools.bricks.answer'),
+              additional: t('tools.bricks.additional'),
             },
           },
         },

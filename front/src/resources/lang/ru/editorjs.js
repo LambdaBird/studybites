@@ -97,9 +97,9 @@ export default {
     link: {
       title: 'Ссылка',
     },
-    constructor: {
+    bricks: {
       title: 'Конструктор',
-      question: 'Вопрос',
+      question: '❓ Вопрос',
       answer: 'Введите слова и нажмите Enter',
       additional: 'Дополнительные слова',
     },

@@ -2,15 +2,15 @@ import PropTypes from 'prop-types';
 import { useCallback, useEffect, useRef } from 'react';
 
 import SelectedWords from './SelectedWords';
-import * as S from './ConstructorSelect.styled';
+import * as S from './BricksSelect.styled';
 import {
   BORDER,
   HEIGHT_GAP,
   HEIGHT_GAP_SELECTED,
   HEIGHT_WORD,
-} from './ConstructorSelect.styled';
+} from './BricksSelect.styled';
 
-const ConstructorSelect = ({
+const BricksSelect = ({
   words,
   setWords = () => {},
   additionalLines,
@@ -115,7 +115,7 @@ const ConstructorSelect = ({
   );
 };
 
-ConstructorSelect.propTypes = {
+BricksSelect.propTypes = {
   words: PropTypes.oneOfType([
     PropTypes.arrayOf(
       PropTypes.shape({
@@ -134,4 +134,4 @@ ConstructorSelect.propTypes = {
   disabled: PropTypes.bool,
 };
 
-export default ConstructorSelect;
+export default BricksSelect;

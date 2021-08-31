@@ -1,4 +1,4 @@
-.constructor-tool {
+.bricks-tool {
     margin-top: 1rem;
     display: flex;
     flex-direction: column;
@@ -6,15 +6,37 @@
     margin-bottom: 1rem;
 }
 
-.constructor-tool__answer-input {
+
+
+.bricks-tool__input-wrapper{
     margin-top: 1rem;
+    display: flex;
+    width: 100%;
+    align-items: center;
 }
 
-.constructor-tool__additional-input {
+.bricks-tool__input-wrapper input{
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+
+}
+
+.bricks-tool__additional-input-wrapper {
     margin-top: 0.25rem;
 }
 
-.constructor-tool__hint {
+.bricks-tool__input-enter-button{
+    box-sizing: content-box;
+    border: 1px solid rgba(201,201,204,.48);
+    cursor:pointer;
+    background-color: #FAFAFA;
+    border-left: none;
+    padding: 10px;
+    height: 22px;
+    width: 22px;
+}
+
+.bricks-tool__hint {
     cursor: default;
     user-select: none;
     font-size: 12px;
@@ -22,7 +44,7 @@
     margin-bottom: 1rem;
 }
 
-.constructor-tool__answer-tag {
+.bricks-tool__answer-tag {
     box-sizing: border-box;
     margin: 0 8px 8px 0;
     color: #000000d9;
@@ -40,7 +62,7 @@
     transition: all .3s;
 }
 
-.constructor-tool__answer-tag span {
+.bricks-tool__answer-tag span {
     cursor: pointer;
     display: inline-block;
     color: inherit;
@@ -51,26 +73,26 @@
     margin-left: 4px;
 }
 
-.constructor-tool__answer-remove svg {
+.bricks-tool__answer-remove svg {
     vertical-align: -0.125em;
 }
 
-.constructor-tool__answer-remove {
+.bricks-tool__answer-remove {
     cursor: pointer;
     color: #00000073;
 }
 
-.constructor-tool__tags-wrapper {
+.bricks-tool__tags-wrapper {
     margin-top: 0.75rem;
     width: 100%;
 }
 
-.constructor-tool__tooltip {
+.bricks-tool__tooltip {
     position: relative;
     display: inline-block;
 }
 
-.constructor-tool__tooltip .constructor-tool__tooltipText {
+.bricks-tool__tooltip .bricks-tool__tooltipText {
     visibility: hidden;
     background-color: black;
     overflow-x: hidden;
@@ -87,7 +109,7 @@
     z-index: 1;
 }
 
-.constructor-tool__tooltip:hover .constructor-tool__tooltipText {
+.bricks-tool__tooltip:hover .bricks-tool__tooltipText {
     visibility: visible;
     cursor: auto;
     color: #fff;

@@ -4,7 +4,7 @@ import { blockConstants } from '../config';
 
 import { getQuizCorrectness } from './blocks/quiz';
 import { getClosedQuestionCorrectness } from './blocks/closedQuestion';
-import { getConstructorCorrectness } from './blocks/constructor';
+import { getBricksCorrectness } from './blocks/bricks';
 
 class Block extends BaseModel {
   static get tableName() {
@@ -71,9 +71,9 @@ class Block extends BaseModel {
           blockWeight: weight,
         });
       }
-      case blockConstants.blocks.CONSTRUCTOR: {
-        return getConstructorCorrectness({
-          solution: answer.results,
+      case blockConstants.blocks.BRICKS: {
+        return getBricksCorrectness({
+          solution: answer.words,
           userResponse,
           blockWeight: weight,
         });

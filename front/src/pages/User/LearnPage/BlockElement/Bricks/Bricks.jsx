@@ -1,22 +1,23 @@
 import { useTranslation } from 'react-i18next';
 
-import AnswerResult from '@sb-ui/pages/User/LearnPage/BlockElement/Constructor/Result';
-import { useConstructor } from '@sb-ui/pages/User/LearnPage/BlockElement/Constructor/useConstructor';
 import {
   BlockContentType,
   BlockIdType,
-  ConstructorBlockAnswerType,
-  ConstructorBlockReplyType,
+  BricksBlockAnswerType,
+  BricksBlockReplyType,
   RevisionType,
   SolvedType,
 } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
 import { ChunkWrapper } from '@sb-ui/pages/User/LearnPage/LearnPage.styled';
+import { htmlToReact } from '@sb-ui/pages/User/LearnPage/utils';
 
-import ConstructorSelect from './ConstructorSelect';
+import AnswerResult from './Result/Result';
+import BricksSelect from './BricksSelect';
+import { useBricks } from './useBricks';
 import { verifyAnswers } from './verifyAnswers';
-import * as S from './Constructor.styled';
+import * as S from './Bricks.styled';
 
-const Constructor = ({
+const Bricks = ({
   blockId,
   revision,
   answer = {},
@@ -25,7 +26,7 @@ const Constructor = ({
   isSolved,
 }) => {
   const { t } = useTranslation('user');
-  const { handleSendClick, ...selectProps } = useConstructor({
+  const { handleSendClick, ...selectProps } = useBricks({
     blockId,
     revision,
     content,
@@ -39,10 +40,10 @@ const Constructor = ({
   return (
     <>
       <ChunkWrapper>
-        <S.Description>{t('editorjs:tools.constructor.title')}</S.Description>
-        <S.Question>{question}</S.Question>
+        <S.Description>{t('editorjs:tools.bricks.title')}</S.Description>
+        <S.Question>{htmlToReact(question)}</S.Question>
 
-        <ConstructorSelect
+        <BricksSelect
           {...selectProps}
           words={isSolved ? userWords : selectProps.words}
           disabled={isSolved}
@@ -64,13 +65,13 @@ const Constructor = ({
   );
 };
 
-Constructor.propTypes = {
+Bricks.propTypes = {
   blockId: BlockIdType,
   revision: RevisionType,
   content: BlockContentType,
-  answer: ConstructorBlockAnswerType,
-  reply: ConstructorBlockReplyType,
+  answer: BricksBlockAnswerType,
+  reply: BricksBlockReplyType,
   isSolved: SolvedType,
 };
 
-export default Constructor;
+export default Bricks;

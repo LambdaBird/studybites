@@ -46,7 +46,7 @@ export const blockConstants = {
     NEXT: 'next',
     QUIZ: 'quiz',
     CLOSED_QUESTION: 'closedQuestion',
-    CONSTRUCTOR: 'constructor',
+    BRICKS: 'bricks',
   },
   get BLOCKS_LIST() {
     return Object.values(this.blocks);
@@ -65,7 +65,7 @@ export const blockConstants = {
       this.blocks.NEXT,
       this.blocks.QUIZ,
       this.blocks.CLOSED_QUESTION,
-      this.blocks.CONSTRUCTOR,
+      this.blocks.BRICKS,
     ];
   },
   get STATIC_BLOCKS() {
