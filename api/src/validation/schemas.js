@@ -30,6 +30,7 @@ export const lessonSearch = {
     search: { type: 'string' },
     offset: { type: 'number', default: 0 },
     limit: { type: 'number', default: searchLimits.LESSON_SEARCH_LIMIT },
+    tags: { type: 'array', items: { type: 'string' } },
   },
 };
 

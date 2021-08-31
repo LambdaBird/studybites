@@ -1,6 +1,6 @@
 export async function publicLessonsHandler({
   user: { id: userId },
-  query: { search, offset, limit },
+  query: { search, offset, limit, tags },
 }) {
   const {
     models: { Lesson },
@@ -11,6 +11,7 @@ export async function publicLessonsHandler({
     offset,
     limit,
     search,
+    tags,
   });
 
   return { total, lessons };

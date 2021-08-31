@@ -29,8 +29,14 @@ export const ongoingLessonsOptions = {
                 interactivePassed: { type: 'number' },
                 isStarted: { type: 'boolean' },
                 keywords: {
-                  type: ['array', 'null'],
-                  items: { type: 'string' },
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      id: { type: 'number' },
+                      name: { type: 'string' },
+                    },
+                  },
                 },
               },
             },
