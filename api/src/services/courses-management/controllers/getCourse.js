@@ -1,11 +1,11 @@
 const options = {
   schema: {
-    params: { $ref: 'paramsLessonId#' },
+    params: { $ref: 'paramsCourseId#' },
     response: {
       200: {
         type: 'object',
         properties: {
-          lesson: {
+          course: {
             type: 'object',
             properties: {
               id: { type: 'number' },
@@ -13,8 +13,6 @@ const options = {
               description: { type: ['string', 'null'] },
               status: { type: 'string' },
               studentsCount: { type: 'number' },
-              createdAt: { type: 'string' },
-              updatedAt: { type: 'string' },
               author: {
                 type: 'object',
                 properties: {
@@ -23,7 +21,7 @@ const options = {
                   lastName: { type: 'string' },
                 },
               },
-              blocks: { type: 'array' },
+              lessons: { type: 'array' },
             },
           },
         },
@@ -35,36 +33,36 @@ const options = {
   async onRequest(req) {
     await this.auth({ req });
   },
-  async preHandler({ user: { id: userId }, params: { lessonId: resourceId } }) {
+  async preHandler({ user: { id: userId }, params: { courseId: resourceId } }) {
     const { resources, roles } = this.config.globals;
 
     await this.access({
       userId,
       resourceId,
-      resourceType: resources.LESSON.name,
+      resourceType: resources.COURSE.name,
       roleId: roles.MAINTAINER.id,
     });
   },
 };
 
-async function handler({ params: { lessonId } }) {
+async function handler({ params: { courseId } }) {
   const {
-    models: { Lesson, LessonBlockStructure, UserRole },
+    models: { Course, CourseLessonStructure, UserRole },
     config: {
       globals: { resources },
     },
   } = this;
 
-  const lesson = await Lesson.findById({ lessonId });
+  const course = await Course.findById({ courseId });
   const { count: studentsCount } = await UserRole.getResourceStudentsCount({
-    resourceId: lessonId,
-    resourceType: resources.LESSON.name,
+    resourceId: courseId,
+    resourceType: resources.COURSE.name,
   });
 
-  lesson.studentsCount = studentsCount;
-  lesson.blocks = await LessonBlockStructure.getAllBlocks({ lessonId });
+  course.studentsCount = studentsCount;
+  course.lessons = await CourseLessonStructure.getAllLessons({ courseId });
 
-  return { lesson };
+  return { course };
 }
 
 export default { options, handler };
