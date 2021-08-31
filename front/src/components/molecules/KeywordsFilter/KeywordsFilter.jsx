@@ -19,7 +19,6 @@ const KeywordsFilter = ({ width = '250px', margin = '1rem', setValues }) => {
     (async () => {
       await handleSearch('');
     })();
-  }, []);
 
   return (
     <S.Select
