@@ -1,27 +1,32 @@
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { fetchKeywords } from '@sb-ui/utils/api/v1/keywords';
 
 import * as S from './KeywordsFilter.styled';
 
 const KeywordsFilter = ({ width = '250px', margin = '1rem', setValues }) => {
+  const { t } = useTranslation('common');
   const [options, setOptions] = useState([]);
 
+  const handleSearch = async (search) => {
+    const data = await fetchKeywords({ search });
+    setOptions(data);
+  };
+
   useEffect(() => {
-    fetchKeywords().then((data) => setOptions(data));
+    (async () => {
+      await handleSearch('');
+    })();
   }, []);
 
   return (
     <S.Select
       width={width}
       margin={margin}
-      mode="multiple"
-      placeholder="Select item"
-      maxTagCount="responsive"
-      onSearch={(search) =>
-        fetchKeywords({ search }).then((data) => setOptions(data))
-      }
+      placeholder={t('filter.placeholder')}
+      onSearch={handleSearch}
       onChange={setValues}
       options={options}
     />
