@@ -21,14 +21,7 @@ const InfoBlock = ({ isLoading, lesson, total }) => {
         <Skeleton loading={isLoading} paragraph={{ rows: 2 }} active />
       ) : (
         <>
-          <S.TitleEllipsis
-            ellipsis={{
-              tooltip: true,
-            }}
-            level={2}
-          >
-            {lesson.name}
-          </S.TitleEllipsis>
+          <S.TitleEllipsis>{lesson.name}</S.TitleEllipsis>
           <S.StyledRow>{lesson.description}</S.StyledRow>
           <S.StyledRow justify="space-between">
             <Text type="secondary">

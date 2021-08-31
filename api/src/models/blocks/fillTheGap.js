@@ -1,16 +1,16 @@
 export function getFillTheGapCorrectness({
-  solution,
-  userResponse,
+  solution: { results },
+  userResponse: { response },
   blockWeight,
 }) {
-  const replies = userResponse.reduce(
+  const replies = response.reduce(
     (result, reply) => ({
       ...result,
       [reply.id]: reply,
     }),
     {},
   );
-  return solution.every(
+  return results.every(
     (answer) =>
       replies[answer.id] && answer.value.includes(replies[answer.id].value),
   )

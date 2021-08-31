@@ -30,7 +30,7 @@ const GapsInput = ({ gaps, setGaps, disabled, result }) => {
           return (
             <React.Fragment key={id}>
               {correctValue ? (
-                <S.CorrectSpan>{resultValue?.[0]}</S.CorrectSpan>
+                <S.CorrectSpan>{resultValue}</S.CorrectSpan>
               ) : (
                 <S.WrongSpan>{resultValue?.[0]}</S.WrongSpan>
               )}
