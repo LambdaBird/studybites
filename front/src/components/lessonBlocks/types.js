@@ -6,19 +6,26 @@ const AuthorType = PropTypes.shape({
   lastName: PropTypes.string.isRequired,
 });
 
-export const LessonType = PropTypes.shape({
+export const GeneralLessonType = {
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   description: PropTypes.string,
   author: AuthorType,
+  keywords: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+    }),
+  ),
+};
+
+export const LessonType = PropTypes.shape({
+  ...GeneralLessonType,
   percentage: PropTypes.number,
   isFinished: PropTypes.bool,
 });
 
 export const PublicLessonType = PropTypes.shape({
-  id: PropTypes.number.isRequired,
-  name: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  author: AuthorType,
+  ...GeneralLessonType,
   isEnrolled: PropTypes.bool.isRequired,
 });

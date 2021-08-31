@@ -29,13 +29,12 @@ export default class ResourceKeyword extends BaseModel {
   }
 
   static async getLessonKeywords({ lessonId }) {
-    const keywords = await this.query()
-      .select('keywords.name')
+    return this.query()
+      .select('keywords.*')
       .join('keywords', 'keywords.id', '=', 'resource_keywords.keyword_id')
       .where({
         resource_id: lessonId,
         resource_type: resources.LESSON.name,
       });
-    return keywords.map((object) => object.name);
   }
 }

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import variables from '@sb-ui/theme/variables';
 
-const { Text } = Typography;
+const { Paragraph } = Typography;
 
 export const Main = styled(Row)`
   background-color: ${variables['lesson-block-background']};
@@ -25,10 +25,18 @@ export const Title = styled(Typography.Title)`
   overflow-wrap: anywhere;
 `;
 
-export const Description = styled(Text)`
+export const Description = styled(Paragraph).attrs({
+  ellipsis: {
+    tooltip: true,
+    rows: 2,
+  },
+})`
   text-align: justify;
   color: ${variables['lesson-block-description-color']};
-  overflow-wrap: anywhere;
+`;
+
+export const DescriptionRow = styled(Row)`
+  margin-bottom: 1rem;
 `;
 
 export const AuthorContainer = styled.div`

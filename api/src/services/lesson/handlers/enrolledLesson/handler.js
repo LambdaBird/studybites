@@ -1,6 +1,6 @@
 export async function enrolledLessonHandler({ params: { lessonId } }) {
   const {
-    models: { Lesson , ResourceKeyword },
+    models: { Lesson, ResourceKeyword },
   } = this;
 
   const lesson = await Lesson.getLessonWithAuthor({ lessonId });
