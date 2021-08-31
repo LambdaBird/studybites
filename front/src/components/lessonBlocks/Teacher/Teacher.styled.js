@@ -32,6 +32,7 @@ export const ImageCol = styled(Col)`
 `;
 
 export const BadgeWrapper = styled.div`
+  z-index: 1;
   right: 1rem;
   top: 1rem;
   position: absolute;

@@ -7,6 +7,8 @@ import DefaultLessonImage from '@sb-ui/resources/img/lesson.svg';
 
 import * as S from './LessonImage.styled';
 
+const MAX_IMAGE_LENGTH = 255;
+
 const LessonImage = ({
   isLoading,
   image,
@@ -21,6 +23,7 @@ const LessonImage = ({
       <Col span={24}>{t('lesson_edit.cover_image.title')}</Col>
       <Col span={24}>
         <Input
+          maxLength={MAX_IMAGE_LENGTH}
           allowClear
           value={image}
           placeholder={t('lesson_edit.cover_image.input_placeholder')}
