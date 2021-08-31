@@ -23,8 +23,9 @@ export default class Match {
   get CSS() {
     return {
       baseClass: this.api.styles.block,
-      input: this.api.styles.input,
+      baseInput: this.api.styles.input,
       container: 'match-tool',
+      input: 'match-tool__input',
       inputsWrapper: 'match-tool__inputsWrapper',
       hint: 'match-tool__hint',
       addLineButton: 'match-tool__addLineButton',
@@ -100,7 +101,7 @@ export default class Match {
 
   createInput(value, placeholderKey) {
     const input = document.createElement('div');
-    input.classList.add(this.CSS.input);
+    input.classList.add(this.CSS.baseInput, this.CSS.input);
     input.innerHTML = value;
     if (!this.readOnly) {
       input.contentEditable = 'true';
@@ -134,6 +135,13 @@ export default class Match {
     return true;
   }
 
+  static get sanitize() {
+    return {
+      div: true,
+      br: true,
+    };
+  }
+
   renderNew(renderParams) {
     const oldView = this.container;
     if (oldView) {
@@ -154,9 +162,16 @@ export default class Match {
 
   save() {
     const inputsValue = this.prepareInputs().filter(
-      ({ left, right }) => left.length !== 0 || right.length !== 0,
+      ({ left, right }, index) =>
+        left.trim().length !== 0 || right.trim().length !== 0 || index <= 1,
     );
-    if (inputsValue.length === 0) {
+    if (
+      inputsValue.length === 0 ||
+      inputsValue.every(
+        ({ left, right }) =>
+          left.trim().length === 0 && right.trim().length === 0,
+      )
+    ) {
       return null;
     }
     return {

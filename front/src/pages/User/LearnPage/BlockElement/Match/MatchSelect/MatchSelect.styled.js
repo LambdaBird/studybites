@@ -61,6 +61,7 @@ export const MatchBlock = styled.div`
   box-shadow: 0 2px 8px rgba(172, 172, 172, 0.15);
   border-radius: 16px;
   user-select: none;
+  overflow-wrap: anywhere;
 `;
 
 export const MatchBlockSelect = styled(MatchBlock)`
