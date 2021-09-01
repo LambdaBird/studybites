@@ -7,6 +7,7 @@ export default {
   lesson_dashboard: {
     title: 'Мои уроки',
     add_button: 'Добавить урок',
+    create_course_button: 'Создать курс',
     card: {
       edit: 'Редактировать',
       no_students: 'Нет студентов',
@@ -64,6 +65,15 @@ export default {
     tools: {
       warning_title: 'Заголовок',
       warning_message: 'Сообщение',
+    },
+  },
+  course_edit: {
+    lesson_search: {
+      placeholder: 'Выберите урок',
+    },
+    to_lesson_button: 'Перейти к уроку',
+    title: {
+      placeholder: 'Название курса',
     },
   },
   lesson_edit: {

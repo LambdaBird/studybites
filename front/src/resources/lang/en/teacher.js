@@ -7,6 +7,8 @@ export default {
   lesson_dashboard: {
     title: 'My lessons',
     add_button: 'Add lesson',
+    create_course_button: 'Add course',
+
     card: {
       edit: 'Edit',
       no_students: 'No students',
@@ -64,6 +66,15 @@ export default {
     tools: {
       warning_title: 'Title',
       warning_message: 'Message',
+    },
+  },
+  course_edit: {
+    lesson_search: {
+      placeholder: 'Choose lesson',
+    },
+    to_lesson_button: 'Go to lesson',
+    title: {
+      placeholder: 'Course title',
     },
   },
   lesson_edit: {
