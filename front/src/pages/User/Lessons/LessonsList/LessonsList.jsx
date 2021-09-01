@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useQuery } from 'react-query';
 
 import OngoingFullLesson from '@sb-ui/components/lessonBlocks/OngoingFull';
+import KeywordsFilter from '@sb-ui/components/molecules/KeywordsFilter';
 import emptyImg from '@sb-ui/resources/img/empty.svg';
 import { skeletonArray } from '@sb-ui/utils/utils';
 
@@ -14,6 +15,7 @@ const LessonsList = ({ title, notFound, query }) => {
   const { key: queryKey, func: queryFunc } = query;
   const [currentPage, setCurrentPage] = useState(1);
   const [searchText, setSearchText] = useState(null);
+  const [keywords, setKeywords] = useState([]);
 
   const { isLoading, data: responseData } = useQuery(
     [
@@ -22,6 +24,7 @@ const LessonsList = ({ title, notFound, query }) => {
         offset: (currentPage - 1) * PAGE_SIZE,
         limit: PAGE_SIZE,
         search: searchText,
+        tags: keywords,
       },
     ],
     queryFunc,
@@ -34,6 +37,7 @@ const LessonsList = ({ title, notFound, query }) => {
       <S.LessonsHeader>
         <S.OpenLessonsTitle>{title}</S.OpenLessonsTitle>
         <S.StyledSearch searchText={searchText} setSearchText={setSearchText} />
+        <KeywordsFilter setValues={setKeywords} />
       </S.LessonsHeader>
       <S.LessonsRow>
         {isLoading

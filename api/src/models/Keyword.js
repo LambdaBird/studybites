@@ -2,7 +2,6 @@ import objection from 'objection';
 import path from 'path';
 
 import BaseModel from './BaseModel';
-import { roles } from '../config';
 
 export default class Keyword extends BaseModel {
   static get tableName() {
@@ -53,5 +52,14 @@ export default class Keyword extends BaseModel {
         search ? `%${search.replace(/ /g, '%')}%` : undefined,
       )
       .range(start, end);
+  }
+
+  static createMany({ trx, keywords }) {
+    const keywordsToInsert = keywords.map((keyword) => ({ name: keyword }));
+    return this.query(trx).insert(keywordsToInsert).onConflict('name').ignore();
+  }
+
+  static getId({ trx, keywords }) {
+    return this.query(trx).select('id as keyword_id').whereIn('name', keywords);
   }
 }

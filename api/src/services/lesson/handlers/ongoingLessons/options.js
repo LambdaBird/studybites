@@ -28,6 +28,16 @@ export const ongoingLessonsOptions = {
                 interactiveTotal: { type: 'number' },
                 interactivePassed: { type: 'number' },
                 isStarted: { type: 'boolean' },
+                keywords: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      id: { type: 'number' },
+                      name: { type: 'string' },
+                    },
+                  },
+                },
               },
             },
           },

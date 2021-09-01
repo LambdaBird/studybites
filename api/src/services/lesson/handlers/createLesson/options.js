@@ -3,6 +3,10 @@ export const createLessonOptions = {
     body: {
       type: 'object',
       properties: {
+        keywords: {
+          type: ['array', 'null'],
+          items: { type: 'string' },
+        },
         lesson: {
           type: 'object',
           properties: {
