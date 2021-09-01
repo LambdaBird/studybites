@@ -207,11 +207,9 @@ class Lesson extends BaseModel {
              and resource_id = lessons.id) is_enrolled
         `),
       )
-      .leftJoin(
-        'resource_keywords',
-        'lessons.id',
-        '=',
-        'resource_keywords.resource_id',
+      .joinRaw(
+        `left join resource_keywords on lessons.id = resource_keywords.resource_id 
+        and resource_keywords.resource_type = '${resources.LESSON.name}'`,
       )
       .where('lessons.status', 'Public')
       .andWhere(
@@ -280,14 +278,13 @@ class Lesson extends BaseModel {
       )
       .join('users_roles', 'lessons.id', '=', 'users_roles.resource_id')
       .join('results', 'results.lesson_id', '=', 'lessons.id')
-      .leftJoin(
-        'resource_keywords',
-        'lessons.id',
-        '=',
-        'resource_keywords.resource_id',
+      .joinRaw(
+        `left join resource_keywords on lessons.id = resource_keywords.resource_id 
+        and resource_keywords.resource_type = '${resources.LESSON.name}'`,
       )
       .where('users_roles.role_id', roles.STUDENT.id)
       .andWhere('users_roles.user_id', userId)
+      .andWhere('users_roles.resource_type', resources.LESSON.name)
       .andWhere('results.action', 'finish')
       .andWhere('results.user_id', userId)
       .andWhere(
@@ -328,13 +325,12 @@ class Lesson extends BaseModel {
     const query = this.query()
       .skipUndefined()
       .join('users_roles', 'users_roles.resource_id', '=', 'lessons.id')
-      .leftJoin(
-        'resource_keywords',
-        'lessons.id',
-        '=',
-        'resource_keywords.resource_id',
+      .joinRaw(
+        `left join resource_keywords on lessons.id = resource_keywords.resource_id 
+        and resource_keywords.resource_type = '${resources.LESSON.name}'`,
       )
       .where('users_roles.role_id', roles.MAINTAINER.id)
+      .andWhere('users_roles.resource_type', resources.LESSON.name)
       .andWhere('users_roles.user_id', userId)
       .andWhere(
         'lessons.name',
@@ -379,16 +375,15 @@ class Lesson extends BaseModel {
              where lesson_id = lessons.id and action = 'start' and user_id = ${userId}) is_started
           `),
       )
-      .leftJoin(
-        'resource_keywords',
-        'lessons.id',
-        '=',
-        'resource_keywords.resource_id',
+      .joinRaw(
+        `left join resource_keywords on lessons.id = resource_keywords.resource_id 
+        and resource_keywords.resource_type = '${resources.LESSON.name}'`,
       )
       .join('users_roles', 'lessons.id', '=', 'users_roles.resource_id')
       .where('lessons.status', 'Public')
       .andWhere('users_roles.role_id', roles.STUDENT.id)
       .andWhere('users_roles.user_id', userId)
+      .andWhere('users_roles.resource_type', resources.LESSON.name)
       .whereNotIn('lessons.id', excludeLessons || undefined)
       .andWhere(
         'lessons.name',
