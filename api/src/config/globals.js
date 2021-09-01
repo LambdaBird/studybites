@@ -29,6 +29,10 @@ export const resources = {
     status: ['Draft', 'Public', 'Private', 'Archived'],
     learnStatus: ['Public', 'Draft'],
   },
+  COURSE: {
+    name: 'course',
+    status: ['Draft', 'Public', 'Private', 'Archived'],
+  },
 };
 
 export const blockConstants = {
