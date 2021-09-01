@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useQuery } from 'react-query';
 
 import OngoingFullLesson from '@sb-ui/components/lessonBlocks/OngoingFull';
+import AuthorSelect from '@sb-ui/components/molecules/AuthorSelect';
 import emptyImg from '@sb-ui/resources/img/empty.svg';
 import { skeletonArray } from '@sb-ui/utils/utils';
 
@@ -12,6 +13,7 @@ import * as S from './LessonsList.styled';
 
 const LessonsList = ({ title, notFound, query }) => {
   const { key: queryKey, func: queryFunc } = query;
+  const [authors, setAuthors] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchText, setSearchText] = useState(null);
 
@@ -34,6 +36,9 @@ const LessonsList = ({ title, notFound, query }) => {
       <S.LessonsHeader>
         <S.OpenLessonsTitle>{title}</S.OpenLessonsTitle>
         <S.StyledSearch searchText={searchText} setSearchText={setSearchText} />
+        <S.AuthorWrapper>
+          <AuthorSelect values={authors} setValues={setAuthors} />
+        </S.AuthorWrapper>
       </S.LessonsHeader>
       <S.LessonsRow>
         {isLoading
