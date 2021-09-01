@@ -9,11 +9,11 @@ export default class CourseLessonStructure extends BaseModel {
     return {
       type: 'object',
       properties: {
-        id: { type: 'number' },
+        id: { type: 'string' },
         courseId: { type: 'number' },
         lessonId: { type: 'number' },
-        childId: { type: ['number', 'null'] },
-        parentId: { type: ['number', 'null'] },
+        childId: { type: ['string', 'null'] },
+        parentId: { type: ['string', 'null'] },
       },
     };
   }
