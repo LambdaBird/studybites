@@ -44,7 +44,7 @@ const options = {
 
 async function handler({
   user: { id: userId },
-  query: { search, offset, limit, progress },
+  query: { search, offset, limit, progress, authors },
 }) {
   const {
     models: { Lesson, Result },
@@ -56,6 +56,7 @@ async function handler({
       offset,
       limit,
       search,
+      authors,
     });
 
     return { total, lessons };
@@ -69,6 +70,7 @@ async function handler({
     offset,
     limit,
     search,
+    authors,
   });
 
   return { total, lessons };

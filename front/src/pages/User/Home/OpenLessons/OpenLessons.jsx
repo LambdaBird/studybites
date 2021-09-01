@@ -33,6 +33,7 @@ const OpenLessons = () => {
         offset: (currentPage - 1) * PAGE_SIZE,
         limit: PAGE_SIZE,
         search: searchText,
+        authors,
       },
     ],
     getLessons,
