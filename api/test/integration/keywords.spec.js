@@ -182,7 +182,7 @@ describe('Keywords creation and filtering', () => {
 
     it('should return lessons with keywords', async () => {
       const response = await testContext.request({
-        url: 'lesson/maintain/?tags[]=English',
+        url: 'lesson/maintain/?tags[]=1',
         method: 'GET',
       });
 
@@ -195,7 +195,7 @@ describe('Keywords creation and filtering', () => {
           expect.objectContaining({
             keywords: expect.arrayContaining([
               expect.objectContaining({
-                name: 'English',
+                name: 'French',
               }),
             ]),
           }),

@@ -213,7 +213,6 @@ class Lesson extends BaseModel {
         '=',
         'resource_keywords.resource_id',
       )
-      .leftJoin('keywords', 'resource_keywords.keyword_id', '=', 'keywords.id')
       .where('lessons.status', 'Public')
       .andWhere(
         'lessons.name',
@@ -233,8 +232,8 @@ class Lesson extends BaseModel {
 
     if (tags) {
       return query
-        .whereIn('keywords.name', tags)
-        .havingRaw('count(keywords.name) = ?', [tags.length]);
+        .whereIn('resource_keywords.keyword_id', tags)
+        .havingRaw('count(resource_keywords.keyword_id) = ?', [tags.length]);
     }
     return query;
   }
@@ -287,7 +286,6 @@ class Lesson extends BaseModel {
         '=',
         'resource_keywords.resource_id',
       )
-      .leftJoin('keywords', 'resource_keywords.keyword_id', '=', 'keywords.id')
       .where('users_roles.role_id', roles.STUDENT.id)
       .andWhere('users_roles.user_id', userId)
       .andWhere('results.action', 'finish')
@@ -304,8 +302,8 @@ class Lesson extends BaseModel {
 
     if (tags) {
       return query
-        .whereIn('keywords.name', tags)
-        .havingRaw('count(keywords.name) = ?', [tags.length]);
+        .whereIn('resource_keywords.keyword_id', tags)
+        .havingRaw('count(resource_keywords.keyword_id) = ?', [tags.length]);
     }
     return query;
   }
@@ -336,7 +334,6 @@ class Lesson extends BaseModel {
         '=',
         'resource_keywords.resource_id',
       )
-      .leftJoin('keywords', 'resource_keywords.keyword_id', '=', 'keywords.id')
       .where('users_roles.role_id', roles.MAINTAINER.id)
       .andWhere('users_roles.user_id', userId)
       .andWhere(
@@ -351,8 +348,8 @@ class Lesson extends BaseModel {
 
     if (tags) {
       return query
-        .whereIn('keywords.name', tags)
-        .havingRaw('count(keywords.name) = ?', [tags.length]);
+        .whereIn('resource_keywords.keyword_id', tags)
+        .havingRaw('count(resource_keywords.keyword_id) = ?', [tags.length]);
     }
     return query;
   }
@@ -388,7 +385,6 @@ class Lesson extends BaseModel {
         '=',
         'resource_keywords.resource_id',
       )
-      .leftJoin('keywords', 'resource_keywords.keyword_id', '=', 'keywords.id')
       .join('users_roles', 'lessons.id', '=', 'users_roles.resource_id')
       .where('lessons.status', 'Public')
       .andWhere('users_roles.role_id', roles.STUDENT.id)
@@ -412,8 +408,8 @@ class Lesson extends BaseModel {
 
     if (tags) {
       return query
-        .whereIn('keywords.name', tags)
-        .havingRaw('count(keywords.name) = ?', [tags.length]);
+        .whereIn('resource_keywords.keyword_id', tags)
+        .havingRaw('count(resource_keywords.keyword_id) = ?', [tags.length]);
     }
     return query;
   }
