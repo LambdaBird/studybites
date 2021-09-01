@@ -5,6 +5,7 @@ import Code from './Code';
 import Delimiter from './Delimiter';
 import Embed from './Embed';
 import Error from './Error';
+import FillTheGap from './FillTheGap';
 import Finish from './Finish';
 import Header from './Header';
 import Image from './Image';
@@ -46,6 +47,8 @@ const BlockElement = ({ element }) => {
       return <Quote {...element} />;
     case BLOCKS_TYPE.CLOSED_QUESTION:
       return <ClosedQuestion {...element} />;
+    case BLOCKS_TYPE.FILL_THE_GAP:
+      return <FillTheGap {...element} />;
     case BLOCKS_TYPE.DELIMITER:
       return <Delimiter {...element} />;
     case BLOCKS_TYPE.TABLE:

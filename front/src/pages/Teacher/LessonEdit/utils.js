@@ -11,6 +11,7 @@ import Warning from '@editorjs/warning';
 import { BLOCKS_TYPE } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
 import ClosedQuestion from '@sb-ui/utils/editorjs/closed-question-plugin';
 import Embed from '@sb-ui/utils/editorjs/embed-plugin';
+import FillTheGap from '@sb-ui/utils/editorjs/fill-the-gap/plugin';
 import Image from '@sb-ui/utils/editorjs/image-plugin';
 import Next from '@sb-ui/utils/editorjs/next-plugin';
 import Quiz from '@sb-ui/utils/editorjs/quiz-plugin';
@@ -40,6 +41,14 @@ export const prepareEditorData = (blocks) =>
             explanation: answer?.explanation,
           },
         };
+      case BLOCKS_TYPE.FILL_THE_GAP:
+        return {
+          ...content,
+          data: {
+            ...content?.data,
+            answers: answer?.results,
+          },
+        };
       default:
         return content;
     }
@@ -57,6 +66,7 @@ export const prepareBlocksDataForApi = (data, type) => {
         answers: answers.map(({ value }) => ({ value })),
       };
     case BLOCKS_TYPE.CLOSED_QUESTION:
+    case BLOCKS_TYPE.FILL_THE_GAP:
       return {
         ...sendData,
       };
@@ -69,6 +79,7 @@ const SKIP_BLOCKS = [
   BLOCKS_TYPE.EMBED,
   BLOCKS_TYPE.IMAGE,
   BLOCKS_TYPE.CLOSED_QUESTION,
+  BLOCKS_TYPE.FILL_THE_GAP,
 ];
 
 export const prepareBlocksForApi = (blocks) =>
@@ -83,6 +94,9 @@ export const prepareBlocksForApi = (blocks) =>
           break;
         case BLOCKS_TYPE.CLOSED_QUESTION:
           answer.explanation = block?.data?.explanation;
+          answer.results = block?.data?.answers;
+          break;
+        case BLOCKS_TYPE.FILL_THE_GAP:
           answer.results = block?.data?.answers;
           break;
         default:
@@ -160,6 +174,10 @@ export const getConfig = (t) => ({
       inlineToolbar: true,
     },
     code: CodeTool,
+    fillTheGap: {
+      class: FillTheGap,
+      inlineToolbar: true,
+    },
   },
   plugins: [],
 });

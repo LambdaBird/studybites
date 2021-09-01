@@ -4,6 +4,7 @@ import { blockConstants } from '../config';
 
 import { getQuizCorrectness } from './blocks/quiz';
 import { getClosedQuestionCorrectness } from './blocks/closedQuestion';
+import { getFillTheGapCorrectness } from './blocks/fillTheGap';
 
 class Block extends BaseModel {
   static get tableName() {
@@ -66,6 +67,13 @@ class Block extends BaseModel {
       case blockConstants.blocks.CLOSED_QUESTION: {
         return getClosedQuestionCorrectness({
           solution: answer.results,
+          userResponse,
+          blockWeight: weight,
+        });
+      }
+      case blockConstants.blocks.FILL_THE_GAP: {
+        return getFillTheGapCorrectness({
+          solution: answer,
           userResponse,
           blockWeight: weight,
         });
