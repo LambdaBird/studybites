@@ -17,7 +17,7 @@ const KeywordsSelect = ({ values, setValues }) => (
 KeywordsSelect.propTypes = {
   values: PropTypes.arrayOf(
     PropTypes.shape({
-      value: PropTypes.string,
+      value: PropTypes.number,
       label: PropTypes.string,
     }),
   ),

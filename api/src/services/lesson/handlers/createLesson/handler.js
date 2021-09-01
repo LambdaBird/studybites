@@ -3,17 +3,7 @@ export async function createLessonHandler({
   user: { id: userId },
 }) {
   const {
-    models: {
-      Lesson,
-      UserRole,
-      Block,
-      LessonBlockStructure,
-      Keyword,
-      ResourceKeyword,
-    },
-    config: {
-      globals: { resources },
-    },
+    models: { Lesson, UserRole, Block, LessonBlockStructure, Keyword },
   } = this;
 
   try {
@@ -22,14 +12,7 @@ export async function createLessonHandler({
       await UserRole.addMaintainer({ trx, userId, resourceId: lessonData.id });
 
       if (keywords) {
-        await Keyword.createMany({ trx, keywords });
-        const keywordsIds = await Keyword.getId({ trx, keywords });
-        const resourceKeywords = keywordsIds.map((keyword) => ({
-          keywordId: keyword.keywordId,
-          resourceId: lessonData.id,
-          resourceType: resources.LESSON.name,
-        }));
-        await ResourceKeyword.createMany({ trx, resourceKeywords });
+        await Keyword.createMany({ trx, keywords, resourceId: lessonData.id });
       }
 
       if (blocks.length) {

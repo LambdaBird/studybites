@@ -61,8 +61,8 @@ const LessonEdit = () => {
     if (lessonData?.keywords) {
       setKeywords(
         lessonData.keywords.map((keyword) => ({
-          value: keyword,
-          label: keyword,
+          value: keyword.id,
+          label: keyword.name,
         })),
       );
     }
@@ -156,7 +156,10 @@ const LessonEdit = () => {
           description,
           status: Statuses.DRAFT,
         },
-        keywords: keywords.map((keyword) => keyword.value),
+        keywords: keywords.map((keyword) => ({
+          name: keyword.label,
+          id: typeof keyword.value === 'number' ? keyword.value : undefined,
+        })),
         blocks: prepareBlocksForApi(blocks),
       };
       if (!name) {

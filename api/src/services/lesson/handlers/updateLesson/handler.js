@@ -5,10 +5,7 @@ export async function updateLessonHandler({
   params: { lessonId },
 }) {
   const {
-    models: { Lesson, Block, LessonBlockStructure, Keyword, ResourceKeyword },
-    config: {
-      globals: { resources },
-    },
+    models: { Lesson, Block, LessonBlockStructure, Keyword },
   } = this;
 
   try {
@@ -22,15 +19,12 @@ export async function updateLessonHandler({
       }
 
       if (keywords) {
-        await Keyword.createMany({ trx, keywords });
-        const keywordsIds = await Keyword.getId({ trx, keywords });
-        const resourceKeywords = keywordsIds.map((keyword) => ({
-          keywordId: keyword.keywordId,
+        await Keyword.createMany({
+          trx,
+          keywords,
           resourceId: lessonData.id,
-          resourceType: resources.LESSON.name,
-        }));
-        await ResourceKeyword.deleteMany({ trx, resourceId: lessonData.id });
-        await ResourceKeyword.createMany({ trx, resourceKeywords });
+          update: true,
+        });
       }
 
       if (blocks) {
