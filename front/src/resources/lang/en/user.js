@@ -15,6 +15,13 @@ export default {
       enroll_button: 'Enroll',
       start_button: 'Start',
     },
+    open_courses: {
+      title: 'Open courses',
+      not_found: 'No open courses yet',
+      search: 'Name or author',
+      enroll_button: 'Enroll',
+      start_button: 'Start',
+    },
     ongoing_lessons: {
       title: 'Ongoing lessons',
       not_found: 'No ongoing lessons yet',
