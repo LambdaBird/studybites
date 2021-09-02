@@ -189,6 +189,10 @@ const EditorJsContainer = forwardRef((props, ref) => {
               example: t('tools.closed_question.example'),
               none: t('tools.closed_question.none'),
             },
+            fillTheGap: {
+              hint: t('tools.fill_the_gap.hint'),
+              placeholder: t('tools.fill_the_gap.placeholder'),
+            },
             match: {
               input_left_placeholder: t('tools.match.input_left_placeholder'),
               input_right_placeholder: t('tools.match.input_right_placeholder'),

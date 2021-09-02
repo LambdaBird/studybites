@@ -46,6 +46,7 @@ export const blockConstants = {
     NEXT: 'next',
     QUIZ: 'quiz',
     CLOSED_QUESTION: 'closedQuestion',
+    FILL_THE_GAP: 'fillTheGap',
     MATCH: 'match',
   },
   get BLOCKS_LIST() {
@@ -62,9 +63,10 @@ export const blockConstants = {
   },
   get INTERACTIVE_BLOCKS() {
     return [
-      this.blocks.QUIZ,
       this.blocks.NEXT,
+      this.blocks.QUIZ,
       this.blocks.CLOSED_QUESTION,
+      this.blocks.FILL_THE_GAP,
       this.blocks.MATCH,
     ];
   },

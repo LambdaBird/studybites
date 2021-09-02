@@ -1,3 +1,10 @@
 export default {
-  interactiveBlocks: ['next', 'quiz', 'closedQuestion', 'match', 'finish'],
+  interactiveBlocks: [
+    'next',
+    'quiz',
+    'closedQuestion',
+    'fillTheGap',
+    'match',
+    'finish',
+  ],
 };

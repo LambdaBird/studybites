@@ -76,6 +76,10 @@ export default {
       example: 'Example',
       none: 'none',
     },
+    fill_the_gap: {
+      hint: '* Text inside {{ }} will be hidden for students',
+      placeholder: 'Enter a text',
+    },
     match: {
       input_left_placeholder: 'Input your left value',
       input_right_placeholder: 'Input your right value',
