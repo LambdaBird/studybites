@@ -30,6 +30,12 @@ export const stripHTML = (html) => {
   return tmp.textContent || tmp.innerText || '';
 };
 
+export const createElementFromHTML = (htmlString) => {
+  const div = document.createElement('div');
+  div.innerHTML = htmlString.trim();
+  return div.firstChild;
+};
+
 export const sanitizeBlocks = {
   b: true,
   i: true,

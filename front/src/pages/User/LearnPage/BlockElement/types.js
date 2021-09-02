@@ -6,6 +6,7 @@ export const BLOCKS_TYPE = {
   CODE: 'code',
   EMBED: 'embed',
   IMAGE: 'image',
+  MATCH: 'match',
   LIST: 'list',
   HEADER: 'header',
   QUOTE: 'quote',
@@ -100,6 +101,33 @@ export const ClosedQuestionResponseDataType = PropTypes.shape({
 
 export const BlockResponseDataType = PropTypes.shape({
   response: PropTypes.arrayOf(PropTypes.bool),
+});
+
+export const MatchBlockDataType = PropTypes.shape({
+  answers: PropTypes.arrayOf(
+    PropTypes.shape({
+      from: PropTypes.string,
+      to: PropTypes.string,
+    }),
+  ),
+});
+
+export const MatchResponseDataType = PropTypes.shape({
+  response: PropTypes.arrayOf(
+    PropTypes.shape({
+      from: PropTypes.string,
+      to: PropTypes.string,
+    }),
+  ),
+});
+
+export const MatchBlockAnswerType = PropTypes.shape({
+  results: PropTypes.arrayOf(
+    PropTypes.shape({
+      from: PropTypes.string,
+      to: PropTypes.string,
+    }),
+  ),
 });
 
 export const EmbedContentType = PropTypes.shape({

@@ -3,7 +3,9 @@ import { BLOCKS_TYPE } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
 export const apiInteractiveBlocks = [
   BLOCKS_TYPE.QUIZ,
   BLOCKS_TYPE.NEXT,
+  BLOCKS_TYPE.CLOSED_QUESTION,
   BLOCKS_TYPE.FILL_THE_GAP,
+  BLOCKS_TYPE.MATCH,
   BLOCKS_TYPE.BRICKS,
 ];
 

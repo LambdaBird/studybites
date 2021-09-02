@@ -5,6 +5,7 @@ import { blockConstants } from '../config';
 import { getQuizCorrectness } from './blocks/quiz';
 import { getClosedQuestionCorrectness } from './blocks/closedQuestion';
 import { getFillTheGapCorrectness } from './blocks/fillTheGap';
+import { getMatchCorrectness } from './blocks/match';
 import { getBricksCorrectness } from './blocks/bricks';
 
 class Block extends BaseModel {
@@ -75,6 +76,13 @@ class Block extends BaseModel {
       case blockConstants.blocks.FILL_THE_GAP: {
         return getFillTheGapCorrectness({
           solution: answer,
+          userResponse,
+          blockWeight: weight,
+        });
+      }
+      case blockConstants.blocks.MATCH: {
+        return getMatchCorrectness({
+          solution: answer.results,
           userResponse,
           blockWeight: weight,
         });

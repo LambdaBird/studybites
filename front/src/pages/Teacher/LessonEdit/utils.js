@@ -14,11 +14,21 @@ import ClosedQuestion from '@sb-ui/utils/editorjs/closed-question-plugin';
 import Embed from '@sb-ui/utils/editorjs/embed-plugin';
 import FillTheGap from '@sb-ui/utils/editorjs/fill-the-gap/plugin';
 import Image from '@sb-ui/utils/editorjs/image-plugin';
+import Match from '@sb-ui/utils/editorjs/match-plugin';
 import Next from '@sb-ui/utils/editorjs/next-plugin';
 import Quiz from '@sb-ui/utils/editorjs/quiz-plugin';
 import { shuffleArray } from '@sb-ui/utils/utils';
 
 const MAX_BODY_LENGTH = 4_000_000;
+
+const prepareMatchValues = (values) => {
+  const rightValues = values.map((value) => value.right);
+  const shuffledRightValues = shuffleArray(rightValues);
+  return values.map((value, index) => ({
+    ...value,
+    right: shuffledRightValues[index],
+  }));
+};
 
 export const prepareEditorData = (blocks) =>
   blocks?.map(({ content, answer, type }) => {
@@ -49,6 +59,13 @@ export const prepareEditorData = (blocks) =>
           data: {
             ...content?.data,
             answers: answer?.results,
+          },
+        };
+      case BLOCKS_TYPE.MATCH:
+        return {
+          ...content,
+          data: {
+            values: answer?.results,
           },
         };
       case BLOCKS_TYPE.BRICKS:
@@ -85,6 +102,12 @@ export const prepareBlocksDataForApi = (data, type) => {
         ...sendData,
         words: shuffleArray(words),
       };
+    case BLOCKS_TYPE.MATCH:
+      return {
+        ...data,
+        values: prepareMatchValues(data.values),
+      };
+
     default:
       return data;
   }
@@ -95,33 +118,42 @@ const SKIP_BLOCKS = [
   BLOCKS_TYPE.IMAGE,
   BLOCKS_TYPE.CLOSED_QUESTION,
   BLOCKS_TYPE.FILL_THE_GAP,
+  BLOCKS_TYPE.MATCH,
   BLOCKS_TYPE.BRICKS,
 ];
+
+export const makeAnswerForBlock = (block) => {
+  switch (block.type) {
+    case BLOCKS_TYPE.QUIZ:
+      return {
+        results: block?.data?.answers?.map((x) => x.correct),
+      };
+    case BLOCKS_TYPE.CLOSED_QUESTION:
+      return {
+        explanation: block?.data?.explanation,
+        results: block?.data?.answers,
+      };
+    case BLOCKS_TYPE.MATCH:
+      return {
+        results: block?.data?.values,
+      };
+    case BLOCKS_TYPE.FILL_THE_GAP:
+      return {
+        results: block?.data?.answers,
+      };
+    case BLOCKS_TYPE.BRICKS:
+      return {
+        words: block?.data?.answers,
+      };
+    default:
+      return {};
+  }
+};
 
 export const prepareBlocksForApi = (blocks) =>
   blocks
     .map((block) => {
       const { id, type, data } = block;
-      const answer = {};
-
-      switch (type) {
-        case BLOCKS_TYPE.QUIZ:
-          answer.results = block?.data?.answers?.map((x) => x.correct);
-          break;
-        case BLOCKS_TYPE.CLOSED_QUESTION:
-          answer.explanation = block?.data?.explanation;
-          answer.results = block?.data?.answers;
-          break;
-        case BLOCKS_TYPE.FILL_THE_GAP:
-          answer.results = block?.data?.answers;
-          break;
-        case BLOCKS_TYPE.BRICKS:
-          answer.words = block?.data?.answers;
-          break;
-        default:
-          break;
-      }
-
       return {
         type,
         revision: hash(block),
@@ -130,7 +162,7 @@ export const prepareBlocksForApi = (blocks) =>
           type,
           data: prepareBlocksDataForApi(data, type),
         },
-        answer,
+        answer: makeAnswerForBlock(block),
       };
     })
     .filter((block) =>
@@ -167,6 +199,10 @@ export const getConfig = (t) => ({
         titlePlaceholder: t('editor_js.tools.warning_title'),
         messagePlaceholder: t('editor_js.tools.warning_message'),
       },
+    },
+    match: {
+      class: Match,
+      inlineToolbar: true,
     },
     header: {
       class: HeaderTool,
