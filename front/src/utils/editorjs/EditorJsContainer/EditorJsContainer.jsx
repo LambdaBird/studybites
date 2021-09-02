@@ -193,6 +193,12 @@ const EditorJsContainer = forwardRef((props, ref) => {
               hint: t('tools.fill_the_gap.hint'),
               placeholder: t('tools.fill_the_gap.placeholder'),
             },
+            match: {
+              input_left_placeholder: t('tools.match.input_left_placeholder'),
+              input_right_placeholder: t('tools.match.input_right_placeholder'),
+              hint: t('tools.match.hint'),
+              add_line: t('tools.match.add_line'),
+            },
             warning: {
               placeholder: t('tools.warning.placeholder'),
               message: t('tools.warning.message'),

@@ -74,7 +74,7 @@ const options = {
   },
 };
 
-async function checkAllowed({
+export async function checkAllowed({
   userId,
   lessonId,
   Result,
