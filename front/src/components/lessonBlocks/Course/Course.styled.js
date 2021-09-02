@@ -24,7 +24,7 @@ export const Wrapper = styled(Row).attrs({
 export const ArrowWrapper = styled.div`
   position: absolute;
   height: 10rem;
-  right: 2rem;
+  right: 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

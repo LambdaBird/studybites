@@ -87,6 +87,29 @@ const CourseEdit = () => {
     setLessons((prev) => prev.filter((lesson) => lesson.id !== id));
   };
 
+  const swapLessons = (from, to) => {
+    setLessons((prev) => {
+      if (!prev[from] || !prev[to]) {
+        return prev;
+      }
+      const newLessons = [...prev];
+      const temp = newLessons[from];
+      newLessons[from] = newLessons[to];
+      newLessons[to] = temp;
+      return newLessons;
+    });
+  };
+
+  const moveTop = (id) => {
+    const index = lessons.findIndex((lesson) => lesson.id === id);
+    swapLessons(index, index - 1);
+  };
+
+  const moveBottom = (id) => {
+    const index = lessons.findIndex((lesson) => lesson.id === id);
+    swapLessons(index, index + 1);
+  };
+
   const handleInputTitle = (e) => {
     const newText = e.target.value;
     if (newText.length < MAX_NAME_LENGTH) {
@@ -147,23 +170,36 @@ const CourseEdit = () => {
                   </S.CardBadge>
                 </S.BadgeWrapper>
               </S.InputWrapper>
-              <S.CourseWrapper onMouseLeave={handleMouseLeaveCourse}>
-                {lessons.map((lesson, index) => (
-                  <S.CourseLessonWrapper>
-                    <CourseLesson
-                      onMouseEnter={() => {
-                        setCurrentLesson(lesson.id);
-                      }}
-                      currentLesson={currentLesson}
-                      removeLessonById={removeLessonById}
-                      {...lesson}
-                    />
-                    {(index !== lessons.length - 1 || options.length > 0) && (
-                      <S.DivideLesson />
+              {lessons.length > 0 && (
+                <>
+                  <S.CourseWrapper
+                    onMouseLeave={handleMouseLeaveCourse}
+                    showBottom={options.length > 0}
+                  >
+                    {lessons.map((lesson) => (
+                      <S.CourseLessonWrapper key={lesson.id}>
+                        <CourseLesson
+                          onMouseEnter={() => {
+                            setCurrentLesson(lesson.id);
+                          }}
+                          currentLesson={currentLesson}
+                          moveTop={moveTop}
+                          removeLessonById={removeLessonById}
+                          moveBottom={moveBottom}
+                          {...lesson}
+                        />
+                      </S.CourseLessonWrapper>
+                    ))}
+                  </S.CourseWrapper>
+                  <S.DivideWrapper>
+                    {lessons.map(
+                      (x, index) =>
+                        (index !== lessons.length - 1 ||
+                          options.length > 0) && <S.DivideLesson />,
                     )}
-                  </S.CourseLessonWrapper>
-                ))}
-              </S.CourseWrapper>
+                  </S.DivideWrapper>
+                </>
+              )}
               <S.SelectWrapper>
                 <S.Select
                   value={lessonsValue}

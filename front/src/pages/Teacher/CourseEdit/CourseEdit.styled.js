@@ -7,6 +7,7 @@ import {
   Select as AntdSelect,
   Typography,
 } from 'antd';
+import FlipMove from 'react-flip-move';
 import styled from 'styled-components';
 import { SmallDashOutlined } from '@ant-design/icons';
 
@@ -112,6 +113,7 @@ export const StudentsCol = styled(Col)`
 export const CourseLessonWrapper = styled.div`
   display: flex;
   flex-direction: column;
+  z-index: 1;
 `;
 
 export const SelectWrapper = styled.div`
@@ -121,17 +123,10 @@ export const SelectWrapper = styled.div`
   align-items: center;
 `;
 
-export const CourseWrapper = styled.div`
-  margin-top: 1rem;
-  display: flex;
-  gap: 1rem;
-  flex-direction: column;
-`;
-
 export const DivideLesson = styled(SmallDashOutlined)`
   font-size: xx-large;
   transform: rotate(90deg);
-  margin-top: 1rem;
+  margin-top: 2rem;
 `;
 
 export const InputWrapper = styled.div`
@@ -165,5 +160,25 @@ export const Select = styled(AntdSelect).attrs({
   mode: 'multiple',
 })`
   margin-right: 1rem;
+  width: 100%;
+`;
+
+export const CourseWrapper = styled(FlipMove).attrs({
+  staggerDurationBy: '30',
+  duration: 500,
+})`
+  margin-top: 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+  margin-bottom: ${(props) => (props.showBottom ? '4rem' : '0')};
+`;
+
+export const DivideWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  margin-top: 15rem;
+  gap: 10rem;
   width: 100%;
 `;
