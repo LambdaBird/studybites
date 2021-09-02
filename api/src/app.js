@@ -16,6 +16,7 @@ import lessonsService from './services/lessons';
 import learnService from './services/learn';
 import lessonsManagementService from './services/lessons-management';
 import coursesManagementService from './services/courses-management';
+import coursesService from './services/courses';
 
 import errorsAndValidation from './validation';
 
@@ -57,6 +58,10 @@ export default (options = {}) => {
 
   app.register(coursesManagementService, {
     prefix: '/api/v1/courses-management',
+  });
+
+  app.register(coursesService, {
+    prefix: '/api/v1/courses',
   });
 
   return app;
