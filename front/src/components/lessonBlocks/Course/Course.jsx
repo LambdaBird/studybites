@@ -19,7 +19,9 @@ const Course = ({
   status,
   students: studentsData,
   currentLesson,
+  moveTop,
   removeLessonById,
+  moveBottom,
   onMouseEnter,
   onMouseLeave,
 }) => {
@@ -43,6 +45,14 @@ const Course = ({
   const handleRemoveClick = useCallback(() => {
     removeLessonById(id);
   }, [id, removeLessonById]);
+
+  const handleMoveTop = useCallback(() => {
+    moveTop(id);
+  }, [id, moveTop]);
+
+  const handleMoveBottom = useCallback(() => {
+    moveBottom(id);
+  }, [id, moveBottom]);
 
   return (
     <S.Wrapper onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
@@ -91,9 +101,9 @@ const Course = ({
       </S.CardDescription>
       {id === currentLesson && (
         <S.ArrowWrapper>
-          <S.ArrowUp />
+          <S.ArrowUp onClick={handleMoveTop} />
           <S.Close onClick={handleRemoveClick} />
-          <S.ArrowDown />
+          <S.ArrowDown onClick={handleMoveBottom} />
         </S.ArrowWrapper>
       )}
     </S.Wrapper>
@@ -113,7 +123,9 @@ Course.propTypes = {
     }),
   ),
   currentLesson: PropTypes.number,
+  moveTop: PropTypes.func,
   removeLessonById: PropTypes.func,
+  moveBottom: PropTypes.func,
   onMouseEnter: PropTypes.func,
   onMouseLeave: PropTypes.func,
 };
