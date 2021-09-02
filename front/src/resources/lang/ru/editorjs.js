@@ -76,6 +76,10 @@ export default {
       example: 'Пример',
       none: 'пусто',
     },
+    fill_the_gap: {
+      hint: '* Текст внутри {{ }} будет скрыт для студентов',
+      placeholder: 'Введите текст',
+    },
     warning: {
       title: 'Предупреждение',
       placeholder: 'Заголовок',

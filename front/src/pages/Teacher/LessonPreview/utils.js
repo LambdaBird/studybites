@@ -1,6 +1,11 @@
 import { BLOCKS_TYPE } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
 
-export const apiInteractiveBlocks = ['quiz', 'next', BLOCKS_TYPE.BRICKS];
+export const apiInteractiveBlocks = [
+  BLOCKS_TYPE.QUIZ,
+  BLOCKS_TYPE.NEXT,
+  BLOCKS_TYPE.FILL_THE_GAP,
+  BLOCKS_TYPE.BRICKS,
+];
 
 const findChunk = ({ blocks, startIndex, fromStart = false }) => {
   let remainingBlocks = blocks;

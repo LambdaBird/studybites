@@ -24,6 +24,12 @@ export const fileToBase64 = (file) =>
     reader.onerror = (error) => reject(error);
   });
 
+export const stripHTML = (html) => {
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+  return tmp.textContent || tmp.innerText || '';
+};
+
 export const sanitizeBlocks = {
   b: true,
   i: true,

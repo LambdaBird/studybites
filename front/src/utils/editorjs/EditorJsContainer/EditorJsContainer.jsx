@@ -190,6 +190,10 @@ const EditorJsContainer = forwardRef((props, ref) => {
               example: t('tools.closed_question.example'),
               none: t('tools.closed_question.none'),
             },
+            fillTheGap: {
+              hint: t('tools.fill_the_gap.hint'),
+              placeholder: t('tools.fill_the_gap.placeholder'),
+            },
             warning: {
               placeholder: t('tools.warning.placeholder'),
               message: t('tools.warning.message'),

@@ -16,10 +16,11 @@ const variables = {
   'avatar-second-color': '#fa541c',
   'button-send-background': '#f0f0f0',
   'button-send-color': '#1890ff',
+  'success-color': '#52c41a',
+  'partial-wrong-color': '#fadb14',
+  'wrong-color': '#f5222d',
   'border-color-base': '#d9d9d9',
   'background-color-light': '#fafafa',
-  'success-color': '#52c41a',
-  'wrong-color': '#f5222d',
 };
 
 module.exports = variables;

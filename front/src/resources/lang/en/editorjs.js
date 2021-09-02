@@ -76,6 +76,10 @@ export default {
       example: 'Example',
       none: 'none',
     },
+    fill_the_gap: {
+      hint: '* Text inside {{ }} will be hidden for students',
+      placeholder: 'Enter a text',
+    },
     warning: {
       title: 'Warning',
       placeholder: 'Title',
