@@ -19,6 +19,7 @@ export const BLOCKS_TYPE = {
   START: 'start',
   CLOSED_QUESTION: 'closedQuestion',
   FILL_THE_GAP: 'fillTheGap',
+  BRICKS: 'bricks',
 };
 
 export const BlockContentType = PropTypes.shape({
@@ -67,6 +68,14 @@ export const ClosedQuestionBlockAnswerType = PropTypes.shape({
 
 export const ClosedQuestionBlockReplyType = PropTypes.shape({
   value: PropTypes.string.isRequired,
+});
+
+export const BricksBlockAnswerType = PropTypes.shape({
+  words: PropTypes.arrayOf(PropTypes.string),
+});
+
+export const BricksBlockReplyType = PropTypes.shape({
+  words: PropTypes.arrayOf(PropTypes.string),
 });
 
 export const QuizBlockDataType = PropTypes.shape({

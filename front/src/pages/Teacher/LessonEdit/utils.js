@@ -9,6 +9,7 @@ import Quote from '@editorjs/quote';
 import Warning from '@editorjs/warning';
 
 import { BLOCKS_TYPE } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
+import Bricks from '@sb-ui/utils/editorjs/bricks-plugin';
 import ClosedQuestion from '@sb-ui/utils/editorjs/closed-question-plugin';
 import Embed from '@sb-ui/utils/editorjs/embed-plugin';
 import FillTheGap from '@sb-ui/utils/editorjs/fill-the-gap/plugin';
@@ -67,6 +68,14 @@ export const prepareEditorData = (blocks) =>
             values: answer?.results,
           },
         };
+      case BLOCKS_TYPE.BRICKS:
+        return {
+          ...content,
+          data: {
+            ...content?.data,
+            answers: answer?.words,
+          },
+        };
       default:
         return content;
     }
@@ -76,7 +85,7 @@ export const prepareBlocksDataForApi = (data, type) => {
   if (!data) {
     return null;
   }
-  const { answers, explanation, ...sendData } = data || {};
+  const { answers, words, explanation, ...sendData } = data || {};
   switch (type) {
     case BLOCKS_TYPE.QUIZ:
       return {
@@ -87,6 +96,11 @@ export const prepareBlocksDataForApi = (data, type) => {
     case BLOCKS_TYPE.FILL_THE_GAP:
       return {
         ...sendData,
+      };
+    case BLOCKS_TYPE.BRICKS:
+      return {
+        ...sendData,
+        words: shuffleArray(words),
       };
     case BLOCKS_TYPE.MATCH:
       return {
@@ -105,6 +119,7 @@ const SKIP_BLOCKS = [
   BLOCKS_TYPE.CLOSED_QUESTION,
   BLOCKS_TYPE.FILL_THE_GAP,
   BLOCKS_TYPE.MATCH,
+  BLOCKS_TYPE.BRICKS,
 ];
 
 export const makeAnswerForBlock = (block) => {
@@ -125,6 +140,10 @@ export const makeAnswerForBlock = (block) => {
     case BLOCKS_TYPE.FILL_THE_GAP:
       return {
         results: block?.data?.answers,
+      };
+    case BLOCKS_TYPE.BRICKS:
+      return {
+        words: block?.data?.answers,
       };
     default:
       return {};
@@ -212,6 +231,10 @@ export const getConfig = (t) => ({
     code: CodeTool,
     fillTheGap: {
       class: FillTheGap,
+      inlineToolbar: true,
+    },
+    bricks: {
+      class: Bricks,
       inlineToolbar: true,
     },
   },

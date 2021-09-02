@@ -107,5 +107,11 @@ export default {
     link: {
       title: 'Ссылка',
     },
+    bricks: {
+      title: 'Конструктор',
+      question: '❓ Вопрос',
+      answer: 'Введите слова и нажмите Enter',
+      additional: 'Дополнительные слова',
+    },
   },
 };

@@ -6,6 +6,7 @@ import { getQuizCorrectness } from './blocks/quiz';
 import { getClosedQuestionCorrectness } from './blocks/closedQuestion';
 import { getFillTheGapCorrectness } from './blocks/fillTheGap';
 import { getMatchCorrectness } from './blocks/match';
+import { getBricksCorrectness } from './blocks/bricks';
 
 class Block extends BaseModel {
   static get tableName() {
@@ -82,6 +83,13 @@ class Block extends BaseModel {
       case blockConstants.blocks.MATCH: {
         return getMatchCorrectness({
           solution: answer.results,
+          userResponse,
+          blockWeight: weight,
+        });
+      }
+      case blockConstants.blocks.BRICKS: {
+        return getBricksCorrectness({
+          solution: answer.words,
           userResponse,
           blockWeight: weight,
         });

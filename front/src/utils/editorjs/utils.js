@@ -35,3 +35,10 @@ export const createElementFromHTML = (htmlString) => {
   div.innerHTML = htmlString.trim();
   return div.firstChild;
 };
+
+export const sanitizeBlocks = {
+  b: true,
+  i: true,
+  a: true,
+  mark: true,
+};

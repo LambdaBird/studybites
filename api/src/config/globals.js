@@ -48,6 +48,7 @@ export const blockConstants = {
     CLOSED_QUESTION: 'closedQuestion',
     FILL_THE_GAP: 'fillTheGap',
     MATCH: 'match',
+    BRICKS: 'bricks',
   },
   get BLOCKS_LIST() {
     return Object.values(this.blocks);
@@ -68,6 +69,7 @@ export const blockConstants = {
       this.blocks.CLOSED_QUESTION,
       this.blocks.FILL_THE_GAP,
       this.blocks.MATCH,
+      this.blocks.BRICKS,
     ];
   },
   get STATIC_BLOCKS() {
