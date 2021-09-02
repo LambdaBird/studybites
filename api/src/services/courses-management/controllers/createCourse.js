@@ -35,7 +35,7 @@ const options = {
                   lastName: { type: 'string' },
                 },
               },
-              lessons: { type: ['array', 'null'] },
+              lessons: { type: 'array' },
             },
           },
         },
@@ -80,6 +80,11 @@ async function handler({ body: { course, lessons }, user: { id: userId } }) {
           courseId: courseData.id,
         });
       }
+
+      courseData.lessons = await CourseLessonStructure.getAllLessons({
+        trx,
+        courseId: courseData.id,
+      });
 
       return courseData;
     });

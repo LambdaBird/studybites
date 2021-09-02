@@ -32,14 +32,14 @@ async function handler({
     models: { Course },
   } = this;
 
-  const { total, results: lessons } = await Course.getAllMaintainableCourses({
+  const { total, results: courses } = await Course.getAllMaintainableCourses({
     userId,
     offset,
     limit,
     search,
   });
 
-  return { total, lessons };
+  return { total, courses };
 }
 
 export default { options, handler };

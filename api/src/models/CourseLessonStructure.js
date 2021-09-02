@@ -69,23 +69,26 @@ export default class CourseLessonStructure extends BaseModel {
     return lessonsInOrder;
   }
 
-  static async getAllLessons({ courseId }) {
-    const lessonsUnordered = await this.query()
+  static async getAllLessons({ trx, courseId }) {
+    const lessonsUnordered = await this.query(trx)
       .select(
         'lessons.*',
         'course_lesson_structure.id',
         'course_lesson_structure.parent_id',
         'course_lesson_structure.child_id',
       )
-      .join('lessons', 'course_lesson_structure.lesson_id', '=', 'lessons.id')
-      .where({
-        course_id: courseId,
-      })
+      .leftJoin(
+        'lessons',
+        'course_lesson_structure.lesson_id',
+        '=',
+        'lessons.id',
+      )
+      .where('course_lesson_structure.course_id', courseId)
       .orderBy(
         this.knex().raw(`(case when parent_id is null then 0 else 1 end)`),
       );
 
-    if (!lessonsUnordered) {
+    if (!lessonsUnordered.length) {
       return [];
     }
 
