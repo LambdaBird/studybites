@@ -31,6 +31,11 @@ export default class Keyword extends BaseModel {
           },
           to: 'lessons.id',
         },
+        modify: (query) => {
+          return query.where({
+            resource_type: 'lesson',
+          });
+        },
       },
     };
   }
