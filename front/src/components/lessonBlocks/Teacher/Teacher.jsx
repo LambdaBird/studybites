@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { EllipsisOutlined } from '@ant-design/icons';
 
 import { StyledAvatar } from '@sb-ui/components/molecules/Header/Header.styled';
-import { Statuses } from '@sb-ui/pages/Teacher/Home/LessonsDashboard/constants';
+import { Statuses } from '@sb-ui/pages/Teacher/Home/Dashboard/constants';
 import { queryClient } from '@sb-ui/query';
 import lesson from '@sb-ui/resources/img/lesson.svg';
 import { putLesson } from '@sb-ui/utils/api/v1/teacher';

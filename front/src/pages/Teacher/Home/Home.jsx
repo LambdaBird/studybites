@@ -1,4 +1,4 @@
-import LessonsDashboard from './LessonsDashboard';
+import Dashboard from './Dashboard';
 import StudentsList from './StudentsList';
 import TeacherInfo from './TeacherInfo';
 import * as S from './Home.styled';
@@ -8,7 +8,7 @@ const Home = () => (
     <S.StyledRow>
       <S.LeftCol>
         <TeacherInfo />
-        <LessonsDashboard />
+        <Dashboard />
       </S.LeftCol>
       <S.RightCol>
         <StudentsList />
