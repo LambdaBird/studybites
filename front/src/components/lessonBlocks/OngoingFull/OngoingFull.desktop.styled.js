@@ -56,7 +56,10 @@ export const AuthorName = styled(Typography.Link)`
   white-space: nowrap;
 `;
 
-export const EnrollRow = styled(Row)`
+export const EnrollRow = styled(Row).attrs({
+  justify: 'space-between',
+  align: 'middle',
+})`
   margin-top: auto;
 `;
 
@@ -74,4 +77,13 @@ export const ProgressBar = styled(Progress)`
 
 export const TitleEllipsis = styled(Title)`
   overflow-wrap: anywhere;
+`;
+
+export const EnrollColKeyword = styled(Col)`
+  flex: 1 1 auto;
+  width: 0;
+`;
+
+export const EnrollColButton = styled(Col)`
+  flex: 0 1 auto;
 `;

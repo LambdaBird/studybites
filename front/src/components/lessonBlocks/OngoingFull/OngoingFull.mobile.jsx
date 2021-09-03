@@ -1,7 +1,8 @@
-import { Row } from 'antd';
+import { Col, Row } from 'antd';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import LessonKeywords from '@sb-ui/components/atoms/LessonKeywords';
 import { LessonType } from '@sb-ui/components/lessonBlocks/types';
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
 
@@ -10,7 +11,8 @@ import * as S from './OngoingFull.mobile.styled';
 
 const OngoingFullMobile = ({ lesson }) => {
   const { t } = useTranslation('user');
-  const { name, description, interactiveTotal, interactivePassed } = lesson;
+  const { name, description, interactiveTotal, interactivePassed, keywords } =
+    lesson;
 
   const { fullName, firstNameLetter, handleContinueLesson } = useLesson(lesson);
 
@@ -40,16 +42,14 @@ const OngoingFullMobile = ({ lesson }) => {
           {name}
         </S.Title>
       </Row>
-      <Row>
-        <S.Description
-          ellipsis={{
-            tooltip: true,
-            rows: 2,
-          }}
-        >
-          {description}
-        </S.Description>
-      </Row>
+      <S.DescriptionRow>
+        <Col span={24}>
+          <S.Description>{description}</S.Description>
+        </Col>
+        <Col span={24}>
+          <LessonKeywords keywords={keywords} />
+        </Col>
+      </S.DescriptionRow>
       <S.EnrollRow>
         <S.Enroll type="primary" onClick={handleContinueLesson}>
           {t('home.ongoing_lessons.continue_button')}
