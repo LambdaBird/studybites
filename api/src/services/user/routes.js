@@ -28,6 +28,11 @@ import {
   updateUserLanguageOptions,
 } from './handlers/updateUserLanguage';
 
+import {
+  getAllAuthorsHandler,
+  getAllAuthorsOptions,
+} from './handlers/getAllAuthors';
+
 export default async function router(instance) {
   instance.post('/signup', signUpOptions, signUpHandler);
 
@@ -36,6 +41,8 @@ export default async function router(instance) {
   instance.post('/refresh_token', refreshTokenOptions, refreshTokenHandler);
 
   instance.get('/self', selfOptions, selfHandler);
+
+  instance.get('/authors', getAllAuthorsOptions, getAllAuthorsHandler);
 
   instance.get('/', getAllUsersOptions, getAllUsersHandler);
 

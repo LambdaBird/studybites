@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useHistory, useLocation } from 'react-router-dom';
 
+import AuthorSelect from '@sb-ui/components/molecules/AuthorSelect';
 import { PAGE_SIZE } from '@sb-ui/pages/User/Lessons/LessonsList/constants';
 import * as S from '@sb-ui/pages/User/Lessons/LessonsList/LessonsList.styled';
 import emptyImg from '@sb-ui/resources/img/empty.svg';
@@ -19,6 +20,7 @@ const OpenLessons = () => {
   const history = useHistory();
   const [searchText, setSearchText] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [authors, setAuthors] = useState([]);
 
   const {
     data: responseData,
@@ -75,6 +77,9 @@ const OpenLessons = () => {
       <S.LessonsHeader>
         <S.OpenLessonsTitle>{t('home.open_lessons.title')}</S.OpenLessonsTitle>
         <S.StyledSearch searchText={searchText} setSearchText={setSearchText} />
+        <S.AuthorWrapper>
+          <AuthorSelect values={authors} setValues={setAuthors} />
+        </S.AuthorWrapper>
       </S.LessonsHeader>
       <S.LessonsRow>
         <OpenLessonsBlock isLoading={isLoading} error={error} data={lessons} />

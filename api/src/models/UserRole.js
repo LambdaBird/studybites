@@ -192,6 +192,26 @@ class UserRole extends BaseModel {
       })
       .returning('*');
   }
+
+  static getAllAuthors({ offset: start, limit, search }) {
+    const end = start + limit - 1;
+
+    return this.query()
+      .select('users.id', 'users.first_name', 'users.last_name')
+      .skipUndefined()
+      .where({
+        role_id: roles.TEACHER.id,
+      })
+      .join('users', 'users.id', '=', 'users_roles.user_id')
+      .andWhere(
+        this.knex().raw(
+          `concat(users.email, ' ', users.first_name, ' ', users.last_name, ' ', users.first_name)`,
+        ),
+        'ilike',
+        search ? `%${search.replace(/ /g, '%')}%` : undefined,
+      )
+      .range(start, end);
+  }
 }
 
 export default UserRole;
