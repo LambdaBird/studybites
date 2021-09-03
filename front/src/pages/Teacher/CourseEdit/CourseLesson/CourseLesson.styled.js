@@ -14,6 +14,7 @@ export const Wrapper = styled(Row).attrs({
   justify: 'center',
   align: 'middle',
 })`
+  opacity: ${(props) => props.opacity};
   flex: 1 1 auto;
   height: 10rem;
   box-shadow: 0 2px 8px 0 #00000026;

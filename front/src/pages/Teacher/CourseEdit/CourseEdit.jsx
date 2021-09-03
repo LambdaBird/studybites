@@ -1,10 +1,12 @@
 import { Button, Col, Input, Row, Typography } from 'antd';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useTranslation } from 'react-i18next';
 import { SaveOutlined } from '@ant-design/icons';
 
-import CourseLesson from '@sb-ui/components/lessonBlocks/Course';
 import Header from '@sb-ui/components/molecules/Header';
+import CourseLesson from '@sb-ui/pages/Teacher/CourseEdit/CourseLesson';
 
 import * as S from './CourseEdit.styled';
 
@@ -172,25 +174,29 @@ const CourseEdit = () => {
               </S.InputWrapper>
               {lessons.length > 0 && (
                 <>
-                  <S.CourseWrapper
-                    onMouseLeave={handleMouseLeaveCourse}
-                    showBottom={options.length > 0}
-                  >
-                    {lessons.map((lesson) => (
-                      <S.CourseLessonWrapper key={lesson.id}>
-                        <CourseLesson
-                          onMouseEnter={() => {
-                            setCurrentLesson(lesson.id);
-                          }}
-                          currentLesson={currentLesson}
-                          moveTop={moveTop}
-                          removeLessonById={removeLessonById}
-                          moveBottom={moveBottom}
-                          {...lesson}
-                        />
-                      </S.CourseLessonWrapper>
-                    ))}
-                  </S.CourseWrapper>
+                  <DndProvider backend={HTML5Backend}>
+                    <S.CourseWrapper
+                      onMouseLeave={handleMouseLeaveCourse}
+                      showBottom={options.length > 0}
+                    >
+                      {lessons.map((lesson, index) => (
+                        <S.CourseLessonWrapper key={lesson.id}>
+                          <CourseLesson
+                            onMouseEnter={() => {
+                              setCurrentLesson(lesson.id);
+                            }}
+                            currentLesson={currentLesson}
+                            swapLessons={swapLessons}
+                            moveTop={moveTop}
+                            removeLessonById={removeLessonById}
+                            moveBottom={moveBottom}
+                            index={index}
+                            {...lesson}
+                          />
+                        </S.CourseLessonWrapper>
+                      ))}
+                    </S.CourseWrapper>
+                  </DndProvider>
                   <S.DivideWrapper>
                     {lessons.map(
                       (x, index) =>
