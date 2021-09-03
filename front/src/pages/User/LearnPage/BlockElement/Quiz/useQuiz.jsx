@@ -46,7 +46,7 @@ export const useQuiz = ({ blockId, revision, answer, content, reply }) => {
     [optionsResult],
   );
 
-  const optionsCorrect = useMemo(() => convertDataToOptions(result), []);
+  const optionsCorrect = useMemo(() => convertDataToOptions(result), [result]);
 
   const valueCorrect = useMemo(
     () =>

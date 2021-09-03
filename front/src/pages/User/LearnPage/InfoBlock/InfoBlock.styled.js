@@ -14,6 +14,10 @@ export const StyledRow = styled(Row)`
   width: 100%;
 `;
 
-export const TitleEllipsis = styled(Title)`
-  overflow-wrap: anywhere;
-`;
+export const TitleEllipsis = styled(Title).attrs({
+  level: 2,
+  ellipsis: {
+    tooltip: true,
+    rows: 3,
+  },
+})``;

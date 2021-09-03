@@ -47,12 +47,12 @@ describe('LessonBlockStructure methods', () => {
       },
     });
 
-    testContext.teacherRequest = async ({ url, method = 'POST', body }) => {
+    testContext.enrollRequest = async ({ url, method = 'POST', body }) => {
       return testContext.app.inject({
         method,
-        url: `/api/v1/lesson/${url}`,
+        url: `/api/v1/lessons/${url}`,
         headers: {
-          authorization: `Bearer ${testContext.teacherToken}`,
+          authorization: `Bearer ${testContext.studentToken}`,
         },
         body,
       });
@@ -60,7 +60,7 @@ describe('LessonBlockStructure methods', () => {
     testContext.studentRequest = async ({ url, method = 'POST', body }) => {
       return testContext.app.inject({
         method,
-        url: `/api/v1/lesson/${url}`,
+        url: `/api/v1/learn/${url}`,
         headers: {
           authorization: `Bearer ${testContext.studentToken}`,
         },
@@ -236,12 +236,12 @@ describe('LessonBlockStructure methods', () => {
             body: prepareLessonFromSeed(french),
           });
 
-          await testContext.studentRequest({
-            url: `lesson/enroll/${lessonWithBlocks.lesson.id}`,
+          await testContext.enrollRequest({
+            url: `${lessonWithBlocks.lesson.id}/enroll`,
           });
 
           await testContext.studentRequest({
-            url: `lesson/${lessonWithBlocks.lesson.id}/learn`,
+            url: `lesson/${lessonWithBlocks.lesson.id}/reply`,
             body: {
               action: 'start',
             },
@@ -282,19 +282,19 @@ describe('LessonBlockStructure methods', () => {
             body: prepareLessonFromSeed(french),
           });
 
-          await testContext.studentRequest({
-            url: `lesson/enroll/${lessonWithBlocks.lesson.id}`,
+          await testContext.enrollRequest({
+            url: `${lessonWithBlocks.lesson.id}/enroll`,
           });
 
           await testContext.studentRequest({
-            url: `lesson/${lessonWithBlocks.lesson.id}/learn`,
+            url: `lesson/${lessonWithBlocks.lesson.id}/reply`,
             body: {
               action: 'start',
             },
           });
 
           await testContext.studentRequest({
-            url: `lesson/${lessonWithBlocks.lesson.id}/learn`,
+            url: `lesson/${lessonWithBlocks.lesson.id}/reply`,
             body: {
               action: 'next',
               blockId:
@@ -354,19 +354,19 @@ describe('LessonBlockStructure methods', () => {
             body: prepareLessonFromSeed(french),
           });
 
-          await testContext.studentRequest({
-            url: `lesson/enroll/${lessonWithBlocks.lesson.id}`,
+          await testContext.enrollRequest({
+            url: `${lessonWithBlocks.lesson.id}/enroll`,
           });
 
           await testContext.studentRequest({
-            url: `lesson/${lessonWithBlocks.lesson.id}/learn`,
+            url: `lesson/${lessonWithBlocks.lesson.id}/reply`,
             body: {
               action: 'start',
             },
           });
 
           await testContext.studentRequest({
-            url: `lesson/${lessonWithBlocks.lesson.id}/learn`,
+            url: `lesson/${lessonWithBlocks.lesson.id}/reply`,
             body: {
               action: 'next',
               blockId:
@@ -381,7 +381,7 @@ describe('LessonBlockStructure methods', () => {
           });
 
           await testContext.studentRequest({
-            url: `lesson/${lessonWithBlocks.lesson.id}/learn`,
+            url: `lesson/${lessonWithBlocks.lesson.id}/reply`,
             body: {
               action: 'response',
               blockId:
@@ -442,12 +442,12 @@ describe('LessonBlockStructure methods', () => {
           body: prepareLessonFromSeed(math),
         });
 
-        await testContext.studentRequest({
-          url: `lesson/enroll/${lessonWithInteractive.lesson.id}`,
+        await testContext.enrollRequest({
+          url: `${lessonWithInteractive.lesson.id}/enroll`,
         });
 
         await testContext.studentRequest({
-          url: `lesson/${lessonWithInteractive.lesson.id}/learn`,
+          url: `lesson/${lessonWithInteractive.lesson.id}/reply`,
           body: {
             action: 'start',
           },
@@ -486,12 +486,12 @@ describe('LessonBlockStructure methods', () => {
           body: prepareLessonFromSeed(russian),
         });
 
-        await testContext.studentRequest({
-          url: `lesson/enroll/${lessonWithNonInteractive.lesson.id}`,
+        await testContext.enrollRequest({
+          url: `${lessonWithNonInteractive.lesson.id}/enroll`,
         });
 
         await testContext.studentRequest({
-          url: `lesson/${lessonWithNonInteractive.lesson.id}/learn`,
+          url: `lesson/${lessonWithNonInteractive.lesson.id}/reply`,
           body: {
             action: 'start',
           },

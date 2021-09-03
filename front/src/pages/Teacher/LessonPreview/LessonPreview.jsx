@@ -55,7 +55,7 @@ const LessonPreview = () => {
     learnProgress,
   } = useLearnChunks({
     lessonId,
-    getLessonById: getLessonByIdPreview,
+    getEnrolledLesson: getLessonByIdPreview,
     postLessonById: postLessonByIdPreviewNew,
   });
 

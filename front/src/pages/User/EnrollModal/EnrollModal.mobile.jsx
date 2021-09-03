@@ -6,7 +6,7 @@ import { useHistory, useParams } from 'react-router-dom';
 
 import { DescriptionText } from '@sb-ui/components/lessonBlocks/Public/Public.desktop.styled';
 import DefaultLessonImage from '@sb-ui/resources/img/lesson.svg';
-import { getEnrolledLesson, postEnroll } from '@sb-ui/utils/api/v1/student';
+import { enrollLesson, getLesson } from '@sb-ui/utils/api/v1/lessons';
 import { LEARN_PAGE, USER_HOME } from '@sb-ui/utils/paths';
 import { USER_LESSON_MODAL_BASE_KEY } from '@sb-ui/utils/queries';
 
@@ -57,11 +57,11 @@ const EnrollModalMobile = () => {
 
   const { data: responseData } = useQuery(
     [USER_LESSON_MODAL_BASE_KEY, { id }],
-    getEnrolledLesson,
+    getLesson,
     { keepPreviousData: true },
   );
 
-  const { mutate: mutatePostEnroll } = useMutation(postEnroll);
+  const { mutate: mutatePostEnroll } = useMutation(enrollLesson);
 
   const { name, author, description, image } = responseData?.lesson || {
     author: {

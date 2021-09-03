@@ -25,7 +25,7 @@ export const Template = (args) => <Quiz {...args} />;
     name="Correct"
     args={{
       answer: { results: [true, true] },
-      data: {
+      reply: {
         response: [true, true],
       },
       content: {
@@ -44,7 +44,7 @@ export const Template = (args) => <Quiz {...args} />;
     name="Incorrect result 1"
     args={{
       answer: { results: [true, false] },
-      data: {
+      reply: {
         response: [true, true],
       },
       content: {
@@ -63,7 +63,7 @@ export const Template = (args) => <Quiz {...args} />;
     name="Incorrect result 2"
     args={{
       answer: { results: [false, true] },
-      data: {
+      reply: {
         response: [false, false],
       },
       content: {
@@ -82,7 +82,7 @@ export const Template = (args) => <Quiz {...args} />;
     name="Correct (empty)"
     args={{
       answer: { results: [] },
-      data: {
+      reply: {
         response: [],
       },
       content: {
