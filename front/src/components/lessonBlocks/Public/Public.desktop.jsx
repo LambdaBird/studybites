@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import LessonKeywords from '@sb-ui/components/atoms/LessonKeywords';
 import { PublicLessonType } from '@sb-ui/components/lessonBlocks/types';
-import lessonImage from '@sb-ui/resources/img/lesson.svg';
+import DefaultLessonImage from '@sb-ui/resources/img/lesson.svg';
 
 import { useLesson } from './useLesson';
 import * as S from './Public.desktop.styled';
@@ -11,7 +11,7 @@ import * as S from './Public.desktop.styled';
 const PublicDesktop = ({ lesson }) => {
   const { t } = useTranslation('user');
 
-  const { name, description, isEnrolled, keywords } = lesson;
+  const { name, description, isEnrolled, keywords, image } = lesson;
   const { fullName, firstNameLetter, handleContinueLesson, handleEnroll } =
     useLesson(lesson);
 
@@ -20,7 +20,16 @@ const PublicDesktop = ({ lesson }) => {
       <S.MainSpace size="large" wrap={false}>
         <S.LeftContent>
           <div>
-            <S.LessonImg src={lessonImage} alt="Lesson" />
+            <S.LessonImg
+              fallback={DefaultLessonImage}
+              src={image || DefaultLessonImage}
+              alt="Lesson"
+            />
+            <S.AuthorContainer>
+              <S.AuthorAvatar>{firstNameLetter}</S.AuthorAvatar>
+              <S.AuthorName>{fullName}</S.AuthorName>
+            </S.AuthorContainer>
+
             <S.AuthorContainer>
               <S.AuthorAvatar>{firstNameLetter}</S.AuthorAvatar>
               <S.AuthorName>{fullName}</S.AuthorName>

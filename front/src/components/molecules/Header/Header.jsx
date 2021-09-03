@@ -1,5 +1,5 @@
 import { Col, Dropdown, Menu } from 'antd';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
 import { Link, useHistory, useLocation } from 'react-router-dom';
@@ -37,6 +37,22 @@ const { SubMenu } = Menu;
 
 const USER_LOGO_FALLBACK = 'X';
 
+const MENU_KEYS = {
+  TEACHER_HOME: 'teacherHome',
+  STUDENT_HOME: 'studentHome',
+  VIEW_ALL_MY_LESSONS: 'viewAllMyLessons',
+  PROFILE: 'profile',
+  LANGUAGE: 'language',
+  SIGN_OUT: 'signOut',
+};
+
+const MENU_LANGUAGES_LIST = new Map(
+  LANGUAGES_LIST.map((language) => [
+    `${MENU_KEYS.LANGUAGE}-${language.key}`,
+    language,
+  ]),
+);
+
 const Header = ({ className, hideOnScroll, bottom, children }) => {
   const history = useHistory();
   const { t, i18n } = useTranslation(['common', 'user']);
@@ -46,33 +62,51 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
   const { data: user } = useQuery(USER_BASE_QUERY, getUser);
   const headerRef = useRef(null);
   const [scroll, setScroll] = useState(null);
+  const [isVisible, setIsVisible] = useState(false);
 
-  const handleSignOut = () => {
+  const handleSignOut = useCallback(() => {
     clearJWT();
     queryClient.resetQueries();
     history.push(SIGN_IN);
-  };
+  }, [history]);
 
   const { mutate: changeLanguage } = useMutation(patchLanguage);
 
-  const handleMenuClick = ({ key }) => {
-    if (key === 'signOut') {
-      handleSignOut();
-    } else if (key.startsWith('language')) {
-      const language = key.split('-')?.[1];
-      i18n.changeLanguage(language);
-      changeLanguage({ language });
-    }
-  };
+  const handleMenuLanguageClick = useCallback(
+    (key) => {
+      const { key: languageCode } = MENU_LANGUAGES_LIST.get(key) || {};
+      i18n.changeLanguage(languageCode);
+      changeLanguage({ language: languageCode });
+    },
+    [changeLanguage, i18n],
+  );
 
-  const getTeacherMenu = () => {
+  const handleMenuClick = useCallback(
+    ({ key, keyPath }) => {
+      setIsVisible(false);
+      const upperKey = keyPath?.[keyPath.length - 1];
+      switch (upperKey) {
+        case MENU_KEYS.SIGN_OUT:
+          handleSignOut();
+          break;
+        case MENU_KEYS.LANGUAGE:
+          handleMenuLanguageClick(key);
+          break;
+        default:
+          break;
+      }
+    },
+    [handleMenuLanguageClick, handleSignOut],
+  );
+
+  const getTeacherMenu = useCallback(() => {
     if (location.pathname.includes(USER_HOME)) {
       return (
         <>
-          <Menu.Item key="teacherHome">
+          <Menu.Item key={MENU_KEYS.TEACHER_HOME}>
             <Link to={TEACHER_HOME}>{t('header.switch_teacher')}</Link>
           </Menu.Item>
-          <Menu.Item key="viewAllMyLessons">
+          <Menu.Item key={MENU_KEYS.VIEW_ALL_MY_LESSONS}>
             <Link to={USER_LESSONS}>
               {t('user:home.ongoing_lessons.view_all_lessons')}
             </Link>
@@ -81,26 +115,46 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
       );
     }
     return (
-      <Menu.Item key="studentHome">
+      <Menu.Item key={MENU_KEYS.STUDENT_HOME}>
         <Link to={USER_HOME}>{t('header.switch_student')}</Link>
       </Menu.Item>
     );
-  };
+  }, [location.pathname, t]);
 
-  const menu = (
-    <Menu onClick={handleMenuClick}>
-      <Menu.Item key="profile">{t('header.profile')}</Menu.Item>
-      {user?.roles?.includes(Roles.TEACHER) && getTeacherMenu()}
+  const languageSubMenu = useMemo(() => {
+    return LANGUAGES_LIST.map(({ key, value }) => (
+      <Menu.Item key={`${MENU_KEYS.LANGUAGE}-${key}`}>{value}</Menu.Item>
+    ));
+  }, []);
 
-      <SubMenu title={t('header.language')}>
-        {LANGUAGES_LIST.map(({ key, value }) => (
-          <Menu.Item key={`language-${key}`}>{value}</Menu.Item>
-        ))}
-      </SubMenu>
+  const menu = useMemo(
+    () => (
+      <S.Menu onClick={handleMenuClick}>
+        <Menu.Item key={MENU_KEYS.PROFILE}>{t('header.profile')}</Menu.Item>
+        {user?.roles?.includes(Roles.TEACHER) && getTeacherMenu()}
 
-      <Menu.Divider />
-      <Menu.Item key="signOut">{t('header.sign_out')}</Menu.Item>
-    </Menu>
+        {isMobile ? (
+          <Menu.ItemGroup key={MENU_KEYS.LANGUAGE} title={t('header.language')}>
+            {languageSubMenu}
+          </Menu.ItemGroup>
+        ) : (
+          <SubMenu key={MENU_KEYS.LANGUAGE} title={t('header.language')}>
+            {languageSubMenu}
+          </SubMenu>
+        )}
+
+        <Menu.Divider />
+        <Menu.Item key={MENU_KEYS.SIGN_OUT}>{t('header.sign_out')}</Menu.Item>
+      </S.Menu>
+    ),
+    [
+      getTeacherMenu,
+      handleMenuClick,
+      isMobile,
+      languageSubMenu,
+      t,
+      user?.roles,
+    ],
   );
 
   const isUsername = useMemo(
@@ -156,36 +210,88 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
     }
   }, [i18n, user]);
 
+  const handleHomeClick = useCallback(() => {
+    if (isMobile && isVisible) {
+      setIsVisible(false);
+    }
+    history.push(HOME);
+  }, [history, isMobile, isVisible]);
+
+  const handleHeaderClick = useCallback(() => {
+    if (isMobile && isVisible) {
+      setIsVisible(false);
+    }
+  }, [isMobile, isVisible]);
+
+  const handleMenuBackgroundClick = useCallback(() => {
+    setIsVisible(false);
+  }, []);
+
+  const handleMenuWrapperClick = useCallback(() => {
+    setIsVisible((prev) => !prev);
+  }, []);
+
+  const profileContent = useMemo(
+    () => (
+      <S.Profile data-testid="profile">
+        <S.StyledAvatar>{firstNameLetter}</S.StyledAvatar>
+        {!isMobile && <S.StyledName>{fullName}</S.StyledName>}
+        {isMobile ? <S.MenuOutlined /> : <DownOutlined />}
+      </S.Profile>
+    ),
+    [firstNameLetter, fullName, isMobile],
+  );
+
   return (
-    <S.Container
-      className={className}
-      hideOnScroll={hideOnScroll}
-      scroll={scroll}
-      ref={headerRef}
-    >
-      <S.RowMain
+    <>
+      <S.Container
+        className={className}
         hideOnScroll={hideOnScroll}
-        align="middle"
-        justify="space-between"
+        scroll={scroll}
+        ref={headerRef}
+        onClick={handleHeaderClick}
       >
-        <Col>
-          <Link to={HOME}>
-            <S.Logo src={logo} alt="Logo" />
-          </Link>
-        </Col>
-        {children}
-        <Col>
-          <Dropdown overlay={menu} trigger={['click']}>
-            <S.Profile data-testid="profile">
-              <S.StyledAvatar>{firstNameLetter}</S.StyledAvatar>
-              {!isMobile && <S.StyledName>{fullName}</S.StyledName>}
-              <DownOutlined />
-            </S.Profile>
-          </Dropdown>
-        </Col>
-      </S.RowMain>
-      {bottom}
-    </S.Container>
+        <S.RowMain hideOnScroll={hideOnScroll}>
+          <Col>
+            <S.LogoLink onClick={handleHomeClick}>
+              <S.Logo src={logo} alt="Logo" />
+            </S.LogoLink>
+          </Col>
+          {children}
+          <Col>
+            {isMobile ? (
+              <div
+                onKeyDown={handleMenuWrapperClick}
+                onClick={handleMenuWrapperClick}
+                role="button"
+                tabIndex={0}
+              >
+                {profileContent}
+              </div>
+            ) : (
+              <Dropdown
+                overlay={menu}
+                onVisibleChange={(newVisible) => {
+                  setIsVisible(newVisible);
+                }}
+                trigger={['click']}
+              >
+                {profileContent}
+              </Dropdown>
+            )}
+          </Col>
+        </S.RowMain>
+        {bottom}
+      </S.Container>
+      {isMobile && (
+        <>
+          <S.MenuWrapper visible={isVisible}>{isVisible && menu}</S.MenuWrapper>
+          {isVisible && (
+            <S.DropdownBackground onClick={handleMenuBackgroundClick} />
+          )}
+        </>
+      )}
+    </>
   );
 };
 

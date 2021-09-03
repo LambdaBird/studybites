@@ -5,8 +5,8 @@ import { useMutation, useQuery } from 'react-query';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 
 import LessonKeywords from '@sb-ui/components/atoms/LessonKeywords';
-import lessonImg from '@sb-ui/resources/img/lesson.svg';
-import { getEnrolledLesson, postEnroll } from '@sb-ui/utils/api/v1/student';
+import DefaultLessonImage from '@sb-ui/resources/img/lesson.svg';
+import { enrollLesson, getLesson } from '@sb-ui/utils/api/v1/lessons';
 import { LEARN_PAGE, USER_HOME } from '@sb-ui/utils/paths';
 import { USER_LESSON_MODAL_BASE_KEY } from '@sb-ui/utils/queries';
 
@@ -40,18 +40,19 @@ const EnrollModalDesktop = () => {
 
   const { data: responseData } = useQuery(
     [USER_LESSON_MODAL_BASE_KEY, { id }],
-    getEnrolledLesson,
+    getLesson,
   );
 
-  const { mutate: mutatePostEnroll } = useMutation(postEnroll);
+  const { mutate: mutatePostEnroll } = useMutation(enrollLesson);
   const keywords = responseData?.keywords;
-  const { name, author, description } = responseData?.lesson || {
+  const { name, author, description, image } = responseData?.lesson || {
     author: {
       firstName: '',
       lastName: '',
     },
     name: '',
     description: '',
+    image: '',
   };
 
   const fullName = useMemo(
@@ -90,7 +91,11 @@ const EnrollModalDesktop = () => {
     >
       <S.LeftColumn>
         <Col span={24}>
-          <img width="100%" src={lessonImg} alt="" />
+          <S.Image
+            fallback={DefaultLessonImage}
+            src={image || DefaultLessonImage}
+            alt="Lesson"
+          />
           <S.AuthorContainer>
             <S.AuthorAvatar>{firstNameLetter}</S.AuthorAvatar>
             <S.AuthorName>{fullName}</S.AuthorName>

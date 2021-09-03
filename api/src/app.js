@@ -13,7 +13,9 @@ import Keyword from './models/Keyword';
 import ResourceKeyword from './models/ResourceKeyword';
 
 import userService from './services/user';
-import lessonService from './services/lesson';
+import lessonsService from './services/lessons';
+import learnService from './services/learn';
+import lessonsManagementService from './services/lessons-management';
 import { keywordsService } from './services/keywords';
 
 import errorsAndValidation from './validation';
@@ -50,8 +52,16 @@ export default (options = {}) => {
     prefix: '/api/v1/user',
   });
 
-  app.register(lessonService, {
-    prefix: '/api/v1/lesson',
+  app.register(lessonsService, {
+    prefix: '/api/v1/lessons',
+  });
+
+  app.register(learnService, {
+    prefix: '/api/v1/learn',
+  });
+
+  app.register(lessonsManagementService, {
+    prefix: '/api/v1/lessons-management',
   });
 
   app.register(keywordsService, {

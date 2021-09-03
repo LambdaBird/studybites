@@ -191,6 +191,7 @@ export default class Quiz {
     const currentItem = event.target.closest(`.${this.CSS.item}`);
     const currentIndex = this.items.indexOf(currentItem);
     const prevItem = this.items[currentIndex - 1];
+    const nextItem = this.items[currentIndex + 1];
     if (!prevItem) {
       return;
     }
@@ -204,18 +205,25 @@ export default class Quiz {
     if (prevItem.classList.contains(this.CSS.questionWrapper)) {
       if (this.items.length === 2) {
         this.api.blocks.delete(this.api.blocks.getCurrentBlockIndex());
+        return;
       }
-    } else {
-      const fragmentAfterCaret = extractContentAfterCaret();
-      const prevItemInput = this.getItemInput(prevItem);
-      const prevItemChildNodesLength = prevItemInput.childNodes.length;
-
-      prevItemInput.appendChild(fragmentAfterCaret);
-
-      moveCaret(prevItemInput, undefined, prevItemChildNodesLength);
-
-      currentItem.remove();
+      this.removeItem(currentItem, nextItem, 'next');
+      return;
     }
+    this.removeItem(currentItem, prevItem, 'prev');
+  }
+
+  removeItem(currentItem, item, type = 'prev') {
+    const fragmentAfterCaret = extractContentAfterCaret();
+    const itemInput = this.getItemInput(item);
+    const itemChildNodesLength = itemInput.childNodes.length;
+    itemInput.appendChild(fragmentAfterCaret);
+    if (type === 'prev') {
+      moveCaret(itemInput, false, itemChildNodesLength);
+    } else if (type === 'next') {
+      moveCaret(itemInput, true);
+    }
+    currentItem.remove();
   }
 
   getItemInput(el) {

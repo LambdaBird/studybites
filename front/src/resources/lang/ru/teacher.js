@@ -75,6 +75,11 @@ export default {
       preview: 'Предпросмотр',
       move_to_draft: 'Вернуть в черновики',
     },
+    cover_image: {
+      title: 'Ссылка на картинку',
+      input_placeholder: 'Введите вашу ссылку',
+      not_found: 'Не найдено',
+    },
     title: {
       placeholder: 'Название урока',
     },
@@ -84,7 +89,10 @@ export default {
       analytics: 'Аналитика',
       archive: 'Архив',
     },
-    description: 'Описание',
+    description: {
+      title: 'Описание',
+      placeholder: 'Ваше описание',
+    },
     publish_modal: {
       title: 'Теперь урок доступен всем студентам',
       ok: 'Ок',

@@ -1,5 +1,13 @@
 import BaseModel from './BaseModel';
 
+import { blockConstants } from '../config';
+
+import { getQuizCorrectness } from './blocks/quiz';
+import { getClosedQuestionCorrectness } from './blocks/closedQuestion';
+import { getFillTheGapCorrectness } from './blocks/fillTheGap';
+import { getMatchCorrectness } from './blocks/match';
+import { getBricksCorrectness } from './blocks/bricks';
+
 class Block extends BaseModel {
   static get tableName() {
     return 'blocks';
@@ -42,6 +50,53 @@ class Block extends BaseModel {
           `(select block_id, array_agg(revision) as revisions from blocks group by block_id) as grouped`,
         ),
       );
+  }
+
+  static async getCorrectness({ blockId, revision, userResponse }) {
+    const { answer, type, weight } = await Block.getBlock({
+      blockId,
+      revision,
+    });
+
+    switch (type) {
+      case blockConstants.blocks.QUIZ: {
+        return getQuizCorrectness({
+          solution: answer.results,
+          userResponse,
+          blockWeight: weight,
+        });
+      }
+      case blockConstants.blocks.CLOSED_QUESTION: {
+        return getClosedQuestionCorrectness({
+          solution: answer.results,
+          userResponse,
+          blockWeight: weight,
+        });
+      }
+      case blockConstants.blocks.FILL_THE_GAP: {
+        return getFillTheGapCorrectness({
+          solution: answer,
+          userResponse,
+          blockWeight: weight,
+        });
+      }
+      case blockConstants.blocks.MATCH: {
+        return getMatchCorrectness({
+          solution: answer.results,
+          userResponse,
+          blockWeight: weight,
+        });
+      }
+      case blockConstants.blocks.BRICKS: {
+        return getBricksCorrectness({
+          solution: answer.words,
+          userResponse,
+          blockWeight: weight,
+        });
+      }
+      default:
+        return { error: null, correctness: 0 };
+    }
   }
 }
 

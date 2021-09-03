@@ -10,7 +10,7 @@
     "test:unit": "babel-node node_modules/.bin/jest test/unit/ src/",
     "test:integration": "yarn prepare:integrationTests && yarn run:integrationTests",
     "prepare:integrationTests": "knex --esm migrate:latest && yarn seed:test",
-    "run:integrationTests": "babel-node node_modules/.bin/jest --verbose --colors test/integration/",
+    "run:integrationTests": "babel-node node_modules/.bin/jest --coverage --verbose --colors test/integration/",
     "migrate:make": "knex --esm migrate:make"
   },
   "dependencies": {

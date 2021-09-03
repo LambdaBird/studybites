@@ -1,31 +1,28 @@
 import api from '@sb-ui/utils/api';
 
-const PATH = '/api/v1/lesson';
+const PATH = '/api/v1/lessons-management';
 
 export const createLesson = async (values) => {
-  const { data } = await api.post(`${PATH}/maintain/`, values);
+  const { data } = await api.post(`${PATH}/lessons`, values);
   return data;
 };
 
 export const putLesson = async (params) => {
-  const { data } = await api.put(
-    `${PATH}/maintain/${params.lesson.id}`,
-    params,
-  );
+  const { data } = await api.put(`${PATH}/lessons/${params.lesson.id}`, params);
   return data;
 };
 
 export const getLesson = async ({ queryKey }) => {
   const [, { id }] = queryKey;
 
-  const { data } = await api.get(`${PATH}/maintain/${id}`);
+  const { data } = await api.get(`${PATH}/lessons/${id}`);
   return data;
 };
 
 export const getTeacherLessons = async ({ queryKey }) => {
   const [, paramsData] = queryKey;
 
-  const { data } = await api.get(`${PATH}/maintain/`, {
+  const { data } = await api.get(`${PATH}/lessons`, {
     params: paramsData,
   });
 
@@ -35,7 +32,7 @@ export const getTeacherLessons = async ({ queryKey }) => {
 export const getTeacherStudents = async ({ queryKey }) => {
   const [, paramsData] = queryKey;
 
-  const { data } = await api.get(`${PATH}/maintain/students`, {
+  const { data } = await api.get(`${PATH}/students`, {
     params: paramsData,
   });
 
@@ -51,7 +48,7 @@ export const getTeacherStudents = async ({ queryKey }) => {
 export const getTeacherLessonStudents = async ({ queryKey }) => {
   const [, { lessonId, offset, limit, search }] = queryKey;
 
-  const { data } = await api.get(`${PATH}/enrolled/${lessonId}`, {
+  const { data } = await api.get(`${PATH}/lessons/${lessonId}/students`, {
     params: {
       offset,
       limit,

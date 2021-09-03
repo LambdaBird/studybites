@@ -6,6 +6,7 @@ export const BLOCKS_TYPE = {
   CODE: 'code',
   EMBED: 'embed',
   IMAGE: 'image',
+  MATCH: 'match',
   LIST: 'list',
   HEADER: 'header',
   QUOTE: 'quote',
@@ -17,6 +18,8 @@ export const BLOCKS_TYPE = {
   NEXT: 'next',
   START: 'start',
   CLOSED_QUESTION: 'closedQuestion',
+  FILL_THE_GAP: 'fillTheGap',
+  BRICKS: 'bricks',
 };
 
 export const BlockContentType = PropTypes.shape({
@@ -26,11 +29,33 @@ export const BlockContentType = PropTypes.shape({
 export const BlockIdType = PropTypes.string.isRequired;
 export const RevisionType = PropTypes.string.isRequired;
 export const QuestionType = PropTypes.string.isRequired;
+export const TextType = PropTypes.string.isRequired;
+export const SolvedType = PropTypes.bool;
 
 export const ParagraphContentType = PropTypes.shape({
   data: PropTypes.shape({
     text: PropTypes.string,
   }),
+});
+
+export const FillTheGapBlockReplyType = PropTypes.shape({
+  response: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.string,
+      id: PropTypes.number,
+      type: PropTypes.oneOf(['text', 'input']),
+    }),
+  ),
+});
+
+export const FillTheGapBlockAnswerType = PropTypes.shape({
+  results: PropTypes.arrayOf(
+    PropTypes.shape({
+      value: PropTypes.arrayOf(PropTypes.string),
+      id: PropTypes.number,
+      type: PropTypes.oneOf(['text', 'input']),
+    }),
+  ),
 });
 
 export const ClosedQuestionBlockDataType = PropTypes.shape({
@@ -43,6 +68,14 @@ export const ClosedQuestionBlockAnswerType = PropTypes.shape({
 
 export const ClosedQuestionBlockReplyType = PropTypes.shape({
   value: PropTypes.string.isRequired,
+});
+
+export const BricksBlockAnswerType = PropTypes.shape({
+  words: PropTypes.arrayOf(PropTypes.string),
+});
+
+export const BricksBlockReplyType = PropTypes.shape({
+  words: PropTypes.arrayOf(PropTypes.string),
 });
 
 export const QuizBlockDataType = PropTypes.shape({
@@ -68,6 +101,33 @@ export const ClosedQuestionResponseDataType = PropTypes.shape({
 
 export const BlockResponseDataType = PropTypes.shape({
   response: PropTypes.arrayOf(PropTypes.bool),
+});
+
+export const MatchBlockDataType = PropTypes.shape({
+  answers: PropTypes.arrayOf(
+    PropTypes.shape({
+      from: PropTypes.string,
+      to: PropTypes.string,
+    }),
+  ),
+});
+
+export const MatchResponseDataType = PropTypes.shape({
+  response: PropTypes.arrayOf(
+    PropTypes.shape({
+      from: PropTypes.string,
+      to: PropTypes.string,
+    }),
+  ),
+});
+
+export const MatchBlockAnswerType = PropTypes.shape({
+  results: PropTypes.arrayOf(
+    PropTypes.shape({
+      from: PropTypes.string,
+      to: PropTypes.string,
+    }),
+  ),
 });
 
 export const EmbedContentType = PropTypes.shape({

@@ -76,6 +76,16 @@ export default {
       example: 'Example',
       none: 'none',
     },
+    fill_the_gap: {
+      hint: '* Text inside {{ }} will be hidden for students',
+      placeholder: 'Enter a text',
+    },
+    match: {
+      input_left_placeholder: 'Input your left value',
+      input_right_placeholder: 'Input your right value',
+      hint: '* Words will be shuffled for students after save',
+      add_line: 'Add line',
+    },
     warning: {
       title: 'Warning',
       placeholder: 'Title',
@@ -96,6 +106,12 @@ export default {
     },
     link: {
       title: 'Link',
+    },
+    bricks: {
+      title: 'Bricks',
+      question: '❓ Question',
+      answer: 'Enter words and press enter',
+      additional: 'Additional words',
     },
   },
 };

@@ -1,4 +1,4 @@
-import { Avatar, Button, Row, Typography } from 'antd';
+import { Avatar, Button, Image as ImageAntd, Row, Typography } from 'antd';
 import styled from 'styled-components';
 
 import variables from '@sb-ui/theme/variables';
@@ -11,9 +11,15 @@ export const Main = styled(Row)`
   flex-direction: column;
 `;
 
-export const Image = styled.img`
-  width: 100%;
-  height: 100%;
+export const ImageWrapper = styled.div`
+  height: 10rem;
+`;
+
+export const Image = styled(ImageAntd).attrs({
+  width: '100%',
+  height: '100%',
+  preview: false,
+})`
   object-fit: cover;
 `;
 

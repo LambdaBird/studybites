@@ -22,6 +22,7 @@ import {
 } from '@sb-ui/utils/paths';
 import { TEACHER_LESSON_BASE_KEY } from '@sb-ui/utils/queries';
 
+import LessonImage from './LessonImage';
 import { getConfig, prepareBlocksForApi, prepareEditorData } from './utils';
 import * as S from './LessonEdit.styled';
 
@@ -40,6 +41,8 @@ const LessonEdit = () => {
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [image, setImage] = useState('');
+  const [imageError, setImageError] = useState(false);
   const [isEditorDisabled, setIsEditorDisabled] = useState(false);
 
   const inputTitle = useRef(null);
@@ -131,6 +134,9 @@ const LessonEdit = () => {
     if (lessonData?.lesson.description) {
       setDescription(lessonData.lesson.description);
     }
+    if (lessonData?.lesson.image) {
+      setImage(lessonData.lesson.image);
+    }
   }, [lessonData?.lesson]);
 
   useEffect(() => {
@@ -146,6 +152,10 @@ const LessonEdit = () => {
     }
   }, [lessonData]);
 
+  useEffect(() => {
+    setImageError(false);
+  }, [image]);
+
   const handleSave = async () => {
     try {
       const { blocks } = await editorJSRef.current.save();
@@ -153,6 +163,7 @@ const LessonEdit = () => {
         lesson: {
           id: parseInt(lessonId, 10) || undefined,
           name,
+          image,
           description,
           status: Statuses.DRAFT,
         },
@@ -372,11 +383,12 @@ const LessonEdit = () => {
                 </Typography.Link>
               </Col>
             </S.RowStyled>
-            <Row gutter={[0, 16]}>
-              <Col span={24}>{t('lesson_edit.description')}</Col>
+            <Row gutter={[0, 8]}>
+              <Col span={24}>{t('lesson_edit.description.title')}</Col>
               <Col span={24}>
                 <TextArea
                   value={description}
+                  placeholder={t('lesson_edit.description.placeholder')}
                   onChange={(e) => setDescription(e.target.value)}
                   showCount
                   maxLength={140}
@@ -389,6 +401,13 @@ const LessonEdit = () => {
                 <KeywordsSelect values={keywords} setValues={setKeywords} />
               </Col>
             </Row>
+            <LessonImage
+              image={image}
+              setImage={setImage}
+              imageError={imageError}
+              setImageError={setImageError}
+              isLoading={isLoading}
+            />
           </S.RightCol>
         </S.StyledRow>
       </S.Page>

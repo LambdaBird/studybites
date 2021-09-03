@@ -6,11 +6,12 @@ const AuthorType = PropTypes.shape({
   lastName: PropTypes.string.isRequired,
 });
 
-export const GeneralLessonType = {
+const LessonGeneralType = {
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
   description: PropTypes.string,
   author: AuthorType,
+  image: PropTypes.oneOfType([PropTypes.string, PropTypes.oneOf([null])]),
   keywords: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number,
@@ -20,12 +21,12 @@ export const GeneralLessonType = {
 };
 
 export const LessonType = PropTypes.shape({
-  ...GeneralLessonType,
+  ...LessonGeneralType,
   percentage: PropTypes.number,
   isFinished: PropTypes.bool,
 });
 
 export const PublicLessonType = PropTypes.shape({
-  ...GeneralLessonType,
+  ...LessonGeneralType,
   isEnrolled: PropTypes.bool.isRequired,
 });

@@ -9,7 +9,7 @@ import useMobile from '@sb-ui/hooks/useMobile';
 import { PAGE_SIZE } from '@sb-ui/pages/User/Lessons/LessonsList/constants';
 import * as S from '@sb-ui/pages/User/Lessons/LessonsList/LessonsList.styled';
 import emptyImg from '@sb-ui/resources/img/empty.svg';
-import { getPublicLessons } from '@sb-ui/utils/api/v1/student';
+import { getLessons } from '@sb-ui/utils/api/v1/lessons';
 import { USER_PUBLIC_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
 import { getQueryPage } from '@sb-ui/utils/utils';
 
@@ -39,7 +39,7 @@ const OpenLessons = () => {
         tags: keywords,
       },
     ],
-    getPublicLessons,
+    getLessons,
     { keepPreviousData: true },
   );
 
