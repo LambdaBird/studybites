@@ -1,4 +1,4 @@
-import { Avatar, Col, Row, Typography } from 'antd';
+import { Avatar, Col, Image, Row, Typography } from 'antd';
 import styled from 'styled-components';
 
 import variables from '@sb-ui/theme/variables';
@@ -22,8 +22,12 @@ export const RightContent = styled(Col)`
   width: 100%;
 `;
 
-export const LessonImg = styled.img`
-  height: 10rem;
+export const LessonImg = styled(Image).attrs({
+  height: '10rem',
+  width: '15rem',
+  preview: false,
+})`
+  object-fit: cover;
 `;
 
 export const DescriptionText = styled(Paragraph)`

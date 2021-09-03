@@ -2,7 +2,7 @@ import { Button, Col } from 'antd';
 import { useTranslation } from 'react-i18next';
 
 import { PublicLessonType } from '@sb-ui/components/lessonBlocks/types';
-import lessonImage from '@sb-ui/resources/img/lesson.svg';
+import DefaultLessonImage from '@sb-ui/resources/img/lesson.svg';
 
 import { useLesson } from './useLesson';
 import {
@@ -22,7 +22,7 @@ import {
 const PublicDesktop = ({ lesson }) => {
   const { t } = useTranslation('user');
 
-  const { name, description, isEnrolled } = lesson;
+  const { name, description, isEnrolled, image } = lesson;
   const { fullName, firstNameLetter, handleContinueLesson, handleEnroll } =
     useLesson(lesson);
 
@@ -31,7 +31,11 @@ const PublicDesktop = ({ lesson }) => {
       <MainSpace size="large" wrap={false}>
         <LeftContent>
           <div>
-            <LessonImg src={lessonImage} alt="Lesson" />
+            <LessonImg
+              fallback={DefaultLessonImage}
+              src={image || DefaultLessonImage}
+              alt="Lesson"
+            />
             <AuthorContainer>
               <AuthorAvatar>{firstNameLetter}</AuthorAvatar>
               <AuthorName>{fullName}</AuthorName>
