@@ -2,7 +2,7 @@ import { Skeleton } from 'antd';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
 
-import OngoingFullLesson from '@sb-ui/components/lessonBlocks/OngoingFull';
+import OngoingFullLesson from '@sb-ui/components/resourceBlocks/OngoingFull';
 import emptyImg from '@sb-ui/resources/img/empty.svg';
 import { skeletonArray } from '@sb-ui/utils/utils';
 

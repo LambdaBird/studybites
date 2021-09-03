@@ -1,4 +1,4 @@
-import TeacherLesson from '@sb-ui/components/lessonBlocks/Teacher';
+import TeacherLesson from '@sb-ui/components/resourceBlocks/Teacher';
 
 import AddCard from '../AddCard';
 import { LessonsListPropTypes } from '../types';

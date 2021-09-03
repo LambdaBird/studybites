@@ -1,10 +1,11 @@
 import { Button, Col } from 'antd';
+import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 
-import { PublicLessonType } from '@sb-ui/components/lessonBlocks/types';
+import { PublicResourceType } from '@sb-ui/components/resourceBlocks/types';
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
 
-import { useLesson } from './useLesson';
+import { useResource } from './useResource';
 import {
   AuthorAvatar,
   AuthorContainer,
@@ -19,12 +20,12 @@ import {
   TitleEllipsis,
 } from './Public.desktop.styled';
 
-const PublicDesktop = ({ lesson }) => {
+const PublicDesktop = ({ resource, isCourse }) => {
   const { t } = useTranslation('user');
 
-  const { name, description, isEnrolled } = lesson;
+  const { name, description, isEnrolled } = resource;
   const { fullName, firstNameLetter, handleContinueLesson, handleEnroll } =
-    useLesson(lesson);
+    useResource({ resource, isCourse });
 
   return (
     <>
@@ -79,7 +80,8 @@ const PublicDesktop = ({ lesson }) => {
 };
 
 PublicDesktop.propTypes = {
-  lesson: PublicLessonType.isRequired,
+  resource: PublicResourceType.isRequired,
+  isCourse: PropTypes.bool,
 };
 
 export default PublicDesktop;

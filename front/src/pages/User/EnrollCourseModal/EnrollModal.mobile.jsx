@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
 import { useHistory, useParams } from 'react-router-dom';
 
-import { DescriptionText } from '@sb-ui/components/lessonBlocks/Public/Public.desktop.styled';
+import { DescriptionText } from '@sb-ui/components/resourceBlocks/Public/Public.desktop.styled';
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
 import { enrollLesson, getLesson } from '@sb-ui/utils/api/v1/lessons';
 import { LEARN_PAGE, USER_HOME } from '@sb-ui/utils/paths';

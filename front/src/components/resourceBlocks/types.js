@@ -15,10 +15,10 @@ export const LessonType = PropTypes.shape({
   isFinished: PropTypes.bool,
 });
 
-export const PublicLessonType = PropTypes.shape({
+export const PublicResourceType = PropTypes.shape({
   id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
+  description: PropTypes.string,
   author: AuthorType,
   isEnrolled: PropTypes.bool.isRequired,
 });

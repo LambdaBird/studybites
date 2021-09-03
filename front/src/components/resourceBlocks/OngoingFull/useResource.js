@@ -3,7 +3,7 @@ import { useHistory } from 'react-router-dom';
 
 import { LEARN_PAGE } from '@sb-ui/utils/paths';
 
-export const useLesson = ({ id, author }) => {
+export const useResource = ({ id, author }) => {
   const history = useHistory();
 
   const fullName = useMemo(
