@@ -1,13 +1,15 @@
 import { Button, Col, Input, message, Row, Typography } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { SaveOutlined } from '@ant-design/icons';
 
-import CourseLesson from '@sb-ui/components/lessonBlocks/Course';
 import Header from '@sb-ui/components/molecules/Header';
 import { Statuses } from '@sb-ui/pages/Teacher/Home/Dashboard/constants';
 
+import CourseLesson from './CourseLesson';
 import { useCourse } from './useCourse';
 import { useCourseParams } from './useCourseParams';
 import * as S from './CourseEdit.styled';
@@ -200,25 +202,29 @@ const CourseEdit = () => {
               </S.InputWrapper>
               {lessons.length > 0 && (
                 <>
-                  <S.CourseWrapper
-                    onMouseLeave={handleMouseLeaveCourse}
-                    showBottom={options.length > 0}
-                  >
-                    {lessons.map((lesson) => (
-                      <S.CourseLessonWrapper key={lesson.id}>
-                        <CourseLesson
-                          onMouseEnter={() => {
-                            setCurrentLesson(lesson.id);
-                          }}
-                          currentLesson={currentLesson}
-                          moveTop={moveTop}
-                          removeLessonById={removeLessonById}
-                          moveBottom={moveBottom}
-                          {...lesson}
-                        />
-                      </S.CourseLessonWrapper>
-                    ))}
-                  </S.CourseWrapper>
+                  <DndProvider backend={HTML5Backend}>
+                    <S.CourseWrapper
+                      onMouseLeave={handleMouseLeaveCourse}
+                      showBottom={options.length > 0}
+                    >
+                      {lessons.map((lesson, index) => (
+                        <S.CourseLessonWrapper key={lesson.id}>
+                          <CourseLesson
+                            onMouseEnter={() => {
+                              setCurrentLesson(lesson.id);
+                            }}
+                            currentLesson={currentLesson}
+                            swapLessons={swapLessons}
+                            moveTop={moveTop}
+                            removeLessonById={removeLessonById}
+                            moveBottom={moveBottom}
+                            index={index}
+                            {...lesson}
+                          />
+                        </S.CourseLessonWrapper>
+                      ))}
+                    </S.CourseWrapper>
+                  </DndProvider>
                   <S.DivideWrapper>
                     {lessons.map(
                       (x, index) =>
