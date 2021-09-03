@@ -19,7 +19,7 @@ const options = {
   async preHandler({ user: { id: userId } }) {
     await this.access({
       userId,
-      roleId: this.config.globals.roles.MAINTAINER.id,
+      roleId: this.config.globals.roles.TEACHER.id,
     });
   },
 };
