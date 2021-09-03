@@ -61,8 +61,8 @@ const LessonEdit = () => {
     if (lessonData?.keywords) {
       setKeywords(
         lessonData.keywords.map((keyword) => ({
-          value: keyword,
-          label: keyword,
+          value: keyword.id,
+          label: keyword.name,
         })),
       );
     }
