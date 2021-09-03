@@ -197,8 +197,8 @@ class Lesson extends BaseModel {
     const query = this.query()
       .skipUndefined()
       .select(
-        this.knex().raw(`
-          lessons.*,
+        'lessons.*',
+        this.knex().raw(`        
           (select cast(case when count(*) > 0 then true else false end as bool)
            from users_roles
            where role_id = ${roles.STUDENT.id}
@@ -266,8 +266,8 @@ class Lesson extends BaseModel {
     const query = this.query()
       .skipUndefined()
       .select(
-        this.knex().raw(`
-          lessons.*,
+        'lessons.*',
+        this.knex().raw(`          
           true is_finished,
           (select count(*) from results where lesson_id = lessons.id and action in ('next', 'response')) interactive_passed,
           (select count(*) from lesson_block_structure join blocks on blocks.block_id = lesson_block_structure.block_id
@@ -366,8 +366,8 @@ class Lesson extends BaseModel {
     const query = this.query()
       .skipUndefined()
       .select(
-        this.knex().raw(`
-            lessons.*, 
+        'lessons.*',
+        this.knex().raw(`           
             (select count(*) from results where lesson_id = lessons.id and action in ('next', 'response')) interactive_passed,
             (select count(*) from lesson_block_structure join blocks on blocks.block_id = lesson_block_structure.block_id
              where blocks.type in ('next', 'quiz') and lesson_block_structure.lesson_id = lessons.id) interactive_total,
