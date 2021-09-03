@@ -28,7 +28,7 @@ export default class ResourceKeyword extends BaseModel {
     });
   }
 
-  static async getLessonKeywords({ lessonId }) {
+  static getLessonKeywords({ lessonId }) {
     return this.query()
       .select('keywords.*')
       .join('keywords', 'keywords.id', '=', 'resource_keywords.keyword_id')

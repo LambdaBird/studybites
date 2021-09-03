@@ -15,7 +15,7 @@ export const fetchKeywords = async ({ search = '' } = {}) => {
   });
 
   return keywords.map((keyword) => ({
-    value: keyword.name,
+    value: keyword.id,
     label: keyword.name,
   }));
 };

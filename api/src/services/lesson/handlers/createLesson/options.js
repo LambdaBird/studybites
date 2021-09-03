@@ -4,8 +4,14 @@ export const createLessonOptions = {
       type: 'object',
       properties: {
         keywords: {
-          type: ['array', 'null'],
-          items: { type: 'string' },
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'number' },
+              name: { type: 'string' },
+            },
+          },
         },
         lesson: {
           type: 'object',

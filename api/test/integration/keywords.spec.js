@@ -50,7 +50,7 @@ describe('Keywords creation and filtering', () => {
         url: 'lesson/maintain/',
         body: {
           ...prepareLessonFromSeed(french),
-          keywords: ['French', 'Language'],
+          keywords: [{ name: 'French' }, { name: 'Language' }],
         },
       });
 
@@ -72,7 +72,7 @@ describe('Keywords creation and filtering', () => {
       url: 'lesson/maintain/',
       body: {
         ...prepareLessonFromSeed(french),
-        keywords: ['French', 'Language'],
+        keywords: [{ name: 'French' }, { name: 'Language' }],
       },
     });
 
@@ -92,7 +92,11 @@ describe('Keywords creation and filtering', () => {
       url: 'lesson/maintain/',
       body: {
         ...prepareLessonFromSeed(french),
-        keywords: ['French', 'Language', 'Literature'],
+        keywords: [
+          { name: 'French' },
+          { name: 'Language' },
+          { name: 'Literature' },
+        ],
       },
     });
 
@@ -142,7 +146,7 @@ describe('Keywords creation and filtering', () => {
         url: `lesson/maintain/${lessonToUpdate.lesson.id}`,
         method: 'PUT',
         body: {
-          keywords: ['French'],
+          keywords: [{ name: 'French' }],
         },
       });
 
@@ -152,7 +156,13 @@ describe('Keywords creation and filtering', () => {
 
       expect(response.statusCode).toBe(200);
       expect(keywords).toBeInstanceOf(Array);
-      expect(keywords).toEqual(['French']);
+      expect(keywords).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            name: 'French',
+          }),
+        ]),
+      );
     });
   });
 
@@ -165,14 +175,14 @@ describe('Keywords creation and filtering', () => {
         credentials,
         body: {
           ...prepareLessonFromSeed(french, '-lessonToSearch'),
-          keywords: ['English'],
+          keywords: [{ name: 'English' }],
         },
       });
     });
 
     it('should return lessons with keywords', async () => {
       const response = await testContext.request({
-        url: 'lesson/maintain/?tags[]=English',
+        url: 'lesson/maintain/?tags[]=1',
         method: 'GET',
       });
 
@@ -185,7 +195,7 @@ describe('Keywords creation and filtering', () => {
           expect.objectContaining({
             keywords: expect.arrayContaining([
               expect.objectContaining({
-                name: 'English',
+                name: 'French',
               }),
             ]),
           }),
@@ -198,7 +208,7 @@ describe('Keywords creation and filtering', () => {
         url: `lesson/maintain/${lessonToSearch.lesson.id}`,
         method: 'PUT',
         body: {
-          keywords: ['French'],
+          keywords: [{ name: 'French' }],
         },
       });
 
@@ -208,7 +218,13 @@ describe('Keywords creation and filtering', () => {
 
       expect(response.statusCode).toBe(200);
       expect(keywords).toBeInstanceOf(Array);
-      expect(keywords).toEqual(['French']);
+      expect(keywords).toEqual(
+        expect.arrayContaining([
+          expect.objectContaining({
+            name: 'French',
+          }),
+        ]),
+      );
     });
 
     it('should return lessons with keywords', async () => {
