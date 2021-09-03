@@ -1,5 +1,5 @@
 import { Alert, Button, Row, Select, Skeleton, Space } from 'antd';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useHistory } from 'react-router-dom';
@@ -50,6 +50,16 @@ const CoursesDashboard = () => {
     history.push(COURSES_NEW);
   };
 
+  const isAddNewShown = useMemo(
+    () => !total && !search && !selectedStatus,
+    [search, selectedStatus, total],
+  );
+
+  const isPaginationShown = useMemo(
+    () => !isLoading && total > pageLimit,
+    [isLoading, total],
+  );
+
   return (
     <Row gutter={[32, 32]}>
       <S.DashboardControls>
@@ -90,10 +100,10 @@ const CoursesDashboard = () => {
         <LessonsList
           lessons={courses}
           onCreateLesson={handleCreateCourse}
-          isAddNewShown={!total && !search && !selectedStatus}
+          isAddNewShown={isAddNewShown}
         />
       )}
-      {!isLoading && total > pageLimit ? (
+      {isPaginationShown && (
         <S.PaginationWrapper>
           <S.DashboardPagination
             current={currentPage}
@@ -102,7 +112,7 @@ const CoursesDashboard = () => {
             onChange={setCurrentPage}
           />
         </S.PaginationWrapper>
-      ) : null}
+      )}
     </Row>
   );
 };
