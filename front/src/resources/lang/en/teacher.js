@@ -42,6 +42,12 @@ export default {
     no_students: 'No students yet!',
     all: 'View all',
   },
+  lesson_funnel: {
+    finish_bite: 'Email sumbited!',
+    start_bite: 'Lesson start',
+    mean: 'Average',
+    median: 'Median',
+  },
   editor_js: {
     tool_names: {
       text: 'Text',

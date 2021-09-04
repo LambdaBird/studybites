@@ -1,4 +1,5 @@
 import T from 'prop-types';
+import { useTranslation } from 'react-i18next';
 
 import {
   SPARK_LINE_HEIGHT,
@@ -16,6 +17,7 @@ const ResolveSpark = ({
   sparkTimeScale,
   isStart,
 }) => {
+  const { t } = useTranslation();
   const {
     median,
     mean,
@@ -32,7 +34,7 @@ const ResolveSpark = ({
   return (
     <S.SeriesWrapper>
       <S.MedianWrapper isTop={!isStart}>
-        <div>{isStart ? 'Median' : median}</div>
+        <div>{isStart ? t('teacher:lesson_funnel.median') : median}</div>
       </S.MedianWrapper>
       <S.SparkWrapper>
         {!isStart && (
@@ -44,7 +46,7 @@ const ResolveSpark = ({
         )}
       </S.SparkWrapper>
       <S.MeanWrapper>
-        <div>{isStart ? 'Average' : mean}</div>
+        <div>{isStart ? t('teacher:lesson_funnel.mean') : mean}</div>
       </S.MeanWrapper>
     </S.SeriesWrapper>
   )
