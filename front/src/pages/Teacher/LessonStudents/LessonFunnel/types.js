@@ -10,4 +10,4 @@ export const Bite = {
   initialLanded: T.number.isRequired,
   blocks: T.oneOfType([BiteBlocks, T.oneOf([null])]),
   replySeries: T.oneOfType([ReplySeries, T.oneOf([null])]),
-}
+};

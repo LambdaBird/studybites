@@ -41,7 +41,8 @@ export const NumberWrapper = styled.div`
 const diffColors = ['#d46b08', '#fa541c', '#f5222d'];
 
 export const DiffNumber = styled.div`
-  color: ${({ value }) => diffColors[Math.min(Math.max(Math.floor((value / 100) * 7) - 2, 0), 2)]};
+  color: ${({ value }) =>
+    diffColors[Math.min(Math.max(Math.floor((value / 100) * 7) - 2, 0), 2)]};
   font-size: 0.75em;
   padding-left: 0.5em;
   display: flex;
@@ -55,7 +56,7 @@ export const SeriesWrapper = styled.div`
 
 export const MedianWrapper = styled.div`
   display: flex;
-  align-items: ${({ isTop }) => (isTop ? 'flex-start' : 'flex-end')} ;
+  align-items: ${({ isTop }) => (isTop ? 'flex-start' : 'flex-end')};
   justify-content: flex-end;
   text-align: right;
   font-size: 0.75em;
@@ -85,8 +86,10 @@ export const BiteBarWrapper = styled.div`
   width: 100%;
 `;
 
-const countWidthPercent = ({ landed, initialLanded }) => Math.floor((landed / initialLanded) * 100);
-const getOpacity = ({ whole, number }) => number === whole ? 1 : 0.2 + ((number * 2) / (whole * 3));
+const countWidthPercent = ({ landed, initialLanded }) =>
+  Math.floor((landed / initialLanded) * 100);
+const getOpacity = ({ whole, number }) =>
+  number === whole ? 1 : 0.2 + (number * 2) / (whole * 3);
 const barColor = css`
   background-color: rgba(0, 0, 200, ${getOpacity});
   padding: 0;

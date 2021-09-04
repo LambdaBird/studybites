@@ -1,6 +1,6 @@
 import T from 'prop-types';
 
-import FunnelBite from './FunnelBite'
+import FunnelBite from './FunnelBite';
 import { Bite } from './types';
 import useFunnelScales from './useFunnelScales';
 import * as S from './LessonFunnel.styled';
