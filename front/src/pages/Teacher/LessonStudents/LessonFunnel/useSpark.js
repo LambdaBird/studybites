@@ -10,11 +10,26 @@ import {
 } from './consts';
 
 const makeDistribution = (scale, series) => {
-  const distDict = series.reduce((dict, replySpeed) => {
-    // eslint-disable-next-line no-param-reassign
-    dict[scale(replySpeed)] = (dict[scale(replySpeed)] || 0) + 1;
-    return dict;
-  }, {});
+  const distDict = series.reduce(
+    (dict, replySpeed) => {
+      // eslint-disable-next-line no-param-reassign
+      dict[scale(replySpeed)] = (dict[scale(replySpeed)] || 0) + 1;
+      return dict;
+    },
+    {
+      0: 0,
+      10: 0,
+      20: 0,
+      30: 0,
+      40: 0,
+      50: 0,
+      60: 0,
+      70: 0,
+      80: 0,
+      90: 0,
+      100: 0,
+    },
+  );
 
   const distList = Object.entries(distDict);
 
