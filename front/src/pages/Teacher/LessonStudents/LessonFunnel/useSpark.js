@@ -48,7 +48,7 @@ const makeLine = (sparkTimeScale, replySeries) => {
 
 const useSpark = (replySeries, sparkTimeScale) =>
   useMemo(() => {
-    if (!replySeries) {
+    if (!replySeries || !replySeries.length) {
       return '';
     }
 
