@@ -33,7 +33,7 @@ export default class Course extends BaseModel {
         relation: objection.Model.HasOneThroughRelation,
         modelClass: path.join(__dirname, 'User'),
         join: {
-          from: 'lessons.id',
+          from: 'courses.id',
           through: {
             modelClass: path.join(__dirname, 'UserRole'),
             from: 'users_roles.resource_id',
@@ -56,7 +56,7 @@ export default class Course extends BaseModel {
         relation: objection.Model.ManyToManyRelation,
         modelClass: path.join(__dirname, 'User'),
         join: {
-          from: 'lessons.id',
+          from: 'courses.id',
           through: {
             modelClass: path.join(__dirname, 'UserRole'),
             from: 'users_roles.resource_id',

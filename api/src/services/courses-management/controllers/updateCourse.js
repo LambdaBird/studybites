@@ -84,6 +84,11 @@ async function handler({ body: { course, lessons }, params: { courseId } }) {
         });
       }
 
+      courseData.lessons = await CourseLessonStructure.getAllLessons({
+        trx,
+        courseId: courseData.id,
+      });
+
       return courseData;
     });
 

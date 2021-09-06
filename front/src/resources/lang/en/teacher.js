@@ -4,6 +4,13 @@ export default {
     lessons: 'Lessons',
     students: 'Students',
   },
+  course_dashboard: {
+    title: 'My courses',
+    add_button: 'Add course',
+    search: {
+      placeholder: 'Name',
+    },
+  },
   lesson_dashboard: {
     title: 'My lessons',
     add_button: 'Add lesson',

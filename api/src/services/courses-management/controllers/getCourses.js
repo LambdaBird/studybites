@@ -19,7 +19,7 @@ const options = {
   async preHandler({ user: { id: userId } }) {
     await this.access({
       userId,
-      roleId: this.config.globals.roles.MAINTAINER.id,
+      roleId: this.config.globals.roles.TEACHER.id,
     });
   },
 };
@@ -32,14 +32,14 @@ async function handler({
     models: { Course },
   } = this;
 
-  const { total, results: lessons } = await Course.getAllMaintainableCourses({
+  const { total, results: courses } = await Course.getAllMaintainableCourses({
     userId,
     offset,
     limit,
     search,
   });
 
-  return { total, lessons };
+  return { total, courses };
 }
 
 export default { options, handler };
