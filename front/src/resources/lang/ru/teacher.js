@@ -113,6 +113,7 @@ export default {
       first_activity: 'Первая активность',
       not_started: 'Еще не начато',
       action: 'Действие',
+      progress: 'Прогресс',
       edit: 'Изменить',
       no_data: 'Нет данных',
       action_remove: 'Удалить',

@@ -113,6 +113,7 @@ export default {
       first_activity: 'First activity',
       not_started: 'Not started',
       action: 'Action',
+      progress: 'Progress',
       edit: 'Edit',
       no_data: 'No data',
       action_remove: 'Remove',

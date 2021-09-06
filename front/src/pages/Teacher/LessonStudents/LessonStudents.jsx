@@ -1,18 +1,28 @@
-import { Button, Col, Empty, Row, Space, Table, Typography } from 'antd';
+import { Button, Col, Empty, Row, Space, Table } from 'antd';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
 import { useTableSearch } from '@sb-ui/hooks/useTableSearch';
-import { getTeacherLessonStudents } from '@sb-ui/utils/api/v1/teacher';
-import { TEACHER_LESSON_STUDENTS_BASE_KEY } from '@sb-ui/utils/queries';
+import {
+  getLesson,
+  getTeacherLessonStudents,
+} from '@sb-ui/utils/api/v1/teacher';
+import {
+  TEACHER_LESSON_BASE_KEY,
+  TEACHER_LESSON_STUDENTS_BASE_KEY,
+} from '@sb-ui/utils/queries';
 import { formatDate } from '@sb-ui/utils/utils';
 
 import FunnelContainer from './FunnelContainer';
 import * as S from './LessonStudents.styled';
 
 const PAGE_SIZE = 10;
+// TODO: take from shared place
+// eslint-disable-next-line no-unused-vars
+const interactiveTypesBlocks = ['next', 'next', 'closedQuestion', 'quiz'];
 
 const LessonStudents = () => {
   const { id: lessonId } = useParams();
@@ -35,6 +45,22 @@ const LessonStudents = () => {
       lessonId,
     },
   });
+
+  const { data: lessonData, isLoading: isLessonLoading } = useQuery(
+    [TEACHER_LESSON_BASE_KEY, { id: lessonId }],
+    getLesson,
+    {
+      keepPreviousData: true,
+    },
+  );
+
+  const interactiveBlocksNumber = useMemo(
+    () =>
+      lessonData?.lesson?.blocks.filter((block) =>
+        interactiveTypesBlocks.includes(block.type),
+      )?.length || 0,
+    [lessonData],
+  );
 
   const columns = useMemo(
     () => [
@@ -75,19 +101,25 @@ const LessonStudents = () => {
         width: '20%',
       },
       {
-        title: t('lesson_students.table.action'),
-        key: 'action',
-        render: () => (
-          <Space size="middle">
-            <Typography.Link>
-              {t('lesson_students.table.action_remove')}
-            </Typography.Link>
-          </Space>
-        ),
+        title: t('lesson_students.table.progress'),
+        dataIndex: 'results',
+        key: 'progress',
+        render: (results) => {
+          // eslint-disable-next-line react/destructuring-assignment
+          const progress = results.filter(
+            (result) => result.action !== 'start',
+          )?.length;
+
+          return (
+            <Space size="middle">
+              {progress} / {interactiveBlocksNumber}
+            </Space>
+          );
+        },
         width: '10%',
       },
     ],
-    [t],
+    [t, interactiveBlocksNumber],
   );
 
   return (
@@ -120,7 +152,7 @@ const LessonStudents = () => {
         dataSource={students}
         rowKey="id"
         pagination={
-          !isLoading &&
+          !(isLoading || isLessonLoading) &&
           total > PAGE_SIZE && {
             showSizeChanger: false,
             current: currentPage,
@@ -129,7 +161,7 @@ const LessonStudents = () => {
           }
         }
         onChange={onChangeLessonsPage}
-        loading={isLoading || isPreviousData}
+        loading={isLoading || isPreviousData || isLessonLoading}
         locale={{
           emptyText: (
             <Empty
