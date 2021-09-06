@@ -10,7 +10,7 @@ import { getCourses } from '@sb-ui/utils/api/v1/courses';
 import { USER_PUBLIC_COURSES_BASE_KEY } from '@sb-ui/utils/queries';
 import { getQueryPage } from '@sb-ui/utils/utils';
 
-import OpenCoursesBlock from '../OpenLessons/OpenLessonsBlock';
+import OpenCoursesBlock from '../OpenResourcesBlock';
 
 const OpenCourses = () => {
   const { t } = useTranslation('user');
@@ -77,7 +77,12 @@ const OpenCourses = () => {
         <S.StyledSearch searchText={searchText} setSearchText={setSearchText} />
       </S.LessonsHeader>
       <S.LessonsRow>
-        <OpenCoursesBlock isLoading={isLoading} error={error} data={courses} />
+        <OpenCoursesBlock
+          isLoading={isLoading}
+          error={error}
+          data={courses}
+          isCourse
+        />
         {isEmpty && (
           <S.EmptyContainer
             image={emptyImg}

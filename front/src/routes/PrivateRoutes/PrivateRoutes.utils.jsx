@@ -9,8 +9,10 @@ import {
   TeacherStudents,
 } from '@sb-ui/pages/Teacher';
 import {
-  EnrollModalDesktop,
-  EnrollModalMobile,
+  EnrollCourseModalDesktop,
+  EnrollCourseModalMobile,
+  EnrollLessonModalDesktop,
+  EnrollLessonModalMobile,
   LearnPage,
   UserHome,
   UserLessons,
@@ -50,8 +52,13 @@ export const getPrivateRoutes = ({ isMobile }) => [
     children: !isMobile
       ? [
           {
-            component: EnrollModalDesktop,
-            path: paths.USER_ENROLL,
+            component: EnrollLessonModalDesktop,
+            path: paths.USER_ENROLL_LESSON,
+            exact: true,
+          },
+          {
+            component: EnrollCourseModalDesktop,
+            path: paths.USER_ENROLL_COURSE,
             exact: true,
           },
         ]
@@ -84,8 +91,13 @@ export const getPrivateRoutes = ({ isMobile }) => [
   ...(isMobile
     ? [
         {
-          component: EnrollModalMobile,
-          path: paths.USER_ENROLL,
+          component: EnrollLessonModalMobile,
+          path: paths.USER_ENROLL_LESSON,
+          exact: true,
+        },
+        {
+          component: EnrollCourseModalMobile,
+          path: paths.USER_ENROLL_COURSE,
           exact: true,
         },
       ]

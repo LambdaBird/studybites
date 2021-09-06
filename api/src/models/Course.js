@@ -133,8 +133,8 @@ export default class Course extends BaseModel {
     return this.query()
       .skipUndefined()
       .select(
+        'courses.*',
         this.knex().raw(`
-          courses.*,
           (select cast(case when count(*) > 0 then true else false end as bool)
            from users_roles
            where role_id = ${roles.STUDENT.id}

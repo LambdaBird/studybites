@@ -2,17 +2,19 @@ import { Button, Row } from 'antd';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { LessonType } from '@sb-ui/components/lessonBlocks/types';
+import { LessonType } from '@sb-ui/components/resourceBlocks/types';
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
 
-import { useLesson } from './useLesson';
+import { useResource } from './useResource';
 import * as S from './OngoingFull.desktop.styled';
 
 const OngoingFullDesktop = ({ lesson }) => {
   const { t } = useTranslation('user');
   const { name, description, interactiveTotal, interactivePassed } = lesson;
 
-  const { fullName, firstNameLetter, handleContinueLesson } = useLesson(lesson);
+  const { fullName, firstNameLetter, handleContinueLesson } = useResource({
+    resource: lesson,
+  });
 
   const countPercentage = useMemo(() => {
     if ((!lesson.interactiveTotal && lesson.isStarted) || lesson.isFinished) {

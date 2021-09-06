@@ -365,6 +365,7 @@ class Lesson extends BaseModel {
         'lessons.id',
       )
       .where('users_roles.role_id', roles.MAINTAINER.id)
+      .andWhere('enrolled.resource_type', resources.LESSON.name)
       .andWhere('enrolled.role_id', roles.STUDENT.id)
       .andWhere('enrolled.user_id', userId)
       .andWhere('users_roles.resource_type', resources.LESSON.name)

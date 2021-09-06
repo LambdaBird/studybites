@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
-import { LessonType } from '@sb-ui/components/lessonBlocks/types';
+import { LessonType } from '@sb-ui/components/resourceBlocks/types';
 import { LESSONS_EDIT } from '@sb-ui/utils/paths';
 
 const MAX_DISPLAYED_LESSONS = 4;

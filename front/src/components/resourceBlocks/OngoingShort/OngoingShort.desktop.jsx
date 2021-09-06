@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 
-import { LessonType } from '@sb-ui/components/lessonBlocks/types';
+import { LessonType } from '@sb-ui/components/resourceBlocks/types';
 import lessonImg from '@sb-ui/resources/img/lesson.svg';
 import { LEARN_PAGE } from '@sb-ui/utils/paths';
 
