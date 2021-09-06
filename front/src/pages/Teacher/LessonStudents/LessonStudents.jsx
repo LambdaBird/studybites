@@ -21,8 +21,30 @@ import * as S from './LessonStudents.styled';
 
 const PAGE_SIZE = 10;
 // TODO: take from shared place
-// eslint-disable-next-line no-unused-vars
 const interactiveTypesBlocks = ['next', 'next', 'closedQuestion', 'quiz'];
+
+const renderFirstActivityColumn = (results, t) => {
+  const firstActivity = results?.[0]?.createdAt;
+  return formatDate(firstActivity) || t('lesson_students.table.not_started');
+};
+
+const renderLastActivityColumn = (results, t) => {
+  const lastActivity = results?.slice(-1)?.[0]?.createdAt;
+  return formatDate(lastActivity) || t('lesson_students.table.not_started');
+};
+
+const renderProgressColumn = (results, interactiveBlocksNumber) => {
+  // eslint-disable-next-line react/destructuring-assignment
+  const progress = results.filter(
+    (result) => result.action !== 'start',
+  )?.length;
+
+  return (
+    <Space size="middle">
+      {progress} / {interactiveBlocksNumber}
+    </Space>
+  );
+};
 
 const LessonStudents = () => {
   const { id: lessonId } = useParams();
@@ -80,42 +102,22 @@ const LessonStudents = () => {
         title: t('lesson_students.table.last_activity'),
         dataIndex: 'results',
         key: 'results',
-        render: (results) => {
-          const lastActivity = results?.slice(-1)?.[0]?.createdAt;
-          return (
-            formatDate(lastActivity) || t('lesson_students.table.not_started')
-          );
-        },
+        render: (results) => renderLastActivityColumn(results, t),
         width: '20%',
       },
       {
         title: t('lesson_students.table.first_activity'),
         dataIndex: 'results',
         key: 'start',
-        render: (results) => {
-          const firstActivity = results?.[0]?.createdAt;
-          return (
-            formatDate(firstActivity) || t('lesson_students.table.not_started')
-          );
-        },
+        render: (results) => renderFirstActivityColumn(results, t),
         width: '20%',
       },
       {
         title: t('lesson_students.table.progress'),
         dataIndex: 'results',
         key: 'progress',
-        render: (results) => {
-          // eslint-disable-next-line react/destructuring-assignment
-          const progress = results.filter(
-            (result) => result.action !== 'start',
-          )?.length;
-
-          return (
-            <Space size="middle">
-              {progress} / {interactiveBlocksNumber}
-            </Space>
-          );
-        },
+        render: (results) =>
+          renderProgressColumn(results, interactiveBlocksNumber),
         width: '10%',
       },
     ],
