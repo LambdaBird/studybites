@@ -106,7 +106,13 @@ export default class Course extends BaseModel {
     return this.query(trx).findById(courseId).patch(course).returning('*');
   }
 
-  static getAllMaintainableCourses({ userId, offset: start, limit, search }) {
+  static getAllMaintainableCourses({
+    userId,
+    offset: start,
+    limit,
+    search,
+    status,
+  }) {
     const end = start + limit - 1;
 
     return this.query()
@@ -122,6 +128,7 @@ export default class Course extends BaseModel {
           ),
       )
       .where('users_roles.user_id', userId)
+      .andWhere('courses.status', status)
       .andWhere(
         'courses.name',
         'ilike',

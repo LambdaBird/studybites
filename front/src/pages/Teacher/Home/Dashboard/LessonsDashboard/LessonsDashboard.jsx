@@ -1,4 +1,4 @@
-import { Alert, Button, Row, Select, Skeleton, Space } from 'antd';
+import { Button, message, Row, Select, Skeleton, Space } from 'antd';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
@@ -26,11 +26,7 @@ const LessonsDashboard = () => {
   const [search, setSearch] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const {
-    data: responseData,
-    isLoading,
-    isError,
-  } = useQuery(
+  const { data: responseData, isLoading } = useQuery(
     [
       TEACHER_LESSONS_BASE_KEY,
       {
@@ -41,7 +37,15 @@ const LessonsDashboard = () => {
       },
     ],
     getTeacherLessons,
-    { keepPreviousData: true },
+    {
+      keepPreviousData: true,
+      onError: () => {
+        message.error({
+          content: t('lesson_dashboard.error'),
+          duration: 2,
+        });
+      },
+    },
   );
 
   const { lessons, total } = responseData || {};
@@ -77,10 +81,6 @@ const LessonsDashboard = () => {
           {t('lesson_dashboard.add_button')}
         </Button>
       </S.DashboardControls>
-      {isError && (
-        <Alert message="Can not fetch lessons" type="error" showIcon />
-      )}
-
       {isLoading ? (
         skeletonArray(pageLimit).map((el) => (
           <S.CardCol key={el.id}>

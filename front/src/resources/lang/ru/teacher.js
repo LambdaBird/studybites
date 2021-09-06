@@ -5,13 +5,21 @@ export default {
     students: 'Студенты',
   },
   course_dashboard: {
+    error: 'Невозможно получить список курсов',
     title: 'Мои курсы',
     add_button: 'Добавить курс',
     search: {
-      placeholder: 'Name',
+      placeholder: 'Название',
+    },
+    menu: {
+      archive: 'Архивировать Курс',
+      publish: 'Опубликовать Курс',
+      restore: 'Восстановить Курс',
+      draft: 'Переместить в черновики',
     },
   },
   lesson_dashboard: {
+    error: 'Невозможно получить список уроков',
     title: 'Мои уроки',
     add_button: 'Добавить урок',
     card: {
@@ -37,9 +45,9 @@ export default {
       private: 'Приватные',
     },
     menu: {
-      archive: 'Архивировать урок',
-      publish: 'Опубликовать урок',
-      restore: 'Восстановить урок',
+      archive: 'Архивировать Урок',
+      publish: 'Опубликовать Урок',
+      restore: 'Восстановить Урок',
       draft: 'Переместить в черновики',
     },
   },

@@ -10,43 +10,43 @@ import { Statuses } from '@sb-ui/pages/Teacher/Home/Dashboard/constants';
 import { queryClient } from '@sb-ui/query';
 import lesson from '@sb-ui/resources/img/lesson.svg';
 import { putLesson } from '@sb-ui/utils/api/v1/teacher';
-import { LESSONS_EDIT } from '@sb-ui/utils/paths';
-import { TEACHER_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
+import { COURSES_EDIT } from '@sb-ui/utils/paths';
+import { TEACHER_COURSES_BASE_KEY } from '@sb-ui/utils/queries';
 
 import { TeacherPropTypes } from './types';
-import * as S from './Teacher.styled';
+import * as S from './Lesson.styled';
 
 const { Text } = Typography;
 
 const menuItems = {
   [Statuses.DRAFT]: [
-    { key: 'publishLesson', labelKey: 'lesson_dashboard.menu.publish' },
+    { key: 'publishCourse', labelKey: 'course_dashboard.menu.publish' },
     {
-      key: 'archiveLesson',
-      labelKey: 'lesson_dashboard.menu.archive',
+      key: 'archiveCourse',
+      labelKey: 'course_dashboard.menu.archive',
       isDanger: true,
     },
   ],
   [Statuses.PUBLIC]: [
-    { key: 'draftLesson', labelKey: 'lesson_dashboard.menu.draft' },
+    { key: 'draftCourse', labelKey: 'course_dashboard.menu.draft' },
     {
-      key: 'archiveLesson',
-      labelKey: 'lesson_dashboard.menu.archive',
+      key: 'archiveCourse',
+      labelKey: 'course_dashboard.menu.archive',
       isDanger: true,
     },
   ],
   [Statuses.ARCHIVED]: [
-    { key: 'restoreLesson', labelKey: 'lesson_dashboard.menu.restore' },
+    { key: 'restoreCourse', labelKey: 'course_dashboard.menu.restore' },
   ],
 };
 
-const Teacher = ({ title, id, students: studentsData, status }) => {
+const Course = ({ name, id, students: studentsData, status }) => {
   const history = useHistory();
 
   const { t } = useTranslation('teacher');
-  const updateLessonMutation = useMutation(putLesson, {
+  const updateCourseMutation = useMutation(putLesson, {
     onSuccess: () => {
-      queryClient.invalidateQueries(TEACHER_LESSONS_BASE_KEY);
+      queryClient.invalidateQueries(TEACHER_COURSES_BASE_KEY);
     },
   });
 
@@ -60,24 +60,24 @@ const Teacher = ({ title, id, students: studentsData, status }) => {
   );
 
   const handleMenuClick = ({ key }) => {
-    if (key === 'archiveLesson') {
-      updateLessonMutation.mutate({
-        lesson: { id, status: Statuses.ARCHIVED },
+    if (key === 'archiveCourse') {
+      updateCourseMutation.mutate({
+        course: { id, status: Statuses.ARCHIVED },
       });
     }
-    if (key === 'publishLesson') {
-      updateLessonMutation.mutate({ lesson: { id, status: Statuses.PUBLIC } });
+    if (key === 'publishCourse') {
+      updateCourseMutation.mutate({ course: { id, status: Statuses.PUBLIC } });
     }
-    if (key === 'restoreLesson') {
-      updateLessonMutation.mutate({ lesson: { id, status: Statuses.DRAFT } });
+    if (key === 'restoreCourse') {
+      updateCourseMutation.mutate({ course: { id, status: Statuses.DRAFT } });
     }
-    if (key === 'draftLesson') {
-      updateLessonMutation.mutate({ lesson: { id, status: Statuses.DRAFT } });
+    if (key === 'draftCourse') {
+      updateCourseMutation.mutate({ course: { id, status: Statuses.DRAFT } });
     }
   };
 
   const handleEdit = () => {
-    history.push(LESSONS_EDIT.replace(':id', id));
+    history.push(COURSES_EDIT.replace(':id', id));
   };
 
   const menu = () => (
@@ -104,14 +104,7 @@ const Teacher = ({ title, id, students: studentsData, status }) => {
       </S.ImageCol>
       <S.CardDescription span={16}>
         <S.CardText>
-          <S.TitleEllipsis
-            ellipsis={{
-              tooltip: true,
-            }}
-            level={4}
-          >
-            {title}
-          </S.TitleEllipsis>
+          <S.TitleEllipsis>{name}</S.TitleEllipsis>
           {!students.length ? (
             <Text type="secondary">
               {t('lesson_dashboard.card.no_students')}
@@ -148,10 +141,10 @@ const Teacher = ({ title, id, students: studentsData, status }) => {
   );
 };
 
-Teacher.propTypes = TeacherPropTypes;
+Course.propTypes = TeacherPropTypes;
 
-Teacher.defaultProps = {
+Course.defaultProps = {
   students: [],
 };
 
-export default Teacher;
+export default Course;
