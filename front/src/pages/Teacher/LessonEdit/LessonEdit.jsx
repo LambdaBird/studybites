@@ -6,7 +6,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { RedoOutlined, SaveOutlined, UndoOutlined } from '@ant-design/icons';
 
 import Header from '@sb-ui/components/molecules/Header';
-import { Statuses } from '@sb-ui/pages/Teacher/Home/LessonsDashboard/constants';
+import { Statuses } from '@sb-ui/pages/Teacher/Home/Dashboard/constants';
 import { queryClient } from '@sb-ui/query';
 import {
   createLesson,

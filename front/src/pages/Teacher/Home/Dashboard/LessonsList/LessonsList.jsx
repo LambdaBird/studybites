@@ -3,7 +3,7 @@ import TeacherLesson from '@sb-ui/components/lessonBlocks/Teacher';
 import AddCard from '../AddCard';
 import { LessonsListPropTypes } from '../types';
 
-import * as S from '../LessonsDashboard.styled';
+import * as S from '../Dashboard.styled';
 
 const LessonsList = ({ lessons, onCreateLesson, isAddNewShown }) => (
   <>

@@ -1,23 +1,24 @@
 import { Alert, Button, Row, Select, Skeleton, Space } from 'antd';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useHistory } from 'react-router-dom';
 import { PlusOutlined } from '@ant-design/icons';
 
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
-import { getTeacherLessons } from '@sb-ui/utils/api/v1/teacher';
-import { LESSONS_NEW } from '@sb-ui/utils/paths';
-import { TEACHER_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
+import { getTeacherCourses } from '@sb-ui/utils/api/v1/courses-management';
+import { COURSES_NEW } from '@sb-ui/utils/paths';
+import { TEACHER_COURSES_BASE_KEY } from '@sb-ui/utils/queries';
 import { skeletonArray } from '@sb-ui/utils/utils';
 
-import { pageLimit, statusesOptions } from './constants';
-import LessonsList from './LessonsList';
-import * as S from './LessonsDashboard.styled';
+import { pageLimit, statusesOptions } from '../constants';
+import LessonsList from '../LessonsList';
+
+import * as S from '../Dashboard.styled';
 
 const { Option } = Select;
 
-const LessonsDashboard = () => {
+const CoursesDashboard = () => {
   const { t } = useTranslation('teacher');
   const history = useHistory();
 
@@ -31,7 +32,7 @@ const LessonsDashboard = () => {
     isError,
   } = useQuery(
     [
-      TEACHER_LESSONS_BASE_KEY,
+      TEACHER_COURSES_BASE_KEY,
       {
         offset: (currentPage - 1) * pageLimit,
         limit: pageLimit,
@@ -39,24 +40,34 @@ const LessonsDashboard = () => {
         status: selectedStatus,
       },
     ],
-    getTeacherLessons,
+    getTeacherCourses,
     { keepPreviousData: true },
   );
 
-  const { lessons, total } = responseData || {};
+  const { courses, total } = responseData || {};
 
-  const handleCreateLesson = () => {
-    history.push(LESSONS_NEW);
+  const handleCreateCourse = () => {
+    history.push(COURSES_NEW);
   };
+
+  const isAddNewShown = useMemo(
+    () => !total && !search && !selectedStatus,
+    [search, selectedStatus, total],
+  );
+
+  const isPaginationShown = useMemo(
+    () => !isLoading && total > pageLimit,
+    [isLoading, total],
+  );
 
   return (
     <Row gutter={[32, 32]}>
       <S.DashboardControls>
         <Space size="middle">
-          <S.DashboardTitle>{t('lesson_dashboard.title')}</S.DashboardTitle>
+          <S.DashboardTitle>{t('course_dashboard.title')}</S.DashboardTitle>
           <DebouncedSearch
             delay={500}
-            placeholder={t('lesson_dashboard.search.placeholder')}
+            placeholder={t('course_dashboard.search.placeholder')}
             allowClear
             onChange={setSearch}
           />
@@ -71,15 +82,14 @@ const LessonsDashboard = () => {
         <Button
           icon={<PlusOutlined />}
           type="link"
-          onClick={handleCreateLesson}
+          onClick={handleCreateCourse}
         >
-          {t('lesson_dashboard.add_button')}
+          {t('course_dashboard.add_button')}
         </Button>
       </S.DashboardControls>
       {isError && (
-        <Alert message="Can not fetch lessons" type="error" showIcon />
+        <Alert message="Can not fetch courses" type="error" showIcon />
       )}
-
       {isLoading ? (
         skeletonArray(pageLimit).map((el) => (
           <S.CardCol key={el.id}>
@@ -88,12 +98,12 @@ const LessonsDashboard = () => {
         ))
       ) : (
         <LessonsList
-          lessons={lessons}
-          onCreateLesson={handleCreateLesson}
-          isAddNewShown={!total && !search && !selectedStatus}
+          lessons={courses}
+          onCreateLesson={handleCreateCourse}
+          isAddNewShown={isAddNewShown}
         />
       )}
-      {!isLoading && total > pageLimit ? (
+      {isPaginationShown && (
         <S.PaginationWrapper>
           <S.DashboardPagination
             current={currentPage}
@@ -102,9 +112,9 @@ const LessonsDashboard = () => {
             onChange={setCurrentPage}
           />
         </S.PaginationWrapper>
-      ) : null}
+      )}
     </Row>
   );
 };
 
-export default LessonsDashboard;
+export default CoursesDashboard;
