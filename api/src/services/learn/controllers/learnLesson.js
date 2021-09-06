@@ -208,15 +208,11 @@ async function handler({
 
   let correctness;
   if (action === 'response') {
-    const getCorrectnessResult = await Block.getCorrectness({
+    correctness = await Block.getCorrectness({
       blockId,
       revision,
       userResponse: reply,
     });
-    if (getCorrectnessResult.error) {
-      throw new BadRequestError(errors.LESSON_ERR_FAIL_LEARN);
-    }
-    correctness = getCorrectnessResult.correctness;
   }
 
   /**
