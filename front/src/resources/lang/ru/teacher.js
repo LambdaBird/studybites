@@ -42,6 +42,12 @@ export default {
     no_students: 'Еще нет студентов!',
     all: 'Показать всех',
   },
+  lesson_funnel: {
+    finish_bite: 'Емейл оставлен!',
+    start_bite: 'Начало урока',
+    mean: 'Среднее',
+    median: 'Медиана',
+  },
   editor_js: {
     tool_names: {
       text: 'Текст',
