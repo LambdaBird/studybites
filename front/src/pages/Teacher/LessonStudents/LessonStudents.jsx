@@ -9,6 +9,7 @@ import { getTeacherLessonStudents } from '@sb-ui/utils/api/v1/teacher';
 import { TEACHER_LESSON_STUDENTS_BASE_KEY } from '@sb-ui/utils/queries';
 import { formatDate } from '@sb-ui/utils/utils';
 
+import FunnelContainer from './FunnelContainer';
 import * as S from './LessonStudents.styled';
 
 const PAGE_SIZE = 10;
@@ -79,6 +80,7 @@ const LessonStudents = () => {
 
   return (
     <S.Page>
+      <FunnelContainer lessonId={lessonId} />
       <S.TableHeader>
         <Col>
           <Row>

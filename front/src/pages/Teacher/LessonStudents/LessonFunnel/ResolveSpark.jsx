@@ -10,11 +10,15 @@ import * as S from './LessonFunnel.styled';
 const ResolveSpark = ({ replySeries, sparkTimeScale, isStart }) => {
   const { t } = useTranslation();
   const { median, mean, medianLine, meanLine } = useStatsTicks(
-    replySeries,
+    replySeries || [],
     sparkTimeScale,
   );
 
   const replyLine = useSpark(replySeries, sparkTimeScale);
+
+  if (!isStart && !replySeries?.length) {
+    return <S.SeriesWrapper />;
+  }
 
   const svgWidth = `${SPARK_LINE_WIDTH}px`;
   const svgHeight = `${SPARK_LINE_HEIGHT + SPARK_LINE_PADD * 2}px`;
