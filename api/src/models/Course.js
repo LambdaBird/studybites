@@ -126,4 +126,35 @@ export default class Course extends BaseModel {
 
     return query;
   }
+
+  static getAllPublicCourses({ userId, offset: start, limit, search }) {
+    const end = start + limit - 1;
+
+    return this.query()
+      .skipUndefined()
+      .select(
+        this.knex().raw(`
+          courses.*,
+          (select cast(case when count(*) > 0 then true else false end as bool)
+           from users_roles
+           where role_id = ${roles.STUDENT.id}
+             and user_id = ${userId}
+             and resource_type = '${resources.COURSE.name}'
+             and resource_id = courses.id) is_enrolled
+        `),
+      )
+      .where('courses.status', 'Public')
+      .andWhere(
+        'courses.name',
+        'ilike',
+        search ? `%${search.replace(/ /g, '%')}%` : undefined,
+      )
+      .groupBy('courses.id')
+      .range(start, end)
+      .withGraphFetched('author');
+  }
+
+  static getCourseWithAuthor({ courseId }) {
+    return this.query().findById(courseId).withGraphFetched('author');
+  }
 }

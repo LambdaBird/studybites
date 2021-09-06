@@ -13,7 +13,6 @@ const options = {
               description: { type: ['string', 'null'] },
               status: { type: 'string' },
               image: { type: ['string', 'null'] },
-              studentsCount: { type: 'number' },
               author: {
                 type: 'object',
                 properties: {
@@ -22,7 +21,6 @@ const options = {
                   lastName: { type: 'string' },
                 },
               },
-              lessons: { type: 'array' },
             },
           },
         },
@@ -34,34 +32,14 @@ const options = {
   async onRequest(req) {
     await this.auth({ req });
   },
-  async preHandler({ user: { id: userId }, params: { courseId: resourceId } }) {
-    const { resources, roles } = this.config.globals;
-
-    await this.access({
-      userId,
-      resourceId,
-      resourceType: resources.COURSE.name,
-      roleId: roles.MAINTAINER.id,
-    });
-  },
 };
 
 async function handler({ params: { courseId } }) {
   const {
-    models: { Course, CourseLessonStructure, UserRole },
-    config: {
-      globals: { resources },
-    },
+    models: { Course },
   } = this;
 
-  const course = await Course.findById({ courseId });
-  const { count: studentsCount } = await UserRole.getResourceStudentsCount({
-    resourceId: courseId,
-    resourceType: resources.COURSE.name,
-  });
-
-  course.studentsCount = studentsCount;
-  course.lessons = await CourseLessonStructure.getAllLessons({ courseId });
+  const course = await Course.getCourseWithAuthor({ courseId });
 
   return { course };
 }
