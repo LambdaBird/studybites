@@ -13,6 +13,7 @@ import {
 } from '@sb-ui/utils/queries';
 
 import LessonFunnel from './LessonFunnel';
+import { FunnelContainerWrapper } from './LessonStudents.styled';
 
 // TODO: take from shared place
 export const staticTypesBlocks = ['paragraph', 'list', 'header', 'table'];
@@ -24,11 +25,7 @@ export const interactiveTypesBlocks = [
 ];
 
 const FunnelContainer = ({ lessonId }) => {
-  const {
-    data: students,
-    isLoading: isStudentsLoading,
-    // isPreviousData: isStudentsPreviousData,
-  } = useQuery(
+  const { data: students, isLoading: isStudentsLoading } = useQuery(
     [TEACHER_LESSON_STUDENTS_BASE_KEY, { lessonId }],
     getTeacherLessonStudents,
     {
@@ -36,13 +33,13 @@ const FunnelContainer = ({ lessonId }) => {
     },
   );
 
-  const {
-    data: lessonData,
-    isLoading: isLessonLoading,
-    // isPreviousData: isLessonPreviousData,
-  } = useQuery([TEACHER_LESSON_BASE_KEY, { id: lessonId }], getLesson, {
-    keepPreviousData: true,
-  });
+  const { data: lessonData, isLoading: isLessonLoading } = useQuery(
+    [TEACHER_LESSON_BASE_KEY, { id: lessonId }],
+    getLesson,
+    {
+      keepPreviousData: true,
+    },
+  );
 
   const bites = useMemo(() => {
     if (isStudentsLoading || isLessonLoading || !lessonData) {
@@ -124,13 +121,13 @@ const FunnelContainer = ({ lessonId }) => {
   const isLoading = isStudentsLoading || isLessonLoading;
 
   return (
-    <div style={{ width: '900px', margin: '0 auto' }}>
+    <FunnelContainerWrapper>
       {isLoading ? (
         <Skeleton loading={isLoading} paragraph={{ rows: 2 }} active />
       ) : (
         <LessonFunnel bites={bites} />
       )}
-    </div>
+    </FunnelContainerWrapper>
   );
 };
 

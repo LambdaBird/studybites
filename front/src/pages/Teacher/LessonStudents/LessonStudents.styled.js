@@ -22,3 +22,8 @@ export const TableHeader = styled(Row).attrs({
 })`
   margin-bottom: 1rem;
 `;
+
+export const FunnelContainerWrapper = styled.div`
+  width: 900px;
+  margin: 0 auto;
+`;

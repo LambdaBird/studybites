@@ -16,7 +16,7 @@ const ResolveSpark = ({ replySeries, sparkTimeScale, isStart }) => {
 
   const replyLine = useSpark(replySeries, sparkTimeScale);
 
-  if (!isStart && (!replySeries || !replySeries.length)) {
+  if (!isStart && !replySeries?.length) {
     return <S.SeriesWrapper />;
   }
 

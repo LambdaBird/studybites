@@ -8,8 +8,7 @@ const useFunnelScales = (bites) =>
     const minMaxEach = bites
       .map(
         ({ replySeries }) =>
-          replySeries &&
-          replySeries.length && [
+          replySeries?.length && [
             replySeries[0],
             replySeries[replySeries.length - 1],
           ],

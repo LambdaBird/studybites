@@ -24,7 +24,7 @@ const findMedian = (arr) => {
 
 const useStatsTicks = (replySeries, sparkTimeScale) =>
   useMemo(() => {
-    if (!replySeries || !replySeries.length) {
+    if (!replySeries?.length) {
       return {};
     }
 
