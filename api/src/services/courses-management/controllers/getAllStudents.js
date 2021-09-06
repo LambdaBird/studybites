@@ -33,7 +33,7 @@ async function handler({
   } = this;
 
   const { total, results: students } =
-    await UserRole.getStudentsOfTeacherLessons({
+    await UserRole.getStudentsOfTeacherCourses({
       userId,
       offset,
       limit,

@@ -1,12 +1,12 @@
 const options = {
   schema: {
-    querystring: { $ref: 'userSearch#' },
+    querystring: { $ref: 'courseSearch#' },
     response: {
       200: {
         type: 'object',
         properties: {
           total: { type: 'number' },
-          students: { type: 'array' },
+          courses: { type: 'array' },
         },
       },
       '4xx': { $ref: '4xx#' },
@@ -19,7 +19,7 @@ const options = {
   async preHandler({ user: { id: userId } }) {
     await this.access({
       userId,
-      roleId: this.config.globals.roles.TEACHER.id,
+      roleId: this.config.globals.roles.MAINTAINER.id,
     });
   },
 };
@@ -29,18 +29,17 @@ async function handler({
   query: { search, offset, limit },
 }) {
   const {
-    models: { UserRole },
+    models: { Course },
   } = this;
 
-  const { total, results: students } =
-    await UserRole.getStudentsOfTeacherLessons({
-      userId,
-      offset,
-      limit,
-      search,
-    });
+  const { total, results: lessons } = await Course.getAllMaintainableCourses({
+    userId,
+    offset,
+    limit,
+    search,
+  });
 
-  return { total, students };
+  return { total, lessons };
 }
 
 export default { options, handler };

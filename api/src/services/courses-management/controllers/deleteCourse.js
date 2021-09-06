@@ -1,6 +1,6 @@
 const options = {
   schema: {
-    params: { $ref: 'paramsLessonId#' },
+    params: { $ref: 'paramsCourseId#' },
     response: {
       '4xx': { $ref: '4xx#' },
       '5xx': { $ref: '5xx#' },
@@ -9,13 +9,13 @@ const options = {
   async onRequest(req) {
     await this.auth({ req });
   },
-  async preHandler({ user: { id: userId }, params: { lessonId: resourceId } }) {
+  async preHandler({ user: { id: userId }, params: { courseId: resourceId } }) {
     const { resources, roles } = this.config.globals;
 
     await this.access({
       userId,
       resourceId,
-      resourceType: resources.LESSON.name,
+      resourceType: resources.COURSE.name,
       roleId: roles.MAINTAINER.id,
     });
   },

@@ -1,8 +1,10 @@
 import objection from 'objection';
 import * as path from 'path';
 
+import { courseServiceErrors as errors, resources, roles } from '../config';
+import { NotFoundError } from '../validation/errors';
+
 import BaseModel from './BaseModel';
-import { resources, roles } from '../config';
 
 export default class Course extends BaseModel {
   static get tableName() {
@@ -86,5 +88,47 @@ export default class Course extends BaseModel {
         },
       },
     };
+  }
+
+  static createCourse({ trx, course }) {
+    return this.query(trx).insert(course).returning('*');
+  }
+
+  static findById({ courseId }) {
+    return this.query()
+      .findById(courseId)
+      .throwIfNotFound({
+        error: new NotFoundError(errors.COURSE_ERR_COURSE_NOT_FOUND),
+      });
+  }
+
+  static updateCourse({ trx, courseId, course }) {
+    return this.query(trx).findById(courseId).patch(course).returning('*');
+  }
+
+  static getAllMaintainableCourses({ userId, offset: start, limit, search }) {
+    const end = start + limit - 1;
+
+    return this.query()
+      .skipUndefined()
+      .join('users_roles', (builder) =>
+        builder
+          .on('courses.id', '=', 'users_roles.resource_id')
+          .andOn('users_roles.role_id', '=', roles.MAINTAINER.id)
+          .andOn(
+            'users_roles.resource_type',
+            '=',
+            this.knex().raw('?', [resources.COURSE.name]),
+          ),
+      )
+      .where('users_roles.user_id', userId)
+      .andWhere(
+        'courses.name',
+        'ilike',
+        search ? `%${search.replace(/ /g, '%')}%` : undefined,
+      )
+      .groupBy('courses.id')
+      .range(start, end)
+      .withGraphFetched('students');
   }
 }

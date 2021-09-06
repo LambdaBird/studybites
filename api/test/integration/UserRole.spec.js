@@ -9,6 +9,7 @@ import {
 import { french } from '../../seeds/testData/lessons';
 
 import { authorizeUser, createLesson, prepareLessonFromSeed } from './utils';
+import { resources } from '../../src/config';
 
 describe('UserRole methods', () => {
   const testContext = {
@@ -85,8 +86,9 @@ describe('UserRole methods', () => {
       });
 
       it('should be zero', async () => {
-        const { count } = await UserRole.getLessonStudentsCount({
-          lessonId: noEnrolled.lesson.id,
+        const { count } = await UserRole.getResourceStudentsCount({
+          resourceId: noEnrolled.lesson.id,
+          resourceType: resources.LESSON.name,
         });
 
         expect(typeof +count).toBe('number');
@@ -110,8 +112,9 @@ describe('UserRole methods', () => {
       });
 
       it('should be one', async () => {
-        const { count } = await UserRole.getLessonStudentsCount({
-          lessonId: oneEnrolled.lesson.id,
+        const { count } = await UserRole.getResourceStudentsCount({
+          resourceId: oneEnrolled.lesson.id,
+          resourceType: resources.LESSON.name,
         });
 
         expect(typeof +count).toBe('number');
@@ -135,8 +138,9 @@ describe('UserRole methods', () => {
       });
 
       it('should be one', async () => {
-        const { count } = await UserRole.getLessonStudentsCount({
-          lessonId: selfEnrolled.lesson.id,
+        const { count } = await UserRole.getResourceStudentsCount({
+          resourceId: selfEnrolled.lesson.id,
+          resourceType: resources.LESSON.name,
         });
 
         expect(typeof +count).toBe('number');
