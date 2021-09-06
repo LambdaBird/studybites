@@ -458,7 +458,7 @@ describe('Maintainer flow', () => {
       });
 
       await testContext.request({
-        url: `lesson/enroll/${lessonToGetStudents.lesson.id}`,
+        url: `lessons/${lessonToGetStudents.lesson.id}/enroll`,
       });
     });
 

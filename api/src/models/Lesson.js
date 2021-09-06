@@ -160,6 +160,7 @@ class Lesson extends BaseModel {
         this.knex().raw(`
           select resource_id from users_roles 
           where user_id = ${userId} and role_id = ${roles.STUDENT.id}
+            and resource_type = '${resources.LESSON.name}'
         `),
       )
       .throwIfNotFound({

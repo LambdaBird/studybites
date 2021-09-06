@@ -2,7 +2,7 @@ import objection from 'objection';
 import * as path from 'path';
 
 import { courseServiceErrors as errors, resources, roles } from '../config';
-import { NotFoundError } from '../validation/errors';
+import { BadRequestError, NotFoundError } from '../validation/errors';
 
 import BaseModel from './BaseModel';
 
@@ -156,5 +156,24 @@ export default class Course extends BaseModel {
 
   static getCourseWithAuthor({ courseId }) {
     return this.query().findById(courseId).withGraphFetched('author');
+  }
+
+  static checkIfEnrolled({ courseId, userId }) {
+    return this.query()
+      .findById(courseId)
+      .where({ status: 'Public' })
+      .whereNotIn(
+        'id',
+        this.knex().raw(`
+            select resource_id
+            from users_roles
+            where user_id = ${userId}
+              and role_id = ${roles.STUDENT.id}
+              and resource_type = '${resources.COURSE.name}'
+        `),
+      )
+      .throwIfNotFound({
+        error: new BadRequestError(errors.COURSE_ERR_FAIL_ENROLL),
+      });
   }
 }
