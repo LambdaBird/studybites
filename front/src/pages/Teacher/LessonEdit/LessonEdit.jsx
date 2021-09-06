@@ -6,6 +6,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { RedoOutlined, SaveOutlined, UndoOutlined } from '@ant-design/icons';
 
 import Header from '@sb-ui/components/molecules/Header';
+import KeywordsSelect from '@sb-ui/components/molecules/KeywordsSelect';
 import { Statuses } from '@sb-ui/pages/Teacher/Home/LessonsDashboard/constants';
 import { queryClient } from '@sb-ui/query';
 import {
@@ -21,6 +22,7 @@ import {
 } from '@sb-ui/utils/paths';
 import { TEACHER_LESSON_BASE_KEY } from '@sb-ui/utils/queries';
 
+import LessonImage from './LessonImage';
 import { getConfig, prepareBlocksForApi, prepareEditorData } from './utils';
 import * as S from './LessonEdit.styled';
 
@@ -39,6 +41,8 @@ const LessonEdit = () => {
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [image, setImage] = useState('');
+  const [imageError, setImageError] = useState(false);
   const [isEditorDisabled, setIsEditorDisabled] = useState(false);
 
   const inputTitle = useRef(null);
@@ -54,6 +58,18 @@ const LessonEdit = () => {
       enabled: isEditLesson,
     },
   );
+
+  const [keywords, setKeywords] = useState([]);
+  useEffect(() => {
+    if (lessonData?.keywords) {
+      setKeywords(
+        lessonData.keywords.map((keyword) => ({
+          value: keyword.id,
+          label: keyword.name,
+        })),
+      );
+    }
+  }, [lessonData]);
 
   const createLessonMutation = useMutation(createLesson, {
     onSuccess: (data) => {
@@ -118,6 +134,9 @@ const LessonEdit = () => {
     if (lessonData?.lesson.description) {
       setDescription(lessonData.lesson.description);
     }
+    if (lessonData?.lesson.image) {
+      setImage(lessonData.lesson.image);
+    }
   }, [lessonData?.lesson]);
 
   useEffect(() => {
@@ -133,6 +152,10 @@ const LessonEdit = () => {
     }
   }, [lessonData]);
 
+  useEffect(() => {
+    setImageError(false);
+  }, [image]);
+
   const handleSave = async () => {
     try {
       const { blocks } = await editorJSRef.current.save();
@@ -140,9 +163,14 @@ const LessonEdit = () => {
         lesson: {
           id: parseInt(lessonId, 10) || undefined,
           name,
+          image,
           description,
           status: Statuses.DRAFT,
         },
+        keywords: keywords.map((keyword) => ({
+          name: keyword.label,
+          id: typeof keyword.value === 'number' ? keyword.value : undefined,
+        })),
         blocks: prepareBlocksForApi(blocks),
       };
       if (!name) {
@@ -355,17 +383,31 @@ const LessonEdit = () => {
                 </Typography.Link>
               </Col>
             </S.RowStyled>
-            <Row gutter={[0, 16]}>
-              <Col span={24}>{t('lesson_edit.description')}</Col>
+            <Row gutter={[0, 8]}>
+              <Col span={24}>{t('lesson_edit.description.title')}</Col>
               <Col span={24}>
                 <TextArea
                   value={description}
+                  placeholder={t('lesson_edit.description.placeholder')}
                   onChange={(e) => setDescription(e.target.value)}
                   showCount
                   maxLength={140}
                 />
               </Col>
             </Row>
+            <Row gutter={[0, 16]}>
+              <Col span={24}>Keywords</Col>
+              <Col span={24}>
+                <KeywordsSelect values={keywords} setValues={setKeywords} />
+              </Col>
+            </Row>
+            <LessonImage
+              image={image}
+              setImage={setImage}
+              imageError={imageError}
+              setImageError={setImageError}
+              isLoading={isLoading}
+            />
           </S.RightCol>
         </S.StyledRow>
       </S.Page>

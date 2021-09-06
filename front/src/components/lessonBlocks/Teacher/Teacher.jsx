@@ -8,7 +8,7 @@ import { EllipsisOutlined } from '@ant-design/icons';
 import { StyledAvatar } from '@sb-ui/components/molecules/Header/Header.styled';
 import { Statuses } from '@sb-ui/pages/Teacher/Home/LessonsDashboard/constants';
 import { queryClient } from '@sb-ui/query';
-import lesson from '@sb-ui/resources/img/lesson.svg';
+import DefaultLessonImage from '@sb-ui/resources/img/lesson.svg';
 import { putLesson } from '@sb-ui/utils/api/v1/teacher';
 import { LESSONS_EDIT } from '@sb-ui/utils/paths';
 import { TEACHER_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
@@ -40,7 +40,7 @@ const menuItems = {
   ],
 };
 
-const Teacher = ({ title, id, students: studentsData, status }) => {
+const Teacher = ({ image, title, id, students: studentsData, status }) => {
   const history = useHistory();
 
   const { t } = useTranslation('teacher');
@@ -100,7 +100,10 @@ const Teacher = ({ title, id, students: studentsData, status }) => {
             </S.StatusText>
           </S.CardBadge>
         </S.BadgeWrapper>
-        <S.CardImage src={lesson} />
+        <S.CardImage
+          fallback={DefaultLessonImage}
+          src={image || DefaultLessonImage}
+        />
       </S.ImageCol>
       <S.CardDescription span={16}>
         <S.CardText>

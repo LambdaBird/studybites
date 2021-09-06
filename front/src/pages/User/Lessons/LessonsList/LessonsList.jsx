@@ -4,6 +4,9 @@ import { useQuery } from 'react-query';
 
 import OngoingFullLesson from '@sb-ui/components/lessonBlocks/OngoingFull';
 import AuthorSelect from '@sb-ui/components/molecules/AuthorSelect';
+import KeywordsFilter from '@sb-ui/components/molecules/KeywordsFilter';
+import KeywordsFilterMobile from '@sb-ui/components/molecules/KeywordsFilterMobile';
+import useMobile from '@sb-ui/hooks/useMobile';
 import emptyImg from '@sb-ui/resources/img/empty.svg';
 import { skeletonArray } from '@sb-ui/utils/utils';
 
@@ -13,9 +16,11 @@ import * as S from './LessonsList.styled';
 
 const LessonsList = ({ title, notFound, query }) => {
   const { key: queryKey, func: queryFunc } = query;
-  const [authors, setAuthors] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchText, setSearchText] = useState(null);
+  const [authors, setAuthors] = useState([]);
+  const [keywords, setKeywords] = useState([]);
+  const isMobile = useMobile();
 
   const { isLoading, data: responseData } = useQuery(
     [
@@ -24,6 +29,7 @@ const LessonsList = ({ title, notFound, query }) => {
         offset: (currentPage - 1) * PAGE_SIZE,
         limit: PAGE_SIZE,
         search: searchText,
+        tags: keywords,
       },
     ],
     queryFunc,
@@ -39,6 +45,13 @@ const LessonsList = ({ title, notFound, query }) => {
         <S.AuthorWrapper>
           <AuthorSelect values={authors} setValues={setAuthors} />
         </S.AuthorWrapper>
+        <S.FilterWrapper>
+          {isMobile ? (
+            <KeywordsFilterMobile setKeywords={setKeywords} />
+          ) : (
+            <KeywordsFilter setValues={setKeywords} />
+          )}
+        </S.FilterWrapper>
       </S.LessonsHeader>
       <S.LessonsRow>
         {isLoading

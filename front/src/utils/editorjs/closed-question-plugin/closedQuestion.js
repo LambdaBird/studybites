@@ -1,14 +1,10 @@
 import * as Utils from '../utils';
 
+import { createRemoveIcon, icon } from './resources';
+
 import './closedQuestion.css';
 
 const MAX_ANSWER_LENGTH = 50;
-
-function createElementFromHTML(htmlString) {
-  const div = document.createElement('div');
-  div.innerHTML = htmlString.trim();
-  return div.firstChild;
-}
 
 export default class ClosedQuestion {
   constructor({ data, api, readOnly }) {
@@ -23,7 +19,7 @@ export default class ClosedQuestion {
   static get toolbox() {
     return {
       title: 'Closed Question',
-      icon: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3C6.5 3 2 6.6 2 11C2 13.2 3.1 15.2 4.8 16.5C4.8 17.1 4.4 18.7 2 21C4.4 20.9 6.6 20 8.5 18.5C9.6 18.8 10.8 19 12 19C17.5 19 22 15.4 22 11C22 6.6 17.5 3 12 3ZM12 17C7.6 17 4 14.3 4 11C4 7.7 7.6 5 12 5C16.4 5 20 7.7 20 11C20 14.3 16.4 17 12 17ZM12.2 6.5C11.3 6.5 10.6 6.7 10.1 7C9.5 7.4 9.2 8 9.3 8.7H11.3C11.3 8.4 11.4 8.2 11.6 8.1C11.8 8 12 7.9 12.3 7.9C12.6 7.9 12.9 8 13.1 8.2C13.3 8.4 13.4 8.6 13.4 8.9C13.4 9.2 13.3 9.4 13.2 9.6C13 9.8 12.8 10 12.6 10.1C12.1 10.4 11.7 10.7 11.5 10.9C11.1 11.2 11 11.5 11 12H13C13 11.7 13.1 11.5 13.1 11.3C13.2 11.1 13.4 11 13.6 10.8C14.1 10.6 14.4 10.3 14.7 9.9C15 9.5 15.1 9.1 15.1 8.7C15.1 8 14.8 7.4 14.3 7C13.9 6.7 13.1 6.5 12.2 6.5V6.5ZM11 13V15H13V13H11Z" fill="currentColor"/></svg>',
+      icon,
     };
   }
 
@@ -181,7 +177,7 @@ export default class ClosedQuestion {
   createTag(text) {
     const wrapper = document.createElement('span');
     wrapper.classList.add(this.CSS.answerTag);
-    let displayText = createElementFromHTML(`<span>${text}</span>`);
+    let displayText = Utils.createElementFromHTML(`<span>${text}</span>`);
     if (text.length > MAX_ANSWER_LENGTH) {
       const textDiv = document.createElement('div');
       textDiv.innerText = text;
@@ -197,13 +193,9 @@ export default class ClosedQuestion {
       displayText.appendChild(tooltiptext);
     }
 
-    const removeSpan =
-      createElementFromHTML(`<span class='${this.CSS.answerRemove}'>
-       <svg viewBox='64 64 896 896' focusable='false' data-icon='close' width='10px' height='10px' fill='currentColor' aria-hidden='true'>
-        <path d='M563.8 512l262.5-312.9c4.4-5.2.7-13.1-6.1-13.1h-79.8c-4.7 0-9.2 2.1-12.3 5.7L511.6 449.8 295.1 191.7c-3-3.6-7.5-5.7-12.3-5.7H203c-6.8 0-10.5 7.9-6.1 13.1L459.4 512 196.9 824.9A7.95 7.95 0 00203 838h79.8c4.7 0 9.2-2.1 12.3-5.7l216.5-258.1 216.5 258.1c3 3.6 7.5 5.7 12.3 5.7h79.8c6.8 0 10.5-7.9 6.1-13.1L563.8 512z'></path>
-       </svg>
-      </span>
-    `);
+    const removeSpan = Utils.createElementFromHTML(
+      createRemoveIcon(this.CSS.answerRemove),
+    );
     wrapper.appendChild(displayText);
     wrapper.appendChild(removeSpan);
     return wrapper;

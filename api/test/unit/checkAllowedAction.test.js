@@ -1,4 +1,4 @@
-import { checkAllowed } from '../../src/services/lesson/handlers/learnLesson';
+import { checkAllowed } from '../../src/services/learn/controllers/learnLesson';
 import { blockConstants } from '../../src/config';
 
 describe('checkAllowed returns allowed action based on the last Results record', () => {

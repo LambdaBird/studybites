@@ -4,7 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 
-import lessonImg from '@sb-ui/resources/img/lesson.svg';
+import LessonKeywords from '@sb-ui/components/atoms/LessonKeywords';
+import DefaultLessonImage from '@sb-ui/resources/img/lesson.svg';
 import { enrollLesson, getLesson } from '@sb-ui/utils/api/v1/lessons';
 import { LEARN_PAGE, USER_HOME } from '@sb-ui/utils/paths';
 import { USER_LESSON_MODAL_BASE_KEY } from '@sb-ui/utils/queries';
@@ -43,14 +44,15 @@ const EnrollModalDesktop = () => {
   );
 
   const { mutate: mutatePostEnroll } = useMutation(enrollLesson);
-
-  const { name, author, description } = responseData?.lesson || {
+  const keywords = responseData?.keywords;
+  const { name, author, description, image } = responseData?.lesson || {
     author: {
       firstName: '',
       lastName: '',
     },
     name: '',
     description: '',
+    image: '',
   };
 
   const fullName = useMemo(
@@ -89,7 +91,11 @@ const EnrollModalDesktop = () => {
     >
       <S.LeftColumn>
         <Col span={24}>
-          <img width="100%" src={lessonImg} alt="" />
+          <S.Image
+            fallback={DefaultLessonImage}
+            src={image || DefaultLessonImage}
+            alt="Lesson"
+          />
           <S.AuthorContainer>
             <S.AuthorAvatar>{firstNameLetter}</S.AuthorAvatar>
             <S.AuthorName>{fullName}</S.AuthorName>
@@ -101,6 +107,11 @@ const EnrollModalDesktop = () => {
         <Col span={24}>
           <S.DescriptionText>{description}</S.DescriptionText>
         </Col>
+        {keywords && (
+          <S.KeywordsCol>
+            <LessonKeywords keywords={keywords} />
+          </S.KeywordsCol>
+        )}
       </S.LeftColumn>
       <S.RightColumn>
         <S.ReviewHeader>

@@ -1,11 +1,12 @@
-import { Comment, List, Rate, Row, Typography } from 'antd';
+import { Col, Comment, List, Rate, Row, Typography } from 'antd';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
 import { useHistory, useParams } from 'react-router-dom';
 
+import LessonKeywords from '@sb-ui/components/atoms/LessonKeywords';
 import { DescriptionText } from '@sb-ui/components/lessonBlocks/Public/Public.desktop.styled';
-import lessonImage from '@sb-ui/resources/img/lesson.svg';
+import DefaultLessonImage from '@sb-ui/resources/img/lesson.svg';
 import { enrollLesson, getLesson } from '@sb-ui/utils/api/v1/lessons';
 import { LEARN_PAGE, USER_HOME } from '@sb-ui/utils/paths';
 import { USER_LESSON_MODAL_BASE_KEY } from '@sb-ui/utils/queries';
@@ -62,14 +63,15 @@ const EnrollModalMobile = () => {
   );
 
   const { mutate: mutatePostEnroll } = useMutation(enrollLesson);
-
-  const { name, author, description } = responseData?.lesson || {
+  const keywords = responseData?.keywords;
+  const { name, author, description, image } = responseData?.lesson || {
     author: {
       firstName: '',
       lastName: '',
     },
     name: '',
     description: '',
+    image: '',
   };
 
   const fullName = useMemo(
@@ -103,7 +105,11 @@ const EnrollModalMobile = () => {
   return (
     <S.Main>
       <S.ImageBlock>
-        <S.Image src={lessonImage} alt="Lesson" />
+        <S.Image
+          fallback={DefaultLessonImage}
+          src={image || DefaultLessonImage}
+          alt="Lesson"
+        />
         <S.AuthorContainer>
           <S.AuthorAvatar>{firstNameLetter}</S.AuthorAvatar>
           <S.AuthorName>{fullName}</S.AuthorName>
@@ -113,7 +119,14 @@ const EnrollModalMobile = () => {
         <S.Title>{name}</S.Title>
       </Row>
       <Row>
-        <S.Description>{description}</S.Description>
+        <Col span={24}>
+          <S.Description>{description}</S.Description>
+        </Col>
+        {keywords && (
+          <S.KeywordsCol>
+            <LessonKeywords keywords={keywords} />
+          </S.KeywordsCol>
+        )}
       </Row>
       <S.ReviewHeader>
         <Title level={5}>{t('enroll_modal.review.header')}</Title>

@@ -19,6 +19,7 @@ const LessonsList = ({ lessons, onCreateLesson, isAddNewShown }) => (
             title={lesson.name}
             students={lesson.students}
             status={lesson.status}
+            image={lesson.image}
           />
         </S.CardCol>
       ))
