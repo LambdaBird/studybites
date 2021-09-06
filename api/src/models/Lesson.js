@@ -196,9 +196,16 @@ class Lesson extends BaseModel {
              and resource_id = lessons.id) is_enrolled
         `),
       )
-      .join('users_roles', 'users_roles.resource_id', '=', 'lessons.id')
-      .where('users_roles.role_id', roles.MAINTAINER.id)
-      .andWhere('users_roles.resource_type', resources.LESSON.name)
+      .join('users_roles', (builder) =>
+        builder
+          .on('users_roles.resource_id', '=', 'lessons.id')
+          .andOn('users_roles.role_id', '=', roles.MAINTAINER.id)
+          .andOn(
+            'users_roles.resource_type',
+            '=',
+            this.knex().raw('?', [resources.LESSON.name]),
+          ),
+      )
       .whereIn('users_roles.user_id', authors)
       .andWhere('lessons.status', 'Public')
       .andWhere(
