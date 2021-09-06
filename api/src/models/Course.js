@@ -109,12 +109,19 @@ export default class Course extends BaseModel {
   static getAllMaintainableCourses({ userId, offset: start, limit, search }) {
     const end = start + limit - 1;
 
-    const query = this.query()
+    return this.query()
       .skipUndefined()
-      .join('users_roles', 'users_roles.resource_id', '=', 'courses.id')
-      .where('users_roles.role_id', roles.MAINTAINER.id)
-      .andWhere('users_roles.resource_type', resources.COURSE.name)
-      .andWhere('users_roles.user_id', userId)
+      .join('users_roles', (builder) =>
+        builder
+          .on('courses.id', '=', 'users_roles.resource_id')
+          .andOn('users_roles.role_id', '=', roles.MAINTAINER.id)
+          .andOn(
+            'users_roles.resource_type',
+            '=',
+            this.knex().raw('?', [resources.COURSE.name]),
+          ),
+      )
+      .where('users_roles.user_id', userId)
       .andWhere(
         'courses.name',
         'ilike',
@@ -123,7 +130,5 @@ export default class Course extends BaseModel {
       .groupBy('courses.id')
       .range(start, end)
       .withGraphFetched('students');
-
-    return query;
   }
 }
