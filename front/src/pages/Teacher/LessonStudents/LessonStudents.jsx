@@ -1,18 +1,50 @@
-import { Button, Col, Empty, Row, Space, Table, Typography } from 'antd';
+import { Button, Col, Empty, Row, Space, Table } from 'antd';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
 import { useTableSearch } from '@sb-ui/hooks/useTableSearch';
-import { getTeacherLessonStudents } from '@sb-ui/utils/api/v1/teacher';
-import { TEACHER_LESSON_STUDENTS_BASE_KEY } from '@sb-ui/utils/queries';
+import {
+  getLesson,
+  getTeacherLessonStudents,
+} from '@sb-ui/utils/api/v1/teacher';
+import {
+  TEACHER_LESSON_BASE_KEY,
+  TEACHER_LESSON_STUDENTS_BASE_KEY,
+} from '@sb-ui/utils/queries';
 import { formatDate } from '@sb-ui/utils/utils';
 
 import FunnelContainer from './FunnelContainer';
 import * as S from './LessonStudents.styled';
 
 const PAGE_SIZE = 10;
+// TODO: take from shared place
+const interactiveTypesBlocks = ['next', 'next', 'closedQuestion', 'quiz'];
+
+const renderFirstActivityColumn = (results, t) => {
+  const firstActivity = results?.[0]?.createdAt;
+  return formatDate(firstActivity) || t('lesson_students.table.not_started');
+};
+
+const renderLastActivityColumn = (results, t) => {
+  const lastActivity = results?.slice(-1)?.[0]?.createdAt;
+  return formatDate(lastActivity) || t('lesson_students.table.not_started');
+};
+
+const renderProgressColumn = (results, interactiveBlocksNumber) => {
+  // eslint-disable-next-line react/destructuring-assignment
+  const progress = results.filter(
+    (result) => result.action !== 'start',
+  )?.length;
+
+  return (
+    <Space size="middle">
+      {progress} / {interactiveBlocksNumber}
+    </Space>
+  );
+};
 
 const LessonStudents = () => {
   const { id: lessonId } = useParams();
@@ -36,46 +68,60 @@ const LessonStudents = () => {
     },
   });
 
+  const { data: lessonData, isLoading: isLessonLoading } = useQuery(
+    [TEACHER_LESSON_BASE_KEY, { id: lessonId }],
+    getLesson,
+    {
+      keepPreviousData: true,
+    },
+  );
+
+  const interactiveBlocksNumber = useMemo(
+    () =>
+      lessonData?.lesson?.blocks.filter((block) =>
+        interactiveTypesBlocks.includes(block.type),
+      )?.length || 0,
+    [lessonData],
+  );
+
   const columns = useMemo(
     () => [
       {
         title: t('lesson_students.table.full_name'),
         dataIndex: 'fullName',
         key: 'fullName',
-        width: '35%',
+        width: '30%',
       },
       {
         title: t('lesson_students.table.email'),
         dataIndex: 'email',
         key: 'email',
-        width: '35%',
+        width: '20%',
       },
       {
         title: t('lesson_students.table.last_activity'),
         dataIndex: 'results',
         key: 'results',
-        render: (results) => {
-          const lastActivity = results?.slice(-1)?.[0]?.createdAt;
-          return (
-            formatDate(lastActivity) || t('lesson_students.table.not_started')
-          );
-        },
+        render: (results) => renderLastActivityColumn(results, t),
         width: '20%',
       },
       {
-        title: t('lesson_students.table.action'),
-        key: 'action',
-        render: () => (
-          <Space size="middle">
-            <Typography.Link>
-              {t('lesson_students.table.action_remove')}
-            </Typography.Link>
-          </Space>
-        ),
+        title: t('lesson_students.table.first_activity'),
+        dataIndex: 'results',
+        key: 'start',
+        render: (results) => renderFirstActivityColumn(results, t),
+        width: '20%',
+      },
+      {
+        title: t('lesson_students.table.progress'),
+        dataIndex: 'results',
+        key: 'progress',
+        render: (results) =>
+          renderProgressColumn(results, interactiveBlocksNumber),
         width: '10%',
       },
     ],
-    [t],
+    [t, interactiveBlocksNumber],
   );
 
   return (
@@ -108,7 +154,7 @@ const LessonStudents = () => {
         dataSource={students}
         rowKey="id"
         pagination={
-          !isLoading &&
+          !(isLoading || isLessonLoading) &&
           total > PAGE_SIZE && {
             showSizeChanger: false,
             current: currentPage,
@@ -117,7 +163,7 @@ const LessonStudents = () => {
           }
         }
         onChange={onChangeLessonsPage}
-        loading={isLoading || isPreviousData}
+        loading={isLoading || isPreviousData || isLessonLoading}
         locale={{
           emptyText: (
             <Empty
