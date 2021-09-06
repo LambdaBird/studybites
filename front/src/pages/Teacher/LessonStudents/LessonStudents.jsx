@@ -42,13 +42,13 @@ const LessonStudents = () => {
         title: t('lesson_students.table.full_name'),
         dataIndex: 'fullName',
         key: 'fullName',
-        width: '35%',
+        width: '30%',
       },
       {
         title: t('lesson_students.table.email'),
         dataIndex: 'email',
         key: 'email',
-        width: '35%',
+        width: '20%',
       },
       {
         title: t('lesson_students.table.last_activity'),
@@ -58,6 +58,18 @@ const LessonStudents = () => {
           const lastActivity = results?.slice(-1)?.[0]?.createdAt;
           return (
             formatDate(lastActivity) || t('lesson_students.table.not_started')
+          );
+        },
+        width: '20%',
+      },
+      {
+        title: t('lesson_students.table.first_activity'),
+        dataIndex: 'results',
+        key: 'start',
+        render: (results) => {
+          const firstActivity = results?.[0]?.createdAt;
+          return (
+            formatDate(firstActivity) || t('lesson_students.table.not_started')
           );
         },
         width: '20%',

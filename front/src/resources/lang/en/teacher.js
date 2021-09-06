@@ -110,6 +110,7 @@ export default {
       full_name: 'Full Name',
       email: 'Email',
       last_activity: 'Last activity',
+      first_activity: 'First activity',
       not_started: 'Not started',
       action: 'Action',
       edit: 'Edit',

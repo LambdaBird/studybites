@@ -110,6 +110,7 @@ export default {
       full_name: 'Полное имя',
       email: 'Email',
       last_activity: 'Последняя активность',
+      first_activity: 'Первая активность',
       not_started: 'Еще не начато',
       action: 'Действие',
       edit: 'Изменить',
