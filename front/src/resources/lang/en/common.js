@@ -20,6 +20,9 @@ export default {
     back_home_button: 'Back Home',
     refresh_page_button: 'Refresh page',
   },
+  filter: {
+    placeholder: 'Select item',
+  },
   filter_author: {
     placeholder: 'Select author',
   },

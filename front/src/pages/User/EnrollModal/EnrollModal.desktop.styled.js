@@ -1,9 +1,25 @@
-import { Avatar, Button, Col, Row, Space, Typography } from 'antd';
+import {
+  Avatar,
+  Button,
+  Col,
+  Image as ImageAntd,
+  Row,
+  Space,
+  Typography,
+} from 'antd';
 import styled from 'styled-components';
 
 import variables from '@sb-ui/theme/variables';
 
 const { Text } = Typography;
+
+export const Image = styled(ImageAntd).attrs({
+  height: '20rem',
+  width: '100%',
+  preview: false,
+})`
+  object-fit: cover;
+`;
 
 export const AuthorContainer = styled.div`
   display: flex;
@@ -81,4 +97,10 @@ export const AuthorName = styled(Typography.Link)`
 export const DescriptionText = styled(Text)`
   text-align: justify;
   color: ${variables['lesson-block-description-color']};
+`;
+
+export const KeywordsCol = styled(Col).attrs({
+  span: 24,
+})`
+  margin-top: 1rem;
 `;

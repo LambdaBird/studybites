@@ -26,6 +26,10 @@ export const OpenLessonsTitle = styled(Title).attrs({
   font-size: 1.25rem !important;
 `;
 
+export const FilterWrapper = styled.div`
+  display: flex;
+`;
+
 export const LessonsRow = styled(Row).attrs({
   gutter: [32, 32],
 })`
@@ -45,6 +49,7 @@ export const StyledPagination = styled(Pagination).attrs({
 
 export const StyledSearch = styled(Search).attrs({
   placement: 'bottomLeft',
+  marginRight: '1rem',
 })``;
 
 export const AuthorWrapper = styled.div`

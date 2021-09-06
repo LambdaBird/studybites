@@ -20,6 +20,9 @@ export default {
     back_home_button: 'Назад на Главную',
     refresh_page_button: 'Обновить страницу',
   },
+  filter: {
+    placeholder: 'Выберите элемент',
+  },
   filter_author: {
     placeholder: 'Выберите автора',
   },
