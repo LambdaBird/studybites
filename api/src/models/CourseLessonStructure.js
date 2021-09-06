@@ -1,6 +1,10 @@
 import { v4 } from 'uuid';
 
+import objection from 'objection';
+import path from 'path';
 import BaseModel from './BaseModel';
+import { roles } from '../config';
+import { BadRequestError } from '../validation/errors';
 
 export default class CourseLessonStructure extends BaseModel {
   static get tableName() {
@@ -16,6 +20,19 @@ export default class CourseLessonStructure extends BaseModel {
         lessonId: { type: 'number' },
         childId: { type: ['string', 'null'] },
         parentId: { type: ['string', 'null'] },
+      },
+    };
+  }
+
+  static relationMappings() {
+    return {
+      results: {
+        relation: objection.Model.HasManyRelation,
+        modelClass: path.join(__dirname, 'Result'),
+        join: {
+          from: 'course_lesson_structure.lesson_id',
+          to: 'results.lesson_id',
+        },
       },
     };
   }
@@ -54,28 +71,25 @@ export default class CourseLessonStructure extends BaseModel {
       {},
     );
 
-    const lessonsInOrder = [];
-
-    if (lessonsUnordered.length) {
-      const block = lessonsUnordered[0];
-      lessonsInOrder.push(block);
-    }
-
-    for (let i = 0, n = lessonsUnordered.length - 1; i < n; i += 1) {
-      const block = dictionary[lessonsInOrder[i].childId];
-      lessonsInOrder.push(block);
-    }
+    const lessonsInOrder = lessonsUnordered.reduce(
+      (result, value, index) => [
+        ...result,
+        index ? dictionary[result[index - 1].childId] : value,
+      ],
+      [],
+    );
 
     return lessonsInOrder;
   }
 
-  static async getAllLessons({ trx, courseId }) {
-    const lessonsUnordered = await this.query(trx)
+  static async getAllLessons({ trx, courseId, userId }) {
+    const query = this.query(trx)
       .select(
         'lessons.*',
         'course_lesson_structure.id',
         'course_lesson_structure.parent_id',
         'course_lesson_structure.child_id',
+        'course_lesson_structure.lesson_id',
       )
       .leftJoin(
         'lessons',
@@ -88,6 +102,18 @@ export default class CourseLessonStructure extends BaseModel {
         this.knex().raw(`(case when parent_id is null then 0 else 1 end)`),
       );
 
+    if (userId) {
+      query.withGraphFetched('results(byUser)').modifiers({
+        byUser(builder) {
+          builder
+            .where('results.user_id', userId)
+            .andWhere('results.action', 'finish');
+        },
+      });
+    }
+
+    const lessonsUnordered = await query;
+
     if (!lessonsUnordered.length) {
       return [];
     }
@@ -97,5 +123,19 @@ export default class CourseLessonStructure extends BaseModel {
     }
 
     return this.#sortLessons({ lessonsUnordered });
+  }
+
+  static async checkIfEnrollAllowed({ courseId, lessonId, userId }) {
+    const courseLessons = await this.getAllLessons({
+      courseId,
+      userId,
+    });
+
+    const currentLesson = courseLessons.find(
+      (lesson) => !lesson.results.length,
+    );
+    if (currentLesson.lessonId !== lessonId) {
+      throw new BadRequestError('errors.fail_enroll');
+    }
   }
 }

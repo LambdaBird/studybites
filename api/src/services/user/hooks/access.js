@@ -13,8 +13,9 @@ export default async function access({
   const {
     config: {
       userService: { userServiceErrors: errors },
+      globals: { resources },
     },
-    models: { UserRole, Lesson },
+    models: { UserRole, Lesson, Course },
   } = this;
 
   try {
@@ -38,12 +39,22 @@ export default async function access({
     }
 
     if (resourceId && status) {
-      const lesson = await Lesson.query()
-        .findById(resourceId)
-        .whereIn('status', status);
+      if (resourceType === resources.LESSON.name) {
+        const lesson = await Lesson.query()
+          .findById(resourceId)
+          .whereIn('status', status);
 
-      if (!lesson) {
-        throw new AuthorizationError(errors.USER_ERR_UNAUTHORIZED);
+        if (!lesson) {
+          throw new AuthorizationError(errors.USER_ERR_UNAUTHORIZED);
+        }
+      } else {
+        const course = await Course.query()
+          .findById(resourceId)
+          .whereIn('status', status);
+
+        if (!course) {
+          throw new AuthorizationError(errors.USER_ERR_UNAUTHORIZED);
+        }
       }
     }
   } catch (error) {
