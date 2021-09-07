@@ -14,6 +14,7 @@ const options = {
                 id: { type: 'number' },
                 name: { type: 'string' },
                 description: { type: ['string', 'null'] },
+                image: { type: ['string', 'null'] },
                 status: { type: 'string' },
                 createdAt: { type: 'string' },
                 updatedAt: { type: 'string' },

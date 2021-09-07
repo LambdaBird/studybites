@@ -1,10 +1,10 @@
 export function getClosedQuestionCorrectness({
   solution,
-  userResponse: { response },
+  userResponse: { value },
   blockWeight,
 }) {
-  if (solution.includes(response)) {
-    return { error: null, correctness: blockWeight };
+  if (solution.includes(value)) {
+    return blockWeight;
   }
-  return { error: true, correctness: null };
+  return 0;
 }

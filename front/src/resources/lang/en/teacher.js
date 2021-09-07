@@ -57,6 +57,12 @@ export default {
     no_students: 'No students yet!',
     all: 'View all',
   },
+  lesson_funnel: {
+    finish_bite: 'Email sumbited!',
+    start_bite: 'Lesson start',
+    mean: 'Average',
+    median: 'Median',
+  },
   editor_js: {
     tool_names: {
       text: 'Text',
@@ -90,6 +96,11 @@ export default {
       preview: 'Preview',
       move_to_draft: 'Move to draft',
     },
+    cover_image: {
+      title: 'Cover image link',
+      input_placeholder: 'Your image link',
+      not_found: 'Not found',
+    },
     title: {
       placeholder: 'Lesson title',
     },
@@ -99,7 +110,10 @@ export default {
       analytics: 'Analytics',
       archive: 'Archive',
     },
-    description: 'Description',
+    description: {
+      title: 'Description',
+      placeholder: 'Your description',
+    },
     publish_modal: {
       title: 'The lesson is now available to all students',
       ok: 'Ok',
@@ -111,8 +125,10 @@ export default {
       full_name: 'Full Name',
       email: 'Email',
       last_activity: 'Last activity',
+      first_activity: 'First activity',
       not_started: 'Not started',
       action: 'Action',
+      progress: 'Progress',
       edit: 'Edit',
       no_data: 'No data',
       action_remove: 'Remove',

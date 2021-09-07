@@ -57,6 +57,12 @@ export default {
     no_students: 'Еще нет студентов!',
     all: 'Показать всех',
   },
+  lesson_funnel: {
+    finish_bite: 'Емейл оставлен!',
+    start_bite: 'Начало урока',
+    mean: 'Среднее',
+    median: 'Медиана',
+  },
   editor_js: {
     tool_names: {
       text: 'Текст',
@@ -90,6 +96,11 @@ export default {
       preview: 'Предпросмотр',
       move_to_draft: 'Вернуть в черновики',
     },
+    cover_image: {
+      title: 'Ссылка на картинку',
+      input_placeholder: 'Введите вашу ссылку',
+      not_found: 'Не найдено',
+    },
     title: {
       placeholder: 'Название урока',
     },
@@ -99,7 +110,10 @@ export default {
       analytics: 'Аналитика',
       archive: 'Архив',
     },
-    description: 'Описание',
+    description: {
+      title: 'Описание',
+      placeholder: 'Ваше описание',
+    },
     publish_modal: {
       title: 'Теперь урок доступен всем студентам',
       ok: 'Ок',
@@ -111,8 +125,10 @@ export default {
       full_name: 'Полное имя',
       email: 'Email',
       last_activity: 'Последняя активность',
+      first_activity: 'Первая активность',
       not_started: 'Еще не начато',
       action: 'Действие',
+      progress: 'Прогресс',
       edit: 'Изменить',
       no_data: 'Нет данных',
       action_remove: 'Удалить',

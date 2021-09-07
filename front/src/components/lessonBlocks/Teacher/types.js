@@ -7,4 +7,5 @@ export const TeacherPropTypes = {
   status: PropTypes.oneOf(Object.values(Statuses)).isRequired,
   name: PropTypes.string.isRequired,
   id: PropTypes.number.isRequired,
+  image: PropTypes.oneOfType([PropTypes.string, PropTypes.oneOf([null])]),
 };
