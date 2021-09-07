@@ -25,6 +25,7 @@ const options = {
                 },
               },
               blocks: { type: 'array' },
+              courses: { type: 'array' },
             },
           },
         },

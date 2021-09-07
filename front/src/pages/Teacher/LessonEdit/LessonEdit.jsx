@@ -1,4 +1,4 @@
-import { Button, Col, Input, message, Modal, Row, Typography } from 'antd';
+import { Button, Col, Input, message, Row, Typography } from 'antd';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
@@ -6,6 +6,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { RedoOutlined, SaveOutlined, UndoOutlined } from '@ant-design/icons';
 
 import Header from '@sb-ui/components/molecules/Header';
+import { useLessonStatus } from '@sb-ui/hooks/useLessonStatus';
 import { Statuses } from '@sb-ui/pages/Teacher/Home/Dashboard/constants';
 import { queryClient } from '@sb-ui/query';
 import {
@@ -37,6 +38,10 @@ const LessonEdit = () => {
 
   const { t } = useTranslation('teacher');
   const history = useHistory();
+
+  const { updateLessonStatusMutation, isUpdateInProgress } = useLessonStatus({
+    id: lessonId,
+  });
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -179,33 +184,18 @@ const LessonEdit = () => {
     }
   };
 
-  const { mutateAsync: updateLessonStatus, isLoading: isUpdateInProgress } =
-    useMutation(putLesson, {
-      onSuccess: () => {
-        queryClient.invalidateQueries([
-          TEACHER_LESSON_BASE_KEY,
-          {
-            id: lessonId,
-          },
-        ]);
-      },
-    });
-
   const handlePublish = async () => {
-    await updateLessonStatus({
-      lesson: { id: +lessonId, status: Statuses.PUBLIC },
-    });
-    Modal.success({
-      width: 480,
-      title: t('lesson_edit.publish_modal.title'),
-      okText: t('lesson_edit.publish_modal.ok'),
+    updateLessonStatusMutation.mutate({
+      id: lessonId,
+      status: Statuses.PUBLIC,
     });
   };
 
   const handleDraft = async () => {
-    await updateLessonStatus({
+    updateLessonStatusMutation.mutate({ id: lessonId, status: Statuses.DRAFT });
+    /* await updateLessonStatus({
       lesson: { id: +lessonId, status: Statuses.DRAFT },
-    });
+    }); */
   };
 
   const handleInputTitle = (e) => {

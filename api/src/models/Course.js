@@ -106,6 +106,32 @@ export default class Course extends BaseModel {
     return this.query(trx).findById(courseId).patch(course).returning('*');
   }
 
+  static getAllCoursesByLessonId({ lessonId }) {
+    return this.query()
+      .select('courses.*')
+      .join(
+        'course_lesson_structure',
+        'courses.id',
+        '=',
+        'course_lesson_structure.course_id',
+      )
+      .where('course_lesson_structure.lesson_id', '=', lessonId);
+  }
+
+  static updateCoursesStatus({ courses, status }) {
+    return Course.transaction(async (trx) => {
+      return Promise.all(
+        courses.map((course) => {
+          return Course.updateCourse({
+            trx,
+            courseId: course.id,
+            course: { status },
+          });
+        }),
+      );
+    });
+  }
+
   static getAllMaintainableCourses({
     userId,
     offset: start,
@@ -114,7 +140,6 @@ export default class Course extends BaseModel {
     status,
   }) {
     const end = start + limit - 1;
-
     return this.query()
       .skipUndefined()
       .join('users_roles', (builder) =>
@@ -136,6 +161,7 @@ export default class Course extends BaseModel {
       )
       .groupBy('courses.id')
       .range(start, end)
-      .withGraphFetched('students');
+      .withGraphFetched('students')
+      .withGraphFetched('lessons');
   }
 }

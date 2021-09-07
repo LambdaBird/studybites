@@ -26,7 +26,7 @@ class Lesson extends BaseModel {
         image: { type: 'string' },
         status: {
           type: 'string',
-          enum: ['Draft', 'Public', 'Private', 'Archived'],
+          enum: resources.LESSON.status,
           default: 'Draft',
         },
         createdAt: { type: 'string' },
@@ -37,6 +37,19 @@ class Lesson extends BaseModel {
 
   static relationMappings() {
     return {
+      courses: {
+        relation: objection.Model.ManyToManyRelation,
+        modelClass: path.join(__dirname, 'Course'),
+        join: {
+          from: 'lessons.id',
+          through: {
+            modelClass: path.join(__dirname, 'CourseLessonStructure'),
+            from: 'course_lesson_structure.lesson_id',
+            to: 'course_lesson_structure.course_id',
+          },
+          to: 'courses.id',
+        },
+      },
       students: {
         relation: objection.Model.ManyToManyRelation,
         modelClass: path.join(__dirname, 'User'),
@@ -247,6 +260,10 @@ class Lesson extends BaseModel {
       .withGraphFetched('author');
   }
 
+  static updateLessonStatus({ lessonId, status }) {
+    return this.query().findById(lessonId).patch({ status }).returning('*');
+  }
+
   static getAllFinishedLessons({ userId, offset: start, limit, search }) {
     const end = start + limit - 1;
 
@@ -318,6 +335,7 @@ class Lesson extends BaseModel {
       .orderBy('lessons.created_at', 'desc')
       .groupBy('lessons.id')
       .withGraphFetched('students')
+      .withGraphFetched('courses')
       .range(start, end);
   }
 
