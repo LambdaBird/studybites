@@ -39,6 +39,7 @@ const OpenLessons = () => {
         limit: PAGE_SIZE,
         search: searchText,
         tags: keywords,
+        authors,
       },
     ],
     getLessons,

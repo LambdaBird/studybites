@@ -29,6 +29,7 @@ const LessonsList = ({ title, notFound, query }) => {
         offset: (currentPage - 1) * PAGE_SIZE,
         limit: PAGE_SIZE,
         search: searchText,
+        authors,
         tags: keywords,
       },
     ],
