@@ -17,6 +17,7 @@ const options = {
             question: { type: 'string' },
             answers: { type: 'array' },
             response: { type: ['array', 'string'] },
+            words: { type: ['array', 'string'] },
             isSolved: { type: 'boolean' },
             value: { type: 'string' },
           },
@@ -32,6 +33,9 @@ const options = {
             },
             {
               required: ['value'],
+            },
+            {
+              required: ['words'],
             },
           ],
         },
@@ -74,7 +78,7 @@ const options = {
   },
 };
 
-async function checkAllowed({
+export async function checkAllowed({
   userId,
   lessonId,
   Result,
@@ -204,15 +208,11 @@ async function handler({
 
   let correctness;
   if (action === 'response') {
-    const getCorrectnessResult = await Block.getCorrectness({
+    correctness = await Block.getCorrectness({
       blockId,
       revision,
       userResponse: reply,
     });
-    if (getCorrectnessResult.error) {
-      throw new BadRequestError(errors.LESSON_ERR_FAIL_LEARN);
-    }
-    correctness = getCorrectnessResult.correctness;
   }
 
   /**

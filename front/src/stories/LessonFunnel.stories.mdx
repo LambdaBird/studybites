@@ -1,0 +1,43 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+
+import LessonFunnel from '@sb-ui/pages/Teacher/LessonStudents/LessonFunnel';
+
+import generateLessonFunnelData from './generateLessonFunnelData';
+
+<Meta
+  title="statistics/LessonFunnel"
+  component={LessonFunnel}
+/>
+
+# LessonFunnel
+
+Component `LessonFunnel` renderß
+
+export const Template = (args) => <LessonFunnel {...args} />;
+
+1. Empty value `''`
+2. Easy `'easy'`
+3. Medium `'Medium123'`
+4. Hard `'Hard123###'`
+
+<Canvas>
+  <Story
+    name="Small funnel"
+    args={{
+      bites: generateLessonFunnelData(),
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+<Canvas>
+  <Story
+    name="Big funnel"
+    args={{
+      bites: generateLessonFunnelData(42, 1024),
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>

@@ -23,6 +23,7 @@ class Lesson extends BaseModel {
         id: { type: 'integer' },
         name: { type: 'string' },
         description: { type: 'string' },
+        image: { type: 'string' },
         status: {
           type: 'string',
           enum: ['Draft', 'Public', 'Private', 'Archived'],
@@ -315,6 +316,7 @@ class Lesson extends BaseModel {
         `%${search ? search.replace(/ /g, '%') : '%'}%`,
       )
       .orderBy('lessons.created_at', 'desc')
+      .groupBy('lessons.id')
       .withGraphFetched('students')
       .range(start, end);
   }

@@ -11,6 +11,7 @@ const options = {
               id: { type: 'number' },
               name: { type: 'string' },
               description: { type: ['string', 'null'] },
+              image: { type: ['string', 'null'] },
               status: { type: 'string' },
               studentsCount: { type: 'number' },
               createdAt: { type: 'string' },
@@ -50,11 +51,15 @@ const options = {
 async function handler({ params: { lessonId } }) {
   const {
     models: { Lesson, LessonBlockStructure, UserRole },
+    config: {
+      globals: { resources },
+    },
   } = this;
 
   const lesson = await Lesson.findById({ lessonId });
-  const { count: studentsCount } = await UserRole.getLessonStudentsCount({
-    lessonId,
+  const { count: studentsCount } = await UserRole.getResourceStudentsCount({
+    resourceId: lessonId,
+    resourceType: resources.LESSON.name,
   });
 
   lesson.studentsCount = studentsCount;

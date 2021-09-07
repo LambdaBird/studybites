@@ -32,12 +32,13 @@ async function handler({
     models: { UserRole },
   } = this;
 
-  const { total, results: students } = await UserRole.getAllStudentsOfTeacher({
-    userId,
-    offset,
-    limit,
-    search,
-  });
+  const { total, results: students } =
+    await UserRole.getStudentsOfTeacherLessons({
+      userId,
+      offset,
+      limit,
+      search,
+    });
 
   return { total, students };
 }

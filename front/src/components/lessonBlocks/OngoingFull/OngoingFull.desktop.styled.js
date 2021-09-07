@@ -1,4 +1,4 @@
-import { Avatar, Col, Progress, Row, Typography } from 'antd';
+import { Avatar, Col, Image, Progress, Row, Typography } from 'antd';
 import styled from 'styled-components';
 
 import variables from '@sb-ui/theme/variables';
@@ -11,7 +11,6 @@ export const MainSpace = styled(Row)`
 `;
 
 export const LeftContent = styled(Col)`
-  margin-right: 1.5rem;
   padding: 1rem 1rem 0;
 `;
 
@@ -22,9 +21,12 @@ export const RightContent = styled(Col)`
   padding: 1rem;
 `;
 
-export const LessonImg = styled.img`
-  height: 8rem;
-  width: 200px;
+export const LessonImg = styled(Image).attrs({
+  height: '8rem',
+  width: '15rem',
+  preview: false,
+})`
+  object-fit: cover;
 `;
 
 export const DescriptionText = styled(Paragraph)`

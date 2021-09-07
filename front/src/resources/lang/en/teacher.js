@@ -4,7 +4,22 @@ export default {
     lessons: 'Lessons',
     students: 'Students',
   },
+  course_dashboard: {
+    error: 'Can not fetch courses',
+    title: 'My courses',
+    add_button: 'Add course',
+    search: {
+      placeholder: 'Name',
+    },
+    menu: {
+      archive: 'Archive Course',
+      publish: 'Publish Course',
+      restore: 'Restore Course',
+      draft: 'Move to Draft',
+    },
+  },
   lesson_dashboard: {
+    error: 'Can not fetch lessons',
     title: 'My lessons',
     add_button: 'Add lesson',
     create_course_button: 'Add course',
@@ -43,6 +58,12 @@ export default {
     invite: 'Invite Now',
     no_students: 'No students yet!',
     all: 'View all',
+  },
+  lesson_funnel: {
+    finish_bite: 'Email sumbited!',
+    start_bite: 'Lesson start',
+    mean: 'Average',
+    median: 'Median',
   },
   editor_js: {
     tool_names: {
@@ -86,6 +107,11 @@ export default {
       preview: 'Preview',
       move_to_draft: 'Move to draft',
     },
+    cover_image: {
+      title: 'Cover image link',
+      input_placeholder: 'Your image link',
+      not_found: 'Not found',
+    },
     title: {
       placeholder: 'Lesson title',
     },
@@ -95,7 +121,10 @@ export default {
       analytics: 'Analytics',
       archive: 'Archive',
     },
-    description: 'Description',
+    description: {
+      title: 'Description',
+      placeholder: 'Your description',
+    },
     publish_modal: {
       title: 'The lesson is now available to all students',
       ok: 'Ok',
@@ -107,8 +136,10 @@ export default {
       full_name: 'Full Name',
       email: 'Email',
       last_activity: 'Last activity',
+      first_activity: 'First activity',
       not_started: 'Not started',
       action: 'Action',
+      progress: 'Progress',
       edit: 'Edit',
       no_data: 'No data',
       action_remove: 'Remove',
