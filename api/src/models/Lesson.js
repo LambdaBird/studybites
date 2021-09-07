@@ -315,6 +315,7 @@ class Lesson extends BaseModel {
         `%${search ? search.replace(/ /g, '%') : '%'}%`,
       )
       .orderBy('lessons.created_at', 'desc')
+      .groupBy('lessons.id')
       .withGraphFetched('students')
       .range(start, end);
   }

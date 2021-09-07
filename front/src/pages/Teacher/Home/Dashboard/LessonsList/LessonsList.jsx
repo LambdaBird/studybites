@@ -1,11 +1,11 @@
-import TeacherLesson from '@sb-ui/components/lessonBlocks/Teacher';
+import { Course, Lesson } from '@sb-ui/components/lessonBlocks/Teacher';
 
 import AddCard from '../AddCard';
 import { LessonsListPropTypes } from '../types';
 
 import * as S from '../Dashboard.styled';
 
-const LessonsList = ({ lessons, onCreateLesson, isAddNewShown }) => (
+const LessonsList = ({ lessons, onCreateLesson, isAddNewShown, isCourse }) => (
   <>
     {isAddNewShown ? (
       <S.CardCol>
@@ -14,12 +14,7 @@ const LessonsList = ({ lessons, onCreateLesson, isAddNewShown }) => (
     ) : (
       lessons.map((lesson) => (
         <S.CardCol key={lesson.id}>
-          <TeacherLesson
-            id={lesson.id}
-            title={lesson.name}
-            students={lesson.students}
-            status={lesson.status}
-          />
+          {isCourse ? <Course {...lesson} /> : <Lesson {...lesson} />}
         </S.CardCol>
       ))
     )}

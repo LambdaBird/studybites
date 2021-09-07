@@ -5,13 +5,21 @@ export default {
     students: 'Students',
   },
   course_dashboard: {
+    error: 'Can not fetch courses',
     title: 'My courses',
     add_button: 'Add course',
     search: {
       placeholder: 'Name',
     },
+    menu: {
+      archive: 'Archive Course',
+      publish: 'Publish Course',
+      restore: 'Restore Course',
+      draft: 'Move to Draft',
+    },
   },
   lesson_dashboard: {
+    error: 'Can not fetch lessons',
     title: 'My lessons',
     add_button: 'Add lesson',
     card: {

@@ -1,4 +1,4 @@
-import { Alert, Button, Row, Select, Skeleton, Space } from 'antd';
+import { Button, message, Row, Select, Skeleton, Space } from 'antd';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
@@ -26,11 +26,7 @@ const CoursesDashboard = () => {
   const [search, setSearch] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
 
-  const {
-    data: responseData,
-    isLoading,
-    isError,
-  } = useQuery(
+  const { data: responseData, isLoading } = useQuery(
     [
       TEACHER_COURSES_BASE_KEY,
       {
@@ -41,7 +37,15 @@ const CoursesDashboard = () => {
       },
     ],
     getTeacherCourses,
-    { keepPreviousData: true },
+    {
+      keepPreviousData: true,
+      onError: () => {
+        message.error({
+          content: t('course_dashboard.error'),
+          duration: 2,
+        });
+      },
+    },
   );
 
   const { courses, total } = responseData || {};
@@ -87,9 +91,6 @@ const CoursesDashboard = () => {
           {t('course_dashboard.add_button')}
         </Button>
       </S.DashboardControls>
-      {isError && (
-        <Alert message="Can not fetch courses" type="error" showIcon />
-      )}
       {isLoading ? (
         skeletonArray(pageLimit).map((el) => (
           <S.CardCol key={el.id}>
@@ -98,6 +99,7 @@ const CoursesDashboard = () => {
         ))
       ) : (
         <LessonsList
+          isCourse
           lessons={courses}
           onCreateLesson={handleCreateCourse}
           isAddNewShown={isAddNewShown}

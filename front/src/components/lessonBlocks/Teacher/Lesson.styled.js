@@ -38,7 +38,12 @@ export const BadgeWrapper = styled.div`
   align-items: flex-start;
 `;
 
-export const TitleEllipsis = styled(Title)`
+export const TitleEllipsis = styled(Title).attrs({
+  ellipsis: {
+    tooltip: true,
+  },
+  level: 4,
+})`
   overflow-wrap: anywhere;
 `;
 

@@ -13,5 +13,6 @@ export const TEACHER_STUDENTS = `${TEACHER_HOME}/students`;
 export const LESSONS_NEW = `${TEACHER_HOME}/lessons/new`;
 export const COURSES_NEW = `${TEACHER_HOME}/courses/new`;
 export const LESSONS_EDIT = `${TEACHER_HOME}/lessons/:id`;
+export const COURSES_EDIT = `${TEACHER_HOME}/courses/:id`;
 export const TEACHER_LESSONS_STUDENTS = `${LESSONS_EDIT}/students`;
 export const LESSONS_PREVIEW = `${TEACHER_HOME}/lessons/preview/:id`;
