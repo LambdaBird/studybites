@@ -12,11 +12,6 @@ export const putLesson = async (params) => {
   return data;
 };
 
-export const putCourse = async (params) => {
-  const { data } = await api.put(`${PATH}/courses/${params.course.id}`, params);
-  return data;
-};
-
 export const getLesson = async ({ queryKey }) => {
   const [, { id }] = queryKey;
 

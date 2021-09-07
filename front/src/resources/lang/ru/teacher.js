@@ -22,7 +22,6 @@ export default {
     error: 'Невозможно получить список уроков',
     title: 'Мои уроки',
     add_button: 'Добавить урок',
-    create_course_button: 'Создать курс',
     card: {
       edit: 'Редактировать',
       no_students: 'Нет студентов',
@@ -89,12 +88,24 @@ export default {
     },
   },
   course_edit: {
+    error_course_name: 'Отсуствует название курса',
     lesson_search: {
       placeholder: 'Выберите урок',
     },
     to_lesson_button: 'Перейти к уроку',
     title: {
       placeholder: 'Название курса',
+    },
+    publish_modal: {
+      title: 'Теперь курс доступен всем студентам',
+      ok: 'Ок',
+    },
+    message: {
+      success_created: 'Курс успешно создан',
+      success_updated: 'Курс успешно обновлен',
+      error_created: 'Ошибка при создании',
+      error_updated: 'Ошибка при обновлении',
+      error_course_name: 'Отсутствует название курса',
     },
   },
   lesson_edit: {

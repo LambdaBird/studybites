@@ -1,6 +1,8 @@
 import { v4 } from 'uuid';
-
+import objection from 'objection';
+import path from 'path';
 import BaseModel from './BaseModel';
+import { resources, roles } from '../config';
 
 export default class CourseLessonStructure extends BaseModel {
   static get tableName() {
@@ -16,6 +18,32 @@ export default class CourseLessonStructure extends BaseModel {
         lessonId: { type: 'number' },
         childId: { type: ['string', 'null'] },
         parentId: { type: ['string', 'null'] },
+      },
+    };
+  }
+
+  static relationMappings() {
+    return {
+      students: {
+        relation: objection.Model.ManyToManyRelation,
+        modelClass: path.join(__dirname, 'User'),
+        join: {
+          from: 'course_lesson_structure.lesson_id',
+          through: {
+            modelClass: path.join(__dirname, 'UserRole'),
+            from: 'users_roles.resource_id',
+            to: 'users_roles.user_id',
+          },
+          to: 'users.id',
+        },
+        modify: (query) => {
+          return query
+            .where({
+              resource_type: resources.LESSON.name,
+              role_id: roles.STUDENT.id,
+            })
+            .select('id', 'first_name', 'last_name');
+        },
       },
     };
   }
@@ -48,7 +76,7 @@ export default class CourseLessonStructure extends BaseModel {
     const dictionary = lessonsUnordered.reduce(
       (result, filter) => ({
         ...result,
-        [filter.id]: filter,
+        [filter.structureId]: filter,
       }),
       {},
     );
@@ -66,7 +94,7 @@ export default class CourseLessonStructure extends BaseModel {
     const lessonsUnordered = await this.query(trx)
       .select(
         'lessons.*',
-        'course_lesson_structure.id',
+        this.knex().raw('course_lesson_structure.id structure_id'),
         'course_lesson_structure.parent_id',
         'course_lesson_structure.child_id',
       )
@@ -79,7 +107,9 @@ export default class CourseLessonStructure extends BaseModel {
       .where('course_lesson_structure.course_id', courseId)
       .orderBy(
         this.knex().raw(`(case when parent_id is null then 0 else 1 end)`),
-      );
+      )
+      .groupBy('course_lesson_structure.id', 'lessons.id')
+      .withGraphFetched('students');
 
     if (!lessonsUnordered.length) {
       return [];

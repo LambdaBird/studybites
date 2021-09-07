@@ -96,7 +96,9 @@ export const HeaderButtons = styled(Col)`
   margin-right: 2rem;
 `;
 
-export const PublishButton = styled(Button)`
+export const PublishButton = styled(Button).attrs({
+  type: 'primary',
+})`
   margin-left: 1rem;
 `;
 

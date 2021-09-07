@@ -16,6 +16,7 @@ const Course = ({
   id,
   name,
   description,
+  status,
   students: studentsData,
   currentLesson,
   removeLessonById,
@@ -28,10 +29,10 @@ const Course = ({
 
   const students = useMemo(
     () =>
-      studentsData.map(({ id: studentId, firstName = '', lastName = '' }) => ({
+      studentsData?.map(({ id: studentId, firstName = '', lastName = '' }) => ({
         id: studentId,
         name: `${firstName} ${lastName}`,
-      })),
+      })) || [],
     [studentsData],
   );
 
@@ -48,7 +49,7 @@ const Course = ({
       <S.ImageCol span={8}>
         <S.BadgeWrapper>
           <S.CardBadge>
-            <S.StatusText>none</S.StatusText>
+            <S.StatusText>{status}</S.StatusText>
           </S.CardBadge>
         </S.BadgeWrapper>
         <S.CardImage src={lesson} />
@@ -103,6 +104,7 @@ Course.propTypes = {
   id: PropTypes.number,
   name: PropTypes.string,
   description: PropTypes.string,
+  status: PropTypes.string,
   students: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number,

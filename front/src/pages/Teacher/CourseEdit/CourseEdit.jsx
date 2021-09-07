@@ -1,76 +1,74 @@
-import { Button, Col, Input, Row, Typography } from 'antd';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { Button, Col, Input, message, Row, Typography } from 'antd';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
 import { SaveOutlined } from '@ant-design/icons';
 
 import CourseLesson from '@sb-ui/components/lessonBlocks/Course';
 import Header from '@sb-ui/components/molecules/Header';
+import { Statuses } from '@sb-ui/pages/Teacher/Home/Dashboard/constants';
 
+import { useCourse } from './useCourse';
+import { useCourseParams } from './useCourseParams';
 import * as S from './CourseEdit.styled';
 
 const { TextArea } = Input;
 
-const MAX_NAME_LENGTH = 255;
-
-const fetchLessons = async () => {
-  return [
-    {
-      id: 1,
-      name: 'Lesson 1',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. quod? consectetur adipisicing elit. quod',
-      students: [{ id: 1, firstName: 'Test', lastName: 'Test' }],
-    },
-    {
-      id: 2,
-      name: 'Lesson 2',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. quod?  adipisicing elit. quod',
-      students: [{ id: 1, firstName: 'Test', lastName: 'Test' }],
-    },
-    {
-      id: 3,
-      name: 'Lesson 3',
-
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. quod? consectetur fyrert  adipisicing elit. quod',
-      students: [{ id: 1, firstName: 'Test', lastName: 'Test' }],
-    },
-    {
-      id: 4,
-      name: 'Lesson 4',
-      description:
-        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. quod? consectetur adipisicing elit. quo asdfasdf d',
-      students: [{ id: 1, firstName: 'Test', lastName: 'Test' }],
-    },
-  ];
-};
-
 const CourseEdit = () => {
-  const { t } = useTranslation('teacher');
-  const inputTitle = useRef(null);
+  const { id: courseId } = useParams();
+  const isEditCourse = useMemo(() => courseId !== 'new', []);
+  const isCurrentlyEditing = courseId !== 'new';
 
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const status = 'draft';
+  const { t } = useTranslation('teacher');
+
+  const [search, setSearch] = useState('');
+  const {
+    courseData,
+    createCourseMutation,
+    updateCourseMutation,
+    teacherLessons,
+    handlePublish,
+    handleDraft,
+    isUpdateInProgress,
+    isSaveButtonDisabled,
+  } = useCourse({
+    isEditCourse,
+    courseId,
+    search,
+  });
 
   const [lessonsAll, setLessonsAll] = useState([]);
   const [options, setOptions] = useState([]);
-  const [lessons, setLessons] = useState([]);
-
-  const handleSearch = async (search) => {
-    const data = await fetchLessons({ search });
-    setLessonsAll(data);
-    setOptions(data.map((x) => ({ value: x.id, label: x.name })));
-  };
-
   const [lessonsValue, setLessonsValue] = useState([]);
-
+  const [lessons, setLessons] = useState([]);
   const [currentLesson, setCurrentLesson] = useState(null);
 
+  const {
+    handleInputTitle,
+    inputTitle,
+    name,
+    description,
+    handleChangeDescription,
+  } = useCourseParams({
+    course: courseData?.course,
+  });
+
   useEffect(() => {
-    handleSearch('');
+    if (courseData?.course?.lessons) {
+      setLessons(courseData.course.lessons);
+    }
+  }, [courseData?.course.lessons]);
+
+  const handleSearch = useCallback((value) => {
+    setSearch(value);
   }, []);
+
+  useEffect(() => {
+    if (teacherLessons) {
+      setLessonsAll(teacherLessons);
+      setOptions(teacherLessons.map((x) => ({ value: x.id, label: x.name })));
+    }
+  }, [teacherLessons]);
 
   const changeSelectOptions = useCallback(() => {
     setOptions(
@@ -83,16 +81,9 @@ const CourseEdit = () => {
     );
   }, [lessons, lessonsAll]);
 
-  const removeLessonById = (id) => {
+  const removeLessonById = useCallback((id) => {
     setLessons((prev) => prev.filter((lesson) => lesson.id !== id));
-  };
-
-  const handleInputTitle = (e) => {
-    const newText = e.target.value;
-    if (newText.length < MAX_NAME_LENGTH) {
-      setName(newText);
-    }
-  };
+  }, []);
 
   const handleAddLessonClick = () => {
     setLessons((prev) => {
@@ -115,13 +106,50 @@ const CourseEdit = () => {
     changeSelectOptions();
   }, [changeSelectOptions, lessons]);
 
+  const handleSave = () => {
+    const params = {
+      course: {
+        id: parseInt(courseId, 10) || undefined,
+        name,
+        description,
+        status: Statuses.DRAFT,
+      },
+      lessons,
+    };
+    if (!name) {
+      message.error({
+        content: t('course_edit.message.error_course_name'),
+        duration: 2,
+      });
+      return;
+    }
+
+    if (isCurrentlyEditing) {
+      updateCourseMutation.mutate(params);
+    } else {
+      createCourseMutation.mutate(params);
+    }
+  };
+
   return (
     <>
-      <Header>
+      <Header hideOnScroll>
         <S.HeaderButtons>
-          <S.PublishButton type="primary">
-            {t('lesson_edit.buttons.publish')}
-          </S.PublishButton>
+          <Button disabled={!isCurrentlyEditing}>
+            {t('lesson_edit.buttons.preview')}
+          </Button>
+          {courseData?.course?.status === Statuses.PUBLIC ? (
+            <S.PublishButton onClick={handleDraft} loading={isUpdateInProgress}>
+              {t('lesson_edit.buttons.move_to_draft')}
+            </S.PublishButton>
+          ) : (
+            <S.PublishButton
+              onClick={handlePublish}
+              loading={isUpdateInProgress}
+            >
+              {t('lesson_edit.buttons.publish')}
+            </S.PublishButton>
+          )}
         </S.HeaderButtons>
       </Header>
       <S.Page>
@@ -138,9 +166,9 @@ const CourseEdit = () => {
                 <S.BadgeWrapper>
                   <S.CardBadge>
                     <S.StatusText>
-                      {status
+                      {courseData?.course?.status
                         ? t(
-                            `lesson_dashboard.status.${status.toLocaleLowerCase()}`,
+                            `lesson_dashboard.status.${courseData?.course.status.toLocaleLowerCase()}`,
                           )
                         : t('lesson_dashboard.status.draft')}
                     </S.StatusText>
@@ -148,8 +176,8 @@ const CourseEdit = () => {
                 </S.BadgeWrapper>
               </S.InputWrapper>
               <S.CourseWrapper onMouseLeave={handleMouseLeaveCourse}>
-                {lessons.map((lesson, index) => (
-                  <S.CourseLessonWrapper>
+                {lessons?.map((lesson, index) => (
+                  <S.CourseLessonWrapper key={lesson.id}>
                     <CourseLesson
                       onMouseEnter={() => {
                         setCurrentLesson(lesson.id);
@@ -158,7 +186,8 @@ const CourseEdit = () => {
                       removeLessonById={removeLessonById}
                       {...lesson}
                     />
-                    {(index !== lessons.length - 1 || options.length > 0) && (
+                    {(index !== lessons.length - 1 ||
+                      courseData?.course?.status === Statuses.DRAFT) && (
                       <S.DivideLesson />
                     )}
                   </S.CourseLessonWrapper>
@@ -168,6 +197,7 @@ const CourseEdit = () => {
                 <S.Select
                   value={lessonsValue}
                   placeholder={t('course_edit.lesson_search.placeholder')}
+                  filterOption={false}
                   onSearch={handleSearch}
                   onChange={setLessonsValue}
                   options={options}
@@ -181,7 +211,11 @@ const CourseEdit = () => {
           <S.RightCol>
             <S.RowStyled>
               <Col span={24}>
-                <S.SaveButton icon={<SaveOutlined />}>
+                <S.SaveButton
+                  disabled={isSaveButtonDisabled}
+                  onClick={handleSave}
+                  icon={<SaveOutlined />}
+                >
                   {t('lesson_edit.buttons.save')}
                 </S.SaveButton>
               </Col>
@@ -210,11 +244,12 @@ const CourseEdit = () => {
               </Col>
             </S.RowStyled>
             <Row gutter={[0, 16]}>
-              <Col span={24}>{t('lesson_edit.description')}</Col>
+              <Col span={24}>{t('lesson_edit.description.title')}</Col>
               <Col span={24}>
                 <TextArea
                   value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder={t('lesson_edit.description.placeholder')}
+                  onChange={handleChangeDescription}
                   showCount
                   maxLength={140}
                 />
