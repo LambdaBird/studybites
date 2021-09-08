@@ -8,7 +8,7 @@ export default async function access({
   resourceType,
   roleId,
   resourceId,
-  status,
+  status: allowedStatuses,
 }) {
   const {
     config: {
@@ -38,23 +38,17 @@ export default async function access({
       throw new AuthorizationError(errors.USER_ERR_UNAUTHORIZED);
     }
 
-    if (resourceId && status) {
-      if (resourceType === resources.LESSON.name) {
-        const lesson = await Lesson.query()
-          .findById(resourceId)
-          .whereIn('status', status);
+    if (resourceId && allowedStatuses) {
+      const resource = await (resourceType === resources.LESSON.name
+        ? Lesson
+        : Course
+      )
+        .query()
+        .findById(resourceId)
+        .whereIn('status', allowedStatuses);
 
-        if (!lesson) {
-          throw new AuthorizationError(errors.USER_ERR_UNAUTHORIZED);
-        }
-      } else {
-        const course = await Course.query()
-          .findById(resourceId)
-          .whereIn('status', status);
-
-        if (!course) {
-          throw new AuthorizationError(errors.USER_ERR_UNAUTHORIZED);
-        }
+      if (!resource) {
+        throw new AuthorizationError(errors.USER_ERR_UNAUTHORIZED);
       }
     }
   } catch (error) {
