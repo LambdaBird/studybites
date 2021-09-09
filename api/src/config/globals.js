@@ -21,6 +21,7 @@ export const roles = {
 export const searchLimits = {
   USER_SEARCH_LIMIT: 10,
   LESSON_SEARCH_LIMIT: 10,
+  COURSE_SEARCH_LIMIT: 10,
   KEYWORD_SEARCH_LIMIT: 10,
 };
 
@@ -29,6 +30,10 @@ export const resources = {
     name: 'lesson',
     status: ['Draft', 'Public', 'Private', 'Archived'],
     learnStatus: ['Public', 'Draft'],
+  },
+  COURSE: {
+    name: 'course',
+    status: ['Draft', 'Public', 'Private', 'Archived'],
   },
 };
 

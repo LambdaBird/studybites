@@ -9,6 +9,8 @@ import Lesson from './models/Lesson';
 import Block from './models/Block';
 import LessonBlockStructure from './models/LessonBlockStructure';
 import Result from './models/Result';
+import Course from './models/Course';
+import CourseLessonStructure from './models/CourseLessonStructure';
 import Keyword from './models/Keyword';
 import ResourceKeyword from './models/ResourceKeyword';
 
@@ -16,7 +18,8 @@ import userService from './services/user';
 import lessonsService from './services/lessons';
 import learnService from './services/learn';
 import lessonsManagementService from './services/lessons-management';
-import { keywordsService } from './services/keywords';
+import coursesManagementService from './services/courses-management';
+import keywordsService from './services/keywords';
 
 import errorsAndValidation from './validation';
 
@@ -43,6 +46,8 @@ export default (options = {}) => {
       Block,
       LessonBlockStructure,
       Result,
+      Course,
+      CourseLessonStructure,
       Keyword,
       ResourceKeyword,
     ],
@@ -62,6 +67,10 @@ export default (options = {}) => {
 
   app.register(lessonsManagementService, {
     prefix: '/api/v1/lessons-management',
+  });
+
+  app.register(coursesManagementService, {
+    prefix: '/api/v1/courses-management',
   });
 
   app.register(keywordsService, {

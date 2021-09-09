@@ -1,12 +1,12 @@
 const options = {
   schema: {
-    querystring: { $ref: 'userSearch#' },
+    querystring: { $ref: 'courseSearch#' },
     response: {
       200: {
         type: 'object',
         properties: {
           total: { type: 'number' },
-          students: { type: 'array' },
+          courses: { type: 'array' },
         },
       },
       '4xx': { $ref: '4xx#' },
@@ -26,21 +26,21 @@ const options = {
 
 async function handler({
   user: { id: userId },
-  query: { search, offset, limit },
+  query: { search, offset, limit, status },
 }) {
   const {
-    models: { UserRole },
+    models: { Course },
   } = this;
 
-  const { total, results: students } =
-    await UserRole.getStudentsOfTeacherLessons({
-      userId,
-      offset,
-      limit,
-      search,
-    });
+  const { total, results: courses } = await Course.getAllMaintainableCourses({
+    userId,
+    offset,
+    limit,
+    search,
+    status,
+  });
 
-  return { total, students };
+  return { total, courses };
 }
 
 export default { options, handler };

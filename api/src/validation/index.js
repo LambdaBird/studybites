@@ -10,6 +10,9 @@ import {
   userSearch,
   lessonStatus,
   passwordPattern,
+  courseSearch,
+  courseStatus,
+  courseIdParam,
   keywordSearch,
 } from './schemas';
 import errorHandler from './errorHandler';
@@ -24,8 +27,18 @@ export default fp((instance, opts, next) => {
   });
 
   instance.addSchema({
+    $id: 'paramsCourseId',
+    ...courseIdParam,
+  });
+
+  instance.addSchema({
     $id: 'lessonSearch',
     ...lessonSearch,
+  });
+
+  instance.addSchema({
+    $id: 'courseSearch',
+    ...courseSearch,
   });
 
   instance.addSchema({
@@ -51,6 +64,11 @@ export default fp((instance, opts, next) => {
   instance.addSchema({
     $id: 'lessonStatus',
     ...lessonStatus,
+  });
+
+  instance.addSchema({
+    $id: 'courseStatus',
+    ...courseStatus,
   });
 
   instance.addSchema({

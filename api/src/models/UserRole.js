@@ -62,15 +62,29 @@ class UserRole extends BaseModel {
     };
   }
 
-  static getAllStudentsOfLesson({ lessonId, offset: start, limit, search }) {
+  static getAllStudentsOfResource({
+    resourceId,
+    offset: start,
+    limit,
+    search,
+    resourceType = resources.LESSON.name,
+  }) {
     const end = start + limit - 1;
-    return this.query()
+
+    const query = this.query()
       .skipUndefined()
       .select('users.id', 'users.email', 'users.first_name', 'users.last_name')
-      .innerJoin('users', 'users.id', '=', 'users_roles.user_id')
-      .where('users_roles.resource_type', resources.LESSON.name)
-      .andWhere('users_roles.resource_id', lessonId)
-      .andWhere('users_roles.role_id', roles.STUDENT.id)
+      .join('users', (builder) =>
+        builder
+          .on('users_roles.user_id', '=', 'users.id')
+          .andOn('users_roles.role_id', '=', roles.STUDENT.id)
+          .andOn(
+            'users_roles.resource_type',
+            '=',
+            this.knex().raw('?', [resourceType]),
+          ),
+      )
+      .where('users_roles.resource_id', resourceId)
       .groupBy('users.id', 'users_roles.user_id')
       .andWhere(
         this.knex().raw(
@@ -79,14 +93,19 @@ class UserRole extends BaseModel {
         'ilike',
         search ? `%${search.replace(/ /g, '%')}%` : undefined,
       )
-      .range(start, end)
-      .withGraphFetched('results')
-      .modifyGraph('results', (builder) => {
-        builder.where('lesson_id', lessonId);
-      });
+      .range(start, end);
+
+    if (resourceType === resources.LESSON.name) {
+      return query
+        .withGraphFetched('results')
+        .modifyGraph('results', (builder) => {
+          builder.where('lesson_id', resourceId);
+        });
+    }
+    return query;
   }
 
-  static getAllStudentsOfTeacher({ userId, offset: start, limit, search }) {
+  static getStudentsOfTeacherLessons({ userId, offset: start, limit, search }) {
     const end = start + limit - 1;
     return this.query()
       .skipUndefined()
@@ -114,6 +133,43 @@ class UserRole extends BaseModel {
       )
       .where('users_roles.user_id', userId)
       .andWhere('users_roles.role_id', roles.MAINTAINER.id)
+      .andWhere('users_roles.resource_type', resources.LESSON.name)
+      .andWhere('students.role_id', roles.STUDENT.id)
+      .andWhere(
+        this.knex().raw(
+          `concat(users.email, ' ', users.first_name, ' ', users.last_name, ' ', users.first_name)`,
+        ),
+        'ilike',
+        search ? `%${search.replace(/ /g, '%')}%` : undefined,
+      )
+      .groupBy('users.id')
+      .range(start, end);
+  }
+
+  static getStudentsOfTeacherCourses({ userId, offset: start, limit, search }) {
+    const end = start + limit - 1;
+
+    return this.query()
+      .skipUndefined()
+      .select(
+        'users.id',
+        'users.first_name',
+        'users.last_name',
+        'users.email',
+        this.knex().raw(`
+          json_agg(distinct jsonb_build_object('id', courses.id, 'name', courses.name)) courses
+        `),
+      )
+      .join('courses', 'courses.id', '=', 'users_roles.resource_id')
+      .join(
+        this.knex().raw(`
+        users_roles students on students.resource_id = courses.id
+      `),
+      )
+      .join('users', 'users.id', '=', 'students.user_id')
+      .where('users_roles.user_id', userId)
+      .andWhere('users_roles.role_id', roles.MAINTAINER.id)
+      .andWhere('users_roles.resource_type', resources.COURSE.name)
       .andWhere('students.role_id', roles.STUDENT.id)
       .andWhere(
         this.knex().raw(
@@ -160,24 +216,29 @@ class UserRole extends BaseModel {
     });
   }
 
-  static getLessonStudentsCount({ lessonId }) {
+  static getResourceStudentsCount({ resourceId, resourceType }) {
     return this.query()
       .where({
-        resource_id: lessonId,
+        resource_id: resourceId,
         role_id: roles.STUDENT.id,
-        resource_type: resources.LESSON.name,
+        resource_type: resourceType,
       })
       .count()
       .first();
   }
 
-  static async addMaintainer({ trx, userId, resourceId }) {
+  static async addMaintainer({
+    trx,
+    userId,
+    resourceId,
+    resourceType = resources.LESSON.name,
+  }) {
     await this.query(trx)
       .insert({
         user_id: userId,
         resource_id: resourceId,
         role_id: roles.MAINTAINER.id,
-        resource_type: resources.LESSON.name,
+        resource_type: resourceType,
       })
       .returning('*');
   }

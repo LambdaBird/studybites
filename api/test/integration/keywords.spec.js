@@ -47,7 +47,7 @@ describe('Keywords creation and filtering', () => {
   describe('Create keywords on lesson creation', () => {
     it('should successfully create keywords', async () => {
       const response = await testContext.request({
-        url: 'lesson/maintain/',
+        url: 'lessons-management/lessons',
         body: {
           ...prepareLessonFromSeed(french),
           keywords: [{ name: 'French' }, { name: 'Language' }],
@@ -69,10 +69,13 @@ describe('Keywords creation and filtering', () => {
 
   it('should not create new keywords', async () => {
     const response = await testContext.request({
-      url: 'lesson/maintain/',
+      url: 'lessons-management/lessons',
       body: {
         ...prepareLessonFromSeed(french),
-        keywords: [{ name: 'French' }, { name: 'Language' }],
+        keywords: [
+          { id: 1, name: 'French' },
+          { id: 2, name: 'Language' },
+        ],
       },
     });
 
@@ -89,7 +92,7 @@ describe('Keywords creation and filtering', () => {
 
   it('should create one new keyword', async () => {
     const response = await testContext.request({
-      url: 'lesson/maintain/',
+      url: 'lessons-management/lessons',
       body: {
         ...prepareLessonFromSeed(french),
         keywords: [
@@ -130,7 +133,7 @@ describe('Keywords creation and filtering', () => {
 
     it('should return a lesson without keywords', async () => {
       const response = await testContext.request({
-        url: `lesson/maintain/${lessonToUpdate.lesson.id}`,
+        url: `lessons-management/lessons/${lessonToUpdate.lesson.id}`,
         method: 'GET',
       });
 
@@ -143,7 +146,7 @@ describe('Keywords creation and filtering', () => {
 
     it('should add a keyword to lesson', async () => {
       const response = await testContext.request({
-        url: `lesson/maintain/${lessonToUpdate.lesson.id}`,
+        url: `lessons-management/lessons/${lessonToUpdate.lesson.id}`,
         method: 'PUT',
         body: {
           keywords: [{ name: 'French' }],
@@ -182,7 +185,7 @@ describe('Keywords creation and filtering', () => {
 
     it('should return lessons with keywords', async () => {
       const response = await testContext.request({
-        url: 'lesson/maintain/?tags[]=1',
+        url: 'lessons-management/lessons?tags[]=1',
         method: 'GET',
       });
 
@@ -205,7 +208,7 @@ describe('Keywords creation and filtering', () => {
 
     it('should add a keyword to lesson', async () => {
       const response = await testContext.request({
-        url: `lesson/maintain/${lessonToSearch.lesson.id}`,
+        url: `lessons-management/lessons/${lessonToSearch.lesson.id}`,
         method: 'PUT',
         body: {
           keywords: [{ name: 'French' }],
@@ -229,7 +232,7 @@ describe('Keywords creation and filtering', () => {
 
     it('should return lessons with keywords', async () => {
       const response = await testContext.request({
-        url: 'lesson/maintain/?[]tags=English',
+        url: 'lessons-management/lessons?tags[]=1',
         method: 'GET',
       });
 

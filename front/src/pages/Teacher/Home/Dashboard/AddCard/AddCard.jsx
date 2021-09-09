@@ -5,14 +5,18 @@ import { AddCardPropTypes } from '../types';
 
 import * as S from './AddCard.styled';
 
-const AddCard = ({ onClick }) => {
+const AddCard = ({ onClick, isCourse }) => {
   const { t } = useTranslation('teacher');
+
+  const cardTitleText = isCourse
+    ? 'course_dashboard.add_button'
+    : 'lesson_dashboard.add_button';
 
   return (
     <S.Wrapper onClick={onClick}>
       <Space size="small" align="center">
         <S.Icon />
-        <S.CardTitle>{t('lesson_dashboard.add_button')}</S.CardTitle>
+        <S.CardTitle>{t(cardTitleText)}</S.CardTitle>
       </Space>
     </S.Wrapper>
   );

@@ -338,6 +338,7 @@ class Lesson extends BaseModel {
         'ilike',
         search ? `%${search.replace(/ /g, '%')}%` : undefined,
       )
+      .orderBy('lessons.created_at', 'desc')
       .groupBy('lessons.id')
       .range(start, end)
       .withGraphFetched('students')
