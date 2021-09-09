@@ -43,11 +43,15 @@ export default {
     answer_result: {
       correct: 'You are right!',
       wrong: 'You are wrong. The correct answer is:',
+      partially_wrong: 'You’re partially right. Correct answer:',
     },
     errors: {
       not_found: 'Lesson not found',
     },
     input_answer: 'Type an answer...',
+    input_fill_gap: {
+      placeholder: 'example',
+    },
     by: 'By',
     blocks: 'blocks',
     start: 'Start',

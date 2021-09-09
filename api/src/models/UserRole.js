@@ -74,10 +74,17 @@ class UserRole extends BaseModel {
     const query = this.query()
       .skipUndefined()
       .select('users.id', 'users.email', 'users.first_name', 'users.last_name')
-      .innerJoin('users', 'users.id', '=', 'users_roles.user_id')
-      .where('users_roles.resource_type', resourceType)
-      .andWhere('users_roles.resource_id', resourceId)
-      .andWhere('users_roles.role_id', roles.STUDENT.id)
+      .join('users', (builder) =>
+        builder
+          .on('users_roles.user_id', '=', 'users.id')
+          .andOn('users_roles.role_id', '=', roles.STUDENT.id)
+          .andOn(
+            'users_roles.resource_type',
+            '=',
+            this.knex().raw('?', [resourceType]),
+          ),
+      )
+      .where('users_roles.resource_id', resourceId)
       .groupBy('users.id', 'users_roles.user_id')
       .andWhere(
         this.knex().raw(

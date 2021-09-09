@@ -1,14 +1,17 @@
 import PropTypes from 'prop-types';
 
+import Bricks from './Bricks';
 import ClosedQuestion from './ClosedQuestion';
 import Code from './Code';
 import Delimiter from './Delimiter';
 import Embed from './Embed';
 import Error from './Error';
+import FillTheGap from './FillTheGap';
 import Finish from './Finish';
 import Header from './Header';
 import Image from './Image';
 import List from './List';
+import Match from './Match';
 import Next from './Next';
 import Paragraph from './Paragraph';
 import Quiz from './Quiz';
@@ -46,10 +49,16 @@ const BlockElement = ({ element }) => {
       return <Quote {...element} />;
     case BLOCKS_TYPE.CLOSED_QUESTION:
       return <ClosedQuestion {...element} />;
+    case BLOCKS_TYPE.FILL_THE_GAP:
+      return <FillTheGap {...element} />;
     case BLOCKS_TYPE.DELIMITER:
       return <Delimiter {...element} />;
     case BLOCKS_TYPE.TABLE:
       return <Table {...element} />;
+    case BLOCKS_TYPE.MATCH:
+      return <Match {...element} />;
+    case BLOCKS_TYPE.BRICKS:
+      return <Bricks {...element} />;
     case BLOCKS_TYPE.NEXT:
       return <Next {...element} />;
     case BLOCKS_TYPE.FINISH:

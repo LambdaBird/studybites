@@ -3,6 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useHistory, useLocation } from 'react-router-dom';
 
+import KeywordsFilter from '@sb-ui/components/molecules/KeywordsFilter';
+import KeywordsFilterMobile from '@sb-ui/components/molecules/KeywordsFilterMobile';
+import useMobile from '@sb-ui/hooks/useMobile';
 import { PAGE_SIZE } from '@sb-ui/pages/User/Lessons/LessonsList/constants';
 import * as S from '@sb-ui/pages/User/Lessons/LessonsList/LessonsList.styled';
 import emptyImg from '@sb-ui/resources/img/empty.svg';
@@ -19,6 +22,8 @@ const OpenLessons = () => {
   const history = useHistory();
   const [searchText, setSearchText] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [keywords, setKeywords] = useState([]);
+  const isMobile = useMobile();
 
   const {
     data: responseData,
@@ -31,6 +36,7 @@ const OpenLessons = () => {
         offset: (currentPage - 1) * PAGE_SIZE,
         limit: PAGE_SIZE,
         search: searchText,
+        tags: keywords,
       },
     ],
     getLessons,
@@ -74,7 +80,20 @@ const OpenLessons = () => {
     <S.Wrapper>
       <S.LessonsHeader>
         <S.OpenLessonsTitle>{t('home.open_lessons.title')}</S.OpenLessonsTitle>
-        <S.StyledSearch searchText={searchText} setSearchText={setSearchText} />
+        <S.FilterWrapper>
+          <S.StyledSearch
+            searchText={searchText}
+            setSearchText={setSearchText}
+          />
+          {isMobile ? (
+            <KeywordsFilterMobile
+              setKeywords={setKeywords}
+              keywords={keywords}
+            />
+          ) : (
+            <KeywordsFilter setValues={setKeywords} />
+          )}
+        </S.FilterWrapper>
       </S.LessonsHeader>
       <S.LessonsRow>
         <OpenLessonsBlock isLoading={isLoading} error={error} data={lessons} />

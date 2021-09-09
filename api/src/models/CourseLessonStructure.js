@@ -21,21 +21,20 @@ export default class CourseLessonStructure extends BaseModel {
   }
 
   static async insertLessons({ trx, lessons, courseId, update = false }) {
-    const lessonStructure = [];
-
-    for (let i = 0, n = lessons.length; i < n; i += 1) {
-      lessonStructure.push({
+    const lessonStructure = lessons
+      .map((lesson) => ({
         id: v4(),
         course_id: courseId,
-        lesson_id: lessons[i].id,
-      });
-    }
-
-    for (let i = 0, n = lessonStructure.length; i < n; i += 1) {
-      lessonStructure[i].parent_id = !i ? null : lessonStructure[i - 1].id;
-      lessonStructure[i].child_id =
-        i === n - 1 ? null : lessonStructure[i + 1].id;
-    }
+        lesson_id: lesson.id,
+      }))
+      .map((lesson, index, lessonsToStructure) => ({
+        ...lesson,
+        parent_id: !index ? null : lessonsToStructure[index - 1].id,
+        child_id:
+          index === lessonsToStructure.length - 1
+            ? null
+            : lessonsToStructure[index + 1].id,
+      }));
 
     if (update) {
       await this.query(trx).delete().where({
@@ -54,19 +53,13 @@ export default class CourseLessonStructure extends BaseModel {
       {},
     );
 
-    const lessonsInOrder = [];
-
-    if (lessonsUnordered.length) {
-      const block = lessonsUnordered[0];
-      lessonsInOrder.push(block);
-    }
-
-    for (let i = 0, n = lessonsUnordered.length - 1; i < n; i += 1) {
-      const block = dictionary[lessonsInOrder[i].childId];
-      lessonsInOrder.push(block);
-    }
-
-    return lessonsInOrder;
+    return lessonsUnordered.reduce(
+      (result, value, index) => [
+        ...result,
+        index ? dictionary[result[index - 1].childId] : value,
+      ],
+      [],
+    );
   }
 
   static async getAllLessons({ trx, courseId }) {
