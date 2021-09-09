@@ -15,6 +15,13 @@ export default {
       enroll_button: 'Записаться',
       start_button: 'Начать',
     },
+    open_courses: {
+      title: 'Открытые курсы',
+      not_found: 'Нет открытых курсов',
+      search: 'Название',
+      enroll_button: 'Записаться',
+      start_button: 'Начать',
+    },
     ongoing_lessons: {
       title: 'Текущие уроки',
       not_found: 'Нет текущих уроков',
