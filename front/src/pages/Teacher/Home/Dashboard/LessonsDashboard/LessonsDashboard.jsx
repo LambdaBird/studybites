@@ -1,4 +1,4 @@
-import { Button, message, Row, Select, Skeleton, Space } from 'antd';
+import { message, Row, Select, Skeleton, Space } from 'antd';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
@@ -7,7 +7,7 @@ import { PlusOutlined } from '@ant-design/icons';
 
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
 import { getTeacherLessons } from '@sb-ui/utils/api/v1/teacher';
-import { COURSES_NEW, LESSONS_NEW } from '@sb-ui/utils/paths';
+import { LESSONS_NEW } from '@sb-ui/utils/paths';
 import { TEACHER_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
 import { skeletonArray } from '@sb-ui/utils/utils';
 
@@ -54,10 +54,6 @@ const LessonsDashboard = () => {
     history.push(LESSONS_NEW);
   };
 
-  const handleCreateCourse = () => {
-    history.push(COURSES_NEW);
-  };
-
   return (
     <Row gutter={[32, 32]}>
       <S.DashboardControls>
@@ -80,13 +76,6 @@ const LessonsDashboard = () => {
         <S.AddButton icon={<PlusOutlined />} onClick={handleCreateLesson}>
           {t('lesson_dashboard.add_button')}
         </S.AddButton>
-        <Button
-          icon={<PlusOutlined />}
-          type="link"
-          onClick={handleCreateCourse}
-        >
-          {t('lesson_dashboard.create_course_button')}
-        </Button>
       </S.DashboardControls>
       {isLoading ? (
         skeletonArray(pageLimit).map((el) => (

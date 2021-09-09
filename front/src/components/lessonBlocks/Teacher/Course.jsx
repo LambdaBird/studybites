@@ -9,7 +9,7 @@ import { StyledAvatar } from '@sb-ui/components/molecules/Header/Header.styled';
 import { Statuses } from '@sb-ui/pages/Teacher/Home/Dashboard/constants';
 import { queryClient } from '@sb-ui/query';
 import lesson from '@sb-ui/resources/img/lesson.svg';
-import { putLesson } from '@sb-ui/utils/api/v1/teacher';
+import { putCourse } from '@sb-ui/utils/api/v1/courses-management';
 import { COURSES_EDIT } from '@sb-ui/utils/paths';
 import { TEACHER_COURSES_BASE_KEY } from '@sb-ui/utils/queries';
 
@@ -44,7 +44,7 @@ const Course = ({ name, id, students: studentsData, status }) => {
   const history = useHistory();
 
   const { t } = useTranslation('teacher');
-  const updateCourseMutation = useMutation(putLesson, {
+  const updateCourseMutation = useMutation(putCourse, {
     onSuccess: () => {
       queryClient.invalidateQueries(TEACHER_COURSES_BASE_KEY);
     },

@@ -22,7 +22,6 @@ export default {
     error: 'Can not fetch lessons',
     title: 'My lessons',
     add_button: 'Add lesson',
-    create_course_button: 'Add course',
 
     card: {
       edit: 'Edit',
@@ -90,12 +89,24 @@ export default {
     },
   },
   course_edit: {
+    error_course_name: 'Missing course name',
     lesson_search: {
       placeholder: 'Choose lesson',
     },
     to_lesson_button: 'Go to lesson',
     title: {
       placeholder: 'Course title',
+    },
+    publish_modal: {
+      title: 'The course is now available to all students',
+      ok: 'Ok',
+    },
+    message: {
+      success_created: 'Successfully created',
+      success_updated: 'Successfully updated',
+      error_created: 'Create error',
+      error_updated: 'Update error',
+      error_course_name: 'Missing course name',
     },
   },
   lesson_edit: {
