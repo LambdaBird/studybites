@@ -5,7 +5,9 @@ export const ADMIN_HOME = '/admin';
 
 export const USER_HOME = '/user';
 export const USER_LESSONS = `${USER_HOME}/lessons`;
-export const LEARN_PAGE = `${USER_LESSONS}/learn/:id`;
+export const USER_COURSES = `${USER_HOME}/courses`;
+export const LESSONS_LEARN_PAGE = `${USER_LESSONS}/learn/:id`;
+export const COURSES_LEARN_PAGE = `${USER_COURSES}/learn/:id`;
 export const USER_ENROLL_LESSON = `${USER_HOME}/enroll/lesson/:id`;
 export const USER_ENROLL_COURSE = `${USER_HOME}/enroll/course/:id`;
 

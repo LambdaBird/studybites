@@ -41,3 +41,26 @@ export const getEnrolledLessonsFinished = async ({ queryKey }) => {
 
   return data;
 };
+
+export const getEnrolledCourses = async ({ queryKey }) => {
+  const [, paramsData] = queryKey;
+
+  const { data } = await api.get(`${PATH}/courses`, {
+    params: paramsData,
+  });
+
+  return data;
+};
+
+export const getEnrolledCoursesFinished = async ({ queryKey }) => {
+  const [, paramsData] = queryKey;
+
+  const { data } = await api.get(`${PATH}/courses`, {
+    params: {
+      ...paramsData,
+      progress: 'finished',
+    },
+  });
+
+  return data;
+};

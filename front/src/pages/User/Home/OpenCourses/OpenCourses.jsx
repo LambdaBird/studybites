@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useHistory, useLocation } from 'react-router-dom';
 
-import { PAGE_SIZE } from '@sb-ui/pages/User/Lessons/LessonsList/constants';
-import * as S from '@sb-ui/pages/User/Lessons/LessonsList/LessonsList.styled';
+import { PAGE_SIZE } from '@sb-ui/pages/User/Lessons/ResourcesList/constants';
+import * as S from '@sb-ui/pages/User/Lessons/ResourcesList/ResourcesList.styled';
 import emptyImg from '@sb-ui/resources/img/empty.svg';
 import { getCourses } from '@sb-ui/utils/api/v1/courses';
 import { USER_PUBLIC_COURSES_BASE_KEY } from '@sb-ui/utils/queries';

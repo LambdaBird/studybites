@@ -26,6 +26,7 @@ export default {
       title: 'Текущие уроки',
       not_found: 'Нет текущих уроков',
       view_all_lessons: 'Посмотреть все мои уроки',
+      view_all_courses: 'Посмотреть все мои курсы',
       continue_button: 'Продолжить',
     },
     finished_lessons: {

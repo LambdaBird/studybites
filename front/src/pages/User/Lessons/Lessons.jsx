@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
+import { LESSONS_RESOURCE_KEY } from '@sb-ui/pages/User/constants';
 import {
   getEnrolledLessons,
   getEnrolledLessonsFinished,
@@ -9,7 +10,7 @@ import {
   USER_ENROLLED_LESSONS_FINISHED_BASE_KEY,
 } from '@sb-ui/utils/queries';
 
-import LessonsList from './LessonsList';
+import ResourcesList from './ResourcesList';
 import * as S from './Lessons.styled';
 
 const Lessons = () => {
@@ -17,7 +18,8 @@ const Lessons = () => {
 
   return (
     <S.MainDiv>
-      <LessonsList
+      <ResourcesList
+        resourceKey={LESSONS_RESOURCE_KEY}
         title={t('home.ongoing_lessons.title')}
         notFound={t('home.ongoing_lessons.not_found')}
         query={{
@@ -25,7 +27,8 @@ const Lessons = () => {
           func: getEnrolledLessons,
         }}
       />
-      <LessonsList
+      <ResourcesList
+        resourceKey={LESSONS_RESOURCE_KEY}
         title={t('home.finished_lessons.title')}
         notFound={t('home.finished_lessons.not_found')}
         query={{

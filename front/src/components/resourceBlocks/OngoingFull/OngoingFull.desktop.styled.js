@@ -27,7 +27,12 @@ export const LessonImg = styled.img`
   width: 200px;
 `;
 
-export const DescriptionText = styled(Paragraph)`
+export const DescriptionText = styled(Paragraph).attrs({
+  ellipsis: {
+    tooltip: true,
+    rows: 2,
+  },
+})`
   text-align: justify;
   color: ${variables['lesson-block-description-color']};
   overflow-wrap: anywhere;
@@ -72,6 +77,11 @@ export const ProgressBar = styled(Progress)`
   }
 `;
 
-export const TitleEllipsis = styled(Title)`
+export const TitleEllipsis = styled(Title).attrs({
+  ellipsis: {
+    tooltip: true,
+  },
+  level: 3,
+})`
   overflow-wrap: anywhere;
 `;

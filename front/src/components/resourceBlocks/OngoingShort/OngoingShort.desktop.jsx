@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 
 import { LessonType } from '@sb-ui/components/resourceBlocks/types';
 import lessonImg from '@sb-ui/resources/img/lesson.svg';
-import { LEARN_PAGE } from '@sb-ui/utils/paths';
+import { LESSONS_LEARN_PAGE } from '@sb-ui/utils/paths';
 
 import * as S from './OngoingShort.styled';
 
@@ -18,7 +18,7 @@ const OngoingShortDesktop = ({ lesson }) => {
   const { name, id, interactiveTotal, interactivePassed } = lesson;
 
   const handleContinueLesson = () => {
-    history.push(LEARN_PAGE.replace(':id', id));
+    history.push(LESSONS_LEARN_PAGE.replace(':id', id));
   };
 
   const countPercentage = useMemo(() => {

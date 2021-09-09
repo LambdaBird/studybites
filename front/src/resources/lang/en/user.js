@@ -26,11 +26,20 @@ export default {
       title: 'Ongoing lessons',
       not_found: 'No ongoing lessons yet',
       view_all_lessons: 'View all my lessons',
+      view_all_courses: 'View all my courses',
       continue_button: 'Continue',
+    },
+    ongoing_courses: {
+      title: 'Ongoing courses',
+      not_found: 'No ongoing courses yet',
     },
     finished_lessons: {
       title: 'Finished lessons',
       not_found: 'No finished lessons yet',
+    },
+    finished_courses: {
+      title: 'Finished courses',
+      not_found: 'No finished courses yet',
     },
   },
   lesson: {
