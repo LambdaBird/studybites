@@ -18,7 +18,7 @@ export default {
     open_courses: {
       title: 'Открытые курсы',
       not_found: 'Нет открытых курсов',
-      search: 'Имя или автор',
+      search: 'Название',
       enroll_button: 'Записаться',
       start_button: 'Начать',
     },
