@@ -1,13 +1,16 @@
 import { Skeleton } from 'antd';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
+import { FilterOutlined, UserOutlined } from '@ant-design/icons';
 
 import OngoingFullLesson from '@sb-ui/components/lessonBlocks/OngoingFull';
 import AuthorSelect from '@sb-ui/components/molecules/AuthorSelect';
+import FilterMobile from '@sb-ui/components/molecules/FilterMobile';
 import KeywordsFilter from '@sb-ui/components/molecules/KeywordsFilter';
-import KeywordsFilterMobile from '@sb-ui/components/molecules/KeywordsFilterMobile';
 import useMobile from '@sb-ui/hooks/useMobile';
 import emptyImg from '@sb-ui/resources/img/empty.svg';
+import { fetchKeywords } from '@sb-ui/utils/api/v1/keywords';
+import { fetchAuthors } from '@sb-ui/utils/api/v1/user';
 import { skeletonArray } from '@sb-ui/utils/utils';
 
 import { PAGE_SIZE } from './constants';
@@ -42,15 +45,29 @@ const LessonsList = ({ title, notFound, query }) => {
     <S.Wrapper>
       <S.LessonsHeader>
         <S.OpenLessonsTitle>{title}</S.OpenLessonsTitle>
-        <S.StyledSearch searchText={searchText} setSearchText={setSearchText} />
-        <S.AuthorWrapper>
-          <AuthorSelect values={authors} setValues={setAuthors} />
-        </S.AuthorWrapper>
         <S.FilterWrapper>
+          <S.StyledSearch
+            searchText={searchText}
+            setSearchText={setSearchText}
+          />
           {isMobile ? (
-            <KeywordsFilterMobile setKeywords={setKeywords} />
+            <>
+              <FilterMobile
+                icon={<UserOutlined />}
+                fetchData={fetchAuthors}
+                setData={setAuthors}
+              />
+              <FilterMobile
+                icon={<FilterOutlined />}
+                fetchData={fetchKeywords}
+                setData={setKeywords}
+              />
+            </>
           ) : (
-            <KeywordsFilter setValues={setKeywords} />
+            <>
+              <AuthorSelect values={authors} setValues={setAuthors} />
+              <KeywordsFilter setValues={setKeywords} />
+            </>
           )}
         </S.FilterWrapper>
       </S.LessonsHeader>
