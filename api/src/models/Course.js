@@ -176,4 +176,86 @@ export default class Course extends BaseModel {
         error: new BadRequestError(errors.COURSE_ERR_FAIL_ENROLL),
       });
   }
+
+  static getAllFinishedCourses({ userId, offset: start, limit, search }) {
+    const end = start + limit - 1;
+
+    return this.query()
+      .skipUndefined()
+      .join('users_roles', (builder) =>
+        builder
+          .on('courses.id', '=', 'users_roles.resource_id')
+          .andOn('users_roles.role_id', '=', roles.STUDENT.id)
+          .andOn(
+            'users_roles.resource_type',
+            '=',
+            this.knex().raw('?', [resources.COURSE.name]),
+          ),
+      )
+      .join(
+        'course_lesson_structure',
+        'courses.id',
+        '=',
+        'course_lesson_structure.course_id',
+      )
+      .where('users_roles.user_id', userId)
+      .andWhere(
+        'courses.name',
+        'ilike',
+        search ? `%${search.replace(/ /g, '%')}%` : undefined,
+      )
+      .groupBy('courses.id')
+      .havingRaw(
+        `count(course_lesson_structure.lesson_id) = (
+          select count(results.id) from course_lesson_structure structure
+            join results on structure.lesson_id = results.lesson_id
+           where structure.course_id = courses.id
+            and results.user_id = ${userId}
+            and results.action = 'finish'
+        )`,
+      )
+      .range(start, end)
+      .withGraphFetched('author');
+  }
+
+  static getOngoingCourses({ userId, offset: start, limit, search }) {
+    const end = start + limit - 1;
+
+    return this.query()
+      .skipUndefined()
+      .join('users_roles', (builder) =>
+        builder
+          .on('courses.id', '=', 'users_roles.resource_id')
+          .andOn('users_roles.role_id', '=', roles.STUDENT.id)
+          .andOn(
+            'users_roles.resource_type',
+            '=',
+            this.knex().raw('?', [resources.COURSE.name]),
+          ),
+      )
+      .join(
+        'course_lesson_structure',
+        'courses.id',
+        '=',
+        'course_lesson_structure.course_id',
+      )
+      .where('users_roles.user_id', userId)
+      .whereNotIn('course_lesson_structure.lesson_id', (builder) =>
+        builder
+          .select('results.lesson_id')
+          .from('course_lesson_structure as structure')
+          .join('results', 'structure.lesson_id', '=', 'results.lesson_id')
+          .whereRaw('structure.course_id = courses.id')
+          .andWhere('results.user_id', userId)
+          .whereRaw(`results.action = 'finish'`),
+      )
+      .andWhere(
+        'courses.name',
+        'ilike',
+        search ? `%${search.replace(/ /g, '%')}%` : undefined,
+      )
+      .groupBy('courses.id')
+      .range(start, end)
+      .withGraphFetched('author');
+  }
 }

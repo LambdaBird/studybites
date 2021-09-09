@@ -33,6 +33,7 @@ export const resources = {
   COURSE: {
     name: 'course',
     status: ['Draft', 'Public', 'Private', 'Archived'],
+    learnStatus: ['Public'],
   },
 };
 

@@ -24,10 +24,9 @@ async function handler({ user: { id: userId }, params: { courseId } }) {
       courseService: { courseServiceMessages: messages },
       globals: { resources },
     },
-    models: { Course, UserRole },
+    models: { UserRole },
   } = this;
 
-  await Course.checkIfEnrolled({ courseId, userId });
   await UserRole.enrollToResource({
     userId,
     resourceId: courseId,
