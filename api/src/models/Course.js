@@ -108,7 +108,6 @@ export default class Course extends BaseModel {
 
   static getAllCoursesByLessonId({ lessonId }) {
     return this.query()
-      .select('courses.*')
       .join(
         'course_lesson_structure',
         'courses.id',
@@ -119,17 +118,16 @@ export default class Course extends BaseModel {
   }
 
   static updateCoursesStatus({ courses, status }) {
-    return Course.transaction(async (trx) => {
-      return Promise.all(
-        courses.map((course) => {
-          return Course.updateCourse({
-            trx,
-            courseId: course.id,
-            course: { status },
-          });
-        }),
-      );
-    });
+    return this.query()
+      .insert(
+        courses.map(({ id, name }) => ({
+          id,
+          name,
+          status,
+        })),
+      )
+      .onConflict('id')
+      .merge('status');
   }
 
   static getAllMaintainableCourses({

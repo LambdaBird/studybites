@@ -1,6 +1,6 @@
 import { resources, roles } from '../../../config';
 
-const options = {
+export const options = {
   schema: {
     params: { $ref: 'paramsLessonId#' },
     body: {

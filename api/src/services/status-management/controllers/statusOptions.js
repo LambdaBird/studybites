@@ -1,13 +1,16 @@
-import { resources } from '../../../config';
+import { resources, roles } from '../../../config';
+import { options as updateOptions } from './updateStatus';
 
 const options = {
   async onRequest(req) {
     await this.auth({ req });
   },
-  async preHandler({ user: { id: userId } }) {
+  async preHandler({ user: { id: userId }, params: { lessonId: resourceId } }) {
     await this.access({
       userId,
-      roleId: this.config.globals.roles.TEACHER.id,
+      resourceId,
+      resourceType: resources.LESSON.name,
+      roleId: roles.MAINTAINER.id,
     });
   },
 };
@@ -15,13 +18,7 @@ const options = {
 async function handler() {
   return {
     POST: {
-      body: {
-        type: 'object',
-        properties: {
-          status: resources.LESSON.status,
-        },
-        required: ['status'],
-      },
+      body: updateOptions.schema.body,
     },
   };
 }
