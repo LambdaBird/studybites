@@ -103,6 +103,7 @@ const CoursesDashboard = () => {
           lessons={courses}
           onCreateLesson={handleCreateCourse}
           isAddNewShown={isAddNewShown}
+          addCardTitle="course_dashboard.add_button"
         />
       )}
       {isPaginationShown && (

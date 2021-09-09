@@ -88,6 +88,7 @@ const LessonsDashboard = () => {
           lessons={lessons}
           onCreateLesson={handleCreateLesson}
           isAddNewShown={!total && !search && !selectedStatus}
+          addCardTitle="lesson_dashboard.add_button"
         />
       )}
       {!isLoading && total > pageLimit ? (
