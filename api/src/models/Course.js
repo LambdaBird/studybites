@@ -158,6 +158,22 @@ export default class Course extends BaseModel {
     return this.query().findById(courseId).withGraphFetched('author');
   }
 
+  static async getCourseWithAuthorAndLessons({ courseId, lessons }) {
+    const course = await this.getCourseWithAuthor({ courseId });
+    course.lessons = lessons.map((lesson) => ({
+      ...lesson,
+      isEnrolled: !!lesson.roleId,
+      isFinished: !!lesson.results.length,
+    }));
+    const currentLessonIndex = course.lessons.findIndex(
+      (lesson) => !lesson.isFinished,
+    );
+    if (currentLessonIndex >= 0) {
+      course.lessons[currentLessonIndex].isCurrent = true;
+    }
+    return course;
+  }
+
   static checkIfEnrolled({ courseId, userId }) {
     return this.query()
       .findById(courseId)

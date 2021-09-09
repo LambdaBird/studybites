@@ -33,6 +33,10 @@ export default {
       title: 'Законченные уроки',
     },
   },
+  course: {
+    by: 'От',
+    lessons: 'урока(-ов)',
+  },
   lesson: {
     results: {
       title: 'Результаты',

@@ -9,6 +9,7 @@ export const Main = styled(Row)`
   background-color: ${variables['lesson-block-background']};
   padding: 1rem;
   flex-direction: column;
+  position: relative;
 `;
 
 export const Image = styled.img`
