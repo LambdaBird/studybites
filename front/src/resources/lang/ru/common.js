@@ -23,4 +23,7 @@ export default {
   filter: {
     placeholder: 'Выберите элемент',
   },
+  filter_author: {
+    placeholder: 'Выберите автора',
+  },
 };

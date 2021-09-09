@@ -1,12 +1,16 @@
 import { Skeleton } from 'antd';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
+import { FilterOutlined, UserOutlined } from '@ant-design/icons';
 
 import OngoingFullLesson from '@sb-ui/components/lessonBlocks/OngoingFull';
+import AuthorSelect from '@sb-ui/components/molecules/AuthorSelect';
+import FilterMobile from '@sb-ui/components/molecules/FilterMobile';
 import KeywordsFilter from '@sb-ui/components/molecules/KeywordsFilter';
-import KeywordsFilterMobile from '@sb-ui/components/molecules/KeywordsFilterMobile';
 import useMobile from '@sb-ui/hooks/useMobile';
 import emptyImg from '@sb-ui/resources/img/empty.svg';
+import { fetchKeywords } from '@sb-ui/utils/api/v1/keywords';
+import { fetchAuthors } from '@sb-ui/utils/api/v1/user';
 import { skeletonArray } from '@sb-ui/utils/utils';
 
 import { PAGE_SIZE } from './constants';
@@ -17,6 +21,7 @@ const LessonsList = ({ title, notFound, query }) => {
   const { key: queryKey, func: queryFunc } = query;
   const [currentPage, setCurrentPage] = useState(1);
   const [searchText, setSearchText] = useState(null);
+  const [authors, setAuthors] = useState([]);
   const [keywords, setKeywords] = useState([]);
   const isMobile = useMobile();
 
@@ -27,6 +32,7 @@ const LessonsList = ({ title, notFound, query }) => {
         offset: (currentPage - 1) * PAGE_SIZE,
         limit: PAGE_SIZE,
         search: searchText,
+        authors,
         tags: keywords,
       },
     ],
@@ -45,9 +51,23 @@ const LessonsList = ({ title, notFound, query }) => {
             setSearchText={setSearchText}
           />
           {isMobile ? (
-            <KeywordsFilterMobile setKeywords={setKeywords} />
+            <>
+              <FilterMobile
+                icon={<UserOutlined />}
+                fetchData={fetchAuthors}
+                setData={setAuthors}
+              />
+              <FilterMobile
+                icon={<FilterOutlined />}
+                fetchData={fetchKeywords}
+                setData={setKeywords}
+              />
+            </>
           ) : (
-            <KeywordsFilter setValues={setKeywords} />
+            <>
+              <AuthorSelect values={authors} setValues={setAuthors} />
+              <KeywordsFilter setValues={setKeywords} />
+            </>
           )}
         </S.FilterWrapper>
       </S.LessonsHeader>

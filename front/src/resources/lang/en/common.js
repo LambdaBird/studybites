@@ -23,4 +23,7 @@ export default {
   filter: {
     placeholder: 'Select item',
   },
+  filter_author: {
+    placeholder: 'Select author',
+  },
 };

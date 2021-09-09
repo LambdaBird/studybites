@@ -20,7 +20,7 @@ const options = {
 
 async function handler({
   user: { id: userId },
-  query: { search, offset, limit, tags },
+  query: { search, offset, limit, tags, authors },
 }) {
   const {
     models: { Lesson },
@@ -32,6 +32,7 @@ async function handler({
     limit,
     search,
     tags,
+    authors,
   });
 
   return { total, lessons };

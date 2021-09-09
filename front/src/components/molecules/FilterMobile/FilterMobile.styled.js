@@ -9,7 +9,7 @@ export const List = styled(ListAntd).attrs({
   position: absolute;
   width: ${HEIGHT}px;
   left: calc(50% - ${HEIGHT / 2 || 0}px);
-  z-index: 3;
+  z-index: 6;
   background: white;
 
   .ant-list-items {
@@ -49,6 +49,6 @@ export const FilterBackground = styled.div`
   top: 0;
   width: 100%;
   height: 100%;
-  z-index: 2;
+  z-index: 5;
   background-color: rgba(0, 0, 0, 0.5);
 `;

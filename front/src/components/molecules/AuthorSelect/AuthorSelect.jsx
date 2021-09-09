@@ -2,16 +2,16 @@ import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { fetchKeywords } from '@sb-ui/utils/api/v1/keywords';
+import { fetchAuthors } from '@sb-ui/utils/api/v1/user';
 
-import * as S from './KeywordsFilter.styled';
+import * as S from './AuthorSelect.styled';
 
-const KeywordsFilter = ({ width = '250px', setValues }) => {
+const AuthorSelect = ({ width = '250px', setValues }) => {
   const { t } = useTranslation('common');
   const [options, setOptions] = useState([]);
 
   const handleSearch = async (search) => {
-    const data = await fetchKeywords({ search });
+    const data = await fetchAuthors({ search });
     setOptions(data);
   };
 
@@ -24,7 +24,7 @@ const KeywordsFilter = ({ width = '250px', setValues }) => {
   return (
     <S.Select
       width={width}
-      placeholder={t('filter.placeholder')}
+      placeholder={t('filter_author.placeholder')}
       onSearch={handleSearch}
       onChange={setValues}
       options={options}
@@ -32,9 +32,9 @@ const KeywordsFilter = ({ width = '250px', setValues }) => {
   );
 };
 
-KeywordsFilter.propTypes = {
+AuthorSelect.propTypes = {
   width: PropTypes.string,
   setValues: PropTypes.func,
 };
 
-export default KeywordsFilter;
+export default AuthorSelect;

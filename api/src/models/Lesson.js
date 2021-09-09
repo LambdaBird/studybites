@@ -192,7 +192,14 @@ class Lesson extends BaseModel {
    * get all lessons where status = 'Public' with author,
    * search, pagination and total
    */
-  static getAllPublicLessons({ userId, offset: start, limit, search, tags }) {
+  static getAllPublicLessons({
+    userId,
+    offset: start,
+    limit,
+    search,
+    tags,
+    authors,
+  }) {
     const end = start + limit - 1;
 
     const query = this.query()
@@ -208,11 +215,22 @@ class Lesson extends BaseModel {
              and resource_id = lessons.id) is_enrolled
         `),
       )
+      .join('users_roles', (builder) =>
+        builder
+          .on('users_roles.resource_id', '=', 'lessons.id')
+          .andOn('users_roles.role_id', '=', roles.MAINTAINER.id)
+          .andOn(
+            'users_roles.resource_type',
+            '=',
+            this.knex().raw('?', [resources.LESSON.name]),
+          ),
+      )
       .joinRaw(
         `left join resource_keywords on lessons.id = resource_keywords.resource_id 
         and resource_keywords.resource_type = '${resources.LESSON.name}'`,
       )
-      .where('lessons.status', 'Public')
+      .whereIn('users_roles.user_id', authors)
+      .andWhere('lessons.status', 'Public')
       .andWhere(
         'lessons.name',
         'ilike',
@@ -225,9 +243,9 @@ class Lesson extends BaseModel {
         ),
       )
       .groupBy('lessons.id')
-      .range(start, end)
       .withGraphFetched('author')
-      .withGraphFetched('keywords');
+      .withGraphFetched('keywords')
+      .range(start, end);
 
     if (tags) {
       return query
@@ -261,31 +279,50 @@ class Lesson extends BaseModel {
       .withGraphFetched('author');
   }
 
-  static getAllFinishedLessons({ userId, offset: start, limit, search, tags }) {
+  static getAllFinishedLessons({
+    userId,
+    offset: start,
+    limit,
+    search,
+    tags,
+    authors,
+  }) {
     const end = start + limit - 1;
 
     const query = this.query()
       .skipUndefined()
       .select(
         'lessons.*',
-        this.knex().raw(`          
-          true is_finished,
-          (select count(*) from results where lesson_id = lessons.id and action in ('next', 'response')) interactive_passed,
+        this.knex().raw(`true is_finished`),
+        this.knex().raw(`
+          (select count(*) from results where lesson_id = lessons.id and action in ('next', 'response')) interactive_passed
+        `),
+        this.knex().raw(`
           (select count(*) from lesson_block_structure join blocks on blocks.block_id = lesson_block_structure.block_id
-          where blocks.type in ('next', 'quiz') and lesson_block_structure.lesson_id = lessons.id) interactive_total,
-          (select cast(case when count(*) > 0 then true else false end as bool) from results
-          where lesson_id = lessons.id and action = 'start' and user_id = ${userId}) is_started
+          where blocks.type in ('next', 'quiz') and lesson_block_structure.lesson_id = lessons.id) interactive_total
         `),
       )
-      .join('users_roles', 'lessons.id', '=', 'users_roles.resource_id')
+      .join(
+        this.knex().raw('users_roles authors'),
+        'authors.resource_id',
+        '=',
+        'lessons.id',
+      )
+      .join(
+        this.knex().raw('users_roles learn'),
+        'learn.resource_id',
+        '=',
+        'lessons.id',
+      )
       .join('results', 'results.lesson_id', '=', 'lessons.id')
       .joinRaw(
         `left join resource_keywords on lessons.id = resource_keywords.resource_id 
         and resource_keywords.resource_type = '${resources.LESSON.name}'`,
       )
-      .where('users_roles.role_id', roles.STUDENT.id)
-      .andWhere('users_roles.user_id', userId)
-      .andWhere('users_roles.resource_type', resources.LESSON.name)
+      .whereIn('authors.user_id', authors)
+      .where('authors.role_id', roles.MAINTAINER.id)
+      .andWhere('learn.role_id', roles.STUDENT.id)
+      .andWhere('learn.user_id', userId)
       .andWhere('results.action', 'finish')
       .andWhere('results.user_id', userId)
       .andWhere(
@@ -362,6 +399,7 @@ class Lesson extends BaseModel {
     search,
     excludeLessons,
     tags,
+    authors,
   }) {
     const end = start + limit - 1;
 
@@ -369,24 +407,36 @@ class Lesson extends BaseModel {
       .skipUndefined()
       .select(
         'lessons.*',
-        this.knex().raw(`           
-            (select count(*) from results where lesson_id = lessons.id and action in ('next', 'response')) interactive_passed,
-            (select count(*) from lesson_block_structure join blocks on blocks.block_id = lesson_block_structure.block_id
-             where blocks.type in ('next', 'quiz') and lesson_block_structure.lesson_id = lessons.id) interactive_total,
-             (select cast(case when count(*) > 0 then true else false end as bool) from results
-             where lesson_id = lessons.id and action = 'start' and user_id = ${userId}) is_started
-          `),
+        this.knex().raw(`
+          (select count(*) from results where lesson_id = lessons.id and action in ('next', 'response')) interactive_passed
+        `),
+        this.knex().raw(`
+          (select count(*) from lesson_block_structure join blocks on blocks.block_id = lesson_block_structure.block_id
+          where blocks.type in ('next', 'quiz') and lesson_block_structure.lesson_id = lessons.id) interactive_total
+        `),
+        this.knex().raw(`
+          (select cast(case when count(*) > 0 then true else false end as bool) from results
+          where lesson_id = lessons.id and action = 'start' and user_id = ${userId}) is_started
+        `),
+      )
+      .join('users_roles', 'users_roles.resource_id', '=', 'lessons.id')
+      .where('users_roles.role_id', roles.MAINTAINER.id)
+      .join(
+        this.knex().raw('users_roles enrolled'),
+        'enrolled.resource_id',
+        '=',
+        'lessons.id',
       )
       .joinRaw(
         `left join resource_keywords on lessons.id = resource_keywords.resource_id 
         and resource_keywords.resource_type = '${resources.LESSON.name}'`,
       )
-      .join('users_roles', 'lessons.id', '=', 'users_roles.resource_id')
       .where('lessons.status', 'Public')
-      .andWhere('users_roles.role_id', roles.STUDENT.id)
-      .andWhere('users_roles.user_id', userId)
+      .andWhere('enrolled.role_id', roles.STUDENT.id)
+      .andWhere('enrolled.user_id', userId)
       .andWhere('users_roles.resource_type', resources.LESSON.name)
       .whereNotIn('lessons.id', excludeLessons || undefined)
+      .whereIn('users_roles.user_id', authors)
       .andWhere(
         'lessons.name',
         'ilike',

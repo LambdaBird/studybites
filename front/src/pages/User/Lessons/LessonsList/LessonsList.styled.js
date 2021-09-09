@@ -12,6 +12,7 @@ export const Wrapper = styled.div`
 
 export const LessonsHeader = styled(Row)`
   margin-bottom: 2rem;
+  align-items: center;
   @media (max-width: 767px) {
     justify-content: space-between;
   }
@@ -27,6 +28,7 @@ export const OpenLessonsTitle = styled(Title).attrs({
 
 export const FilterWrapper = styled.div`
   display: flex;
+  gap: 1rem;
 `;
 
 export const LessonsRow = styled(Row).attrs({
@@ -48,8 +50,11 @@ export const StyledPagination = styled(Pagination).attrs({
 
 export const StyledSearch = styled(Search).attrs({
   placement: 'bottomLeft',
-  marginRight: '1rem',
 })``;
+
+export const AuthorWrapper = styled.div`
+  margin-left: 1rem;
+`;
 
 export const LessonCol = styled(Col).attrs(() => ({
   lg: { span: 12 },
