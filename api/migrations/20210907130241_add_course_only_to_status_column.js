@@ -19,7 +19,8 @@ export const up = (knex) =>
     ]),
   );
 
-export const down = (knex) =>
+export const down = (knex) => {
+  knex('lessons').update({ status: 'Private' }).where({ status: 'CourseOnly' });
   knex.raw(
     formatAlterTableEnumSql('lessons', 'status', [
       'Draft',
@@ -28,3 +29,4 @@ export const down = (knex) =>
       'Archived',
     ]),
   );
+};
