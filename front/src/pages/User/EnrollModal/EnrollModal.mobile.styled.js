@@ -1,6 +1,7 @@
 import {
   Avatar,
   Button,
+  Col,
   Image as ImageAntd,
   Row,
   Space,
@@ -98,4 +99,10 @@ export const StartButton = styled(Button).attrs({
 export const ReviewBodyText = styled.div`
   text-align: center;
   margin-top: 4rem;
+`;
+
+export const KeywordsCol = styled(Col).attrs({
+  span: 24,
+})`
+  margin-top: 1rem;
 `;

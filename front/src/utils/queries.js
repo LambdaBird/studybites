@@ -18,3 +18,6 @@ export const TEACHER_LESSON_STUDENTS_BASE_KEY = 'teacher/lesson/students';
 
 // ADMIN
 export const ADMIN_USERS_BASE_KEY = 'admin/users';
+
+// KEYWORDS
+export const KEYWORDS_BASE_KEY = 'keywords';
