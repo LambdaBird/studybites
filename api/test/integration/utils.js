@@ -40,6 +40,26 @@ export const createLesson = async ({ app, credentials, body }) => {
   return payload;
 };
 
+export const createCourse = async ({ app, credentials, body }) => {
+  const token = await authorizeUser({
+    app,
+    credentials,
+  });
+
+  const response = await app.inject({
+    method: 'POST',
+    url: '/api/v1/courses-management/courses',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body,
+  });
+
+  const payload = JSON.parse(response.payload);
+
+  return payload;
+};
+
 export const prepareLessonFromSeed = (lessonSeed, nameModifier = '') => ({
   lesson: {
     name: `${lessonSeed.name}${nameModifier}`,
@@ -58,4 +78,15 @@ export const prepareLessonFromSeed = (lessonSeed, nameModifier = '') => ({
       revision: v4(),
     };
   }),
+});
+
+export const prepareCourseFromSeed = (courseSeed, nameModifier = '') => ({
+  course: {
+    name: `${courseSeed.name}${nameModifier}`,
+    status: 'Public',
+  },
+  // eslint-disable-next-line no-underscore-dangle
+  lessons: courseSeed._lessons.map((structureItem) => ({
+    id: structureItem.lesson_id,
+  })),
 });

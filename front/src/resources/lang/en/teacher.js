@@ -4,7 +4,22 @@ export default {
     lessons: 'Lessons',
     students: 'Students',
   },
+  course_dashboard: {
+    error: 'Can not fetch courses',
+    title: 'My courses',
+    add_button: 'Add course',
+    search: {
+      placeholder: 'Name',
+    },
+    menu: {
+      archive: 'Archive Course',
+      publish: 'Publish Course',
+      restore: 'Restore Course',
+      draft: 'Move to Draft',
+    },
+  },
   lesson_dashboard: {
+    error: 'Can not fetch lessons',
     title: 'My lessons',
     add_button: 'Add lesson',
     card: {
@@ -41,6 +56,12 @@ export default {
     invite: 'Invite Now',
     no_students: 'No students yet!',
     all: 'View all',
+  },
+  lesson_funnel: {
+    finish_bite: 'Email sumbited!',
+    start_bite: 'Lesson start',
+    mean: 'Average',
+    median: 'Median',
   },
   editor_js: {
     tool_names: {
@@ -104,8 +125,10 @@ export default {
       full_name: 'Full Name',
       email: 'Email',
       last_activity: 'Last activity',
+      first_activity: 'First activity',
       not_started: 'Not started',
       action: 'Action',
+      progress: 'Progress',
       edit: 'Edit',
       no_data: 'No data',
       action_remove: 'Remove',

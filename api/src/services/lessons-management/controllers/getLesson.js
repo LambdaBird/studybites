@@ -61,11 +61,15 @@ const options = {
 async function handler({ params: { lessonId } }) {
   const {
     models: { Lesson, LessonBlockStructure, UserRole, ResourceKeyword },
+    config: {
+      globals: { resources },
+    },
   } = this;
 
   const lesson = await Lesson.findById({ lessonId });
-  const { count: studentsCount } = await UserRole.getLessonStudentsCount({
-    lessonId,
+  const { count: studentsCount } = await UserRole.getResourceStudentsCount({
+    resourceId: lessonId,
+    resourceType: resources.LESSON.name,
   });
 
   lesson.studentsCount = studentsCount;

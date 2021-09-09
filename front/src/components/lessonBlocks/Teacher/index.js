@@ -1,3 +1,4 @@
-import Teacher from './Teacher';
+import Course from './Course';
+import Lesson from './Lesson';
 
-export default Teacher;
+export { Course, Lesson };

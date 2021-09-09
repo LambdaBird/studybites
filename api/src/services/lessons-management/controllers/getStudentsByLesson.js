@@ -38,9 +38,9 @@ async function handler({
     models: { UserRole },
   } = this;
 
-  const { total, results: students } = await UserRole.getAllStudentsOfLesson({
+  const { total, results: students } = await UserRole.getAllStudentsOfResource({
     userId,
-    lessonId,
+    resourceId: lessonId,
     offset,
     limit,
     search,

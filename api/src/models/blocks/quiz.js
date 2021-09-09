@@ -6,7 +6,7 @@ export function getQuizCorrectness({
   blockWeight,
 }) {
   if (solution.length !== response.length) {
-    return { error: true, correctness: null };
+    return 0;
   }
 
   const numberOfRightAnswers = solution.filter(Boolean).length;
@@ -17,8 +17,5 @@ export function getQuizCorrectness({
     );
   }, 0);
 
-  return {
-    error: null,
-    correctness: blockWeight * Math.max(mark / numberOfRightAnswers, 0),
-  };
+  return blockWeight * Math.max(mark / numberOfRightAnswers, 0);
 }

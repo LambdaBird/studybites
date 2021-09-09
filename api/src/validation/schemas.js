@@ -24,6 +24,14 @@ export const lessonIdParam = {
   required: ['lessonId'],
 };
 
+export const courseIdParam = {
+  type: 'object',
+  properties: {
+    courseId: { type: 'number' },
+  },
+  required: ['courseId'],
+};
+
 export const lessonSearch = {
   type: 'object',
   properties: {
@@ -33,6 +41,16 @@ export const lessonSearch = {
     authors: { type: 'array', items: { type: 'number' } },
     progress: { type: 'string' },
     tags: { type: 'array', items: { type: 'number' } },
+  },
+};
+
+export const courseSearch = {
+  type: 'object',
+  properties: {
+    search: { type: 'string' },
+    offset: { type: 'number', default: 0 },
+    limit: { type: 'number', default: searchLimits.COURSE_SEARCH_LIMIT },
+    status: { type: 'string' },
   },
 };
 
@@ -57,6 +75,11 @@ export const keywordSearch = {
 export const lessonStatus = {
   type: 'string',
   enum: resources.LESSON.status,
+};
+
+export const courseStatus = {
+  type: 'string',
+  enum: resources.COURSE.status,
 };
 
 export const passwordPattern = {

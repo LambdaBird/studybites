@@ -4,7 +4,22 @@ export default {
     lessons: 'Уроки',
     students: 'Студенты',
   },
+  course_dashboard: {
+    error: 'Невозможно получить список курсов',
+    title: 'Мои курсы',
+    add_button: 'Добавить курс',
+    search: {
+      placeholder: 'Название',
+    },
+    menu: {
+      archive: 'Архивировать Курс',
+      publish: 'Опубликовать Курс',
+      restore: 'Восстановить Курс',
+      draft: 'Переместить в черновики',
+    },
+  },
   lesson_dashboard: {
+    error: 'Невозможно получить список уроков',
     title: 'Мои уроки',
     add_button: 'Добавить урок',
     card: {
@@ -30,9 +45,9 @@ export default {
       private: 'Приватные',
     },
     menu: {
-      archive: 'Архивировать урок',
-      publish: 'Опубликовать урок',
-      restore: 'Восстановить урок',
+      archive: 'Архивировать Урок',
+      publish: 'Опубликовать Урок',
+      restore: 'Восстановить Урок',
       draft: 'Переместить в черновики',
     },
   },
@@ -41,6 +56,12 @@ export default {
     invite: 'Пригласить сейчас',
     no_students: 'Еще нет студентов!',
     all: 'Показать всех',
+  },
+  lesson_funnel: {
+    finish_bite: 'Емейл оставлен!',
+    start_bite: 'Начало урока',
+    mean: 'Среднее',
+    median: 'Медиана',
   },
   editor_js: {
     tool_names: {
@@ -104,8 +125,10 @@ export default {
       full_name: 'Полное имя',
       email: 'Email',
       last_activity: 'Последняя активность',
+      first_activity: 'Первая активность',
       not_started: 'Еще не начато',
       action: 'Действие',
+      progress: 'Прогресс',
       edit: 'Изменить',
       no_data: 'Нет данных',
       action_remove: 'Удалить',
