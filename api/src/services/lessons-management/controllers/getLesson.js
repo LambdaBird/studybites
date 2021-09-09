@@ -5,6 +5,16 @@ const options = {
       200: {
         type: 'object',
         properties: {
+          keywords: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                id: { type: 'number' },
+                name: { type: 'string' },
+              },
+            },
+          },
           lesson: {
             type: 'object',
             properties: {
@@ -50,7 +60,7 @@ const options = {
 
 async function handler({ params: { lessonId } }) {
   const {
-    models: { Lesson, LessonBlockStructure, UserRole },
+    models: { Lesson, LessonBlockStructure, UserRole, ResourceKeyword },
   } = this;
 
   const lesson = await Lesson.findById({ lessonId });
@@ -60,8 +70,8 @@ async function handler({ params: { lessonId } }) {
 
   lesson.studentsCount = studentsCount;
   lesson.blocks = await LessonBlockStructure.getAllBlocks({ lessonId });
-
-  return { lesson };
+  const keywords = await ResourceKeyword.getLessonKeywords({ lessonId });
+  return { lesson, keywords };
 }
 
 export default { options, handler };

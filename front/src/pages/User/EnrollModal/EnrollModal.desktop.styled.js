@@ -98,3 +98,9 @@ export const DescriptionText = styled(Text)`
   text-align: justify;
   color: ${variables['lesson-block-description-color']};
 `;
+
+export const KeywordsCol = styled(Col).attrs({
+  span: 24,
+})`
+  margin-top: 1rem;
+`;

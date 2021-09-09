@@ -3,6 +3,16 @@ const options = {
     body: {
       type: 'object',
       properties: {
+        keywords: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'number' },
+              name: { type: 'string' },
+            },
+          },
+        },
         lesson: {
           type: 'object',
           properties: {
@@ -59,15 +69,22 @@ const options = {
   },
 };
 
-async function handler({ body: { lesson, blocks }, user: { id: userId } }) {
+async function handler({
+  body: { lesson, blocks, keywords },
+  user: { id: userId },
+}) {
   const {
-    models: { Lesson, UserRole, Block, LessonBlockStructure },
+    models: { Lesson, UserRole, Block, LessonBlockStructure, Keyword },
   } = this;
 
   try {
     const data = await Lesson.transaction(async (trx) => {
       const lessonData = await Lesson.createLesson({ trx, lesson });
       await UserRole.addMaintainer({ trx, userId, resourceId: lessonData.id });
+
+      if (keywords) {
+        await Keyword.createMany({ trx, keywords, resourceId: lessonData.id });
+      }
 
       if (blocks.length) {
         blocks.forEach((block) => {
