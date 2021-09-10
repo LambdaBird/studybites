@@ -26,7 +26,7 @@ export const LessonType = PropTypes.shape({
   isFinished: PropTypes.bool,
 });
 
-export const PublicLessonType = PropTypes.shape({
+export const PublicResourceType = PropTypes.shape({
   ...LessonGeneralType,
   isEnrolled: PropTypes.bool.isRequired,
 });

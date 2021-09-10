@@ -322,6 +322,10 @@ describe('Maintainer flow', () => {
         credentials: anotherTeacherCredentials,
         body: prepareCourseFromSeed(courseToTest, '-notMaintainable'),
       });
+
+      await testContext.studentRequest({
+        url: `courses/${courseToGet.course.id}/enroll`,
+      });
     });
 
     it('should return an error if the user is not a teacher', async () => {
@@ -362,12 +366,168 @@ describe('Maintainer flow', () => {
 
       expect(payload.course).toHaveProperty('studentsCount');
       expect(typeof payload.course.studentsCount).toBe('number');
-      expect(payload.course.studentsCount).toBe(0);
+      expect(payload.course.studentsCount).toBe(1);
 
       expect(payload.course).toHaveProperty('lessons');
       expect(payload.course.lessons).toBeInstanceOf(Array);
       // eslint-disable-next-line no-underscore-dangle
       expect(payload.course.lessons.length).toBe(courseToTest._lessons.length);
+    });
+  });
+
+  describe('Get all students enrolled to maintainable courses', () => {
+    it('should return an error if the user is not a teacher', async () => {
+      const response = await testContext.studentRequest({
+        method: 'GET',
+        url: 'courses-management/students',
+      });
+
+      const payload = JSON.parse(response.payload);
+
+      expect(response.statusCode).toBe(401);
+      expect(payload.statusCode).toBe(401);
+      expect(payload.message).toBe(errors.USER_ERR_UNAUTHORIZED);
+    });
+
+    it('should return students with total count', async () => {
+      const response = await testContext.request({
+        method: 'GET',
+        url: 'students',
+      });
+
+      const payload = JSON.parse(response.payload);
+
+      expect(response.statusCode).toBe(200);
+      expect(payload).toHaveProperty('total');
+      expect(payload).toHaveProperty('students');
+    });
+  });
+
+  describe('Search through all students enrolled to maintainable courses', () => {
+    beforeAll(async () => {
+      const courseToEnroll = await createCourse({
+        app: testContext.app,
+        credentials: teacherCredentials,
+        body: prepareCourseFromSeed(courseToTest),
+      });
+
+      await testContext.studentRequest({
+        url: `courses/${courseToEnroll.course.id}/enroll`,
+      });
+    });
+
+    it('should return one student by name', async () => {
+      const response = await testContext.request({
+        method: 'GET',
+        url: `students?search=${studentJohn.first_name}`,
+      });
+
+      const payload = JSON.parse(response.payload);
+
+      expect(response.statusCode).toBe(200);
+      expect(payload).toHaveProperty('total');
+      expect(payload).toHaveProperty('students');
+      expect(payload.total).toBe(1);
+    });
+
+    it('should return no students', async () => {
+      const response = await testContext.request({
+        method: 'GET',
+        url: 'students?search=nomatchstring',
+      });
+
+      const payload = JSON.parse(response.payload);
+
+      expect(response.statusCode).toBe(200);
+      expect(payload).toHaveProperty('total');
+      expect(payload).toHaveProperty('students');
+      expect(payload.total).toBe(0);
+    });
+  });
+
+  describe('Get all students enrolled to course', () => {
+    let courseToGetStudents;
+
+    beforeAll(async () => {
+      courseToGetStudents = await createCourse({
+        app: testContext.app,
+        credentials: teacherCredentials,
+        body: prepareCourseFromSeed(courseToTest, '-courseToGetStudents'),
+      });
+
+      await testContext.request({
+        url: `courses/${courseToGetStudents.course.id}/enroll`,
+      });
+    });
+
+    it('should return an error if the user is not a teacher', async () => {
+      const response = await testContext.studentRequest({
+        method: 'GET',
+        url: `courses-management/courses/${courseToGetStudents.course.id}/students`,
+      });
+
+      const payload = JSON.parse(response.payload);
+
+      expect(response.statusCode).toBe(401);
+      expect(payload.statusCode).toBe(401);
+      expect(payload.message).toBe(errors.USER_ERR_UNAUTHORIZED);
+    });
+
+    it('should return students with total count', async () => {
+      const response = await testContext.request({
+        method: 'GET',
+        url: `courses/${courseToGetStudents.course.id}/students`,
+      });
+
+      const payload = JSON.parse(response.payload);
+
+      expect(response.statusCode).toBe(200);
+      expect(payload).toHaveProperty('total');
+      expect(payload).toHaveProperty('students');
+    });
+  });
+
+  describe('Search through all students enrolled to course', () => {
+    let courseToSearchStudents;
+
+    beforeAll(async () => {
+      courseToSearchStudents = await createCourse({
+        app: testContext.app,
+        credentials: teacherCredentials,
+        body: prepareCourseFromSeed(courseToTest, '-courseToSearchStudents'),
+      });
+
+      await testContext.studentRequest({
+        url: `courses/${courseToSearchStudents.course.id}/enroll`,
+      });
+    });
+
+    it('should return one student by name', async () => {
+      const response = await testContext.request({
+        method: 'GET',
+        url: `courses/${courseToSearchStudents.course.id}/students?search=${studentJohn.first_name}`,
+      });
+
+      const payload = JSON.parse(response.payload);
+
+      expect(response.statusCode).toBe(200);
+      expect(payload).toHaveProperty('total');
+      expect(payload).toHaveProperty('students');
+      expect(payload.total).toBe(1);
+    });
+
+    it('should return no students', async () => {
+      const response = await testContext.request({
+        method: 'GET',
+        url: `courses/${courseToSearchStudents.course.id}/students?search=nomatchstring`,
+      });
+
+      const payload = JSON.parse(response.payload);
+
+      expect(response.statusCode).toBe(200);
+      expect(payload).toHaveProperty('total');
+      expect(payload).toHaveProperty('students');
+      expect(payload.total).toBe(0);
     });
   });
 });

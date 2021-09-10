@@ -3,7 +3,7 @@ export default {
     review: {
       header: 'Отзывы',
       empty: 'Отзывов еще нет',
-      be_first: 'Оцените урок первым',
+      be_first: 'Будьте первым кто добавит оценку',
     },
     start: 'Начать',
   },

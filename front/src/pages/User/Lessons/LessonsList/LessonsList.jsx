@@ -3,10 +3,10 @@ import { useState } from 'react';
 import { useQuery } from 'react-query';
 import { FilterOutlined, UserOutlined } from '@ant-design/icons';
 
-import OngoingFullLesson from '@sb-ui/components/lessonBlocks/OngoingFull';
 import AuthorSelect from '@sb-ui/components/molecules/AuthorSelect';
 import FilterMobile from '@sb-ui/components/molecules/FilterMobile';
 import KeywordsFilter from '@sb-ui/components/molecules/KeywordsFilter';
+import OngoingFullLesson from '@sb-ui/components/resourceBlocks/OngoingFull';
 import useMobile from '@sb-ui/hooks/useMobile';
 import emptyImg from '@sb-ui/resources/img/empty.svg';
 import { fetchKeywords } from '@sb-ui/utils/api/v1/keywords';

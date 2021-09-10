@@ -1,15 +1,14 @@
-import { Col, Comment, List, Rate, Row, Typography } from 'antd';
+import { Comment, List, Rate, Row, Typography } from 'antd';
 import { useCallback, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
 import { useHistory, useParams } from 'react-router-dom';
 
-import LessonKeywords from '@sb-ui/components/atoms/LessonKeywords';
-import { DescriptionText } from '@sb-ui/components/lessonBlocks/Public/Public.desktop.styled';
-import DefaultLessonImage from '@sb-ui/resources/img/lesson.svg';
-import { enrollLesson, getLesson } from '@sb-ui/utils/api/v1/lessons';
-import { LEARN_PAGE, USER_HOME } from '@sb-ui/utils/paths';
-import { USER_LESSON_MODAL_BASE_KEY } from '@sb-ui/utils/queries';
+import { DescriptionText } from '@sb-ui/components/resourceBlocks/Public/Public.desktop.styled';
+import lessonImage from '@sb-ui/resources/img/lesson.svg';
+import { enrollCourse, getCourse } from '@sb-ui/utils/api/v1/courses';
+import { LEARN_COURSE_PAGE, USER_HOME } from '@sb-ui/utils/paths';
+import { USER_COURSE_MODAL_BASE_KEY } from '@sb-ui/utils/queries';
 
 import * as S from './EnrollModal.mobile.styled';
 
@@ -52,26 +51,25 @@ const EnrollModalMobile = () => {
   const { t } = useTranslation('user');
   const { id } = useParams();
 
-  const historyPushLesson = useCallback(() => {
-    history.push(LEARN_PAGE.replace(':id', id));
+  const historyPushCourse = useCallback(() => {
+    history.push(LEARN_COURSE_PAGE.replace(':id', id));
   }, [history, id]);
 
   const { data: responseData } = useQuery(
-    [USER_LESSON_MODAL_BASE_KEY, { id }],
-    getLesson,
+    [USER_COURSE_MODAL_BASE_KEY, { id }],
+    getCourse,
     { keepPreviousData: true },
   );
 
-  const { mutate: mutatePostEnroll } = useMutation(enrollLesson);
-  const keywords = responseData?.keywords;
-  const { name, author, description, image } = responseData?.lesson || {
+  const { mutate: mutatePostEnroll } = useMutation(enrollCourse);
+
+  const { name, author, description } = responseData?.course || {
     author: {
       firstName: '',
       lastName: '',
     },
     name: '',
     description: '',
-    image: '',
   };
 
   const fullName = useMemo(
@@ -91,25 +89,21 @@ const EnrollModalMobile = () => {
   }, [history]);
 
   useEffect(() => {
-    if (responseData !== undefined && !responseData?.lesson) {
+    if (responseData !== undefined && !responseData?.course) {
       historyReplaceBack();
     }
   }, [historyReplaceBack, responseData]);
 
   const onClickStartEnroll = useCallback(async () => {
     mutatePostEnroll(id, {
-      onSuccess: historyPushLesson,
+      onSuccess: historyPushCourse,
     });
-  }, [historyPushLesson, id, mutatePostEnroll]);
+  }, [historyPushCourse, id, mutatePostEnroll]);
 
   return (
     <S.Main>
       <S.ImageBlock>
-        <S.Image
-          fallback={DefaultLessonImage}
-          src={image || DefaultLessonImage}
-          alt="Lesson"
-        />
+        <S.Image src={lessonImage} alt="Lesson" />
         <S.AuthorContainer>
           <S.AuthorAvatar>{firstNameLetter}</S.AuthorAvatar>
           <S.AuthorName>{fullName}</S.AuthorName>
@@ -119,14 +113,7 @@ const EnrollModalMobile = () => {
         <S.Title>{name}</S.Title>
       </Row>
       <Row>
-        <Col span={24}>
-          <S.Description>{description}</S.Description>
-        </Col>
-        {keywords && (
-          <S.KeywordsCol>
-            <LessonKeywords keywords={keywords} />
-          </S.KeywordsCol>
-        )}
+        <S.Description>{description}</S.Description>
       </Row>
       <S.ReviewHeader>
         <Title level={5}>{t('enroll_modal.review.header')}</Title>
@@ -165,7 +152,7 @@ const EnrollModalMobile = () => {
 
       <S.EnrollRow>
         <S.StartButton onClick={onClickStartEnroll}>
-          {t('home.open_lessons.start_button')}
+          {t('home.open_courses.start_button')}
         </S.StartButton>
       </S.EnrollRow>
     </S.Main>

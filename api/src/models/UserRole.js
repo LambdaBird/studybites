@@ -243,13 +243,13 @@ class UserRole extends BaseModel {
       .returning('*');
   }
 
-  static enrollToLesson({ userId, lessonId }) {
+  static enrollToResource({ userId, resourceId, resourceType }) {
     return this.query()
       .insert({
         user_id: userId,
         role_id: roles.STUDENT.id,
-        resource_type: resources.LESSON.name,
-        resource_id: lessonId,
+        resource_type: resourceType,
+        resource_id: resourceId,
       })
       .returning('*');
   }

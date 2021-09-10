@@ -181,6 +181,7 @@ class Lesson extends BaseModel {
         this.knex().raw(`
           select resource_id from users_roles 
           where user_id = ${userId} and role_id = ${roles.STUDENT.id}
+            and resource_type = '${resources.LESSON.name}'
         `),
       )
       .throwIfNotFound({
@@ -427,6 +428,8 @@ class Lesson extends BaseModel {
         '=',
         'lessons.id',
       )
+      .where('users_roles.role_id', roles.MAINTAINER.id)
+      .andWhere('enrolled.resource_type', resources.LESSON.name)
       .joinRaw(
         `left join resource_keywords on lessons.id = resource_keywords.resource_id 
         and resource_keywords.resource_type = '${resources.LESSON.name}'`,

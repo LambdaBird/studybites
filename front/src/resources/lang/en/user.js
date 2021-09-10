@@ -3,7 +3,7 @@ export default {
     review: {
       header: 'Reviews',
       empty: 'No reviews yet',
-      be_first: 'Be first to rate a lesson',
+      be_first: 'Be first to rate it',
     },
     start: 'Start',
   },
