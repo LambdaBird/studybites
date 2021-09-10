@@ -236,11 +236,16 @@ class UserRole extends BaseModel {
       .returning('*');
   }
 
-  static async enrollToResource({ userId, resourceId, resourceType }) {
+  static async enrollToResource({
+    userId,
+    resourceId,
+    resourceType,
+    resourceStatuses,
+  }) {
     await this.query()
       .findById(resourceId)
       .from(resourceType === resources.COURSE.name ? 'courses' : 'lessons')
-      .where({ status: 'Public' })
+      .whereIn('status', resourceStatuses)
       .whereNotIn(
         'id',
         this.knex().raw(`

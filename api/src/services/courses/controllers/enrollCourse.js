@@ -31,6 +31,7 @@ async function handler({ user: { id: userId }, params: { courseId } }) {
     userId,
     resourceId: courseId,
     resourceType: resources.COURSE.name,
+    resourceStatuses: resources.COURSE.enrollStatuses,
   });
 
   return { message: messages.COURSE_MSG_SUCCESS_ENROLL };

@@ -2,6 +2,7 @@ import { useCallback, useMemo } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import {
+  LEARN_COURSE_PAGE,
   LEARN_PAGE,
   USER_ENROLL_COURSE,
   USER_ENROLL_LESSON,
@@ -31,7 +32,9 @@ export const useResource = ({ resource: { id, author }, isCourse = false }) => {
   }, [history, id, isCourse, query]);
 
   const handleContinueLesson = useCallback(() => {
-    history.push(LEARN_PAGE.replace(':id', id));
+    return isCourse
+      ? history.push(LEARN_COURSE_PAGE.replace(':id', id))
+      : history.push(LEARN_PAGE.replace(':id', id));
   }, [history, id]);
 
   return { fullName, firstNameLetter, handleEnroll, handleContinueLesson };
