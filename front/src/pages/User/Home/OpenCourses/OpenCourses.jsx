@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useHistory, useLocation } from 'react-router-dom';
 
+import KeywordsFilter from '@sb-ui/components/molecules/KeywordsFilter';
 import { PAGE_SIZE } from '@sb-ui/pages/User/Lessons/LessonsList/constants';
 import * as S from '@sb-ui/pages/User/Lessons/LessonsList/LessonsList.styled';
 import emptyImg from '@sb-ui/resources/img/empty.svg';
@@ -19,6 +20,7 @@ const OpenCourses = () => {
   const history = useHistory();
   const [searchText, setSearchText] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [keywords, setKeywords] = useState([]);
 
   const {
     data: responseData,
@@ -31,6 +33,7 @@ const OpenCourses = () => {
         offset: (currentPage - 1) * PAGE_SIZE,
         limit: PAGE_SIZE,
         search: searchText,
+        tags: keywords,
       },
     ],
     getCourses,
@@ -74,7 +77,13 @@ const OpenCourses = () => {
     <S.Wrapper>
       <S.LessonsHeader>
         <S.OpenLessonsTitle>{t('home.open_courses.title')}</S.OpenLessonsTitle>
-        <S.StyledSearch searchText={searchText} setSearchText={setSearchText} />
+        <S.FilterWrapper>
+          <S.StyledSearch
+            searchText={searchText}
+            setSearchText={setSearchText}
+          />
+          <KeywordsFilter setValues={setKeywords} />
+        </S.FilterWrapper>
       </S.LessonsHeader>
       <S.LessonsRow>
         <OpenCoursesBlock isLoading={isLoading} error={error} data={courses} />
