@@ -20,10 +20,8 @@ export const options = {
       200: {
         type: 'object',
         properties: {
-          status: {
-            type: 'string',
-            enum: resources.COURSE.status,
-            default: 'Draft',
+          courses: {
+            type: 'array',
           },
         },
       },
@@ -52,8 +50,8 @@ async function handler({ body: { status, courses } }) {
   if (status !== 'Draft' && status !== 'Archived') {
     throw new BadRequestError(errors.USER_ERR_PUBLISH_RESTRICTED);
   }
-
-  return Course.updateCoursesStatus({ courses, status });
+  const updatedCourses = await Course.updateCoursesStatus({ courses, status });
+  return { courses: updatedCourses };
 }
 
 export default { options, handler };
