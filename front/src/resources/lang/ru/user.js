@@ -29,9 +29,17 @@ export default {
       view_all_courses: 'Посмотреть все мои курсы',
       continue_button: 'Продолжить',
     },
+    ongoing_courses: {
+      title: 'Текущие курсы',
+      not_found: 'Нет текущих курсов',
+    },
     finished_lessons: {
       not_found: 'Нет законченых уроков',
       title: 'Законченные уроки',
+    },
+    finished_courses: {
+      title: 'Законченные курсы',
+      not_found: 'Нет законченых курсов',
     },
   },
   lesson: {
