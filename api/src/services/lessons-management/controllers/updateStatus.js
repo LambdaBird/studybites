@@ -1,4 +1,4 @@
-import { resources, roles } from '../../../config';
+import { resources, roles, userServiceErrors as errors } from '../../../config';
 
 export const options = {
   schema: {
@@ -6,10 +6,6 @@ export const options = {
     body: {
       type: 'object',
       properties: {
-        force: {
-          type: 'boolean',
-          default: false,
-        },
         status: {
           type: 'string',
           enum: resources.LESSON.status,
@@ -22,8 +18,6 @@ export const options = {
       200: {
         type: 'object',
         properties: {
-          update: { type: 'boolean' },
-          courses: { type: 'array' },
           status: {
             type: 'string',
             enum: resources.LESSON.status,
@@ -48,7 +42,7 @@ export const options = {
   },
 };
 
-async function handler({ body: { status, force }, params: { lessonId } }) {
+async function handler({ body: { status }, params: { lessonId } }, reply) {
   const {
     models: { Course, Lesson },
   } = this;
@@ -59,32 +53,20 @@ async function handler({ body: { status, force }, params: { lessonId } }) {
     const nonDraftAndArchivedCourses = allLessonCourses.filter(
       (lessonCourse) => lessonCourse.status !== status,
     );
-    if (force) {
-      await Course.updateCoursesStatus({
-        courses: nonDraftAndArchivedCourses,
-        status,
-      });
-      await Lesson.updateLessonStatus({ lessonId, status });
-      return {
-        status,
-        update: true,
-        courses: allLessonCourses,
-      };
-    }
     if (nonDraftAndArchivedCourses.length > 0) {
-      return {
-        status,
-        update: false,
-        courses: allLessonCourses,
-      };
+      return reply.status(400).send({
+        statusCode: 400,
+        message: errors.USER_ERR_COURSES_RESTRICTED,
+        payload: {
+          courses: nonDraftAndArchivedCourses,
+          status,
+        },
+      });
     }
   }
-
   await Lesson.updateLessonStatus({ lessonId, status });
   return {
     status,
-    update: true,
-    courses: allLessonCourses,
   };
 }
 

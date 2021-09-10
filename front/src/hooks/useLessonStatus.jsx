@@ -5,7 +5,8 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 import { Statuses } from '@sb-ui/pages/Teacher/Home/Dashboard/constants';
 import { queryClient } from '@sb-ui/query';
-import { postStatus } from '@sb-ui/utils/api/v1/status-managemenet';
+import { putCoursesStatus } from '@sb-ui/utils/api/v1/courses-management';
+import { putLessonStatus } from '@sb-ui/utils/api/v1/teacher';
 import {
   TEACHER_COURSES_BASE_KEY,
   TEACHER_LESSON_BASE_KEY,
@@ -14,23 +15,38 @@ import {
 
 export const useLessonStatus = ({ id }) => {
   const { t } = useTranslation('teacher');
-  const updateLessonStatusMutation = useMutation(postStatus, {
-    onSuccess: ({ status: statusToChange, update, courses }) => {
-      if (update) {
-        queryClient.invalidateQueries(TEACHER_LESSON_BASE_KEY);
-        queryClient.invalidateQueries(TEACHER_LESSONS_BASE_KEY);
-        queryClient.invalidateQueries(TEACHER_COURSES_BASE_KEY);
-        if (statusToChange !== Statuses.DRAFT) {
-          Modal.success({
-            width: 480,
-            title: t('lesson_edit.publish_modal.title'),
-            okText: t('lesson_edit.publish_modal.ok'),
-          });
-        }
+
+  const { mutateAsync: updateCoursesStatuses } = useMutation(putCoursesStatus, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(TEACHER_COURSES_BASE_KEY);
+    },
+  });
+
+  const updateLessonStatusMutation = useMutation(putLessonStatus, {
+    onSuccess: ({ status: statusToChange }) => {
+      queryClient.invalidateQueries(TEACHER_LESSON_BASE_KEY);
+      queryClient.invalidateQueries(TEACHER_LESSONS_BASE_KEY);
+      queryClient.invalidateQueries(TEACHER_COURSES_BASE_KEY);
+      if (
+        statusToChange !== Statuses.DRAFT &&
+        statusToChange !== Statuses.ARCHIVED
+      ) {
+        Modal.success({
+          width: 480,
+          title: t('lesson_edit.publish_modal.title'),
+          okText: t('lesson_edit.publish_modal.ok'),
+        });
+      }
+    },
+    onError: (error) => {
+      if (error.response?.data?.message !== 'errors.courses_restricted') {
         return;
       }
 
-      const nonDraftOrArchivedCourses = courses.filter(
+      const { courses, status: statusToChange } =
+        error.response.data.payload || {};
+
+      const nonDraftOrArchivedCourses = courses?.filter(
         (course) => course.status !== statusToChange,
       );
       Modal.confirm({
@@ -41,11 +57,14 @@ export const useLessonStatus = ({ id }) => {
         }),
         okText: t('lesson_dashboard.status_modal.ok'),
         cancelText: t('lesson_dashboard.status_modal.cancel'),
-        onOk() {
+        async onOk() {
+          await updateCoursesStatuses({
+            courses,
+            status: statusToChange,
+          });
           updateLessonStatusMutation.mutate({
             id,
             status: statusToChange,
-            force: true,
           });
         },
         onCancel() {},

@@ -193,9 +193,6 @@ const LessonEdit = () => {
 
   const handleDraft = async () => {
     updateLessonStatusMutation.mutate({ id: lessonId, status: Statuses.DRAFT });
-    /* await updateLessonStatus({
-      lesson: { id: +lessonId, status: Statuses.DRAFT },
-    }); */
   };
 
   const handleInputTitle = (e) => {

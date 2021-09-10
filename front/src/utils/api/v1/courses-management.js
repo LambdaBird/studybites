@@ -28,3 +28,13 @@ export const getCourse = async ({ queryKey }) => {
   const { data } = await api.get(`${PATH}/courses/${id}`);
   return data;
 };
+
+export const putCourseStatus = async (params) => {
+  const { data } = await api.put(`${PATH}/courses/${params.id}/status`, params);
+  return data;
+};
+
+export const putCoursesStatus = async (params) => {
+  const { data } = await api.put(`${PATH}/courses/status`, params);
+  return data;
+};

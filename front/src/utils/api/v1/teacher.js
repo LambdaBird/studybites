@@ -64,3 +64,8 @@ export const getTeacherLessonStudents = async ({ queryKey }) => {
     })),
   };
 };
+
+export const putLessonStatus = async (params) => {
+  const { data } = await api.put(`${PATH}/lessons/${params.id}/status`, params);
+  return data;
+};

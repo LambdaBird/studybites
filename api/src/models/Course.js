@@ -106,6 +106,10 @@ export default class Course extends BaseModel {
     return this.query(trx).findById(courseId).patch(course).returning('*');
   }
 
+  static getCourseWithLessons({ courseId }) {
+    return this.query().findById(courseId).withGraphFetched('lessons');
+  }
+
   static getAllCoursesByLessonId({ lessonId }) {
     return this.query()
       .join(
@@ -115,6 +119,10 @@ export default class Course extends BaseModel {
         'course_lesson_structure.course_id',
       )
       .where('course_lesson_structure.lesson_id', '=', lessonId);
+  }
+
+  static updateCourseStatus({ courseId, status }) {
+    return this.query().findById(courseId).patch({ status }).returning('*');
   }
 
   static updateCoursesStatus({ courses, status }) {
