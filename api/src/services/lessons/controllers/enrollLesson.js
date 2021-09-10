@@ -24,14 +24,14 @@ async function handler({ user: { id: userId }, params: { lessonId } }) {
       lessonService: { lessonServiceMessages: messages },
       globals: { resources },
     },
-    models: { Lesson, UserRole },
+    models: { UserRole },
   } = this;
 
-  await Lesson.checkIfEnrolled({ lessonId, userId });
   await UserRole.enrollToResource({
     userId,
     resourceId: lessonId,
     resourceType: resources.LESSON.name,
+    resourceStatuses: resources.LESSON.enrollStatuses,
   });
 
   return { message: messages.LESSON_MSG_SUCCESS_ENROLL };

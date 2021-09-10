@@ -33,6 +33,10 @@ export default {
       not_found: 'No finished lessons yet',
     },
   },
+  course: {
+    by: 'By',
+    lessons: 'lessons',
+  },
   lesson: {
     results: {
       title: 'Results',

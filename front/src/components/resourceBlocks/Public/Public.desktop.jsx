@@ -9,12 +9,15 @@ import DefaultLessonImage from '@sb-ui/resources/img/lesson.svg';
 import { useResource } from './useResource';
 import * as S from './Public.desktop.styled';
 
-const PublicDesktop = ({ resource, isCourse }) => {
+const PublicDesktop = ({ resource, isCourse, isCourseLesson }) => {
   const { t } = useTranslation('user');
 
   const { name, description, isEnrolled, keywords, image } = resource;
   const { fullName, firstNameLetter, handleContinueLesson, handleEnroll } =
     useResource({ resource, isCourse });
+
+  const isButtonDisabled =
+    isCourseLesson && !resource.isFinished && !resource.isCurrent;
 
   return (
     <>
@@ -59,11 +62,20 @@ const PublicDesktop = ({ resource, isCourse }) => {
             </S.EnrollColKeyword>
             <S.EnrollColButton>
               {isEnrolled ? (
-                <Button type="primary" onClick={handleContinueLesson}>
+                <Button
+                  type="primary"
+                  onClick={handleContinueLesson}
+                  disabled={isButtonDisabled}
+                >
                   {t('home.ongoing_lessons.continue_button')}
                 </Button>
               ) : (
-                <Button size="medium" type="secondary" onClick={handleEnroll}>
+                <Button
+                  size="medium"
+                  type="secondary"
+                  onClick={handleEnroll}
+                  disabled={isButtonDisabled}
+                >
                   {t('home.open_lessons.enroll_button')}
                 </Button>
               )}
@@ -78,6 +90,7 @@ const PublicDesktop = ({ resource, isCourse }) => {
 PublicDesktop.propTypes = {
   resource: PublicResourceType.isRequired,
   isCourse: PropTypes.bool,
+  isCourseLesson: PropTypes.bool,
 };
 
 export default PublicDesktop;

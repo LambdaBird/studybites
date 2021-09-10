@@ -4,6 +4,7 @@ export const USER_LESSON_MODAL_BASE_KEY = 'user/lesson_modal';
 export const USER_COURSE_MODAL_BASE_KEY = 'user/course_modal';
 export const USER_PUBLIC_LESSONS_BASE_KEY = 'user/public_lessons';
 export const USER_PUBLIC_COURSES_BASE_KEY = 'user/public_courses';
+export const USER_ENROLLED_COURSE = 'user/enrolled_course';
 export const USER_ENROLLED_LESSONS_BASE_KEY = 'user/enrolled_lessons';
 export const USER_ENROLLED_LESSONS_FINISHED_BASE_KEY =
   'user/enrolled_lessons_finished';
