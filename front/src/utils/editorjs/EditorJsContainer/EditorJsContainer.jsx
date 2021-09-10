@@ -145,6 +145,7 @@ const EditorJsContainer = forwardRef((props, ref) => {
             Bold: t('tools.bold.title'),
             Italic: t('tools.italic.title'),
             Link: t('tools.link.title'),
+            Bricks: t('tools.bricks.title'),
           },
           tools: {
             stub: {
@@ -189,12 +190,27 @@ const EditorJsContainer = forwardRef((props, ref) => {
               example: t('tools.closed_question.example'),
               none: t('tools.closed_question.none'),
             },
+            fillTheGap: {
+              hint: t('tools.fill_the_gap.hint'),
+              placeholder: t('tools.fill_the_gap.placeholder'),
+            },
+            match: {
+              input_left_placeholder: t('tools.match.input_left_placeholder'),
+              input_right_placeholder: t('tools.match.input_right_placeholder'),
+              hint: t('tools.match.hint'),
+              add_line: t('tools.match.add_line'),
+            },
             warning: {
               placeholder: t('tools.warning.placeholder'),
               message: t('tools.warning.message'),
             },
             code: {
               placeholder: t('tools.code.placeholder'),
+            },
+            bricks: {
+              question: t('tools.bricks.question'),
+              answer: t('tools.bricks.answer'),
+              additional: t('tools.bricks.additional'),
             },
           },
         },

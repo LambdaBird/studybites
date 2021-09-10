@@ -61,21 +61,20 @@ export default class CourseLessonStructure extends BaseModel {
   }
 
   static async insertLessons({ trx, lessons, courseId, update = false }) {
-    const lessonStructure = [];
-
-    for (let i = 0, n = lessons.length; i < n; i += 1) {
-      lessonStructure.push({
+    const lessonStructure = lessons
+      .map((lesson) => ({
         id: v4(),
         course_id: courseId,
-        lesson_id: lessons[i].id,
-      });
-    }
-
-    for (let i = 0, n = lessonStructure.length; i < n; i += 1) {
-      lessonStructure[i].parent_id = !i ? null : lessonStructure[i - 1].id;
-      lessonStructure[i].child_id =
-        i === n - 1 ? null : lessonStructure[i + 1].id;
-    }
+        lesson_id: lesson.id,
+      }))
+      .map((lesson, index, lessonsToStructure) => ({
+        ...lesson,
+        parent_id: !index ? null : lessonsToStructure[index - 1].id,
+        child_id:
+          index === lessonsToStructure.length - 1
+            ? null
+            : lessonsToStructure[index + 1].id,
+      }));
 
     if (update) {
       await this.query(trx).delete().where({
@@ -94,15 +93,13 @@ export default class CourseLessonStructure extends BaseModel {
       {},
     );
 
-    const lessonsInOrder = lessonsUnordered.reduce(
+    return lessonsUnordered.reduce(
       (result, value, index) => [
         ...result,
         index ? dictionary[result[index - 1].childId] : value,
       ],
       [],
     );
-
-    return lessonsInOrder;
   }
 
   static async getAllLessons({ trx, courseId, userId }) {

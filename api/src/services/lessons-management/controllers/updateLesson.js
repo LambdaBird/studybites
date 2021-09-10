@@ -6,6 +6,16 @@ const options = {
     body: {
       type: 'object',
       properties: {
+        keywords: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'number' },
+              name: { type: 'string' },
+            },
+          },
+        },
         lesson: {
           type: 'object',
           properties: {
@@ -62,9 +72,12 @@ const options = {
   },
 };
 
-async function handler({ body: { lesson, blocks }, params: { lessonId } }) {
+async function handler({
+  body: { lesson, blocks, keywords },
+  params: { lessonId },
+}) {
   const {
-    models: { Lesson, Block, LessonBlockStructure },
+    models: { Lesson, Block, LessonBlockStructure, Keyword },
   } = this;
 
   try {
@@ -75,6 +88,15 @@ async function handler({ body: { lesson, blocks }, params: { lessonId } }) {
         lessonData = await Lesson.updateLesson({ trx, lessonId, lesson });
       } else {
         lessonData = await Lesson.query(trx).findById(lessonId);
+      }
+
+      if (keywords) {
+        await Keyword.createMany({
+          trx,
+          keywords,
+          resourceId: lessonData.id,
+          update: true,
+        });
       }
 
       if (blocks) {

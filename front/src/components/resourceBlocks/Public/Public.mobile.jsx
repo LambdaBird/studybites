@@ -1,9 +1,10 @@
-import { Row } from 'antd';
+import { Col, Row } from 'antd';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 
+import LessonKeywords from '@sb-ui/components/atoms/LessonKeywords';
 import { PublicResourceType } from '@sb-ui/components/resourceBlocks/types';
-import lessonImage from '@sb-ui/resources/img/lesson.svg';
+import DefaultLessonImage from '@sb-ui/resources/img/lesson.svg';
 
 import { useResource } from './useResource';
 import * as S from './Public.mobile.styled';
@@ -11,7 +12,7 @@ import * as S from './Public.mobile.styled';
 const PublicMobile = ({ resource, isCourse, isCourseLesson }) => {
   const { t } = useTranslation('user');
 
-  const { name, description, isEnrolled } = resource;
+  const { name, description, isEnrolled, image, keywords } = resource;
   const { fullName, firstNameLetter, handleContinueLesson, handleEnroll } =
     useResource({ resource, isCourse });
 
@@ -20,9 +21,13 @@ const PublicMobile = ({ resource, isCourse, isCourseLesson }) => {
 
   return (
     <S.Main size="large" wrap={false}>
-      <div style={{ height: '9rem' }}>
-        <S.Image src={lessonImage} alt="Lesson" />
-      </div>
+      <S.ImageWrapper>
+        <S.Image
+          fallback={DefaultLessonImage}
+          src={image || DefaultLessonImage}
+          alt="Lesson"
+        />
+      </S.ImageWrapper>
       <Row>
         <S.Title
           ellipsis={{
@@ -33,16 +38,14 @@ const PublicMobile = ({ resource, isCourse, isCourseLesson }) => {
           {name}
         </S.Title>
       </Row>
-      <Row>
-        <S.Description
-          ellipsis={{
-            rows: 2,
-            tooltip: true,
-          }}
-        >
-          {description}
-        </S.Description>
-      </Row>
+      <S.DescriptionRow style={{ marginBottom: '1rem' }}>
+        <Col span={24}>
+          <S.Description>{description}</S.Description>
+        </Col>
+        <Col span={24}>
+          <LessonKeywords keywords={keywords} />
+        </Col>
+      </S.DescriptionRow>
       <S.EnrollRow>
         {isEnrolled ? (
           <S.Enroll

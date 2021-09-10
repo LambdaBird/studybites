@@ -12,6 +12,7 @@ const options = {
               name: { type: 'string' },
               description: { type: ['string', 'null'] },
               status: { type: 'string' },
+              image: { type: ['string', 'null'] },
               author: {
                 type: 'object',
                 properties: {

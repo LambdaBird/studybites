@@ -2,28 +2,17 @@ import { Button, Col } from 'antd';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 
+import LessonKeywords from '@sb-ui/components/atoms/LessonKeywords';
 import { PublicResourceType } from '@sb-ui/components/resourceBlocks/types';
-import lessonImage from '@sb-ui/resources/img/lesson.svg';
+import DefaultLessonImage from '@sb-ui/resources/img/lesson.svg';
 
 import { useResource } from './useResource';
-import {
-  AuthorAvatar,
-  AuthorContainer,
-  AuthorName,
-  DescriptionText,
-  EnrollRow,
-  LeftContent,
-  LessonImg,
-  MainSpace,
-  RightContent,
-  RowEllipsis,
-  TitleEllipsis,
-} from './Public.desktop.styled';
+import * as S from './Public.desktop.styled';
 
 const PublicDesktop = ({ resource, isCourse, isCourseLesson }) => {
   const { t } = useTranslation('user');
 
-  const { name, description, isEnrolled } = resource;
+  const { name, description, isEnrolled, keywords, image } = resource;
   const { fullName, firstNameLetter, handleContinueLesson, handleEnroll } =
     useResource({ resource, isCourse });
 
@@ -32,61 +21,68 @@ const PublicDesktop = ({ resource, isCourse, isCourseLesson }) => {
 
   return (
     <>
-      <MainSpace size="large" wrap={false}>
-        <LeftContent>
+      <S.MainSpace size="large" wrap={false}>
+        <S.LeftContent>
           <div>
-            <LessonImg src={lessonImage} alt="Lesson" />
-            <AuthorContainer>
-              <AuthorAvatar>{firstNameLetter}</AuthorAvatar>
-              <AuthorName>{fullName}</AuthorName>
-            </AuthorContainer>
+            <S.LessonImg
+              fallback={DefaultLessonImage}
+              src={image || DefaultLessonImage}
+              alt="Lesson"
+            />
+            <S.AuthorContainer>
+              <S.AuthorAvatar>{firstNameLetter}</S.AuthorAvatar>
+              <S.AuthorName>{fullName}</S.AuthorName>
+            </S.AuthorContainer>
+
+            <S.AuthorContainer>
+              <S.AuthorAvatar>{firstNameLetter}</S.AuthorAvatar>
+              <S.AuthorName>{fullName}</S.AuthorName>
+            </S.AuthorContainer>
           </div>
-        </LeftContent>
-        <RightContent>
-          <RowEllipsis>
+        </S.LeftContent>
+        <S.RightContent>
+          <S.RowEllipsis>
             <Col span={24}>
-              <TitleEllipsis
-                ellipsis={{
-                  tooltip: true,
-                }}
-                level={3}
-              >
-                {name}
-              </TitleEllipsis>
+              <S.TitleEllipsis>{name}</S.TitleEllipsis>
             </Col>
             <Col span={24}>
-              <DescriptionText
+              <S.DescriptionText
                 ellipsis={{
                   tooltip: true,
                   rows: 2,
                 }}
               >
                 {description}
-              </DescriptionText>
+              </S.DescriptionText>
             </Col>
-          </RowEllipsis>
-          <EnrollRow justify="end">
-            {isEnrolled ? (
-              <Button
-                type="primary"
-                onClick={handleContinueLesson}
-                disabled={isButtonDisabled}
-              >
-                {t('home.ongoing_lessons.continue_button')}
-              </Button>
-            ) : (
-              <Button
-                size="medium"
-                type="secondary"
-                onClick={handleEnroll}
-                disabled={isButtonDisabled}
-              >
-                {t('home.open_lessons.enroll_button')}
-              </Button>
-            )}
-          </EnrollRow>
-        </RightContent>
-      </MainSpace>
+          </S.RowEllipsis>
+          <S.EnrollRow>
+            <S.EnrollColKeyword>
+              <LessonKeywords keywords={keywords} />
+            </S.EnrollColKeyword>
+            <S.EnrollColButton>
+              {isEnrolled ? (
+                <Button
+                  type="primary"
+                  onClick={handleContinueLesson}
+                  disabled={isButtonDisabled}
+                >
+                  {t('home.ongoing_lessons.continue_button')}
+                </Button>
+              ) : (
+                <Button
+                  size="medium"
+                  type="secondary"
+                  onClick={handleEnroll}
+                  disabled={isButtonDisabled}
+                >
+                  {t('home.open_lessons.enroll_button')}
+                </Button>
+              )}
+            </S.EnrollColButton>
+          </S.EnrollRow>
+        </S.RightContent>
+      </S.MainSpace>
     </>
   );
 };

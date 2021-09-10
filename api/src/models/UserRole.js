@@ -74,10 +74,17 @@ class UserRole extends BaseModel {
     const query = this.query()
       .skipUndefined()
       .select('users.id', 'users.email', 'users.first_name', 'users.last_name')
-      .innerJoin('users', 'users.id', '=', 'users_roles.user_id')
-      .where('users_roles.resource_type', resourceType)
-      .andWhere('users_roles.resource_id', resourceId)
-      .andWhere('users_roles.role_id', roles.STUDENT.id)
+      .join('users', (builder) =>
+        builder
+          .on('users_roles.user_id', '=', 'users.id')
+          .andOn('users_roles.role_id', '=', roles.STUDENT.id)
+          .andOn(
+            'users_roles.resource_type',
+            '=',
+            this.knex().raw('?', [resourceType]),
+          ),
+      )
+      .where('users_roles.resource_id', resourceId)
       .groupBy('users.id', 'users_roles.user_id')
       .andWhere(
         this.knex().raw(
@@ -268,6 +275,26 @@ class UserRole extends BaseModel {
         resource_id: resourceId,
       })
       .returning('*');
+  }
+
+  static getAllAuthors({ offset: start, limit, search }) {
+    const end = start + limit - 1;
+
+    return this.query()
+      .select('users.id', 'users.first_name', 'users.last_name')
+      .skipUndefined()
+      .where({
+        role_id: roles.TEACHER.id,
+      })
+      .join('users', 'users.id', '=', 'users_roles.user_id')
+      .andWhere(
+        this.knex().raw(
+          `concat(users.email, ' ', users.first_name, ' ', users.last_name, ' ', users.first_name)`,
+        ),
+        'ilike',
+        search ? `%${search.replace(/ /g, '%')}%` : undefined,
+      )
+      .range(start, end);
   }
 }
 

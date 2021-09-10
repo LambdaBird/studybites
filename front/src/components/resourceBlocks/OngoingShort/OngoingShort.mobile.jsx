@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 
 import { LessonType } from '@sb-ui/components/resourceBlocks/types';
-import lessonImg from '@sb-ui/resources/img/lesson.svg';
+import DefaultLessonImage from '@sb-ui/resources/img/lesson.svg';
 import { LEARN_PAGE } from '@sb-ui/utils/paths';
 
 import * as S from './OngoingShort.styled';
@@ -14,7 +14,7 @@ const { Title } = Typography;
 const OngoingShortMobile = ({ lesson }) => {
   const { t } = useTranslation('user');
   const history = useHistory();
-  const { name, id, interactiveTotal, interactivePassed } = lesson;
+  const { name, id, interactiveTotal, interactivePassed, image } = lesson;
 
   const handleContinueLesson = () => {
     history.push(LEARN_PAGE.replace(':id', id));
@@ -30,7 +30,11 @@ const OngoingShortMobile = ({ lesson }) => {
   return (
     <S.MainSpace>
       <S.LeftColumn span={8}>
-        <S.StyledImage src={lessonImg} alt="Lesson" />
+        <S.StyledImage
+          fallback={DefaultLessonImage}
+          src={image || DefaultLessonImage}
+          alt="Lesson"
+        />
         <S.ProgressBar percent={countPercentage} status="normal" />
       </S.LeftColumn>
       <S.RightColumn span={16}>

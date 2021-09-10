@@ -5,12 +5,23 @@ const options = {
       200: {
         type: 'object',
         properties: {
+          keywords: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                id: { type: 'number' },
+                name: { type: 'string' },
+              },
+            },
+          },
           lesson: {
             type: 'object',
             properties: {
               id: { type: 'number' },
               name: { type: 'string' },
               description: { type: ['string', 'null'] },
+              image: { type: ['string', 'null'] },
               status: { type: 'string' },
               createdAt: { type: 'string' },
               updatedAt: { type: 'string' },
@@ -38,12 +49,13 @@ const options = {
 
 async function handler({ params: { lessonId } }) {
   const {
-    models: { Lesson },
+    models: { Lesson, ResourceKeyword },
   } = this;
 
   const lesson = await Lesson.getLessonWithAuthor({ lessonId });
+  const keywords = await ResourceKeyword.getLessonKeywords({ lessonId });
 
-  return { lesson };
+  return { lesson, keywords };
 }
 
 export default { options, handler };
