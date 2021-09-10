@@ -12,6 +12,12 @@ const LessonGeneralType = {
   description: PropTypes.string,
   author: AuthorType,
   image: PropTypes.oneOfType([PropTypes.string, PropTypes.oneOf([null])]),
+  keywords: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number,
+      name: PropTypes.string,
+    }),
+  ),
 };
 
 export const LessonType = PropTypes.shape({

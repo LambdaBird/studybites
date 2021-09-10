@@ -30,9 +30,18 @@ export const Title = styled(Typography.Title)`
   line-height: 28px !important;
 `;
 
-export const Description = styled(Paragraph)`
+export const Description = styled(Paragraph).attrs({
+  ellipsis: {
+    rows: 2,
+    tooltip: true,
+  },
+})`
   text-align: justify;
   color: ${variables['lesson-block-description-color']};
+`;
+
+export const DescriptionRow = styled(Row)`
+  margin-bottom: 1rem;
 `;
 
 export const AuthorContainer = styled.div`

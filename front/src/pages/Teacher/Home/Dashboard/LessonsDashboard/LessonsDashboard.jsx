@@ -6,6 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { PlusOutlined } from '@ant-design/icons';
 
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
+import KeywordsFilter from '@sb-ui/components/molecules/KeywordsFilter';
 import { getTeacherLessons } from '@sb-ui/utils/api/v1/teacher';
 import { LESSONS_NEW } from '@sb-ui/utils/paths';
 import { TEACHER_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
@@ -25,6 +26,7 @@ const LessonsDashboard = () => {
   const [selectedStatus, setSelectedStatus] = useState(null);
   const [search, setSearch] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [keywords, setKeywords] = useState([]);
 
   const { data: responseData, isLoading } = useQuery(
     [
@@ -34,6 +36,7 @@ const LessonsDashboard = () => {
         limit: pageLimit,
         search,
         status: selectedStatus,
+        tags: keywords,
       },
     ],
     getTeacherLessons,
@@ -72,6 +75,7 @@ const LessonsDashboard = () => {
               </Option>
             ))}
           </S.StyledSelect>
+          <KeywordsFilter setValues={setKeywords} margin={0} />
         </Space>
         <S.AddButton icon={<PlusOutlined />} onClick={handleCreateLesson}>
           {t('lesson_dashboard.add_button')}

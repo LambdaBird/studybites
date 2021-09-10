@@ -11,7 +11,14 @@ export default {
     open_lessons: {
       title: 'Open lessons',
       not_found: 'No open lessons yet',
-      search: 'Name or author',
+      search: 'Lesson name',
+      enroll_button: 'Enroll',
+      start_button: 'Start',
+    },
+    open_courses: {
+      title: 'Open courses',
+      not_found: 'No open courses yet',
+      search: 'Name',
       enroll_button: 'Enroll',
       start_button: 'Start',
     },

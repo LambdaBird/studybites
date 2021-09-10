@@ -9,7 +9,7 @@ const LessonsList = ({ lessons, onCreateLesson, isAddNewShown, isCourse }) => (
   <>
     {isAddNewShown ? (
       <S.CardCol>
-        <AddCard onClick={onCreateLesson} />
+        <AddCard onClick={onCreateLesson} isCourse={isCourse} />
       </S.CardCol>
     ) : (
       lessons.map((lesson) => (
