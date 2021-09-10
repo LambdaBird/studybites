@@ -2,15 +2,23 @@ import { Button, Row } from 'antd';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import LessonKeywords from '@sb-ui/components/atoms/LessonKeywords';
 import { LessonType } from '@sb-ui/components/resourceBlocks/types';
-import lessonImage from '@sb-ui/resources/img/lesson.svg';
+import DefaultLessonImage from '@sb-ui/resources/img/lesson.svg';
 
 import { useResource } from './useResource';
 import * as S from './OngoingFull.desktop.styled';
 
 const OngoingFullDesktop = ({ lesson }) => {
   const { t } = useTranslation('user');
-  const { name, description, interactiveTotal, interactivePassed } = lesson;
+  const {
+    name,
+    description,
+    interactiveTotal,
+    interactivePassed,
+    image,
+    keywords,
+  } = lesson;
 
   const { fullName, firstNameLetter, handleContinueLesson } = useResource({
     resource: lesson,
@@ -28,7 +36,11 @@ const OngoingFullDesktop = ({ lesson }) => {
       <S.MainSpace size="large" wrap={false}>
         <S.LeftContent>
           <div>
-            <S.LessonImg src={lessonImage} alt="Lesson" />
+            <S.LessonImg
+              fallback={DefaultLessonImage}
+              src={image || DefaultLessonImage}
+              alt="Lesson"
+            />
             <S.AuthorContainer>
               <S.AuthorAvatar>{firstNameLetter}</S.AuthorAvatar>
               <S.AuthorName>{fullName}</S.AuthorName>
@@ -60,10 +72,15 @@ const OngoingFullDesktop = ({ lesson }) => {
               {description}
             </S.DescriptionText>
           </Row>
-          <S.EnrollRow justify="end">
-            <Button type="primary" onClick={handleContinueLesson}>
-              {t('home.ongoing_lessons.continue_button')}
-            </Button>
+          <S.EnrollRow>
+            <S.EnrollColKeyword>
+              <LessonKeywords keywords={keywords} />
+            </S.EnrollColKeyword>
+            <S.EnrollColButton>
+              <Button type="primary" onClick={handleContinueLesson}>
+                {t('home.ongoing_lessons.continue_button')}
+              </Button>
+            </S.EnrollColButton>
           </S.EnrollRow>
         </S.RightContent>
       </S.MainSpace>

@@ -11,14 +11,14 @@ export default {
     open_lessons: {
       title: 'Open lessons',
       not_found: 'No open lessons yet',
-      search: 'Name or author',
+      search: 'Lesson name',
       enroll_button: 'Enroll',
       start_button: 'Start',
     },
     open_courses: {
       title: 'Open courses',
       not_found: 'No open courses yet',
-      search: 'Name or author',
+      search: 'Name',
       enroll_button: 'Enroll',
       start_button: 'Start',
     },
@@ -43,11 +43,15 @@ export default {
     answer_result: {
       correct: 'You are right!',
       wrong: 'You are wrong. The correct answer is:',
+      partially_wrong: 'You’re partially right. Correct answer:',
     },
     errors: {
       not_found: 'Lesson not found',
     },
     input_answer: 'Type an answer...',
+    input_fill_gap: {
+      placeholder: 'example',
+    },
     by: 'By',
     blocks: 'blocks',
     start: 'Start',

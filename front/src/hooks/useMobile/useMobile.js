@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react';
 
 const DESKTOP = 768;
-
 const getCurrentWidth = () =>
-  window.innerWidth ||
   document.documentElement.clientWidth ||
+  window.innerWidth ||
   document.body.clientWidth;
 
 const useMobile = () => {

@@ -1,3 +1,4 @@
+import { PAGE_SIZE } from '@sb-ui/pages/User/Lessons/LessonsList/constants';
 import api from '@sb-ui/utils/api';
 
 const PATH = '/api/v1/user';
@@ -43,4 +44,21 @@ export const patchLanguage = async ({ language }) => {
     language,
   });
   return data;
+};
+
+export const fetchAuthors = async ({ search = '' } = {}) => {
+  const {
+    data: { authors },
+  } = await api.get(`${PATH}/authors`, {
+    params: {
+      offset: 0,
+      limit: PAGE_SIZE,
+      search,
+    },
+  });
+
+  return authors.map(({ id, firstName, lastName }) => ({
+    value: id,
+    label: `${firstName} ${lastName}`,
+  }));
 };

@@ -1,4 +1,4 @@
-import { Avatar, Button, Row, Typography } from 'antd';
+import { Avatar, Button, Image as ImageAntd, Row, Typography } from 'antd';
 import styled from 'styled-components';
 
 import variables from '@sb-ui/theme/variables';
@@ -11,9 +11,15 @@ export const Main = styled(Row)`
   flex-direction: column;
 `;
 
-export const Image = styled.img`
-  width: 100%;
-  height: 100%;
+export const ImageWrapper = styled.div`
+  height: 10rem;
+`;
+
+export const Image = styled(ImageAntd).attrs({
+  width: '100%',
+  height: '100%',
+  preview: false,
+})`
   object-fit: cover;
 `;
 
@@ -24,9 +30,18 @@ export const Title = styled(Typography.Title)`
   line-height: 28px !important;
 `;
 
-export const Description = styled(Paragraph)`
+export const Description = styled(Paragraph).attrs({
+  ellipsis: {
+    rows: 2,
+    tooltip: true,
+  },
+})`
   text-align: justify;
   color: ${variables['lesson-block-description-color']};
+`;
+
+export const DescriptionRow = styled(Row)`
+  margin-bottom: 1rem;
 `;
 
 export const AuthorContainer = styled.div`

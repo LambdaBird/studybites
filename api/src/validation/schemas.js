@@ -38,7 +38,9 @@ export const lessonSearch = {
     search: { type: 'string' },
     offset: { type: 'number', default: 0 },
     limit: { type: 'number', default: searchLimits.LESSON_SEARCH_LIMIT },
+    authors: { type: 'array', items: { type: 'number' } },
     progress: { type: 'string' },
+    tags: { type: 'array', items: { type: 'number' } },
   },
 };
 
@@ -48,6 +50,7 @@ export const courseSearch = {
     search: { type: 'string' },
     offset: { type: 'number', default: 0 },
     limit: { type: 'number', default: searchLimits.COURSE_SEARCH_LIMIT },
+    status: { type: 'string' },
   },
 };
 
@@ -57,6 +60,15 @@ export const userSearch = {
     search: { type: 'string' },
     offset: { type: 'number', default: 0 },
     limit: { type: 'number', default: searchLimits.USER_SEARCH_LIMIT },
+  },
+};
+
+export const keywordSearch = {
+  type: 'object',
+  properties: {
+    search: { type: 'string' },
+    offset: { type: 'number', default: 0 },
+    limit: { type: 'number', default: searchLimits.KEYWORD_SEARCH_LIMIT },
   },
 };
 

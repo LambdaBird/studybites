@@ -14,6 +14,7 @@ const options = {
                 id: { type: 'number' },
                 name: { type: 'string' },
                 description: { type: ['string', 'null'] },
+                image: { type: ['string', 'null'] },
                 status: { type: 'string' },
                 createdAt: { type: 'string' },
                 updatedAt: { type: 'string' },
@@ -28,6 +29,16 @@ const options = {
                 interactiveTotal: { type: 'number' },
                 interactivePassed: { type: 'number' },
                 isStarted: { type: 'boolean' },
+                keywords: {
+                  type: 'array',
+                  items: {
+                    type: 'object',
+                    properties: {
+                      id: { type: 'number' },
+                      name: { type: 'string' },
+                    },
+                  },
+                },
               },
             },
           },
@@ -44,7 +55,7 @@ const options = {
 
 async function handler({
   user: { id: userId },
-  query: { search, offset, limit, progress },
+  query: { search, offset, limit, progress, authors, tags },
 }) {
   const {
     models: { Lesson, Result },
@@ -56,6 +67,8 @@ async function handler({
       offset,
       limit,
       search,
+      authors,
+      tags,
     });
 
     return { total, lessons };
@@ -69,6 +82,8 @@ async function handler({
     offset,
     limit,
     search,
+    authors,
+    tags,
   });
 
   return { total, lessons };

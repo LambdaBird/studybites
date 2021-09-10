@@ -1,0 +1,113 @@
+.bricks-tool {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-bottom: 1rem;
+}
+
+.bricks-tool__input-wrapper {
+  margin-top: 1rem;
+  display: flex;
+  width: 100%;
+  align-items: center;
+}
+
+.bricks-tool__input-wrapper input {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.bricks-tool__additional-input-wrapper {
+  margin-top: 0.25rem;
+}
+
+.bricks-tool__input-enter-button {
+  box-sizing: content-box;
+  border: 1px solid rgba(201, 201, 204, 0.48);
+  cursor: pointer;
+  background-color: #fafafa;
+  border-left: none;
+  padding: 10px;
+  height: 22px;
+  width: 22px;
+}
+
+.bricks-tool__hint {
+  cursor: default;
+  user-select: none;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.45);
+  margin-bottom: 1rem;
+}
+
+.bricks-tool__answer-tag {
+  box-sizing: border-box;
+  margin: 0 8px 8px 0;
+  color: #000000d9;
+  font-variant: tabular-nums;
+  display: inline-block;
+  height: auto;
+  padding: 0 7px;
+  font-size: 12px;
+  line-height: 20px;
+  white-space: nowrap;
+  background: #fafafa;
+  border: 1px solid #d9d9d9;
+  border-radius: 2px;
+  opacity: 1;
+  transition: all 0.3s;
+}
+
+.bricks-tool__answer-tag span {
+  cursor: pointer;
+  display: inline-block;
+  color: inherit;
+  font-style: normal;
+  line-height: 0;
+  text-align: center;
+  text-transform: none;
+  margin-left: 4px;
+}
+
+.bricks-tool__answer-remove svg {
+  vertical-align: -0.125em;
+}
+
+.bricks-tool__answer-remove {
+  cursor: pointer;
+  color: #00000073;
+}
+
+.bricks-tool__tags-wrapper {
+  margin-top: 0.75rem;
+  width: 100%;
+}
+
+.bricks-tool__tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.bricks-tool__tooltip .bricks-tool__tooltipText {
+  visibility: hidden;
+  background-color: black;
+  overflow-x: hidden;
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+  border-radius: 6px;
+  bottom: 100%;
+  max-width: 1000px;
+  height: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  position: absolute;
+  z-index: 1;
+}
+
+.bricks-tool__tooltip:hover .bricks-tool__tooltipText {
+  visibility: visible;
+  cursor: auto;
+  color: #fff;
+}
