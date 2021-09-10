@@ -5,17 +5,11 @@ import { LessonsListPropTypes } from '../types';
 
 import * as S from '../Dashboard.styled';
 
-const LessonsList = ({
-  lessons,
-  onCreateLesson,
-  isAddNewShown,
-  isCourse,
-  addCardTitle,
-}) => (
+const LessonsList = ({ lessons, onCreateLesson, isAddNewShown, isCourse }) => (
   <>
     {isAddNewShown ? (
       <S.CardCol>
-        <AddCard onClick={onCreateLesson} titleKey={addCardTitle} />
+        <AddCard onClick={onCreateLesson} isCourse={isCourse} />
       </S.CardCol>
     ) : (
       lessons.map((lesson) => (

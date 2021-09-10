@@ -11,10 +11,9 @@ export const LessonsListPropTypes = {
   isCourse: PropTypes.bool,
   onCreateLesson: PropTypes.func.isRequired,
   isAddNewShown: PropTypes.bool.isRequired,
-  addCardTitle: PropTypes.string.isRequired,
 };
 
 export const AddCardPropTypes = {
   onClick: PropTypes.func.isRequired,
-  titleKey: PropTypes.string.isRequired,
+  isCourse: PropTypes.bool.isRequired,
 };
