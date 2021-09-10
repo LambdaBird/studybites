@@ -2,14 +2,9 @@ import { Col, Row } from 'antd';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-<<<<<<< HEAD:front/src/components/resourceBlocks/OngoingFull/OngoingFull.mobile.jsx
-import { LessonType } from '@sb-ui/components/resourceBlocks/types';
-import lessonImage from '@sb-ui/resources/img/lesson.svg';
-=======
 import LessonKeywords from '@sb-ui/components/atoms/LessonKeywords';
-import { LessonType } from '@sb-ui/components/lessonBlocks/types';
+import { LessonType } from '@sb-ui/components/resourceBlocks/types';
 import DefaultLessonImage from '@sb-ui/resources/img/lesson.svg';
->>>>>>> develop:front/src/components/lessonBlocks/OngoingFull/OngoingFull.mobile.jsx
 
 import { useResource } from './useResource';
 import * as S from './OngoingFull.mobile.styled';
