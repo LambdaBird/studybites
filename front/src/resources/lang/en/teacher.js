@@ -118,6 +118,13 @@ export default {
       title: 'The lesson is now available to all students',
       ok: 'Ok',
     },
+    demo_publish_modal: {
+      title: 'Lesson is published',
+      content: 'Share this link to your students',
+      copy: 'Copy',
+      ok: 'Ok',
+      copy_success: 'Copied to your clipboard',
+    },
   },
   lesson_students: {
     title: 'Lesson students ({{studentsCount}})',

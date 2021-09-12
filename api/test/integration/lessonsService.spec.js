@@ -46,13 +46,19 @@ describe('Enroll to lesson flow', () => {
       },
     });
 
-    testContext.request = async ({ url, method = 'POST', body }) => {
+    testContext.request = async ({
+      url,
+      method = 'POST',
+      body,
+      fullUrl,
+      headers = {
+        Authorization: `Bearer ${testContext.token}`,
+      },
+    }) => {
       return testContext.app.inject({
         method,
-        url: `/api/v1/lessons/${url}`,
-        headers: {
-          Authorization: `Bearer ${testContext.token}`,
-        },
+        url: fullUrl || `/api/v1/lessons/${url}`,
+        headers,
         body,
       });
     };
@@ -253,4 +259,33 @@ describe('Enroll to lesson flow', () => {
       expect(payload.total).toBe(0);
     });
   });
+
+  if (process.env.DEMO_MODE) {
+    describe('Enroll to demo lesson ', () => {
+      let publicLessonForDemo;
+
+      beforeAll(async () => {
+        publicLessonForDemo = await createLesson({
+          app: testContext.app,
+          credentials: teacherCredentials,
+          body: prepareLessonFromSeed(french, '-publicLesson-for-demo'),
+        });
+      });
+
+      it('should successfully enroll anonymous user', async () => {
+        const response = await testContext.request({
+          fullUrl: `/api/v1/user/demo_enroll/${publicLessonForDemo.lesson.id}`,
+          headers: {},
+        });
+
+        const payload = JSON.parse(response.payload);
+
+        expect(response.statusCode).toBe(200);
+        expect(payload).toHaveProperty('userId');
+        expect(payload).toHaveProperty('lessonId');
+        expect(payload).toHaveProperty('accessToken');
+        expect(payload).toHaveProperty('refreshToken');
+      });
+    });
+  }
 });

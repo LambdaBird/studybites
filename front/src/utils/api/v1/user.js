@@ -62,3 +62,9 @@ export const fetchAuthors = async ({ search = '' } = {}) => {
     label: `${firstName} ${lastName}`,
   }));
 };
+
+export const enrollDemoLesson = async (lessonId) => {
+  const { data } = await api.post(`${PATH}/demo_enroll/${lessonId}`);
+
+  return data;
+};

@@ -19,3 +19,5 @@ export const LESSONS_EDIT = `${TEACHER_HOME}/lessons/:id`;
 export const COURSES_EDIT = `${TEACHER_HOME}/courses/:id`;
 export const TEACHER_LESSONS_STUDENTS = `${LESSONS_EDIT}/students`;
 export const LESSONS_PREVIEW = `${TEACHER_HOME}/lessons/preview/:id`;
+
+export const DEMO_LESSON = '/demo/lesson/:id';

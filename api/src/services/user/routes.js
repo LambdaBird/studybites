@@ -33,6 +33,8 @@ import {
   getAllAuthorsOptions,
 } from './handlers/getAllAuthors';
 
+import { enrollDemoHandler } from './handlers/enrollDemoHandler';
+
 export default async function router(instance) {
   instance.post('/signup', signUpOptions, signUpHandler);
 
@@ -61,4 +63,6 @@ export default async function router(instance) {
     updateUserLanguageOptions,
     updateUserLanguageHandler,
   );
+
+  instance.post('/demo_enroll/:lesson_id', enrollDemoHandler);
 }

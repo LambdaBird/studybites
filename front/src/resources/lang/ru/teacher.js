@@ -118,6 +118,13 @@ export default {
       title: 'Теперь урок доступен всем студентам',
       ok: 'Ок',
     },
+    demo_publish_modal: {
+      title: 'Урок успешно опубликован',
+      content: 'Поделитесь этой ссылкой со своими студентами',
+      copy: 'Копировать',
+      ok: 'Ок',
+      copy_success: 'Ссылка скопирована в буфер обмена',
+    },
   },
   lesson_students: {
     title: 'Студенты урока ({{studentsCount}})',

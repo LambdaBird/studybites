@@ -16,12 +16,14 @@ import {
 } from '@sb-ui/utils/api/v1/teacher';
 import EditorJs from '@sb-ui/utils/editorjs/EditorJsContainer';
 import {
+  DEMO_LESSON,
   LESSONS_EDIT,
   LESSONS_PREVIEW,
   TEACHER_LESSONS_STUDENTS,
 } from '@sb-ui/utils/paths';
 import { TEACHER_LESSON_BASE_KEY } from '@sb-ui/utils/queries';
 
+import DemoLink from './DemoLink';
 import LessonImage from './LessonImage';
 import { getConfig, prepareBlocksForApi, prepareEditorData } from './utils';
 import * as S from './LessonEdit.styled';
@@ -32,6 +34,11 @@ const MAX_NAME_LENGTH = 255;
 
 const LessonEdit = () => {
   const { id: lessonId } = useParams();
+
+  const link = `${window.location.origin}${DEMO_LESSON.replace(
+    ':id',
+    lessonId,
+  )}`;
 
   const isEditLesson = useMemo(() => lessonId !== 'new', []);
   const isCurrentlyEditing = lessonId !== 'new';
@@ -212,11 +219,43 @@ const LessonEdit = () => {
     await updateLessonStatus({
       lesson: { id: +lessonId, status: Statuses.PUBLIC },
     });
-    Modal.success({
-      width: 480,
-      title: t('lesson_edit.publish_modal.title'),
-      okText: t('lesson_edit.publish_modal.ok'),
-    });
+
+    if (process.env.REACT_APP_DEMO_MODE) {
+      Modal.success({
+        width: 480,
+        title: t('lesson_edit.demo_publish_modal.title'),
+        content: (
+          <div>
+            <S.JoinText>
+              {t('lesson_edit.demo_publish_modal.content')}
+            </S.JoinText>
+            <S.CopyLinkInput
+              onChange={() => {}}
+              value={link}
+              addonAfter={
+                <Button
+                  onClick={() => {
+                    navigator.clipboard.writeText(link);
+                    message.success(
+                      t('lesson_edit.demo_publish_modal.copy_success'),
+                    );
+                  }}
+                >
+                  {t('lesson_edit.demo_publish_modal.copy')}
+                </Button>
+              }
+            />
+          </div>
+        ),
+        okText: t('lesson_edit.publish_modal.ok'),
+      });
+    } else {
+      Modal.success({
+        width: 480,
+        title: t('lesson_edit.publish_modal.title'),
+        okText: t('lesson_edit.publish_modal.ok'),
+      });
+    }
   };
 
   const handleDraft = async () => {
@@ -352,6 +391,12 @@ const LessonEdit = () => {
                   {t('lesson_edit.buttons.forward')}
                 </S.MoveButton>
               </Col>
+              {lessonData?.lesson.status === Statuses.PUBLIC &&
+                process.env.REACT_APP_DEMO_MODE && (
+                  <Col span={24}>
+                    <DemoLink link={link} />
+                  </Col>
+                )}
             </S.RowStyled>
             <S.RowStyled gutter={[0, 10]}>
               <Col span={24}>

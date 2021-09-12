@@ -41,31 +41,35 @@ export const getPrivateRoutes = ({ isMobile }) => [
   },
   { component: LearnPage, path: paths.LEARN_PAGE, exact: true },
   { component: LessonPreview, path: paths.LESSONS_PREVIEW, exact: true },
-  { component: CoursePage, path: paths.LEARN_COURSE_PAGE, exact: true },
-  {
-    component: UserLessons,
-    path: paths.USER_LESSONS,
-    exact: true,
-  },
-  {
-    component: UserHome,
-    path: paths.USER_HOME,
-    exact: true,
-    children: !isMobile
-      ? [
-          {
-            component: EnrollLessonModalDesktop,
-            path: paths.USER_ENROLL_LESSON,
-            exact: true,
-          },
-          {
-            component: EnrollCourseModalDesktop,
-            path: paths.USER_ENROLL_COURSE,
-            exact: true,
-          },
-        ]
-      : null,
-  },
+  ...(!process.env.REACT_APP_DEMO_MODE
+    ? [
+        { component: CoursePage, path: paths.LEARN_COURSE_PAGE, exact: true },
+        {
+          component: UserLessons,
+          path: paths.USER_LESSONS,
+          exact: true,
+        },
+        {
+          component: UserHome,
+          path: paths.USER_HOME,
+          exact: true,
+          children: !isMobile
+            ? [
+                {
+                  component: EnrollLessonModalDesktop,
+                  path: paths.USER_ENROLL_LESSON,
+                  exact: true,
+                },
+                {
+                  component: EnrollCourseModalDesktop,
+                  path: paths.USER_ENROLL_COURSE,
+                  exact: true,
+                },
+              ]
+            : null,
+        },
+      ]
+    : []),
   {
     component: TeacherHome,
     path: paths.TEACHER_HOME,

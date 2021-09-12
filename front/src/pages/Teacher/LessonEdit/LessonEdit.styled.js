@@ -1,4 +1,4 @@
-import { Badge, Button, Col, Row, Typography } from 'antd';
+import { Badge, Button, Col, Input, Row, Typography } from 'antd';
 import styled from 'styled-components';
 
 import variables from '@sb-ui/theme/variables';
@@ -137,4 +137,28 @@ export const ImageFallback = styled.div`
 
 export const ImageFallbackTitle = styled.span`
   margin-right: 1rem;
+`;
+
+export const JoinText = styled.div`
+  margin-bottom: 0.5rem;
+`;
+
+export const CopyLinkInput = styled(Input)`
+  input {
+    margin-left: 1px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .ant-input-group-addon {
+    padding: 0;
+    border: none;
+  }
+  .ant-input-group-addon > button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+`;
+
+export const CopyButton = styled(Button)`
+  height: 100%;
 `;

@@ -100,6 +100,8 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
   );
 
   const getTeacherMenu = useCallback(() => {
+    if (process.env.REACT_APP_DEMO_MODE) return null;
+
     if (location.pathname.includes(USER_HOME)) {
       return (
         <>

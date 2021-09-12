@@ -1,10 +1,11 @@
-import { BrowserRouter as Router, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import SignIn from '../pages/SignIn';
 import SignUp from '../pages/SignUp';
 import * as paths from '../utils/paths';
 
 import AuthRoute from './AuthRoute';
+import Demo from './Demo';
 import PrivateRoutes from './PrivateRoutes';
 
 const Routes = () => (
@@ -16,6 +17,9 @@ const Routes = () => (
       <AuthRoute path={paths.SIGN_UP}>
         <SignUp />
       </AuthRoute>
+      <Route path={paths.DEMO_LESSON}>
+        <Demo />
+      </Route>
       <PrivateRoutes />
     </Switch>
   </Router>

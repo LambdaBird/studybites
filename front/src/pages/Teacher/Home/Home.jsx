@@ -11,7 +11,7 @@ const Home = () => (
       <S.LeftCol>
         <TeacherInfo />
         <LessonsDashboard />
-        <CoursesDashboard />
+        {!process.env.REACT_APP_DEMO_MODE && <CoursesDashboard />}
       </S.LeftCol>
       <S.RightCol>
         <StudentsList />
