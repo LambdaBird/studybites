@@ -94,7 +94,7 @@ export default class CourseLessonStructure extends BaseModel {
     const lessonsUnordered = await this.query(trx)
       .select(
         'lessons.*',
-        this.knex().raw('course_lesson_structure.id structure_id'),
+        'course_lesson_structure.id as structure_id',
         'course_lesson_structure.parent_id',
         'course_lesson_structure.child_id',
       )

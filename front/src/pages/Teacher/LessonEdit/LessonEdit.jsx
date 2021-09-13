@@ -6,6 +6,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { RedoOutlined, SaveOutlined, UndoOutlined } from '@ant-design/icons';
 
 import Header from '@sb-ui/components/molecules/Header';
+import KeywordsSelect from '@sb-ui/components/molecules/KeywordsSelect';
 import { useLessonStatus } from '@sb-ui/hooks/useLessonStatus';
 import { Statuses } from '@sb-ui/pages/Teacher/Home/Dashboard/constants';
 import { queryClient } from '@sb-ui/query';
@@ -62,6 +63,18 @@ const LessonEdit = () => {
       enabled: isEditLesson,
     },
   );
+
+  const [keywords, setKeywords] = useState([]);
+  useEffect(() => {
+    if (lessonData?.keywords) {
+      setKeywords(
+        lessonData.keywords.map((keyword) => ({
+          value: keyword.id,
+          label: keyword.name,
+        })),
+      );
+    }
+  }, [lessonData]);
 
   const createLessonMutation = useMutation(createLesson, {
     onSuccess: (data) => {
@@ -159,6 +172,10 @@ const LessonEdit = () => {
           description,
           status: Statuses.DRAFT,
         },
+        keywords: keywords.map((keyword) => ({
+          name: keyword.label,
+          id: typeof keyword.value === 'number' ? keyword.value : undefined,
+        })),
         blocks: prepareBlocksForApi(blocks),
       };
       if (!name) {
@@ -363,6 +380,12 @@ const LessonEdit = () => {
                   showCount
                   maxLength={140}
                 />
+              </Col>
+            </Row>
+            <Row gutter={[0, 16]}>
+              <Col span={24}>Keywords</Col>
+              <Col span={24}>
+                <KeywordsSelect values={keywords} setValues={setKeywords} />
               </Col>
             </Row>
             <LessonImage

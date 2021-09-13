@@ -11,7 +11,14 @@ export default {
     open_lessons: {
       title: 'Открытые уроки',
       not_found: 'Нет открытых уроков',
-      search: 'Имя или автор',
+      search: 'Название урока',
+      enroll_button: 'Записаться',
+      start_button: 'Начать',
+    },
+    open_courses: {
+      title: 'Открытые курсы',
+      not_found: 'Нет открытых курсов',
+      search: 'Название',
       enroll_button: 'Записаться',
       start_button: 'Начать',
     },

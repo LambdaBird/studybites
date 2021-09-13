@@ -22,6 +22,7 @@ export const searchLimits = {
   USER_SEARCH_LIMIT: 10,
   LESSON_SEARCH_LIMIT: 10,
   COURSE_SEARCH_LIMIT: 10,
+  KEYWORD_SEARCH_LIMIT: 10,
 };
 
 export const resources = {
