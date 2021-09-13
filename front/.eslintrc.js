@@ -7,7 +7,7 @@ module.exports = {
     'plugin:jsx-a11y/recommended',
     'plugin:prettier/recommended',
   ],
-  plugins: ['react', 'jsx-a11y', 'simple-import-sort'],
+  plugins: ['only-warn', 'react', 'jsx-a11y', 'simple-import-sort'],
   rules: {
     'import/prefer-default-export': 'off',
     'react/jsx-props-no-spreading': 'off',
