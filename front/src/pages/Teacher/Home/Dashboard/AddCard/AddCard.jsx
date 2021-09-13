@@ -10,6 +10,7 @@ const AddCard = ({ onClick, isCourse }) => {
   const cardTitleKey = isCourse
     ? 'course_dashboard.add_button'
     : 'lesson_dashboard.add_button';
+
   return (
     <S.Wrapper onClick={onClick}>
       <Space size="small" align="center">

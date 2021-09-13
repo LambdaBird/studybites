@@ -3,7 +3,7 @@ export default {
     review: {
       header: 'Отзывы',
       empty: 'Отзывов еще нет',
-      be_first: 'Оцените урок первым',
+      be_first: 'Будьте первым кто добавит оценку',
     },
     start: 'Начать',
   },
@@ -11,7 +11,14 @@ export default {
     open_lessons: {
       title: 'Открытые уроки',
       not_found: 'Нет открытых уроков',
-      search: 'Имя или автор',
+      search: 'Название урока',
+      enroll_button: 'Записаться',
+      start_button: 'Начать',
+    },
+    open_courses: {
+      title: 'Открытые курсы',
+      not_found: 'Нет открытых курсов',
+      search: 'Название',
       enroll_button: 'Записаться',
       start_button: 'Начать',
     },
@@ -25,6 +32,10 @@ export default {
       not_found: 'Нет законченых уроков',
       title: 'Законченные уроки',
     },
+  },
+  course: {
+    by: 'От',
+    lessons: 'урока(-ов)',
   },
   lesson: {
     results: {

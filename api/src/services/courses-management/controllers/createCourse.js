@@ -9,6 +9,7 @@ const options = {
             name: { type: 'string', minLength: 1 },
             description: { type: ['string', 'null'] },
             status: { $ref: 'courseStatus#' },
+            image: { type: ['string', 'null'] },
           },
           required: ['name'],
         },

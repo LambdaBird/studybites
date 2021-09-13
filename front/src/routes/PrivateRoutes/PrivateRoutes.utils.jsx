@@ -10,8 +10,11 @@ import {
 } from '@sb-ui/pages/Teacher';
 import CourseEdit from '@sb-ui/pages/Teacher/CourseEdit';
 import {
-  EnrollModalDesktop,
-  EnrollModalMobile,
+  CoursePage,
+  EnrollCourseModalDesktop,
+  EnrollCourseModalMobile,
+  EnrollLessonModalDesktop,
+  EnrollLessonModalMobile,
   LearnPage,
   UserHome,
   UserLessons,
@@ -39,6 +42,7 @@ export const getPrivateRoutes = ({ isMobile }) => [
   },
   { component: LearnPage, path: paths.LEARN_PAGE, exact: true },
   { component: LessonPreview, path: paths.LESSONS_PREVIEW, exact: true },
+  { component: CoursePage, path: paths.LEARN_COURSE_PAGE, exact: true },
   {
     component: UserLessons,
     path: paths.USER_LESSONS,
@@ -51,8 +55,13 @@ export const getPrivateRoutes = ({ isMobile }) => [
     children: !isMobile
       ? [
           {
-            component: EnrollModalDesktop,
-            path: paths.USER_ENROLL,
+            component: EnrollLessonModalDesktop,
+            path: paths.USER_ENROLL_LESSON,
+            exact: true,
+          },
+          {
+            component: EnrollCourseModalDesktop,
+            path: paths.USER_ENROLL_COURSE,
             exact: true,
           },
         ]
@@ -91,8 +100,13 @@ export const getPrivateRoutes = ({ isMobile }) => [
   ...(isMobile
     ? [
         {
-          component: EnrollModalMobile,
-          path: paths.USER_ENROLL,
+          component: EnrollLessonModalMobile,
+          path: paths.USER_ENROLL_LESSON,
+          exact: true,
+        },
+        {
+          component: EnrollCourseModalMobile,
+          path: paths.USER_ENROLL_COURSE,
           exact: true,
         },
       ]

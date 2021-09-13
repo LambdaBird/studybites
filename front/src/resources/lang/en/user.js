@@ -3,7 +3,7 @@ export default {
     review: {
       header: 'Reviews',
       empty: 'No reviews yet',
-      be_first: 'Be first to rate a lesson',
+      be_first: 'Be first to rate it',
     },
     start: 'Start',
   },
@@ -11,7 +11,14 @@ export default {
     open_lessons: {
       title: 'Open lessons',
       not_found: 'No open lessons yet',
-      search: 'Name or author',
+      search: 'Lesson name',
+      enroll_button: 'Enroll',
+      start_button: 'Start',
+    },
+    open_courses: {
+      title: 'Open courses',
+      not_found: 'No open courses yet',
+      search: 'Name',
       enroll_button: 'Enroll',
       start_button: 'Start',
     },
@@ -25,6 +32,10 @@ export default {
       title: 'Finished lessons',
       not_found: 'No finished lessons yet',
     },
+  },
+  course: {
+    by: 'By',
+    lessons: 'lessons',
   },
   lesson: {
     results: {
