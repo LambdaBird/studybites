@@ -61,7 +61,9 @@ export const SaveButton = styled(Button)`
   width: 100%;
 `;
 
-export const MoveButton = styled(Button)`
+export const MoveButton = styled(Button).attrs({
+  size: 'medium',
+})`
   width: 100%;
 `;
 

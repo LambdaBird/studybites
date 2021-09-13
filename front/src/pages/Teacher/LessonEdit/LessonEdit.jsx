@@ -338,16 +338,16 @@ const LessonEdit = () => {
                 <S.MoveButton
                   id="undo-button"
                   icon={<UndoOutlined />}
-                  size="medium"
+                  disabled={isEditorDisabled}
                 >
                   {t('lesson_edit.buttons.back')}
                 </S.MoveButton>
               </Col>
               <Col span={12}>
                 <S.MoveButton
+                  disabled={isEditorDisabled}
                   id="redo-button"
                   icon={<RedoOutlined />}
-                  size="medium"
                 >
                   {t('lesson_edit.buttons.forward')}
                 </S.MoveButton>
@@ -387,6 +387,7 @@ const LessonEdit = () => {
               <Col span={24}>{t('lesson_edit.description.title')}</Col>
               <Col span={24}>
                 <TextArea
+                  disabled={isEditorDisabled}
                   value={description}
                   placeholder={t('lesson_edit.description.placeholder')}
                   onChange={(e) => setDescription(e.target.value)}
@@ -398,10 +399,15 @@ const LessonEdit = () => {
             <Row gutter={[0, 16]}>
               <Col span={24}>Keywords</Col>
               <Col span={24}>
-                <KeywordsSelect values={keywords} setValues={setKeywords} />
+                <KeywordsSelect
+                  disabled={isEditorDisabled}
+                  values={keywords}
+                  setValues={setKeywords}
+                />
               </Col>
             </Row>
             <LessonImage
+              disabled={isEditorDisabled}
               image={image}
               setImage={setImage}
               imageError={imageError}

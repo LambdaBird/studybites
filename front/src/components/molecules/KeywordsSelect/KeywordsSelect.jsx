@@ -3,8 +3,9 @@ import AsyncSelect from 'react-select/async-creatable';
 
 import { fetchKeywords } from '@sb-ui/utils/api/v1/keywords';
 
-const KeywordsSelect = ({ values, setValues }) => (
+const KeywordsSelect = ({ values, setValues, disabled }) => (
   <AsyncSelect
+    isDisabled={disabled}
     cacheOptions
     isMulti
     defaultOptions
@@ -22,6 +23,7 @@ KeywordsSelect.propTypes = {
     }),
   ),
   setValues: PropTypes.func,
+  disabled: PropTypes.bool,
 };
 
 export default KeywordsSelect;

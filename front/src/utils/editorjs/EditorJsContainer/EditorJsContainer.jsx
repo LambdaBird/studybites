@@ -1,13 +1,6 @@
 import DragDrop from 'editorjs-drag-drop';
 import PropTypes from 'prop-types';
-import {
-  forwardRef,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { forwardRef, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditorJS from '@editorjs/editorjs';
 import Paragraph from '@editorjs/paragraph';
@@ -27,7 +20,7 @@ const EditorJsContainer = forwardRef((props, ref) => {
     [],
   );
 
-  const [instance, setInstance] = useState(null);
+  const instance = useRef(null);
 
   const handleChange = useCallback(
     async (api) => {
@@ -36,7 +29,7 @@ const EditorJsContainer = forwardRef((props, ref) => {
         return;
       }
 
-      const newData = await instance.save();
+      const newData = await instance.current.save();
       const isBlocksEqual = onCompareBlocks?.(newData.blocks, data?.blocks);
 
       if (isBlocksEqual) {
@@ -45,26 +38,31 @@ const EditorJsContainer = forwardRef((props, ref) => {
 
       onChange(api, newData);
     },
-    [instance, props],
+    [props],
   );
 
   const handleReady = useCallback(
-    (editor) => {
+    async (editor) => {
       if (editor) {
-        // eslint-disable-next-line no-param-reassign
-        ref.current = new Undo({
-          editor,
-          redoButton: 'redo-button',
-          undoButton: 'undo-button',
-        });
-        // eslint-disable-next-line no-new
-        new DragDrop(editor);
+        try {
+          // eslint-disable-next-line no-param-reassign
+          ref.current = new Undo({
+            editor,
+            redoButton: 'redo-button',
+            undoButton: 'undo-button',
+          });
+          // eslint-disable-next-line no-new
+          new DragDrop(editor);
+        } catch (e) {
+          // eslint-disable-next-line no-param-reassign
+          ref.current = null;
+        }
       }
     },
     [ref],
   );
 
-  const initEditor = useCallback(() => {
+  const initEditor = useCallback(async () => {
     const {
       instanceRef,
       // eslint-disable-next-line no-shadow
@@ -84,6 +82,10 @@ const EditorJsContainer = forwardRef((props, ref) => {
       },
       ...tools,
     };
+
+    if (instance.current) {
+      return;
+    }
 
     const newInstance = new EditorJS({
       tools: extendTools,
@@ -217,37 +219,36 @@ const EditorJsContainer = forwardRef((props, ref) => {
       },
     });
 
-    setInstance(newInstance);
+    instance.current = newInstance;
 
     if (instanceRef) {
       instanceRef(newInstance);
     }
   }, [handleChange, handleReady, holder, props, t]);
 
-  const destroyEditor = () => {
+  const destroyEditor = useCallback(() => {
     Array.from(document.querySelectorAll('.ct--bottom')).forEach(
       (codexTooltip) => codexTooltip.remove(),
     );
 
-    if (!instance) {
+    if (!instance.current) {
       return;
     }
 
     (async () => {
-      await instance.isReady;
-      if (instance.destroy) {
-        instance.destroy();
-        setInstance(undefined);
+      await instance.current.isReady;
+      if (instance.current.destroy) {
+        instance.current.destroy();
       }
     })();
-  };
+  }, []);
 
   const changeData = useCallback((data) => {
-    if (instance) {
-      instance?.isReady
+    if (instance.current) {
+      instance.current?.isReady
         .then(() => {
-          instance.clear();
-          instance.render(data);
+          instance.current.clear();
+          instance.current.render(data);
         })
         .catch(() => {
           // do nothing
@@ -256,8 +257,12 @@ const EditorJsContainer = forwardRef((props, ref) => {
   }, []);
 
   useEffect(() => {
-    initEditor();
-    return destroyEditor;
+    if (initEditor && !instance.current) {
+      initEditor();
+      return destroyEditor;
+    }
+    return () => {};
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
