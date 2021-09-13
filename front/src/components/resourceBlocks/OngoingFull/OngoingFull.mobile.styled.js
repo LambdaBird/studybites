@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import variables from '@sb-ui/theme/variables';
 
-const { Text } = Typography;
+const { Paragraph } = Typography;
 
 export const Main = styled(Row)`
   background-color: ${variables['lesson-block-background']};
@@ -17,7 +17,12 @@ export const Image = styled.img`
   object-fit: cover;
 `;
 
-export const Title = styled(Typography.Title)`
+export const Title = styled(Typography.Title).attrs({
+  level: 3,
+  ellipsis: {
+    tooltip: true,
+  },
+})`
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   font-size: 20px !important;
@@ -25,7 +30,12 @@ export const Title = styled(Typography.Title)`
   overflow-wrap: anywhere;
 `;
 
-export const Description = styled(Text)`
+export const Description = styled(Paragraph).attrs({
+  ellipsis: {
+    tooltip: true,
+    rows: 2,
+  },
+})`
   text-align: justify;
   color: ${variables['lesson-block-description-color']};
   overflow-wrap: anywhere;

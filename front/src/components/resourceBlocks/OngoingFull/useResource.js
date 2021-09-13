@@ -1,9 +1,13 @@
 import { useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 
-import { LEARN_PAGE } from '@sb-ui/utils/paths';
+import {
+  COURSES_RESOURCE_KEY,
+  LESSONS_RESOURCE_KEY,
+} from '@sb-ui/pages/User/constants';
+import { COURSES_LEARN_PAGE, LESSONS_LEARN_PAGE } from '@sb-ui/utils/paths';
 
-export const useResource = ({ id, author }) => {
+export const useResource = ({ id, author, resourceKey }) => {
   const history = useHistory();
 
   const fullName = useMemo(
@@ -16,9 +20,18 @@ export const useResource = ({ id, author }) => {
     [author],
   );
 
-  const handleContinueLesson = () => {
-    history.push(LEARN_PAGE.replace(':id', id));
+  const handleContinueResource = () => {
+    switch (resourceKey) {
+      case LESSONS_RESOURCE_KEY:
+        history.push(LESSONS_LEARN_PAGE.replace(':id', id));
+        break;
+      case COURSES_RESOURCE_KEY:
+        history.push(COURSES_LEARN_PAGE.replace(':id', id));
+        break;
+      default:
+        break;
+    }
   };
 
-  return { fullName, firstNameLetter, handleContinueLesson };
+  return { fullName, firstNameLetter, handleContinueResource };
 };

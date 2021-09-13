@@ -6,7 +6,7 @@ import { useHistory, useLocation, useParams } from 'react-router-dom';
 
 import lessonImg from '@sb-ui/resources/img/lesson.svg';
 import { enrollLesson, getLesson } from '@sb-ui/utils/api/v1/lessons';
-import { LEARN_PAGE, USER_HOME } from '@sb-ui/utils/paths';
+import { LESSONS_LEARN_PAGE, USER_HOME } from '@sb-ui/utils/paths';
 import { USER_LESSON_MODAL_BASE_KEY } from '@sb-ui/utils/queries';
 
 import * as S from './EnrollModal.desktop.styled';
@@ -34,7 +34,7 @@ const EnrollModalDesktop = () => {
   }, [query, history]);
 
   const historyPushLesson = useCallback(() => {
-    history.push(LEARN_PAGE.replace(':id', id));
+    history.push(LESSONS_LEARN_PAGE.replace(':id', id));
   }, [history, id]);
 
   const { data: responseData } = useQuery(

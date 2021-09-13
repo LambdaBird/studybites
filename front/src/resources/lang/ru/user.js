@@ -26,11 +26,20 @@ export default {
       title: 'Текущие уроки',
       not_found: 'Нет текущих уроков',
       view_all_lessons: 'Посмотреть все мои уроки',
+      view_all_courses: 'Посмотреть все мои курсы',
       continue_button: 'Продолжить',
+    },
+    ongoing_courses: {
+      title: 'Текущие курсы',
+      not_found: 'Нет текущих курсов',
     },
     finished_lessons: {
       not_found: 'Нет законченых уроков',
       title: 'Законченные уроки',
+    },
+    finished_courses: {
+      title: 'Законченные курсы',
+      not_found: 'Нет законченых курсов',
     },
   },
   lesson: {

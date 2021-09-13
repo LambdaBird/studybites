@@ -7,7 +7,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { DescriptionText } from '@sb-ui/components/resourceBlocks/Public/Public.desktop.styled';
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
 import { enrollLesson, getLesson } from '@sb-ui/utils/api/v1/lessons';
-import { LEARN_PAGE, USER_HOME } from '@sb-ui/utils/paths';
+import { COURSES_LEARN_PAGE, USER_HOME } from '@sb-ui/utils/paths';
 import { USER_LESSON_MODAL_BASE_KEY } from '@sb-ui/utils/queries';
 
 import * as S from './EnrollModal.mobile.styled';
@@ -52,7 +52,7 @@ const EnrollModalMobile = () => {
   const { id } = useParams();
 
   const historyPushLesson = useCallback(() => {
-    history.push(LEARN_PAGE.replace(':id', id));
+    history.push(COURSES_LEARN_PAGE.replace(':id', id));
   }, [history, id]);
 
   const { data: responseData } = useQuery(
