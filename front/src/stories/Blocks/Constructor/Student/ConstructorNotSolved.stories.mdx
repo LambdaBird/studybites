@@ -1,0 +1,70 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+import { LearnContextDecorator } from '@sb-ui/stories/decorators';
+import Bricks from '@sb-ui/pages/User/LearnPage/BlockElement/Bricks';
+
+<Meta
+  title="Blocks/Bricks/Student/NotSolved"
+  decorators={[
+    (Story) => (
+      <LearnContextDecorator>
+        <Story />
+      </LearnContextDecorator>
+    ),
+  ]}
+  component={Bricks}
+/>
+
+# Bricks
+
+Component `Bricks` should use to display BricksAnswer `answer: undefined` (accepts data options `question`, `words`)
+
+export const Template = (args) => <Bricks {...args} />;
+
+<Canvas>
+  <Story
+    name="Many words"
+    args={{
+      answer: undefined,
+      content: {
+        data: {
+          question: 'Дизайн должен быть в порядке.',
+          words: [
+            'Lorem',
+            'ipsum',
+            'dolor',
+            'sit',
+            'amet,',
+            'consectetur',
+            'adipiscing',
+            'elit,',
+            'sed',
+            'do',
+            'eiusmod',
+            'tempor',
+            'incididunt',
+            'ut',
+            'labore',
+            'et',
+            'dolore',
+            'magna',
+            'aliqua.',
+            'Ut',
+            'enim',
+            'ad',
+            'minim',
+            'veniam,',
+            'quis',
+            'nostrud',
+            'exercitation',
+            'ullamco',
+            'laboris',
+          ],
+        },
+      },
+      blockId: 'Test id',
+      revision: 'Test revision',
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>

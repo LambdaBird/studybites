@@ -1,4 +1,12 @@
-import { Avatar, Button, Row, Space, Typography } from 'antd';
+import {
+  Avatar,
+  Button,
+  Col,
+  Image as ImageAntd,
+  Row,
+  Space,
+  Typography,
+} from 'antd';
 import styled from 'styled-components';
 
 import variables from '@sb-ui/theme/variables';
@@ -15,9 +23,11 @@ export const Main = styled(Row).attrs({
   flex-direction: column;
 `;
 
-export const Image = styled.img`
-  width: 100%;
-  height: 100%;
+export const Image = styled(ImageAntd).attrs({
+  width: '100%',
+  height: '100%',
+  preview: false,
+})`
   object-fit: cover;
 `;
 
@@ -70,7 +80,7 @@ export const Enroll = styled(Button)`
 export const ImageBlock = styled.div`
   position: relative;
   margin-bottom: 1rem;
-  height: 9rem;
+  height: 12rem;
 `;
 
 export const ReviewHeader = styled(Space)`
@@ -89,4 +99,10 @@ export const StartButton = styled(Button).attrs({
 export const ReviewBodyText = styled.div`
   text-align: center;
   margin-top: 4rem;
+`;
+
+export const KeywordsCol = styled(Col).attrs({
+  span: 24,
+})`
+  margin-top: 1rem;
 `;

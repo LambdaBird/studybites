@@ -1,4 +1,4 @@
-import { Col, Progress, Row } from 'antd';
+import { Col, Image, Progress, Row } from 'antd';
 import styled from 'styled-components';
 
 import variables from '@sb-ui/theme/variables';
@@ -37,6 +37,9 @@ export const ProgressBar = styled(Progress)`
   }
 `;
 
-export const StyledImage = styled.img`
-  height: 100%;
+export const StyledImage = styled(Image).attrs({
+  height: '6rem',
+  preview: false,
+})`
+  object-fit: cover;
 `;

@@ -32,13 +32,12 @@ async function handler({ params: { courseId }, user: { id: userId } }) {
     userId,
   });
 
-  const course = await Course.getCourseWithAuthor({ courseId });
-  course.lessons = courseLessons.map((lesson) => ({
-    ...lesson,
-    isFinished: !!lesson.results.length,
-  }));
+  const course = await Course.getCourseWithAuthorAndLessons({
+    courseId,
+    lessons: courseLessons,
+  });
 
-  return { course };
+  return { total: courseLessons.length, course };
 }
 
 export default { options, handler };

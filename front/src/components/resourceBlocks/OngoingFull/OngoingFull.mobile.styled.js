@@ -1,4 +1,11 @@
-import { Avatar, Button, Progress, Row, Typography } from 'antd';
+import {
+  Avatar,
+  Button,
+  Image as ImageAntd,
+  Progress,
+  Row,
+  Typography,
+} from 'antd';
 import styled from 'styled-components';
 
 import variables from '@sb-ui/theme/variables';
@@ -11,9 +18,15 @@ export const Main = styled(Row)`
   flex-direction: column;
 `;
 
-export const Image = styled.img`
-  width: 100%;
-  height: 100%;
+export const ImageWrapper = styled.div`
+  height: 12rem;
+`;
+
+export const Image = styled(ImageAntd).attrs({
+  width: '100%',
+  height: '10rem',
+  preview: false,
+})`
   object-fit: cover;
 `;
 
@@ -38,7 +51,10 @@ export const Description = styled(Paragraph).attrs({
 })`
   text-align: justify;
   color: ${variables['lesson-block-description-color']};
-  overflow-wrap: anywhere;
+`;
+
+export const DescriptionRow = styled(Row)`
+  margin-bottom: 1rem;
 `;
 
 export const AuthorContainer = styled.div`

@@ -1,4 +1,4 @@
-import { Avatar, Col, Progress, Row, Typography } from 'antd';
+import { Avatar, Col, Image, Progress, Row, Typography } from 'antd';
 import styled from 'styled-components';
 
 import variables from '@sb-ui/theme/variables';
@@ -11,7 +11,6 @@ export const MainSpace = styled(Row)`
 `;
 
 export const LeftContent = styled(Col)`
-  margin-right: 1.5rem;
   padding: 1rem 1rem 0;
 `;
 
@@ -22,9 +21,12 @@ export const RightContent = styled(Col)`
   padding: 1rem;
 `;
 
-export const LessonImg = styled.img`
-  height: 8rem;
-  width: 200px;
+export const LessonImg = styled(Image).attrs({
+  height: '8rem',
+  width: '15rem',
+  preview: false,
+})`
+  object-fit: cover;
 `;
 
 export const DescriptionText = styled(Paragraph).attrs({
@@ -61,7 +63,10 @@ export const AuthorName = styled(Typography.Link)`
   white-space: nowrap;
 `;
 
-export const EnrollRow = styled(Row)`
+export const EnrollRow = styled(Row).attrs({
+  justify: 'space-between',
+  align: 'middle',
+})`
   margin-top: auto;
 `;
 
@@ -84,4 +89,13 @@ export const TitleEllipsis = styled(Title).attrs({
   level: 3,
 })`
   overflow-wrap: anywhere;
+`;
+
+export const EnrollColKeyword = styled(Col)`
+  flex: 1 1 auto;
+  width: 0;
+`;
+
+export const EnrollColButton = styled(Col)`
+  flex: 0 1 auto;
 `;

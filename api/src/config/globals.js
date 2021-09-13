@@ -22,18 +22,24 @@ export const searchLimits = {
   USER_SEARCH_LIMIT: 10,
   LESSON_SEARCH_LIMIT: 10,
   COURSE_SEARCH_LIMIT: 10,
+  KEYWORD_SEARCH_LIMIT: 10,
 };
 
 export const resources = {
   LESSON: {
     name: 'lesson',
-    status: ['Draft', 'Public', 'Private', 'Archived'],
+    status: ['Draft', 'Public', 'Private', 'Archived', 'CourseOnly'],
     learnStatus: ['Public', 'Draft'],
+    enrollStatuses: ['Public'],
+    get courseEnrollStatuses() {
+      return [...this.enrollStatuses, 'CourseOnly'];
+    },
   },
   COURSE: {
     name: 'course',
     status: ['Draft', 'Public', 'Private', 'Archived'],
     learnStatus: ['Public'],
+    enrollStatuses: ['Public'],
   },
 };
 
@@ -52,6 +58,9 @@ export const blockConstants = {
     NEXT: 'next',
     QUIZ: 'quiz',
     CLOSED_QUESTION: 'closedQuestion',
+    FILL_THE_GAP: 'fillTheGap',
+    MATCH: 'match',
+    BRICKS: 'bricks',
   },
   get BLOCKS_LIST() {
     return Object.values(this.blocks);
@@ -66,7 +75,14 @@ export const blockConstants = {
     return [this.actions.NEXT, this.actions.RESPONSE];
   },
   get INTERACTIVE_BLOCKS() {
-    return [this.blocks.NEXT, this.blocks.QUIZ, this.blocks.CLOSED_QUESTION];
+    return [
+      this.blocks.NEXT,
+      this.blocks.QUIZ,
+      this.blocks.CLOSED_QUESTION,
+      this.blocks.FILL_THE_GAP,
+      this.blocks.MATCH,
+      this.blocks.BRICKS,
+    ];
   },
   get STATIC_BLOCKS() {
     return this.BLOCKS_LIST.filter(

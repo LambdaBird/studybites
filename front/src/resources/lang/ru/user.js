@@ -11,14 +11,14 @@ export default {
     open_lessons: {
       title: 'Открытые уроки',
       not_found: 'Нет открытых уроков',
-      search: 'Имя или автор',
+      search: 'Название урока',
       enroll_button: 'Записаться',
       start_button: 'Начать',
     },
     open_courses: {
       title: 'Открытые курсы',
       not_found: 'Нет открытых курсов',
-      search: 'Имя или автор',
+      search: 'Название',
       enroll_button: 'Записаться',
       start_button: 'Начать',
     },
@@ -42,6 +42,10 @@ export default {
       not_found: 'Нет законченых курсов',
     },
   },
+  course: {
+    by: 'От',
+    lessons: 'урока(-ов)',
+  },
   lesson: {
     results: {
       title: 'Результаты',
@@ -52,11 +56,15 @@ export default {
     answer_result: {
       correct: 'Правильно !',
       wrong: 'Неправильно. Правильный ответ:',
+      partially_wrong: 'Частично правильно. Правильный ответ:',
     },
     errors: {
       not_found: 'Урок не найден',
     },
     input_answer: 'Введите ответ...',
+    input_fill_gap: {
+      placeholder: 'пример',
+    },
     by: 'От',
     blocks: 'блоков',
     start: 'Начать',

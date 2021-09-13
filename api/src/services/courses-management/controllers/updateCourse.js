@@ -1,5 +1,3 @@
-import { v4 } from 'uuid';
-
 const options = {
   schema: {
     params: { $ref: 'paramsCourseId#' },
@@ -12,6 +10,7 @@ const options = {
             name: { type: 'string', minLength: 1 },
             description: { type: ['string', 'null'] },
             status: { $ref: 'courseStatus#' },
+            image: { type: ['string', 'null'] },
           },
         },
         lessons: { type: 'array' },

@@ -1,5 +1,6 @@
 import fastify from 'fastify';
 import fastifyObjection from 'fastify-objection';
+import qs from 'qs';
 
 import User from './models/User';
 import Role from './models/Role';
@@ -10,6 +11,8 @@ import LessonBlockStructure from './models/LessonBlockStructure';
 import Result from './models/Result';
 import Course from './models/Course';
 import CourseLessonStructure from './models/CourseLessonStructure';
+import Keyword from './models/Keyword';
+import ResourceKeyword from './models/ResourceKeyword';
 
 import userService from './services/user';
 import lessonsService from './services/lessons';
@@ -17,11 +20,20 @@ import learnService from './services/learn';
 import lessonsManagementService from './services/lessons-management';
 import coursesManagementService from './services/courses-management';
 import coursesService from './services/courses';
+import keywordsService from './services/keywords';
 
 import errorsAndValidation from './validation';
 
 export default (options = {}) => {
-  const app = fastify(options);
+  const app = fastify({
+    ...options,
+    querystringParser: (str) => qs.parse(str),
+    ajv: {
+      customOptions: {
+        coerceTypes: 'array',
+      },
+    },
+  });
 
   app.register(errorsAndValidation);
 
@@ -37,6 +49,8 @@ export default (options = {}) => {
       Result,
       Course,
       CourseLessonStructure,
+      Keyword,
+      ResourceKeyword,
     ],
   });
 
@@ -62,6 +76,10 @@ export default (options = {}) => {
 
   app.register(coursesService, {
     prefix: '/api/v1/courses',
+  });
+
+  app.register(keywordsService, {
+    prefix: '/api/v1/keywords',
   });
 
   return app;

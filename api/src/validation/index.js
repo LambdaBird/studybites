@@ -13,6 +13,7 @@ import {
   courseSearch,
   courseStatus,
   courseIdParam,
+  keywordSearch,
 } from './schemas';
 import errorHandler from './errorHandler';
 import { NotFoundError } from './errors';
@@ -43,6 +44,11 @@ export default fp((instance, opts, next) => {
   instance.addSchema({
     $id: 'userSearch',
     ...userSearch,
+  });
+
+  instance.addSchema({
+    $id: 'keywordSearch',
+    ...keywordSearch,
   });
 
   instance.addSchema({
