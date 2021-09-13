@@ -51,6 +51,7 @@ export const courseSearch = {
     offset: { type: 'number', default: 0 },
     limit: { type: 'number', default: searchLimits.COURSE_SEARCH_LIMIT },
     status: { type: 'string' },
+    tags: { type: 'array', items: { type: 'number' } },
   },
 };
 
