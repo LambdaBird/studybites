@@ -2,12 +2,16 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useHistory, useLocation } from 'react-router-dom';
+import { FilterOutlined } from '@ant-design/icons';
 
+import FilterMobile from '@sb-ui/components/molecules/FilterMobile';
 import KeywordsFilter from '@sb-ui/components/molecules/KeywordsFilter';
+import useMobile from '@sb-ui/hooks/useMobile';
 import { PAGE_SIZE } from '@sb-ui/pages/User/Lessons/LessonsList/constants';
 import * as S from '@sb-ui/pages/User/Lessons/LessonsList/LessonsList.styled';
 import emptyImg from '@sb-ui/resources/img/empty.svg';
 import { getCourses } from '@sb-ui/utils/api/v1/courses';
+import { fetchKeywords } from '@sb-ui/utils/api/v1/keywords';
 import { USER_PUBLIC_COURSES_BASE_KEY } from '@sb-ui/utils/queries';
 import { getQueryPage } from '@sb-ui/utils/utils';
 
@@ -21,6 +25,7 @@ const OpenCourses = () => {
   const [searchText, setSearchText] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [keywords, setKeywords] = useState([]);
+  const isMobile = useMobile();
 
   const {
     data: responseData,
@@ -82,7 +87,19 @@ const OpenCourses = () => {
             searchText={searchText}
             setSearchText={setSearchText}
           />
-          <KeywordsFilter setValues={setKeywords} />
+          {isMobile ? (
+            <>
+              <FilterMobile
+                icon={<FilterOutlined />}
+                fetchData={fetchKeywords}
+                setData={setKeywords}
+              />
+            </>
+          ) : (
+            <>
+              <KeywordsFilter setValues={setKeywords} />
+            </>
+          )}
         </S.FilterWrapper>
       </S.LessonsHeader>
       <S.LessonsRow>
