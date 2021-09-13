@@ -8,13 +8,25 @@ export const options = {
       properties: {
         courses: {
           type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: {
+                type: 'number',
+              },
+              name: {
+                type: 'string',
+              },
+            },
+            required: ['id', 'name'],
+          },
         },
         status: {
           type: 'string',
           enum: resources.COURSE.status,
         },
       },
-      required: ['status'],
+      required: ['status', 'courses'],
     },
     response: {
       200: {
