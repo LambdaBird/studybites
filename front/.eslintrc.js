@@ -14,22 +14,23 @@ module.exports = {
     'react/jsx-uses-react': 'off',
     'react/react-in-jsx-scope': 'off',
     'react/require-default-props': 'off',
-    'simple-import-sort/imports': 'error',
-    'simple-import-sort/exports': 'error',
+    'simple-import-sort/imports': 'warn',
+    'simple-import-sort/exports': 'warn',
     'prettier/prettier': [
-      'error',
+      'warn',
       {
         singleQuote: true,
         trailingComma: 'all',
       },
     ],
+    'arrow-body-style': ['warn', 'as-needed'],
   },
   overrides: [
     {
       files: ['*'],
       rules: {
         'simple-import-sort/imports': [
-          'error',
+          'warn',
           {
             groups: [
               // Node.js builtins. You could also generate this regex if you use a `.js` config.
