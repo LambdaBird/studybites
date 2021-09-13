@@ -117,7 +117,7 @@ const CourseEdit = () => {
         })),
       );
     }
-  }, [courseData]);
+  }, [courseData?.keywords]);
 
   const handleSave = () => {
     const params = {
@@ -273,7 +273,7 @@ const CourseEdit = () => {
               </Col>
             </Row>
             <Row gutter={[0, 16]}>
-              <Col span={24}>Keywords</Col>
+              <Col span={24}>{t('course_edit.keywords')}</Col>
               <Col span={24}>
                 <KeywordsSelect values={keywords} setValues={setKeywords} />
               </Col>

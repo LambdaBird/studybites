@@ -88,6 +88,7 @@ export default {
     },
   },
   course_edit: {
+    keywords: 'Ключевые слова',
     error_course_name: 'Отсуствует название курса',
     lesson_search: {
       placeholder: 'Выберите урок',
