@@ -25,6 +25,7 @@ const options = {
               status: { type: 'string' },
               createdAt: { type: 'string' },
               updatedAt: { type: 'string' },
+              isEnrolled: { type: 'boolean' },
               author: {
                 type: 'object',
                 properties: {
@@ -47,12 +48,12 @@ const options = {
   },
 };
 
-async function handler({ params: { lessonId } }) {
+async function handler({ params: { lessonId }, user: { id: userId } }) {
   const {
     models: { Lesson, ResourceKeyword },
   } = this;
 
-  const lesson = await Lesson.getLessonWithAuthor({ lessonId });
+  const lesson = await Lesson.getLessonWithAuthor({ lessonId, userId });
   const keywords = await ResourceKeyword.getLessonKeywords({ lessonId });
 
   return { lesson, keywords };
