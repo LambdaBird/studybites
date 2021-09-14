@@ -1,18 +1,26 @@
-import { Avatar, Button, Image as ImageAntd, Row, Typography } from 'antd';
+import {
+  Avatar,
+  Button,
+  Col,
+  Image as ImageAntd,
+  Row,
+  Space,
+  Typography,
+} from 'antd';
 import styled from 'styled-components';
 
 import variables from '@sb-ui/theme/variables';
 
-const { Paragraph } = Typography;
+const { Text } = Typography;
 
-export const Main = styled(Row)`
+export const Main = styled(Row).attrs({
+  size: 'large',
+  wrap: false,
+})`
+  height: 100vh;
   background-color: ${variables['lesson-block-background']};
   padding: 1rem;
   flex-direction: column;
-`;
-
-export const ImageWrapper = styled.div`
-  height: 10rem;
 `;
 
 export const Image = styled(ImageAntd).attrs({
@@ -23,25 +31,18 @@ export const Image = styled(ImageAntd).attrs({
   object-fit: cover;
 `;
 
-export const Title = styled(Typography.Title)`
+export const Title = styled(Typography.Title).attrs({
+  level: 3,
+})`
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   font-size: 20px !important;
   line-height: 28px !important;
 `;
 
-export const Description = styled(Paragraph).attrs({
-  ellipsis: {
-    rows: 2,
-    tooltip: true,
-  },
-})`
+export const Description = styled(Text)`
   text-align: justify;
   color: ${variables['lesson-block-description-color']};
-`;
-
-export const DescriptionRow = styled(Row)`
-  margin-bottom: 1rem;
 `;
 
 export const AuthorContainer = styled.div`
@@ -53,8 +54,8 @@ export const AuthorContainer = styled.div`
   border-radius: 5px;
   padding: 0.5rem 0.5rem;
   position: absolute;
-  top: 1.5rem;
-  right: 1.5rem;
+  left: 0.5rem;
+  bottom: 0.5rem;
 `;
 
 export const AuthorAvatar = styled(Avatar)`
@@ -74,4 +75,34 @@ export const EnrollRow = styled(Row)`
 
 export const Enroll = styled(Button)`
   width: 100%;
+`;
+
+export const ImageBlock = styled.div`
+  position: relative;
+  margin-bottom: 1rem;
+  height: 12rem;
+`;
+
+export const ReviewHeader = styled(Space)`
+  align-items: baseline;
+  margin-top: 1rem;
+`;
+
+export const StartButton = styled(Button).attrs({
+  size: 'large',
+  type: 'primary',
+})`
+  margin-top: auto;
+  width: 100%;
+`;
+
+export const ReviewBodyText = styled.div`
+  text-align: center;
+  margin-top: 4rem;
+`;
+
+export const KeywordsCol = styled(Col).attrs({
+  span: 24,
+})`
+  margin-top: 1rem;
 `;

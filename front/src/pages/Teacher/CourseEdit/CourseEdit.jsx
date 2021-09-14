@@ -4,8 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { SaveOutlined } from '@ant-design/icons';
 
-import CourseLesson from '@sb-ui/components/lessonBlocks/Course';
 import Header from '@sb-ui/components/molecules/Header';
+import CourseLesson from '@sb-ui/components/resourceBlocks/Teacher/Course';
 import { Statuses } from '@sb-ui/pages/Teacher/Home/Dashboard/constants';
 
 import { useCourse } from './useCourse';

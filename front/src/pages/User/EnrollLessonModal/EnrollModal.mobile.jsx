@@ -5,7 +5,7 @@ import { useMutation, useQuery } from 'react-query';
 import { useHistory, useParams } from 'react-router-dom';
 
 import LessonKeywords from '@sb-ui/components/atoms/LessonKeywords';
-import { DescriptionText } from '@sb-ui/components/lessonBlocks/Public/Public.desktop.styled';
+import { DescriptionText } from '@sb-ui/components/resourceBlocks/Public/Public.desktop.styled';
 import DefaultLessonImage from '@sb-ui/resources/img/lesson.svg';
 import { enrollLesson, getLesson } from '@sb-ui/utils/api/v1/lessons';
 import { LEARN_PAGE, USER_HOME } from '@sb-ui/utils/paths';
@@ -95,6 +95,12 @@ const EnrollModalMobile = () => {
       historyReplaceBack();
     }
   }, [historyReplaceBack, responseData]);
+
+  useEffect(() => {
+    if (responseData?.lesson?.isEnrolled) {
+      history.push(USER_HOME);
+    }
+  }, [responseData?.lesson?.isEnrolled]);
 
   const onClickStartEnroll = useCallback(async () => {
     mutatePostEnroll(id, {

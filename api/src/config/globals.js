@@ -28,12 +28,18 @@ export const searchLimits = {
 export const resources = {
   LESSON: {
     name: 'lesson',
-    status: ['Draft', 'Public', 'Private', 'Archived'],
+    status: ['Draft', 'Public', 'Private', 'Archived', 'CourseOnly'],
     learnStatus: ['Public', 'Draft'],
+    enrollStatuses: ['Public'],
+    get courseEnrollStatuses() {
+      return [...this.enrollStatuses, 'CourseOnly'];
+    },
   },
   COURSE: {
     name: 'course',
     status: ['Draft', 'Public', 'Private', 'Archived'],
+    learnStatus: ['Public'],
+    enrollStatuses: ['Public'],
   },
 };
 

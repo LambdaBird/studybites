@@ -1,4 +1,5 @@
 import BaseModel from './BaseModel';
+import { BadRequestError } from '../validation/errors';
 
 class Result extends BaseModel {
   static get tableName() {
@@ -81,6 +82,26 @@ class Result extends BaseModel {
       data,
       correctness,
     });
+  }
+
+  static getIdsOfFinishedLessons({ courseLessons, userId }) {
+    return this.query()
+      .first()
+      .select(this.knex().raw('json_agg(lesson_id) as finished_lessons'))
+      .whereIn('lesson_id', courseLessons)
+      .where({ user_id: userId, action: 'finish' });
+  }
+
+  static async checkNumberOfFinishedLessons({ userId, lessons, error }) {
+    const { count } = await this.query()
+      .whereIn('lesson_id', lessons)
+      .where({ user_id: userId, action: 'finish' })
+      .first()
+      .count();
+
+    if (+count !== lessons.length) {
+      throw new BadRequestError(error);
+    }
   }
 }
 

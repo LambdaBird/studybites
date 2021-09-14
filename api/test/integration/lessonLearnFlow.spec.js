@@ -15,7 +15,7 @@ import {
   userServiceErrors as userErrors,
 } from '../../src/config';
 
-describe('Learning flow', () => {
+describe('Lesson learning flow', () => {
   const testContext = {
     app: null,
     teacherToken: null,
