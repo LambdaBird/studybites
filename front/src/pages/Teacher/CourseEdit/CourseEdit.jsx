@@ -20,7 +20,6 @@ const CourseEdit = () => {
   const isCurrentlyEditing = courseId !== 'new';
 
   const { t } = useTranslation('teacher');
-
   const [search, setSearch] = useState('');
   const {
     courseData,

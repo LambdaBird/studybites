@@ -86,7 +86,10 @@ describe('Maintainer flow', () => {
     it('should return an error if the user is not a teacher', async () => {
       const response = await testContext.studentRequest({
         url: 'courses-management/courses',
-        body: prepareCourseFromSeed(courseToTest, '-notCreated'),
+        body: prepareCourseFromSeed({
+          seed: courseToTest,
+          name: '-notCreated',
+        }),
       });
 
       const payload = JSON.parse(response.payload);
@@ -99,7 +102,10 @@ describe('Maintainer flow', () => {
     it('should return a course with lessons', async () => {
       const response = await testContext.request({
         url: 'courses',
-        body: prepareCourseFromSeed(courseToTest, '-courseToCreate'),
+        body: prepareCourseFromSeed({
+          seed: courseToTest,
+          name: '-courseToCreate',
+        }),
       });
 
       const payload = JSON.parse(response.payload);
@@ -158,7 +164,10 @@ describe('Maintainer flow', () => {
       courseToUpdate = await createCourse({
         app: testContext.app,
         credentials: teacherCredentials,
-        body: prepareCourseFromSeed(courseToTest, '-courseToUpdate'),
+        body: prepareCourseFromSeed({
+          seed: courseToTest,
+          name: '-courseToUpdate',
+        }),
       });
     });
 
@@ -205,14 +214,14 @@ describe('Maintainer flow', () => {
       courseToUpdate = await createCourse({
         app: testContext.app,
         credentials: teacherCredentials,
-        body: prepareCourseFromSeed(courseToTest),
+        body: prepareCourseFromSeed({ seed: courseToTest }),
       });
     });
 
     it('should return an unchanged course with new lessons', async () => {
       const lessons = [
         {
-          id: 200,
+          id: 20003,
         },
       ];
 
@@ -273,7 +282,10 @@ describe('Maintainer flow', () => {
       courseToSearch = await createCourse({
         app: testContext.app,
         credentials: teacherCredentials,
-        body: prepareCourseFromSeed(courseToTest, '-newUniqueIdentifier'),
+        body: prepareCourseFromSeed({
+          seed: courseToTest,
+          name: '-newUniqueIdentifier',
+        }),
       });
     });
 
@@ -314,13 +326,19 @@ describe('Maintainer flow', () => {
       courseToGet = await createCourse({
         app: testContext.app,
         credentials: teacherCredentials,
-        body: prepareCourseFromSeed(courseToTest, '-courseToGet'),
+        body: prepareCourseFromSeed({
+          seed: courseToTest,
+          name: '-courseToGet',
+        }),
       });
 
       notMaintainableCourse = await createCourse({
         app: testContext.app,
         credentials: anotherTeacherCredentials,
-        body: prepareCourseFromSeed(courseToTest, '-notMaintainable'),
+        body: prepareCourseFromSeed({
+          seed: courseToTest,
+          name: '-notMaintainable',
+        }),
       });
 
       await testContext.studentRequest({
@@ -408,7 +426,7 @@ describe('Maintainer flow', () => {
       const courseToEnroll = await createCourse({
         app: testContext.app,
         credentials: teacherCredentials,
-        body: prepareCourseFromSeed(courseToTest),
+        body: prepareCourseFromSeed({ seed: courseToTest }),
       });
 
       await testContext.studentRequest({
@@ -452,7 +470,10 @@ describe('Maintainer flow', () => {
       courseToGetStudents = await createCourse({
         app: testContext.app,
         credentials: teacherCredentials,
-        body: prepareCourseFromSeed(courseToTest, '-courseToGetStudents'),
+        body: prepareCourseFromSeed({
+          seed: courseToTest,
+          name: '-courseToGetStudents',
+        }),
       });
 
       await testContext.request({
@@ -494,7 +515,10 @@ describe('Maintainer flow', () => {
       courseToSearchStudents = await createCourse({
         app: testContext.app,
         credentials: teacherCredentials,
-        body: prepareCourseFromSeed(courseToTest, '-courseToSearchStudents'),
+        body: prepareCourseFromSeed({
+          seed: courseToTest,
+          name: '-courseToSearchStudents',
+        }),
       });
 
       await testContext.studentRequest({

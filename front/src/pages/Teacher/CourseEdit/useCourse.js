@@ -1,9 +1,10 @@
-import { message, Modal } from 'antd';
-import { useCallback, useMemo } from 'react';
+import { message } from 'antd';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
 import { useHistory } from 'react-router-dom';
 
+import { useCoursePublish } from '@sb-ui/hooks/useCoursePublish';
 import { Statuses } from '@sb-ui/pages/Teacher/Home/Dashboard/constants';
 import { queryClient } from '@sb-ui/query';
 import {
@@ -90,34 +91,10 @@ export const useCourse = ({ isEditCourse, courseId, search }) => {
     },
   });
 
-  const { mutateAsync: updateCourseStatus, isLoading: isUpdateInProgress } =
-    useMutation(putCourse, {
-      onSuccess: () => {
-        queryClient.invalidateQueries([
-          TEACHER_COURSE_BASE_KEY,
-          {
-            id: courseId,
-          },
-        ]);
-      },
-    });
-
-  const handlePublish = useCallback(async () => {
-    await updateCourseStatus({
-      course: { id: +courseId, status: Statuses.PUBLIC },
-    });
-    Modal.success({
-      width: 480,
-      title: t('course_edit.publish_modal.title'),
-      okText: t('course_edit.publish_modal.ok'),
-    });
-  }, [courseId, t, updateCourseStatus]);
-
-  const handleDraft = async () => {
-    await updateCourseStatus({
-      course: { id: +courseId, status: Statuses.DRAFT },
-    });
-  };
+  const { handlePublish, handleDraft, isUpdateInProgress } = useCoursePublish({
+    lessons: courseData?.course?.lessons,
+    courseId,
+  });
 
   const isSaveButtonDisabled = useMemo(
     () =>

@@ -1,4 +1,6 @@
 import { v4 } from 'uuid';
+import { french, russian } from '../../seeds/testData/lessons';
+import { courseToTest, secondCourseToTest } from '../../seeds/testData/courses';
 
 export const authorizeUser = async ({
   credentials,
@@ -60,10 +62,14 @@ export const createCourse = async ({ app, credentials, body }) => {
   return payload;
 };
 
-export const prepareLessonFromSeed = (lessonSeed, nameModifier = '') => ({
+export const prepareLessonFromSeed = (
+  lessonSeed,
+  nameModifier = '',
+  status = 'Public',
+) => ({
   lesson: {
     name: `${lessonSeed.name}${nameModifier}`,
-    status: 'Public',
+    status,
   },
   // eslint-disable-next-line no-underscore-dangle
   blocks: lessonSeed._blocks._current.map((structureItem) => {
@@ -80,13 +86,75 @@ export const prepareLessonFromSeed = (lessonSeed, nameModifier = '') => ({
   }),
 });
 
-export const prepareCourseFromSeed = (courseSeed, nameModifier = '') => ({
+export const prepareCourseFromSeed = ({
+  seed,
+  name = '',
+  status = 'Public',
+  lessons = [],
+}) => ({
   course: {
-    name: `${courseSeed.name}${nameModifier}`,
-    status: 'Public',
+    name: `${seed.name}${name}`,
+    status,
   },
-  // eslint-disable-next-line no-underscore-dangle
-  lessons: courseSeed._lessons.map((structureItem) => ({
-    id: structureItem.lesson_id,
-  })),
+  lessons: [
+    // eslint-disable-next-line no-underscore-dangle
+    ...seed._lessons.map((structureItem) => ({
+      id: structureItem.lesson_id,
+    })),
+    ...lessons,
+  ],
 });
+
+export const prepareLessonsAndCourses = async (
+  context,
+  teacherCredentials,
+  lessonStatuses,
+  courseStatuses,
+) => {
+  const firstLesson = await createLesson({
+    app: context.app,
+    credentials: teacherCredentials,
+    body: prepareLessonFromSeed(
+      french,
+      `-lesson${lessonStatuses[0]}`,
+      lessonStatuses[0],
+    ),
+  });
+
+  const secondLesson = await createLesson({
+    app: context.app,
+    credentials: teacherCredentials,
+    body: prepareLessonFromSeed(
+      russian,
+      `-lesson${lessonStatuses[1]}`,
+      lessonStatuses[1],
+    ),
+  });
+
+  const firstCourse = await createCourse({
+    app: context.app,
+    credentials: teacherCredentials,
+    body: prepareCourseFromSeed({
+      seed: courseToTest,
+      name: `-course${courseStatuses[0]}`,
+      status: courseStatuses[0],
+      lessons: [{ id: firstLesson.lesson.id }, { id: secondLesson.lesson.id }],
+    }),
+  });
+
+  const secondCourse = await createCourse({
+    app: context.app,
+    credentials: teacherCredentials,
+    body: prepareCourseFromSeed({
+      seed: secondCourseToTest,
+      name: `-course${courseStatuses[1]}`,
+      status: courseStatuses[1],
+      lessons: [{ id: firstLesson.lesson.id }],
+    }),
+  });
+
+  return {
+    lessons: [firstLesson, secondLesson],
+    courses: [firstCourse, secondCourse],
+  };
+};

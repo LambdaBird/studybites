@@ -97,11 +97,13 @@ describe('Course learning flow', () => {
         app: testContext.app,
         credentials: teacherCredentials,
         body: prepareCourseFromSeed({
-          ...courseToTest,
-          _lessons: [
-            ...courseToTest._lessons,
-            { lesson_id: lessonToEnroll.lesson.id },
-          ],
+          seed: {
+            ...courseToTest,
+            _lessons: [
+              ...courseToTest._lessons,
+              { lesson_id: lessonToEnroll.lesson.id },
+            ],
+          },
         }),
       });
     });
@@ -136,7 +138,7 @@ describe('Course learning flow', () => {
       courseToEnroll = await createCourse({
         app: testContext.app,
         credentials: teacherCredentials,
-        body: prepareCourseFromSeed(courseToTest),
+        body: prepareCourseFromSeed({ seed: courseToTest }),
       });
 
       await testContext.studentRequest({
@@ -180,11 +182,13 @@ describe('Course learning flow', () => {
         app: testContext.app,
         credentials: teacherCredentials,
         body: prepareCourseFromSeed({
-          ...courseToTest,
-          _lessons: [
-            { lesson_id: firstLessonToEnroll.lesson.id },
-            { lesson_id: lastLessonToEnroll.lesson.id },
-          ],
+          seed: {
+            ...courseToTest,
+            _lessons: [
+              { lesson_id: firstLessonToEnroll.lesson.id },
+              { lesson_id: lastLessonToEnroll.lesson.id },
+            ],
+          },
         }),
       });
 
@@ -253,11 +257,13 @@ describe('Course learning flow', () => {
         app: testContext.app,
         credentials: teacherCredentials,
         body: prepareCourseFromSeed({
-          ...courseToTest,
-          _lessons: [
-            { lesson_id: firstLessonToEnroll.lesson.id },
-            { lesson_id: lastLessonToEnroll.lesson.id },
-          ],
+          seed: {
+            ...courseToTest,
+            _lessons: [
+              { lesson_id: firstLessonToEnroll.lesson.id },
+              { lesson_id: lastLessonToEnroll.lesson.id },
+            ],
+          },
         }),
       });
 
@@ -318,8 +324,10 @@ describe('Course learning flow', () => {
         app: testContext.app,
         credentials: teacherCredentials,
         body: prepareCourseFromSeed({
-          ...courseToTest,
-          _lessons: [{ lesson_id: courseLesson.lesson.id }],
+          seed: {
+            ...courseToTest,
+            _lessons: [{ lesson_id: courseLesson.lesson.id }],
+          },
         }),
       });
 
@@ -397,8 +405,10 @@ describe('Course learning flow', () => {
           app: testContext.app,
           credentials: teacherCredentials,
           body: prepareCourseFromSeed({
-            ...courseToGet,
-            _lessons: [{ lesson_id: courseLesson.lesson.id }],
+            seed: {
+              ...courseToGet,
+              _lessons: [{ lesson_id: courseLesson.lesson.id }],
+            },
           }),
         });
 
@@ -450,8 +460,10 @@ describe('Course learning flow', () => {
           app: testContext.app,
           credentials: teacherCredentials,
           body: prepareCourseFromSeed({
-            ...courseToGet,
-            _lessons: [{ lesson_id: courseLesson.lesson.id }],
+            seed: {
+              ...courseToGet,
+              _lessons: [{ lesson_id: courseLesson.lesson.id }],
+            },
           }),
         });
 
@@ -539,12 +551,14 @@ describe('Course learning flow', () => {
           app: testContext.app,
           credentials: teacherCredentials,
           body: prepareCourseFromSeed({
-            ...courseToGet,
-            _lessons: [
-              { lesson_id: firstLesson.lesson.id },
-              { lesson_id: secondLesson.lesson.id },
-              { lesson_id: thirdLesson.lesson.id },
-            ],
+            seed: {
+              ...courseToGet,
+              _lessons: [
+                { lesson_id: firstLesson.lesson.id },
+                { lesson_id: secondLesson.lesson.id },
+                { lesson_id: thirdLesson.lesson.id },
+              ],
+            },
           }),
         });
 
@@ -624,12 +638,14 @@ describe('Course learning flow', () => {
           app: testContext.app,
           credentials: teacherCredentials,
           body: prepareCourseFromSeed({
-            ...courseToGet,
-            _lessons: [
-              { lesson_id: firstLesson.lesson.id },
-              { lesson_id: secondLesson.lesson.id },
-              { lesson_id: thirdLesson.lesson.id },
-            ],
+            seed: {
+              ...courseToGet,
+              _lessons: [
+                { lesson_id: firstLesson.lesson.id },
+                { lesson_id: secondLesson.lesson.id },
+                { lesson_id: thirdLesson.lesson.id },
+              ],
+            },
           }),
         });
 
@@ -717,12 +733,14 @@ describe('Course learning flow', () => {
           app: testContext.app,
           credentials: teacherCredentials,
           body: prepareCourseFromSeed({
-            ...courseToGet,
-            _lessons: [
-              { lesson_id: firstLesson.lesson.id },
-              { lesson_id: secondLesson.lesson.id },
-              { lesson_id: thirdLesson.lesson.id },
-            ],
+            seed: {
+              ...courseToGet,
+              _lessons: [
+                { lesson_id: firstLesson.lesson.id },
+                { lesson_id: secondLesson.lesson.id },
+                { lesson_id: thirdLesson.lesson.id },
+              ],
+            },
           }),
         });
 

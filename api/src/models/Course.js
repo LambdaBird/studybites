@@ -106,6 +106,38 @@ export default class Course extends BaseModel {
     return this.query(trx).findById(courseId).patch(course).returning('*');
   }
 
+  static getCourseWithLessons({ courseId }) {
+    return this.query().findById(courseId).withGraphFetched('lessons');
+  }
+
+  static getAllCoursesByLessonId({ lessonId }) {
+    return this.query()
+      .join(
+        'course_lesson_structure',
+        'courses.id',
+        '=',
+        'course_lesson_structure.course_id',
+      )
+      .where('course_lesson_structure.lesson_id', '=', lessonId);
+  }
+
+  static updateCourseStatus({ courseId, status }) {
+    return this.query().findById(courseId).patch({ status }).returning('*');
+  }
+
+  static updateCoursesStatus({ courses, status }) {
+    return this.query()
+      .insert(
+        courses.map(({ id, name }) => ({
+          id,
+          name,
+          status,
+        })),
+      )
+      .onConflict('id')
+      .merge('status');
+  }
+
   static getAllMaintainableCourses({
     userId,
     offset: start,
@@ -114,7 +146,6 @@ export default class Course extends BaseModel {
     status,
   }) {
     const end = start + limit - 1;
-
     return this.query()
       .skipUndefined()
       .join('users_roles', (builder) =>
@@ -136,7 +167,8 @@ export default class Course extends BaseModel {
       )
       .groupBy('courses.id')
       .range(start, end)
-      .withGraphFetched('students');
+      .withGraphFetched('students')
+      .withGraphFetched('lessons');
   }
 
   static getAllPublicCourses({ userId, offset: start, limit, search }) {
