@@ -374,6 +374,7 @@ class Lesson extends BaseModel {
     limit,
     search,
     tags,
+    status,
   }) {
     const end = start + limit - 1;
 
@@ -387,6 +388,7 @@ class Lesson extends BaseModel {
       .where('users_roles.role_id', roles.MAINTAINER.id)
       .andWhere('users_roles.resource_type', resources.LESSON.name)
       .andWhere('users_roles.user_id', userId)
+      .andWhere('lessons.status', status)
       .andWhere(
         'lessons.name',
         'ilike',

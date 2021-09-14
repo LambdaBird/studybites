@@ -41,6 +41,7 @@ export const lessonSearch = {
     authors: { type: 'array', items: { type: 'number' } },
     progress: { type: 'string' },
     tags: { type: 'array', items: { type: 'number' } },
+    status: { type: 'string' },
   },
 };
 
