@@ -8,6 +8,10 @@ import {
 } from '../../seeds/testData/users';
 
 import { authorizeUser, createCourse, prepareCourseFromSeed } from './utils';
+import {
+  courseServiceErrors as errors,
+  courseServiceMessages as messages,
+} from '../../src/config';
 
 describe('Courses service', () => {
   const testContext = {};
@@ -55,6 +59,140 @@ describe('Courses service', () => {
 
   afterAll(async () => {
     await testContext.app.close();
+  });
+
+  describe('Enroll to public', () => {
+    let publicCourse;
+
+    beforeAll(async () => {
+      publicCourse = await createCourse({
+        app: testContext.app,
+        credentials: teacherCredentials,
+        body: prepareCourseFromSeed({
+          seed: courseToTest,
+          name: '-publicCourse',
+        }),
+      });
+    });
+
+    it('should successfully enroll', async () => {
+      const response = await testContext.request({
+        url: `${publicCourse.course.id}/enroll`,
+      });
+
+      const payload = JSON.parse(response.payload);
+
+      expect(response.statusCode).toBe(200);
+      expect(payload.message).toBe(messages.COURSE_MSG_SUCCESS_ENROLL);
+    });
+  });
+
+  describe('Enroll multiple times', () => {
+    let courseToEnroll;
+
+    beforeAll(async () => {
+      courseToEnroll = await createCourse({
+        app: testContext.app,
+        credentials: teacherCredentials,
+        body: prepareCourseFromSeed({
+          seed: courseToTest,
+          name: '-courseToEnroll',
+        }),
+      });
+
+      await testContext.request({
+        url: `${courseToEnroll.course.id}/enroll`,
+      });
+    });
+
+    it('should return an error if try to enroll multiple times', async () => {
+      const response = await testContext.request({
+        url: `${courseToEnroll.course.id}/enroll`,
+      });
+
+      const payload = JSON.parse(response.payload);
+
+      expect(response.statusCode).toBe(400);
+      expect(payload.statusCode).toBe(400);
+      expect(payload.message).toBe(errors.COURSE_ERR_FAIL_ENROLL);
+    });
+  });
+
+  describe('Enroll to not public', () => {
+    let draftCourse;
+    let archivedCourse;
+    let privateCourse;
+
+    beforeAll(async () => {
+      draftCourse = await createCourse({
+        app: testContext.app,
+        credentials: teacherCredentials,
+        body: {
+          course: {
+            name: 'Draft',
+            status: 'Draft',
+          },
+        },
+      });
+
+      archivedCourse = await createCourse({
+        app: testContext.app,
+        credentials: teacherCredentials,
+        body: {
+          course: {
+            name: 'Archived',
+            status: 'Archived',
+          },
+        },
+      });
+
+      privateCourse = await createCourse({
+        app: testContext.app,
+        credentials: teacherCredentials,
+        body: {
+          course: {
+            name: 'Private',
+            status: 'Private',
+          },
+        },
+      });
+    });
+
+    it('should return an error if try to enroll to draft', async () => {
+      const response = await testContext.request({
+        url: `${draftCourse.course.id}/enroll`,
+      });
+
+      const payload = JSON.parse(response.payload);
+
+      expect(response.statusCode).toBe(400);
+      expect(payload.statusCode).toBe(400);
+      expect(payload.message).toBe(errors.COURSE_ERR_FAIL_ENROLL);
+    });
+
+    it('should return an error if try to enroll to archived', async () => {
+      const response = await testContext.request({
+        url: `${archivedCourse.course.id}/enroll`,
+      });
+
+      const payload = JSON.parse(response.payload);
+
+      expect(response.statusCode).toBe(400);
+      expect(payload.statusCode).toBe(400);
+      expect(payload.message).toBe(errors.COURSE_ERR_FAIL_ENROLL);
+    });
+
+    it('should return an error if try to enroll to private', async () => {
+      const response = await testContext.request({
+        url: `${privateCourse.course.id}/enroll`,
+      });
+
+      const payload = JSON.parse(response.payload);
+
+      expect(response.statusCode).toBe(400);
+      expect(payload.statusCode).toBe(400);
+      expect(payload.message).toBe(errors.COURSE_ERR_FAIL_ENROLL);
+    });
   });
 
   describe('Get public courses', () => {

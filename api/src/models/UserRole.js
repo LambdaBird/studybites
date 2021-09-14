@@ -243,13 +243,36 @@ class UserRole extends BaseModel {
       .returning('*');
   }
 
-  static enrollToLesson({ userId, lessonId }) {
-    return this.query()
+  static async enrollToResource({
+    userId,
+    resourceId,
+    resourceType,
+    resourceStatuses,
+  }) {
+    await this.query()
+      .findById(resourceId)
+      .from(resourceType === resources.COURSE.name ? 'courses' : 'lessons')
+      .whereIn('status', resourceStatuses)
+      .whereNotIn(
+        'id',
+        this.knex().raw(`
+            select resource_id
+            from users_roles
+            where user_id = ${userId}
+              and role_id = ${roles.STUDENT.id}
+              and resource_type = '${resourceType}'
+        `),
+      )
+      .throwIfNotFound({
+        error: new BadRequestError('errors.fail_enroll'),
+      });
+
+    await this.query()
       .insert({
         user_id: userId,
         role_id: roles.STUDENT.id,
-        resource_type: resources.LESSON.name,
-        resource_id: lessonId,
+        resource_type: resourceType,
+        resource_id: resourceId,
       })
       .returning('*');
   }

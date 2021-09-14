@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 
-import { LessonType } from '@sb-ui/components/lessonBlocks/types';
+import { LessonType } from '@sb-ui/components/resourceBlocks/types';
 import DefaultLessonImage from '@sb-ui/resources/img/lesson.svg';
 import { LEARN_PAGE } from '@sb-ui/utils/paths';
 
@@ -11,9 +11,10 @@ import * as S from './OngoingShort.styled';
 
 const { Title } = Typography;
 
-const OngoingShortMobile = ({ lesson }) => {
+const OngoingShortDesktop = ({ lesson }) => {
   const { t } = useTranslation('user');
   const history = useHistory();
+
   const { name, id, interactiveTotal, interactivePassed, image } = lesson;
 
   const handleContinueLesson = () => {
@@ -59,8 +60,8 @@ const OngoingShortMobile = ({ lesson }) => {
   );
 };
 
-OngoingShortMobile.propTypes = {
+OngoingShortDesktop.propTypes = {
   lesson: LessonType.isRequired,
 };
 
-export default OngoingShortMobile;
+export default OngoingShortDesktop;

@@ -17,7 +17,7 @@ import { fetchAuthors } from '@sb-ui/utils/api/v1/user';
 import { USER_PUBLIC_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
 import { getQueryPage } from '@sb-ui/utils/utils';
 
-import OpenLessonsBlock from './OpenLessonsBlock';
+import OpenLessonsBlock from '../OpenResourcesBlock';
 
 const OpenLessons = () => {
   const { t } = useTranslation('user');

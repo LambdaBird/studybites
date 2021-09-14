@@ -30,10 +30,16 @@ export const resources = {
     name: 'lesson',
     status: ['Draft', 'Public', 'Private', 'Archived', 'CourseOnly'],
     learnStatus: ['Public', 'Draft'],
+    enrollStatuses: ['Public'],
+    get courseEnrollStatuses() {
+      return [...this.enrollStatuses, 'CourseOnly'];
+    },
   },
   COURSE: {
     name: 'course',
     status: ['Draft', 'Public', 'Private', 'Archived'],
+    learnStatus: ['Public'],
+    enrollStatuses: ['Public'],
   },
 };
 

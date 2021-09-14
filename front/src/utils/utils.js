@@ -1,3 +1,5 @@
+import { DEFAULT_CODE } from '@sb-ui/i18n';
+
 const escapeRegExp = (string) => string.replace(/[-.*+?^${}()|[\]\\]/g, '\\$&');
 
 export const sleep = (ms) =>
@@ -76,9 +78,9 @@ export const skeletonArray = (size) =>
     id: `skeleton ${index}`,
   }));
 
-export const formatDate = (date) =>
+export const formatDate = (date, localeCode = DEFAULT_CODE) =>
   date &&
-  new Intl.DateTimeFormat('en-US', {
+  new Intl.DateTimeFormat(localeCode, {
     hour: 'numeric',
     minute: 'numeric',
     second: 'numeric',

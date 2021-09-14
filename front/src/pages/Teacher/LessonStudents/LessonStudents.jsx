@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
 import { useTableSearch } from '@sb-ui/hooks/useTableSearch';
+import { getLanguageCodeByKey } from '@sb-ui/i18n';
 import {
   getLesson,
   getTeacherLessonStudents,
@@ -23,14 +24,20 @@ const PAGE_SIZE = 10;
 // TODO: take from shared place
 const interactiveTypesBlocks = ['next', 'next', 'closedQuestion', 'quiz'];
 
-const renderFirstActivityColumn = (results, t) => {
+const renderFirstActivityColumn = ({ results, t, languageCode }) => {
   const firstActivity = results?.[0]?.createdAt;
-  return formatDate(firstActivity) || t('lesson_students.table.not_started');
+  return (
+    formatDate(firstActivity, languageCode) ||
+    t('lesson_students.table.not_started')
+  );
 };
 
-const renderLastActivityColumn = (results, t) => {
+const renderLastActivityColumn = ({ results, t, languageCode }) => {
   const lastActivity = results?.slice(-1)?.[0]?.createdAt;
-  return formatDate(lastActivity) || t('lesson_students.table.not_started');
+  return (
+    formatDate(lastActivity, languageCode) ||
+    t('lesson_students.table.not_started')
+  );
 };
 
 const renderProgressColumn = (results, interactiveBlocksNumber) => {
@@ -48,7 +55,12 @@ const renderProgressColumn = (results, interactiveBlocksNumber) => {
 
 const LessonStudents = () => {
   const { id: lessonId } = useParams();
-  const { t } = useTranslation('teacher');
+  const { t, i18n } = useTranslation('teacher');
+
+  const languageCode = useMemo(
+    () => getLanguageCodeByKey(i18n.language),
+    [i18n.language],
+  );
 
   const {
     setSearch,
@@ -102,14 +114,24 @@ const LessonStudents = () => {
         title: t('lesson_students.table.last_activity'),
         dataIndex: 'results',
         key: 'results',
-        render: (results) => renderLastActivityColumn(results, t),
+        render: (results) =>
+          renderLastActivityColumn({
+            results,
+            t,
+            languageCode,
+          }),
         width: '20%',
       },
       {
         title: t('lesson_students.table.first_activity'),
         dataIndex: 'results',
         key: 'start',
-        render: (results) => renderFirstActivityColumn(results, t),
+        render: (results) =>
+          renderFirstActivityColumn({
+            results,
+            t,
+            languageCode,
+          }),
         width: '20%',
       },
       {
@@ -121,7 +143,7 @@ const LessonStudents = () => {
         width: '10%',
       },
     ],
-    [t, interactiveBlocksNumber],
+    [t, languageCode, interactiveBlocksNumber],
   );
 
   return (

@@ -194,6 +194,7 @@ class Lesson extends BaseModel {
         this.knex().raw(`
           select resource_id from users_roles 
           where user_id = ${userId} and role_id = ${roles.STUDENT.id}
+            and resource_type = '${resources.LESSON.name}'
         `),
       )
       .throwIfNotFound({
@@ -272,8 +273,24 @@ class Lesson extends BaseModel {
     return this.query(trx).insert(lesson).returning('*');
   }
 
-  static getLessonWithAuthor({ lessonId }) {
-    return this.query().findById(lessonId).withGraphFetched('author');
+  static getLessonWithAuthor({ lessonId, userId }) {
+    const query = this.query().findById(lessonId);
+
+    if (userId) {
+      query.select(
+        'lessons.*',
+        this.knex().raw(`
+          (select cast(case when count(*) > 0 then true else false end as bool)
+           from users_roles
+           where role_id = ${roles.STUDENT.id}
+             and user_id = ${userId}
+             and resource_type = '${resources.LESSON.name}'
+             and resource_id = lessons.id) is_enrolled
+        `),
+      );
+    }
+
+    return query.withGraphFetched('author');
   }
 
   static getLessonWithProgress({ lessonId }) {
@@ -374,6 +391,7 @@ class Lesson extends BaseModel {
     limit,
     search,
     tags,
+    status,
   }) {
     const end = start + limit - 1;
 
@@ -387,6 +405,7 @@ class Lesson extends BaseModel {
       .where('users_roles.role_id', roles.MAINTAINER.id)
       .andWhere('users_roles.resource_type', resources.LESSON.name)
       .andWhere('users_roles.user_id', userId)
+      .andWhere('lessons.status', status)
       .andWhere(
         'lessons.name',
         'ilike',
@@ -445,6 +464,8 @@ class Lesson extends BaseModel {
         '=',
         'lessons.id',
       )
+      .where('users_roles.role_id', roles.MAINTAINER.id)
+      .andWhere('enrolled.resource_type', resources.LESSON.name)
       .joinRaw(
         `left join resource_keywords on lessons.id = resource_keywords.resource_id 
         and resource_keywords.resource_type = '${resources.LESSON.name}'`,

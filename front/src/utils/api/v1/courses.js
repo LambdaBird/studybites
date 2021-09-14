@@ -10,3 +10,15 @@ export const getCourses = async ({ queryKey }) => {
   });
   return data;
 };
+
+export const getCourse = async ({ queryKey }) => {
+  const [, paramsData] = queryKey;
+  const { id } = paramsData;
+  const { data } = await api.get(`${PATH}/${id}`);
+  return data;
+};
+
+export const enrollCourse = async (id) => {
+  const { data } = await api.post(`${PATH}/${id}/enroll`);
+  return data;
+};

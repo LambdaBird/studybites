@@ -1,12 +1,18 @@
-import EnrollModalDesktop from './EnrollModal/EnrollModal.desktop';
-import EnrollModalMobile from './EnrollModal/EnrollModal.mobile';
+import EnrollCourseModalDesktop from './EnrollCourseModal/EnrollModal.desktop';
+import EnrollCourseModalMobile from './EnrollCourseModal/EnrollModal.mobile';
+import EnrollLessonModalDesktop from './EnrollLessonModal/EnrollModal.desktop';
+import EnrollLessonModalMobile from './EnrollLessonModal/EnrollModal.mobile';
+import CoursePage from './CoursePage';
 import UserHome from './Home';
 import LearnPage from './LearnPage';
 import UserLessons from './Lessons';
 
 export {
-  EnrollModalDesktop,
-  EnrollModalMobile,
+  CoursePage,
+  EnrollCourseModalDesktop,
+  EnrollCourseModalMobile,
+  EnrollLessonModalDesktop,
+  EnrollLessonModalMobile,
   LearnPage,
   UserHome,
   UserLessons,

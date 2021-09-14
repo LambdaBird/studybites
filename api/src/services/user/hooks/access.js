@@ -8,14 +8,15 @@ export default async function access({
   resourceType,
   roleId,
   resourceId,
-  status,
+  status: allowedStatuses,
   resourcesId,
 }) {
   const {
     config: {
       userService: { userServiceErrors: errors },
+      globals: { resources },
     },
-    models: { UserRole, Lesson },
+    models: { UserRole, Lesson, Course },
   } = this;
 
   try {
@@ -39,12 +40,16 @@ export default async function access({
       throw new AuthorizationError(errors.USER_ERR_UNAUTHORIZED);
     }
 
-    if (resourceId && status) {
-      const lesson = await Lesson.query()
+    if (resourceId && allowedStatuses) {
+      const resource = await (resourceType === resources.LESSON.name
+        ? Lesson
+        : Course
+      )
+        .query()
         .findById(resourceId)
-        .whereIn('status', status);
+        .whereIn('status', allowedStatuses);
 
-      if (!lesson) {
+      if (!resource) {
         throw new AuthorizationError(errors.USER_ERR_UNAUTHORIZED);
       }
     }

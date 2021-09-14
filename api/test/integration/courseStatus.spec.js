@@ -140,7 +140,7 @@ describe('Change Course status flow', () => {
       const { courses } = await prepareLessonsAndCourses(
         context,
         teacherCredentials,
-        [lessonStatus],
+        [lessonStatus, lessonStatus],
         [statusGiven, 'Draft'],
       );
       const [firstCourse] = courses;
