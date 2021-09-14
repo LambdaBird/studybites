@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
 import { useTableSearch } from '@sb-ui/hooks/useTableSearch';
+import { getLanguageCodeByKey } from '@sb-ui/i18n';
 import { getTeacherStudents } from '@sb-ui/utils/api/v1/teacher';
 import { TEACHER_STUDENTS_BASE_KEY } from '@sb-ui/utils/queries';
 import { formatDate } from '@sb-ui/utils/utils';
@@ -16,7 +17,12 @@ const PAGE_SIZE = 10;
 
 const Students = () => {
   const { id: lessonId } = useParams();
-  const { t } = useTranslation('teacher');
+  const { t, i18n } = useTranslation('teacher');
+
+  const languageCode = useMemo(
+    () => getLanguageCodeByKey(i18n.language),
+    [i18n.language],
+  );
 
   const {
     setSearch,
@@ -55,7 +61,8 @@ const Students = () => {
         dataIndex: 'lastActivity',
         key: 'lastActivity',
         render: (lastActivity) =>
-          formatDate(lastActivity) || t('lesson_students.table.not_started'),
+          formatDate(lastActivity, languageCode) ||
+          t('lesson_students.table.not_started'),
         width: '20%',
       },
       {
@@ -65,7 +72,7 @@ const Students = () => {
         width: '10%',
       },
     ],
-    [t],
+    [languageCode, t],
   );
 
   return (
