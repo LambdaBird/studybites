@@ -78,6 +78,9 @@ async function handler({
 }) {
   const {
     models: { Lesson, Block, LessonBlockStructure, Keyword },
+    config: {
+      globals: { resources },
+    },
   } = this;
 
   try {
@@ -95,6 +98,7 @@ async function handler({
           trx,
           keywords,
           resourceId: lessonData.id,
+          resourceType: resources.LESSON.name,
           update: true,
         });
       }

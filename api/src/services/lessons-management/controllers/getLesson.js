@@ -74,7 +74,10 @@ async function handler({ params: { lessonId } }) {
 
   lesson.studentsCount = studentsCount;
   lesson.blocks = await LessonBlockStructure.getAllBlocks({ lessonId });
-  const keywords = await ResourceKeyword.getLessonKeywords({ lessonId });
+  const keywords = await ResourceKeyword.getResourceKeywords({
+    resourceId: lessonId,
+    resourceType: resources.LESSON.name,
+  });
   return { lesson, keywords };
 }
 

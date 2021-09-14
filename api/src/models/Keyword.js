@@ -56,16 +56,22 @@ export default class Keyword extends BaseModel {
       .range(start, end);
   }
 
-  static async createMany({ trx, keywords, resourceId, update = false }) {
+  static async createMany({
+    trx,
+    keywords,
+    resourceId,
+    resourceType,
+    update = false,
+  }) {
     await this.query(trx).insert(keywords).onConflict('name').ignore();
     const keywordIds = await this.getId({ trx, keywords });
     const resourceKeywords = keywordIds.map(({ keywordId }) => ({
-      keywordId,
-      resourceId,
-      resourceType: resources.LESSON.name,
+      keyword_id: keywordId,
+      resource_id: resourceId,
+      resource_type: resourceType,
     }));
     if (update) {
-      await ResourceKeyword.deleteMany({ trx, resourceId });
+      await ResourceKeyword.deleteMany({ trx, resourceId, resourceType });
     }
     await ResourceKeyword.createMany({ trx, resourceKeywords });
   }
