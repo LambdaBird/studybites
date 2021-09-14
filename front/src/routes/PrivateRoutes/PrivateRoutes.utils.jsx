@@ -1,6 +1,7 @@
 import { matchPath } from 'react-router-dom';
 
 import { AdminHome } from '@sb-ui/pages/Admin';
+import Profile from '@sb-ui/pages/Profile';
 import {
   LessonEdit,
   LessonPreview,
@@ -37,6 +38,11 @@ export const getPrivateRoutes = ({ isMobile }) => [
     component: AdminHome,
     path: paths.ADMIN_HOME,
     permissions: [Roles.SUPER_ADMIN],
+    exact: true,
+  },
+  {
+    component: Profile,
+    path: paths.PROFILE,
     exact: true,
   },
   { component: LearnPage, path: paths.LEARN_PAGE, exact: true },

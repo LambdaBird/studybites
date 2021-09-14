@@ -3,6 +3,7 @@ export const SIGN_IN = '/sign-in';
 export const SIGN_UP = '/sign-up';
 export const ADMIN_HOME = '/admin';
 
+export const PROFILE = '/profile';
 export const USER_HOME = '/user';
 export const USER_LESSONS = `${USER_HOME}/lessons`;
 export const USER_COURSES = `${USER_HOME}/courses`;
