@@ -1,7 +1,7 @@
 import { Col, Empty, Skeleton } from 'antd';
 import { useTranslation } from 'react-i18next';
 
-import OngoingShortLesson from '@sb-ui/components/lessonBlocks/OngoingShort';
+import OngoingShortLesson from '@sb-ui/components/resourceBlocks/OngoingShort';
 import useMobile from '@sb-ui/hooks/useMobile';
 import emptyImg from '@sb-ui/resources/img/empty.svg';
 

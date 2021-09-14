@@ -1,9 +1,14 @@
 import { useCallback, useMemo } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
-import { LEARN_PAGE, USER_ENROLL } from '@sb-ui/utils/paths';
+import {
+  LEARN_COURSE_PAGE,
+  LEARN_PAGE,
+  USER_ENROLL_COURSE,
+  USER_ENROLL_LESSON,
+} from '@sb-ui/utils/paths';
 
-export const useLesson = ({ id, author }) => {
+export const useResource = ({ resource: { id, author }, isCourse = false }) => {
   const location = useLocation();
   const query = useMemo(() => location.search, [location]);
   const history = useHistory();
@@ -20,13 +25,19 @@ export const useLesson = ({ id, author }) => {
   const handleEnroll = useCallback(() => {
     history.push({
       search: query,
-      pathname: USER_ENROLL.replace(':id', id),
+      pathname: isCourse
+        ? USER_ENROLL_COURSE.replace(':id', id)
+        : USER_ENROLL_LESSON.replace(':id', id),
     });
-  }, [history, id, query]);
+  }, [history, id, isCourse, query]);
 
-  const handleContinueLesson = useCallback(() => {
-    history.push(LEARN_PAGE.replace(':id', id));
-  }, [history, id]);
+  const handleContinueLesson = useCallback(
+    () =>
+      isCourse
+        ? history.push(LEARN_COURSE_PAGE.replace(':id', id))
+        : history.push(LEARN_PAGE.replace(':id', id)),
+    [history, id, isCourse],
+  );
 
   return { fullName, firstNameLetter, handleEnroll, handleContinueLesson };
 };

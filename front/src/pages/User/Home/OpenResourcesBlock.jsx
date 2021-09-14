@@ -1,12 +1,12 @@
 import { Skeleton } from 'antd';
 import PropTypes from 'prop-types';
 
-import PublicLesson from '@sb-ui/components/lessonBlocks/Public';
+import PublicResource from '@sb-ui/components/resourceBlocks/Public';
 import { PAGE_SIZE } from '@sb-ui/pages/User/Lessons/LessonsList/constants';
 import * as S from '@sb-ui/pages/User/Lessons/LessonsList/LessonsList.styled';
 import { skeletonArray } from '@sb-ui/utils/utils';
 
-const OpenLessonsBlock = ({ isLoading, error, data }) => {
+const OpenResourcesBlock = ({ isLoading, error, data, isCourse = false }) => {
   if (isLoading && !error) {
     return (
       <>
@@ -21,20 +21,21 @@ const OpenLessonsBlock = ({ isLoading, error, data }) => {
 
   return (
     <>
-      {data?.map((lesson) => (
-        <S.LessonCol key={lesson.id}>
-          <PublicLesson lesson={lesson} />
+      {data?.map((resource) => (
+        <S.LessonCol key={resource.id}>
+          <PublicResource resource={resource} isCourse={isCourse} />
         </S.LessonCol>
       ))}
     </>
   );
 };
 
-OpenLessonsBlock.propTypes = {
+OpenResourcesBlock.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   error: PropTypes.object,
   data: PropTypes.arrayOf(PropTypes.object),
+  isCourse: PropTypes.bool,
 };
 
-export default OpenLessonsBlock;
+export default OpenResourcesBlock;

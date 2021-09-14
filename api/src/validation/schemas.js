@@ -41,6 +41,7 @@ export const lessonSearch = {
     authors: { type: 'array', items: { type: 'number' } },
     progress: { type: 'string' },
     tags: { type: 'array', items: { type: 'number' } },
+    status: { type: 'string' },
   },
 };
 
@@ -50,6 +51,7 @@ export const courseSearch = {
     search: { type: 'string' },
     offset: { type: 'number', default: 0 },
     limit: { type: 'number', default: searchLimits.COURSE_SEARCH_LIMIT },
+    progress: { type: 'string' },
     status: { type: 'string' },
     tags: { type: 'array', items: { type: 'number' } },
   },

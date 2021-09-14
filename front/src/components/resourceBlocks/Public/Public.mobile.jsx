@@ -1,19 +1,23 @@
 import { Col, Row } from 'antd';
+import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 
 import LessonKeywords from '@sb-ui/components/atoms/LessonKeywords';
-import { PublicLessonType } from '@sb-ui/components/lessonBlocks/types';
+import { PublicResourceType } from '@sb-ui/components/resourceBlocks/types';
 import DefaultLessonImage from '@sb-ui/resources/img/lesson.svg';
 
-import { useLesson } from './useLesson';
+import { useResource } from './useResource';
 import * as S from './Public.mobile.styled';
 
-const PublicMobile = ({ lesson }) => {
+const PublicMobile = ({ resource, isCourse, isCourseLesson }) => {
   const { t } = useTranslation('user');
 
-  const { name, description, isEnrolled, image, keywords } = lesson;
+  const { name, description, isEnrolled, image, keywords } = resource;
   const { fullName, firstNameLetter, handleContinueLesson, handleEnroll } =
-    useLesson(lesson);
+    useResource({ resource, isCourse });
+
+  const isButtonDisabled =
+    isCourseLesson && !resource.isFinished && !resource.isCurrent;
 
   return (
     <S.Main size="large" wrap={false}>
@@ -44,11 +48,20 @@ const PublicMobile = ({ lesson }) => {
       </S.DescriptionRow>
       <S.EnrollRow>
         {isEnrolled ? (
-          <S.Enroll type="primary" onClick={handleContinueLesson}>
+          <S.Enroll
+            type="primary"
+            onClick={handleContinueLesson}
+            disabled={isButtonDisabled}
+          >
             {t('home.ongoing_lessons.continue_button')}
           </S.Enroll>
         ) : (
-          <S.Enroll size="medium" type="secondary" onClick={handleEnroll}>
+          <S.Enroll
+            size="medium"
+            type="secondary"
+            onClick={handleEnroll}
+            disabled={isButtonDisabled}
+          >
             {t('home.open_lessons.enroll_button')}
           </S.Enroll>
         )}
@@ -62,7 +75,9 @@ const PublicMobile = ({ lesson }) => {
 };
 
 PublicMobile.propTypes = {
-  lesson: PublicLessonType.isRequired,
+  resource: PublicResourceType.isRequired,
+  isCourse: PropTypes.bool,
+  isCourseLesson: PropTypes.bool,
 };
 
 export default PublicMobile;

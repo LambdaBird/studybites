@@ -15,7 +15,7 @@ import { fetchKeywords } from '@sb-ui/utils/api/v1/keywords';
 import { USER_PUBLIC_COURSES_BASE_KEY } from '@sb-ui/utils/queries';
 import { getQueryPage } from '@sb-ui/utils/utils';
 
-import OpenCoursesBlock from '../OpenLessons/OpenLessonsBlock';
+import OpenCoursesBlock from '../OpenResourcesBlock';
 
 const OpenCourses = () => {
   const { t } = useTranslation('user');
@@ -103,7 +103,12 @@ const OpenCourses = () => {
         </S.FilterWrapper>
       </S.LessonsHeader>
       <S.LessonsRow>
-        <OpenCoursesBlock isLoading={isLoading} error={error} data={courses} />
+        <OpenCoursesBlock
+          isLoading={isLoading}
+          error={error}
+          data={courses}
+          isCourse
+        />
         {isEmpty && (
           <S.EmptyContainer
             image={emptyImg}

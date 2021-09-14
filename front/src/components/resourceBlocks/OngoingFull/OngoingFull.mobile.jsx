@@ -3,10 +3,10 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import LessonKeywords from '@sb-ui/components/atoms/LessonKeywords';
-import { LessonType } from '@sb-ui/components/lessonBlocks/types';
+import { LessonType } from '@sb-ui/components/resourceBlocks/types';
 import DefaultLessonImage from '@sb-ui/resources/img/lesson.svg';
 
-import { useLesson } from './useLesson';
+import { useResource } from './useResource';
 import * as S from './OngoingFull.mobile.styled';
 
 const OngoingFullMobile = ({ lesson }) => {
@@ -20,7 +20,9 @@ const OngoingFullMobile = ({ lesson }) => {
     keywords,
   } = lesson;
 
-  const { fullName, firstNameLetter, handleContinueLesson } = useLesson(lesson);
+  const { fullName, firstNameLetter, handleContinueLesson } = useResource({
+    resource: lesson,
+  });
 
   const countPercentage = useMemo(() => {
     if ((!lesson.interactiveTotal && lesson.isStarted) || lesson.isFinished) {

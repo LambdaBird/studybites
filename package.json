@@ -26,7 +26,7 @@
     ],
     "./front/src/**/*.{js,jsx}": [
       "prettier --config ./.prettierrc",
-      "eslint --fix"
+      "eslint --fix --max-warnings=0"
     ]
   },
   "scripts": {
