@@ -166,8 +166,24 @@ export default class Course extends BaseModel {
       .withGraphFetched('author');
   }
 
-  static getCourseWithAuthor({ courseId }) {
-    return this.query().findById(courseId).withGraphFetched('author');
+  static getCourseWithAuthor({ courseId, userId }) {
+    const query = this.query().findById(courseId);
+
+    if (userId) {
+      query.select(
+        'courses.*',
+        this.knex().raw(`
+          (select cast(case when count(*) > 0 then true else false end as bool)
+           from users_roles
+           where role_id = ${roles.STUDENT.id}
+             and user_id = ${userId}
+             and resource_type = '${resources.COURSE.name}'
+             and resource_id = courses.id) is_enrolled
+        `),
+      );
+    }
+
+    return query.withGraphFetched('author');
   }
 
   static async getCourseWithAuthorAndLessons({ courseId, lessons }) {

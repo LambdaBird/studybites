@@ -260,8 +260,24 @@ class Lesson extends BaseModel {
     return this.query(trx).insert(lesson).returning('*');
   }
 
-  static getLessonWithAuthor({ lessonId }) {
-    return this.query().findById(lessonId).withGraphFetched('author');
+  static getLessonWithAuthor({ lessonId, userId }) {
+    const query = this.query().findById(lessonId);
+
+    if (userId) {
+      query.select(
+        'lessons.*',
+        this.knex().raw(`
+          (select cast(case when count(*) > 0 then true else false end as bool)
+           from users_roles
+           where role_id = ${roles.STUDENT.id}
+             and user_id = ${userId}
+             and resource_type = '${resources.LESSON.name}'
+             and resource_id = lessons.id) is_enrolled
+        `),
+      );
+    }
+
+    return query.withGraphFetched('author');
   }
 
   static getLessonWithProgress({ lessonId }) {
