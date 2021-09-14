@@ -35,7 +35,7 @@ export const useResource = ({ resource: { id, author }, isCourse = false }) => {
     return isCourse
       ? history.push(LEARN_COURSE_PAGE.replace(':id', id))
       : history.push(LEARN_PAGE.replace(':id', id));
-  }, [history, id]);
+  }, [history, id, isCourse]);
 
   return { fullName, firstNameLetter, handleEnroll, handleContinueLesson };
 };

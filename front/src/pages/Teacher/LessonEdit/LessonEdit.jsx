@@ -33,8 +33,8 @@ const MAX_NAME_LENGTH = 255;
 const LessonEdit = () => {
   const { id: lessonId } = useParams();
 
-  const isEditLesson = useMemo(() => lessonId !== 'new', []);
-  const isCurrentlyEditing = lessonId !== 'new';
+  const [isEditLesson] = useState(lessonId !== 'new');
+  const isCurrentlyEditing = useMemo(() => lessonId !== 'new', [lessonId]);
 
   const { t } = useTranslation('teacher');
   const history = useHistory();
