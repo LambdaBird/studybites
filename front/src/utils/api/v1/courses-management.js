@@ -29,12 +29,15 @@ export const getCourse = async ({ queryKey }) => {
   return data;
 };
 
-export const putCourseStatus = async (params) => {
-  const { data } = await api.put(`${PATH}/courses/${params.id}/status`, params);
+export const patchCourseStatus = async (params) => {
+  const { data } = await api.patch(
+    `${PATH}/courses/${params.id}/update-status`,
+    params,
+  );
   return data;
 };
 
-export const putCoursesStatus = async (params) => {
-  const { data } = await api.put(`${PATH}/courses/status`, params);
+export const patchCoursesStatus = async (params) => {
+  const { data } = await api.patch(`${PATH}/courses/update-status`, params);
   return data;
 };

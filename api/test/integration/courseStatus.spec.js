@@ -18,7 +18,7 @@ describe('Change Course status flow', () => {
       credentials: teacherCredentials,
       app: context.app,
       setToken: (accessToken) => {
-        context.token = accessToken;
+        context.teacherToken = accessToken;
       },
     });
 
@@ -27,7 +27,7 @@ describe('Change Course status flow', () => {
         method,
         url: `/api/v1/${url}`,
         headers: {
-          Authorization: `Bearer ${context.token}`,
+          Authorization: `Bearer ${context.teacherToken}`,
         },
         body,
       });
@@ -54,8 +54,8 @@ describe('Change Course status flow', () => {
       );
       const [firstCourse] = courses;
       const response = await context.request({
-        url: `courses-management/courses/${firstCourse.course.id}/status`,
-        method: 'PUT',
+        url: `courses-management/courses/${firstCourse.course.id}/update-status`,
+        method: 'PATCH',
         body: {
           status: toStatus,
         },
@@ -85,13 +85,16 @@ describe('Change Course status flow', () => {
       );
       const [firstCourse] = courses;
       const response = await context.request({
-        url: `courses-management/courses/${firstCourse.course.id}/status`,
-        method: 'PUT',
+        url: `courses-management/courses/${firstCourse.course.id}/update-status`,
+        method: 'PATCH',
         body: {
           status: toStatus,
         },
       });
+      const payload = JSON.parse(response.payload);
+
       expect(response.statusCode).toBe(200);
+      expect(payload.status).toBe(toStatus);
     },
   );
 });

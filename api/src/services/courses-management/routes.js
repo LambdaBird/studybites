@@ -18,20 +18,20 @@ export async function router(instance) {
   instance.post('/courses', createCourse.options, createCourse.handler);
   instance.options('/lessons', coursesOptions.options, coursesOptions.handler);
 
-  instance.put(
-    '/courses/status',
+  instance.patch(
+    '/courses/update-status',
     updateStatuses.options,
     updateStatuses.handler,
   );
 
-  instance.put(
-    '/courses/:courseId/status',
+  instance.patch(
+    '/courses/:courseId/update-status',
     updateStatus.options,
     updateStatus.handler,
   );
 
   instance.options(
-    '/courses/:courseId/status',
+    '/courses/:courseId/update-status',
     statusOptions.options,
     statusOptions.handler,
   );

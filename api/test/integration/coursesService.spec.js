@@ -84,7 +84,10 @@ describe('Courses service', () => {
       courseToSearch = await createCourse({
         app: testContext.app,
         credentials: teacherCredentials,
-        body: prepareCourseFromSeed(courseToTest, '-uniquePublicIdentifier'),
+        body: prepareCourseFromSeed({
+          seed: courseToTest,
+          name: '-uniquePublicIdentifier',
+        }),
       });
     });
 

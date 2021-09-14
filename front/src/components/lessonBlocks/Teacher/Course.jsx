@@ -67,7 +67,8 @@ const Course = ({ name, id, students: studentsData, status, lessons }) => {
     switch (key) {
       case STATUS_KEYS.ARCHIVE:
         updateCourseStatus({
-          course: { id, status: Statuses.ARCHIVED },
+          id,
+          status: Statuses.ARCHIVED,
         });
         break;
       case STATUS_KEYS.PUBLISH:

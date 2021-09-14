@@ -5,7 +5,7 @@ import { useMutation } from 'react-query';
 
 import { Statuses } from '@sb-ui/pages/Teacher/Home/Dashboard/constants';
 import { queryClient } from '@sb-ui/query';
-import { putCourseStatus } from '@sb-ui/utils/api/v1/courses-management';
+import { patchCourseStatus } from '@sb-ui/utils/api/v1/courses-management';
 import {
   TEACHER_COURSE_BASE_KEY,
   TEACHER_COURSES_BASE_KEY,
@@ -15,7 +15,7 @@ export const useCoursePublish = ({ courseId }) => {
   const { t } = useTranslation('teacher');
 
   const { mutateAsync: updateCourseStatus, isLoading: isUpdateInProgress } =
-    useMutation(putCourseStatus, {
+    useMutation(patchCourseStatus, {
       onSuccess: () => {
         queryClient.invalidateQueries(TEACHER_COURSES_BASE_KEY);
         queryClient.invalidateQueries([
@@ -46,7 +46,10 @@ export const useCoursePublish = ({ courseId }) => {
           content: t('course_edit.publish_modal_fail.content'),
           okText: t('course_edit.publish_modal_fail.ok'),
         });
+        return;
       }
+
+      throw new Error(e);
     }
   }, [courseId, t, updateCourseStatus]);
 

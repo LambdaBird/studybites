@@ -17,14 +17,14 @@ export async function router(instance) {
   instance.post('/lessons', createLesson.options, createLesson.handler);
   instance.options('/lessons', lessonsOptions.options, lessonsOptions.handler);
 
-  instance.put(
-    '/lessons/:lessonId/status',
+  instance.patch(
+    '/lessons/:lessonId/update-status',
     updateStatus.options,
     updateStatus.handler,
   );
 
   instance.options(
-    '/lessons/:lessonId/status',
+    '/lessons/:lessonId/update-status',
     statusOptions.options,
     statusOptions.handler,
   );

@@ -86,19 +86,19 @@ export const prepareLessonFromSeed = (
   }),
 });
 
-export const prepareCourseFromSeed = (
-  courseSeed,
-  nameModifier = '',
+export const prepareCourseFromSeed = ({
+  seed,
+  name = '',
   status = 'Public',
   lessons = [],
-) => ({
+}) => ({
   course: {
-    name: `${courseSeed.name}${nameModifier}`,
+    name: `${seed.name}${name}`,
     status,
   },
   lessons: [
     // eslint-disable-next-line no-underscore-dangle
-    ...courseSeed._lessons.map((structureItem) => ({
+    ...seed._lessons.map((structureItem) => ({
       id: structureItem.lesson_id,
     })),
     ...lessons,
@@ -134,23 +134,23 @@ export const prepareLessonsAndCourses = async (
   const firstCourse = await createCourse({
     app: context.app,
     credentials: teacherCredentials,
-    body: prepareCourseFromSeed(
-      courseToTest,
-      `-course${courseStatuses[0]}`,
-      courseStatuses[0],
-      [{ id: firstLesson.lesson.id }, { id: secondLesson.lesson.id }],
-    ),
+    body: prepareCourseFromSeed({
+      seed: courseToTest,
+      name: `-course${courseStatuses[0]}`,
+      status: courseStatuses[0],
+      lessons: [{ id: firstLesson.lesson.id }, { id: secondLesson.lesson.id }],
+    }),
   });
 
   const secondCourse = await createCourse({
     app: context.app,
     credentials: teacherCredentials,
-    body: prepareCourseFromSeed(
-      secondCourseToTest,
-      `-course${courseStatuses[1]}`,
-      courseStatuses[1],
-      [{ id: firstLesson.lesson.id }],
-    ),
+    body: prepareCourseFromSeed({
+      seed: secondCourseToTest,
+      name: `-course${courseStatuses[1]}`,
+      status: courseStatuses[1],
+      lessons: [{ id: firstLesson.lesson.id }],
+    }),
   });
 
   return {

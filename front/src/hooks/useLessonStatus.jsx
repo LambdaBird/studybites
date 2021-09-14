@@ -5,8 +5,8 @@ import { ExclamationCircleOutlined } from '@ant-design/icons';
 
 import { Statuses } from '@sb-ui/pages/Teacher/Home/Dashboard/constants';
 import { queryClient } from '@sb-ui/query';
-import { putCoursesStatus } from '@sb-ui/utils/api/v1/courses-management';
-import { putLessonStatus } from '@sb-ui/utils/api/v1/teacher';
+import { patchCoursesStatus } from '@sb-ui/utils/api/v1/courses-management';
+import { patchLessonStatus } from '@sb-ui/utils/api/v1/teacher';
 import {
   TEACHER_COURSES_BASE_KEY,
   TEACHER_LESSON_BASE_KEY,
@@ -16,13 +16,16 @@ import {
 export const useLessonStatus = ({ id }) => {
   const { t } = useTranslation('teacher');
 
-  const { mutateAsync: updateCoursesStatuses } = useMutation(putCoursesStatus, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(TEACHER_COURSES_BASE_KEY);
+  const { mutateAsync: updateCoursesStatuses } = useMutation(
+    patchCoursesStatus,
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries(TEACHER_COURSES_BASE_KEY);
+      },
     },
-  });
+  );
 
-  const updateLessonStatusMutation = useMutation(putLessonStatus, {
+  const updateLessonStatusMutation = useMutation(patchLessonStatus, {
     onSuccess: ({ status: statusToChange }) => {
       queryClient.invalidateQueries(TEACHER_LESSON_BASE_KEY);
       queryClient.invalidateQueries(TEACHER_LESSONS_BASE_KEY);

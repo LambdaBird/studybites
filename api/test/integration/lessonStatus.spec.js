@@ -19,7 +19,7 @@ describe('Change Lesson status flow', () => {
       credentials: teacherCredentials,
       app: context.app,
       setToken: (accessToken) => {
-        context.token = accessToken;
+        context.teacherToken = accessToken;
       },
     });
 
@@ -28,7 +28,7 @@ describe('Change Lesson status flow', () => {
         method,
         url: `/api/v1/${url}`,
         headers: {
-          Authorization: `Bearer ${context.token}`,
+          Authorization: `Bearer ${context.teacherToken}`,
         },
         body,
       });
@@ -48,13 +48,16 @@ describe('Change Lesson status flow', () => {
     );
     const [firstLesson] = lessons;
     const response = await context.request({
-      url: `lessons-management/lessons/${firstLesson.lesson.id}/status`,
-      method: 'PUT',
+      url: `lessons-management/lessons/${firstLesson.lesson.id}/update-status`,
+      method: 'PATCH',
       body: {
         status: 'Draft',
       },
     });
+    const payload = JSON.parse(response.payload);
+
     expect(response.statusCode).toBe(200);
+    expect(payload.status).toBe('Draft');
   });
 
   it('should return an error if try to change lesson status from Public to Draft when courses status is Public', async () => {
@@ -66,8 +69,8 @@ describe('Change Lesson status flow', () => {
     );
     const [firstLesson] = lessons;
     const response = await context.request({
-      url: `lessons-management/lessons/${firstLesson.lesson.id}/status`,
-      method: 'PUT',
+      url: `lessons-management/lessons/${firstLesson.lesson.id}/update-status`,
+      method: 'PATCH',
       body: {
         status: 'Draft',
       },
@@ -96,8 +99,8 @@ describe('Change Lesson status flow', () => {
       const [firstLesson] = lessons;
 
       const lessonResponse = await context.request({
-        url: `lessons-management/lessons/${firstLesson.lesson.id}/status`,
-        method: 'PUT',
+        url: `lessons-management/lessons/${firstLesson.lesson.id}/update-status`,
+        method: 'PATCH',
         body: {
           status: statusTo,
         },
@@ -106,16 +109,16 @@ describe('Change Lesson status flow', () => {
       const { courses } = payload.payload;
       const statusToChange = payload.payload.status;
       const coursesResponse = await context.request({
-        url: `courses-management/courses/status`,
-        method: 'PUT',
+        url: `courses-management/courses/update-status`,
+        method: 'PATCH',
         body: {
           status: statusToChange,
           courses,
         },
       });
       const lessonSecondResponse = await context.request({
-        url: `lessons-management/lessons/${firstLesson.lesson.id}/status`,
-        method: 'PUT',
+        url: `lessons-management/lessons/${firstLesson.lesson.id}/update-status`,
+        method: 'PATCH',
         body: {
           status: statusToChange,
         },
