@@ -23,6 +23,7 @@ import coursesService from './services/courses';
 import keywordsService from './services/keywords';
 
 import errorsAndValidation from './validation';
+import chooseDB from '../utils/chooseDB';
 
 export default (options = {}) => {
   const app = fastify({
@@ -36,9 +37,8 @@ export default (options = {}) => {
   });
 
   app.register(errorsAndValidation);
-
   app.register(fastifyObjection, {
-    connection: process.env.DATABASE_URL,
+    connection: `${process.env.DATABASE_URL}/${chooseDB()}`,
     models: [
       User,
       Role,

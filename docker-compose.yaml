@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   postgres:
-    image: postgres
+    image: postgres:13.4-alpine
     restart: always
     environment:
       POSTGRES_HOST_AUTH_METHOD: trust
@@ -23,13 +23,12 @@ services:
       SB_ADMIN_EMAIL: ${SB_ADMIN_EMAIL}
       SB_ADMIN_PASSWORD: ${SB_ADMIN_PASSWORD}
       DEMO_MODE: ${DEMO_MODE}
-      DATABASE_URL: postgres://postgres:@postgres:5432/studybites
+      DATABASE_URL: postgres://postgres:@postgres:5432
       PORT: 3017
       JWT_SECRET: tvXqYGduhyMw28EzyBxaGrFP8zQsmRG93GZHrmADmHsU9WwB7nbULUsJ98aAqWzM
       POSTGRES_HOST: postgres
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: studybites
       API_LOGLEVEL: info
     ports:
       - '3017:3017'

@@ -1,12 +1,13 @@
 /* eslint-disable no-console */
 import knex from 'knex';
+import chooseDB from './utils/chooseDB';
 import { hashPassword } from './utils/salt';
 
 (async () => {
   try {
     const db = knex({
       client: 'pg',
-      connection: process.env.DATABASE_URL,
+      connection: `${process.env.DATABASE_URL}/${chooseDB()}`,
     });
 
     await db.migrate.latest();

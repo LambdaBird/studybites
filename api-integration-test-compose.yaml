@@ -22,7 +22,7 @@ services:
       - ./api:/api
       - /api/node_modules
     environment:
-      DATABASE_URL: postgres://postgres:@postgres:5432/studybites-test
+      DATABASE_URL: postgres://postgres:@postgres:5432
       PORT: 3019
       JWT_SECRET: tvXqYGduhyMw28EzyBxaGrFP8zQsmRG93GZHrmADmHsU9WwB7nbULUsJ98aAqWzM
       POSTGRES_HOST: postgres

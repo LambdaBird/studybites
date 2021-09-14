@@ -17,9 +17,11 @@ const Routes = () => (
       <AuthRoute path={paths.SIGN_UP}>
         <SignUp />
       </AuthRoute>
-      <Route path={paths.DEMO_LESSON}>
-        <Demo />
-      </Route>
+      {process.env.REACT_APP_DEMO_MODE && (
+        <Route path={paths.DEMO_LESSON}>
+          <Demo />
+        </Route>
+      )}
       <PrivateRoutes />
     </Switch>
   </Router>
