@@ -29,7 +29,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: studybites
-      API_LOGLEVEL: info
+      DEVELOPMENT_MODE: 1
     ports:
       - '3017:3017'
 

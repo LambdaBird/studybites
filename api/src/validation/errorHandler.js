@@ -1,10 +1,8 @@
 import { globalErrors } from '../config';
 
-export default function errorHandler(
-  { validation, statusCode, message },
-  _,
-  reply,
-) {
+export default function errorHandler(err, req, reply) {
+  req.log.error(err);
+  const { validation, statusCode, message } = err;
   if (validation) {
     return reply.status(400).send({
       statusCode: 400,
