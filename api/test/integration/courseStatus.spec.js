@@ -22,7 +22,7 @@ describe('Change Course status flow', () => {
       },
     });
 
-    context.request = async ({ url, method = 'POST', body }) => {
+    context.teacherRequest = async ({ url, method = 'POST', body }) => {
       return context.app.inject({
         method,
         url: `/api/v1/${url}`,
@@ -39,25 +39,49 @@ describe('Change Course status flow', () => {
   });
 
   it.each([
-    ['Draft', 'Public', 'Draft'],
-    ['Archived', 'Public', 'Draft'],
-    ['Draft', 'Public', 'Archived'],
-    ['Archived', 'Public', 'Archived'],
+    [
+      {
+        statusGiven: 'Draft',
+        statusAttempted: 'Public',
+        lessonStatus: 'Draft',
+      },
+    ],
+    [
+      {
+        statusGiven: 'Archived',
+        statusAttempted: 'Public',
+        lessonStatus: 'Draft',
+      },
+    ],
+    [
+      {
+        statusGiven: 'Draft',
+        statusAttempted: 'Public',
+        lessonStatus: 'Archived',
+      },
+    ],
+    [
+      {
+        statusGiven: 'Archived',
+        statusAttempted: 'Public',
+        lessonStatus: 'Archived',
+      },
+    ],
   ])(
     'should return error if try to change course status from %s to %s when one of lessons is %s',
-    async (fromStatus, toStatus, lessonStatus) => {
+    async ({ statusGiven, statusAttempted, lessonStatus }) => {
       const { courses } = await prepareLessonsAndCourses(
         context,
         teacherCredentials,
         [lessonStatus, 'Public'],
-        [fromStatus, 'Draft'],
+        [statusGiven, 'Draft'],
       );
       const [firstCourse] = courses;
-      const response = await context.request({
+      const response = await context.teacherRequest({
         url: `courses-management/courses/${firstCourse.course.id}/update-status`,
         method: 'PATCH',
         body: {
-          status: toStatus,
+          status: statusAttempted,
         },
       });
       const payload = JSON.parse(response.payload);
@@ -68,33 +92,69 @@ describe('Change Course status flow', () => {
   );
 
   it.each([
-    ['Public', 'Draft', 'Public'],
-    ['Public', 'Draft', 'Draft'],
-    ['Public', 'Draft', 'Archived'],
-    ['Public', 'Archived', 'Public'],
-    ['Public', 'Archived', 'Draft'],
-    ['Public', 'Archived', 'Archived'],
+    [
+      {
+        statusGiven: 'Public',
+        statusAttempted: 'Draft',
+        lessonStatus: 'Public',
+      },
+    ],
+    [
+      {
+        statusGiven: 'Public',
+        statusAttempted: 'Draft',
+        lessonStatus: 'Draft',
+      },
+    ],
+    [
+      {
+        statusGiven: 'Public',
+        statusAttempted: 'Draft',
+        lessonStatus: 'Archived',
+      },
+    ],
+    [
+      {
+        statusGiven: 'Public',
+        statusAttempted: 'Archived',
+        lessonStatus: 'Public',
+      },
+    ],
+    [
+      {
+        statusGiven: 'Public',
+        statusAttempted: 'Archived',
+        lessonStatus: 'Draft',
+      },
+    ],
+    [
+      {
+        statusGiven: 'Public',
+        statusAttempted: 'Archived',
+        lessonStatus: 'Archived',
+      },
+    ],
   ])(
     'should return success if try to change course status from %s to %s when lessons status is %s',
-    async (fromStatus, toStatus, lessonStatus) => {
+    async ({ statusGiven, statusAttempted, lessonStatus }) => {
       const { courses } = await prepareLessonsAndCourses(
         context,
         teacherCredentials,
         [lessonStatus],
-        [fromStatus, 'Draft'],
+        [statusGiven, 'Draft'],
       );
       const [firstCourse] = courses;
-      const response = await context.request({
+      const response = await context.teacherRequest({
         url: `courses-management/courses/${firstCourse.course.id}/update-status`,
         method: 'PATCH',
         body: {
-          status: toStatus,
+          status: statusAttempted,
         },
       });
       const payload = JSON.parse(response.payload);
 
       expect(response.statusCode).toBe(200);
-      expect(payload.status).toBe(toStatus);
+      expect(payload.status).toBe(statusAttempted);
     },
   );
 });
