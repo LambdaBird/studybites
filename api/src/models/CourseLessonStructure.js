@@ -1,5 +1,4 @@
 import { v4 } from 'uuid';
-
 import objection from 'objection';
 import path from 'path';
 import BaseModel from './BaseModel';
@@ -34,7 +33,27 @@ export default class CourseLessonStructure extends BaseModel {
           to: 'results.lesson_id',
         },
       },
-
+      students: {
+        relation: objection.Model.ManyToManyRelation,
+        modelClass: path.join(__dirname, 'User'),
+        join: {
+          from: 'course_lesson_structure.lesson_id',
+          through: {
+            modelClass: path.join(__dirname, 'UserRole'),
+            from: 'users_roles.resource_id',
+            to: 'users_roles.user_id',
+          },
+          to: 'users.id',
+        },
+        modify: (query) => {
+          return query
+            .where({
+              resource_type: resources.LESSON.name,
+              role_id: roles.STUDENT.id,
+            })
+            .select('id', 'first_name', 'last_name');
+        },
+      },
       author: {
         relation: objection.Model.HasOneThroughRelation,
         modelClass: path.join(__dirname, 'User'),
@@ -121,7 +140,8 @@ export default class CourseLessonStructure extends BaseModel {
       .orderBy(
         this.knex().raw(`(case when parent_id is null then 0 else 1 end)`),
       )
-      .withGraphFetched('author');
+      .withGraphFetched('author')
+      .withGraphFetched('students');
 
     if (userId) {
       query

@@ -3,8 +3,6 @@ export const verifyAnswers = (answers, results) => {
     return false;
   }
   return results
-    ?.map((result, index) => {
-      return result === answers[index];
-    })
+    ?.map((result, index) => result === answers[index])
     ?.every((result) => result);
 };

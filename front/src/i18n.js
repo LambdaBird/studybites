@@ -8,10 +8,12 @@ export const LANGUAGES_LIST = [
   {
     key: 'en',
     value: 'English',
+    code: 'en-US',
   },
   {
     key: 'ru',
     value: 'Русский',
+    code: 'ru',
   },
 ];
 
@@ -23,6 +25,7 @@ const resources = {
 const LANGUAGE = 'language';
 const DEFAULT_KEY = 'en';
 const DEFAULT_VALUE = 'English';
+export const DEFAULT_CODE = 'en-US';
 
 export const removeStorageLanguage = () => {
   localStorage.removeItem(LANGUAGE);
@@ -33,8 +36,14 @@ export const setStorageLanguage = (language) =>
 
 export const getStorageLanguage = () => localStorage.getItem(LANGUAGE);
 
+export const getLanguageByKey = (key) =>
+  LANGUAGES_LIST.find((lang) => lang.key === key) || LANGUAGES_LIST?.[0];
+
 export const getLanguageValueByKey = (key) =>
-  LANGUAGES_LIST.find((lang) => lang.key === key)?.value || DEFAULT_VALUE;
+  getLanguageByKey(key)?.value || DEFAULT_VALUE;
+
+export const getLanguageCodeByKey = (key) =>
+  getLanguageByKey(key)?.code || DEFAULT_CODE;
 
 const getNavigatorLanguage = () =>
   LANGUAGES_LIST.find((lang) => navigator.language.includes(lang.key))?.key ||

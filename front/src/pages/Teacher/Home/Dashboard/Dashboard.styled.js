@@ -1,4 +1,4 @@
-import { Col, Pagination, Row, Select, Typography } from 'antd';
+import { Button, Col, Pagination, Row, Select, Typography } from 'antd';
 import styled from 'styled-components';
 
 const { Title } = Typography;
@@ -47,4 +47,10 @@ export const DashboardTitle = styled(Title).attrs({
 
 export const StyledSelect = styled(Select)`
   min-width: 8rem;
+`;
+
+export const AddButton = styled(Button).attrs({
+  type: 'link',
+})`
+  margin-left: auto;
 `;

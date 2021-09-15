@@ -1,4 +1,4 @@
-import { Button, message, Row, Select, Skeleton, Space } from 'antd';
+import { message, Row, Select, Skeleton, Space } from 'antd';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
@@ -77,13 +77,9 @@ const LessonsDashboard = () => {
           </S.StyledSelect>
           <KeywordsFilter setValues={setKeywords} margin={0} />
         </Space>
-        <Button
-          icon={<PlusOutlined />}
-          type="link"
-          onClick={handleCreateLesson}
-        >
+        <S.AddButton icon={<PlusOutlined />} onClick={handleCreateLesson}>
           {t('lesson_dashboard.add_button')}
-        </Button>
+        </S.AddButton>
       </S.DashboardControls>
       {isLoading ? (
         skeletonArray(pageLimit).map((el) => (

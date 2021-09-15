@@ -1,53 +1,57 @@
 import { Avatar, Dropdown, Menu, Space, Tooltip, Typography } from 'antd';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useMutation } from 'react-query';
 import { useHistory } from 'react-router-dom';
 import { EllipsisOutlined } from '@ant-design/icons';
 
 import { StyledAvatar } from '@sb-ui/components/molecules/Header/Header.styled';
+import { useCoursePublish } from '@sb-ui/hooks/useCoursePublish';
 import { Statuses } from '@sb-ui/pages/Teacher/Home/Dashboard/constants';
-import { queryClient } from '@sb-ui/query';
 import lesson from '@sb-ui/resources/img/lesson.svg';
-import { putLesson } from '@sb-ui/utils/api/v1/teacher';
 import { COURSES_EDIT } from '@sb-ui/utils/paths';
-import { TEACHER_COURSES_BASE_KEY } from '@sb-ui/utils/queries';
 
 import { TeacherPropTypes } from './types';
 import * as S from './Lesson.styled';
 
 const { Text } = Typography;
 
+const STATUS_KEYS = {
+  ARCHIVE: 'archiveCourse',
+  PUBLISH: 'publishCourse',
+  DRAFT: 'draftCourse',
+  RESTORE: 'restoreCourse',
+};
+
 const menuItems = {
   [Statuses.DRAFT]: [
-    { key: 'publishCourse', labelKey: 'course_dashboard.menu.publish' },
+    { key: STATUS_KEYS.PUBLISH, labelKey: 'course_dashboard.menu.publish' },
     {
-      key: 'archiveCourse',
+      key: STATUS_KEYS.ARCHIVE,
       labelKey: 'course_dashboard.menu.archive',
       isDanger: true,
     },
   ],
   [Statuses.PUBLIC]: [
-    { key: 'draftCourse', labelKey: 'course_dashboard.menu.draft' },
+    { key: STATUS_KEYS.DRAFT, labelKey: 'course_dashboard.menu.draft' },
     {
-      key: 'archiveCourse',
+      key: STATUS_KEYS.ARCHIVE,
       labelKey: 'course_dashboard.menu.archive',
       isDanger: true,
     },
   ],
   [Statuses.ARCHIVED]: [
-    { key: 'restoreCourse', labelKey: 'course_dashboard.menu.restore' },
+    { key: STATUS_KEYS.RESTORE, labelKey: 'course_dashboard.menu.restore' },
   ],
 };
 
-const Course = ({ name, id, students: studentsData, status }) => {
+const Course = ({ name, id, students: studentsData, status, lessons }) => {
   const history = useHistory();
 
   const { t } = useTranslation('teacher');
-  const updateCourseMutation = useMutation(putLesson, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(TEACHER_COURSES_BASE_KEY);
-    },
+
+  const { handlePublish, handleDraft, updateCourseStatus } = useCoursePublish({
+    lessons,
+    courseId: id,
   });
 
   const students = useMemo(
@@ -60,19 +64,22 @@ const Course = ({ name, id, students: studentsData, status }) => {
   );
 
   const handleMenuClick = ({ key }) => {
-    if (key === 'archiveCourse') {
-      updateCourseMutation.mutate({
-        course: { id, status: Statuses.ARCHIVED },
-      });
-    }
-    if (key === 'publishCourse') {
-      updateCourseMutation.mutate({ course: { id, status: Statuses.PUBLIC } });
-    }
-    if (key === 'restoreCourse') {
-      updateCourseMutation.mutate({ course: { id, status: Statuses.DRAFT } });
-    }
-    if (key === 'draftCourse') {
-      updateCourseMutation.mutate({ course: { id, status: Statuses.DRAFT } });
+    switch (key) {
+      case STATUS_KEYS.ARCHIVE:
+        updateCourseStatus({
+          id,
+          status: Statuses.ARCHIVED,
+        });
+        break;
+      case STATUS_KEYS.PUBLISH:
+        handlePublish();
+        break;
+      case STATUS_KEYS.RESTORE:
+      case STATUS_KEYS.DRAFT:
+        handleDraft();
+        break;
+      default:
+        break;
     }
   };
 

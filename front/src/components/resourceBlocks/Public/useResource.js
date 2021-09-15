@@ -31,11 +31,14 @@ export const useResource = ({ resource: { id, author }, isCourse = false }) => {
     });
   }, [history, id, isCourse, query]);
 
-  const handleContinueLesson = useCallback(() => {
-    return isCourse
-      ? history.push(LEARN_COURSE_PAGE.replace(':id', id))
-      : history.push(LEARN_PAGE.replace(':id', id));
-  }, [history, id, isCourse]);
+
+  const handleContinueLesson = useCallback(
+    () =>
+      isCourse
+        ? history.push(LEARN_COURSE_PAGE.replace(':id', id))
+        : history.push(LEARN_PAGE.replace(':id', id)),
+    [history, id, isCourse],
+  );
 
   return { fullName, firstNameLetter, handleEnroll, handleContinueLesson };
 };
