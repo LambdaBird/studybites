@@ -27,4 +27,7 @@ export const updateSelfOptions = {
   async onRequest(req) {
     await this.auth({ req });
   },
+  async preHandler({ body: { email } }) {
+    this.validateEmail({ email });
+  },
 };
