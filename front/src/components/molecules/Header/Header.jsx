@@ -208,7 +208,7 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
         i18n.changeLanguage(user?.language);
       }
     }
-  }, [i18n, user]);
+  }, [changeLanguage, i18n, user]);
 
   const handleHomeClick = useCallback(() => {
     if (isMobile && isVisible) {
@@ -251,7 +251,7 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
         ref={headerRef}
         onClick={handleHeaderClick}
       >
-        <S.RowMain hideOnScroll={hideOnScroll}>
+        <S.RowMain>
           <Col>
             <S.LogoLink onClick={handleHomeClick}>
               <S.Logo src={logo} alt="Logo" />

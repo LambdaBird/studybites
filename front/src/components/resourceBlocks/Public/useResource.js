@@ -31,6 +31,7 @@ export const useResource = ({ resource: { id, author }, isCourse = false }) => {
     });
   }, [history, id, isCourse, query]);
 
+
   const handleContinueLesson = useCallback(
     () =>
       isCourse

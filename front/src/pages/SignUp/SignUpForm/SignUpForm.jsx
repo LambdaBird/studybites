@@ -25,6 +25,7 @@ const SignUpForm = () => {
   const [isFormErrors, setIsFormErrors] = useState(false);
 
   const handleFieldsChange = useCallback(() => {
+    setMessage(form.getFieldError('email')?.[0]);
     setIsFormErrors(form.getFieldsError().some(({ errors }) => errors.length));
   }, [form]);
 
@@ -108,12 +109,6 @@ const SignUpForm = () => {
       >
         <Input placeholder={t('email.placeholder')} />
       </Form.Item>
-      <Form.Item shouldUpdate noStyle>
-        {({ getFieldError }) => {
-          setMessage(getFieldError('email')[0]);
-        }}
-      </Form.Item>
-
       <Form.Item name="password" rules={formRules.password}>
         <div>
           <Input.Password placeholder={t('password.placeholder')} />
