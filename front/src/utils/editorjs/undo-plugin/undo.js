@@ -180,7 +180,7 @@ export default class Undo {
    * @returns {Boolean}
    */
   canUndo() {
-    return !this.readOnly && this.position > 0;
+    return this.editor.clear && !this.readOnly && this.position > 0;
   }
 
   /**
@@ -189,7 +189,7 @@ export default class Undo {
    * @returns {Boolean}
    */
   canRedo() {
-    return !this.readOnly && this.position < this.count();
+    return this.editor.clear && !this.readOnly && this.position < this.count();
   }
 
   /**
