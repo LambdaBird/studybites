@@ -9,11 +9,32 @@ import getStudentsByCourse from './controllers/getStudentsByCourse';
 import courseStudentsOptions from './controllers/courseStudentsOptions';
 import getAllStudents from './controllers/getAllStudents';
 import studentsOptions from './controllers/studentsOptions';
+import updateStatus from './controllers/updateStatus';
+import updateStatuses from './controllers/updateStatuses';
+import statusOptions from './controllers/statusOptions';
 
 export async function router(instance) {
   instance.get('/courses', getCourses.options, getCourses.handler);
   instance.post('/courses', createCourse.options, createCourse.handler);
   instance.options('/lessons', coursesOptions.options, coursesOptions.handler);
+
+  instance.patch(
+    '/courses/update-status',
+    updateStatuses.options,
+    updateStatuses.handler,
+  );
+
+  instance.patch(
+    '/courses/:courseId/update-status',
+    updateStatus.options,
+    updateStatus.handler,
+  );
+
+  instance.options(
+    '/courses/:courseId/update-status',
+    statusOptions.options,
+    statusOptions.handler,
+  );
 
   instance.get('/courses/:courseId', getCourse.options, getCourse.handler);
   instance.put(

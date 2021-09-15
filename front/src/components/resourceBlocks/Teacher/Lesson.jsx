@@ -1,17 +1,17 @@
 import { Avatar, Dropdown, Menu, Space, Tooltip, Typography } from 'antd';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useMutation } from 'react-query';
 import { useHistory } from 'react-router-dom';
 import { EllipsisOutlined } from '@ant-design/icons';
 
 import { StyledAvatar } from '@sb-ui/components/molecules/Header/Header.styled';
-import { Statuses } from '@sb-ui/pages/Teacher/Home/Dashboard/constants';
-import { queryClient } from '@sb-ui/query';
+import { useLessonStatus } from '@sb-ui/hooks/useLessonStatus';
+import {
+  Statuses,
+  statusesOptions,
+} from '@sb-ui/pages/Teacher/Home/Dashboard/constants';
 import DefaultLessonImage from '@sb-ui/resources/img/lesson.svg';
-import { putLesson } from '@sb-ui/utils/api/v1/teacher';
 import { LESSONS_EDIT } from '@sb-ui/utils/paths';
-import { TEACHER_LESSONS_BASE_KEY } from '@sb-ui/utils/queries';
 
 import { TeacherPropTypes } from './types';
 import * as S from './Lesson.styled';
@@ -21,6 +21,10 @@ const { Text } = Typography;
 const menuItems = {
   [Statuses.DRAFT]: [
     { key: 'publishLesson', labelKey: 'lesson_dashboard.menu.publish' },
+    {
+      key: 'courseOnlyLesson',
+      labelKey: 'lesson_dashboard.menu.course_only',
+    },
     {
       key: 'archiveLesson',
       labelKey: 'lesson_dashboard.menu.archive',
@@ -38,17 +42,21 @@ const menuItems = {
   [Statuses.ARCHIVED]: [
     { key: 'restoreLesson', labelKey: 'lesson_dashboard.menu.restore' },
   ],
+  [Statuses.COURSE_ONLY]: [
+    { key: 'draftLesson', labelKey: 'lesson_dashboard.menu.draft' },
+    {
+      key: 'archiveLesson',
+      labelKey: 'lesson_dashboard.menu.archive',
+      isDanger: true,
+    },
+  ],
 };
 
 const Lesson = ({ image, name, id, students: studentsData, status }) => {
   const history = useHistory();
 
   const { t } = useTranslation('teacher');
-  const updateLessonMutation = useMutation(putLesson, {
-    onSuccess: () => {
-      queryClient.invalidateQueries(TEACHER_LESSONS_BASE_KEY);
-    },
-  });
+  const { updateLessonStatusMutation } = useLessonStatus({ id });
 
   const students = useMemo(
     () =>
@@ -60,19 +68,24 @@ const Lesson = ({ image, name, id, students: studentsData, status }) => {
   );
 
   const handleMenuClick = ({ key }) => {
-    if (key === 'archiveLesson') {
-      updateLessonMutation.mutate({
-        lesson: { id, status: Statuses.ARCHIVED },
-      });
-    }
-    if (key === 'publishLesson') {
-      updateLessonMutation.mutate({ lesson: { id, status: Statuses.PUBLIC } });
-    }
-    if (key === 'restoreLesson') {
-      updateLessonMutation.mutate({ lesson: { id, status: Statuses.DRAFT } });
-    }
-    if (key === 'draftLesson') {
-      updateLessonMutation.mutate({ lesson: { id, status: Statuses.DRAFT } });
+    switch (key) {
+      case 'archiveLesson':
+        updateLessonStatusMutation.mutate({ id, status: Statuses.ARCHIVED });
+        break;
+      case 'publishLesson':
+        updateLessonStatusMutation.mutate({ id, status: Statuses.PUBLIC });
+        break;
+      case 'restoreLesson':
+        updateLessonStatusMutation.mutate({ id, status: Statuses.DRAFT });
+        break;
+      case 'draftLesson':
+        updateLessonStatusMutation.mutate({ id, status: Statuses.DRAFT });
+        break;
+      case 'courseOnlyLesson':
+        updateLessonStatusMutation.mutate({ id, status: Statuses.COURSE_ONLY });
+        break;
+      default:
+        break;
     }
   };
 
@@ -90,14 +103,20 @@ const Lesson = ({ image, name, id, students: studentsData, status }) => {
     </Menu>
   );
 
+  const statusKey = useMemo(
+    () =>
+      statusesOptions
+        .find((x) => x.value === status)
+        ?.labelKey?.replace('status_select', 'status'),
+    [status],
+  );
+
   return (
     <S.Wrapper justify="center" align="middle">
       <S.ImageCol span={8}>
         <S.BadgeWrapper>
           <S.CardBadge>
-            <S.StatusText>
-              {t(`lesson_dashboard.status.${status.toLocaleLowerCase()}`)}
-            </S.StatusText>
+            <S.StatusText>{t(statusKey)}</S.StatusText>
           </S.CardBadge>
         </S.BadgeWrapper>
         <S.CardImage

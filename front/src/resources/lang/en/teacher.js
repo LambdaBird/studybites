@@ -22,6 +22,7 @@ export default {
     error: 'Can not fetch lessons',
     title: 'My lessons',
     add_button: 'Add lesson',
+
     card: {
       edit: 'Edit',
       no_students: 'No students',
@@ -35,6 +36,7 @@ export default {
       archived: 'Archived',
       public: 'Public',
       private: 'Private',
+      course_only: 'Course Only',
       none: 'None',
     },
     status_select: {
@@ -43,12 +45,21 @@ export default {
       archived: 'Archived',
       public: 'Public',
       private: 'Private',
+      course_only: 'Courses Only',
     },
     menu: {
       archive: 'Archive Lesson',
       publish: 'Publish Lesson',
       restore: 'Restore Lesson',
+      course_only: 'Make Course only',
       draft: 'Move to Draft',
+    },
+    status_modal: {
+      title: 'Do you want to also change course status?',
+      content:
+        'Lesson status will change and all related courses ({{ coursesCount }}) will also change statuses',
+      ok: 'Ok',
+      cancel: 'Cancel',
     },
   },
   students_list: {
@@ -85,6 +96,33 @@ export default {
     tools: {
       warning_title: 'Title',
       warning_message: 'Message',
+    },
+  },
+  course_edit: {
+    error_course_name: 'Missing course name',
+    lesson_search: {
+      placeholder: 'Choose lesson',
+    },
+    to_lesson_button: 'Go to lesson',
+    title: {
+      placeholder: 'Course title',
+    },
+    publish_modal_success: {
+      title: 'The course is now available to all students',
+      ok: 'Ok',
+    },
+    publish_modal_fail: {
+      title: 'Can not publish course',
+      content:
+        'Can not publish course if at least one of its Lesson have status “Draft“ or “Archived”',
+      ok: 'Ok',
+    },
+    message: {
+      success_created: 'Successfully created',
+      success_updated: 'Successfully updated',
+      error_created: 'Create error',
+      error_updated: 'Update error',
+      error_course_name: 'Missing course name',
     },
   },
   lesson_edit: {

@@ -68,7 +68,10 @@ describe('Courses service', () => {
       publicCourse = await createCourse({
         app: testContext.app,
         credentials: teacherCredentials,
-        body: prepareCourseFromSeed(courseToTest, '-publicCourse'),
+        body: prepareCourseFromSeed({
+          seed: courseToTest,
+          name: '-publicCourse',
+        }),
       });
     });
 
@@ -91,7 +94,10 @@ describe('Courses service', () => {
       courseToEnroll = await createCourse({
         app: testContext.app,
         credentials: teacherCredentials,
-        body: prepareCourseFromSeed(courseToTest, '-courseToEnroll'),
+        body: prepareCourseFromSeed({
+          seed: courseToTest,
+          name: '-courseToEnroll',
+        }),
       });
 
       await testContext.request({
@@ -216,7 +222,10 @@ describe('Courses service', () => {
       courseToSearch = await createCourse({
         app: testContext.app,
         credentials: teacherCredentials,
-        body: prepareCourseFromSeed(courseToTest, '-uniquePublicIdentifier'),
+        body: prepareCourseFromSeed({
+          seed: courseToTest,
+          name: '-uniquePublicIdentifier',
+        }),
       });
     });
 
