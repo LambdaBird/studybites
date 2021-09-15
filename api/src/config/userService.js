@@ -2,6 +2,7 @@ export const userServiceErrors = {
   USER_ERR_UNAUTHORIZED: 'errors.unauthorized',
   USER_ERR_TOKEN_EXPIRED: 'errors.token_expired',
   USER_ERR_INVALID_USER_ID: 'errors.invalid_user_id',
+  USER_ERR_INVALID_USER_BODY: 'errors.invalid_user_body',
   USER_ERR_ALREADY_REGISTERED: 'errors.user_already_registered',
   USER_ERR_USER_NOT_FOUND: 'errors.user_not_found',
   USER_ERR_INVALID_UPDATE: 'errors.invalid_update',

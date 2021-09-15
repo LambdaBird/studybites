@@ -146,6 +146,13 @@ class User extends BaseModel {
       });
   }
 
+  static updateSelf({ userId, user }) {
+    return this.query()
+      .findById(userId)
+      .patch(user)
+      .returning('first_name', 'last_name', 'email');
+  }
+
   static self({ userId }) {
     return this.query()
       .findById(userId)
