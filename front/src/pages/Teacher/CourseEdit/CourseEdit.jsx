@@ -1,14 +1,16 @@
 import { Button, Col, Input, message, Row, Typography } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { SaveOutlined } from '@ant-design/icons';
 
 import Header from '@sb-ui/components/molecules/Header';
 import KeywordsSelect from '@sb-ui/components/molecules/KeywordsSelect';
-import CourseLesson from '@sb-ui/components/resourceBlocks/Course';
 import { Statuses } from '@sb-ui/pages/Teacher/Home/Dashboard/constants';
 
+import CourseLesson from './CourseLesson';
 import { useCourse } from './useCourse';
 import { useCourseParams } from './useCourseParams';
 import * as S from './CourseEdit.styled';
@@ -21,7 +23,6 @@ const CourseEdit = () => {
   const isCurrentlyEditing = courseId !== 'new';
 
   const { t } = useTranslation('teacher');
-
   const [search, setSearch] = useState('');
   const {
     courseData,
@@ -85,6 +86,29 @@ const CourseEdit = () => {
   const removeLessonById = useCallback((id) => {
     setLessons((prev) => prev.filter((lesson) => lesson.id !== id));
   }, []);
+
+  const swapLessons = (from, to) => {
+    setLessons((prev) => {
+      if (!prev[from] || !prev[to]) {
+        return prev;
+      }
+      const newLessons = [...prev];
+      const temp = newLessons[from];
+      newLessons[from] = newLessons[to];
+      newLessons[to] = temp;
+      return newLessons;
+    });
+  };
+
+  const moveTop = (id) => {
+    const index = lessons.findIndex((lesson) => lesson.id === id);
+    swapLessons(index, index - 1);
+  };
+
+  const moveBottom = (id) => {
+    const index = lessons.findIndex((lesson) => lesson.id === id);
+    swapLessons(index, index + 1);
+  };
 
   const handleAddLessonClick = () => {
     setLessons((prev) => {
@@ -192,24 +216,42 @@ const CourseEdit = () => {
                   </S.CardBadge>
                 </S.BadgeWrapper>
               </S.InputWrapper>
-              <S.CourseWrapper onMouseLeave={handleMouseLeaveCourse}>
-                {lessons?.map((lesson, index) => (
-                  <S.CourseLessonWrapper key={lesson.id}>
-                    <CourseLesson
-                      onMouseEnter={() => {
-                        setCurrentLesson(lesson.id);
-                      }}
-                      currentLesson={currentLesson}
-                      removeLessonById={removeLessonById}
-                      {...lesson}
-                    />
-                    {(index !== lessons.length - 1 ||
-                      courseData?.course?.status === Statuses.DRAFT) && (
-                      <S.DivideLesson />
+              {lessons.length > 0 && (
+                <>
+                  <DndProvider backend={HTML5Backend}>
+                    <S.CourseWrapper
+                      onMouseLeave={handleMouseLeaveCourse}
+                      showBottom={options.length > 0}
+                    >
+                      {lessons.map((lesson, index) => (
+                        <S.CourseLessonWrapper key={lesson.id}>
+                          <CourseLesson
+                            onMouseEnter={() => {
+                              setCurrentLesson(lesson.id);
+                            }}
+                            currentLesson={currentLesson}
+                            swapLessons={swapLessons}
+                            moveTop={moveTop}
+                            removeLessonById={removeLessonById}
+                            moveBottom={moveBottom}
+                            index={index}
+                            {...lesson}
+                          />
+                        </S.CourseLessonWrapper>
+                      ))}
+                    </S.CourseWrapper>
+                  </DndProvider>
+                  <S.DivideWrapper>
+                    {lessons.map(
+                      (x, index) =>
+                        (index !== lessons.length - 1 ||
+                          courseData?.course?.status === Statuses.DRAFT) && (
+                          <S.DivideLesson />
+                        ),
                     )}
-                  </S.CourseLessonWrapper>
-                ))}
-              </S.CourseWrapper>
+                  </S.DivideWrapper>
+                </>
+              )}
               <S.SelectWrapper>
                 <S.Select
                   value={lessonsValue}

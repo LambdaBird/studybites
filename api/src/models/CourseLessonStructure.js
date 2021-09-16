@@ -25,6 +25,15 @@ export default class CourseLessonStructure extends BaseModel {
 
   static relationMappings() {
     return {
+      results: {
+        relation: objection.Model.HasManyRelation,
+        modelClass: path.join(__dirname, 'Result'),
+        join: {
+          from: 'course_lesson_structure.lesson_id',
+          to: 'results.lesson_id',
+        },
+      },
+
       students: {
         relation: objection.Model.ManyToManyRelation,
         modelClass: path.join(__dirname, 'User'),
@@ -44,15 +53,6 @@ export default class CourseLessonStructure extends BaseModel {
               role_id: roles.STUDENT.id,
             })
             .select('id', 'first_name', 'last_name');
-        },
-      },
-
-      results: {
-        relation: objection.Model.HasManyRelation,
-        modelClass: path.join(__dirname, 'Result'),
-        join: {
-          from: 'course_lesson_structure.lesson_id',
-          to: 'results.lesson_id',
         },
       },
 

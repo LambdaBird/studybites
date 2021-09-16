@@ -9,6 +9,7 @@ export default async function access({
   roleId,
   resourceId,
   status: allowedStatuses,
+  resourcesId,
 }) {
   const {
     config: {
@@ -32,7 +33,8 @@ export default async function access({
         role_id: roleId,
         resource_type: resourceType,
         resource_id: resourceId,
-      });
+      })
+      .whereIn('resource_id', resourcesId);
 
     if (!userRole) {
       throw new AuthorizationError(errors.USER_ERR_UNAUTHORIZED);

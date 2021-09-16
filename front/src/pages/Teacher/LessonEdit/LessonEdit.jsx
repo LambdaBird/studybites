@@ -1,4 +1,4 @@
-import { Button, Col, Input, message, Modal, Row, Typography } from 'antd';
+import { Button, Col, Input, message, Row, Typography } from 'antd';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
@@ -7,6 +7,7 @@ import { RedoOutlined, SaveOutlined, UndoOutlined } from '@ant-design/icons';
 
 import Header from '@sb-ui/components/molecules/Header';
 import KeywordsSelect from '@sb-ui/components/molecules/KeywordsSelect';
+import { useLessonStatus } from '@sb-ui/hooks/useLessonStatus';
 import { Statuses } from '@sb-ui/pages/Teacher/Home/Dashboard/constants';
 import { queryClient } from '@sb-ui/query';
 import {
@@ -33,11 +34,15 @@ const MAX_NAME_LENGTH = 255;
 const LessonEdit = () => {
   const { id: lessonId } = useParams();
 
-  const isEditLesson = useMemo(() => lessonId !== 'new', []);
-  const isCurrentlyEditing = lessonId !== 'new';
+  const [isEditLesson] = useState(lessonId !== 'new');
+  const isCurrentlyEditing = useMemo(() => lessonId !== 'new', [lessonId]);
 
   const { t } = useTranslation('teacher');
   const history = useHistory();
+
+  const { updateLessonStatusMutation, isUpdateInProgress } = useLessonStatus({
+    id: lessonId,
+  });
 
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -196,33 +201,15 @@ const LessonEdit = () => {
     }
   };
 
-  const { mutateAsync: updateLessonStatus, isLoading: isUpdateInProgress } =
-    useMutation(putLesson, {
-      onSuccess: () => {
-        queryClient.invalidateQueries([
-          TEACHER_LESSON_BASE_KEY,
-          {
-            id: lessonId,
-          },
-        ]);
-      },
-    });
-
   const handlePublish = async () => {
-    await updateLessonStatus({
-      lesson: { id: +lessonId, status: Statuses.PUBLIC },
-    });
-    Modal.success({
-      width: 480,
-      title: t('lesson_edit.publish_modal.title'),
-      okText: t('lesson_edit.publish_modal.ok'),
+    updateLessonStatusMutation.mutate({
+      id: lessonId,
+      status: Statuses.PUBLIC,
     });
   };
 
   const handleDraft = async () => {
-    await updateLessonStatus({
-      lesson: { id: +lessonId, status: Statuses.DRAFT },
-    });
+    updateLessonStatusMutation.mutate({ id: lessonId, status: Statuses.DRAFT });
   };
 
   const handleInputTitle = (e) => {
@@ -338,16 +325,16 @@ const LessonEdit = () => {
                 <S.MoveButton
                   id="undo-button"
                   icon={<UndoOutlined />}
-                  size="medium"
+                  disabled={isEditorDisabled}
                 >
                   {t('lesson_edit.buttons.back')}
                 </S.MoveButton>
               </Col>
               <Col span={12}>
                 <S.MoveButton
+                  disabled={isEditorDisabled}
                   id="redo-button"
                   icon={<RedoOutlined />}
-                  size="medium"
                 >
                   {t('lesson_edit.buttons.forward')}
                 </S.MoveButton>
@@ -387,6 +374,7 @@ const LessonEdit = () => {
               <Col span={24}>{t('lesson_edit.description.title')}</Col>
               <Col span={24}>
                 <TextArea
+                  disabled={isEditorDisabled}
                   value={description}
                   placeholder={t('lesson_edit.description.placeholder')}
                   onChange={(e) => setDescription(e.target.value)}
@@ -398,10 +386,15 @@ const LessonEdit = () => {
             <Row gutter={[0, 16]}>
               <Col span={24}>Keywords</Col>
               <Col span={24}>
-                <KeywordsSelect values={keywords} setValues={setKeywords} />
+                <KeywordsSelect
+                  disabled={isEditorDisabled}
+                  values={keywords}
+                  setValues={setKeywords}
+                />
               </Col>
             </Row>
             <LessonImage
+              disabled={isEditorDisabled}
               image={image}
               setImage={setImage}
               imageError={imageError}

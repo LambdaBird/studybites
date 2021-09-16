@@ -14,6 +14,7 @@ export const Wrapper = styled(Row).attrs({
   justify: 'center',
   align: 'middle',
 })`
+  opacity: ${(props) => props.opacity};
   flex: 1 1 auto;
   height: 10rem;
   box-shadow: 0 2px 8px 0 #00000026;
@@ -24,7 +25,7 @@ export const Wrapper = styled(Row).attrs({
 export const ArrowWrapper = styled.div`
   position: absolute;
   height: 10rem;
-  right: 2rem;
+  right: 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

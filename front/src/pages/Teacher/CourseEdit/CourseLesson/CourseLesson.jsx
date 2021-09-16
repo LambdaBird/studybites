@@ -5,26 +5,35 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 
 import { StyledAvatar } from '@sb-ui/components/molecules/Header/Header.styled';
+import { useCourseLesson } from '@sb-ui/pages/Teacher/CourseEdit/CourseLesson/useCourseLesson';
 import lesson from '@sb-ui/resources/img/lesson.svg';
 import { LESSONS_EDIT } from '@sb-ui/utils/paths';
 
-import * as S from './Course.styled';
+import * as S from './CourseLesson.styled';
 
 const { Text } = Typography;
 
-const Course = ({
+const CourseLesson = ({
   id,
+  index,
   name,
   description,
   status,
   students: studentsData,
   currentLesson,
+  swapLessons,
   removeLessonById,
+  moveTop,
+  moveBottom,
   onMouseEnter,
-  onMouseLeave,
 }) => {
   const history = useHistory();
 
+  const { handlerId, opacity, ref } = useCourseLesson({
+    id,
+    index,
+    swapLessons,
+  });
   const { t } = useTranslation('teacher');
 
   const students = useMemo(
@@ -44,8 +53,21 @@ const Course = ({
     removeLessonById(id);
   }, [id, removeLessonById]);
 
+  const handleMoveTop = useCallback(() => {
+    moveTop(id);
+  }, [id, moveTop]);
+
+  const handleMoveBottom = useCallback(() => {
+    moveBottom(id);
+  }, [id, moveBottom]);
+
   return (
-    <S.Wrapper onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+    <S.Wrapper
+      ref={ref}
+      data-handler-id={handlerId}
+      opacity={opacity}
+      onMouseEnter={onMouseEnter}
+    >
       <S.ImageCol span={8}>
         <S.BadgeWrapper>
           <S.CardBadge>
@@ -91,17 +113,18 @@ const Course = ({
       </S.CardDescription>
       {id === currentLesson && (
         <S.ArrowWrapper>
-          <S.ArrowUp />
+          <S.ArrowUp onClick={handleMoveTop} />
           <S.Close onClick={handleRemoveClick} />
-          <S.ArrowDown />
+          <S.ArrowDown onClick={handleMoveBottom} />
         </S.ArrowWrapper>
       )}
     </S.Wrapper>
   );
 };
 
-Course.propTypes = {
+CourseLesson.propTypes = {
   id: PropTypes.number,
+  index: PropTypes.number,
   name: PropTypes.string,
   description: PropTypes.string,
   status: PropTypes.string,
@@ -113,9 +136,11 @@ Course.propTypes = {
     }),
   ),
   currentLesson: PropTypes.number,
+  moveTop: PropTypes.func,
   removeLessonById: PropTypes.func,
+  moveBottom: PropTypes.func,
   onMouseEnter: PropTypes.func,
-  onMouseLeave: PropTypes.func,
+  swapLessons: PropTypes.func,
 };
 
-export default Course;
+export default CourseLesson;

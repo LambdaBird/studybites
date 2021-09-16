@@ -28,3 +28,16 @@ export const getCourse = async ({ queryKey }) => {
   const { data } = await api.get(`${PATH}/courses/${id}`);
   return data;
 };
+
+export const patchCourseStatus = async (params) => {
+  const { data } = await api.patch(
+    `${PATH}/courses/${params.id}/update-status`,
+    params,
+  );
+  return data;
+};
+
+export const patchCoursesStatus = async (params) => {
+  const { data } = await api.patch(`${PATH}/courses/update-status`, params);
+  return data;
+};

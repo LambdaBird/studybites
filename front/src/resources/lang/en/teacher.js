@@ -36,6 +36,7 @@ export default {
       archived: 'Archived',
       public: 'Public',
       private: 'Private',
+      course_only: 'Course Only',
       none: 'None',
     },
     status_select: {
@@ -44,12 +45,21 @@ export default {
       archived: 'Archived',
       public: 'Public',
       private: 'Private',
+      course_only: 'Courses Only',
     },
     menu: {
       archive: 'Archive Lesson',
       publish: 'Publish Lesson',
       restore: 'Restore Lesson',
+      course_only: 'Make Course only',
       draft: 'Move to Draft',
+    },
+    status_modal: {
+      title: 'Do you want to also change course status?',
+      content:
+        'Lesson status will change and all related courses ({{ coursesCount }}) will also change statuses',
+      ok: 'Ok',
+      cancel: 'Cancel',
     },
   },
   students_list: {
@@ -98,8 +108,14 @@ export default {
     title: {
       placeholder: 'Course title',
     },
-    publish_modal: {
+    publish_modal_success: {
       title: 'The course is now available to all students',
+      ok: 'Ok',
+    },
+    publish_modal_fail: {
+      title: 'Can not publish course',
+      content:
+        'Can not publish course if at least one of its Lesson have status “Draft“ or “Archived”',
       ok: 'Ok',
     },
     message: {

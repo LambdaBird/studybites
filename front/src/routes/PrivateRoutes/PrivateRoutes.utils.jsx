@@ -16,6 +16,7 @@ import {
   EnrollLessonModalDesktop,
   EnrollLessonModalMobile,
   LearnPage,
+  UserCourses,
   UserHome,
   UserLessons,
 } from '@sb-ui/pages/User';
@@ -46,6 +47,11 @@ export const getPrivateRoutes = ({ isMobile }) => [
   {
     component: UserLessons,
     path: paths.USER_LESSONS,
+    exact: true,
+  },
+  {
+    component: UserCourses,
+    path: paths.USER_COURSES,
     exact: true,
   },
   {

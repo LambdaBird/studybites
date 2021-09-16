@@ -5,7 +5,7 @@ import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 
 import Public from '@sb-ui/components/resourceBlocks/Public';
-import { PAGE_SIZE } from '@sb-ui/pages/User/Lessons/LessonsList/constants';
+import { PAGE_SIZE } from '@sb-ui/pages/User/Lessons/ResourcesList/constants';
 import { getCourseLessons } from '@sb-ui/utils/api/v1/student';
 import { USER_ENROLLED_COURSE } from '@sb-ui/utils/queries';
 import { skeletonArray } from '@sb-ui/utils/utils';
