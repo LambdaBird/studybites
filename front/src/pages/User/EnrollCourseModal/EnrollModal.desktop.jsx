@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 
+import ResourceKeywords from '@sb-ui/components/atoms/LessonKeywords';
 import lessonImg from '@sb-ui/resources/img/lesson.svg';
 import { enrollCourse, getCourse } from '@sb-ui/utils/api/v1/courses';
 import { LEARN_COURSE_PAGE, USER_HOME } from '@sb-ui/utils/paths';
@@ -43,7 +44,7 @@ const EnrollModalDesktop = () => {
   );
 
   const { mutate: mutatePostEnroll } = useMutation(enrollCourse);
-
+  const keywords = responseData?.keywords;
   const { name, author, description } = responseData?.course || {
     author: {
       firstName: '',
@@ -107,6 +108,11 @@ const EnrollModalDesktop = () => {
         <Col span={24}>
           <S.DescriptionText>{description}</S.DescriptionText>
         </Col>
+        {keywords && (
+          <S.KeywordsCol>
+            <ResourceKeywords keywords={keywords} />
+          </S.KeywordsCol>
+        )}
       </S.LeftColumn>
       <S.RightColumn>
         <S.ReviewHeader>

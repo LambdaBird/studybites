@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
 import { useHistory, useParams } from 'react-router-dom';
 
+import LessonKeywords from '@sb-ui/components/atoms/LessonKeywords';
 import { DescriptionText } from '@sb-ui/components/resourceBlocks/Public/Public.desktop.styled';
 import lessonImage from '@sb-ui/resources/img/lesson.svg';
 import { enrollCourse, getCourse } from '@sb-ui/utils/api/v1/courses';
@@ -62,7 +63,7 @@ const EnrollModalMobile = () => {
   );
 
   const { mutate: mutatePostEnroll } = useMutation(enrollCourse);
-
+  const keywords = responseData?.keywords;
   const { name, author, description } = responseData?.course || {
     author: {
       firstName: '',
@@ -120,6 +121,11 @@ const EnrollModalMobile = () => {
       </Row>
       <Row>
         <S.Description>{description}</S.Description>
+        {keywords && (
+          <S.KeywordsCol>
+            <LessonKeywords keywords={keywords} />
+          </S.KeywordsCol>
+        )}
       </Row>
       <S.ReviewHeader>
         <Title level={5}>{t('enroll_modal.review.header')}</Title>
