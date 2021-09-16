@@ -5,6 +5,16 @@ const options = {
       200: {
         type: 'object',
         properties: {
+          keywords: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                id: { type: 'number' },
+                name: { type: 'string' },
+              },
+            },
+          },
           course: {
             type: 'object',
             properties: {
@@ -37,12 +47,19 @@ const options = {
 
 async function handler({ params: { courseId }, user: { id: userId } }) {
   const {
-    models: { Course },
+    models: { Course, ResourceKeyword },
+    config: {
+      globals: { resources },
+    },
   } = this;
 
+  const keywords = await ResourceKeyword.getResourceKeywords({
+    resourceId: courseId,
+    resourceType: resources.COURSE.name,
+  });
   const course = await Course.getCourseWithAuthor({ courseId, userId });
 
-  return { course };
+  return { course, keywords };
 }
 
 export default { options, handler };
