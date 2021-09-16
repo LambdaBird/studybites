@@ -35,7 +35,7 @@ export const NameWrapper = styled.div`
 
 export const FormWrapper = styled.div`
   display: flex;
-  gap: 1rem;
+  gap: 3rem;
   margin-top: 3rem;
   flex-wrap: wrap;
 `;
@@ -43,12 +43,13 @@ export const FormWrapper = styled.div`
 export const FormInputsWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  flex: 1 1 49%;
+  flex: 1 1 auto;
 `;
 
 export const Button = styled(ButtonAntd).attrs({
   type: 'primary',
+  size: 'large',
 })`
-  width: 185px;
+  min-width: 185px;
   margin-left: auto;
 `;

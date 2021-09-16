@@ -12,11 +12,11 @@ import * as S from './Profile.styled';
 const { Title } = Typography;
 
 const USER_ROLE = 'User';
-const MAINTAINER_ROLE = 'Maintainer';
+const TEACHER_ROLE = 'Teacher';
 const SUPER_ADMIN = 'SuperAdmin';
 
 const ROLE_KEYS = {
-  [MAINTAINER_ROLE]: 'role.maintainer',
+  [TEACHER_ROLE]: 'role.teacher',
   [USER_ROLE]: 'role.user',
   [SUPER_ADMIN]: 'role.super_admin',
 };
@@ -32,7 +32,10 @@ const Profile = () => {
     setIsFormErrors(form.getFieldsError().some(({ errors }) => errors.length));
   }, [form]);
 
-  const roleKey = useMemo(() => ROLE_KEYS[roles?.[0] || USER_ROLE], [roles]);
+  const roleKey = useMemo(
+    () => ROLE_KEYS?.[roles?.find((role) => ROLE_KEYS?.[role])],
+    [roles],
+  );
 
   const { mutate: mutateUser, isLoading } = useMutation(patchUser, {
     onSuccess: (userData) => {
@@ -108,13 +111,16 @@ const Profile = () => {
           <S.NameWrapper>
             <Title level={2}>{t('title')}</Title>
           </S.NameWrapper>
-          <div>
-            <Tag>{t(roleKey)}</Tag>
-          </div>
+          {roleKey && (
+            <div>
+              <Tag>{t(roleKey)}</Tag>
+            </div>
+          )}
         </S.HeaderWrapper>
         <S.FormWrapper>
           <S.FormInputsWrapper>
             <Form
+              size="large"
               onFieldsChange={handleFieldsChange}
               form={form}
               initialValues={{
@@ -161,7 +167,7 @@ const Profile = () => {
             </S.Button>
           </S.FormInputsWrapper>
           <S.FormInputsWrapper>
-            <Form layout="vertical">
+            <Form size="large" layout="vertical">
               <Form.Item
                 label={t('current_password.label')}
                 name="current-password"
@@ -184,7 +190,7 @@ const Profile = () => {
                 />
               </Form.Item>
             </Form>
-            <S.Button>{t('update_password_button')}</S.Button>
+            <S.Button disabled>{t('update_password_button')}</S.Button>
           </S.FormInputsWrapper>
         </S.FormWrapper>
       </S.Profile>

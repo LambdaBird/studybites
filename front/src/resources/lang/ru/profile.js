@@ -1,7 +1,7 @@
 export default {
   title: 'Мои настройки профиля',
   role: {
-    maintainer: 'Учитель',
+    teacher: 'Учитель',
     user: 'Студент',
     super_admin: 'Суперпользователь',
   },
