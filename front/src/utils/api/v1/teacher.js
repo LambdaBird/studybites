@@ -64,3 +64,11 @@ export const getTeacherLessonStudents = async ({ queryKey }) => {
     })),
   };
 };
+
+export const patchLessonStatus = async (params) => {
+  const { data } = await api.patch(
+    `${PATH}/lessons/${params.id}/update-status`,
+    params,
+  );
+  return data;
+};

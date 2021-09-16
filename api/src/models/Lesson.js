@@ -26,7 +26,7 @@ class Lesson extends BaseModel {
         image: { type: 'string' },
         status: {
           type: 'string',
-          enum: ['Draft', 'Public', 'Private', 'Archived'],
+          enum: resources.LESSON.status,
           default: 'Draft',
         },
         createdAt: { type: 'string' },
@@ -37,6 +37,19 @@ class Lesson extends BaseModel {
 
   static relationMappings() {
     return {
+      courses: {
+        relation: objection.Model.ManyToManyRelation,
+        modelClass: path.join(__dirname, 'Course'),
+        join: {
+          from: 'lessons.id',
+          through: {
+            modelClass: path.join(__dirname, 'CourseLessonStructure'),
+            from: 'course_lesson_structure.lesson_id',
+            to: 'course_lesson_structure.course_id',
+          },
+          to: 'courses.id',
+        },
+      },
       students: {
         relation: objection.Model.ManyToManyRelation,
         modelClass: path.join(__dirname, 'User'),
@@ -260,8 +273,24 @@ class Lesson extends BaseModel {
     return this.query(trx).insert(lesson).returning('*');
   }
 
-  static getLessonWithAuthor({ lessonId }) {
-    return this.query().findById(lessonId).withGraphFetched('author');
+  static getLessonWithAuthor({ lessonId, userId }) {
+    const query = this.query().findById(lessonId);
+
+    if (userId) {
+      query.select(
+        'lessons.*',
+        this.knex().raw(`
+          (select cast(case when count(*) > 0 then true else false end as bool)
+           from users_roles
+           where role_id = ${roles.STUDENT.id}
+             and user_id = ${userId}
+             and resource_type = '${resources.LESSON.name}'
+             and resource_id = lessons.id) is_enrolled
+        `),
+      );
+    }
+
+    return query.withGraphFetched('author');
   }
 
   static getLessonWithProgress({ lessonId }) {
@@ -278,6 +307,10 @@ class Lesson extends BaseModel {
       )
       .findById(lessonId)
       .withGraphFetched('author');
+  }
+
+  static updateLessonStatus({ lessonId, status }) {
+    return this.query().findById(lessonId).patch({ status }).returning('*');
   }
 
   static getAllFinishedLessons({
@@ -358,6 +391,7 @@ class Lesson extends BaseModel {
     limit,
     search,
     tags,
+    status,
   }) {
     const end = start + limit - 1;
 
@@ -371,6 +405,7 @@ class Lesson extends BaseModel {
       .where('users_roles.role_id', roles.MAINTAINER.id)
       .andWhere('users_roles.resource_type', resources.LESSON.name)
       .andWhere('users_roles.user_id', userId)
+      .andWhere('lessons.status', status)
       .andWhere(
         'lessons.name',
         'ilike',
@@ -380,7 +415,8 @@ class Lesson extends BaseModel {
       .groupBy('lessons.id')
       .range(start, end)
       .withGraphFetched('students')
-      .withGraphFetched('keywords');
+      .withGraphFetched('keywords')
+      .withGraphFetched('courses');
 
     if (tags) {
       return query

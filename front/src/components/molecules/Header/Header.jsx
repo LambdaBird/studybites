@@ -121,11 +121,13 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
     );
   }, [location.pathname, t]);
 
-  const languageSubMenu = useMemo(() => {
-    return LANGUAGES_LIST.map(({ key, value }) => (
-      <Menu.Item key={`${MENU_KEYS.LANGUAGE}-${key}`}>{value}</Menu.Item>
-    ));
-  }, []);
+  const languageSubMenu = useMemo(
+    () =>
+      LANGUAGES_LIST.map(({ key, value }) => (
+        <Menu.Item key={`${MENU_KEYS.LANGUAGE}-${key}`}>{value}</Menu.Item>
+      )),
+    [],
+  );
 
   const menu = useMemo(
     () => (
@@ -208,7 +210,7 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
         i18n.changeLanguage(user?.language);
       }
     }
-  }, [i18n, user]);
+  }, [changeLanguage, i18n, user]);
 
   const handleHomeClick = useCallback(() => {
     if (isMobile && isVisible) {
@@ -251,7 +253,7 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
         ref={headerRef}
         onClick={handleHeaderClick}
       >
-        <S.RowMain hideOnScroll={hideOnScroll}>
+        <S.RowMain>
           <Col>
             <S.LogoLink onClick={handleHomeClick}>
               <S.Logo src={logo} alt="Logo" />

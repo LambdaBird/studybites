@@ -1,6 +1,6 @@
 /* eslint no-underscore-dangle: "off", no-use-before-define: "off" */
 export const math = {
-  id: 100,
+  id: 10000,
   name: 'Math',
   status: 'Public',
   _blocks: {
@@ -27,25 +27,25 @@ export const math = {
 };
 
 export const english = {
-  id: 101,
+  id: 10001,
   name: 'English',
   status: 'Public',
 };
 
 export const biology = {
-  id: 102,
+  id: 10002,
   name: 'Biology',
   status: 'Public',
 };
 
 export const literature = {
-  id: 103,
+  id: 10003,
   name: 'Literature',
   status: 'Public',
 };
 
 export const russian = {
-  id: 104,
+  id: 10004,
   name: 'Russian',
   status: 'Public',
   _blocks: {
@@ -68,7 +68,7 @@ export const russian = {
 };
 
 export const french = {
-  id: 200,
+  id: 20003,
   name: 'French',
   status: 'Public',
   _blocks: {

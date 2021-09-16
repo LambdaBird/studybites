@@ -4,15 +4,17 @@ const LEFT = 'left';
 const RIGHT = 'right';
 
 export const useMatch = (values) => {
-  const convertId = useCallback((convertValues, id) => {
-    return convertValues?.map(({ [id]: value, correct = null }, i) => ({
-      ref: createRef(),
-      value,
-      id: `${id}-${i + 1}`,
-      selected: false,
-      correct,
-    }));
-  }, []);
+  const convertId = useCallback(
+    (convertValues, id) =>
+      convertValues?.map(({ [id]: value, correct = null }, i) => ({
+        ref: createRef(),
+        value,
+        id: `${id}-${i + 1}`,
+        selected: false,
+        correct,
+      })),
+    [],
+  );
 
   const convertPrevId = useCallback(
     (convertValues, prev, id) =>

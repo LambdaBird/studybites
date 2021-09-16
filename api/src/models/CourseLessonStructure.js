@@ -25,6 +25,14 @@ export default class CourseLessonStructure extends BaseModel {
 
   static relationMappings() {
     return {
+      results: {
+        relation: objection.Model.HasManyRelation,
+        modelClass: path.join(__dirname, 'Result'),
+        join: {
+          from: 'course_lesson_structure.lesson_id',
+          to: 'results.lesson_id',
+        },
+      },
       students: {
         relation: objection.Model.ManyToManyRelation,
         modelClass: path.join(__dirname, 'User'),
@@ -46,15 +54,6 @@ export default class CourseLessonStructure extends BaseModel {
             .select('id', 'first_name', 'last_name');
         },
       },
-      results: {
-        relation: objection.Model.HasManyRelation,
-        modelClass: path.join(__dirname, 'Result'),
-        join: {
-          from: 'course_lesson_structure.lesson_id',
-          to: 'results.lesson_id',
-        },
-      },
-
       author: {
         relation: objection.Model.HasOneThroughRelation,
         modelClass: path.join(__dirname, 'User'),
@@ -141,9 +140,8 @@ export default class CourseLessonStructure extends BaseModel {
       .orderBy(
         this.knex().raw(`(case when parent_id is null then 0 else 1 end)`),
       )
-      .groupBy('course_lesson_structure.id', 'lessons.id')
-      .withGraphFetched('students')
-      .withGraphFetched('author');
+      .withGraphFetched('author')
+      .withGraphFetched('students');
 
     if (userId) {
       query

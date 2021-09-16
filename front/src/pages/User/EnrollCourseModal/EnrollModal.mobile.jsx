@@ -94,6 +94,12 @@ const EnrollModalMobile = () => {
     }
   }, [historyReplaceBack, responseData]);
 
+  useEffect(() => {
+    if (responseData?.course?.isEnrolled) {
+      history.push(USER_HOME);
+    }
+  }, [history, responseData?.course?.isEnrolled]);
+
   const onClickStartEnroll = useCallback(async () => {
     mutatePostEnroll(id, {
       onSuccess: historyPushCourse,
