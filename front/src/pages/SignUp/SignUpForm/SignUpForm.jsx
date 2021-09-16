@@ -1,5 +1,5 @@
 import { Alert, Form, Input } from 'antd';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 
@@ -17,9 +17,17 @@ const SignUpForm = () => {
 
   const { password, passwordValidator } = usePasswordInput();
 
+  const [form] = Form.useForm();
+
   const [auth, error, setError, loading] = useAuthentication(postSignUp);
 
   const [message, setMessage] = useState('');
+  const [isFormErrors, setIsFormErrors] = useState(false);
+
+  const handleFieldsChange = useCallback(() => {
+    setMessage(form.getFieldError('email')?.[0]);
+    setIsFormErrors(form.getFieldsError().some(({ errors }) => errors.length));
+  }, [form]);
 
   const handleSubmit = async (formData) => {
     await auth(formData);
@@ -67,7 +75,13 @@ const SignUpForm = () => {
   };
 
   return (
-    <Form layout="vertical" size="large" onFinish={handleSubmit}>
+    <Form
+      layout="vertical"
+      size="large"
+      form={form}
+      onFieldsChange={handleFieldsChange}
+      onFinish={handleSubmit}
+    >
       {error && (
         <Form.Item>
           <Alert
@@ -95,12 +109,6 @@ const SignUpForm = () => {
       >
         <Input placeholder={t('email.placeholder')} />
       </Form.Item>
-      <Form.Item shouldUpdate noStyle>
-        {({ getFieldError }) => {
-          setMessage(getFieldError('email')[0]);
-        }}
-      </Form.Item>
-
       <Form.Item name="password" rules={formRules.password}>
         <div>
           <Input.Password placeholder={t('password.placeholder')} />
@@ -108,7 +116,9 @@ const SignUpForm = () => {
         </div>
       </Form.Item>
 
-      <S.SubmitButton loading={loading}>{t('button')}</S.SubmitButton>
+      <S.SubmitButton loading={loading} disabled={isFormErrors}>
+        {t('button')}
+      </S.SubmitButton>
       <S.DivAlignCenter>
         <S.LinkButton onClick={onClickHaveAccount}>
           {t('have_account')}

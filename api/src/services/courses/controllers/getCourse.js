@@ -13,6 +13,7 @@ const options = {
               description: { type: ['string', 'null'] },
               status: { type: 'string' },
               image: { type: ['string', 'null'] },
+              isEnrolled: { type: 'boolean' },
               author: {
                 type: 'object',
                 properties: {
@@ -34,12 +35,12 @@ const options = {
   },
 };
 
-async function handler({ params: { courseId } }) {
+async function handler({ params: { courseId }, user: { id: userId } }) {
   const {
     models: { Course },
   } = this;
 
-  const course = await Course.getCourseWithAuthor({ courseId });
+  const course = await Course.getCourseWithAuthor({ courseId, userId });
 
   return { course };
 }

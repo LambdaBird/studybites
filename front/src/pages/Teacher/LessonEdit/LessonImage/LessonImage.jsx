@@ -15,6 +15,7 @@ const LessonImage = ({
   setImage,
   imageError,
   setImageError,
+  disabled,
 }) => {
   const { t } = useTranslation('teacher');
 
@@ -23,6 +24,7 @@ const LessonImage = ({
       <Col span={24}>{t('lesson_edit.cover_image.title')}</Col>
       <Col span={24}>
         <Input
+          disabled={disabled}
           maxLength={MAX_IMAGE_LENGTH}
           allowClear
           value={image}
@@ -58,6 +60,7 @@ LessonImage.propTypes = {
   imageError: PropTypes.bool,
   setImageError: PropTypes.func,
   isLoading: PropTypes.bool,
+  disabled: PropTypes.bool,
 };
 
 export default LessonImage;
