@@ -1,11 +1,13 @@
 import { BadRequestError } from '../../../../validation/errors';
-import { userServiceErrors as errors } from '../../../../config';
 
 export async function updateSelfHandler({
   user: { id: userId },
   body: { firstName, lastName, email },
 }) {
   const {
+    config: {
+      userService: { userServiceErrors: errors },
+    },
     models: { User },
   } = this;
   const firstNameTrimmed = firstName?.trim?.();

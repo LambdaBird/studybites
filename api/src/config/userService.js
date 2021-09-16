@@ -17,6 +17,11 @@ export const userServiceMessages = {
   USER_MSG_ROLE_DELETED: 'messages.role_deleted',
 };
 
+export const userConstants = {
+  MAX_FIRST_NAME_LENGTH: 30,
+  MAX_LAST_NAME_LENGTH: 30,
+};
+
 export const userServiceConstants = {
   USER_CONST_ALLOWED_USER_FIELDS: [
     'id',

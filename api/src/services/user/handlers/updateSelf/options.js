@@ -1,5 +1,4 @@
-const MAX_FIRST_NAME_LENGTH = 30;
-const MAX_LAST_NAME_LENGTH = 30;
+import { userConstants } from '../../../../config';
 
 export const updateSelfOptions = {
   schema: {
@@ -9,12 +8,12 @@ export const updateSelfOptions = {
         firstName: {
           type: 'string',
           minLength: 1,
-          maxLength: MAX_FIRST_NAME_LENGTH,
+          maxLength: userConstants.MAX_FIRST_NAME_LENGTH,
         },
         lastName: {
           type: 'string',
           minLength: 1,
-          maxLength: MAX_LAST_NAME_LENGTH,
+          maxLength: userConstants.MAX_LAST_NAME_LENGTH,
         },
         email: { type: 'string', minLength: 1 },
       },
