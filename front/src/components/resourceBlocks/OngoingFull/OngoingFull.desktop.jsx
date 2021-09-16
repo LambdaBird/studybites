@@ -1,4 +1,5 @@
 import { Button, Row } from 'antd';
+import PropTypes from 'prop-types';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -9,7 +10,7 @@ import DefaultLessonImage from '@sb-ui/resources/img/lesson.svg';
 import { useResource } from './useResource';
 import * as S from './OngoingFull.desktop.styled';
 
-const OngoingFullDesktop = ({ lesson }) => {
+const OngoingFullDesktop = ({ resource, resourceKey }) => {
   const { t } = useTranslation('user');
   const {
     name,
@@ -18,18 +19,22 @@ const OngoingFullDesktop = ({ lesson }) => {
     interactivePassed,
     image,
     keywords,
-  } = lesson;
+  } = resource;
 
-  const { fullName, firstNameLetter, handleContinueLesson } = useResource({
-    resource: lesson,
+  const { fullName, firstNameLetter, handleContinueResource } = useResource({
+    ...resource,
+    resourceKey,
   });
 
   const countPercentage = useMemo(() => {
-    if ((!lesson.interactiveTotal && lesson.isStarted) || lesson.isFinished) {
+    if (
+      (!resource.interactiveTotal && resource.isStarted) ||
+      resource.isFinished
+    ) {
       return 100;
     }
     return Math.round((interactivePassed / interactiveTotal) * 100);
-  }, [lesson, interactivePassed, interactiveTotal]);
+  }, [resource, interactivePassed, interactiveTotal]);
 
   return (
     <>
@@ -47,37 +52,23 @@ const OngoingFullDesktop = ({ lesson }) => {
             </S.AuthorContainer>
             <S.ProgressBar
               percent={countPercentage}
-              status={lesson.isFinished ? 'success' : 'normal'}
+              status={resource.isFinished ? 'success' : 'normal'}
             />
           </div>
         </S.LeftContent>
         <S.RightContent>
           <Row>
-            <S.TitleEllipsis
-              ellipsis={{
-                tooltip: true,
-              }}
-              level={3}
-            >
-              {name}
-            </S.TitleEllipsis>
+            <S.TitleEllipsis>{name}</S.TitleEllipsis>
           </Row>
           <Row>
-            <S.DescriptionText
-              ellipsis={{
-                tooltip: true,
-                rows: 2,
-              }}
-            >
-              {description}
-            </S.DescriptionText>
+            <S.DescriptionText>{description}</S.DescriptionText>
           </Row>
           <S.EnrollRow>
             <S.EnrollColKeyword>
               <LessonKeywords keywords={keywords} />
             </S.EnrollColKeyword>
             <S.EnrollColButton>
-              <Button type="primary" onClick={handleContinueLesson}>
+              <Button type="primary" onClick={handleContinueResource}>
                 {t('home.ongoing_lessons.continue_button')}
               </Button>
             </S.EnrollColButton>
@@ -89,7 +80,8 @@ const OngoingFullDesktop = ({ lesson }) => {
 };
 
 OngoingFullDesktop.propTypes = {
-  lesson: LessonType.isRequired,
+  resource: LessonType.isRequired,
+  resourceKey: PropTypes.string.isRequired,
 };
 
 export default OngoingFullDesktop;

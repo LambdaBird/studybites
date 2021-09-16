@@ -1,4 +1,4 @@
-import { PAGE_SIZE } from '@sb-ui/pages/User/Lessons/LessonsList/constants';
+import { PAGE_SIZE } from '@sb-ui/pages/User/Lessons/ResourcesList/constants';
 import api from '@sb-ui/utils/api';
 
 const PATH = '/api/v1/keywords';

@@ -1,8 +1,8 @@
-import { Col, Row } from 'antd';
+import { Col, Row, Space } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
-import { USER_LESSONS } from '@sb-ui/utils/paths';
+import { USER_COURSES, USER_LESSONS } from '@sb-ui/utils/paths';
 
 import LessonsList from './LessonsList';
 import * as S from './OngoingLessons.mobile.styled';
@@ -24,9 +24,14 @@ const OngoingLessonsMobile = (props) => {
       </S.Main>
       <S.Footer>
         <Col>
-          <Link to={USER_LESSONS}>
-            {t('home.ongoing_lessons.view_all_lessons')}
-          </Link>
+          <Space size="large">
+            <Link to={USER_LESSONS}>
+              {t('home.ongoing_lessons.view_all_lessons')}
+            </Link>
+            <Link to={USER_COURSES}>
+              {t('home.ongoing_lessons.view_all_courses')}
+            </Link>
+          </Space>
         </Col>
       </S.Footer>
     </>
