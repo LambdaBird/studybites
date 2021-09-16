@@ -1,13 +1,5 @@
-import { Avatar as AvatarAntd, Button as ButtonAntd } from 'antd';
-import styled, { createGlobalStyle } from 'styled-components';
-
-import variables from '@sb-ui/theme/variables';
-
-export const GlobalStyles = createGlobalStyle`
-  body{
-    background-color: white;
-  }
-`;
+import { Button as ButtonAntd } from 'antd';
+import styled from 'styled-components';
 
 export const HeaderWrapper = styled.div`
   display: flex;
@@ -16,20 +8,11 @@ export const HeaderWrapper = styled.div`
   justify-content: center;
 `;
 
-export const Avatar = styled(AvatarAntd).attrs({
-  size: { xs: 48, sm: 64, md: 64, lg: 64, xl: 64, xxl: 64 },
-})`
-  flex: 0 0 auto;
-  color: ${variables['avatar-second-color']};
-  background-color: ${variables['avatar-first-color']};
-`;
-
 export const Profile = styled.div`
   max-width: 900px;
   width: 100%;
-  background-color: ${variables['body-background-color']};
+  background-color: white;
   padding: 2rem;
-  border-radius: 2rem;
   margin: 2rem 2rem 2rem 2rem;
 `;
 
@@ -58,23 +41,14 @@ export const FormWrapper = styled.div`
 `;
 
 export const FormInputsWrapper = styled.div`
-  flex: 1 1 49%;
-`;
-
-export const SaveWrapper = styled.div`
   display: flex;
-  justify-content: flex-end;
-  @media (max-width: 767px) {
-    justify-content: center;
-    flex: 1 1 100%;
-    button {
-      width: 100%;
-    }
-  }
+  flex-direction: column;
+  flex: 1 1 49%;
 `;
 
 export const Button = styled(ButtonAntd).attrs({
   type: 'primary',
 })`
-  width: 150px;
+  width: 185px;
+  margin-left: auto;
 `;

@@ -12,10 +12,12 @@ const { Title } = Typography;
 
 const USER_ROLE = 'User';
 const MAINTAINER_ROLE = 'Maintainer';
+const SUPER_ADMIN = 'SuperAdmin';
 
 const ROLE_KEYS = {
   [MAINTAINER_ROLE]: 'role.maintainer',
   [USER_ROLE]: 'role.user',
+  [SUPER_ADMIN]: 'role.super_admin',
 };
 
 const Profile = () => {
@@ -23,31 +25,21 @@ const Profile = () => {
   const { data: user } = useQuery(USER_BASE_QUERY, getUser);
   const { email, firstName, lastName, roles } = user || {};
 
-  const firstNameLetter = useMemo(
-    () => firstName?.[0] || lastName?.[0],
-    [firstName, lastName],
-  );
-
   const roleKey = useMemo(() => ROLE_KEYS[roles?.[0] || USER_ROLE], [roles]);
 
   return (
     <S.Page>
       <S.Profile>
-        <S.GlobalStyles />
         <S.HeaderWrapper>
-          <S.Avatar>{firstNameLetter}</S.Avatar>
           <S.NameWrapper>
-            <Title level={2}>
-              {firstName} {lastName}
-            </Title>
+            <Title level={2}>{t('title')}</Title>
           </S.NameWrapper>
           <div>
-            <Tag color="cyan">{t(roleKey)}</Tag>
+            <Tag>{t(roleKey)}</Tag>
           </div>
         </S.HeaderWrapper>
         <S.FormWrapper>
           <S.FormInputsWrapper>
-            <Title level={4}>{t('bio_title')}</Title>
             <Form layout="vertical">
               <Form.Item label={t('first_name.label')}>
                 <Input
@@ -68,9 +60,9 @@ const Profile = () => {
                 />
               </Form.Item>
             </Form>
+            <S.Button>{t('update_information_button')}</S.Button>
           </S.FormInputsWrapper>
           <S.FormInputsWrapper>
-            <Title level={4}>{t('password_title')}</Title>
             <Form layout="vertical">
               <Form.Item
                 label={t('current_password.label')}
@@ -94,11 +86,9 @@ const Profile = () => {
                 />
               </Form.Item>
             </Form>
+            <S.Button>{t('update_password_button')}</S.Button>
           </S.FormInputsWrapper>
         </S.FormWrapper>
-        <S.SaveWrapper>
-          <S.Button>{t('save_button')}</S.Button>
-        </S.SaveWrapper>
       </S.Profile>
     </S.Page>
   );

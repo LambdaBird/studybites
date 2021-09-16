@@ -1,10 +1,10 @@
 export default {
-  bio_title: 'Биография',
+  title: 'Мои настройки профиля',
   role: {
     maintainer: 'Учитель',
-    user: 'Пользователь',
+    user: 'Студент',
+    super_admin: 'Суперпользователь',
   },
-  password_title: 'Изменить пароль',
   first_name: {
     label: 'Имя',
     placeholder: 'Введите свое имя',
@@ -27,5 +27,6 @@ export default {
   confirm_password: {
     label: 'Подтверждение пароля',
   },
-  save_button: 'Сохранить',
+  update_information_button: 'Обновить информацию',
+  update_password_button: 'Обновить пароль',
 };

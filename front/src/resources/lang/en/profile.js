@@ -1,10 +1,10 @@
 export default {
-  bio_title: 'BIO',
+  title: 'My profile settings',
   role: {
-    maintainer: 'Maintainer',
-    user: 'User',
+    maintainer: 'Teacher',
+    user: 'Student',
+    super_admin: 'Super Admin',
   },
-  password_title: 'Change password',
   first_name: {
     label: 'First name',
     placeholder: 'Enter first name',
@@ -27,5 +27,6 @@ export default {
   confirm_password: {
     label: 'Confirm password',
   },
-  save_button: 'Save Changes',
+  update_information_button: 'Update information',
+  update_password_button: 'Update password',
 };
