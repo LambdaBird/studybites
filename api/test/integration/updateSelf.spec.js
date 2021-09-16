@@ -1,11 +1,11 @@
 import build from '../../src/app';
 import { authorizeUser } from './utils';
-import { defaultPassword, teacherMike } from '../../seeds/testData/users';
+import { defaultPassword, teacherJack } from '../../seeds/testData/users';
 
 describe('PATCH /api/v1/user/self', () => {
   const testContext = {};
   const teacherCredentials = {
-    email: teacherMike.email,
+    email: teacherJack.email,
     password: defaultPassword,
   };
 
