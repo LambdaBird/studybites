@@ -28,6 +28,7 @@ import { USER_BASE_QUERY } from '@sb-ui/utils/queries';
 import {
   ChildrenType,
   ClassNameType,
+  HandleHideType,
   HideOnScrollType,
 } from '@sb-ui/utils/types';
 
@@ -55,7 +56,7 @@ const MENU_LANGUAGES_LIST = new Map(
   ]),
 );
 
-const Header = ({ className, hideOnScroll, bottom, children }) => {
+const Header = ({ className, hideOnScroll, bottom, children, handleHide }) => {
   const history = useHistory();
   const { t, i18n } = useTranslation(['common', 'user']);
   const location = useLocation();
@@ -251,6 +252,12 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
     [firstNameLetter, fullName, isMobile],
   );
 
+  useEffect(() => {
+    if (typeof handleHide === 'function') {
+      handleHide?.(scroll === 'down');
+    }
+  }, [handleHide, scroll]);
+
   return (
     <>
       <S.Container
@@ -309,6 +316,7 @@ Header.propTypes = {
   className: ClassNameType,
   bottom: ChildrenType,
   hideOnScroll: HideOnScrollType,
+  handleHide: HandleHideType,
 };
 
 export default Header;
