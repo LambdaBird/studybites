@@ -40,7 +40,7 @@ const Profile = () => {
         </S.HeaderWrapper>
         <S.FormWrapper>
           <S.FormInputsWrapper>
-            <Form layout="vertical">
+            <Form size="large" layout="vertical">
               <Form.Item label={t('first_name.label')}>
                 <Input
                   placeholder={t('first_name.placeholder')}
@@ -63,7 +63,7 @@ const Profile = () => {
             <S.Button>{t('update_information_button')}</S.Button>
           </S.FormInputsWrapper>
           <S.FormInputsWrapper>
-            <Form layout="vertical">
+            <Form size="large" layout="vertical">
               <Form.Item
                 label={t('current_password.label')}
                 name="current-password"

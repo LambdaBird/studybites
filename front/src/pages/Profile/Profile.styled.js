@@ -49,6 +49,6 @@ export const FormInputsWrapper = styled.div`
 export const Button = styled(ButtonAntd).attrs({
   type: 'primary',
 })`
-  width: 185px;
+  min-width: 185px;
   margin-left: auto;
 `;
