@@ -7,8 +7,7 @@ import * as S from './AddCard.styled';
 
 const AddCard = ({ onClick, isCourse }) => {
   const { t } = useTranslation('teacher');
-
-  const cardTitleText = isCourse
+  const cardTitleKey = isCourse
     ? 'course_dashboard.add_button'
     : 'lesson_dashboard.add_button';
 
@@ -16,7 +15,7 @@ const AddCard = ({ onClick, isCourse }) => {
     <S.Wrapper onClick={onClick}>
       <Space size="small" align="center">
         <S.Icon />
-        <S.CardTitle>{t(cardTitleText)}</S.CardTitle>
+        <S.CardTitle>{t(cardTitleKey)}</S.CardTitle>
       </Space>
     </S.Wrapper>
   );
