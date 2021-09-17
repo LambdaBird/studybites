@@ -51,10 +51,16 @@ const options = {
 async function handler({ params: { lessonId }, user: { id: userId } }) {
   const {
     models: { Lesson, ResourceKeyword },
+    config: {
+      globals: { resources },
+    },
   } = this;
 
+  const keywords = await ResourceKeyword.getResourceKeywords({
+    resourceId: lessonId,
+    resourceType: resources.LESSON.name,
+  });
   const lesson = await Lesson.getLessonWithAuthor({ lessonId, userId });
-  const keywords = await ResourceKeyword.getLessonKeywords({ lessonId });
 
   return { lesson, keywords };
 }

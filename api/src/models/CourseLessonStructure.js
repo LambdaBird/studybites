@@ -33,6 +33,7 @@ export default class CourseLessonStructure extends BaseModel {
           to: 'results.lesson_id',
         },
       },
+
       students: {
         relation: objection.Model.ManyToManyRelation,
         modelClass: path.join(__dirname, 'User'),
@@ -54,6 +55,7 @@ export default class CourseLessonStructure extends BaseModel {
             .select('id', 'first_name', 'last_name');
         },
       },
+
       author: {
         relation: objection.Model.HasOneThroughRelation,
         modelClass: path.join(__dirname, 'User'),
@@ -140,8 +142,8 @@ export default class CourseLessonStructure extends BaseModel {
       .orderBy(
         this.knex().raw(`(case when parent_id is null then 0 else 1 end)`),
       )
-      .withGraphFetched('author')
-      .withGraphFetched('students');
+      .withGraphFetched('students')
+      .withGraphFetched('author');
 
     if (userId) {
       query

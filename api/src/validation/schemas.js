@@ -53,6 +53,7 @@ export const courseSearch = {
     limit: { type: 'number', default: searchLimits.COURSE_SEARCH_LIMIT },
     progress: { type: 'string' },
     status: { type: 'string' },
+    tags: { type: 'array', items: { type: 'number' } },
   },
 };
 

@@ -3,6 +3,16 @@ const options = {
     body: {
       type: 'object',
       properties: {
+        keywords: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'number' },
+              name: { type: 'string' },
+            },
+          },
+        },
         course: {
           type: 'object',
           properties: {
@@ -56,9 +66,12 @@ const options = {
   },
 };
 
-async function handler({ body: { course, lessons }, user: { id: userId } }) {
+async function handler({
+  body: { course, lessons, keywords },
+  user: { id: userId },
+}) {
   const {
-    models: { Course, UserRole, CourseLessonStructure },
+    models: { Course, UserRole, CourseLessonStructure, Keyword },
     config: {
       globals: { resources },
     },
@@ -73,6 +86,15 @@ async function handler({ body: { course, lessons }, user: { id: userId } }) {
         resourceId: courseData.id,
         resourceType: resources.COURSE.name,
       });
+
+      if (keywords) {
+        await Keyword.createMany({
+          trx,
+          keywords,
+          resourceId: courseData.id,
+          resourceType: resources.COURSE.name,
+        });
+      }
 
       if (lessons) {
         await CourseLessonStructure.insertLessons({

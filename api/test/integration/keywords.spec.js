@@ -4,6 +4,7 @@ import { authorizeUser, createLesson, prepareLessonFromSeed } from './utils';
 import { french } from '../../seeds/testData/lessons';
 import Keyword from '../../src/models/Keyword';
 import ResourceKeyword from '../../src/models/ResourceKeyword';
+import { resources } from '../../src/config';
 
 describe('Keywords creation and filtering', () => {
   const testContext = {
@@ -153,8 +154,9 @@ describe('Keywords creation and filtering', () => {
         },
       });
 
-      const keywords = await ResourceKeyword.getLessonKeywords({
-        lessonId: lessonToUpdate.lesson.id,
+      const keywords = await ResourceKeyword.getResourceKeywords({
+        resourceId: lessonToUpdate.lesson.id,
+        resourceType: resources.LESSON.name,
       });
 
       expect(response.statusCode).toBe(200);
@@ -215,8 +217,9 @@ describe('Keywords creation and filtering', () => {
         },
       });
 
-      const keywords = await ResourceKeyword.getLessonKeywords({
-        lessonId: lessonToSearch.lesson.id,
+      const keywords = await ResourceKeyword.getResourceKeywords({
+        resourceId: lessonToSearch.lesson.id,
+        resourceType: resources.LESSON.name,
       });
 
       expect(response.statusCode).toBe(200);

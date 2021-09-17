@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 import { SaveOutlined } from '@ant-design/icons';
 
 import Header from '@sb-ui/components/molecules/Header';
+import KeywordsSelect from '@sb-ui/components/molecules/KeywordsSelect';
 import { Statuses } from '@sb-ui/pages/Teacher/Home/Dashboard/constants';
 
 import CourseLesson from './CourseLesson';
@@ -130,6 +131,18 @@ const CourseEdit = () => {
     changeSelectOptions();
   }, [changeSelectOptions, lessons]);
 
+  const [keywords, setKeywords] = useState([]);
+  useEffect(() => {
+    if (courseData?.keywords) {
+      setKeywords(
+        courseData.keywords.map((keyword) => ({
+          value: keyword.id,
+          label: keyword.name,
+        })),
+      );
+    }
+  }, [courseData?.keywords]);
+
   const handleSave = () => {
     const params = {
       course: {
@@ -138,6 +151,10 @@ const CourseEdit = () => {
         description,
         status: Statuses.DRAFT,
       },
+      keywords: keywords.map((keyword) => ({
+        name: keyword.label,
+        id: typeof keyword.value === 'number' ? keyword.value : undefined,
+      })),
       lessons,
     };
     if (!name) {
@@ -295,6 +312,12 @@ const CourseEdit = () => {
                   showCount
                   maxLength={140}
                 />
+              </Col>
+            </Row>
+            <Row gutter={[0, 16]}>
+              <Col span={24}>{t('course_edit.keywords')}</Col>
+              <Col span={24}>
+                <KeywordsSelect values={keywords} setValues={setKeywords} />
               </Col>
             </Row>
           </S.RightCol>

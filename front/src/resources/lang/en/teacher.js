@@ -99,6 +99,7 @@ export default {
     },
   },
   course_edit: {
+    keywords: 'Keywords',
     error_course_name: 'Missing course name',
     lesson_search: {
       placeholder: 'Choose lesson',
