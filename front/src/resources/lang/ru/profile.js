@@ -28,6 +28,10 @@ export default {
     error: 'Email должен иметь хотябы 1 символ',
     validation: 'Неправильный email',
   },
+  description: {
+    label: 'Описание',
+    placeholder: 'Введите описание',
+  },
   password_placeholder: '••••••••',
   current_password: {
     label: 'Текущий пароль',

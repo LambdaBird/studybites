@@ -10,6 +10,7 @@ import { USER_BASE_QUERY } from '@sb-ui/utils/queries';
 import * as S from './Profile.styled';
 
 const { Title } = Typography;
+const { TextArea } = Input;
 
 const USER_ROLE = 'User';
 const TEACHER_ROLE = 'Teacher';
@@ -25,7 +26,7 @@ const Profile = () => {
   const { t } = useTranslation('profile');
   const [form] = Form.useForm();
   const { data: user } = useQuery(USER_BASE_QUERY, getUser);
-  const { email, firstName, lastName, roles } = user || {};
+  const { email, firstName, lastName, description, roles } = user || {};
   const [isFormErrors, setIsFormErrors] = useState(false);
 
   const handleFieldsChange = useCallback(() => {
@@ -71,7 +72,12 @@ const Profile = () => {
   });
 
   const handleSave = useCallback(() => {
-    const values = form.getFieldsValue(['firstName', 'lastName', 'email']);
+    const values = form.getFieldsValue([
+      'firstName',
+      'lastName',
+      'email',
+      'description',
+    ]);
     mutateUser(values);
     form.setFieldsValue(values);
   }, [form, mutateUser]);
@@ -127,6 +133,7 @@ const Profile = () => {
                 firstName,
                 lastName,
                 email,
+                description,
               }}
               layout="vertical"
             >
@@ -156,6 +163,13 @@ const Profile = () => {
                 label={t('email.label')}
               >
                 <Input placeholder={t('email.placeholder')} />
+              </Form.Item>
+              <Form.Item name="description" label={t('description.label')}>
+                <TextArea
+                  placeholder={t('description.placeholder')}
+                  showCount
+                  maxLength={140}
+                />
               </Form.Item>
             </Form>
             <S.Button
@@ -190,7 +204,7 @@ const Profile = () => {
                 />
               </Form.Item>
             </Form>
-            <S.Button disabled>{t('update_password_button')}</S.Button>
+            <S.UpdateButton>{t('update_password_button')}</S.UpdateButton>
           </S.FormInputsWrapper>
         </S.FormWrapper>
       </S.Profile>

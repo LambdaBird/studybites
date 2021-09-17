@@ -15,6 +15,10 @@ export const updateSelfOptions = {
           minLength: 1,
           maxLength: userConstants.MAX_LAST_NAME_LENGTH,
         },
+        description: {
+          type: 'string',
+          maxLength: userConstants.MAX_DESCRIPTION_LENGTH,
+        },
         email: { type: 'string', minLength: 1 },
       },
     },

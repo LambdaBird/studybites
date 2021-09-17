@@ -20,6 +20,7 @@ export const userServiceMessages = {
 export const userConstants = {
   MAX_FIRST_NAME_LENGTH: 30,
   MAX_LAST_NAME_LENGTH: 30,
+  MAX_DESCRIPTION_LENGTH: 140,
 };
 
 export const userServiceConstants = {

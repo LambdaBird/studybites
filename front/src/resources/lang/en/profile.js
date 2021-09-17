@@ -28,6 +28,10 @@ export default {
     error: 'Email must have at least 1 symbol',
     validation: 'The input is not valid E-mail',
   },
+  description: {
+    label: 'Description',
+    placeholder: 'Enter description',
+  },
   password_placeholder: '••••••••',
   current_password: {
     label: 'Current password',

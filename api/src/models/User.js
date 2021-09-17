@@ -150,7 +150,7 @@ class User extends BaseModel {
     return this.query()
       .findById(userId)
       .patch(user)
-      .returning('first_name', 'last_name', 'email');
+      .returning('first_name', 'last_name', 'email', 'description');
   }
 
   static self({ userId }) {
@@ -158,7 +158,7 @@ class User extends BaseModel {
       .findById(userId)
       .select(
         this.knex().raw(`
-          users.id, users.email, users.first_name, users.last_name, users.language,
+          users.id, users.email, users.first_name, users.description, users.last_name, users.language,
           array_remove(array_append(array_agg(distinct roles.name) filter (where roles.name is not null), 
           case when users.is_super_admin then 'SuperAdmin'::varchar end), null) roles
         `),
