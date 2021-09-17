@@ -282,10 +282,10 @@ export default class Course extends BaseModel {
       });
   }
 
-  static getAllFinishedCourses({ userId, offset: start, limit, search }) {
+  static getAllFinishedCourses({ userId, offset: start, limit, search, tags }) {
     const end = start + limit - 1;
 
-    return this.query()
+    const query = this.query()
       .skipUndefined()
       .join('users_roles', (builder) =>
         builder
@@ -302,6 +302,10 @@ export default class Course extends BaseModel {
         'courses.id',
         '=',
         'course_lesson_structure.course_id',
+      )
+      .joinRaw(
+        `left join resource_keywords on courses.id = resource_keywords.resource_id 
+        and resource_keywords.resource_type = '${resources.COURSE.name}'`,
       )
       .where('users_roles.user_id', userId)
       .andWhere(
@@ -320,13 +324,21 @@ export default class Course extends BaseModel {
         )`,
       )
       .range(start, end)
-      .withGraphFetched('author');
+      .withGraphFetched('author')
+      .withGraphFetched('keywords');
+
+    if (tags) {
+      return query
+        .whereIn('resource_keywords.keyword_id', tags)
+        .havingRaw('count(resource_keywords.keyword_id) = ?', [tags.length]);
+    }
+    return query;
   }
 
-  static getOngoingCourses({ userId, offset: start, limit, search }) {
+  static getOngoingCourses({ userId, offset: start, limit, search, tags }) {
     const end = start + limit - 1;
 
-    return this.query()
+    const query = this.query()
       .skipUndefined()
       .join('users_roles', (builder) =>
         builder
@@ -338,11 +350,15 @@ export default class Course extends BaseModel {
             this.knex().raw('?', [resources.COURSE.name]),
           ),
       )
-      .join(
+      .leftJoin(
         'course_lesson_structure',
         'courses.id',
         '=',
         'course_lesson_structure.course_id',
+      )
+      .joinRaw(
+        `left join resource_keywords on courses.id = resource_keywords.resource_id 
+        and resource_keywords.resource_type = '${resources.COURSE.name}'`,
       )
       .where('users_roles.user_id', userId)
       .whereNotIn('course_lesson_structure.lesson_id', (builder) =>
@@ -361,6 +377,14 @@ export default class Course extends BaseModel {
       )
       .groupBy('courses.id')
       .range(start, end)
-      .withGraphFetched('author');
+      .withGraphFetched('author')
+      .withGraphFetched('keywords');
+
+    if (tags) {
+      return query
+        .whereIn('resource_keywords.keyword_id', tags)
+        .havingRaw('count(resource_keywords.keyword_id) = ?', [tags.length]);
+    }
+    return query;
   }
 }
