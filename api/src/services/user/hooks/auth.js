@@ -11,7 +11,7 @@ export default async function auth({ req, isAdminOnly = false }) {
   } = this;
 
   try {
-    const { access, id } = await req.jwtVerify();
+    const { access, id, iat } = await req.jwtVerify();
     if (!access) {
       throw new AuthorizationError(USER_ERR_UNAUTHORIZED);
     }
@@ -25,6 +25,13 @@ export default async function auth({ req, isAdminOnly = false }) {
       if (!user.isSuperAdmin) {
         throw new AuthorizationError(USER_ERR_UNAUTHORIZED);
       }
+    }
+
+    const lastUpdateUserTime = Math.floor(
+      new Date(user.updatedAt).getTime() / 1000,
+    );
+    if (iat < lastUpdateUserTime) {
+      throw new AuthorizationError(USER_ERR_UNAUTHORIZED);
     }
   } catch (error) {
     throw new AuthorizationError(USER_ERR_UNAUTHORIZED);

@@ -21,6 +21,7 @@ import lessonsManagementService from './services/lessons-management';
 import coursesManagementService from './services/courses-management';
 import coursesService from './services/courses';
 import keywordsService from './services/keywords';
+import emailService from './services/email';
 
 import errorsAndValidation from './validation';
 
@@ -80,6 +81,10 @@ export default (options = {}) => {
 
   app.register(keywordsService, {
     prefix: '/api/v1/keywords',
+  });
+
+  app.register(emailService, {
+    prefix: '/api/v1/email',
   });
 
   return app;

@@ -2,6 +2,8 @@ export const HOME = '/';
 export const SIGN_IN = '/sign-in';
 export const SIGN_UP = '/sign-up';
 export const ADMIN_HOME = '/admin';
+export const CHANGE_PASSWORD = '/change-password/:id';
+export const FORGET_PASSWORD = '/forget-password';
 
 export const PROFILE = '/profile';
 export const USER_HOME = '/user';

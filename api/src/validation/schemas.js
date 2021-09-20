@@ -64,6 +64,13 @@ export const userSearch = {
     limit: { type: 'number', default: searchLimits.USER_SEARCH_LIMIT },
   },
 };
+export const passwordResetIdParam = {
+  type: 'object',
+  properties: {
+    id: { type: 'number' },
+  },
+  required: ['id'],
+};
 
 export const keywordSearch = {
   type: 'object',

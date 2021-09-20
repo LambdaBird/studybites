@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
 
 import { queryClient } from '@sb-ui/query';
+import { resetPassword } from '@sb-ui/utils/api/v1/email';
 import { getUser, patchUser } from '@sb-ui/utils/api/v1/user';
 import { USER_BASE_QUERY } from '@sb-ui/utils/queries';
 
@@ -37,6 +38,29 @@ const Profile = () => {
     () => ROLE_KEYS?.[roles?.find((role) => ROLE_KEYS?.[role])],
     [roles],
   );
+
+  const { mutate: mutateResetPassword, isLoading: isLoadingResetPassword } =
+    useMutation(resetPassword, {
+      onSuccess: () => {
+        message.success({
+          content: 'Reset link sent to your email',
+          key: 'link.success',
+          duration: 2,
+        });
+      },
+      onError: (err) => {
+        if (err.response.data?.message === 'errors.email.too_frequently') {
+          const timeout = err.response.data.payload?.timeout;
+          message.error({
+            content: `You try to reset your password too frequently, try in ${timeout} seconds`,
+            key: `link.fail${timeout}`,
+            duration: 2,
+          });
+          return;
+        }
+        throw new Error(err);
+      },
+    });
 
   const { mutate: mutateUser, isLoading } = useMutation(patchUser, {
     onSuccess: (userData) => {
@@ -108,6 +132,10 @@ const Profile = () => {
       { required: true, message: t('email.error') },
       { type: 'email', message: t('email.validation') },
     ],
+  };
+
+  const handleResetPassword = () => {
+    mutateResetPassword();
   };
 
   return (
@@ -204,7 +232,12 @@ const Profile = () => {
                 />
               </Form.Item>
             </Form>
-            <S.UpdateButton>{t('update_password_button')}</S.UpdateButton>
+            <S.ResetButton
+              loading={isLoadingResetPassword}
+              onClick={handleResetPassword}
+            >
+              {t('reset_password_button')}
+            </S.ResetButton>
           </S.FormInputsWrapper>
         </S.FormWrapper>
       </S.Profile>

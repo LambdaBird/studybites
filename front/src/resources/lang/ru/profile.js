@@ -43,6 +43,6 @@ export default {
     label: 'Подтверждение пароля',
   },
   update_information_button: 'Обновить информацию',
-  update_password_button: 'Обновить пароль',
+  reset_password_button: 'Сбросить пароль',
   reset_button: 'Сбросить Форму',
 };

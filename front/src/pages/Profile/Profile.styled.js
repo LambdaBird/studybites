@@ -54,8 +54,6 @@ export const Button = styled(ButtonAntd).attrs({
   margin-left: auto;
 `;
 
-export const UpdateButton = styled(Button).attrs({
-  disabled: true,
-})`
+export const ResetButton = styled(Button)`
   margin-top: auto;
 `;

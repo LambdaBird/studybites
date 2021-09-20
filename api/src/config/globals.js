@@ -1,3 +1,9 @@
+export const ONLY_CONSOLE = 1;
+export const ONLY_EMAIL = 2;
+export const CONSOLE_AND_EMAIL = 3;
+
+export const DEBUG_EMAIL = ONLY_CONSOLE;
+
 export const jwt = {
   ACCESS_JWT_EXPIRES_IN: 60 * 5,
   REFRESH_JWT_EXPIRES_IN: 60 * 60 * 24 * 7,
