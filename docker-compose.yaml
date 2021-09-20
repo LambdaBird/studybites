@@ -16,6 +16,7 @@ services:
     build: ./api
     depends_on:
       - postgres
+      - s3
     volumes:
       - ./api:/api
       - /api/node_modules
@@ -30,8 +31,25 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: studybites
       API_LOGLEVEL: info
+      S3_HOST: s3
+      S3_PORT: 9000
+      S3_ACCESS_KEY: minio_access_key
+      S3_SECRET_KEY: minio_secret_key
+      S3_BUCKET: storage
     ports:
       - '3017:3017'
+
+  s3:
+    image: minio/minio
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - ./minio:/data
+    environment:
+      MINIO_ROOT_USER: minio_access_key
+      MINIO_ROOT_PASSWORD: minio_secret_key
+    command: server --address 0.0.0.0:9000 --console-address 0.0.0.0:9001 /data
 
   studybites-front:
     build: ./front
