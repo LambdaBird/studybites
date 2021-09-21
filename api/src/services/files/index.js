@@ -2,6 +2,7 @@ import fp from 'fastify-plugin';
 import * as Minio from 'minio';
 
 import { router } from './routes';
+import { handleFile } from './hooks/handleFile';
 
 const minio = new Minio.Client({
   endPoint: process.env.S3_HOST,
@@ -13,6 +14,7 @@ const minio = new Minio.Client({
 
 const filesService = (instance, opts, done) => {
   instance.decorate('s3', minio);
+  instance.decorate('handleFile', handleFile);
   instance.register(router, opts);
   done();
 };

@@ -23,11 +23,11 @@ const LessonImage = ({
     name: 'file',
     action: 'http://localhost:3017/api/v1/files',
     headers: {
-      authorization: getJWTAccessToken(),
+      Authorization: `Bearer ${getJWTAccessToken()}`,
     },
     onChange(info) {
       if (info?.file?.response?.location) {
-        setImage(info?.file?.response?.location);
+        setImage(info.file.response.location);
       }
     },
   };

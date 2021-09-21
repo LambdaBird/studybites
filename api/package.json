@@ -18,6 +18,7 @@
     "bcrypt": "^5.0.1",
     "busboy": "^0.3.1",
     "fastify": "^3.15.1",
+    "fastify-cors": "^6.0.2",
     "fastify-jwt": "^2.4.0",
     "fastify-objection": "^0.0.2",
     "fastify-plugin": "^3.0.0",

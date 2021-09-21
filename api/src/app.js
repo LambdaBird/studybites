@@ -1,4 +1,5 @@
 import fastify from 'fastify';
+import fastifyCors from 'fastify-cors';
 import fastifyObjection from 'fastify-objection';
 import qs from 'qs';
 
@@ -40,6 +41,8 @@ export default (options = {}) => {
     req.raw.multipart = true;
     done();
   });
+
+  app.register(fastifyCors);
 
   app.register(errorsAndValidation);
 

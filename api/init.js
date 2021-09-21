@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import knex from 'knex';
+import * as Minio from 'minio';
 import { hashPassword } from './utils/salt';
 
 (async () => {

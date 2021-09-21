@@ -1,47 +1,52 @@
-import Busboy from 'busboy';
+const options = {
+  async onRequest(req) {
+    await this.auth({ req });
+  },
+  async preHandler(req) {
+    this.file = await this.handleFile(req);
+  },
+};
 
-const options = {};
+// TODO: move to init
+const policy = {
+  Statement: [
+    {
+      Action: ['s3:GetBucketLocation'],
+      Effect: 'Allow',
+      Principal: {
+        AWS: ['*'],
+      },
+      Resource: ['arn:aws:s3:::storage'],
+    },
+    {
+      Action: ['s3:GetObject'],
+      Effect: 'Allow',
+      Principal: {
+        AWS: ['*'],
+      },
+      Resource: ['arn:aws:s3:::storage/*'],
+    },
+  ],
+  Version: '2012-10-17',
+};
 
-function handleFile(req) {
-  const busboy = new Busboy({ headers: req.headers });
-  const ctx = {
-    buf: [],
-    fileSize: 0,
-    fileName: null,
-    type: null,
-  };
-  return new Promise((resolve, reject) => {
-    busboy.on('file', (fieldName, file, filename, encoding, mimetype) => {
-      ctx.fileName = filename;
-      ctx.type = mimetype;
-      file.on('data', (data) => {
-        ctx.buf.push(data);
-        ctx.fileSize += data.length;
-      });
-    });
-    busboy.on('error', (e) => {
-      reject(e);
-    });
-    busboy.on('finish', () => {
-      ctx.buf = Buffer.concat(ctx.buf);
-      resolve(ctx);
-    });
-    req.raw.pipe(busboy);
-  });
-}
+async function handler() {
+  const {
+    s3,
+    file,
+    config: { globals },
+  } = this;
 
-async function handler(req) {
-  try {
-    const { s3 } = this;
-
-    const file = await handleFile(req);
-    await s3.putObject(process.env.S3_BUCKET, file.fileName, file.buf);
-
-    return { status: 'ok' };
-  } catch (e) {
-    console.log({ e });
-    return { status: 'not ok' };
+  // TODO: move to init
+  const buckets = await s3.listBuckets();
+  if (!buckets.length) {
+    await s3.makeBucket(process.env.S3_BUCKET);
   }
+  await s3.setBucketPolicy(process.env.S3_BUCKET, JSON.stringify(policy));
+
+  await s3.putObject(process.env.S3_BUCKET, file.fileName, file.buf);
+
+  return { location: `${globals.S3_URL}${file.fileName}` };
 }
 
 export default { options, handler };
