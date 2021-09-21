@@ -121,11 +121,13 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
     );
   }, [location.pathname, t]);
 
-  const languageSubMenu = useMemo(() => {
-    return LANGUAGES_LIST.map(({ key, value }) => (
-      <Menu.Item key={`${MENU_KEYS.LANGUAGE}-${key}`}>{value}</Menu.Item>
-    ));
-  }, []);
+  const languageSubMenu = useMemo(
+    () =>
+      LANGUAGES_LIST.map(({ key, value }) => (
+        <Menu.Item key={`${MENU_KEYS.LANGUAGE}-${key}`}>{value}</Menu.Item>
+      )),
+    [],
+  );
 
   const menu = useMemo(
     () => (
@@ -234,7 +236,7 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
   const profileContent = useMemo(
     () => (
       <S.Profile data-testid="profile">
-        <S.StyledAvatar>{firstNameLetter}</S.StyledAvatar>
+        <S.StyledAvatar src={user?.image} />
         {!isMobile && <S.StyledName>{fullName}</S.StyledName>}
         {isMobile ? <S.MenuOutlined /> : <DownOutlined />}
       </S.Profile>

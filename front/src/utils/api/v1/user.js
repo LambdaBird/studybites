@@ -34,9 +34,12 @@ export const postSignIn = async (formData) => {
 };
 
 export const getUser = async () => {
-  const { data } = await api.get(`${PATH}/self`);
+  const { data: user } = await api.get(`${PATH}/self`);
+  const {
+    data: { location },
+  } = await api.get(`/api/v1/files/Screenshot from 2021-09-10 20-11-07.png`);
 
-  return data;
+  return { ...user, image: location };
 };
 
 export const patchLanguage = async ({ language }) => {

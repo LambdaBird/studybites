@@ -1,9 +1,10 @@
-import { Col, Input, Row } from 'antd';
+import { Button, Col, Input, message, Row, Upload } from 'antd';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined, UploadOutlined } from '@ant-design/icons';
 
 import DefaultLessonImage from '@sb-ui/resources/img/lesson.svg';
+import { getJWTAccessToken } from '@sb-ui/utils/jwt';
 
 import * as S from './LessonImage.styled';
 
@@ -18,6 +19,19 @@ const LessonImage = ({
 }) => {
   const { t } = useTranslation('teacher');
 
+  const props = {
+    name: 'file',
+    action: 'http://localhost:3017/api/v1/files',
+    headers: {
+      authorization: getJWTAccessToken(),
+    },
+    onChange(info) {
+      if (info?.file?.response?.location) {
+        setImage(info?.file?.response?.location);
+      }
+    },
+  };
+
   return (
     <Row gutter={[0, 8]}>
       <Col span={24}>{t('lesson_edit.cover_image.title')}</Col>
@@ -29,6 +43,11 @@ const LessonImage = ({
           placeholder={t('lesson_edit.cover_image.input_placeholder')}
           onChange={(e) => setImage(e.target.value)}
         />
+      </Col>
+      <Col span={24}>
+        <Upload {...props}>
+          <Button icon={<UploadOutlined />}>Click to Upload</Button>
+        </Upload>
       </Col>
       {isLoading === false && (
         <Col span={24}>
