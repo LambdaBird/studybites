@@ -53,6 +53,14 @@ export const teacherNathan = {
   is_confirmed: true,
 };
 
+export const teacherJack = {
+  id: 106,
+  email: 'jack@test.io',
+  first_name: 'Jack',
+  last_name: 'Teacher',
+  is_confirmed: true,
+};
+
 export const users = [
   superAdmin,
   teacherMike,
@@ -60,6 +68,7 @@ export const users = [
   studentJane,
   userBob,
   teacherNathan,
+  teacherJack,
 ];
 
 export const usersRoles = [
@@ -69,6 +78,10 @@ export const usersRoles = [
   },
   {
     user_id: teacherNathan.id,
+    role_id: roles.TEACHER.id,
+  },
+  {
+    user_id: teacherJack.id,
     role_id: roles.TEACHER.id,
   },
   {

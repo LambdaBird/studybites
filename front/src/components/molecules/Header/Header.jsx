@@ -18,6 +18,7 @@ import { Roles } from '@sb-ui/utils/constants';
 import { clearJWT } from '@sb-ui/utils/jwt';
 import {
   HOME,
+  PROFILE,
   SIGN_IN,
   TEACHER_HOME,
   USER_COURSES,
@@ -66,6 +67,10 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
   const [scroll, setScroll] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
 
+  const handleProfile = useCallback(() => {
+    history.push(PROFILE);
+  }, [history]);
+
   const handleSignOut = useCallback(() => {
     clearJWT();
     queryClient.resetQueries();
@@ -88,6 +93,9 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
       setIsVisible(false);
       const upperKey = keyPath?.[keyPath.length - 1];
       switch (upperKey) {
+        case MENU_KEYS.PROFILE:
+          handleProfile();
+          break;
         case MENU_KEYS.SIGN_OUT:
           handleSignOut();
           break;

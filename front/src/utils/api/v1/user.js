@@ -39,6 +39,12 @@ export const getUser = async () => {
   return data;
 };
 
+export const patchUser = async (params) => {
+  const { data } = await api.patch(`${PATH}/self`, params);
+
+  return data;
+};
+
 export const patchLanguage = async ({ language }) => {
   const { data } = await api.patch(`${PATH}/language`, {
     language,
