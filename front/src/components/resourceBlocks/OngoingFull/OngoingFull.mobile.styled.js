@@ -30,7 +30,12 @@ export const Image = styled(ImageAntd).attrs({
   object-fit: cover;
 `;
 
-export const Title = styled(Typography.Title)`
+export const Title = styled(Typography.Title).attrs({
+  level: 3,
+  ellipsis: {
+    tooltip: true,
+  },
+})`
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
   font-size: 20px !important;

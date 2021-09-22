@@ -87,6 +87,23 @@ export default class Course extends BaseModel {
           to: 'lessons.id',
         },
       },
+
+      keywords: {
+        relation: objection.Model.ManyToManyRelation,
+        modelClass: path.join(__dirname, 'Keyword'),
+        join: {
+          from: 'courses.id',
+          through: {
+            modelClass: path.join(__dirname, 'ResourceKeyword'),
+            from: 'resource_keywords.resource_id',
+            to: 'resource_keywords.keyword_id',
+          },
+          to: 'keywords.id',
+        },
+        modify: (query) => {
+          return query.where({ resource_type: resources.COURSE.name });
+        },
+      },
     };
   }
 
@@ -106,6 +123,38 @@ export default class Course extends BaseModel {
     return this.query(trx).findById(courseId).patch(course).returning('*');
   }
 
+  static getCourseWithLessons({ courseId }) {
+    return this.query().findById(courseId).withGraphFetched('lessons');
+  }
+
+  static getAllCoursesByLessonId({ lessonId }) {
+    return this.query()
+      .join(
+        'course_lesson_structure',
+        'courses.id',
+        '=',
+        'course_lesson_structure.course_id',
+      )
+      .where('course_lesson_structure.lesson_id', '=', lessonId);
+  }
+
+  static updateCourseStatus({ courseId, status }) {
+    return this.query().findById(courseId).patch({ status }).returning('*');
+  }
+
+  static updateCoursesStatus({ courses, status }) {
+    return this.query()
+      .insert(
+        courses.map(({ id, name }) => ({
+          id,
+          name,
+          status,
+        })),
+      )
+      .onConflict('id')
+      .merge('status');
+  }
+
   static getAllMaintainableCourses({
     userId,
     offset: start,
@@ -114,7 +163,6 @@ export default class Course extends BaseModel {
     status,
   }) {
     const end = start + limit - 1;
-
     return this.query()
       .skipUndefined()
       .join('users_roles', (builder) =>
@@ -136,13 +184,14 @@ export default class Course extends BaseModel {
       )
       .groupBy('courses.id')
       .range(start, end)
-      .withGraphFetched('students');
+      .withGraphFetched('students')
+      .withGraphFetched('lessons');
   }
 
-  static getAllPublicCourses({ userId, offset: start, limit, search }) {
+  static getAllPublicCourses({ userId, offset: start, limit, search, tags }) {
     const end = start + limit - 1;
 
-    return this.query()
+    const query = this.query()
       .skipUndefined()
       .select(
         'courses.*',
@@ -155,6 +204,10 @@ export default class Course extends BaseModel {
              and resource_id = courses.id) is_enrolled
         `),
       )
+      .joinRaw(
+        `left join resource_keywords on courses.id = resource_keywords.resource_id 
+        and resource_keywords.resource_type = '${resources.COURSE.name}'`,
+      )
       .where('courses.status', 'Public')
       .andWhere(
         'courses.name',
@@ -163,7 +216,15 @@ export default class Course extends BaseModel {
       )
       .groupBy('courses.id')
       .range(start, end)
-      .withGraphFetched('author');
+      .withGraphFetched('author')
+      .withGraphFetched('keywords');
+
+    if (tags) {
+      return query
+        .whereIn('resource_keywords.keyword_id', tags)
+        .havingRaw('count(resource_keywords.keyword_id) = ?', [tags.length]);
+    }
+    return query;
   }
 
   static getCourseWithAuthor({ courseId, userId }) {
@@ -221,10 +282,10 @@ export default class Course extends BaseModel {
       });
   }
 
-  static getAllFinishedCourses({ userId, offset: start, limit, search }) {
+  static getAllFinishedCourses({ userId, offset: start, limit, search, tags }) {
     const end = start + limit - 1;
 
-    return this.query()
+    const query = this.query()
       .skipUndefined()
       .join('users_roles', (builder) =>
         builder
@@ -241,6 +302,10 @@ export default class Course extends BaseModel {
         'courses.id',
         '=',
         'course_lesson_structure.course_id',
+      )
+      .joinRaw(
+        `left join resource_keywords on courses.id = resource_keywords.resource_id 
+        and resource_keywords.resource_type = '${resources.COURSE.name}'`,
       )
       .where('users_roles.user_id', userId)
       .andWhere(
@@ -259,13 +324,21 @@ export default class Course extends BaseModel {
         )`,
       )
       .range(start, end)
-      .withGraphFetched('author');
+      .withGraphFetched('author')
+      .withGraphFetched('keywords');
+
+    if (tags) {
+      return query
+        .whereIn('resource_keywords.keyword_id', tags)
+        .havingRaw('count(resource_keywords.keyword_id) = ?', [tags.length]);
+    }
+    return query;
   }
 
-  static getOngoingCourses({ userId, offset: start, limit, search }) {
+  static getOngoingCourses({ userId, offset: start, limit, search, tags }) {
     const end = start + limit - 1;
 
-    return this.query()
+    const query = this.query()
       .skipUndefined()
       .join('users_roles', (builder) =>
         builder
@@ -277,11 +350,15 @@ export default class Course extends BaseModel {
             this.knex().raw('?', [resources.COURSE.name]),
           ),
       )
-      .join(
+      .leftJoin(
         'course_lesson_structure',
         'courses.id',
         '=',
         'course_lesson_structure.course_id',
+      )
+      .joinRaw(
+        `left join resource_keywords on courses.id = resource_keywords.resource_id 
+        and resource_keywords.resource_type = '${resources.COURSE.name}'`,
       )
       .where('users_roles.user_id', userId)
       .whereNotIn('course_lesson_structure.lesson_id', (builder) =>
@@ -300,6 +377,14 @@ export default class Course extends BaseModel {
       )
       .groupBy('courses.id')
       .range(start, end)
-      .withGraphFetched('author');
+      .withGraphFetched('author')
+      .withGraphFetched('keywords');
+
+    if (tags) {
+      return query
+        .whereIn('resource_keywords.keyword_id', tags)
+        .havingRaw('count(resource_keywords.keyword_id) = ?', [tags.length]);
+    }
+    return query;
   }
 }

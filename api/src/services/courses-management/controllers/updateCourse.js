@@ -4,6 +4,16 @@ const options = {
     body: {
       type: 'object',
       properties: {
+        keywords: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'number' },
+              name: { type: 'string' },
+            },
+          },
+        },
         course: {
           type: 'object',
           properties: {
@@ -59,9 +69,15 @@ const options = {
   },
 };
 
-async function handler({ body: { course, lessons }, params: { courseId } }) {
+async function handler({
+  body: { course, lessons, keywords },
+  params: { courseId },
+}) {
   const {
-    models: { Course, CourseLessonStructure },
+    models: { Course, CourseLessonStructure, Keyword },
+    config: {
+      globals: { resources },
+    },
   } = this;
 
   try {
@@ -72,6 +88,16 @@ async function handler({ body: { course, lessons }, params: { courseId } }) {
         courseData = await Course.updateCourse({ trx, courseId, course });
       } else {
         courseData = await Course.query(trx).findById(courseId);
+      }
+
+      if (keywords) {
+        await Keyword.createMany({
+          trx,
+          keywords,
+          resourceId: courseData.id,
+          resourceType: resources.COURSE.name,
+          update: true,
+        });
       }
 
       if (lessons) {

@@ -9,6 +9,7 @@ import {
   TeacherHome,
   TeacherStudents,
 } from '@sb-ui/pages/Teacher';
+import CourseEdit from '@sb-ui/pages/Teacher/CourseEdit';
 import {
   CoursePage,
   EnrollCourseModalDesktop,
@@ -16,14 +17,15 @@ import {
   EnrollLessonModalDesktop,
   EnrollLessonModalMobile,
   LearnPage,
+  UserCourses,
   UserHome,
   UserLessons,
 } from '@sb-ui/pages/User';
 import { Roles } from '@sb-ui/utils/constants';
 import * as paths from '@sb-ui/utils/paths';
-import { LEARN_PAGE, LESSONS_EDIT } from '@sb-ui/utils/paths';
+import { COURSES_EDIT, LEARN_PAGE, LESSONS_EDIT } from '@sb-ui/utils/paths';
 
-const SKIP_HEADER = [LESSONS_EDIT, LEARN_PAGE];
+const SKIP_HEADER = [LESSONS_EDIT, LEARN_PAGE, COURSES_EDIT];
 
 export const checkPermission = (roles, permissions) => {
   if (!permissions) return true;
@@ -51,6 +53,11 @@ export const getPrivateRoutes = ({ isMobile }) => [
   {
     component: UserLessons,
     path: paths.USER_LESSONS,
+    exact: true,
+  },
+  {
+    component: UserCourses,
+    path: paths.USER_COURSES,
     exact: true,
   },
   {
@@ -93,6 +100,12 @@ export const getPrivateRoutes = ({ isMobile }) => [
   {
     component: LessonEdit,
     path: paths.LESSONS_EDIT,
+    permissions: [Roles.TEACHER],
+    exact: true,
+  },
+  {
+    component: CourseEdit,
+    path: paths.COURSES_EDIT,
     permissions: [Roles.TEACHER],
     exact: true,
   },

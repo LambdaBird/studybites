@@ -17,7 +17,7 @@ const LessonsTags = ({ lessons }) => {
   return (
     <div>
       {lessons?.slice(0, MAX_DISPLAYED_LESSONS)?.map(({ id }) => (
-        <Tag>
+        <Tag key={id}>
           <Link to={LESSONS_EDIT.replace(':id', id)}>{id}</Link>
         </Tag>
       ))}

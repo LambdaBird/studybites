@@ -15,6 +15,7 @@ export default {
       archive: 'Архивировать Курс',
       publish: 'Опубликовать Курс',
       restore: 'Восстановить Курс',
+      course_only: 'Только для Курсов',
       draft: 'Переместить в черновики',
     },
   },
@@ -36,6 +37,7 @@ export default {
       public: 'Публичный',
       private: 'Приватный',
       none: 'Отсуствует',
+      course_only: 'Только для Курса',
     },
     status_select: {
       all: 'Все статусы',
@@ -43,12 +45,21 @@ export default {
       archived: 'Архивированные',
       public: 'Публичные',
       private: 'Приватные',
+      course_only: 'Только для курсов',
     },
     menu: {
       archive: 'Архивировать Урок',
       publish: 'Опубликовать Урок',
       restore: 'Восстановить Урок',
+      course_only: 'Сделать только для Курса',
       draft: 'Переместить в черновики',
+    },
+    status_modal: {
+      title: 'Вы хотите также изменить статус курса?',
+      content:
+        'Статус урока будет изменен и будут изменены все статусы курсов ({{ coursesCount }}) которые к ним относятся',
+      ok: 'Ок',
+      cancel: 'Отмена',
     },
   },
   students_list: {
@@ -85,6 +96,34 @@ export default {
     tools: {
       warning_title: 'Заголовок',
       warning_message: 'Сообщение',
+    },
+  },
+  course_edit: {
+    keywords: 'Ключевые слова',
+    error_course_name: 'Отсуствует название курса',
+    lesson_search: {
+      placeholder: 'Выберите урок',
+    },
+    to_lesson_button: 'Перейти к уроку',
+    title: {
+      placeholder: 'Название курса',
+    },
+    publish_modal_success: {
+      title: 'Курс теперь доступен для всех студентов',
+      ok: 'Ок',
+    },
+    publish_modal_fail: {
+      title: 'Невозможно опубликовать курс',
+      content:
+        'Невозможно опубликовать курс так как один из уроков имеет статус "Черновик" или "Архивирован"',
+      ok: 'Ок',
+    },
+    message: {
+      success_created: 'Курс успешно создан',
+      success_updated: 'Курс успешно обновлен',
+      error_created: 'Ошибка при создании',
+      error_updated: 'Ошибка при обновлении',
+      error_course_name: 'Отсутствует название курса',
     },
   },
   lesson_edit: {

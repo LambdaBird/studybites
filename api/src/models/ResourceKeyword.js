@@ -1,5 +1,4 @@
 import BaseModel from './BaseModel';
-import { resources } from '../config';
 
 export default class ResourceKeyword extends BaseModel {
   static get tableName() {
@@ -28,13 +27,13 @@ export default class ResourceKeyword extends BaseModel {
     });
   }
 
-  static getLessonKeywords({ lessonId }) {
+  static getResourceKeywords({ resourceId, resourceType }) {
     return this.query()
       .select('keywords.*')
       .join('keywords', 'keywords.id', '=', 'resource_keywords.keyword_id')
       .where({
-        resource_id: lessonId,
-        resource_type: resources.LESSON.name,
+        resource_id: resourceId,
+        resource_type: resourceType,
       });
   }
 }

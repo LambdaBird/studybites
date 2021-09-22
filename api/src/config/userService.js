@@ -9,6 +9,8 @@ export const userServiceErrors = {
   USER_ERR_ROLE_NOT_FOUND: 'errors.role_not_found',
   USER_ERR_FAIL_ALTER_ROLE: 'errors.fail_alter_role',
   USER_ERR_MISSING_ROLE: 'errors.missing_role',
+  USER_ERR_PUBLISH_RESTRICTED: 'errors.publish_restricted',
+  USER_ERR_COURSES_RESTRICTED: 'errors.courses_restricted',
 };
 
 export const userServiceMessages = {

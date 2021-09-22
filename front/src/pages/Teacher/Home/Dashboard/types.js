@@ -15,5 +15,5 @@ export const LessonsListPropTypes = {
 
 export const AddCardPropTypes = {
   onClick: PropTypes.func.isRequired,
-  isCourse: PropTypes.bool,
+  isCourse: PropTypes.bool.isRequired,
 };

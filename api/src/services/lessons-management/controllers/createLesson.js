@@ -75,6 +75,9 @@ async function handler({
 }) {
   const {
     models: { Lesson, UserRole, Block, LessonBlockStructure, Keyword },
+    config: {
+      globals: { resources },
+    },
   } = this;
 
   try {
@@ -83,7 +86,12 @@ async function handler({
       await UserRole.addMaintainer({ trx, userId, resourceId: lessonData.id });
 
       if (keywords) {
-        await Keyword.createMany({ trx, keywords, resourceId: lessonData.id });
+        await Keyword.createMany({
+          trx,
+          keywords,
+          resourceId: lessonData.id,
+          resourceType: resources.LESSON.name,
+        });
       }
 
       if (blocks.length) {

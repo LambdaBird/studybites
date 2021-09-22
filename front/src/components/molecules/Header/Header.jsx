@@ -21,6 +21,7 @@ import {
   PROFILE,
   SIGN_IN,
   TEACHER_HOME,
+  USER_COURSES,
   USER_HOME,
   USER_LESSONS,
 } from '@sb-ui/utils/paths';
@@ -42,6 +43,7 @@ const MENU_KEYS = {
   TEACHER_HOME: 'teacherHome',
   STUDENT_HOME: 'studentHome',
   VIEW_ALL_MY_LESSONS: 'viewAllMyLessons',
+  VIEW_ALL_MY_COURSES: 'viewAllMyCourses',
   PROFILE: 'profile',
   LANGUAGE: 'language',
   SIGN_OUT: 'signOut',
@@ -117,6 +119,11 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
           <Menu.Item key={MENU_KEYS.VIEW_ALL_MY_LESSONS}>
             <Link to={USER_LESSONS}>
               {t('user:home.ongoing_lessons.view_all_lessons')}
+            </Link>
+          </Menu.Item>
+          <Menu.Item key={MENU_KEYS.VIEW_ALL_MY_COURSES}>
+            <Link to={USER_COURSES}>
+              {t('user:home.ongoing_lessons.view_all_courses')}
             </Link>
           </Menu.Item>
         </>
@@ -218,7 +225,7 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
         i18n.changeLanguage(user?.language);
       }
     }
-  }, [i18n, user]);
+  }, [changeLanguage, i18n, user]);
 
   const handleHomeClick = useCallback(() => {
     if (isMobile && isVisible) {
@@ -261,7 +268,7 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
         ref={headerRef}
         onClick={handleHeaderClick}
       >
-        <S.RowMain hideOnScroll={hideOnScroll}>
+        <S.RowMain>
           <Col>
             <S.LogoLink onClick={handleHomeClick}>
               <S.Logo src={logo} alt="Logo" />
