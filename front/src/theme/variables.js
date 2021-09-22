@@ -21,6 +21,7 @@ const variables = {
   'wrong-color': '#f5222d',
   'border-color-base': '#d9d9d9',
   'background-color-light': '#fafafa',
+  'editorjs-grey-color': '#707684',
 };
 
 module.exports = variables;
