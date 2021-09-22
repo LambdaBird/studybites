@@ -1252,14 +1252,6 @@
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/@ctrl/tinycolor/-/tinycolor-3.4.0.tgz#c3c5ae543c897caa9c2a68630bed355be5f9990f"
 
-"@editorjs/code@git://github.com/LambdaBird/code.git#feature/improve_i18n_support":
-  version "2.7.0"
-  resolved "git://github.com/LambdaBird/code.git#81ba215f4bed3c2135ec6818709f9ce319a69e3f"
-
-"@editorjs/delimiter@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@editorjs/delimiter/-/delimiter-1.2.0.tgz#5075f1a3e68765cfb6aec8694b316d81e2b41607"
-
 "@editorjs/editorjs@^2.22.0":
   version "2.22.1"
   resolved "https://registry.yarnpkg.com/@editorjs/editorjs/-/editorjs-2.22.1.tgz#a55442d7e4d3c44475cccad594caf6477b83a09b"
@@ -1268,18 +1260,6 @@
     codex-tooltip "^1.0.2"
     nanoid "^3.1.22"
 
-"@editorjs/embed@^2.4.6":
-  version "2.4.6"
-  resolved "https://registry.yarnpkg.com/@editorjs/embed/-/embed-2.4.6.tgz#7db8bc84d90c947d1fff037c96973d587168692e"
-
-"@editorjs/header@git://github.com/LambdaBird/header.git#feature/improve_i18n_support":
-  version "2.6.1"
-  resolved "git://github.com/LambdaBird/header.git#c32366d7270d38b4d9cb9d1d6346879e0445de8a"
-
-"@editorjs/list@^1.6.2":
-  version "1.6.2"
-  resolved "https://registry.yarnpkg.com/@editorjs/list/-/list-1.6.2.tgz#38cb307d78ec8b6c55480c538805cdc2ff250ad1"
-
 "@editorjs/marker@^1.2.2":
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/@editorjs/marker/-/marker-1.2.2.tgz#d9261a257436bf70179c0fa1e766ab85c823c96b"
@@ -1287,14 +1267,6 @@
 "@editorjs/paragraph@^2.8.0":
   version "2.8.0"
   resolved "https://registry.yarnpkg.com/@editorjs/paragraph/-/paragraph-2.8.0.tgz#11cc381fcafaf8b9160517ce65d59eee93fc4af9"
-
-"@editorjs/quote@git://github.com/LambdaBird/quote.git#feature/improve_i18n_support":
-  version "2.4.0"
-  resolved "git://github.com/LambdaBird/quote.git#3d299095dcf9aa301b91240d0512259a1563306e"
-
-"@editorjs/warning@git://github.com/LambdaBird/warning.git#feature/improve_i18n_support":
-  version "1.2.0"
-  resolved "git://github.com/LambdaBird/warning.git#a46114675fa507f132594e005a388c093b0d307e"
 
 "@emotion/cache@^10.0.27":
   version "10.0.29"
@@ -5935,9 +5907,9 @@ editorjs-drag-drop@^0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/editorjs-drag-drop/-/editorjs-drag-drop-0.1.3.tgz#a9a581af5b20a0d736fc25b44cc9a34e46c2e483"
 
-"editorjs-table@git://github.com/LambdaBird/editorjs-table.git#feature/i18n_support":
+"editorjs-table@git://github.com/LambdaBird/editorjs-table.git#feature/plugin_title":
   version "1.4.10"
-  resolved "git://github.com/LambdaBird/editorjs-table.git#32f9c8e139cbe90fe09bc33bacd0a411f121e816"
+  resolved "git://github.com/LambdaBird/editorjs-table.git#44b4fc5b486a571fde5d929f676df052603cec77"
 
 ee-first@1.1.1:
   version "1.1.1"

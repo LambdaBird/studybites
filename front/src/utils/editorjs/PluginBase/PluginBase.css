@@ -1,0 +1,14 @@
+.base-plugin__titleWrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.base-plugin__text {
+    cursor: default;
+    user-select: none;
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.45);
+    margin-bottom: 1rem;
+}
