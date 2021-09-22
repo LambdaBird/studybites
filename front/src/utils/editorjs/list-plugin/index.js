@@ -273,7 +273,7 @@ export default class List extends PluginBase {
       style === 'ordered' ? this.CSS.wrapperOrdered : this.CSS.wrapperUnordered;
     const tag = style === 'ordered' ? 'ol' : 'ul';
 
-    return this._make(tag, [this.CSS.baseBlock, this.CSS.wrapper, styleClass], {
+    return this._make(tag, [this.CSS.wrapper, styleClass], {
       contentEditable: !this.readOnly,
     });
   }
@@ -302,7 +302,6 @@ export default class List extends PluginBase {
    */
   get CSS() {
     return {
-      baseBlock: this.api.styles.block,
       wrapper: 'cdx-list',
       wrapperOrdered: 'cdx-list--ordered',
       wrapperUnordered: 'cdx-list--unordered',

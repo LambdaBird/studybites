@@ -52,7 +52,6 @@ export default class Delimiter extends PluginBase {
     this.api = api;
 
     this._CSS = {
-      block: this.api.styles.block,
       wrapper: 'ce-delimiter',
     };
 
@@ -70,7 +69,7 @@ export default class Delimiter extends PluginBase {
   drawView() {
     const div = document.createElement('DIV');
 
-    div.classList.add(this._CSS.wrapper, this._CSS.block);
+    div.classList.add(this._CSS.wrapper);
 
     return div;
   }

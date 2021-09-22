@@ -1,14 +1,15 @@
-.base-plugin__titleWrapper {
+.plugin-base__titleWrapper {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-bottom: 0.5rem;
 }
 
-.base-plugin__text {
+.plugin-base__text {
     cursor: default;
     user-select: none;
     font-size: 12px;
+    line-height: 20px;
     color: rgba(0, 0, 0, 0.45);
-    margin-bottom: 1rem;
 }

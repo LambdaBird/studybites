@@ -67,7 +67,6 @@ export default class CodeTool extends PluginBase {
     );
 
     this.CSS = {
-      baseClass: this.api.styles.block,
       input: this.api.styles.input,
       wrapper: 'ce-code',
       textarea: 'ce-code__textarea',
@@ -95,7 +94,7 @@ export default class CodeTool extends PluginBase {
     const wrapper = document.createElement('div');
     const textarea = document.createElement('textarea');
 
-    wrapper.classList.add(this.CSS.baseClass, this.CSS.wrapper);
+    wrapper.classList.add(this.CSS.wrapper);
     textarea.classList.add(this.CSS.textarea, this.CSS.input);
     textarea.textContent = this.data.code;
 
