@@ -29,7 +29,7 @@ export async function file({ req }) {
     };
 
     busboy.on('file', (_, dataStream, fileName, encoding, mimetype) => {
-      if (!fileServiceAllowedTypes.includes(mimetype)) {
+      if (!Object.keys(fileServiceAllowedTypes).includes(mimetype)) {
         reject(new BadRequestError(fileServiceErrors.FILE_ERR_INVALID_TYPE));
       }
 
@@ -48,6 +48,9 @@ export async function file({ req }) {
     });
 
     busboy.on('finish', () => {
+      if (ctx.fileSize > fileServiceAllowedTypes[ctx.fileType]) {
+        reject(new BadRequestError(fileServiceErrors.FILE_ERR_SIZE_LIMIT));
+      }
       ctx.buf = Buffer.concat(ctx.buf);
       resolve(ctx);
     });
