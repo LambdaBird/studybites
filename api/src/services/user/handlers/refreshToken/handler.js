@@ -18,7 +18,13 @@ export async function refreshTokenHandler(req) {
     throw new AuthorizationError(errors.USER_ERR_TOKEN_EXPIRED);
   }
 
-  const { id } = await User.getUser({ userId: decoded.id });
+  const { id, updatedAt } = await User.getUser({ userId: decoded.id });
+
+  const lastUpdateUserTime = Math.floor(new Date(updatedAt).getTime() / 1000);
+  const tokenCreatedTime = decoded.iat;
+  if (tokenCreatedTime < lastUpdateUserTime) {
+    throw new AuthorizationError(errors.USER_ERR_TOKEN_EXPIRED);
+  }
 
   const newAccessToken = createAccessToken(this, id);
   const newRefreshToken = createRefreshToken(this, id);

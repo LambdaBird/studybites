@@ -1,3 +1,15 @@
+export const DEBUG_MAIL_STATUS = {
+  ONLY_CONSOLE: 1,
+  ONLY_EMAIL: 2,
+  CONSOLE_AND_EMAIL: 3,
+};
+
+export const DEBUG_EMAIL = DEBUG_MAIL_STATUS.ONLY_CONSOLE;
+export const EMAIL_SETTINGS = {
+  fromName: 'StudyBites',
+  host: 'smtp.gmail.com',
+};
+
 export const jwt = {
   ACCESS_JWT_EXPIRES_IN: 60 * 5,
   REFRESH_JWT_EXPIRES_IN: 60 * 60 * 24 * 7,
@@ -16,6 +28,13 @@ export const roles = {
     id: 3,
     name: 'Student',
   },
+};
+
+// Time in seconds
+export const emailTimes = {
+  RESET_LINK_EXPIRE_TIME: 60 * 5,
+  AGAIN_GENERATE_LINK_NOT_ALLOWED_TIME: 5,
+  RESET_PASSWORD_NOT_ALLOWED_TIME: 5,
 };
 
 export const searchLimits = {
