@@ -19,7 +19,6 @@ export const updateSelfOptions = {
           type: 'string',
           maxLength: userConstants.MAX_DESCRIPTION_LENGTH,
         },
-        email: { type: 'string', minLength: 1 },
       },
     },
     response: {
@@ -29,8 +28,5 @@ export const updateSelfOptions = {
   },
   async onRequest(req) {
     await this.auth({ req });
-  },
-  async preHandler({ body: { email } }) {
-    this.validateEmail({ email });
   },
 };

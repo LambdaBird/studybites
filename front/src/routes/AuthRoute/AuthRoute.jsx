@@ -1,7 +1,7 @@
 import { Dropdown, Menu } from 'antd';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect, Route, useHistory } from 'react-router-dom';
 import { RightOutlined } from '@ant-design/icons';
 
 import {
@@ -10,13 +10,14 @@ import {
   setStorageLanguage,
 } from '@sb-ui/i18n';
 import { HOME } from '@sb-ui/utils/paths';
-import { ChildrenType } from '@sb-ui/utils/types';
+import { ChildrenType, IsPublicType } from '@sb-ui/utils/types';
 
 import { getJWTAccessToken } from '../../utils/jwt';
 
 import * as S from './AuthRoute.styled';
 
-const AuthRoute = ({ children: Component, ...rest }) => {
+const AuthRoute = ({ children: Component, isPublic, ...rest }) => {
+  const history = useHistory();
   const isLoggedIn = getJWTAccessToken();
   const { i18n } = useTranslation();
 
@@ -36,18 +37,27 @@ const AuthRoute = ({ children: Component, ...rest }) => {
     </Menu>
   );
 
-  if (!isLoggedIn) {
+  const handleHomeClick = useCallback(() => {
+    history.push(HOME);
+  }, [history]);
+
+  if (!isLoggedIn || isPublic) {
     return (
       <>
         <S.Logo>
-          <S.LogoImg />
-          <Dropdown overlay={menu} trigger={['click']}>
-            <S.DropdownWrapper>
-              <span>{getLanguageValueByKey(languageKey)}</span>
-              <S.TranslateIcon /> <RightOutlined />
-            </S.DropdownWrapper>
-          </Dropdown>
+          <S.LogoLink onClick={handleHomeClick}>
+            <S.LogoImg />
+          </S.LogoLink>
+          <S.LogoLink>
+            <Dropdown overlay={menu} trigger={['click']}>
+              <S.DropdownWrapper>
+                <span>{getLanguageValueByKey(languageKey)}</span>
+                <S.TranslateIcon /> <RightOutlined />
+              </S.DropdownWrapper>
+            </Dropdown>
+          </S.LogoLink>
         </S.Logo>
+
         <Route {...rest}>{Component}</Route>
       </>
     );
@@ -58,6 +68,7 @@ const AuthRoute = ({ children: Component, ...rest }) => {
 
 AuthRoute.propTypes = {
   children: ChildrenType.isRequired,
+  isPublic: IsPublicType,
 };
 
 export default AuthRoute;
