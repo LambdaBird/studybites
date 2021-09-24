@@ -29,7 +29,9 @@ async function handler({ user: { id: userId }, params: { id } }) {
     throw new BadRequestError(emailServiceErrors.EMAIL_ERR_VERIFY);
   }
 
-  return {};
+  return {
+    message: 'Link verified successfully',
+  };
 }
 
 export default { options, handler };

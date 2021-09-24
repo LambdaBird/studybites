@@ -1,5 +1,6 @@
 import { emailUtils } from '../../../../utils/email';
 import { emailServiceErrors } from '../../../config';
+import { BadRequestWithPayloadError } from '../../../validation/errors/BadRequestWithPayloadError';
 
 const options = {
   schema: {
@@ -13,7 +14,7 @@ const options = {
   },
 };
 
-async function handler({ user: { id: userId }, headers }, reply) {
+async function handler({ user: { id: userId }, headers }) {
   const {
     models: { User },
   } = this;
@@ -25,16 +26,17 @@ async function handler({ user: { id: userId }, headers }, reply) {
   });
 
   if (!allowed) {
-    return reply.status(400).send({
-      statusCode: 400,
-      message: emailServiceErrors.EMAIL_ERR_TOO_FREQUENTLY,
-      payload: { timeout },
-    });
+    throw new BadRequestWithPayloadError(
+      emailServiceErrors.EMAIL_ERR_TOO_FREQUENTLY,
+      { timeout },
+    );
   }
 
   const link = await emailUtils.generateLink({ host, email });
   await emailUtils.sendResetPassword({ email, link });
-  return {};
+  return {
+    message: 'Reset link sent to email successfully',
+  };
 }
 
 export default { options, handler };
