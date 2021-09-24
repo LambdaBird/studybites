@@ -2,7 +2,19 @@ import fastify from 'fastify';
 import fastifyObjection from 'fastify-objection';
 import qs from 'qs';
 
-import models from './models';
+import User from './models/User';
+import Role from './models/Role';
+import UserRole from './models/UserRole';
+import Lesson from './models/Lesson';
+import Block from './models/Block';
+import LessonBlockStructure from './models/LessonBlockStructure';
+import Result from './models/Result';
+import Course from './models/Course';
+import CourseLessonStructure from './models/CourseLessonStructure';
+import Keyword from './models/Keyword';
+import ResourceKeyword from './models/ResourceKeyword';
+import File from './models/File';
+import ResourceFile from './models/ResourceFile';
 
 import userService from './services/user';
 import lessonsService from './services/lessons';
@@ -29,7 +41,21 @@ export default (options = {}) => {
 
   app.register(fastifyObjection, {
     connection: process.env.DATABASE_URL,
-    models,
+    models: [
+      User,
+      Role,
+      UserRole,
+      Lesson,
+      Block,
+      LessonBlockStructure,
+      Result,
+      Course,
+      CourseLessonStructure,
+      Keyword,
+      ResourceKeyword,
+      File,
+      ResourceFile,
+    ],
   });
 
   app.register(userService, {
