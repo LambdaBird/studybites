@@ -18,6 +18,13 @@ SB_ADMIN_EMAIL="ADMIN_EMAIL" SB_ADMIN_PASSWORD="ADMIN_PASSWORD" docker compose u
 
 <!-- add test users -->
 yarn --cwd ./api seed:run
+
+<!-- rename the .env-example -->
+mv .env-example .env
+<!-- and add credentials for the storage -->
+
+<!-- add storage to your hosts file -->
+sudo -- sh -c "127.0.0.1 s3 >> /etc/hosts"
 ```
 
 Go to http://localhost:3018 and enter your SB_ADMIN_EMAIL and SB_ADMIN_PASSWORD you've set upper.
