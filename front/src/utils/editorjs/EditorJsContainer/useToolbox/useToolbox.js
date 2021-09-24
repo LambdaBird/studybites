@@ -3,8 +3,11 @@ import { useTranslation } from 'react-i18next';
 
 import config from '@sb-ui/utils/api/config';
 
-import convertToolNameToTranslateKey from './convertToolNameToTranslateKey';
+import createDivWithClassName from './createDivWithClassName';
 import getBasicAndInteractiveItems from './getBasicAndInteractiveItems';
+import getTranslationKey from './getTranslationKey';
+import selectBlocksDescKeys from './selectBlockDescKeys';
+import updateInnerText from './updateInnerText';
 
 const { interactiveBlocks } = config;
 
@@ -13,37 +16,33 @@ export const useToolbox = () => {
   const toolbox = useRef(null);
 
   const updateLanguage = useCallback(() => {
-    const blocks = Array.from(
-      toolbox.current?.querySelectorAll('.ce-toolbox__button') || [],
-    );
-    blocks.forEach((block) => {
-      const translateToolKey = convertToolNameToTranslateKey(
-        block.dataset.tool,
-      );
-      const title = block.querySelector('.toolbox-block-data-name');
-      title.innerText = t(`tools.${translateToolKey}.title`);
-
-      const description = block.querySelector(
-        '.toolbox-block-data-description',
-      );
-      description.innerText = t(`tools.${translateToolKey}.description`);
-    });
-    const [basicTitle, interactiveTitle] = Array.from(
-      toolbox.current?.querySelectorAll('.toolbox-blocks-title') || [],
-    );
-    if (basicTitle) {
-      basicTitle.innerText = t('tools.basic_blocks');
+    const blocks =
+      toolbox.current?.querySelectorAll('.ce-toolbox__button') || [];
+    if (blocks.length === 0) {
+      return;
     }
-    if (interactiveTitle) {
-      interactiveTitle.innerText = t('tools.interactive_blocks');
-    }
+    Array.from(toolbox.current?.querySelectorAll('.ce-toolbox__button') || [])
+      .map(selectBlocksDescKeys)
+      .flat()
+      .concat(
+        {
+          parentNode: toolbox.current,
+          key: `tools.basic_blocks`,
+          selector: '.toolbox-basic-blocks-title',
+        },
+        {
+          parentNode: toolbox.current,
+          key: `tools.interactive_blocks`,
+          selector: '.toolbox-interactive-blocks-title',
+        },
+      )
+      .map(({ parentNode, selector, key }) => ({
+        parentNode,
+        selector,
+        text: t(key),
+      }))
+      .forEach(updateInnerText);
   }, [t]);
-
-  const createDivWithClassName = (className) => {
-    const element = document.createElement('div');
-    element.classList.add(className);
-    return element;
-  };
 
   const createItemData = useCallback(
     (toolName) => {
@@ -64,9 +63,7 @@ export const useToolbox = () => {
   const insertItem = useCallback(
     (item, blocks, items) => {
       const blockItem = items.find((x) => x.dataset.tool === item.dataset.tool);
-      const translateToolName = convertToolNameToTranslateKey(
-        item.dataset.tool,
-      );
+      const translateToolName = getTranslationKey(item.dataset.tool);
       const itemWrapper = createDivWithClassName('toolbox-block-wrapper');
 
       const itemData = createItemData(translateToolName);
@@ -100,11 +97,13 @@ export const useToolbox = () => {
       return;
     }
 
-    const basicBlocksTitle = createDivWithClassName('toolbox-blocks-title');
+    const basicBlocksTitle = createDivWithClassName(
+      'toolbox-basic-blocks-title',
+    );
     basicBlocksTitle.innerText = t('tools.basic_blocks');
     const basicBlocksWrapper = createDivWithClassName('toolbox-basic-blocks');
     const interactiveBlocksTitle = createDivWithClassName(
-      'toolbox-blocks-title',
+      'toolbox-interactive-blocks-title',
     );
     interactiveBlocksTitle.innerText = t('tools.interactive_blocks');
     const interactiveBlocksWrapper = createDivWithClassName(

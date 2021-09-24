@@ -225,7 +225,6 @@ const EditorJsContainer = forwardRef((props, ref) => {
     });
 
     instance.current = newInstance;
-    window.testa = newInstance;
 
     if (instanceRef) {
       instanceRef(newInstance);

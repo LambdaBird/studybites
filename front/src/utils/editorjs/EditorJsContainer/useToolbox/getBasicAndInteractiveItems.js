@@ -1,4 +1,4 @@
-const getBasicAndInteractiveItems = (items, interactiveItemsName) => {
+const getTranslationKey = (items, interactiveItemsName) => {
   const interactiveItems = items.filter((block) =>
     interactiveItemsName.includes(block.dataset.tool),
   );
@@ -8,4 +8,4 @@ const getBasicAndInteractiveItems = (items, interactiveItemsName) => {
   return [basicItems, interactiveItems];
 };
 
-export default getBasicAndInteractiveItems;
+export default getTranslationKey;

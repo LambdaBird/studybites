@@ -1,4 +1,4 @@
-const convertToolNameToTranslateKey = (name) => {
+const getTranslationKey = (name) => {
   switch (name) {
     case 'fillTheGap':
       return 'fill_the_gap';
@@ -9,4 +9,4 @@ const convertToolNameToTranslateKey = (name) => {
   }
 };
 
-export default convertToolNameToTranslateKey;
+export default getTranslationKey;

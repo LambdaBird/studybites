@@ -29,7 +29,7 @@ export const GlobalStylesEditorPage = createGlobalStyle`
       animation:  none;
     }
     
-    .toolbox-blocks-title{
+    .toolbox-basic-blocks-title, .toolbox-interactive-blocks-title{
       user-select: none;
       color: rgba(0, 0, 0, 0.45);
       font-style: normal;
