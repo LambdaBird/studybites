@@ -1,3 +1,5 @@
+import { allowedTypes } from '@sb-ui/utils/constants';
+
 import { ToolboxIcon } from './resources';
 import Uploader from './uploader';
 
@@ -93,6 +95,7 @@ export default class AttachPlugin {
     this.nodes.fileInput = document.createElement('input');
     this.nodes.fileInput.type = 'file';
     this.nodes.fileInput.id = 'file';
+    this.nodes.fileInput.accept = allowedTypes;
     this.nodes.fileInput.classList.add(this.CSS.file);
     this.nodes.fileInput.onchange = this.onChange;
 
