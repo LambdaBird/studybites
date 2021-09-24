@@ -28,3 +28,7 @@ export const ADMIN_USERS_BASE_KEY = 'admin/users';
 
 // KEYWORDS
 export const KEYWORDS_BASE_KEY = 'keywords';
+
+export const EMAIL_VERIFY_PASSWORD_RESET = 'email/verify_password_reset';
+export const EMAIL_VERIFY_PASSWORD_RESET_NO_AUTH =
+  'email/verify_password_reset_no_auth';

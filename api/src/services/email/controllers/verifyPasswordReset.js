@@ -2,11 +2,8 @@ import { BadRequestError } from '../../../validation/errors';
 
 const options = {
   schema: {
+    params: { $ref: 'passwordResetId#' },
     response: {
-      200: {
-        type: 'object',
-        properties: {},
-      },
       '4xx': { $ref: '4xx#' },
       '5xx': { $ref: '5xx#' },
     },

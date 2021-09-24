@@ -3,6 +3,7 @@ import resetPasswordNoAuth from './controllers/resetPasswordNoAuth';
 import updatePassword from './controllers/updatePassword';
 import updatePasswordNoAuth from './controllers/updatePasswordNoAuth';
 import verifyPasswordReset from './controllers/verifyPasswordReset';
+import verifyPasswordResetNoAuth from './controllers/verifyPasswordResetNoAuth';
 
 export async function router(instance) {
   instance.post(
@@ -21,6 +22,11 @@ export async function router(instance) {
     '/verify-password-reset/:id',
     verifyPasswordReset.options,
     verifyPasswordReset.handler,
+  );
+  instance.get(
+    '/verify_password_reset_no_auth/:id',
+    verifyPasswordResetNoAuth.options,
+    verifyPasswordResetNoAuth.handler,
   );
 
   instance.put(

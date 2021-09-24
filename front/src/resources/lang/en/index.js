@@ -4,6 +4,7 @@ import change_password from './change_password';
 import common from './common';
 import editorjs from './editorjs';
 import email from './email';
+import forget_password from './forget_password';
 import profile from './profile';
 import sign_in from './sign_in';
 import sign_up from './sign_up';
@@ -21,4 +22,5 @@ export default {
   teacher,
   editorjs,
   email,
+  forget_password,
 };
