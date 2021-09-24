@@ -67,8 +67,7 @@ export default class AttachPlugin {
   }
 
   onError = (e) => {
-    // eslint-disable-next-line no-console
-    console.log('attach error:', e);
+    this.nodes.label.innerText = this.api.i18n.t('error');
   };
 
   onChange = async () => {

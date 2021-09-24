@@ -25,6 +25,7 @@ export default {
     attach: {
       title: 'Attach a file',
       select: 'Select a file to upload',
+      error: 'Failed to upload the file',
     },
     text: {
       title: 'Text',
