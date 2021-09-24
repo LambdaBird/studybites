@@ -13,6 +13,8 @@ import Course from './models/Course';
 import CourseLessonStructure from './models/CourseLessonStructure';
 import Keyword from './models/Keyword';
 import ResourceKeyword from './models/ResourceKeyword';
+import File from './models/File';
+import ResourceFile from './models/ResourceFile';
 
 import userService from './services/user';
 import lessonsService from './services/lessons';
@@ -51,6 +53,8 @@ export default (options = {}) => {
       CourseLessonStructure,
       Keyword,
       ResourceKeyword,
+      File,
+      ResourceFile,
     ],
   });
 
