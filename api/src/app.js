@@ -1,4 +1,5 @@
 import fastify from 'fastify';
+import fastifyCors from 'fastify-cors';
 import fastifyObjection from 'fastify-objection';
 import qs from 'qs';
 
@@ -37,6 +38,8 @@ export default (options = {}) => {
       },
     },
   });
+
+  app.register(fastifyCors);
 
   app.register(errorsAndValidation);
 

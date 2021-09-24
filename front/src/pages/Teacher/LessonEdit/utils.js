@@ -9,6 +9,7 @@ import Quote from '@editorjs/quote';
 import Warning from '@editorjs/warning';
 
 import { BLOCKS_TYPE } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
+import Attach from '@sb-ui/utils/editorjs/attach-plugin';
 import Bricks from '@sb-ui/utils/editorjs/bricks-plugin';
 import ClosedQuestion from '@sb-ui/utils/editorjs/closed-question-plugin';
 import Embed from '@sb-ui/utils/editorjs/embed-plugin';
@@ -17,6 +18,7 @@ import Image from '@sb-ui/utils/editorjs/image-plugin';
 import Match from '@sb-ui/utils/editorjs/match-plugin';
 import Next from '@sb-ui/utils/editorjs/next-plugin';
 import Quiz from '@sb-ui/utils/editorjs/quiz-plugin';
+import { getJWTAccessToken } from '@sb-ui/utils/jwt';
 import { shuffleArray } from '@sb-ui/utils/utils';
 
 const MAX_BODY_LENGTH = 4_000_000;
@@ -107,7 +109,6 @@ export const prepareBlocksDataForApi = (data, type) => {
         ...data,
         values: prepareMatchValues(data.values),
       };
-
     default:
       return data;
   }
@@ -175,6 +176,15 @@ export const prepareBlocksForApi = (blocks) =>
 export const getConfig = (t) => ({
   holder: 'editorjs',
   tools: {
+    attach: {
+      class: Attach,
+      config: {
+        endpoint: 'http://localhost:3017/api/v1/files',
+        headers: {
+          authorization: `Bearer ${getJWTAccessToken()}`,
+        },
+      },
+    },
     next: Next,
     image: {
       class: Image,

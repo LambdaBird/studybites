@@ -1252,6 +1252,11 @@
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/@ctrl/tinycolor/-/tinycolor-3.4.0.tgz#c3c5ae543c897caa9c2a68630bed355be5f9990f"
 
+"@editorjs/attaches@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@editorjs/attaches/-/attaches-1.1.1.tgz#fd8b7f9480692deeb8e43a56001ec05c0d43a3a7"
+  integrity sha512-1tBqJiOouJvc8Bg/2xu8wr5xu4JJb7znLnJrPglfNFxalL6P6cCj1tPEc4COjsTlwOM/+wq1JWovQJfE8IF8mg==
+
 "@editorjs/code@git://github.com/LambdaBird/code.git#feature/improve_i18n_support":
   version "2.7.0"
   resolved "git://github.com/LambdaBird/code.git#81ba215f4bed3c2135ec6818709f9ce319a69e3f"
