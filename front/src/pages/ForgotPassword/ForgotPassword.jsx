@@ -7,10 +7,10 @@ import { useHistory } from 'react-router-dom';
 import { resetPasswordNoAuth } from '@sb-ui/utils/api/v1/email';
 import { EMAIL_SENT, SIGN_IN } from '@sb-ui/utils/paths';
 
-import * as S from './ForgetPassword.styled';
+import * as S from './ForgotPassword.styled';
 
-const ForgetPassword = () => {
-  const { t } = useTranslation('forget_password');
+const ForgotPassword = () => {
+  const { t } = useTranslation('forgot_password');
   const history = useHistory();
   const [form] = Form.useForm();
 
@@ -81,4 +81,4 @@ const ForgetPassword = () => {
   );
 };
 
-export default ForgetPassword;
+export default ForgotPassword;

@@ -23,7 +23,7 @@ export const Title = styled(TitleAntd).attrs({
 `;
 
 export const Form = styled(FormAntd).attrs({
-  name: 'forget-password',
+  name: 'forgot-password',
 })`
   text-align: center;
   margin-top: 3.5rem;

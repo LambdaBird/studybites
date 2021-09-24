@@ -62,7 +62,7 @@ i18n.use(initReactI18next).init({
     'profile',
     'email',
     'change_password',
-    'forget_password',
+    'forgot_password',
   ],
   defaultNS: 'common',
   keySeparator: '.',

@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 
 import { useAuthentication } from '@sb-ui/hooks/useAuthentication';
 import { postSignIn } from '@sb-ui/utils/api/v1/user';
-import { FORGET_PASSWORD, SIGN_UP } from '@sb-ui/utils/paths';
+import { FORGOT_PASSWORD, SIGN_UP } from '@sb-ui/utils/paths';
 
 import * as S from './SignInForm.styled';
 
@@ -43,8 +43,8 @@ const SignInForm = () => {
     history.push(SIGN_UP);
   }, [history]);
 
-  const onClickForgetPassword = useCallback(() => {
-    history.push(FORGET_PASSWORD);
+  const onClickForgotPassword = useCallback(() => {
+    history.push(FORGOT_PASSWORD);
   }, [history]);
 
   const handleSubmit = async (formData) => {
@@ -87,7 +87,7 @@ const SignInForm = () => {
         name="password"
         rules={formRules.password}
         extra={
-          <S.LinkButton onClick={onClickForgetPassword}>
+          <S.LinkButton onClick={onClickForgotPassword}>
             {t('forgot_password')}
           </S.LinkButton>
         }

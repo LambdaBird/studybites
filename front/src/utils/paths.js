@@ -4,7 +4,7 @@ export const SIGN_UP = '/sign-up';
 export const ADMIN_HOME = '/admin';
 export const CHANGE_PASSWORD = '/change-password/:id';
 export const EMAIL_SENT = '/email-sent';
-export const FORGET_PASSWORD = '/forget-password';
+export const FORGOT_PASSWORD = '/forgot-password';
 
 export const PROFILE = '/profile';
 export const USER_HOME = '/user';

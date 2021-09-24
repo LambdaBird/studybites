@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Switch } from 'react-router-dom';
 
 import ChangePassword from '../pages/ChangePassword';
 import EmailSent from '../pages/EmailSent';
-import ForgetPassword from '../pages/ForgetPassword';
+import ForgotPassword from '../pages/ForgotPassword';
 import SignIn from '../pages/SignIn';
 import SignUp from '../pages/SignUp';
 import * as paths from '../utils/paths';
@@ -13,8 +13,8 @@ import PrivateRoutes from './PrivateRoutes';
 const Routes = () => (
   <Router>
     <Switch>
-      <AuthRoute path={paths.FORGET_PASSWORD}>
-        <ForgetPassword />
+      <AuthRoute path={paths.FORGOT_PASSWORD}>
+        <ForgotPassword />
       </AuthRoute>
       <AuthRoute isPublic path={paths.EMAIL_SENT}>
         <EmailSent />
