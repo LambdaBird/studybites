@@ -109,6 +109,8 @@ export const prepareBlocksDataForApi = (data, type) => {
         ...data,
         values: prepareMatchValues(data.values),
       };
+    case BLOCKS_TYPE.ATTACH:
+      return data.location ? data : null;
     default:
       return data;
   }
@@ -121,6 +123,7 @@ const SKIP_BLOCKS = [
   BLOCKS_TYPE.FILL_THE_GAP,
   BLOCKS_TYPE.MATCH,
   BLOCKS_TYPE.BRICKS,
+  BLOCKS_TYPE.ATTACH,
 ];
 
 export const makeAnswerForBlock = (block) => {
