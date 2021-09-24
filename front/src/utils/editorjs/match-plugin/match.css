@@ -2,7 +2,6 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  margin-top: 1rem;
 }
 
 .match-tool__input {
