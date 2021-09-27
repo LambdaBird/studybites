@@ -1,4 +1,3 @@
-import { emailUtils } from '../../../../utils/email';
 import { authWithNewPassword } from './updatePassword';
 
 const options = {
@@ -21,6 +20,7 @@ const options = {
 async function handler({ params: { id: uuid }, body: { password } }) {
   const {
     models: { User },
+    emailUtils,
   } = this;
 
   const email = await emailUtils.getEmailByUuid({ uuid });

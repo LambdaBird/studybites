@@ -1,5 +1,3 @@
-import { emailUtils } from '../../../../utils/email';
-import { emailServiceErrors } from '../../../config';
 import { BadRequestWithPayloadError } from '../../../validation/errors/BadRequestWithPayloadError';
 
 const options = {
@@ -21,6 +19,13 @@ const options = {
 async function handler({ body: { email }, socket, headers }) {
   const {
     models: { User },
+    config: {
+      emailService: {
+        emailServiceErrors: errors,
+        emailServiceMessages: messages,
+      },
+    },
+    emailUtils,
   } = this;
   const host = headers['x-forwarded-host'];
   const userIp = socket.remoteAddress || headers['x-forwarded-for'];
@@ -28,23 +33,21 @@ async function handler({ body: { email }, socket, headers }) {
     userIp,
   });
   if (!allowed) {
-    throw new BadRequestWithPayloadError(
-      emailServiceErrors.EMAIL_ERR_TOO_FREQUENTLY,
-      { timeout },
-    );
+    throw new BadRequestWithPayloadError(errors.EMAIL_ERR_TOO_FREQUENTLY, {
+      timeout,
+    });
   }
-  const message = 'Email sent successfully';
   await emailUtils.setUserIp({ userIp });
   try {
     await User.getUserByEmail({ email });
   } catch (e) {
     // Do nothing if user not found with this email
-    return { message };
+    return { message: messages.EMAIL_MESSAGE_SENT_SUCCESSFULLY };
   }
 
   const link = await emailUtils.generateLink({ host, email });
   await emailUtils.sendResetPassword({ email, link });
-  return { message };
+  return { message: messages.EMAIL_MESSAGE_SENT_SUCCESSFULLY };
 }
 
 export default { options, handler };

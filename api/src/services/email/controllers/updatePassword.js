@@ -1,6 +1,4 @@
 import { hashPassword } from '../../../../utils/salt';
-import { emailUtils } from '../../../../utils/email';
-import { emailServiceErrors } from '../../../config';
 import { BadRequestError } from '../../../validation/errors';
 import { createAccessToken, createRefreshToken } from '../../user/utils';
 
@@ -32,9 +30,15 @@ export const authWithNewPassword = async ({
   email,
   password,
 }) => {
+  const {
+    emailUtils,
+    config: {
+      emailService: { emailServiceErrors: errors },
+    },
+  } = instance;
   const verified = await emailUtils.verifyPasswordReset({ email, uuid });
   if (!verified) {
-    throw new BadRequestError(emailServiceErrors.EMAIL_ERR_VERIFY);
+    throw new BadRequestError(errors.EMAIL_ERR_VERIFY);
   }
 
   const hash = await hashPassword(password);

@@ -1,5 +1,3 @@
-import { emailUtils } from '../../../../utils/email';
-import { emailServiceErrors } from '../../../config';
 import { BadRequestWithPayloadError } from '../../../validation/errors/BadRequestWithPayloadError';
 
 const options = {
@@ -17,6 +15,13 @@ const options = {
 async function handler({ user: { id: userId }, headers }) {
   const {
     models: { User },
+    config: {
+      emailService: {
+        emailServiceErrors: errors,
+        emailServiceMessages: messages,
+      },
+    },
+    emailUtils,
   } = this;
   const host = headers['x-forwarded-host'];
   const { email } = await User.getUser({ userId });
@@ -26,16 +31,15 @@ async function handler({ user: { id: userId }, headers }) {
   });
 
   if (!allowed) {
-    throw new BadRequestWithPayloadError(
-      emailServiceErrors.EMAIL_ERR_TOO_FREQUENTLY,
-      { timeout },
-    );
+    throw new BadRequestWithPayloadError(errors.EMAIL_ERR_TOO_FREQUENTLY, {
+      timeout,
+    });
   }
 
   const link = await emailUtils.generateLink({ host, email });
   await emailUtils.sendResetPassword({ email, link });
   return {
-    message: 'Reset link sent to email successfully',
+    message: messages.EMAIL_MESSAGE_LINK_SENT,
   };
 }
 

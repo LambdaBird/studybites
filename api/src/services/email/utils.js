@@ -1,13 +1,16 @@
 import nodemailer from 'nodemailer';
 import { v4 } from 'uuid';
 
-import { redisClient } from '../src/redisClient';
+import Redis from 'ioredis';
 import {
   DEBUG_EMAIL,
   emailTimes,
   DEBUG_MAIL_STATUS,
   EMAIL_SETTINGS,
-} from '../src/config';
+} from '../../config';
+
+const PORT = process.env.REDIS_PORT || 6379;
+const redisClient = new Redis({ host: 'redis', port: PORT });
 
 const { CONSOLE_AND_EMAIL, ONLY_CONSOLE, ONLY_EMAIL } = DEBUG_MAIL_STATUS;
 
@@ -15,7 +18,7 @@ const { fromName, host } = EMAIL_SETTINGS;
 const transporter = nodemailer.createTransport({
   pool: true,
   host,
-  port: 465,
+  port: process.env.SMTP_PORT || 465,
   secure: true,
   auth: {
     user: process.env.SB_MAIL_USER,

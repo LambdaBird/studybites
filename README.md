@@ -10,11 +10,12 @@ Studybites is an open-source Education Platform (LMS) focused on microlearning a
 
 **Development is currently in a very early stage. The solution isn't ready to be used in a production environment.**
 
+Create an .env file locally. You can duplicate .env-example and name the new copy .env. Adapt the variables to your needs.
 
 ```
 git clone https://github.com/LambdaBird/studybites.git
 
-SB_ADMIN_EMAIL="ADMIN_EMAIL" SB_ADMIN_PASSWORD="ADMIN_PASSWORD" docker compose up --build
+docker compose up --build
 
 <!-- add test users -->
 yarn --cwd ./api seed:run
