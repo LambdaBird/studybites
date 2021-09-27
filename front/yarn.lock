@@ -5907,10 +5907,6 @@ editorjs-drag-drop@^0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/editorjs-drag-drop/-/editorjs-drag-drop-0.1.3.tgz#a9a581af5b20a0d736fc25b44cc9a34e46c2e483"
 
-"editorjs-table@git://github.com/LambdaBird/editorjs-table.git#feature/plugin_title":
-  version "1.4.10"
-  resolved "git://github.com/LambdaBird/editorjs-table.git#44b4fc5b486a571fde5d929f676df052603cec77"
-
 ee-first@1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/ee-first/-/ee-first-1.1.1.tgz#590c61156b0ae2f4f0255732a158b266bc56b21d"

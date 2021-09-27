@@ -1,4 +1,3 @@
-import Table from 'editorjs-table';
 import hash from 'object-hash';
 import Marker from '@editorjs/marker';
 
@@ -16,6 +15,7 @@ import Match from '@sb-ui/utils/editorjs/match-plugin';
 import Next from '@sb-ui/utils/editorjs/next-plugin';
 import Quiz from '@sb-ui/utils/editorjs/quiz-plugin';
 import Quote from '@sb-ui/utils/editorjs/quote-plugin';
+import Table from '@sb-ui/utils/editorjs/table-plugin';
 import Warning from '@sb-ui/utils/editorjs/warning-plugin';
 import { shuffleArray } from '@sb-ui/utils/utils';
 
