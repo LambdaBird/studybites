@@ -23,6 +23,7 @@ import lessonsManagementService from './services/lessons-management';
 import coursesManagementService from './services/courses-management';
 import coursesService from './services/courses';
 import keywordsService from './services/keywords';
+import filesService from './services/files';
 
 import errorsAndValidation from './validation';
 
@@ -84,6 +85,10 @@ export default (options = {}) => {
 
   app.register(keywordsService, {
     prefix: '/api/v1/keywords',
+  });
+
+  app.register(filesService, {
+    prefix: '/api/v1/files',
   });
 
   return app;
