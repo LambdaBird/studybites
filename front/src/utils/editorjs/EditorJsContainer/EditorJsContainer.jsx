@@ -7,6 +7,8 @@ import Paragraph from '@editorjs/paragraph';
 
 import Undo from '@sb-ui/utils/editorjs/undo-plugin';
 
+import * as S from './EditorJsContainer.styled';
+
 const EditorJsContainer = forwardRef((props, ref) => {
   const mounted = useRef();
   const { t } = useTranslation('editorjs');
@@ -280,7 +282,12 @@ const EditorJsContainer = forwardRef((props, ref) => {
     return () => {};
   }, [changeData, props]);
 
-  return children || <div id={holder} />;
+  return (
+    <>
+      <S.GlobalStylesEditorPage toolbarHint={t('tools.hint')} />
+      {children || <div id={holder} />}
+    </>
+  );
 });
 
 EditorJsContainer.propTypes = {
