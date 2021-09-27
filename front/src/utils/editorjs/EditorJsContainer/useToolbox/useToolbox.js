@@ -2,6 +2,7 @@ import { useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import config from '@sb-ui/utils/api/config';
+import appendItems from '@sb-ui/utils/editorjs/EditorJsContainer/useToolbox/appendItems';
 
 import createDivWithClassName from './createDivWithClassName';
 import getBasicAndInteractiveItems from './getBasicAndInteractiveItems';
@@ -16,9 +17,7 @@ export const useToolbox = () => {
   const toolbox = useRef(null);
 
   const updateLanguage = useCallback(() => {
-    const blocks =
-      toolbox.current?.querySelectorAll('.ce-toolbox__button') || [];
-    if (blocks.length === 0) {
+    if (!toolbox.current) {
       return;
     }
     Array.from(toolbox.current?.querySelectorAll('.ce-toolbox__button') || [])
@@ -45,48 +44,47 @@ export const useToolbox = () => {
   }, [t]);
 
   const createItemData = useCallback(
-    (toolName) => {
-      const itemData = createDivWithClassName('toolbox-block-data');
-      const itemDataName = createDivWithClassName('toolbox-block-data-name');
-      itemDataName.innerText = t(`tools.${toolName}.title`);
-      const itemDataDescription = createDivWithClassName(
-        'toolbox-block-data-description',
-      );
-      itemDataDescription.innerText = t(`tools.${toolName}.description`);
-      itemData.appendChild(itemDataName);
-      itemData.appendChild(itemDataDescription);
-      return itemData;
-    },
+    (toolName) =>
+      createDivWithClassName({
+        className: 'toolbox-block-data',
+        items: [
+          createDivWithClassName({
+            className: 'toolbox-block-data-name',
+            innerText: t(`tools.${toolName}.title`),
+          }),
+          createDivWithClassName({
+            className: 'toolbox-block-data-description',
+            innerText: t(`tools.${toolName}.description`),
+          }),
+        ],
+      }),
     [t],
   );
 
-  const insertItem = useCallback(
-    (item, blocks, items) => {
-      const blockItem = items.find((x) => x.dataset.tool === item.dataset.tool);
-      const translateToolName = getTranslationKey(item.dataset.tool);
-      const itemWrapper = createDivWithClassName('toolbox-block-wrapper');
-
-      const itemData = createItemData(translateToolName);
-      itemWrapper.appendChild(itemData);
-
-      const svgWrapper = createDivWithClassName('toolbox-svg-wrapper');
-      const svgElement = blockItem.querySelector('svg');
-      svgWrapper.appendChild(svgElement);
-
-      blockItem.appendChild(svgWrapper);
-      blockItem.appendChild(itemWrapper);
-    },
-    [createItemData],
-  );
-
   const appendItemsToBlock = useCallback(
-    (items, blockWrapper) => {
+    (items, block) => {
       items.forEach((item) => {
-        blockWrapper.appendChild(item);
-        insertItem(item, blockWrapper, items);
+        block.appendChild(item);
+        const blockItem = items.find(
+          (x) => x.dataset.tool === item.dataset.tool,
+        );
+        const translateToolName = getTranslationKey(item.dataset.tool);
+        appendItems({
+          node: blockItem,
+          items: [
+            createDivWithClassName({
+              className: 'toolbox-svg-wrapper',
+              items: [blockItem.querySelector('svg')],
+            }),
+            createDivWithClassName({
+              className: 'toolbox-block-wrapper',
+              items: [createItemData(translateToolName)],
+            }),
+          ],
+        });
       });
     },
-    [insertItem],
+    [createItemData],
   );
 
   const prepareToolbox = useCallback(() => {
@@ -97,23 +95,28 @@ export const useToolbox = () => {
       return;
     }
 
-    const basicBlocksTitle = createDivWithClassName(
-      'toolbox-basic-blocks-title',
-    );
-    basicBlocksTitle.innerText = t('tools.basic_blocks');
-    const basicBlocksWrapper = createDivWithClassName('toolbox-basic-blocks');
-    const interactiveBlocksTitle = createDivWithClassName(
-      'toolbox-interactive-blocks-title',
-    );
-    interactiveBlocksTitle.innerText = t('tools.interactive_blocks');
-    const interactiveBlocksWrapper = createDivWithClassName(
-      'toolbox-interactive-blocks',
-    );
+    const basicBlocksWrapper = createDivWithClassName({
+      className: 'toolbox-basic-blocks',
+    });
+    const interactiveBlocksWrapper = createDivWithClassName({
+      className: 'toolbox-interactive-blocks',
+    });
 
-    wrapper.appendChild(basicBlocksTitle);
-    wrapper.appendChild(basicBlocksWrapper);
-    wrapper.appendChild(interactiveBlocksTitle);
-    wrapper.appendChild(interactiveBlocksWrapper);
+    appendItems({
+      node: wrapper,
+      items: [
+        createDivWithClassName({
+          className: 'toolbox-basic-blocks-title',
+          innerText: t('tools.basic_blocks'),
+        }),
+        basicBlocksWrapper,
+        createDivWithClassName({
+          className: 'toolbox-interactive-blocks-title',
+          innerText: t('tools.interactive_blocks'),
+        }),
+        interactiveBlocksWrapper,
+      ],
+    });
 
     const items = Array.from(document.querySelectorAll('.ce-toolbox__button'));
     const [basicItems, interactiveItems] = getBasicAndInteractiveItems(
