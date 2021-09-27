@@ -1,6 +1,4 @@
 import { BadRequestError } from '../../../validation/errors';
-import { emailUtils } from '../../../../utils/email';
-import { emailServiceErrors } from '../../../config';
 
 const options = {
   schema: {
@@ -13,13 +11,22 @@ const options = {
 };
 
 async function handler({ params: { id } }) {
+  const {
+    config: {
+      emailService: {
+        emailServiceErrors: errors,
+        emailServiceMessages: messages,
+      },
+    },
+    emailUtils,
+  } = this;
   const verified = await emailUtils.getEmailByUuid({ uuid: id });
   if (!verified) {
-    throw new BadRequestError(emailServiceErrors.EMAIL_ERR_VERIFY);
+    throw new BadRequestError(errors.EMAIL_ERR_VERIFY);
   }
 
   return {
-    message: 'Link verified successfully',
+    message: messages.EMAIL_MESSAGE_LINK_VERIFIED,
   };
 }
 
