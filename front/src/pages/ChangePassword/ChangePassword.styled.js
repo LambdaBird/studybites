@@ -39,7 +39,7 @@ export const Form = styled(FormAntd).attrs({
   scrollToFirstError: true,
 })`
   margin-top: 1rem;
-  max-width: 400px;
+  max-width: 300px;
   width: 100%;
 `;
 

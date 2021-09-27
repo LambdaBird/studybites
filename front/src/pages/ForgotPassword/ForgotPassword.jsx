@@ -5,6 +5,7 @@ import { useMutation } from 'react-query';
 import { useHistory } from 'react-router-dom';
 
 import { resetPasswordNoAuth } from '@sb-ui/utils/api/v1/email';
+import { EMAIL_ERR_TOO_FREQUENTLY } from '@sb-ui/utils/errors';
 import { EMAIL_SENT, SIGN_IN } from '@sb-ui/utils/paths';
 
 import * as S from './ForgotPassword.styled';
@@ -28,7 +29,7 @@ const ForgotPassword = () => {
         history.push(EMAIL_SENT);
       },
       onError: (err) => {
-        if (err.response.data?.message === 'errors.email.too_frequently') {
+        if (err.response.data?.message === EMAIL_ERR_TOO_FREQUENTLY) {
           const timeout = err.response.data.payload?.timeout;
           messageAntd.error({
             content: t('error_reset_frequently', { timeout }),

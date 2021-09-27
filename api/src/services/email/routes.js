@@ -24,7 +24,7 @@ export async function router(instance) {
     verifyPasswordReset.handler,
   );
   instance.get(
-    '/verify_password_reset_no_auth/:id',
+    '/verify-password-reset-no-auth/:id',
     verifyPasswordResetNoAuth.options,
     verifyPasswordResetNoAuth.handler,
   );

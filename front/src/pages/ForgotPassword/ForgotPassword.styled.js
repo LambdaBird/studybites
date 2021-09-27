@@ -27,7 +27,7 @@ export const Form = styled(FormAntd).attrs({
 })`
   text-align: center;
   margin-top: 3.5rem;
-  max-width: 400px;
+  max-width: 300px;
   width: 100%;
 `;
 

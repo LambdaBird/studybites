@@ -22,7 +22,7 @@ export const verifyPasswordReset = async ({ queryKey }) => {
 export const verifyPasswordResetNoAuth = async ({ queryKey }) => {
   const [, paramsData] = queryKey;
   const { id } = paramsData;
-  const { data } = await api.get(`${PATH}/verify_password_reset_no_auth/${id}`);
+  const { data } = await api.get(`${PATH}/verify-password-reset-no-auth/${id}`);
   return data;
 };
 
