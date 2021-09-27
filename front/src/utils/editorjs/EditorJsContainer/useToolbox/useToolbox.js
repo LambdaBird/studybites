@@ -6,6 +6,8 @@ import appendItems from '@sb-ui/utils/editorjs/EditorJsContainer/useToolbox/appe
 
 import createDivWithClassName from './createDivWithClassName';
 import getBasicAndInteractiveItems from './getBasicAndInteractiveItems';
+import getTitleKeys from './getTitleKeys';
+import getToolboxBlocks from './getToolboxBlocks';
 import getTranslationKey from './getTranslationKey';
 import selectBlocksDescKeys from './selectBlockDescKeys';
 import updateInnerText from './updateInnerText';
@@ -20,21 +22,10 @@ export const useToolbox = () => {
     if (!toolbox.current) {
       return;
     }
-    Array.from(toolbox.current?.querySelectorAll('.ce-toolbox__button') || [])
+    Array.from(getToolboxBlocks(toolbox.current))
       .map(selectBlocksDescKeys)
       .flat()
-      .concat(
-        {
-          parentNode: toolbox.current,
-          key: `tools.basic_blocks`,
-          selector: '.toolbox-basic-blocks-title',
-        },
-        {
-          parentNode: toolbox.current,
-          key: `tools.interactive_blocks`,
-          selector: '.toolbox-interactive-blocks-title',
-        },
-      )
+      .concat(getTitleKeys(toolbox.current))
       .map(({ parentNode, selector, key }) => ({
         parentNode,
         selector,
@@ -118,7 +109,7 @@ export const useToolbox = () => {
       ],
     });
 
-    const items = Array.from(document.querySelectorAll('.ce-toolbox__button'));
+    const items = Array.from(getToolboxBlocks(toolbox.current));
     const [basicItems, interactiveItems] = getBasicAndInteractiveItems(
       items,
       interactiveBlocks,
