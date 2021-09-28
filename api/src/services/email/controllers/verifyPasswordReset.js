@@ -8,25 +8,19 @@ const options = {
       '5xx': { $ref: '5xx#' },
     },
   },
-  async onRequest(req) {
-    await this.auth({ req });
-  },
 };
 
-async function handler({ user: { id: userId }, params: { id } }) {
+async function handler({ params: { id } }) {
   const {
-    models: { User },
     config: {
       emailService: {
         emailServiceErrors: errors,
         emailServiceMessages: messages,
       },
     },
-    emailUtils: { verifyPasswordReset },
+    emailUtils,
   } = this;
-  const { email } = await User.getUser({ userId });
-
-  const verified = await verifyPasswordReset({ email, uuid: id });
+  const verified = await emailUtils.getEmailByUuid({ uuid: id });
   if (!verified) {
     throw new BadRequestError(errors.EMAIL_ERR_VERIFY);
   }

@@ -8,7 +8,6 @@ import {
   updatePassword,
   updatePasswordNoAuth,
   verifyPasswordReset,
-  verifyPasswordResetNoAuth,
 } from '@sb-ui/utils/api/v1/email';
 import { getJWTAccessToken, setJWT } from '@sb-ui/utils/jwt';
 import { HOME } from '@sb-ui/utils/paths';
@@ -50,7 +49,7 @@ export const useChangePassword = ({ id }) => {
         : EMAIL_VERIFY_PASSWORD_RESET_NO_AUTH,
       { id },
     ],
-    isLoggedIn ? verifyPasswordReset : verifyPasswordResetNoAuth,
+    verifyPasswordReset,
     {
       retry: false,
       enabled: !!id,
