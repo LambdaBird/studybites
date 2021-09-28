@@ -12,12 +12,25 @@ services:
     volumes:
       - studybites-db:/var/lib/postgresql/data
 
+  s3:
+    image: minio/minio
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - ./storage:/data
+    environment:
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_KEY}
+    command: server --address 0.0.0.0:9000 --console-address 0.0.0.0:9001 /data
+
   api:
     build:
       context: ./api
       dockerfile: Dockerfile_test
     depends_on:
       - postgres
+      - s3
     volumes:
       - ./api:/api
       - /api/node_modules
@@ -29,6 +42,11 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: studybites-test
+      S3_HOST: s3
+      S3_PORT: 9000
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY}
+      S3_SECRET_KEY: ${S3_SECRET_KEY}
+      S3_BUCKET: storage
     ports:
       - '3019:3019'
 
