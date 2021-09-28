@@ -5,13 +5,17 @@ import { useTranslation } from 'react-i18next';
 import EditorJS from '@editorjs/editorjs';
 import Paragraph from '@editorjs/paragraph';
 
+import { useToolbox } from '@sb-ui/utils/editorjs/EditorJsContainer/useToolbox';
 import Undo from '@sb-ui/utils/editorjs/undo-plugin';
+
+import * as S from './EditorJsContainer.styled';
 
 const EditorJsContainer = forwardRef((props, ref) => {
   const mounted = useRef();
   const { t } = useTranslation('editorjs');
+  const { prepareToolbox, updateLanguage } = useToolbox();
 
-  const { children } = props;
+  const { children, language } = props;
   const holder = useMemo(
     () =>
       `editor-js-${(Math.floor(Math.random() * 1000) + Date.now()).toString(
@@ -43,6 +47,7 @@ const EditorJsContainer = forwardRef((props, ref) => {
 
   const handleReady = useCallback(async (editor) => {
     if (editor) {
+      prepareToolbox();
       try {
         // eslint-disable-next-line no-param-reassign
         ref.current = new Undo({
@@ -130,12 +135,12 @@ const EditorJsContainer = forwardRef((props, ref) => {
             },
           },
           toolNames: {
-            Text: t('tools.text.title'),
+            Text: t('tools.paragraph.title'),
             Image: t('tools.image.title'),
             Next: t('tools.next.title'),
             Quiz: t('tools.quiz.title'),
-            Video: t('tools.video.title'),
-            Heading: t('tools.heading.title'),
+            Video: t('tools.embed.title'),
+            Heading: t('tools.header.title'),
             List: t('tools.list.title'),
             Quote: t('tools.quote.title'),
             Delimiter: t('tools.delimiter.title'),
@@ -166,11 +171,11 @@ const EditorJsContainer = forwardRef((props, ref) => {
               answer: t('tools.quiz.answer'),
             },
             embed: {
-              input: t('tools.video.input'),
-              caption: t('tools.video.caption'),
+              input: t('tools.embed.input'),
+              caption: t('tools.embed.caption'),
             },
             header: {
-              input: t('tools.heading.input'),
+              input: t('tools.header.input'),
             },
             quote: {
               input: t('tools.quote.input'),
@@ -280,10 +285,24 @@ const EditorJsContainer = forwardRef((props, ref) => {
     return () => {};
   }, [changeData, props]);
 
-  return children || <div id={holder} />;
+  useEffect(() => {
+    updateLanguage();
+  }, [language, updateLanguage]);
+
+  return (
+    <>
+      <S.GlobalStylesEditorPage toolbarHint={t('tools.hint')} />
+      {children || <div id={holder} />}
+    </>
+  );
 });
 
 EditorJsContainer.propTypes = {
+  toolbox: PropTypes.oneOfType([
+    PropTypes.func,
+    PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
+  ]),
+  language: PropTypes.string,
   children: PropTypes.node,
   enableReInitialize: PropTypes.bool,
   readOnly: PropTypes.bool,
