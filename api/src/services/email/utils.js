@@ -68,15 +68,23 @@ export const getEmailUtils = (redisClient) => {
     });
   };
 
+  const sendEmailConfirmation = async ({ email, link }) => {
+    return sendMailDebug({
+      to: email,
+      subject: 'Email confirmation',
+      html: `Confirm email link ${link}`,
+    });
+  };
+
   const verifyPasswordReset = async ({ email, uuid: id }) => {
     const uuid = await redisClient.get(email);
     return uuid === id;
   };
 
   const invalidateLink = async ({ email, uuid }) => {
-    redisClient.del(email);
-    redisClient.del(uuid);
-    redisClient.del(`${uuid}-email`);
+    await redisClient.del(email);
+    await redisClient.del(uuid);
+    await redisClient.del(`${uuid}-email`);
   };
 
   const generateLink = async ({ host: frontHost, email }) => {
@@ -97,8 +105,24 @@ export const getEmailUtils = (redisClient) => {
     return `http://${frontHost}/change-password/${uuid}`;
   };
 
+  const generateConfirmationLink = async ({ host: frontHost, email }) => {
+    const uuid = v4();
+    redisClient.set(`${email}-confirm`, uuid);
+    redisClient.set(`${uuid}-confirm`, email);
+    return `http://${frontHost}/verify-email/${uuid}`;
+  };
+
+  const invalidateConfirmationLink = async ({ email, uuid }) => {
+    await redisClient.del(`${email}-confirm`);
+    await redisClient.del(`${uuid}-confirm`);
+  };
+
   const getEmailByUuid = async ({ uuid }) => {
     return redisClient.get(`${uuid}-email`);
+  };
+
+  const getEmailConfirmByUuid = async ({ uuid }) => {
+    return redisClient.get(`${uuid}-confirm`);
   };
 
   const setUserIp = async ({ userIp }) => {
@@ -143,13 +167,17 @@ export const getEmailUtils = (redisClient) => {
 
   return {
     getEmailByUuid,
+    getEmailConfirmByUuid,
     setUserIp,
+    generateConfirmationLink,
     getResetPasswordAllowed,
     getResetPasswordAllowedNoAuth,
     sendResetPassword,
     sendPasswordChanged,
+    sendEmailConfirmation,
     generateLink,
     invalidateLink,
+    invalidateConfirmationLink,
     verifyPasswordReset,
   };
 };
