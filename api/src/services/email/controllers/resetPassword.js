@@ -21,12 +21,12 @@ async function handler({ user: { id: userId }, headers }) {
         emailServiceMessages: messages,
       },
     },
-    emailUtils,
+    emailUtils: { getResetPasswordAllowed, generateLink, sendResetPassword },
   } = this;
   const host = headers['x-forwarded-host'];
   const { email } = await User.getUser({ userId });
 
-  const { allowed, timeout } = await emailUtils.getResetPasswordAllowed({
+  const { allowed, timeout } = await getResetPasswordAllowed({
     email,
   });
 
@@ -36,8 +36,8 @@ async function handler({ user: { id: userId }, headers }) {
     });
   }
 
-  const link = await emailUtils.generateLink({ host, email });
-  await emailUtils.sendResetPassword({ email, link });
+  const link = await generateLink({ host, email });
+  await sendResetPassword({ email, link });
   return {
     message: messages.EMAIL_MESSAGE_LINK_SENT,
   };

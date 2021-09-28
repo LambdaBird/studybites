@@ -6,31 +6,31 @@ import verifyPasswordReset from './controllers/verifyPasswordReset';
 
 export async function router(instance) {
   instance.post(
-    '/reset_password',
+    '/reset-password',
     resetPassword.options,
     resetPassword.handler,
   );
 
   instance.post(
-    '/reset_password_no_auth',
+    '/reset-password-no-auth',
     resetPasswordNoAuth.options,
     resetPasswordNoAuth.handler,
   );
 
   instance.get(
-    '/verify_password_reset/:id',
+    '/verify-password-reset/:id',
     verifyPasswordReset.options,
     verifyPasswordReset.handler,
   );
 
   instance.put(
-    '/update_password/:id',
+    '/update-password/:id',
     updatePassword.options,
     updatePassword.handler,
   );
 
   instance.put(
-    '/update_password_no_auth/:id',
+    '/update-password-no-auth/:id',
     updatePasswordNoAuth.options,
     updatePasswordNoAuth.handler,
   );

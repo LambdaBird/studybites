@@ -31,12 +31,12 @@ export const authWithNewPassword = async ({
   password,
 }) => {
   const {
-    emailUtils,
+    emailUtils: { verifyPasswordReset, invalidateLink, sendPasswordChanged },
     config: {
       emailService: { emailServiceErrors: errors },
     },
   } = instance;
-  const verified = await emailUtils.verifyPasswordReset({ email, uuid });
+  const verified = await verifyPasswordReset({ email, uuid });
   if (!verified) {
     throw new BadRequestError(errors.EMAIL_ERR_VERIFY);
   }
@@ -51,8 +51,8 @@ export const authWithNewPassword = async ({
   const accessToken = createAccessToken(instance, userId);
   const refreshToken = createRefreshToken(instance, userId);
 
-  await emailUtils.invalidateLink({ email, uuid });
-  await emailUtils.sendPasswordChanged({ email });
+  await invalidateLink({ email, uuid });
+  await sendPasswordChanged({ email });
 
   return { accessToken, refreshToken };
 };

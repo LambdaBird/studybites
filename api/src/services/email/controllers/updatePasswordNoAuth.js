@@ -20,10 +20,10 @@ const options = {
 async function handler({ params: { id: uuid }, body: { password } }) {
   const {
     models: { User },
-    emailUtils,
+    emailUtils: { getEmailByUuid },
   } = this;
 
-  const email = await emailUtils.getEmailByUuid({ uuid });
+  const email = await getEmailByUuid({ uuid });
   const { id: userId } = await User.getUserByEmail({ email });
 
   const { accessToken, refreshToken } = await authWithNewPassword({

@@ -25,11 +25,16 @@ async function handler({ body: { email }, socket, headers }) {
         emailServiceMessages: messages,
       },
     },
-    emailUtils,
+    emailUtils: {
+      getResetPasswordAllowedNoAuth,
+      setUserIp,
+      generateLink,
+      sendResetPassword,
+    },
   } = this;
   const host = headers['x-forwarded-host'];
   const userIp = socket.remoteAddress || headers['x-forwarded-for'];
-  const { allowed, timeout } = await emailUtils.getResetPasswordAllowedNoAuth({
+  const { allowed, timeout } = await getResetPasswordAllowedNoAuth({
     userIp,
   });
   if (!allowed) {
@@ -37,7 +42,7 @@ async function handler({ body: { email }, socket, headers }) {
       timeout,
     });
   }
-  await emailUtils.setUserIp({ userIp });
+  await setUserIp({ userIp });
   try {
     await User.getUserByEmail({ email });
   } catch (e) {
@@ -45,8 +50,8 @@ async function handler({ body: { email }, socket, headers }) {
     return { message: messages.EMAIL_MESSAGE_SENT_SUCCESSFULLY };
   }
 
-  const link = await emailUtils.generateLink({ host, email });
-  await emailUtils.sendResetPassword({ email, link });
+  const link = await generateLink({ host, email });
+  await sendResetPassword({ email, link });
   return { message: messages.EMAIL_MESSAGE_SENT_SUCCESSFULLY };
 }
 

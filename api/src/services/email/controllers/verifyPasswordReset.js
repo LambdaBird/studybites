@@ -25,11 +25,11 @@ async function handler({ user: { id: userId }, params: { id } }) {
         emailServiceMessages: messages,
       },
     },
-    emailUtils,
+    emailUtils: { verifyPasswordReset },
   } = this;
   const { email } = await User.getUser({ userId });
 
-  const verified = await emailUtils.verifyPasswordReset({ email, uuid: id });
+  const verified = await verifyPasswordReset({ email, uuid: id });
   if (!verified) {
     throw new BadRequestError(errors.EMAIL_ERR_VERIFY);
   }
