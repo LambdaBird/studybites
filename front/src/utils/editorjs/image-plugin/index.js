@@ -6,6 +6,8 @@ import { ToolboxIcon } from './resources';
 
 import './index.css';
 
+const MAX_NAME_LENGTH = 50;
+
 const createElement = ({
   tagName = 'div',
   classList = [],
@@ -95,7 +97,14 @@ export default class Image {
 
   onSuccess = () => {
     this.error = false;
-    this.nodes.fileLabel.innerText = this.data.location;
+    if (this.data.location > MAX_NAME_LENGTH) {
+      this.nodes.fileLabel.innerText = `${this.data.location.slice(
+        0,
+        MAX_NAME_LENGTH,
+      )}...`;
+    } else {
+      this.nodes.fileLabel.innerText = this.data.location;
+    }
     if (!this.nodes.caption) {
       this.nodes.container.appendChild(this.createCaption());
     }
