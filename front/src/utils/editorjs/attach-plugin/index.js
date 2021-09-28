@@ -1,7 +1,8 @@
 import { allowedTypes } from '@sb-ui/utils/constants';
 
+import { Uploader } from '../utils';
+
 import { ToolboxIcon } from './resources';
-import Uploader from './uploader';
 
 import './index.css';
 

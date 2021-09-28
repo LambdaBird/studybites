@@ -191,6 +191,11 @@ export const getConfig = (t) => ({
     image: {
       class: Image,
       inlineToolbar: true,
+      config: {
+        headers: {
+          authorization: `Bearer ${getJWTAccessToken()}`,
+        },
+      },
     },
     embed: {
       class: Embed,
