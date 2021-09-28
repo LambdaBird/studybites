@@ -3,6 +3,7 @@ export const SIGN_IN = '/sign-in';
 export const SIGN_UP = '/sign-up';
 export const ADMIN_HOME = '/admin';
 export const CHANGE_PASSWORD = '/change-password/:id';
+export const VERIFY_EMAIL = '/verify-email/:id';
 export const EMAIL_SENT = '/email-sent';
 export const FORGOT_PASSWORD = '/forgot-password';
 
