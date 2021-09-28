@@ -115,4 +115,4 @@ export const globalErrors = {
 
 export const S3_URL = 'http://s3:9000/storage/';
 
-export const FILE_SIZE_LIMIT = 1000000; // 1 MB
+export const FILE_SIZE_LIMIT = 1_000_000; // 1 MB

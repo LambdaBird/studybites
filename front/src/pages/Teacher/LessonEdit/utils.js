@@ -182,7 +182,6 @@ export const getConfig = (t) => ({
     attach: {
       class: Attach,
       config: {
-        endpoint: 'http://localhost:3017/api/v1/files',
         headers: {
           authorization: `Bearer ${getJWTAccessToken()}`,
         },

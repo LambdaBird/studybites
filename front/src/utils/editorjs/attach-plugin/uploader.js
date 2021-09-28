@@ -7,12 +7,12 @@ export default class Uploader {
     this.onError = onError;
   }
 
-  async uploadFile() {
+  async uploadFile(parent) {
     try {
       const formData = new FormData();
       const {
         files: [file],
-      } = document.querySelector('#file');
+      } = parent;
       formData.append('file', file);
 
       const response = await request.post('/api/v1/files', formData, {

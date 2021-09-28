@@ -15,7 +15,6 @@
   },
   "dependencies": {
     "@ant-design/icons": "^4.6.2",
-    "@editorjs/attaches": "^1.1.1",
     "@editorjs/code": "git://github.com/LambdaBird/code.git#feature/improve_i18n_support",
     "@editorjs/delimiter": "^1.2.0",
     "@editorjs/editorjs": "^2.22.0",

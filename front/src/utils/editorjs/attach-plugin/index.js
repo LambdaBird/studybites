@@ -7,6 +7,15 @@ import './index.css';
 
 const MAX_NAME_LENGTH = 50;
 
+function createElement({ tagName = 'div', classList = [], items = [] } = {}) {
+  const element = document.createElement(tagName);
+  element.classList.add(...classList);
+  items.forEach((item) => {
+    element.appendChild(item);
+  });
+  return element;
+}
+
 export default class AttachPlugin {
   constructor({ data, api, config, readOnly }) {
     this.data = data;
@@ -66,53 +75,52 @@ export default class AttachPlugin {
     }
   }
 
-  onError = (e) => {
+  onError = () => {
     this.nodes.label.innerText = this.api.i18n.t('error');
   };
 
   onChange = async () => {
-    await this.uploader.uploadFile();
+    await this.uploader.uploadFile(this.nodes.fileInput);
   };
 
   preparePluginTitle() {
-    this.nodes.pluginTitle = document.createElement('div');
-    this.nodes.pluginTitle.classList.add(this.CSS.titleWrapper);
-
-    const title = document.createElement('span');
+    const title = createElement({
+      tagName: 'span',
+      classList: [this.CSS.title],
+    });
     title.innerText = this.api.i18n.t('title');
-    title.classList.add(this.CSS.title);
-
-    this.nodes.pluginTitle.appendChild(title);
-
+    this.nodes.pluginTitle = createElement({
+      classList: [this.CSS.titleWrapper],
+      items: [title],
+    });
     this.nodes.container.appendChild(this.nodes.pluginTitle);
   }
 
   prepareFileInput() {
-    const wrapper = document.createElement('div');
-    wrapper.classList.add(this.CSS.fileInput);
-
-    this.nodes.fileInput = document.createElement('input');
+    this.nodes.fileInput = createElement({
+      tagName: 'input',
+      classList: [this.CSS.file],
+    });
     this.nodes.fileInput.type = 'file';
     this.nodes.fileInput.id = 'file';
     this.nodes.fileInput.accept = allowedTypes;
-    this.nodes.fileInput.classList.add(this.CSS.file);
     this.nodes.fileInput.onchange = this.onChange;
-
-    this.nodes.label = document.createElement('label');
+    this.nodes.label = createElement({
+      tagName: 'label',
+    });
     this.nodes.label.htmlFor = 'file';
     this.nodes.label.innerText = this.data.name || this.api.i18n.t('select');
-
-    wrapper.appendChild(this.nodes.fileInput);
-    wrapper.appendChild(this.nodes.label);
+    const wrapper = createElement({
+      classList: [this.CSS.fileInput],
+      items: [this.nodes.fileInput, this.nodes.label],
+    });
     this.nodes.container.appendChild(wrapper);
   }
 
   render() {
-    this.nodes.container = document.createElement('div');
-
+    this.nodes.container = createElement();
     this.preparePluginTitle();
     this.prepareFileInput();
-
     return this.nodes.container;
   }
 }
