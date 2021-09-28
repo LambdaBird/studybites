@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import config from '@sb-ui/utils/api/config';
@@ -15,12 +15,23 @@ import {
   getTitleKeys,
   selectBlocksDescKeys,
 } from './toolboxItemsHelpers';
+import { destroyObserver, initObserver } from './toolboxObserver';
 
 const { interactiveBlocks } = config;
 
 export const useToolbox = () => {
   const { t } = useTranslation('editorjs');
   const toolbox = useRef(null);
+  const [isReady, setIsReady] = useState(false);
+  useEffect(() => {
+    if (isReady) {
+      const observer = initObserver(toolbox.current);
+      return () => {
+        destroyObserver(observer);
+      };
+    }
+    return () => {};
+  }, [isReady]);
 
   const updateLanguage = useCallback(() => {
     if (!toolbox.current) {
@@ -77,6 +88,7 @@ export const useToolbox = () => {
 
     transformDefaultMenuItems(interactiveItems, interactiveBlocksWrapper, t);
     transformDefaultMenuItems(basicItems, basicBlocksWrapper, t);
+    setIsReady(true);
   }, [t]);
 
   return {

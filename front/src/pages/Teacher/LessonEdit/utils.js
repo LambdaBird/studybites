@@ -172,71 +172,78 @@ export const prepareBlocksForApi = (blocks) =>
     )
     .filter((block) => JSON.stringify(block).length < MAX_BODY_LENGTH);
 
+const getBaseBlocks = (t) => ({
+  warning: {
+    class: Warning,
+    inlineToolbar: true,
+    config: {
+      titlePlaceholder: t('editor_js.tools.warning_title'),
+      messagePlaceholder: t('editor_js.tools.warning_message'),
+    },
+  },
+  image: {
+    class: Image,
+    inlineToolbar: true,
+  },
+  list: {
+    class: List,
+    inlineToolbar: true,
+  },
+  quote: {
+    class: Quote,
+    inlineToolbar: true,
+  },
+  code: CodeTool,
+  table: {
+    class: Table,
+    inlineToolbar: true,
+  },
+  embed: {
+    class: Embed,
+    inlineToolbar: true,
+  },
+  delimiter: Delimiter,
+  header: {
+    class: HeaderTool,
+    config: {
+      placeholder: t('editor_js.header.placeholder'),
+      levels: [1, 2, 3, 4, 5],
+      defaultLevel: 2,
+    },
+    inlineToolbar: true,
+  },
+});
+
+const getInteractiveBlocks = () => ({
+  next: Next,
+  quiz: {
+    class: Quiz,
+    inlineToolbar: true,
+  },
+  closedQuestion: {
+    class: ClosedQuestion,
+    inlineToolbar: true,
+  },
+  fillTheGap: {
+    class: FillTheGap,
+    inlineToolbar: true,
+  },
+  match: {
+    class: Match,
+    inlineToolbar: true,
+  },
+  marker: Marker,
+  bricks: {
+    class: Bricks,
+    inlineToolbar: true,
+  },
+});
+
 export const getConfig = (t) => ({
   holder: 'editorjs',
   tools: {
-    next: Next,
-    image: {
-      class: Image,
-      inlineToolbar: true,
-    },
-    embed: {
-      class: Embed,
-      inlineToolbar: true,
-    },
-    quiz: {
-      class: Quiz,
-      inlineToolbar: true,
-    },
-    closedQuestion: {
-      class: ClosedQuestion,
-      inlineToolbar: true,
-    },
-    warning: {
-      class: Warning,
-      inlineToolbar: true,
-      config: {
-        titlePlaceholder: t('editor_js.tools.warning_title'),
-        messagePlaceholder: t('editor_js.tools.warning_message'),
-      },
-    },
-    match: {
-      class: Match,
-      inlineToolbar: true,
-    },
-    header: {
-      class: HeaderTool,
-      config: {
-        placeholder: t('editor_js.header.placeholder'),
-        levels: [1, 2, 3, 4, 5],
-        defaultLevel: 2,
-      },
-      inlineToolbar: true,
-    },
-    list: {
-      class: List,
-      inlineToolbar: true,
-    },
-    quote: {
-      class: Quote,
-      inlineToolbar: true,
-    },
-    delimiter: Delimiter,
-    marker: Marker,
-
-    table: {
-      class: Table,
-      inlineToolbar: true,
-    },
-    code: CodeTool,
-    fillTheGap: {
-      class: FillTheGap,
-      inlineToolbar: true,
-    },
-    bricks: {
-      class: Bricks,
-      inlineToolbar: true,
-    },
+    ...getBaseBlocks(t),
+    ...getInteractiveBlocks(t),
   },
   plugins: [],
 });
