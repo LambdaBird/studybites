@@ -1,11 +1,16 @@
+import PluginBase from '../PluginBase';
 import * as Utils from '../utils';
 
 import SERVICES from './services';
 
 import './embed.css';
 
-export default class Embed {
+export default class Embed extends PluginBase {
   constructor({ data, api, readOnly }) {
+    super({
+      title: api.i18n.t('title'),
+    });
+
     this.api = api;
     this.data = data;
     this.element = null;
@@ -81,6 +86,7 @@ export default class Embed {
     const container = document.createElement('div');
     this.container = container;
     container.classList.add(this.CSS.container);
+    container.appendChild(this.titleWrapper);
 
     const inputUrl = Utils.createInput({
       wrapper: this,
