@@ -1,3 +1,4 @@
+import { Button } from 'antd';
 import styled from 'styled-components';
 
 export const Image = styled.img`
@@ -18,4 +19,8 @@ export const ImageFallback = styled.div`
 
 export const ImageFallbackTitle = styled.span`
   margin-right: 1rem;
+`;
+
+export const UploadButton = styled(Button)`
+  width: 100%;
 `;

@@ -134,6 +134,7 @@ export default {
       forward: 'Вперед',
       preview: 'Предпросмотр',
       move_to_draft: 'Вернуть в черновики',
+      upload: 'Нажмите чтобы выбрать файл',
     },
     cover_image: {
       title: 'Ссылка на картинку',
