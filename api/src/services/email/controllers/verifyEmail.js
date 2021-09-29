@@ -22,16 +22,18 @@ async function handler({ params: { id } }) {
     emailUtils: { getEmailConfirmByUuid, invalidateConfirmationLink },
   } = this;
   const email = await getEmailConfirmByUuid({ uuid: id });
-  try {
-    const { id: userId } = await User.getUserByEmail({ email });
-    await User.updateOne({ userData: { isConfirmed: true }, userId });
-    await invalidateConfirmationLink({ email, uuid: id });
-    return {
-      message: messages.EMAIL_MESSAGE_EMAIL_VERIFIED,
-    };
-  } catch (e) {
+  if (!email) {
     throw new BadRequestError(errors.EMAIL_ERR_VERIFY);
   }
+  const { id: userId, isConfirmed } = await User.getUserByEmail({ email });
+  if (isConfirmed) {
+    throw new BadRequestError(errors.EMAIL_ERR_ALREADY_VERIFIED);
+  }
+  await User.updateOne({ userData: { isConfirmed: true }, userId });
+  await invalidateConfirmationLink({ email, uuid: id });
+  return {
+    message: messages.EMAIL_MESSAGE_EMAIL_VERIFIED,
+  };
 }
 
 export default { options, handler };

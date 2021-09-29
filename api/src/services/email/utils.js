@@ -89,14 +89,14 @@ export const getEmailUtils = (redisClient) => {
 
   const generateLink = async ({ host: frontHost, email }) => {
     const uuid = v4();
-    redisClient.set(email, uuid, 'EX', emailTimes.RESET_LINK_EXPIRE_TIME);
-    redisClient.set(
+    await redisClient.set(email, uuid, 'EX', emailTimes.RESET_LINK_EXPIRE_TIME);
+    await redisClient.set(
       `${uuid}-email`,
       email,
       'EX',
       emailTimes.RESET_LINK_EXPIRE_TIME,
     );
-    redisClient.set(
+    await redisClient.set(
       uuid,
       true,
       'EX',
@@ -107,8 +107,8 @@ export const getEmailUtils = (redisClient) => {
 
   const generateConfirmationLink = async ({ host: frontHost, email }) => {
     const uuid = v4();
-    redisClient.set(`${email}-confirm`, uuid);
-    redisClient.set(`${uuid}-confirm`, email);
+    await redisClient.set(`${email}-confirm`, uuid);
+    await redisClient.set(`${uuid}-confirm`, email);
     return `http://${frontHost}/verify-email/${uuid}`;
   };
 
