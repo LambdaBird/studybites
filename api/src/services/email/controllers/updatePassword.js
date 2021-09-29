@@ -16,15 +16,13 @@ const options = {
       '5xx': { $ref: '5xx#' },
     },
   },
-  async onRequest(req) {
-    await this.auth({ req });
-  },
 };
 
 async function handler({ params: { id: uuid }, body: { password } }) {
   const {
     models: { User },
-    emailUtils: { getEmailByUuid, invalidateLink, sendPasswordChanged },
+    emailModel: Email,
+    redisModel: Redis,
     config: {
       emailService: { emailServiceErrors: errors },
     },
@@ -32,7 +30,7 @@ async function handler({ params: { id: uuid }, body: { password } }) {
     createRefreshToken,
   } = this;
 
-  const email = await getEmailByUuid({ uuid });
+  const email = await Redis.getEmailByUuid({ uuid });
   if (!email) {
     throw new BadRequestError(errors.EMAIL_ERR_VERIFY);
   }
@@ -48,8 +46,8 @@ async function handler({ params: { id: uuid }, body: { password } }) {
   const accessToken = createAccessToken(this, userId);
   const refreshToken = createRefreshToken(this, userId);
 
-  await invalidateLink({ email, uuid });
-  await sendPasswordChanged({ email });
+  await Redis.invalidateLink({ email, uuid });
+  await Email.sendPasswordChanged({ email });
 
   return { accessToken, refreshToken };
 }

@@ -27,6 +27,7 @@ services:
       - ./api:/api
       - /api/node_modules
     environment:
+      SB_HOST: ${SB_HOST}
       SB_ADMIN_EMAIL: ${SB_ADMIN_EMAIL}
       SB_ADMIN_PASSWORD: ${SB_ADMIN_PASSWORD}
       SB_MAIL_USER: ${SB_MAIL_USER}

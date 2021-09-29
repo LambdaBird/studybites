@@ -1,5 +1,6 @@
 import fastify from 'fastify';
 import fastifyObjection from 'fastify-objection';
+import fastifyRedis from 'fastify-redis';
 import qs from 'qs';
 
 import User from './models/User';
@@ -25,6 +26,8 @@ import keywordsService from './services/keywords';
 
 import errorsAndValidation from './validation';
 
+const REDIS_PORT = process.env.REDIS_PORT || 6379;
+
 export default (options = {}) => {
   const app = fastify({
     ...options,
@@ -37,6 +40,11 @@ export default (options = {}) => {
   });
 
   app.register(errorsAndValidation);
+
+  app.register(fastifyRedis, {
+    host: 'redis',
+    port: REDIS_PORT,
+  });
 
   app.register(fastifyObjection, {
     connection: process.env.DATABASE_URL,

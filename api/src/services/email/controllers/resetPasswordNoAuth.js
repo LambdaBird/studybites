@@ -24,17 +24,13 @@ async function handler({ body: { email }, socket, headers }) {
         emailServiceErrors: errors,
         emailServiceMessages: messages,
       },
+      globals: { host },
     },
-    emailUtils: {
-      getResetPasswordAllowedNoAuth,
-      setUserIp,
-      generateLink,
-      sendResetPassword,
-    },
+    emailModel: Email,
+    redisModel: Redis,
   } = this;
-  const host = headers['x-forwarded-host'];
   const userIp = socket.remoteAddress || headers['x-forwarded-for'];
-  const { allowed, timeout } = await getResetPasswordAllowedNoAuth({
+  const { allowed, timeout } = await Redis.getResetPasswordAllowedNoAuth({
     userIp,
   });
   if (!allowed) {
@@ -42,7 +38,7 @@ async function handler({ body: { email }, socket, headers }) {
       timeout,
     });
   }
-  await setUserIp({ userIp });
+  await Redis.setUserIp({ userIp });
   try {
     await User.getUserByEmail({ email });
   } catch (e) {
@@ -50,8 +46,8 @@ async function handler({ body: { email }, socket, headers }) {
     return { message: messages.EMAIL_MESSAGE_LINK_SENT };
   }
 
-  const link = await generateLink({ host, email });
-  await sendResetPassword({ email, link });
+  const link = await Redis.generateLink({ host, email });
+  await Email.sendResetPassword({ email, link });
   return { message: messages.EMAIL_MESSAGE_LINK_SENT };
 }
 

@@ -1,14 +1,19 @@
-export const DEBUG_MAIL_STATUS = {
+export const SEND_MAIL_STATUSES = {
   ONLY_CONSOLE: 1,
   ONLY_EMAIL: 2,
   CONSOLE_AND_EMAIL: 3,
 };
 
-export const DEBUG_EMAIL = DEBUG_MAIL_STATUS.ONLY_CONSOLE;
+export const SEND_MAIL_STATUS =
+  parseInt(process.env.SB_SEND_MAIL_STATUS, 10) ||
+  SEND_MAIL_STATUSES.ONLY_CONSOLE;
+
 export const EMAIL_SETTINGS = {
   fromName: 'StudyBites',
   host: 'smtp.gmail.com',
 };
+
+export const host = process.env.SB_HOST;
 
 export const jwt = {
   ACCESS_JWT_EXPIRES_IN: 60 * 5,
