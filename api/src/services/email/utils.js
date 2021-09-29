@@ -11,6 +11,8 @@ import {
 const { CONSOLE_AND_EMAIL, ONLY_CONSOLE, ONLY_EMAIL } = DEBUG_MAIL_STATUS;
 const { fromName, host } = EMAIL_SETTINGS;
 
+const CHANGE_PASSWORD_PATH = 'change-password';
+
 export const getEmailUtils = (redisClient) => {
   const transporter = nodemailer.createTransport({
     pool: true,
@@ -68,11 +70,6 @@ export const getEmailUtils = (redisClient) => {
     });
   };
 
-  const verifyPasswordReset = async ({ email, uuid: id }) => {
-    const uuid = await redisClient.get(email);
-    return uuid === id;
-  };
-
   const invalidateLink = async ({ email, uuid }) => {
     redisClient.del(email);
     redisClient.del(uuid);
@@ -94,7 +91,7 @@ export const getEmailUtils = (redisClient) => {
       'EX',
       emailTimes.AGAIN_GENERATE_LINK_NOT_ALLOWED_TIME,
     );
-    return `http://${frontHost}/change-password/${uuid}`;
+    return `http://${frontHost}/${CHANGE_PASSWORD_PATH}/${uuid}`;
   };
 
   const getEmailByUuid = async ({ uuid }) => {
@@ -150,6 +147,5 @@ export const getEmailUtils = (redisClient) => {
     sendPasswordChanged,
     generateLink,
     invalidateLink,
-    verifyPasswordReset,
   };
 };

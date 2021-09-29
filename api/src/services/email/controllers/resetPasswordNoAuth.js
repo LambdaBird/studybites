@@ -47,12 +47,12 @@ async function handler({ body: { email }, socket, headers }) {
     await User.getUserByEmail({ email });
   } catch (e) {
     // Do nothing if user not found with this email
-    return { message: messages.EMAIL_MESSAGE_SENT_SUCCESSFULLY };
+    return { message: messages.EMAIL_MESSAGE_LINK_SENT };
   }
 
   const link = await generateLink({ host, email });
   await sendResetPassword({ email, link });
-  return { message: messages.EMAIL_MESSAGE_SENT_SUCCESSFULLY };
+  return { message: messages.EMAIL_MESSAGE_LINK_SENT };
 }
 
 export default { options, handler };

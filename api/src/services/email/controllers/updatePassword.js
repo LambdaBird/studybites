@@ -21,26 +21,22 @@ const options = {
   },
 };
 
-export const authWithNewPassword = async ({
-  instance,
-  User,
-  userId,
-  uuid,
-  email,
-  password,
-}) => {
+async function handler({ params: { id: uuid }, body: { password } }) {
   const {
-    emailUtils: { verifyPasswordReset, invalidateLink, sendPasswordChanged },
+    models: { User },
+    emailUtils: { getEmailByUuid, invalidateLink, sendPasswordChanged },
     config: {
       emailService: { emailServiceErrors: errors },
     },
     createAccessToken,
     createRefreshToken,
-  } = instance;
-  const verified = await verifyPasswordReset({ email, uuid });
-  if (!verified) {
+  } = this;
+
+  const email = await getEmailByUuid({ uuid });
+  if (!email) {
     throw new BadRequestError(errors.EMAIL_ERR_VERIFY);
   }
+  const { id: userId } = await User.getUserByEmail({ email });
 
   const hash = await hashPassword(password);
 
@@ -49,33 +45,12 @@ export const authWithNewPassword = async ({
     userId,
   });
 
-  const accessToken = createAccessToken(instance, userId);
-  const refreshToken = createRefreshToken(instance, userId);
+  const accessToken = createAccessToken(this, userId);
+  const refreshToken = createRefreshToken(this, userId);
 
   await invalidateLink({ email, uuid });
   await sendPasswordChanged({ email });
 
-  return { accessToken, refreshToken };
-};
-
-async function handler({
-  user: { id: userId },
-  params: { id: uuid },
-  body: { password },
-}) {
-  const {
-    models: { User },
-  } = this;
-
-  const { email } = await User.getUser({ userId });
-  const { accessToken, refreshToken } = await authWithNewPassword({
-    instance: this,
-    User,
-    userId,
-    uuid,
-    email,
-    password,
-  });
   return { accessToken, refreshToken };
 }
 
