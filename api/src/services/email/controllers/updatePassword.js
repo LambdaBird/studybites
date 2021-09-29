@@ -1,6 +1,5 @@
 import { hashPassword } from '../../../../utils/salt';
 import { BadRequestError } from '../../../validation/errors';
-import { createAccessToken, createRefreshToken } from '../../user/utils';
 
 const options = {
   schema: {
@@ -35,6 +34,8 @@ export const authWithNewPassword = async ({
     config: {
       emailService: { emailServiceErrors: errors },
     },
+    createAccessToken,
+    createRefreshToken,
   } = instance;
   const verified = await verifyPasswordReset({ email, uuid });
   if (!verified) {
@@ -67,7 +68,6 @@ async function handler({
   } = this;
 
   const { email } = await User.getUser({ userId });
-
   const { accessToken, refreshToken } = await authWithNewPassword({
     instance: this,
     User,
