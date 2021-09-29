@@ -1,5 +1,4 @@
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 
-yarn --cwd ./api test:unit
-./test
+./studybites.sh test
