@@ -1,5 +1,6 @@
 import objection from 'objection';
 
+import { QueryBuilder } from './QueryBuilder';
 import { globalErrors as errors } from '../config';
 import {
   BadRequestError,
@@ -8,6 +9,10 @@ import {
 } from '../validation/errors';
 
 export default class BaseModel extends objection.Model {
+  static get QueryBuilder() {
+    return QueryBuilder;
+  }
+
   static get columnNameMappers() {
     return objection.snakeCaseMappers();
   }

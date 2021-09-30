@@ -177,11 +177,10 @@ export default class Course extends BaseModel {
       )
       .where('users_roles.user_id', userId)
       .andWhere('courses.status', status)
-      .andWhere(
-        'courses.name',
-        'ilike',
-        search ? `%${search.replace(/ /g, '%')}%` : undefined,
-      )
+      .search({
+        columns: 'courses.name',
+        searchString: search,
+      })
       .groupBy('courses.id')
       .range(start, end)
       .withGraphFetched('students')
@@ -209,11 +208,10 @@ export default class Course extends BaseModel {
         and resource_keywords.resource_type = '${resources.COURSE.name}'`,
       )
       .where('courses.status', 'Public')
-      .andWhere(
-        'courses.name',
-        'ilike',
-        search ? `%${search.replace(/ /g, '%')}%` : undefined,
-      )
+      .search({
+        columns: 'courses.name',
+        searchString: search,
+      })
       .groupBy('courses.id')
       .range(start, end)
       .withGraphFetched('author')
@@ -308,11 +306,10 @@ export default class Course extends BaseModel {
         and resource_keywords.resource_type = '${resources.COURSE.name}'`,
       )
       .where('users_roles.user_id', userId)
-      .andWhere(
-        'courses.name',
-        'ilike',
-        search ? `%${search.replace(/ /g, '%')}%` : undefined,
-      )
+      .search({
+        columns: 'courses.name',
+        searchString: search,
+      })
       .groupBy('courses.id')
       .havingRaw(
         `count(course_lesson_structure.lesson_id) = (
@@ -370,11 +367,10 @@ export default class Course extends BaseModel {
           .andWhere('results.user_id', userId)
           .whereRaw(`results.action = 'finish'`),
       )
-      .andWhere(
-        'courses.name',
-        'ilike',
-        search ? `%${search.replace(/ /g, '%')}%` : undefined,
-      )
+      .search({
+        columns: 'courses.name',
+        searchString: search,
+      })
       .groupBy('courses.id')
       .range(start, end)
       .withGraphFetched('author')
