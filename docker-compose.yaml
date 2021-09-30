@@ -61,7 +61,7 @@ services:
     environment:
       PORT: 3018
       API_PORT: 3017
-      SB_HOST: http://localhost:3017
+      REACT_APP_SB_HOST: http://localhost:3017
 
 volumes:
   studybites-db:

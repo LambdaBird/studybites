@@ -97,14 +97,9 @@ export default class Image {
 
   onSuccess = () => {
     this.error = false;
-    if (this.data.location > MAX_NAME_LENGTH) {
-      this.nodes.fileLabel.innerText = `${this.data.location.slice(
-        0,
-        MAX_NAME_LENGTH,
-      )}...`;
-    } else {
-      this.nodes.fileLabel.innerText = this.data.location;
-    }
+    const name = this.data.location;
+    this.nodes.fileLabel.innerText =
+      name > MAX_NAME_LENGTH ? `${name.slice(0, MAX_NAME_LENGTH)}...` : name;
     if (!this.nodes.caption) {
       this.nodes.container.appendChild(this.createCaption());
     }
@@ -152,6 +147,7 @@ export default class Image {
         id: 'file',
         accept: allowedImageTypes,
         onchange: this.onFileSelect,
+        disabled: this.readOnly || false,
       },
     });
     this.nodes.fileLabel = createElement({
@@ -174,6 +170,7 @@ export default class Image {
       attrs: {
         placeholder: this.api.i18n.t('input'),
         oninput: this.onLinkInput,
+        disabled: this.readOnly || false,
       },
     });
     return createElement({
@@ -203,6 +200,7 @@ export default class Image {
       attrs: {
         placeholder: this.data.caption || this.api.i18n.t('caption'),
         oninput: this.onCaptionInput,
+        disabled: this.readOnly || false,
       },
     });
     return this.nodes.caption;
