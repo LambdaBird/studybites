@@ -1,13 +1,3 @@
-export const SEND_MAIL_STATUSES = {
-  ONLY_CONSOLE: 1,
-  ONLY_EMAIL: 2,
-  CONSOLE_AND_EMAIL: 3,
-};
-
-export const SEND_MAIL_STATUS =
-  parseInt(process.env.SB_SEND_MAIL_STATUS, 10) ||
-  SEND_MAIL_STATUSES.ONLY_CONSOLE;
-
 export const EMAIL_SETTINGS = {
   fromName: 'StudyBites',
   host: 'smtp.gmail.com',

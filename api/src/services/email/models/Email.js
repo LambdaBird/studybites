@@ -1,18 +1,19 @@
 import nodemailer from 'nodemailer';
-import {
-  EMAIL_SETTINGS,
-  SEND_MAIL_STATUS,
-  SEND_MAIL_STATUSES,
-} from '../../../config';
+import { EMAIL_SETTINGS } from '../../../config';
 
 const { fromName, host } = EMAIL_SETTINGS;
-const { CONSOLE_AND_EMAIL, ONLY_CONSOLE, ONLY_EMAIL } = SEND_MAIL_STATUSES;
+
+const ONLY_CONSOLE = 1;
+const ONLY_EMAIL = 2;
+const CONSOLE_AND_EMAIL = 3;
+
+const sendMailStatus = +process.env.SB_SEND_MAIL_STATUS || ONLY_CONSOLE;
 
 class Email {
-  static transporter;
+  transporter;
 
   constructor() {
-    Email.transporter = nodemailer.createTransport({
+    this.transporter = nodemailer.createTransport({
       pool: true,
       host,
       port: process.env.SMTP_PORT || 465,
@@ -24,7 +25,7 @@ class Email {
     });
   }
 
-  static sendMail({ ...params }) {
+  sendMail({ ...params }) {
     return this.transporter.sendMail({
       from: `"${fromName}" <${process.env.SB_MAIL_USER}>`,
       ...params,
@@ -38,22 +39,26 @@ class Email {
     };
   }
 
-  static async sendMailWithLogging(params) {
-    if (SEND_MAIL_STATUS === ONLY_EMAIL) {
-      await this.sendMail(params);
-    } else if (SEND_MAIL_STATUS === ONLY_CONSOLE) {
-      const message = this.getMailMocked(params);
-      // eslint-disable-next-line no-console
-      console.log(message);
-    } else if (SEND_MAIL_STATUS === CONSOLE_AND_EMAIL) {
-      await this.sendMail(params);
-      const message = this.getMailMocked(params);
-      // eslint-disable-next-line no-console
-      console.log(message);
+  async sendMailWithLogging(params) {
+    switch (sendMailStatus) {
+      case ONLY_EMAIL:
+        await this.sendMail(params);
+        break;
+      case ONLY_CONSOLE:
+        // eslint-disable-next-line no-console
+        console.log(Email.getMailMocked(params));
+        break;
+      case CONSOLE_AND_EMAIL:
+        await this.sendMail(params);
+        // eslint-disable-next-line no-console
+        console.log(Email.getMailMocked(params));
+        break;
+      default:
+        break;
     }
   }
 
-  static async sendResetPassword({ email, link }) {
+  async sendResetPassword({ email, link }) {
     return this.sendMailWithLogging({
       to: email,
       subject: 'Password reset',
@@ -61,7 +66,7 @@ class Email {
     });
   }
 
-  static async sendPasswordChanged({ email }) {
+  async sendPasswordChanged({ email }) {
     return this.sendMailWithLogging({
       to: email,
       subject: 'Password changed',
