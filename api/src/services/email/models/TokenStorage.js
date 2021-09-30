@@ -3,7 +3,7 @@ import { emailTimes } from '../../../config';
 
 const CHANGE_PASSWORD_PATH = 'change-password';
 
-class Redis {
+class TokenStorage {
   static redisClient;
 
   static async invalidateLink({ email, uuid }) {
@@ -75,4 +75,4 @@ class Redis {
   }
 }
 
-export default Redis;
+export default TokenStorage;

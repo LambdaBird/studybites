@@ -3,14 +3,14 @@ import fp from 'fastify-plugin';
 import { router } from './routes';
 
 import Email from './models/Email';
-import Redis from './models/Redis';
+import TokenStorage from './models/TokenStorage';
 
 const emailService = (instance, opts, done) => {
   const { redis } = instance;
-  Redis.redisClient = redis;
+  TokenStorage.redisClient = redis;
   instance.register(router, opts);
-  instance.decorate('emailModel', Email);
-  instance.decorate('redisModel', Redis);
+  instance.decorate('emailModel', new Email());
+  instance.decorate('redisModel', TokenStorage);
   return done();
 };
 
