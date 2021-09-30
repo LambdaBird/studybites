@@ -29,7 +29,7 @@ export const GlobalStylesEditorPage = createGlobalStyle`
       animation:  none;
     }
     
-    .toolbox-basic-blocks-title, .toolbox-interactive-blocks-title{
+    .toolbox-basic-items-title, .toolbox-interactive-items-title{
       user-select: none;
       color: rgba(0, 0, 0, 0.45);
       font-style: normal;
@@ -38,13 +38,13 @@ export const GlobalStylesEditorPage = createGlobalStyle`
       margin-bottom: 0.5rem;
     }
     
-    .toolbox-interactive-blocks, .toolbox-basic-blocks{
+    .toolbox-interactive-items, .toolbox-basic-items{
       display: flex;
       flex-direction: column;
       align-items: start;
       gap: 1rem;
     }
-    .toolbox-basic-blocks{
+    .toolbox-basic-items{
       margin-bottom: 1rem;
     }
     .toolbox-svg-wrapper{
@@ -61,16 +61,16 @@ export const GlobalStylesEditorPage = createGlobalStyle`
       }
     }
     
-    .toolbox-block-wrapper{
+    .toolbox-item-wrapper{
       display: flex;
       margin-left: 1rem;
       align-items: center;
       user-select: none;
-      .toolbox-block-data-name{
+      .toolbox-item-data-name{
         font-size: 14px;
         color: rgba(0, 0, 0, 0.85);
       }
-      .toolbox-block-data-description{
+      .toolbox-item-data-description{
         font-size: 12px;
         color: rgba(0, 0, 0, 0.45);
       }

@@ -1,27 +1,39 @@
-export const getBasicAndInteractiveItems = (items, interactiveItemsName) => {
-  const basicItems = new Map();
-  const interactiveItems = new Map();
-  items.forEach((block) => {
-    const toolName = block.dataset.tool;
-    if (interactiveItemsName.includes(toolName)) {
-      interactiveItems.set(toolName, block);
-    } else {
-      basicItems.set(toolName, block);
+import {
+  getBaseBlocks,
+  getInteractiveBlocks,
+} from '@sb-ui/pages/Teacher/LessonEdit/utils';
+
+const createMenuItems = (blocksName, items) => {
+  const menuItems = new Map();
+  blocksName.forEach((blockName) => {
+    const block = items.find((item) => item.dataset.tool === blockName);
+    if (block) {
+      menuItems.set(blockName, block);
     }
   });
-  return [basicItems, interactiveItems];
+  return menuItems;
+};
+
+export const getBasicAndInteractiveItems = (items) => {
+  const baseBlocksName = Object.keys(getBaseBlocks(() => {}));
+  const interactiveBlocksName = Object.keys(getInteractiveBlocks(() => {}));
+
+  const basicMenuItems = createMenuItems(baseBlocksName, items);
+  const interactiveMenuItems = createMenuItems(interactiveBlocksName, items);
+
+  return [basicMenuItems, interactiveMenuItems];
 };
 
 export const getTitleKeys = (parentNode) => [
   {
     parentNode,
     key: `tools.basic_blocks`,
-    selector: '.toolbox-basic-blocks-title',
+    selector: '.toolbox-basic-items-title',
   },
   {
     parentNode,
     key: `tools.interactive_blocks`,
-    selector: '.toolbox-interactive-blocks-title',
+    selector: '.toolbox-interactive-items-title',
   },
 ];
 
@@ -36,19 +48,19 @@ export const getTranslationKey = (name) => {
   }
 };
 
-export const selectBlocksDescKeys = (block) => {
-  const parentNode = block;
-  const blockKey = getTranslationKey(block?.dataset?.tool);
+export const selectItemsDescKeys = (item) => {
+  const parentNode = item;
+  const blockKey = getTranslationKey(item?.dataset?.tool);
   return [
     {
       parentNode,
       key: `tools.${blockKey}.description`,
-      selector: '.toolbox-block-data-description',
+      selector: '.toolbox-item-data-description',
     },
     {
       parentNode,
       key: `tools.${blockKey}.title`,
-      selector: '.toolbox-block-data-name',
+      selector: '.toolbox-item-data-name',
     },
   ];
 };

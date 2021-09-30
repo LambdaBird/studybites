@@ -20,7 +20,7 @@ export const createDivWithClassName = ({
   return element;
 };
 
-export const getToolboxBlocks = (parent) =>
+export const getToolboxItems = (parent) =>
   parent?.querySelectorAll('.ce-toolbox__button') || [];
 
 export const updateInnerText = ({ parentNode, text, selector }) => {
@@ -32,14 +32,14 @@ export const updateInnerText = ({ parentNode, text, selector }) => {
 
 export const createItemData = (toolName, t) =>
   createDivWithClassName({
-    className: 'toolbox-block-data',
+    className: 'toolbox-item-data',
     items: [
       createDivWithClassName({
-        className: 'toolbox-block-data-name',
+        className: 'toolbox-item-data-name',
         innerText: t(`tools.${toolName}.title`),
       }),
       createDivWithClassName({
-        className: 'toolbox-block-data-description',
+        className: 'toolbox-item-data-description',
         innerText: t(`tools.${toolName}.description`),
       }),
     ],
@@ -58,7 +58,7 @@ export const transformDefaultMenuItems = (items, block, t) => {
           items: [blockItem.querySelector('svg')],
         }),
         createDivWithClassName({
-          className: 'toolbox-block-wrapper',
+          className: 'toolbox-item-wrapper',
           items: [createItemData(translateToolName, t)],
         }),
       ],

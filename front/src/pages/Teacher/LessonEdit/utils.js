@@ -5,6 +5,7 @@ import Delimiter from '@editorjs/delimiter';
 import HeaderTool from '@editorjs/header';
 import List from '@editorjs/list';
 import Marker from '@editorjs/marker';
+import Paragraph from '@editorjs/paragraph';
 import Quote from '@editorjs/quote';
 import Warning from '@editorjs/warning';
 
@@ -172,7 +173,11 @@ export const prepareBlocksForApi = (blocks) =>
     )
     .filter((block) => JSON.stringify(block).length < MAX_BODY_LENGTH);
 
-const getBaseBlocks = (t) => ({
+export const getBaseBlocks = (t) => ({
+  paragraph: {
+    class: Paragraph,
+    inlineToolbar: true,
+  },
   warning: {
     class: Warning,
     inlineToolbar: true,
@@ -214,7 +219,7 @@ const getBaseBlocks = (t) => ({
   },
 });
 
-const getInteractiveBlocks = () => ({
+export const getInteractiveBlocks = () => ({
   next: Next,
   quiz: {
     class: Quiz,
@@ -232,11 +237,14 @@ const getInteractiveBlocks = () => ({
     class: Match,
     inlineToolbar: true,
   },
-  marker: Marker,
   bricks: {
     class: Bricks,
     inlineToolbar: true,
   },
+});
+
+export const getInlineTool = () => ({
+  marker: Marker,
 });
 
 export const getConfig = (t) => ({
@@ -244,6 +252,7 @@ export const getConfig = (t) => ({
   tools: {
     ...getBaseBlocks(t),
     ...getInteractiveBlocks(t),
+    ...getInlineTool(t),
   },
   plugins: [],
 });
