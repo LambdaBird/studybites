@@ -15,12 +15,16 @@ export default class Uploader {
       } = parent;
       formData.append('file', file);
 
-      const response = await request.post('/api/v1/files', formData, {
-        headers: {
-          ...this.config.headers,
-          'content-type': 'multipart/form-data',
+      const response = await request.post(
+        `${process.env.HOST}/api/v1/files`,
+        formData,
+        {
+          headers: {
+            ...this.config.headers,
+            'content-type': 'multipart/form-data',
+          },
         },
-      });
+      );
       this.onSuccess(response);
     } catch (e) {
       this.onError(e);
