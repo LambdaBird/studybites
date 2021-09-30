@@ -16,7 +16,7 @@ export default class Uploader {
       formData.append('file', file);
 
       const response = await request.post(
-        `${process.env.HOST}/api/v1/files`,
+        `${process.env.SB_HOST}/api/v1/files`,
         formData,
         {
           headers: {
