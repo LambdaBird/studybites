@@ -30,7 +30,7 @@ export default class AttachPlugin {
       uploadButton: null,
       label: null,
     };
-
+    this.isLoading = false;
     this.uploader = new Uploader({
       config: this.config,
       onSuccess: this.onSuccess.bind(this),
@@ -64,6 +64,8 @@ export default class AttachPlugin {
   }
 
   onSuccess(response) {
+    this.isLoading = false;
+    this.nodes.fileInput.disabled = false;
     this.data = response.data;
     if (this.data.name.length > MAX_NAME_LENGTH) {
       this.nodes.label.innerText = `${this.data.name.slice(
@@ -76,10 +78,14 @@ export default class AttachPlugin {
   }
 
   onError = () => {
+    this.isLoading = false;
+    this.nodes.fileInput.disabled = false;
     this.nodes.label.innerText = this.api.i18n.t('error');
   };
 
   onChange = async () => {
+    this.isLoading = true;
+    this.nodes.fileInput.disabled = true;
     await this.uploader.uploadFile(this.nodes.fileInput);
   };
 
@@ -105,6 +111,7 @@ export default class AttachPlugin {
     this.nodes.fileInput.id = 'file';
     this.nodes.fileInput.accept = allowedTypes;
     this.nodes.fileInput.onchange = this.onChange;
+    this.nodes.fileInput.disabled = this.readOnly || this.isLoading;
     this.nodes.label = createElement({
       tagName: 'label',
     });
