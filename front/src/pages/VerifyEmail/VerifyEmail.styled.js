@@ -13,13 +13,6 @@ export const Page = styled.div`
   align-items: center;
 `;
 
-export const Title = styled(TitleAntd).attrs({
-  level: 2,
-})`
-  text-align: center;
-  margin-top: 1.5rem;
-`;
-
 export const TextWrapper = styled.div`
   text-align: center;
 `;
