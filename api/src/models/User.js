@@ -127,13 +127,10 @@ class User extends BaseModel {
       `),
       )
       .whereNot('users.id', userId)
-      .andWhere(
-        this.knex().raw(
-          `concat(users.first_name, ' ', users.last_name, ' ', users.first_name, ' ', users.email)`,
-        ),
-        'ilike',
-        `%${search ? search.replace(/ /g, '%') : '%'}%`,
-      )
+      .search({
+        columns: `concat(users.first_name, ' ', users.last_name, ' ', users.first_name, ' ', users.email)`,
+        searchString: search,
+      })
       .range(start, end);
   }
 
