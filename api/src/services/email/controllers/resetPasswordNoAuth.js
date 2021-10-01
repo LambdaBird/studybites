@@ -39,15 +39,15 @@ async function handler({ body: { email }, socket, headers }) {
     });
   }
   await Redis.setUserIp({ userIp });
+
   try {
-    await User.getUserByEmail({ email });
+    const { language } = await User.getUserByEmail({ email });
+    const link = await Redis.generateLink({ host, email });
+    await Email.sendResetPassword({ email, link, language });
   } catch (e) {
     // Do nothing if user not found with this email
-    return { message: messages.EMAIL_MESSAGE_LINK_SENT };
   }
 
-  const link = await Redis.generateLink({ host, email });
-  await Email.sendResetPassword({ email, link });
   return { message: messages.EMAIL_MESSAGE_LINK_SENT };
 }
 

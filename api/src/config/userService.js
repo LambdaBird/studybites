@@ -41,5 +41,6 @@ export const userServiceConstants = {
     'is_confirmed',
     'is_super_admin',
     'updated_at',
+    'language',
   ],
 };

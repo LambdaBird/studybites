@@ -12,7 +12,10 @@ const sendMailStatus = +process.env.SB_SEND_MAIL_STATUS || ONLY_CONSOLE;
 class Email {
   transporter;
 
-  constructor() {
+  t;
+
+  constructor(i18next) {
+    this.t = i18next.t.bind(i18next);
     this.transporter = nodemailer.createTransport({
       pool: true,
       host,
@@ -58,19 +61,19 @@ class Email {
     }
   }
 
-  async sendResetPassword({ email, link }) {
+  async sendResetPassword({ email, link, language = 'en' }) {
     return this.sendMailWithLogging({
       to: email,
-      subject: 'Password reset',
-      html: `Reset password link ${link}`,
+      subject: this.t('email:password_reset.subject', { lng: language }),
+      html: this.t('email:password_reset.html', { link, lng: language }),
     });
   }
 
-  async sendPasswordChanged({ email }) {
+  async sendPasswordChanged({ email, language = 'en' }) {
     return this.sendMailWithLogging({
       to: email,
-      subject: 'Password changed',
-      html: `Your password were successfully changed`,
+      subject: this.t('email:password_changed.subject', { lng: language }),
+      html: this.t('email:password_changed.html', { lng: language }),
     });
   }
 }
