@@ -90,6 +90,10 @@ export default class Image {
     });
   };
 
+  handleLabelClick = () => {
+    this.nodes.fileInput.click();
+  };
+
   onUploadSuccess = (response) => {
     this.data = response.data;
     this.nodes.contentDisplay.src = this.data.location;
@@ -144,7 +148,6 @@ export default class Image {
       classList: [this.CSS.fileInput],
       attrs: {
         type: 'file',
-        id: 'file',
         accept: allowedImageTypes,
         onchange: this.onFileSelect,
         disabled: this.readOnly || false,
@@ -155,6 +158,7 @@ export default class Image {
       attrs: {
         htmlFor: 'file',
         innerText: this.api.i18n.t('select'),
+        onclick: this.handleLabelClick,
       },
     });
     return createElement({
