@@ -8,6 +8,7 @@ services:
       - "6379:6379"
     environment:
       - REDIS_REPLICATION_MODE=master
+
   postgres:
     image: postgres
     restart: always
