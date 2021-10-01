@@ -1,9 +1,14 @@
+import PluginBase from '../PluginBase';
 import * as Utils from '../utils';
 
 import './image.css';
 
-export default class Image {
+export default class Image extends PluginBase {
   constructor({ data, api, readOnly }) {
+    super({
+      title: api.i18n.t('title'),
+    });
+
     this.api = api;
     this.data = data;
     this.element = null;
@@ -68,6 +73,7 @@ export default class Image {
     const container = document.createElement('div');
     this.container = container;
     container.classList.add(this.CSS.container);
+    container.appendChild(this.titleWrapper);
 
     const inputUrl = Utils.createInput({
       wrapper: this,
