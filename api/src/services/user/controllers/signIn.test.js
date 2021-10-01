@@ -1,8 +1,8 @@
 import Ajv from 'ajv';
 
-import { ajv as ajvConfig } from '../../../../config';
+import { ajv as ajvConfig } from '../../../config';
 
-import { signInOptions } from './options';
+import { signInOptions } from '../handlers/signIn/options';
 
 describe('Test signIn validation', () => {
   const schema = signInOptions.schema.body;
