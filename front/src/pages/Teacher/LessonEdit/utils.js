@@ -181,21 +181,11 @@ export const getConfig = (t) => ({
   tools: {
     attach: {
       class: Attach,
-      config: {
-        headers: {
-          authorization: `Bearer ${getJWTAccessToken()}`,
-        },
-      },
     },
     next: Next,
     image: {
       class: Image,
       inlineToolbar: true,
-      config: {
-        headers: {
-          authorization: `Bearer ${getJWTAccessToken()}`,
-        },
-      },
     },
     embed: {
       class: Embed,
