@@ -1,8 +1,0 @@
-#!/bin/bash
-
-echo "StudyBites superadmin account setup:"
-
-read -e -p "email: " EMAIL
-read -e -p "password: " PASSWORD
-
-SB_ADMIN_EMAIL=$EMAIL SB_ADMIN_PASSWORD=$PASSWORD bash -c 'docker-compose up --build'

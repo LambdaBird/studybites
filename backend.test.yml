@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  db:
+    networks:
+      - intranet-test
+    ports:
+      - '7000:5432'
+    volumes:
+      - studybites-test:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${POSTGRES_TEST_DB}
+  api:
+    command: yarn test:integration
+    networks:
+      - intranet-test
+    ports:
+      - '7001:3017'
+    volumes:
+      - ./api:/api
+      - /api/node_modules
+    environment:
+      PORT: ${API_PORT}
+      DATABASE_URL: ${POSTGRES_TEST_URI}
+      POSTGRES_DB: ${POSTGRES_TEST_DB}
+
+networks:
+  intranet-test:
+
+volumes:
+  studybites-test:
