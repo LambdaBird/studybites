@@ -7,6 +7,7 @@ import { useHistory } from 'react-router-dom';
 import { queryClient } from '@sb-ui/query';
 import { resetPassword } from '@sb-ui/utils/api/v1/email';
 import { getUser, patchUser } from '@sb-ui/utils/api/v1/user';
+import { EMAIL_ERR_TOO_FREQUENTLY } from '@sb-ui/utils/errors';
 import { EMAIL_SENT } from '@sb-ui/utils/paths';
 import { USER_BASE_QUERY } from '@sb-ui/utils/queries';
 
@@ -48,7 +49,7 @@ const Profile = () => {
         history.push(EMAIL_SENT);
       },
       onError: (err) => {
-        if (err.response.data?.message === 'errors.email.too_frequently') {
+        if (err.response.data?.message === EMAIL_ERR_TOO_FREQUENTLY) {
           const timeout = err.response.data.payload?.timeout;
           message.error({
             content: t('error_save_frequently', { timeout }),

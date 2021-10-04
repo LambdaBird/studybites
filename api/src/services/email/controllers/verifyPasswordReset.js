@@ -2,11 +2,8 @@ import { BadRequestError } from '../../../validation/errors';
 
 const options = {
   schema: {
+    params: { $ref: 'passwordResetId#' },
     response: {
-      200: {
-        type: 'object',
-        properties: {},
-      },
       '4xx': { $ref: '4xx#' },
       '5xx': { $ref: '5xx#' },
     },
@@ -21,10 +18,9 @@ async function handler({ params: { id } }) {
         emailServiceMessages: messages,
       },
     },
-    redisModel: Redis,
+    emailUtils: { getEmailByUuid },
   } = this;
-
-  const verified = await Redis.getEmailByUuid({ uuid: id });
+  const verified = await getEmailByUuid({ uuid: id });
   if (!verified) {
     throw new BadRequestError(errors.EMAIL_ERR_VERIFY);
   }
