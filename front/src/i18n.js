@@ -52,7 +52,17 @@ const getNavigatorLanguage = () =>
 i18n.use(initReactI18next).init({
   resources,
   lng: getStorageLanguage() || getNavigatorLanguage(),
-  ns: ['admin', 'sign_in', 'sign_up', 'teacher', 'user', 'common', 'profile'],
+  ns: [
+    'admin',
+    'sign_in',
+    'sign_up',
+    'teacher',
+    'user',
+    'common',
+    'profile',
+    'email',
+    'change_password',
+  ],
   defaultNS: 'common',
   keySeparator: '.',
   interpolation: {

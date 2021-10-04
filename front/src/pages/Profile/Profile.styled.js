@@ -46,16 +46,24 @@ export const FormInputsWrapper = styled.div`
   flex: 1 1 auto;
 `;
 
+export const ButtonsWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  column-gap: 2rem;
+`;
+
 export const Button = styled(ButtonAntd).attrs({
   type: 'primary',
   size: 'large',
 })`
+  @media (max-width: 767px) {
+    width: 100%;
+  }
+  margin-top: 1rem;
   min-width: 185px;
-  margin-left: auto;
 `;
 
-export const UpdateButton = styled(Button).attrs({
-  disabled: true,
-})`
-  margin-top: auto;
-`;
+export const ResetButton = styled(Button).attrs({
+  danger: true,
+})``;
