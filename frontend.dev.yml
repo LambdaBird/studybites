@@ -1,15 +1,15 @@
-version: '3.8'
+version: '3.7'
 
 services:
   front:
     build:
       context: ./front
       dockerfile: .docker/Dockerfile.dev
+    volumes:
+        - ./front:/front
+        - /front/node_modules
     ports:
       - '3018:3018'
     environment:
       PORT: ${FRONT_PORT}
       API_PORT: ${API_PORT}
-
-networks:
-  intranet:
