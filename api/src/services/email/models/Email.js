@@ -47,16 +47,13 @@ class Email {
       case ONLY_EMAIL:
         await this.sendMail(params);
         break;
-      case ONLY_CONSOLE:
-        // eslint-disable-next-line no-console
-        console.log(Email.getMailMocked(params));
-        break;
       case CONSOLE_AND_EMAIL:
         await this.sendMail(params);
+      // eslint-disable-next-line no-fallthrough
+      case ONLY_CONSOLE:
+      default:
         // eslint-disable-next-line no-console
         console.log(Email.getMailMocked(params));
-        break;
-      default:
         break;
     }
   }

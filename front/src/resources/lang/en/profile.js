@@ -43,6 +43,8 @@ export default {
     label: 'Confirm password',
   },
   update_information_button: 'Update information',
-  update_password_button: 'Update password',
+  reset_password_button: 'Reset password',
   reset_button: 'Reset Form',
+  error_save_frequently:
+    'You try to reset your password too frequently, try in {{timeout}} seconds',
 };
