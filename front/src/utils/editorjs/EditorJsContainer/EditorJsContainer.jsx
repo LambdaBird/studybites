@@ -161,8 +161,11 @@ const EditorJsContainer = forwardRef((props, ref) => {
               error: t('tools.attach.error'),
             },
             image: {
+              title: t('tools.image.title'),
               input: t('tools.image.input'),
               caption: t('tools.image.caption'),
+              select: t('tools.image.select'),
+              error: t('tools.image.error'),
             },
             next: {
               button: t('tools.next.title'),

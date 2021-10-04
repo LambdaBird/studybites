@@ -34,6 +34,8 @@ export default {
       title: 'Image',
       input: 'Input link',
       caption: 'Input caption',
+      select: 'Select a file to upload',
+      error: 'Failed to upload the file',
     },
     next: {
       title: 'Next',
