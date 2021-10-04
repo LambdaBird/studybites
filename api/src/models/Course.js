@@ -178,7 +178,7 @@ export default class Course extends BaseModel {
       .where('users_roles.user_id', userId)
       .andWhere('courses.status', status)
       .search({
-        columns: 'courses.name',
+        columns: ['courses.name'],
         searchString: search,
       })
       .groupBy('courses.id')
@@ -209,7 +209,7 @@ export default class Course extends BaseModel {
       )
       .where('courses.status', 'Public')
       .search({
-        columns: 'courses.name',
+        columns: ['courses.name'],
         searchString: search,
       })
       .groupBy('courses.id')
@@ -307,7 +307,7 @@ export default class Course extends BaseModel {
       )
       .where('users_roles.user_id', userId)
       .search({
-        columns: 'courses.name',
+        columns: ['courses.name'],
         searchString: search,
       })
       .groupBy('courses.id')
@@ -368,7 +368,7 @@ export default class Course extends BaseModel {
           .whereRaw(`results.action = 'finish'`),
       )
       .search({
-        columns: 'courses.name',
+        columns: ['courses.name'],
         searchString: search,
       })
       .groupBy('courses.id')

@@ -128,7 +128,7 @@ class User extends BaseModel {
       )
       .whereNot('users.id', userId)
       .search({
-        columns: `concat(users.first_name, ' ', users.last_name, ' ', users.first_name, ' ', users.email)`,
+        columns: ['users.first_name', 'users.last_name', 'users.email'],
         searchString: search,
       })
       .range(start, end);
