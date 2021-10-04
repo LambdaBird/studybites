@@ -5,6 +5,9 @@ services:
     build:
       context: ./front
       dockerfile: .docker/Dockerfile.dev
+    volumes:
+        - ./front:/front
+        - /front/node_modules
     ports:
       - '3018:3018'
     environment:
