@@ -82,10 +82,12 @@ export default {
       none: 'none',
     },
     fill_the_gap: {
+      title: 'Fill the gap',
       hint: '* Text inside {{ }} will be hidden for students',
       placeholder: 'Enter a text',
     },
     match: {
+      title: 'Match',
       input_left_placeholder: 'Input your left value',
       input_right_placeholder: 'Input your right value',
       hint: '* Words will be shuffled for students after save',
@@ -117,6 +119,7 @@ export default {
       question: '❓ Question',
       answer: 'Enter words and press enter',
       additional: 'Additional words',
+      hint: '* Words will be shuffled for students after save',
     },
   },
 };

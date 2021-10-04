@@ -1,0 +1,38 @@
+version: '3.7s'
+
+services:
+  db:
+    networks:
+      - intranet-test
+    ports:
+      - '7000:5432'
+    volumes:
+      - studybites-test:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${POSTGRES_TEST_DB}
+  s3:
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - ./storage:/data
+    command: server --address 0.0.0.0:9000 --console-address 0.0.0.0:9001 /data
+  api:
+    command: yarn test:integration
+    networks:
+      - intranet-test
+    ports:
+      - '7001:3017'
+    volumes:
+      - ./api:/api
+      - /api/node_modules
+    environment:
+      PORT: ${API_PORT}
+      DATABASE_URL: ${POSTGRES_TEST_URI}
+      POSTGRES_DB: ${POSTGRES_TEST_DB}
+
+networks:
+  intranet-test:
+
+volumes:
+  studybites-test:
