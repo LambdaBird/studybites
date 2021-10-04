@@ -90,10 +90,6 @@ export default class AttachPlugin {
     });
   };
 
-  handleLabelClick = () => {
-    this.nodes.fileInput.click();
-  };
-
   preparePluginTitle() {
     const title = createElement({
       tagName: 'span',
@@ -113,14 +109,14 @@ export default class AttachPlugin {
       classList: [this.CSS.file],
     });
     this.nodes.fileInput.type = 'file';
+    this.nodes.fileInput.id = 'attach-input';
     this.nodes.fileInput.accept = allowedTypes;
-    this.nodes.fileInput.onchange = this.onChange;
+    this.nodes.fileInput.addEventListener('change', this.onChange);
     this.nodes.fileInput.disabled = this.readOnly || this.isLoading;
     this.nodes.label = createElement({
       tagName: 'label',
     });
-    this.nodes.label.htmlFor = 'file';
-    this.nodes.label.onclick = this.handleLabelClick;
+    this.nodes.label.htmlFor = 'attach-input';
     this.nodes.label.innerText = this.data.name || this.api.i18n.t('select');
     const wrapper = createElement({
       classList: [this.CSS.fileInput],

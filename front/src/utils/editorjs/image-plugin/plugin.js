@@ -149,10 +149,10 @@ export default class Image {
       attrs: {
         type: 'file',
         accept: allowedImageTypes,
-        onchange: this.onFileSelect,
         disabled: this.readOnly || false,
       },
     });
+    this.nodes.fileInput.addEventListener('change', this.onFileSelect);
     this.nodes.fileLabel = createElement({
       tagName: 'label',
       attrs: {
@@ -173,10 +173,10 @@ export default class Image {
       classList: [this.CSS.input],
       attrs: {
         placeholder: this.api.i18n.t('input'),
-        oninput: this.onLinkInput,
         disabled: this.readOnly || false,
       },
     });
+    this.nodes.linkInput.addEventListener('input', this.onLinkInput);
     return createElement({
       children: [this.nodes.linkInput],
     });
@@ -188,10 +188,10 @@ export default class Image {
       classList: [this.CSS.contentDisplay],
       attrs: {
         src: this.data.location || '',
-        onload: this.onSuccess,
-        onerror: this.onError,
       },
     });
+    this.nodes.contentDisplay.addEventListener('load', this.onSuccess);
+    this.nodes.contentDisplay.addEventListener('error', this.onError);
     return createElement({
       children: [this.nodes.contentDisplay],
     });
@@ -207,6 +207,7 @@ export default class Image {
         disabled: this.readOnly || false,
       },
     });
+    this.nodes.caption.addEventListener('input', this.onCaptionInput);
     return this.nodes.caption;
   }
 
