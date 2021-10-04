@@ -18,6 +18,7 @@ import { Roles } from '@sb-ui/utils/constants';
 import { clearJWT } from '@sb-ui/utils/jwt';
 import {
   HOME,
+  PROFILE,
   SIGN_IN,
   TEACHER_HOME,
   USER_COURSES,
@@ -28,6 +29,7 @@ import { USER_BASE_QUERY } from '@sb-ui/utils/queries';
 import {
   ChildrenType,
   ClassNameType,
+  HandleHideType,
   HideOnScrollType,
 } from '@sb-ui/utils/types';
 
@@ -55,7 +57,7 @@ const MENU_LANGUAGES_LIST = new Map(
   ]),
 );
 
-const Header = ({ className, hideOnScroll, bottom, children }) => {
+const Header = ({ className, hideOnScroll, bottom, children, handleHide }) => {
   const history = useHistory();
   const { t, i18n } = useTranslation(['common', 'user']);
   const location = useLocation();
@@ -65,6 +67,10 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
   const headerRef = useRef(null);
   const [scroll, setScroll] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
+
+  const handleProfile = useCallback(() => {
+    history.push(PROFILE);
+  }, [history]);
 
   const handleSignOut = useCallback(() => {
     clearJWT();
@@ -88,6 +94,9 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
       setIsVisible(false);
       const upperKey = keyPath?.[keyPath.length - 1];
       switch (upperKey) {
+        case MENU_KEYS.PROFILE:
+          handleProfile();
+          break;
         case MENU_KEYS.SIGN_OUT:
           handleSignOut();
           break;
@@ -98,7 +107,7 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
           break;
       }
     },
-    [handleMenuLanguageClick, handleSignOut],
+    [handleMenuLanguageClick, handleProfile, handleSignOut],
   );
 
   const getTeacherMenu = useCallback(() => {
@@ -251,6 +260,12 @@ const Header = ({ className, hideOnScroll, bottom, children }) => {
     [firstNameLetter, fullName, isMobile],
   );
 
+  useEffect(() => {
+    if (typeof handleHide === 'function') {
+      handleHide?.(scroll === 'down');
+    }
+  }, [handleHide, scroll]);
+
   return (
     <>
       <S.Container
@@ -309,6 +324,7 @@ Header.propTypes = {
   className: ClassNameType,
   bottom: ChildrenType,
   hideOnScroll: HideOnScrollType,
+  handleHide: HandleHideType,
 };
 
 export default Header;

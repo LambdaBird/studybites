@@ -1,4 +1,5 @@
 /* eslint-disable class-methods-use-this */
+import PluginBase from '../PluginBase';
 
 import {
   extractContentAfterCaret,
@@ -10,8 +11,12 @@ import {
 
 import './quiz.css';
 
-export default class Quiz {
+export default class Quiz extends PluginBase {
   constructor({ data, api, readOnly }) {
+    super({
+      title: api.i18n.t('title'),
+    });
+
     this.api = api;
     this.readOnly = readOnly;
 
@@ -55,6 +60,9 @@ export default class Quiz {
 
   render() {
     const { answers, question } = this.data;
+    const container = document.createElement('div');
+    container.appendChild(this.titleWrapper);
+
     this.elements.wrapper = document.createElement('div');
     this.elements.wrapper.classList.add(this.CSS.wrapper);
 
@@ -126,7 +134,8 @@ export default class Quiz {
       false,
     );
 
-    return this.elements.wrapper;
+    container.appendChild(this.elements.wrapper);
+    return container;
   }
 
   toggleCheckbox(event) {

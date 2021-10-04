@@ -13,19 +13,22 @@ export const StyledRow = styled(Row)`
   height: 100%;
   width: 100%;
   display: flex;
+  flex-wrap: nowrap;
+  gap: 3rem;
 `;
 
 export const LeftCol = styled(Col)`
-  height: 100%;
-  @media (min-width: 1450px) {
-    margin: 0 auto;
-  }
+  min-height: 100%;
+  display: flex;
+  justify-content: center;
+  flex: 3 1 auto;
 `;
 
 export const EditorWrapper = styled.div`
   background-color: white;
   border: 32px solid #e2eff8;
   border-radius: 40px;
+  width: 100%;
   min-height: 100%;
   padding: 2rem;
   max-width: 850px;
@@ -34,13 +37,19 @@ export const EditorWrapper = styled.div`
 
 export const RightCol = styled(Col)`
   height: 100%;
-  width: 100%;
+  flex: 1 1 400px;
+  display: flex;
+  max-width: 450px;
+  justify-content: center;
+`;
+
+export const RightColContent = styled(Col)`
   position: fixed;
-  right: 0;
-  padding: 2rem;
-  @media (min-width: 1600px) {
-    right: 8rem;
-  }
+  height: 100vh;
+  padding: 0 2rem 2rem;
+  overflow-y: auto;
+  transition: transform 0.3s ease-in-out;
+  transform: translateY(${(props) => (props.headerHide ? '-54' : '0')}px);
 `;
 
 export const InputTitle = styled.input`

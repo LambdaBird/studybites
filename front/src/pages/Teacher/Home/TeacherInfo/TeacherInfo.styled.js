@@ -1,5 +1,7 @@
-import { Avatar, Col, Divider, Row, Statistic } from 'antd';
+import { Avatar, Col, Divider, Row, Statistic, Typography } from 'antd';
 import styled from 'styled-components';
+
+const { Paragraph } = Typography;
 
 export const Wrapper = styled(Row).attrs({
   justify: 'center',
@@ -50,4 +52,11 @@ export const StyledAvatar = styled(Avatar).attrs({
 })`
   color: #f56a00;
   background-color: #fde3cf;
+`;
+
+export const Description = styled(Paragraph).attrs({
+  ellipsis: { tooltip: true, rows: 2 },
+  type: 'secondary',
+})`
+  overflow-wrap: anywhere;
 `;

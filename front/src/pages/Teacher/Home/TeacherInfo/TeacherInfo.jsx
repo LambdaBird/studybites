@@ -48,6 +48,8 @@ const TeacherInfo = () => {
     [user.firstName, user.lastName],
   );
 
+  const { description } = user || {};
+
   return (
     <S.Wrapper>
       <S.AvatarCol>
@@ -55,7 +57,7 @@ const TeacherInfo = () => {
       </S.AvatarCol>
       <S.TextCol>
         <Title level={4}>{t('info.greeting', { fullName })}</Title>
-        <Text type="secondary">Your awesome description</Text>
+        <S.Description>{description}</S.Description>
       </S.TextCol>
       <S.StatisticCol>
         {statisticColumns.map((column) => (

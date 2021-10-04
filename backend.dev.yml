@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  db:
+    networks:
+      - intranet
+    ports:
+      - '5503:5432'
+    volumes:
+      - studybites:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+  api:
+    command: yarn run:dev
+    networks:
+      - intranet
+    ports:
+      - '3017:3017'
+    volumes:
+      - ./api:/api
+      - /api/node_modules
+    environment:
+      PORT: ${API_PORT}
+      DEVELOPMENT_MODE: 1
+      DATABASE_URL: ${POSTGRES_URI}
+      POSTGRES_DB: ${POSTGRES_DB}
+
+networks:
+  intranet:
+
+volumes:
+  studybites:

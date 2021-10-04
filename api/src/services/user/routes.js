@@ -9,6 +9,8 @@ import {
 
 import { selfHandler, selfOptions } from './handlers/self';
 
+import { updateSelfHandler, updateSelfOptions } from './handlers/updateSelf';
+
 import { getAllUsersHandler, getAllUsersOptions } from './handlers/getAllUsers';
 
 import { getUserHandler, getUserOptions } from './handlers/getUser';
@@ -41,6 +43,8 @@ export default async function router(instance) {
   instance.post('/refresh_token', refreshTokenOptions, refreshTokenHandler);
 
   instance.get('/self', selfOptions, selfHandler);
+
+  instance.patch('/self', updateSelfOptions, updateSelfHandler);
 
   instance.get('/authors', getAllAuthorsOptions, getAllAuthorsHandler);
 

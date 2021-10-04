@@ -3,6 +3,12 @@ import { createGlobalStyle } from 'styled-components';
 import variables from '@sb-ui/theme/variables';
 
 export const GlobalStylesEditorPage = createGlobalStyle`
+  .codex-editor__redactor{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
   .ce-toolbar__plus::after{
     content: '${(props) => props.toolbarHint}';
     position: absolute;

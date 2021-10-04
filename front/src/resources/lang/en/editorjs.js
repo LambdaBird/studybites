@@ -133,6 +133,7 @@ export default {
       question: '❓ Question',
       answer: 'Enter words and press enter',
       additional: 'Additional words',
+      hint: '* Words will be shuffled for students after save',
     },
   },
 };
