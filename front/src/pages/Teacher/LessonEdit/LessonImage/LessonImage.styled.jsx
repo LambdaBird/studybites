@@ -1,5 +1,6 @@
-import { Button } from 'antd';
+import { Button, Col as AntdCol } from 'antd';
 import styled from 'styled-components';
+import { UploadOutlined } from '@ant-design/icons';
 
 export const Image = styled.img`
   object-fit: cover;
@@ -21,6 +22,12 @@ export const ImageFallbackTitle = styled.span`
   margin-right: 1rem;
 `;
 
-export const UploadButton = styled(Button)`
+export const UploadButton = styled(Button).attrs({
+  icon: <UploadOutlined />,
+})`
   width: 100%;
 `;
+
+export const Col = styled(AntdCol).attrs({
+  span: 24,
+})``;
