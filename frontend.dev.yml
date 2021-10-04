@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.7'
 
 services:
   front:
@@ -10,6 +10,3 @@ services:
     environment:
       PORT: ${FRONT_PORT}
       API_PORT: ${API_PORT}
-
-networks:
-  intranet:
