@@ -47,6 +47,9 @@ export default {
     lessons: 'урока(-ов)',
   },
   lesson: {
+    attach: {
+      download: 'Скачать прикреплённый файл',
+    },
     results: {
       title: 'Результаты',
       correct_answers: 'Правильные ответы в уроке',

@@ -2,6 +2,7 @@ import hash from 'object-hash';
 import Marker from '@editorjs/marker';
 
 import { BLOCKS_TYPE } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
+import Attach from '@sb-ui/utils/editorjs/attach-plugin';
 import Bricks from '@sb-ui/utils/editorjs/bricks-plugin';
 import ClosedQuestion from '@sb-ui/utils/editorjs/closed-question-plugin';
 import CodeTool from '@sb-ui/utils/editorjs/code-plugin';
@@ -107,7 +108,8 @@ export const prepareBlocksDataForApi = (data, type) => {
         ...data,
         values: prepareMatchValues(data.values),
       };
-
+    case BLOCKS_TYPE.ATTACH:
+      return data.location ? data : null;
     default:
       return data;
   }
@@ -120,6 +122,7 @@ const SKIP_BLOCKS = [
   BLOCKS_TYPE.FILL_THE_GAP,
   BLOCKS_TYPE.MATCH,
   BLOCKS_TYPE.BRICKS,
+  BLOCKS_TYPE.ATTACH,
 ];
 
 export const makeAnswerForBlock = (block) => {
@@ -175,6 +178,9 @@ export const prepareBlocksForApi = (blocks) =>
 export const getConfig = (t) => ({
   holder: 'editorjs',
   tools: {
+    attach: {
+      class: Attach,
+    },
     next: Next,
     image: {
       class: Image,

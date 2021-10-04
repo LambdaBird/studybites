@@ -132,6 +132,7 @@ const EditorJsContainer = forwardRef((props, ref) => {
             },
           },
           toolNames: {
+            Attach: t('tools.attach.title'),
             Text: t('tools.text.title'),
             Image: t('tools.image.title'),
             Next: t('tools.next.title'),
@@ -155,6 +156,11 @@ const EditorJsContainer = forwardRef((props, ref) => {
             stub: {
               'The block can not be displayed correctly.':
                 t('tools.stub.title'),
+            },
+            attach: {
+              title: t('tools.attach.title'),
+              select: t('tools.attach.select'),
+              error: t('tools.attach.error'),
             },
             image: {
               title: t('tools.image.title'),

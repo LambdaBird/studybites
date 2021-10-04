@@ -1,0 +1,41 @@
+.attach-plugin__titleWrapper {
+    width: 100%;
+    align-items: center;
+    justify-content: start;
+    margin-bottom: 0.5rem;
+}
+
+.attach-plugin__title {
+    cursor: default;
+    user-select: none;
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.45);
+}
+
+.attach-plugin__file {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.attach-plugin__file-input label {
+    position: relative;
+    width: 100%;
+    height: 3rem;
+    background: #098C8C;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+.file-name {
+    position: absolute;
+    bottom: -35px;
+    left: 10px;
+    font-size: 0.85rem;
+    color: #555;
+}
