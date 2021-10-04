@@ -45,7 +45,7 @@ export const sanitizeBlocks = {
   mark: true,
 };
 
-export const uploadFile = async ({ parent, config, onSuccess, onError }) => {
+export const uploadFile = async ({ parent, onSuccess, onError }) => {
   try {
     const formData = new FormData();
     const {
