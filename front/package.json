@@ -2,7 +2,7 @@
   "name": "studybites-front",
   "version": "0.0.1",
   "license": "Apache-2.0",
-  "proxy": "http://studybites-api:3017",
+  "proxy": "http://api:3017",
   "scripts": {
     "start": "yarn install && craco start",
     "build": "yarn install && craco build",

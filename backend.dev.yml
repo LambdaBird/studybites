@@ -1,9 +1,7 @@
-version: '3.8'
+version: '3.7'
 
 services:
   db:
-    networks:
-      - intranet
     ports:
       - '5503:5432'
     volumes:
@@ -12,8 +10,6 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
   api:
     command: yarn run:dev
-    networks:
-      - intranet
     ports:
       - '3017:3017'
     volumes:
@@ -24,9 +20,6 @@ services:
       DEVELOPMENT_MODE: 1
       DATABASE_URL: ${POSTGRES_URI}
       POSTGRES_DB: ${POSTGRES_DB}
-
-networks:
-  intranet:
 
 volumes:
   studybites:
