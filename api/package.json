@@ -21,6 +21,8 @@
     "fastify-objection": "^0.0.2",
     "fastify-plugin": "^3.0.0",
     "fastify-redis": "^4.3.2",
+    "i18next": "^21.2.0",
+    "i18next-fs-backend": "^1.1.1",
     "knex": "^0.95.4",
     "nodemailer": "^6.6.3",
     "objection": "^2.2.15",

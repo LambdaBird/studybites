@@ -25,7 +25,7 @@ async function handler({ user: { id: userId } }) {
     emailModel: Email,
     redisModel: Redis,
   } = this;
-  const { email } = await User.getUser({ userId });
+  const { email, language } = await User.getUser({ userId });
 
   const { allowed, timeout } = await Redis.getResetPasswordAllowed({
     email,
@@ -38,7 +38,7 @@ async function handler({ user: { id: userId } }) {
   }
 
   const link = await Redis.generateLink({ host, email });
-  await Email.sendResetPassword({ email, link });
+  await Email.sendResetPassword({ email, link, language });
   return {
     message: messages.EMAIL_MESSAGE_LINK_SENT,
   };

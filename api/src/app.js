@@ -25,6 +25,7 @@ import emailService from './services/email';
 import keywordsService from './services/keywords';
 
 import errorsAndValidation from './validation';
+import i18n from './i18n';
 
 const REDIS_PORT = process.env.REDIS_PORT || 6379;
 
@@ -40,6 +41,7 @@ export default (options = {}) => {
   });
 
   app.register(errorsAndValidation);
+  app.register(i18n);
 
   app.register(fastifyRedis, {
     host: 'redis',

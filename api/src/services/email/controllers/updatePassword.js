@@ -34,7 +34,7 @@ async function handler({ params: { id: uuid }, body: { password } }) {
   if (!email) {
     throw new BadRequestError(errors.EMAIL_ERR_VERIFY);
   }
-  const { id: userId } = await User.getUserByEmail({ email });
+  const { id: userId, language } = await User.getUserByEmail({ email });
 
   const hash = await hashPassword(password);
 
@@ -47,7 +47,7 @@ async function handler({ params: { id: uuid }, body: { password } }) {
   const refreshToken = createRefreshToken(this, userId);
 
   await Redis.invalidateLink({ email, uuid });
-  await Email.sendPasswordChanged({ email });
+  await Email.sendPasswordChanged({ email, language });
 
   return { accessToken, refreshToken };
 }
