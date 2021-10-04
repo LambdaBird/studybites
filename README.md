@@ -12,6 +12,18 @@ Studybites is an open-source Education Platform (LMS) focused on microlearning a
 
 Create an .env file locally. You can duplicate .env-example and name the new copy .env. Adapt the variables to your needs.
 
+Environment represents
+```dotenv
+SB_SEND_MAIL_STATUS=1 
+# 1 - Don't send email and only log it to console
+# 2 - Don't log to console and only send email
+# 3 - Log to console and send email 
+SB_MAIL_USER=your_mail@mail.com # Email address which from message will be sent
+SB_MAIL_PASSWORD=your_password # Email address password
+SB_ADMIN_EMAIL=admin_mail@mail.com # Super admin account email address 
+SB_ADMIN_PASSWORD=some_hard_admin_password # Super admin email address password
+```
+
 ```
 git clone https://github.com/LambdaBird/studybites.git
 

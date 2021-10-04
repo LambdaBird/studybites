@@ -12,7 +12,7 @@ const options = {
   },
 };
 
-async function handler({ user: { id: userId }, headers }) {
+async function handler({ user: { id: userId } }) {
   const {
     models: { User },
     config: {
@@ -20,13 +20,14 @@ async function handler({ user: { id: userId }, headers }) {
         emailServiceErrors: errors,
         emailServiceMessages: messages,
       },
+      globals: { host },
     },
-    emailUtils: { getResetPasswordAllowed, generateLink, sendResetPassword },
+    emailModel: Email,
+    redisModel: Redis,
   } = this;
-  const host = headers['x-forwarded-host'];
   const { email } = await User.getUser({ userId });
 
-  const { allowed, timeout } = await getResetPasswordAllowed({
+  const { allowed, timeout } = await Redis.getResetPasswordAllowed({
     email,
   });
 
@@ -36,8 +37,8 @@ async function handler({ user: { id: userId }, headers }) {
     });
   }
 
-  const link = await generateLink({ host, email });
-  await sendResetPassword({ email, link });
+  const link = await Redis.generateLink({ host, email });
+  await Email.sendResetPassword({ email, link });
   return {
     message: messages.EMAIL_MESSAGE_LINK_SENT,
   };

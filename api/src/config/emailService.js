@@ -6,5 +6,4 @@ export const emailServiceErrors = {
 export const emailServiceMessages = {
   EMAIL_MESSAGE_LINK_SENT: 'Reset link sent to email successfully',
   EMAIL_MESSAGE_LINK_VERIFIED: 'Link verified successfully',
-  EMAIL_MESSAGE_SENT_SUCCESSFULLY: 'Email sent successfully',
 };
