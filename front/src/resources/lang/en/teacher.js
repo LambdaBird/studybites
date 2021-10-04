@@ -179,6 +179,12 @@ export default {
       invite_student: 'Invite student',
     },
   },
+  lesson_students_results: {
+    start: 'Start',
+    finish: 'Finish',
+    seconds: 'seconds',
+    short_seconds: 'sec.',
+  },
   students: {
     title: 'Lessons students ({{studentsCount}})',
     table: {

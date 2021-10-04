@@ -81,7 +81,7 @@ const FunnelContainer = ({ lessonId }) => {
 
         const landedStudents = students.students.filter((student) => {
           const theResult = student.results.find(
-            (result) => result.revision === interactiveBlock.revision,
+            (result) => result?.revision === interactiveBlock?.revision,
           );
 
           return !!theResult;
@@ -94,7 +94,7 @@ const FunnelContainer = ({ lessonId }) => {
           blocks: bite.map((block) => block.type),
           replySeries: landedStudents.map((student) => {
             const theResultIndex = student.results.findIndex(
-              (result) => result.revision === interactiveBlock.revision,
+              (result) => result?.revision === interactiveBlock?.revision,
             );
 
             return (
