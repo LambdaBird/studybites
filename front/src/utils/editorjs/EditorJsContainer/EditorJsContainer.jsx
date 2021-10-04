@@ -24,6 +24,7 @@ const EditorJsContainer = forwardRef((props, ref) => {
     [],
   );
 
+  const initialLanguage = useRef(language);
   const instance = useRef(null);
 
   const handleChange = useCallback(
@@ -67,191 +68,197 @@ const EditorJsContainer = forwardRef((props, ref) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const initEditor = useCallback(async () => {
-    const {
-      instanceRef,
-      // eslint-disable-next-line no-shadow
-      children,
-      enableReInitialize,
-      tools,
-      onChange,
-      onReady,
-      ...anotherProps
-    } = props;
+  const initEditor = useCallback(
+    async (data) => {
+      const {
+        instanceRef,
+        // eslint-disable-next-line no-shadow
+        children,
+        enableReInitialize,
+        tools,
+        onChange,
+        onReady,
+        ...anotherProps
+      } = props;
 
-    const extendTools = {
-      // default tools
-      paragraph: {
-        class: Paragraph,
-        inlineToolbar: true,
-      },
-      ...tools,
-    };
+      const extendTools = {
+        // default tools
+        paragraph: {
+          class: Paragraph,
+          inlineToolbar: true,
+        },
+        ...tools,
+      };
 
-    if (instance.current) {
-      return;
-    }
+      if (instance.current) {
+        return;
+      }
 
-    const newInstance = new EditorJS({
-      tools: extendTools,
-      holder,
+      const newInstance = new EditorJS({
+        tools: extendTools,
+        holder,
 
-      onReady: () => handleReady(newInstance),
+        onReady: () => handleReady(newInstance),
 
-      ...(onChange && {
-        onChange: handleChange,
-      }),
-      ...anotherProps,
+        ...(onChange && {
+          onChange: handleChange,
+        }),
+        ...anotherProps,
+        ...data,
 
-      i18n: {
-        messages: {
-          ui: {
-            toolbar: {
-              toolbox: {
-                Add: t('toolbar.toolbox.add'),
+        i18n: {
+          messages: {
+            ui: {
+              toolbar: {
+                toolbox: {
+                  Add: t('toolbar.toolbox.add'),
+                },
               },
-            },
-            inlineToolbar: {
-              converter: {
-                'Convert to': t('toolbar.converter.convert_to'),
+              inlineToolbar: {
+                converter: {
+                  'Convert to': t('toolbar.converter.convert_to'),
+                },
+              },
+              blockTunes: {
+                toggler: {
+                  'Click to tune': t('block_tunes.toggler.tune'),
+                  'or drag to move': t('block_tunes.toggler.drag'),
+                },
               },
             },
             blockTunes: {
-              toggler: {
-                'Click to tune': t('block_tunes.toggler.tune'),
-                'or drag to move': t('block_tunes.toggler.drag'),
+              delete: {
+                Delete: t('block_tunes.actions.delete'),
+              },
+              moveUp: {
+                'Move up': t('block_tunes.actions.move_up'),
+              },
+              moveDown: {
+                'Move down': t('block_tunes.actions.move_down'),
+              },
+            },
+            toolNames: {
+              Text: t('tools.paragraph.title'),
+              Image: t('tools.image.title'),
+              Next: t('tools.next.title'),
+              Quiz: t('tools.quiz.title'),
+              Video: t('tools.embed.title'),
+              Heading: t('tools.header.title'),
+              List: t('tools.list.title'),
+              Quote: t('tools.quote.title'),
+              Delimiter: t('tools.delimiter.title'),
+              Table: t('tools.table.title'),
+              'Closed Question': t('tools.closed_question.title'),
+              Warning: t('tools.warning.title'),
+              Code: t('tools.code.title'),
+              Marker: t('tools.marker.title'),
+              Bold: t('tools.bold.title'),
+              Italic: t('tools.italic.title'),
+              Link: t('tools.link.title'),
+              Bricks: t('tools.bricks.title'),
+            },
+            tools: {
+              stub: {
+                'The block can not be displayed correctly.':
+                  t('tools.stub.title'),
+              },
+              image: {
+                title: t('tools.image.title'),
+                input: t('tools.image.input'),
+                caption: t('tools.image.caption'),
+              },
+              next: {
+                title: t('tools.next.title'),
+                button: t('tools.next.title'),
+              },
+              list: {
+                title: t('tools.list.title'),
+              },
+              delimiter: {
+                title: t('tools.delimiter.title'),
+              },
+              quiz: {
+                title: t('tools.quiz.title'),
+                question: t('tools.quiz.question'),
+                answer: t('tools.quiz.answer'),
+              },
+              embed: {
+                title: t('tools.embed.title'),
+                input: t('tools.embed.input'),
+                caption: t('tools.embed.caption'),
+              },
+              header: {
+                title: t('tools.header.title'),
+                input: t('tools.header.input'),
+              },
+              quote: {
+                title: t('tools.quote.title'),
+                input: t('tools.quote.input'),
+                caption: t('tools.quote.caption'),
+              },
+              table: {
+                title: t('tools.table.title'),
+                col_before: t('tools.table.col_before'),
+                col_after: t('tools.table.col_after'),
+                row_before: t('tools.table.row_before'),
+                row_after: t('tools.table.row_after'),
+                delete_col: t('tools.table.delete_col'),
+                delete_row: t('tools.table.delete_row'),
+              },
+              closedQuestion: {
+                title: t('tools.closed_question.title'),
+                question: t('tools.closed_question.question'),
+                answer: t('tools.closed_question.answer'),
+                explanation: t('tools.closed_question.explanation'),
+                tag_title: t('tools.closed_question.tag_title'),
+                example: t('tools.closed_question.example'),
+                none: t('tools.closed_question.none'),
+              },
+              fillTheGap: {
+                title: t('tools.fill_the_gap.title'),
+                hint: t('tools.fill_the_gap.hint'),
+                placeholder: t('tools.fill_the_gap.placeholder'),
+              },
+              match: {
+                title: t('tools.match.title'),
+                input_left_placeholder: t('tools.match.input_left_placeholder'),
+                input_right_placeholder: t(
+                  'tools.match.input_right_placeholder',
+                ),
+                hint: t('tools.match.hint'),
+                add_line: t('tools.match.add_line'),
+              },
+              warning: {
+                title: t('tools.warning.title'),
+                placeholder: t('tools.warning.placeholder'),
+                message: t('tools.warning.message'),
+              },
+              code: {
+                title: t('tools.code.title'),
+                placeholder: t('tools.code.placeholder'),
+              },
+              bricks: {
+                title: t('tools.bricks.title'),
+                question: t('tools.bricks.question'),
+                answer: t('tools.bricks.answer'),
+                additional: t('tools.bricks.additional'),
+                hint: t('tools.bricks.hint'),
               },
             },
           },
-          blockTunes: {
-            delete: {
-              Delete: t('block_tunes.actions.delete'),
-            },
-            moveUp: {
-              'Move up': t('block_tunes.actions.move_up'),
-            },
-            moveDown: {
-              'Move down': t('block_tunes.actions.move_down'),
-            },
-          },
-          toolNames: {
-            Text: t('tools.paragraph.title'),
-            Image: t('tools.image.title'),
-            Next: t('tools.next.title'),
-            Quiz: t('tools.quiz.title'),
-            Video: t('tools.embed.title'),
-            Heading: t('tools.header.title'),
-            List: t('tools.list.title'),
-            Quote: t('tools.quote.title'),
-            Delimiter: t('tools.delimiter.title'),
-            Table: t('tools.table.title'),
-            'Closed Question': t('tools.closed_question.title'),
-            Warning: t('tools.warning.title'),
-            Code: t('tools.code.title'),
-            Marker: t('tools.marker.title'),
-            Bold: t('tools.bold.title'),
-            Italic: t('tools.italic.title'),
-            Link: t('tools.link.title'),
-            Bricks: t('tools.bricks.title'),
-          },
-          tools: {
-            stub: {
-              'The block can not be displayed correctly.':
-                t('tools.stub.title'),
-            },
-            image: {
-              title: t('tools.image.title'),
-              input: t('tools.image.input'),
-              caption: t('tools.image.caption'),
-            },
-            next: {
-              title: t('tools.next.title'),
-              button: t('tools.next.title'),
-            },
-            list: {
-              title: t('tools.list.title'),
-            },
-            delimiter: {
-              title: t('tools.delimiter.title'),
-            },
-            quiz: {
-              title: t('tools.quiz.title'),
-              question: t('tools.quiz.question'),
-              answer: t('tools.quiz.answer'),
-            },
-            embed: {
-              title: t('tools.embed.title'),
-              input: t('tools.embed.input'),
-              caption: t('tools.embed.caption'),
-            },
-            header: {
-              title: t('tools.header.title'),
-              input: t('tools.header.input'),
-            },
-            quote: {
-              title: t('tools.quote.title'),
-              input: t('tools.quote.input'),
-              caption: t('tools.quote.caption'),
-            },
-            table: {
-              title: t('tools.table.title'),
-              col_before: t('tools.table.col_before'),
-              col_after: t('tools.table.col_after'),
-              row_before: t('tools.table.row_before'),
-              row_after: t('tools.table.row_after'),
-              delete_col: t('tools.table.delete_col'),
-              delete_row: t('tools.table.delete_row'),
-            },
-            closedQuestion: {
-              title: t('tools.closed_question.title'),
-              question: t('tools.closed_question.question'),
-              answer: t('tools.closed_question.answer'),
-              explanation: t('tools.closed_question.explanation'),
-              tag_title: t('tools.closed_question.tag_title'),
-              example: t('tools.closed_question.example'),
-              none: t('tools.closed_question.none'),
-            },
-            fillTheGap: {
-              title: t('tools.fill_the_gap.title'),
-              hint: t('tools.fill_the_gap.hint'),
-              placeholder: t('tools.fill_the_gap.placeholder'),
-            },
-            match: {
-              title: t('tools.match.title'),
-              input_left_placeholder: t('tools.match.input_left_placeholder'),
-              input_right_placeholder: t('tools.match.input_right_placeholder'),
-              hint: t('tools.match.hint'),
-              add_line: t('tools.match.add_line'),
-            },
-            warning: {
-              title: t('tools.warning.title'),
-              placeholder: t('tools.warning.placeholder'),
-              message: t('tools.warning.message'),
-            },
-            code: {
-              title: t('tools.code.title'),
-              placeholder: t('tools.code.placeholder'),
-            },
-            bricks: {
-              title: t('tools.bricks.title'),
-              question: t('tools.bricks.question'),
-              answer: t('tools.bricks.answer'),
-              additional: t('tools.bricks.additional'),
-              hint: t('tools.bricks.hint'),
-            },
-          },
         },
-      },
-    });
+      });
 
-    instance.current = newInstance;
+      instance.current = newInstance;
 
-    if (instanceRef) {
-      instanceRef(newInstance);
-    }
-  }, [handleChange, handleReady, holder, props, t]);
+      if (instanceRef) {
+        instanceRef(newInstance);
+      }
+    },
+    [handleChange, handleReady, holder, props, t],
+  );
 
-  const destroyEditor = useCallback(() => {
+  const destroyEditor = useCallback(async () => {
     Array.from(document.querySelectorAll('.ct--bottom')).forEach(
       (codexTooltip) => codexTooltip.remove(),
     );
@@ -260,12 +267,11 @@ const EditorJsContainer = forwardRef((props, ref) => {
       return;
     }
 
-    (async () => {
-      await instance.current.isReady;
-      if (instance.current.destroy) {
-        instance.current.destroy();
-      }
-    })();
+    await instance.current.isReady;
+    if (instance.current.destroy) {
+      await instance.current.destroy();
+      instance.current = null;
+    }
   }, []);
 
   const changeData = useCallback((data) => {
@@ -304,6 +310,19 @@ const EditorJsContainer = forwardRef((props, ref) => {
     }
     return () => {};
   }, [changeData, props]);
+
+  const renderEditorWithBlocks = useCallback(async () => {
+    const { blocks } = await instance.current.save();
+    await destroyEditor();
+    await initEditor({ data: { blocks } });
+  }, [destroyEditor, initEditor]);
+
+  useEffect(() => {
+    if (language !== initialLanguage.current) {
+      initialLanguage.current = language;
+      renderEditorWithBlocks();
+    }
+  }, [destroyEditor, initEditor, language, renderEditorWithBlocks]);
 
   useEffect(() => {
     updateLanguage();
