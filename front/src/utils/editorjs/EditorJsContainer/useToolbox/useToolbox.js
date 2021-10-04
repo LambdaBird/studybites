@@ -1,33 +1,40 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-
-import config from '@sb-ui/utils/api/config';
 
 import {
   appendItems,
   createDivWithClassName,
-  getToolboxBlocks,
+  getToolboxItems,
   transformDefaultMenuItems,
   updateInnerText,
 } from './domToolboxHelpers';
 import {
   getBasicAndInteractiveItems,
   getTitleKeys,
-  selectBlocksDescKeys,
+  selectItemsDescKeys,
 } from './toolboxItemsHelpers';
-
-const { interactiveBlocks } = config;
+import { destroyObserver, initObserver } from './toolboxObserver';
 
 export const useToolbox = () => {
   const { t } = useTranslation('editorjs');
   const toolbox = useRef(null);
+  const [isReady, setIsReady] = useState(false);
+  useEffect(() => {
+    if (isReady) {
+      const observer = initObserver(toolbox.current);
+      return () => {
+        destroyObserver(observer);
+      };
+    }
+    return () => {};
+  }, [isReady]);
 
   const updateLanguage = useCallback(() => {
     if (!toolbox.current) {
       return;
     }
-    Array.from(getToolboxBlocks(toolbox.current))
-      .map(selectBlocksDescKeys)
+    Array.from(getToolboxItems(toolbox.current))
+      .map(selectItemsDescKeys)
       .flat()
       .concat(getTitleKeys(toolbox.current))
       .map(({ parentNode, selector, key }) => ({
@@ -41,42 +48,40 @@ export const useToolbox = () => {
   const prepareToolbox = useCallback(() => {
     toolbox.current = document.querySelector('.ce-toolbox');
     const wrapper = toolbox.current;
-    const basicCheck = wrapper?.querySelector('.toolbox-basic-blocks');
+    const basicCheck = wrapper?.querySelector('.toolbox-basic-items');
     if (!wrapper || basicCheck) {
       return;
     }
 
-    const basicBlocksWrapper = createDivWithClassName({
-      className: 'toolbox-basic-blocks',
+    const basicMenuItemsWrapper = createDivWithClassName({
+      className: 'toolbox-basic-items',
     });
-    const interactiveBlocksWrapper = createDivWithClassName({
-      className: 'toolbox-interactive-blocks',
+    const interactiveMenuItemsWrapper = createDivWithClassName({
+      className: 'toolbox-interactive-items',
     });
 
     appendItems({
       node: wrapper,
       items: [
         createDivWithClassName({
-          className: 'toolbox-basic-blocks-title',
+          className: 'toolbox-basic-items-title',
           innerText: t('tools.basic_blocks'),
         }),
-        basicBlocksWrapper,
+        basicMenuItemsWrapper,
         createDivWithClassName({
-          className: 'toolbox-interactive-blocks-title',
+          className: 'toolbox-interactive-items-title',
           innerText: t('tools.interactive_blocks'),
         }),
-        interactiveBlocksWrapper,
+        interactiveMenuItemsWrapper,
       ],
     });
 
-    const items = Array.from(getToolboxBlocks(toolbox.current));
-    const [basicItems, interactiveItems] = getBasicAndInteractiveItems(
-      items,
-      interactiveBlocks,
-    );
+    const items = Array.from(getToolboxItems(toolbox.current));
+    const [basicItems, interactiveItems] = getBasicAndInteractiveItems(items);
 
-    transformDefaultMenuItems(interactiveItems, interactiveBlocksWrapper, t);
-    transformDefaultMenuItems(basicItems, basicBlocksWrapper, t);
+    transformDefaultMenuItems(interactiveItems, interactiveMenuItemsWrapper, t);
+    transformDefaultMenuItems(basicItems, basicMenuItemsWrapper, t);
+    setIsReady(true);
   }, [t]);
 
   return {
