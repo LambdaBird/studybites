@@ -1,3 +1,4 @@
+import { message as MessageAntd } from 'antd';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -18,6 +19,10 @@ export const useAuthentication = (requestFunc) => {
     setLoading(false);
     if (status.toString().startsWith('2')) {
       setJWT(data);
+      MessageAntd.success({
+        content: t('sign_up:email_verification'),
+        duration: 2,
+      });
       history.push(HOME);
     } else {
       const { message } = data;

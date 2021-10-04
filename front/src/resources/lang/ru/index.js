@@ -10,6 +10,7 @@ import sign_in from './sign_in';
 import sign_up from './sign_up';
 import teacher from './teacher';
 import user from './user';
+import verify_email from './verify_email';
 
 export default {
   admin,
@@ -23,4 +24,5 @@ export default {
   editorjs,
   email,
   forgot_password,
+  verify_email,
 };
