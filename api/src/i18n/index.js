@@ -1,9 +1,7 @@
 import fp from 'fastify-plugin';
 import i18next from 'i18next';
 import Backend from 'i18next-fs-backend';
-
-const LANGUAGES_LIST = ['en', 'ru'];
-const DEFAULT_LANGUAGE = LANGUAGES_LIST?.[0] || 'en';
+import { DEFAULT_LANGUAGE, LANGUAGES_LIST } from '../config/i18n';
 
 export default fp((instance, opts, next) => {
   i18next.use(Backend).init({
@@ -17,7 +15,7 @@ export default fp((instance, opts, next) => {
       escapeValue: false,
     },
     backend: {
-      loadPath: `src/locales/{{lng}}/{{ns}}.json`,
+      loadPath: `src/i18n/locales/{{lng}}/{{ns}}.json`,
     },
   });
 
