@@ -26,7 +26,6 @@ services:
       PORT: ${API_PORT}
       DEVELOPMENT_MODE: 1
       DATABASE_URL: ${POSTGRES_URI}
-      POSTGRES_DB: ${POSTGRES_DB}
 
 volumes:
   studybites:
