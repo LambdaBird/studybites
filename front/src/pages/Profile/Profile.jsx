@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
 
 import { queryClient } from '@sb-ui/query';
+import { SELF_STALE_TIME } from '@sb-ui/utils/api/config';
 import { getUser, patchUser } from '@sb-ui/utils/api/v1/user';
 import { USER_BASE_QUERY } from '@sb-ui/utils/queries';
 
@@ -25,7 +26,9 @@ const ROLE_KEYS = {
 const Profile = () => {
   const { t } = useTranslation('profile');
   const [form] = Form.useForm();
-  const { data: user } = useQuery(USER_BASE_QUERY, getUser);
+  const { data: user } = useQuery(USER_BASE_QUERY, getUser, {
+    staleTime: SELF_STALE_TIME,
+  });
   const { email, firstName, lastName, description, roles } = user || {};
   const [isFormErrors, setIsFormErrors] = useState(false);
 

@@ -13,6 +13,7 @@ import {
 } from '@sb-ui/i18n';
 import { queryClient } from '@sb-ui/query';
 import logo from '@sb-ui/resources/img/logo.svg';
+import { SELF_STALE_TIME } from '@sb-ui/utils/api/config';
 import { getUser, patchLanguage } from '@sb-ui/utils/api/v1/user';
 import { Roles } from '@sb-ui/utils/constants';
 import { clearJWT } from '@sb-ui/utils/jwt';
@@ -63,7 +64,9 @@ const Header = ({ className, hideOnScroll, bottom, children, handleHide }) => {
   const location = useLocation();
   const isMobile = useMobile();
 
-  const { data: user } = useQuery(USER_BASE_QUERY, getUser);
+  const { data: user } = useQuery(USER_BASE_QUERY, getUser, {
+    staleTime: SELF_STALE_TIME,
+  });
   const headerRef = useRef(null);
   const [scroll, setScroll] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
@@ -85,6 +88,7 @@ const Header = ({ className, hideOnScroll, bottom, children, handleHide }) => {
       const { key: languageCode } = MENU_LANGUAGES_LIST.get(key) || {};
       i18n.changeLanguage(languageCode);
       changeLanguage({ language: languageCode });
+      queryClient.invalidateQueries(USER_BASE_QUERY);
     },
     [changeLanguage, i18n],
   );
@@ -107,7 +111,7 @@ const Header = ({ className, hideOnScroll, bottom, children, handleHide }) => {
           break;
       }
     },
-    [handleMenuLanguageClick, handleSignOut],
+    [handleMenuLanguageClick, handleProfile, handleSignOut],
   );
 
   const getTeacherMenu = useCallback(() => {
