@@ -7,21 +7,26 @@ class TokenStorage {
   static redisClient;
 
   static async invalidateLink({ email, uuid }) {
-    this.redisClient.del(email);
-    this.redisClient.del(uuid);
-    this.redisClient.del(`${uuid}-email`);
+    TokenStorage.redisClient.del(email);
+    TokenStorage.redisClient.del(uuid);
+    TokenStorage.redisClient.del(`${uuid}-email`);
   }
 
   static async generateLink({ host: frontHost, email }) {
     const uuid = v4();
-    this.redisClient.set(email, uuid, 'EX', emailTimes.RESET_LINK_EXPIRE_TIME);
-    this.redisClient.set(
+    TokenStorage.redisClient.set(
+      email,
+      uuid,
+      'EX',
+      emailTimes.RESET_LINK_EXPIRE_TIME,
+    );
+    TokenStorage.redisClient.set(
       `${uuid}-email`,
       email,
       'EX',
       emailTimes.RESET_LINK_EXPIRE_TIME,
     );
-    this.redisClient.set(
+    TokenStorage.redisClient.set(
       uuid,
       true,
       'EX',
@@ -31,11 +36,11 @@ class TokenStorage {
   }
 
   static async getEmailByUuid({ uuid }) {
-    return this.redisClient.get(`${uuid}-email`);
+    return TokenStorage.redisClient.get(`${uuid}-email`);
   }
 
   static async setUserIp({ userIp }) {
-    return this.redisClient.set(
+    return TokenStorage.redisClient.set(
       userIp,
       true,
       'EX',
@@ -44,9 +49,9 @@ class TokenStorage {
   }
 
   static async getResetPasswordAllowedNoAuth({ userIp }) {
-    const isUserIpNotExpired = await this.redisClient.get(userIp);
+    const isUserIpNotExpired = await TokenStorage.redisClient.get(userIp);
     if (isUserIpNotExpired) {
-      const timeout = await this.redisClient.ttl(userIp);
+      const timeout = await TokenStorage.redisClient.ttl(userIp);
       return {
         allowed: false,
         timeout,
@@ -58,11 +63,11 @@ class TokenStorage {
   }
 
   static async getResetPasswordAllowed({ email }) {
-    const uuid = await this.redisClient.get(email);
+    const uuid = await TokenStorage.redisClient.get(email);
     if (uuid) {
-      const isUuidNotExpired = await this.redisClient.get(uuid);
+      const isUuidNotExpired = await TokenStorage.redisClient.get(uuid);
       if (isUuidNotExpired) {
-        const timeout = await this.redisClient.ttl(uuid);
+        const timeout = await TokenStorage.redisClient.ttl(uuid);
         return {
           allowed: false,
           timeout,

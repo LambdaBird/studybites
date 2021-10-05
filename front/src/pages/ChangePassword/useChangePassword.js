@@ -4,11 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
 import { useHistory } from 'react-router-dom';
 
-import {
-  updatePassword,
-  updatePasswordNoAuth,
-  verifyPasswordReset,
-} from '@sb-ui/utils/api/v1/email';
+import { updatePassword, verifyPasswordReset } from '@sb-ui/utils/api/v1/email';
 import { getJWTAccessToken, setJWT } from '@sb-ui/utils/jwt';
 import { HOME } from '@sb-ui/utils/paths';
 import { EMAIL_VERIFY_PASSWORD_RESET } from '@sb-ui/utils/queries';
@@ -25,7 +21,7 @@ export const useChangePassword = ({ id }) => {
     mutate: mutateUpdatePassword,
     isSuccess: isUpdatePasswordSuccess,
     isLoading: isUpdatePasswordLoading,
-  } = useMutation(isLoggedIn ? updatePassword : updatePasswordNoAuth, {
+  } = useMutation(updatePassword, {
     onSuccess: (data) => {
       setJWT(data);
       message.success({

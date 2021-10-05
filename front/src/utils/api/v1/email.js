@@ -26,11 +26,3 @@ export const updatePassword = async (params) => {
   );
   return data;
 };
-
-export const updatePasswordNoAuth = async (params) => {
-  const { data } = await api.put(
-    `${PATH}/update-password-no-auth/${params.id}`,
-    params,
-  );
-  return data;
-};
