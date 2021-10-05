@@ -12,11 +12,25 @@ Studybites is an open-source Education Platform (LMS) focused on microlearning a
 
 
 ```
+# clone the StudyBites repository
 git clone https://github.com/LambdaBird/studybites.git
 
-SB_ADMIN_EMAIL="ADMIN_EMAIL" SB_ADMIN_PASSWORD="ADMIN_PASSWORD" docker compose up --build
+# run the development version
+./studybites.sh start-dev
 
-<!-- add test users -->
+# run the headless version
+./studybites start-headless
+
+# append latest migrations
+./studybites.sh migrate
+
+# run tests
+./studybites.sh test
+
+# remove containers
+./studybites.sh down-dev
+
+# add test users
 yarn --cwd ./api seed:run
 
 <!-- rename the .env-example -->
@@ -25,6 +39,46 @@ mv .env-example .env
 
 <!-- add storage to your hosts file -->
 sudo -- sh -c "127.0.0.1 s3 >> /etc/hosts"
+```
+
+Create an .env file locally. You can duplicate .env-example and name the new copy .env. Adapt the variables to your needs.
+
+```
+# PostgreSQL service hostname, do not change it without updating the bace.dev.yml
+POSTGRES_HOST=db 
+
+# PostgreSQL development database name
+POSTGRES_DB=studybites 
+
+# PostgreSQL test database name
+POSTGRES_TEST_DB=studybites-test
+
+# PostgreSQL username
+POSTGRES_USER=sb-admin
+
+# PostgreSQL password
+POSTGRES_PASSWORD=sb-password
+
+# Backend port
+API_PORT=3017
+
+# StudyBites admin email
+SB_ADMIN_EMAIL=admin@test.io
+
+# StudyBites admin password
+SB_ADMIN_PASSWORD=passwd3
+
+# JSON Web Token secret
+JWT_SECRET=tvXqYGduhyMw28EzyBxaGrFP8zQsmRG93GZHrmADmHsU9WwB7nbULUsJ98aAqWzM 
+
+# PostgreSQL DSN for the development database
+POSTGRES_URI=postgres://sb-admin:sb-password@db:5432/studybites
+
+# PostgreSQL DSN for the test database
+POSTGRES_TEST_URI=postgres://sb-admin:sb-password@db:5432/studybites-test 
+
+# Frontend port
+FRONT_PORT=3018 
 ```
 
 Go to http://localhost:3018 and enter your SB_ADMIN_EMAIL and SB_ADMIN_PASSWORD you've set upper.

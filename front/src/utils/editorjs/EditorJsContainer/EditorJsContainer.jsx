@@ -7,6 +7,8 @@ import Paragraph from '@editorjs/paragraph';
 
 import Undo from '@sb-ui/utils/editorjs/undo-plugin';
 
+import * as S from './EditorJsContainer.styled';
+
 const EditorJsContainer = forwardRef((props, ref) => {
   const mounted = useRef();
   const { t } = useTranslation('editorjs');
@@ -168,24 +170,36 @@ const EditorJsContainer = forwardRef((props, ref) => {
               error: t('tools.image.error'),
             },
             next: {
+              title: t('tools.next.title'),
               button: t('tools.next.title'),
             },
+            list: {
+              title: t('tools.list.title'),
+            },
+            delimiter: {
+              title: t('tools.delimiter.title'),
+            },
             quiz: {
+              title: t('tools.quiz.title'),
               question: t('tools.quiz.question'),
               answer: t('tools.quiz.answer'),
             },
             embed: {
+              title: t('tools.video.title'),
               input: t('tools.video.input'),
               caption: t('tools.video.caption'),
             },
             header: {
+              title: t('tools.heading.title'),
               input: t('tools.heading.input'),
             },
             quote: {
+              title: t('tools.quote.title'),
               input: t('tools.quote.input'),
               caption: t('tools.quote.caption'),
             },
             table: {
+              title: t('tools.table.title'),
               col_before: t('tools.table.col_before'),
               col_after: t('tools.table.col_after'),
               row_before: t('tools.table.row_before'),
@@ -194,6 +208,7 @@ const EditorJsContainer = forwardRef((props, ref) => {
               delete_row: t('tools.table.delete_row'),
             },
             closedQuestion: {
+              title: t('tools.closed_question.title'),
               question: t('tools.closed_question.question'),
               answer: t('tools.closed_question.answer'),
               explanation: t('tools.closed_question.explanation'),
@@ -202,26 +217,32 @@ const EditorJsContainer = forwardRef((props, ref) => {
               none: t('tools.closed_question.none'),
             },
             fillTheGap: {
+              title: t('tools.fill_the_gap.title'),
               hint: t('tools.fill_the_gap.hint'),
               placeholder: t('tools.fill_the_gap.placeholder'),
             },
             match: {
+              title: t('tools.match.title'),
               input_left_placeholder: t('tools.match.input_left_placeholder'),
               input_right_placeholder: t('tools.match.input_right_placeholder'),
               hint: t('tools.match.hint'),
               add_line: t('tools.match.add_line'),
             },
             warning: {
+              title: t('tools.warning.title'),
               placeholder: t('tools.warning.placeholder'),
               message: t('tools.warning.message'),
             },
             code: {
+              title: t('tools.code.title'),
               placeholder: t('tools.code.placeholder'),
             },
             bricks: {
+              title: t('tools.bricks.title'),
               question: t('tools.bricks.question'),
               answer: t('tools.bricks.answer'),
               additional: t('tools.bricks.additional'),
+              hint: t('tools.bricks.hint'),
             },
           },
         },
@@ -289,7 +310,12 @@ const EditorJsContainer = forwardRef((props, ref) => {
     return () => {};
   }, [changeData, props]);
 
-  return children || <div id={holder} />;
+  return (
+    <>
+      <S.GlobalStylesEditorPage toolbarHint={t('tools.hint')} />
+      {children || <div id={holder} />}
+    </>
+  );
 });
 
 EditorJsContainer.propTypes = {

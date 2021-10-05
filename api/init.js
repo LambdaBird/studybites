@@ -63,15 +63,8 @@ const minio = new Minio.Client({
       process.exit(0);
     }
 
-    const args = process.argv.slice(2, process.argv.length);
-
-    if (!args[0] || !args[1]) {
-      console.log('provide an email and a password for super admin');
-      process.exit(1);
-    }
-
-    const email = args[0];
-    const password = args[1];
+    const email = process.env.SB_ADMIN_EMAIL;
+    const password = process.env.SB_ADMIN_PASSWORD;
 
     if (
       !/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(

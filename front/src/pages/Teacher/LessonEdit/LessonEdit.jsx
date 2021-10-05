@@ -246,13 +246,16 @@ const LessonEdit = () => {
       instanceRef: (instance) => {
         editorJSRef.current = instance;
       },
+      minHeight: 0,
     }),
     [dataBlocks, t],
   );
 
+  const [headerHide, setHeaderHide] = useState(false);
+
   return (
     <>
-      <Header>
+      <Header hideOnScroll handleHide={setHeaderHide}>
         <S.HeaderButtons>
           <Button disabled={!isCurrentlyEditing} onClick={handlePreview}>
             {t('lesson_edit.buttons.preview')}
@@ -278,7 +281,7 @@ const LessonEdit = () => {
       </Header>
       <S.Page>
         <S.StyledRow align="top">
-          <S.LeftCol sm={12} md={14} lg={16} xl={18}>
+          <S.LeftCol>
             <S.EditorWrapper>
               <S.InputTitle
                 ref={inputTitle}
@@ -308,99 +311,101 @@ const LessonEdit = () => {
               )}
             </S.EditorWrapper>
           </S.LeftCol>
-          <S.RightCol sm={12} md={10} lg={8} xl={6}>
-            <S.RowStyled gutter={[32, 32]}>
-              <Col span={24}>
-                <S.SaveButton
-                  onClick={handleSave}
-                  disabled={isEditorDisabled}
-                  icon={<SaveOutlined />}
-                  type="primary"
-                  size="large"
-                >
-                  {t('lesson_edit.buttons.save')}
-                </S.SaveButton>
-              </Col>
-              <Col span={12}>
-                <S.MoveButton
-                  id="undo-button"
-                  icon={<UndoOutlined />}
-                  disabled={isEditorDisabled}
-                >
-                  {t('lesson_edit.buttons.back')}
-                </S.MoveButton>
-              </Col>
-              <Col span={12}>
-                <S.MoveButton
-                  disabled={isEditorDisabled}
-                  id="redo-button"
-                  icon={<RedoOutlined />}
-                >
-                  {t('lesson_edit.buttons.forward')}
-                </S.MoveButton>
-              </Col>
-            </S.RowStyled>
-            <S.RowStyled gutter={[0, 10]}>
-              <Col span={24}>
-                <S.TextLink underline>
-                  {t('lesson_edit.links.invite')}
-                </S.TextLink>
-              </Col>
-              <S.StudentsCol span={24}>
-                <S.TextLink
-                  onClick={handleStudentsClick}
-                  underline
-                  disabled={!isCurrentlyEditing}
-                >
-                  {t('lesson_edit.links.students')}
-                </S.TextLink>
-                <S.StudentsCount
-                  showZero
-                  count={lessonData?.lesson.studentsCount || 0}
-                />
-              </S.StudentsCol>
-              <Col span={24}>
-                <S.TextLink underline>
-                  {t('lesson_edit.links.analytics')}
-                </S.TextLink>
-              </Col>
-              <Col span={24}>
-                <Typography.Link type="danger" underline>
-                  {t('lesson_edit.links.archive')}
-                </Typography.Link>
-              </Col>
-            </S.RowStyled>
-            <Row gutter={[0, 8]}>
-              <Col span={24}>{t('lesson_edit.description.title')}</Col>
-              <Col span={24}>
-                <TextArea
-                  disabled={isEditorDisabled}
-                  value={description}
-                  placeholder={t('lesson_edit.description.placeholder')}
-                  onChange={(e) => setDescription(e.target.value)}
-                  showCount
-                  maxLength={140}
-                />
-              </Col>
-            </Row>
-            <Row gutter={[0, 16]}>
-              <Col span={24}>Keywords</Col>
-              <Col span={24}>
-                <KeywordsSelect
-                  disabled={isEditorDisabled}
-                  values={keywords}
-                  setValues={setKeywords}
-                />
-              </Col>
-            </Row>
-            <LessonImage
-              disabled={isEditorDisabled}
-              image={image}
-              setImage={setImage}
-              imageError={imageError}
-              setImageError={setImageError}
-              isLoading={isLoading}
-            />
+          <S.RightCol>
+            <S.RightColContent headerHide={headerHide}>
+              <S.RowStyled gutter={[32, 32]}>
+                <Col span={24}>
+                  <S.SaveButton
+                    onClick={handleSave}
+                    disabled={isEditorDisabled}
+                    icon={<SaveOutlined />}
+                    type="primary"
+                    size="large"
+                  >
+                    {t('lesson_edit.buttons.save')}
+                  </S.SaveButton>
+                </Col>
+                <Col span={12}>
+                  <S.MoveButton
+                    id="undo-button"
+                    icon={<UndoOutlined />}
+                    disabled={isEditorDisabled}
+                  >
+                    {t('lesson_edit.buttons.back')}
+                  </S.MoveButton>
+                </Col>
+                <Col span={12}>
+                  <S.MoveButton
+                    disabled={isEditorDisabled}
+                    id="redo-button"
+                    icon={<RedoOutlined />}
+                  >
+                    {t('lesson_edit.buttons.forward')}
+                  </S.MoveButton>
+                </Col>
+              </S.RowStyled>
+              <S.RowStyled gutter={[0, 10]}>
+                <Col span={24}>
+                  <S.TextLink underline>
+                    {t('lesson_edit.links.invite')}
+                  </S.TextLink>
+                </Col>
+                <S.StudentsCol span={24}>
+                  <S.TextLink
+                    onClick={handleStudentsClick}
+                    underline
+                    disabled={!isCurrentlyEditing}
+                  >
+                    {t('lesson_edit.links.students')}
+                  </S.TextLink>
+                  <S.StudentsCount
+                    showZero
+                    count={lessonData?.lesson.studentsCount || 0}
+                  />
+                </S.StudentsCol>
+                <Col span={24}>
+                  <S.TextLink underline>
+                    {t('lesson_edit.links.analytics')}
+                  </S.TextLink>
+                </Col>
+                <Col span={24}>
+                  <Typography.Link type="danger" underline>
+                    {t('lesson_edit.links.archive')}
+                  </Typography.Link>
+                </Col>
+              </S.RowStyled>
+              <Row gutter={[0, 8]}>
+                <Col span={24}>{t('lesson_edit.description.title')}</Col>
+                <Col span={24}>
+                  <TextArea
+                    disabled={isEditorDisabled}
+                    value={description}
+                    placeholder={t('lesson_edit.description.placeholder')}
+                    onChange={(e) => setDescription(e.target.value)}
+                    showCount
+                    maxLength={140}
+                  />
+                </Col>
+              </Row>
+              <S.RowStyled gutter={[0, 16]}>
+                <Col span={24}>Keywords</Col>
+                <Col span={24}>
+                  <KeywordsSelect
+                    disabled={isEditorDisabled}
+                    values={keywords}
+                    setValues={setKeywords}
+                  />
+                </Col>
+              </S.RowStyled>
+              <LessonImage
+                disabled={isEditorDisabled}
+                image={image}
+                setImage={setImage}
+                imageError={imageError}
+                setImageError={setImageError}
+                isLoading={isLoading}
+              />
+            </S.RightColContent>
           </S.RightCol>
         </S.StyledRow>
       </S.Page>

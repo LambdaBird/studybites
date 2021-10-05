@@ -1,4 +1,4 @@
 
 #!/bin/sh
 
-docker exec -it studybites_studybites-api_1 ./node_modules/knex/bin/cli.js --esm seed:run --specific users.js
+docker exec -it studybites_api_1 ./node_modules/knex/bin/cli.js --esm seed:run --specific users.js
