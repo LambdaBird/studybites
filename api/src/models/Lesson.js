@@ -245,11 +245,10 @@ class Lesson extends BaseModel {
       )
       .whereIn('users_roles.user_id', authors)
       .andWhere('lessons.status', 'Public')
-      .andWhere(
-        'lessons.name',
-        'ilike',
-        search ? `%${search.replace(/ /g, '%')}%` : undefined,
-      )
+      .search({
+        columns: ['lessons.name'],
+        searchString: search,
+      })
       .whereNotIn(
         'lessons.id',
         this.knex().raw(
@@ -359,11 +358,10 @@ class Lesson extends BaseModel {
       .andWhere('learn.user_id', userId)
       .andWhere('results.action', 'finish')
       .andWhere('results.user_id', userId)
-      .andWhere(
-        'lessons.name',
-        'ilike',
-        search ? `%${search.replace(/ /g, '%')}%` : undefined,
-      )
+      .search({
+        columns: ['lessons.name'],
+        searchString: search,
+      })
       .groupBy('lessons.id')
       .range(start, end)
       .withGraphFetched('author')
@@ -406,11 +404,10 @@ class Lesson extends BaseModel {
       .andWhere('users_roles.resource_type', resources.LESSON.name)
       .andWhere('users_roles.user_id', userId)
       .andWhere('lessons.status', status)
-      .andWhere(
-        'lessons.name',
-        'ilike',
-        search ? `%${search.replace(/ /g, '%')}%` : undefined,
-      )
+      .search({
+        columns: ['lessons.name'],
+        searchString: search,
+      })
       .orderBy('lessons.created_at', 'desc')
       .groupBy('lessons.id')
       .range(start, end)
@@ -476,11 +473,10 @@ class Lesson extends BaseModel {
       .andWhere('users_roles.resource_type', resources.LESSON.name)
       .whereNotIn('lessons.id', excludeLessons || undefined)
       .whereIn('users_roles.user_id', authors)
-      .andWhere(
-        'lessons.name',
-        'ilike',
-        search ? `%${search.replace(/ /g, '%')}%` : undefined,
-      )
+      .search({
+        columns: ['lessons.name'],
+        searchString: search,
+      })
       .whereNotIn(
         'lessons.id',
         this.knex().raw(
