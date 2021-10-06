@@ -18,9 +18,9 @@ async function handler({ params: { id } }) {
         emailServiceMessages: messages,
       },
     },
-    emailUtils,
+    redisModel: Redis,
   } = this;
-  const verified = await emailUtils.getEmailByUuid({ uuid: id });
+  const verified = await Redis.getEmailByUuid({ uuid: id });
   if (!verified) {
     throw new BadRequestError(errors.EMAIL_ERR_VERIFY);
   }

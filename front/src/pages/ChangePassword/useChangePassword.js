@@ -4,17 +4,10 @@ import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
 import { useHistory } from 'react-router-dom';
 
-import {
-  updatePassword,
-  updatePasswordNoAuth,
-  verifyPasswordReset,
-} from '@sb-ui/utils/api/v1/email';
+import { updatePassword, verifyPasswordReset } from '@sb-ui/utils/api/v1/email';
 import { getJWTAccessToken, setJWT } from '@sb-ui/utils/jwt';
 import { HOME } from '@sb-ui/utils/paths';
-import {
-  EMAIL_VERIFY_PASSWORD_RESET,
-  EMAIL_VERIFY_PASSWORD_RESET_NO_AUTH,
-} from '@sb-ui/utils/queries';
+import { EMAIL_VERIFY_PASSWORD_RESET } from '@sb-ui/utils/queries';
 
 const TIME_TO_REDIRECT_HOME_FAIL = 5000;
 const TIME_TO_REDIRECT_HOME_SUCCESS = 3000;
@@ -28,7 +21,7 @@ export const useChangePassword = ({ id }) => {
     mutate: mutateUpdatePassword,
     isSuccess: isUpdatePasswordSuccess,
     isLoading: isUpdatePasswordLoading,
-  } = useMutation(isLoggedIn ? updatePassword : updatePasswordNoAuth, {
+  } = useMutation(updatePassword, {
     onSuccess: (data) => {
       setJWT(data);
       message.success({
@@ -43,12 +36,7 @@ export const useChangePassword = ({ id }) => {
   });
 
   const { isError, isSuccess, isLoading } = useQuery(
-    [
-      isLoggedIn
-        ? EMAIL_VERIFY_PASSWORD_RESET
-        : EMAIL_VERIFY_PASSWORD_RESET_NO_AUTH,
-      { id },
-    ],
+    [EMAIL_VERIFY_PASSWORD_RESET, { id }],
     verifyPasswordReset,
     {
       retry: false,

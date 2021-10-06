@@ -1,0 +1,14 @@
+FROM node:14-alpine
+
+WORKDIR /api
+
+RUN apk --no-cache --virtual build-dependencies add \
+  python \
+  make \
+  g++
+
+COPY package.json yarn.lock ./
+RUN yarn
+RUN apk del build-dependencies
+
+COPY . .

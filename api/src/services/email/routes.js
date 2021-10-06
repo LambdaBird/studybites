@@ -1,7 +1,6 @@
 import resetPassword from './controllers/resetPassword';
 import resetPasswordNoAuth from './controllers/resetPasswordNoAuth';
 import updatePassword from './controllers/updatePassword';
-import updatePasswordNoAuth from './controllers/updatePasswordNoAuth';
 import verifyPasswordReset from './controllers/verifyPasswordReset';
 import verifyEmail from './controllers/verifyEmail';
 
@@ -30,11 +29,5 @@ export async function router(instance) {
     '/update-password/:id',
     updatePassword.options,
     updatePassword.handler,
-  );
-
-  instance.put(
-    '/update-password-no-auth/:id',
-    updatePasswordNoAuth.options,
-    updatePasswordNoAuth.handler,
   );
 }

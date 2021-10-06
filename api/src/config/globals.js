@@ -1,14 +1,9 @@
-export const DEBUG_MAIL_STATUS = {
-  ONLY_CONSOLE: 1,
-  ONLY_EMAIL: 2,
-  CONSOLE_AND_EMAIL: 3,
-};
-
-export const DEBUG_EMAIL = DEBUG_MAIL_STATUS.ONLY_CONSOLE;
 export const EMAIL_SETTINGS = {
   fromName: 'StudyBites',
   host: 'smtp.gmail.com',
 };
+
+export const host = process.env.SB_HOST;
 
 export const jwt = {
   ACCESS_JWT_EXPIRES_IN: 60 * 5,
@@ -131,3 +126,7 @@ export const globalErrors = {
   GLOBAL_ERR_NOT_FOUND: 'errors.not_found',
   GLOBAL_ERR_VALIDATION_ERROR: 'errors.validation',
 };
+
+export const S3_URL = 'http://s3:9000/storage/';
+
+export const FILE_SIZE_LIMIT = 1_000_000; // 1 MB

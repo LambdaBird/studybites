@@ -1,6 +1,5 @@
 import { hashPassword } from '../../../../utils/salt';
 import { BadRequestError } from '../../../validation/errors';
-import { createAccessToken, createRefreshToken } from '../../user/utils';
 
 const options = {
   schema: {
@@ -17,29 +16,25 @@ const options = {
       '5xx': { $ref: '5xx#' },
     },
   },
-  async onRequest(req) {
-    await this.auth({ req });
-  },
 };
 
-export const authWithNewPassword = async ({
-  instance,
-  User,
-  userId,
-  uuid,
-  email,
-  password,
-}) => {
+async function handler({ params: { id: uuid }, body: { password } }) {
   const {
-    emailUtils: { verifyPasswordReset, invalidateLink, sendPasswordChanged },
+    models: { User },
+    emailModel: Email,
+    redisModel: Redis,
     config: {
       emailService: { emailServiceErrors: errors },
     },
-  } = instance;
-  const verified = await verifyPasswordReset({ email, uuid });
-  if (!verified) {
+    createAccessToken,
+    createRefreshToken,
+  } = this;
+
+  const email = await Redis.getEmailByUuid({ uuid });
+  if (!email) {
     throw new BadRequestError(errors.EMAIL_ERR_VERIFY);
   }
+  const { id: userId, language } = await User.getUserByEmail({ email });
 
   const hash = await hashPassword(password);
 
@@ -48,34 +43,12 @@ export const authWithNewPassword = async ({
     userId,
   });
 
-  const accessToken = createAccessToken(instance, userId);
-  const refreshToken = createRefreshToken(instance, userId);
+  const accessToken = createAccessToken(this, userId);
+  const refreshToken = createRefreshToken(this, userId);
 
-  await invalidateLink({ email, uuid });
-  await sendPasswordChanged({ email });
+  await Redis.invalidateLink({ email, uuid });
+  await Email.sendPasswordChanged({ email, language });
 
-  return { accessToken, refreshToken };
-};
-
-async function handler({
-  user: { id: userId },
-  params: { id: uuid },
-  body: { password },
-}) {
-  const {
-    models: { User },
-  } = this;
-
-  const { email } = await User.getUser({ userId });
-
-  const { accessToken, refreshToken } = await authWithNewPassword({
-    instance: this,
-    User,
-    userId,
-    uuid,
-    email,
-    password,
-  });
   return { accessToken, refreshToken };
 }
 
