@@ -107,7 +107,7 @@ const Header = ({ className, hideOnScroll, bottom, children, handleHide }) => {
           break;
       }
     },
-    [handleMenuLanguageClick, handleSignOut],
+    [handleMenuLanguageClick, handleProfile, handleSignOut],
   );
 
   const getTeacherMenu = useCallback(() => {
