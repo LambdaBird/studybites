@@ -99,10 +99,13 @@ export default class Image {
     this.error = false;
     const name = this.data.location;
     this.nodes.fileLabel.innerText =
-      name > MAX_NAME_LENGTH ? `${name.slice(0, MAX_NAME_LENGTH)}...` : name;
+      name.length > MAX_NAME_LENGTH
+        ? `${name.slice(0, MAX_NAME_LENGTH)}...`
+        : name;
     if (!this.nodes.caption) {
       this.nodes.container.appendChild(this.createCaption());
     }
+    this.nodes.linkInput.value = '';
   };
 
   onError = () => {
@@ -125,7 +128,7 @@ export default class Image {
   };
 
   onCaptionInput = () => {
-    this.data.caption = this.nodes.caption.value;
+    this.data.caption = this.nodes.caption.innerHTML;
   };
 
   createPluginTitle() {
@@ -195,14 +198,16 @@ export default class Image {
 
   createCaption() {
     this.nodes.caption = createElement({
-      tagName: 'input',
+      tagName: 'div',
       classList: [this.CSS.input],
       attrs: {
-        placeholder: this.data.caption || this.api.i18n.t('caption'),
+        innerHTML: this.data.caption || '',
         oninput: this.onCaptionInput,
         disabled: this.readOnly || false,
+        contentEditable: this.readOnly ? 'false' : 'true',
       },
     });
+    this.nodes.caption.setAttribute('placeholder', this.api.i18n.t('caption'));
     return this.nodes.caption;
   }
 
