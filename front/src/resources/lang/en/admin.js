@@ -1,4 +1,7 @@
 export default {
+  pages: {
+    home: 'Admin dashboard',
+  },
   messages: {
     success_alter_role: 'Role changed successfully',
   },

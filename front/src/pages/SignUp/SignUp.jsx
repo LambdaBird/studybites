@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 
 import SignUpForm from './SignUpForm';
@@ -7,12 +8,17 @@ const SignUp = () => {
   const { t } = useTranslation('sign_up');
 
   return (
-    <S.Container>
-      <S.StyledTitle>{t('title')}</S.StyledTitle>
-      <S.SignUpFormContainer>
-        <SignUpForm />
-      </S.SignUpFormContainer>
-    </S.Container>
+    <>
+      <Helmet>
+        <title>{t('title')}</title>
+      </Helmet>
+      <S.Container>
+        <S.StyledTitle>{t('title')}</S.StyledTitle>
+        <S.SignUpFormContainer>
+          <SignUpForm />
+        </S.SignUpFormContainer>
+      </S.Container>
+    </>
   );
 };
 

@@ -1,4 +1,6 @@
 import { useMemo } from 'react';
+import { Helmet } from 'react-helmet';
+import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 
@@ -32,6 +34,7 @@ const getLessonByIdPreview = async ({ queryKey }) => {
 };
 
 const LessonPreview = () => {
+  const { t } = useTranslation('teacher');
   const { id: lessonId } = useParams();
 
   const { data: lessonData } = useQuery(
@@ -69,6 +72,9 @@ const LessonPreview = () => {
 
   return (
     <>
+      <Helmet>
+        <title>{t('pages.lesson_preview')}</title>
+      </Helmet>
       <Header hideOnScroll bottom={<S.Progress percent={learnProgress} />} />
       <S.Wrapper>
         <S.GlobalStylesLearnPage />

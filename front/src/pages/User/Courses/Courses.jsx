@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 
 import { COURSES_RESOURCE_KEY } from '@sb-ui/pages/User/constants';
@@ -16,26 +17,31 @@ const Courses = () => {
   const { t } = useTranslation('user');
 
   return (
-    <S.MainDiv>
-      <ResourcesList
-        resourceKey={COURSES_RESOURCE_KEY}
-        title={t('home.ongoing_courses.title')}
-        notFound={t('home.ongoing_courses.not_found')}
-        query={{
-          key: USER_ENROLLED_COURSES_BASE_KEY,
-          func: getEnrolledCourses,
-        }}
-      />
-      <ResourcesList
-        resourceKey={COURSES_RESOURCE_KEY}
-        title={t('home.finished_courses.title')}
-        notFound={t('home.finished_courses.not_found')}
-        query={{
-          key: USER_ENROLLED_COURSES_FINISHED_BASE_KEY,
-          func: getEnrolledCoursesFinished,
-        }}
-      />
-    </S.MainDiv>
+    <>
+      <Helmet>
+        <title>{t('pages.courses')}</title>
+      </Helmet>
+      <S.MainDiv>
+        <ResourcesList
+          resourceKey={COURSES_RESOURCE_KEY}
+          title={t('home.ongoing_courses.title')}
+          notFound={t('home.ongoing_courses.not_found')}
+          query={{
+            key: USER_ENROLLED_COURSES_BASE_KEY,
+            func: getEnrolledCourses,
+          }}
+        />
+        <ResourcesList
+          resourceKey={COURSES_RESOURCE_KEY}
+          title={t('home.finished_courses.title')}
+          notFound={t('home.finished_courses.not_found')}
+          query={{
+            key: USER_ENROLLED_COURSES_FINISHED_BASE_KEY,
+            func: getEnrolledCoursesFinished,
+          }}
+        />
+      </S.MainDiv>
+    </>
   );
 };
 

@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet';
 import { QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 
@@ -13,15 +14,20 @@ const App = () => {
   const isMobile = useMobile();
 
   return (
-    <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <MobileContext.Provider value={isMobile}>
-          <GlobalStyles />
-          <Routes />
-          <ReactQueryDevtools initialIsOpen={false} />
-        </MobileContext.Provider>
-      </QueryClientProvider>
-    </ErrorBoundary>
+    <>
+      <Helmet>
+        <title>StudyBites App</title>
+      </Helmet>
+      <ErrorBoundary>
+        <QueryClientProvider client={queryClient}>
+          <MobileContext.Provider value={isMobile}>
+            <GlobalStyles />
+            <Routes />
+            <ReactQueryDevtools initialIsOpen={false} />
+          </MobileContext.Provider>
+        </QueryClientProvider>
+      </ErrorBoundary>
+    </>
   );
 };
 
