@@ -27,7 +27,7 @@ module.exports = {
       '@sb-ui': path.resolve(__dirname, 'src/'),
     },
     configure: {
-      devtool: 'eval-source-map',
+      devtool: 'eval-cheap-source-map',
     },
   },
   babel: {
