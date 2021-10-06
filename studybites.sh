@@ -32,7 +32,7 @@ migrate() {
 }
 
 psql-dev() {
-  if docker exec -it studybites_db_1 psql -d studybites -U "$POSTGRES_USER"; then
+  if docker exec -it studybites_db_1 psql -d studybites -U sb-admin; then
     exit 0
   fi
   exit 1
@@ -67,13 +67,6 @@ test() {
   fi
   exit 1
 }
-
-if [ -f .env ]; then
-  export "$(sed 's/#.*//g' < .env | xargs)"
-else
-  echo .env file not found
-  exit 1
-fi
 
 CMD="$1"
 
