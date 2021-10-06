@@ -7,6 +7,11 @@ services:
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  s3:
+    image: minio/minio
+    environment:
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_KEY}
   api:
     build:
       context: ./api
@@ -14,9 +19,11 @@ services:
     depends_on:
       - db
     environment:
-      POSTGRES_HOST: ${POSTGRES_HOST}
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       SB_ADMIN_EMAIL: ${SB_ADMIN_EMAIL}
       SB_ADMIN_PASSWORD: ${SB_ADMIN_PASSWORD}
       JWT_SECRET: ${JWT_SECRET}
+      S3_HOST: s3
+      S3_PORT: 9000
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY}
+      S3_SECRET_KEY: ${S3_SECRET_KEY}
+      S3_BUCKET: storage

@@ -25,6 +25,11 @@ export default {
     stub: {
       title: 'The block can not be displayed correctly',
     },
+    attach: {
+      title: 'Attach a file',
+      select: 'Select a file to upload',
+      error: 'Failed to upload the file',
+    },
     paragraph: {
       title: 'Text',
       description: 'Just start writing with plain tex',

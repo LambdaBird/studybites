@@ -13,3 +13,4 @@ services:
     environment:
       PORT: ${FRONT_PORT}
       API_PORT: ${API_PORT}
+      REACT_APP_SB_HOST: ${REACT_APP_SB_HOST}

@@ -1,4 +1,5 @@
 import fastify from 'fastify';
+import fastifyCors from 'fastify-cors';
 import fastifyObjection from 'fastify-objection';
 import qs from 'qs';
 
@@ -13,6 +14,8 @@ import Course from './models/Course';
 import CourseLessonStructure from './models/CourseLessonStructure';
 import Keyword from './models/Keyword';
 import ResourceKeyword from './models/ResourceKeyword';
+import File from './models/File';
+import ResourceFile from './models/ResourceFile';
 
 import userService from './services/user';
 import lessonsService from './services/lessons';
@@ -21,6 +24,7 @@ import lessonsManagementService from './services/lessons-management';
 import coursesManagementService from './services/courses-management';
 import coursesService from './services/courses';
 import keywordsService from './services/keywords';
+import filesService from './services/files';
 
 import errorsAndValidation from './validation';
 
@@ -34,6 +38,8 @@ export default (options = {}) => {
       },
     },
   });
+
+  app.register(fastifyCors);
 
   app.register(errorsAndValidation);
 
@@ -51,6 +57,8 @@ export default (options = {}) => {
       CourseLessonStructure,
       Keyword,
       ResourceKeyword,
+      File,
+      ResourceFile,
     ],
   });
 
@@ -80,6 +88,10 @@ export default (options = {}) => {
 
   app.register(keywordsService, {
     prefix: '/api/v1/keywords',
+  });
+
+  app.register(filesService, {
+    prefix: '/api/v1/files',
   });
 
   return app;

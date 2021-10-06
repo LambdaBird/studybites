@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 
 export const BLOCKS_TYPE = {
+  ATTACH: 'attach',
   PARAGRAPH: 'paragraph',
   QUIZ: 'quiz',
   CODE: 'code',
@@ -147,6 +148,10 @@ export const WarningContentType = PropTypes.shape({
 
 export const CodeContentType = PropTypes.shape({
   code: PropTypes.string,
+});
+
+export const AttachContentType = PropTypes.shape({
+  location: PropTypes.string,
 });
 
 export const ImageContentType = PropTypes.shape({
