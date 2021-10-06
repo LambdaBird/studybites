@@ -1,3 +1,5 @@
+import api from '@sb-ui/utils/api';
+
 export const createInput = ({
   readOnly = false,
   wrapper,
@@ -41,4 +43,27 @@ export const sanitizeBlocks = {
   i: true,
   a: true,
   mark: true,
+};
+
+export const uploadFile = async ({ parent, onSuccess, onError }) => {
+  try {
+    const formData = new FormData();
+    const {
+      files: [file],
+    } = parent;
+    formData.append('file', file);
+
+    const response = await api.post(
+      `${process.env.REACT_APP_SB_HOST}/api/v1/files`,
+      formData,
+      {
+        headers: {
+          'content-type': 'multipart/form-data',
+        },
+      },
+    );
+    onSuccess(response);
+  } catch (e) {
+    onError(e);
+  }
 };

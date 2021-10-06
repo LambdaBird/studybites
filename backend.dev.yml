@@ -8,6 +8,13 @@ services:
       - studybites:/var/lib/postgresql/data
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
+  s3:
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - ./storage:/data
+    command: server --address 0.0.0.0:9000 --console-address 0.0.0.0:9001 /data
   api:
     command: yarn run:dev
     ports:
@@ -19,7 +26,6 @@ services:
       PORT: ${API_PORT}
       DEVELOPMENT_MODE: 1
       DATABASE_URL: ${POSTGRES_URI}
-      POSTGRES_DB: ${POSTGRES_DB}
 
 volumes:
   studybites:

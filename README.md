@@ -32,14 +32,18 @@ git clone https://github.com/LambdaBird/studybites.git
 
 # add test users
 yarn --cwd ./api seed:run
+
+<!-- rename the .env-example -->
+mv .env-example .env
+<!-- and add credentials for the storage -->
+
+<!-- add storage to your hosts file -->
+sudo -- sh -c "127.0.0.1 s3 >> /etc/hosts"
 ```
 
 Create an .env file locally. You can duplicate .env-example and name the new copy .env. Adapt the variables to your needs.
 
 ```
-# PostgreSQL service hostname, do not change it without updating the bace.dev.yml
-POSTGRES_HOST=db 
-
 # PostgreSQL development database name
 POSTGRES_DB=studybites 
 

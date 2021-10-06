@@ -112,3 +112,7 @@ export const globalErrors = {
   GLOBAL_ERR_NOT_FOUND: 'errors.not_found',
   GLOBAL_ERR_VALIDATION_ERROR: 'errors.validation',
 };
+
+export const S3_URL = 'http://s3:9000/storage/';
+
+export const FILE_SIZE_LIMIT = 1_000_000; // 1 MB
