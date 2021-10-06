@@ -1,5 +1,7 @@
 import { sanitizeBlocks } from '@sb-ui/utils/editorjs/utils';
 
+import PluginBase from '../PluginBase';
+
 import { enterIcon, icon, removeIcon } from './resources';
 
 import './bricks.css';
@@ -12,8 +14,13 @@ function createElementFromHTML(htmlString) {
   return div.firstChild;
 }
 
-export default class Bricks {
+export default class Bricks extends PluginBase {
   constructor({ data, api, readOnly }) {
+    super({
+      title: api.i18n.t('title'),
+      hint: api.i18n.t('hint'),
+    });
+
     this.api = api;
     this.data = data;
     this.readOnly = readOnly;
@@ -220,10 +227,6 @@ export default class Bricks {
     const container = document.createElement('div');
     container.classList.add(this.CSS.container);
 
-    const hint = document.createElement('span');
-    hint.innerText = '* Words will be shuffled for students after save';
-    hint.classList.add(this.CSS.hint);
-
     this.elements.questionInput = document.createElement('div');
     this.elements.questionInput.classList.add(this.CSS.input);
     this.elements.questionInput.classList.add(this.CSS.questionInput);
@@ -255,7 +258,7 @@ export default class Bricks {
       handleEnter: this.handleEnterWord.bind(this),
     });
 
-    container.appendChild(hint);
+    container.appendChild(this.titleWrapper);
     container.appendChild(this.elements.questionInput);
     container.appendChild(answerInputWrapper);
     container.appendChild(this.elements.tagsWrapper);

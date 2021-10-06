@@ -1,11 +1,17 @@
+import PluginBase from '../PluginBase';
 import * as Utils from '../utils';
 
 import { icon, plusIcon } from './resources';
 
 import './match.css';
 
-export default class Match {
+export default class Match extends PluginBase {
   constructor({ data, api, readOnly }) {
+    super({
+      title: api.i18n.t('title'),
+      hint: api.i18n.t('hint'),
+    });
+
     this.api = api;
     this.data = data;
     this.readOnly = readOnly;
@@ -27,7 +33,6 @@ export default class Match {
       container: 'match-tool',
       input: 'match-tool__input',
       inputsWrapper: 'match-tool__inputsWrapper',
-      hint: 'match-tool__hint',
       addLineButton: 'match-tool__addLineButton',
       matchLine: 'match-tool__line',
     };
@@ -37,10 +42,7 @@ export default class Match {
     const container = document.createElement('div');
     this.container = container;
     container.classList.add(this.CSS.container);
-
-    const hint = document.createElement('span');
-    hint.innerText = this.api.i18n.t('hint');
-    hint.classList.add(this.CSS.hint);
+    container.appendChild(this.titleWrapper);
 
     const addLineButton = this.createAddButton();
 
@@ -71,7 +73,6 @@ export default class Match {
       inputsWrapper.appendChild(secondBlockLine);
     }
 
-    container.appendChild(hint);
     container.appendChild(inputsWrapper);
     container.appendChild(addLineButton);
 

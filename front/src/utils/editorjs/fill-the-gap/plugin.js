@@ -1,11 +1,18 @@
 import { stripHTML } from '@sb-ui/utils/editorjs/utils';
 
+import PluginBase from '../PluginBase';
+
 import { icon } from './resources';
 
 import './fillTheGap.css';
 
-export default class FillTheGap {
+export default class FillTheGap extends PluginBase {
   constructor({ data, api, readOnly }) {
+    super({
+      title: api.i18n.t('title'),
+      hint: api.i18n.t('hint'),
+    });
+
     this.data = data;
     this.api = api;
     this.readOnly = readOnly;
@@ -31,7 +38,6 @@ export default class FillTheGap {
     return {
       container: 'ftg-tool',
       input: this.api.styles.input,
-      hint: 'ftg-tool__hint',
     };
   }
 
@@ -85,10 +91,6 @@ export default class FillTheGap {
     const container = document.createElement('div');
     container.classList.add(this.CSS.container);
 
-    const hint = document.createElement('span');
-    hint.innerText = this.api.i18n.t('hint');
-    hint.classList.add(this.CSS.hint);
-
     this.input = document.createElement('div');
     this.input.classList.add(this.CSS.input);
     this.input.setAttribute('placeholder', this.api.i18n.t('placeholder'));
@@ -119,7 +121,7 @@ export default class FillTheGap {
         'Here is an example of a sentence with {{ empty, vacant, blank }} spaces that a {{ learner, student }} will need to fill in.';
     }
 
-    container.appendChild(hint);
+    container.appendChild(this.titleWrapper);
     container.appendChild(this.input);
 
     return container;

@@ -1,22 +1,23 @@
-import Table from 'editorjs-table';
 import hash from 'object-hash';
-import CodeTool from '@editorjs/code';
-import Delimiter from '@editorjs/delimiter';
-import HeaderTool from '@editorjs/header';
-import List from '@editorjs/list';
 import Marker from '@editorjs/marker';
-import Quote from '@editorjs/quote';
-import Warning from '@editorjs/warning';
 
 import { BLOCKS_TYPE } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
+import Attach from '@sb-ui/utils/editorjs/attach-plugin';
 import Bricks from '@sb-ui/utils/editorjs/bricks-plugin';
 import ClosedQuestion from '@sb-ui/utils/editorjs/closed-question-plugin';
+import CodeTool from '@sb-ui/utils/editorjs/code-plugin';
+import Delimiter from '@sb-ui/utils/editorjs/delimiter-plugin';
 import Embed from '@sb-ui/utils/editorjs/embed-plugin';
 import FillTheGap from '@sb-ui/utils/editorjs/fill-the-gap/plugin';
+import HeaderTool from '@sb-ui/utils/editorjs/header-plugin';
 import Image from '@sb-ui/utils/editorjs/image-plugin';
+import List from '@sb-ui/utils/editorjs/list-plugin';
 import Match from '@sb-ui/utils/editorjs/match-plugin';
 import Next from '@sb-ui/utils/editorjs/next-plugin';
 import Quiz from '@sb-ui/utils/editorjs/quiz-plugin';
+import Quote from '@sb-ui/utils/editorjs/quote-plugin';
+import Table from '@sb-ui/utils/editorjs/table-plugin';
+import Warning from '@sb-ui/utils/editorjs/warning-plugin';
 import { shuffleArray } from '@sb-ui/utils/utils';
 
 const MAX_BODY_LENGTH = 4_000_000;
@@ -107,7 +108,8 @@ export const prepareBlocksDataForApi = (data, type) => {
         ...data,
         values: prepareMatchValues(data.values),
       };
-
+    case BLOCKS_TYPE.ATTACH:
+      return data.location ? data : null;
     default:
       return data;
   }
@@ -120,6 +122,7 @@ const SKIP_BLOCKS = [
   BLOCKS_TYPE.FILL_THE_GAP,
   BLOCKS_TYPE.MATCH,
   BLOCKS_TYPE.BRICKS,
+  BLOCKS_TYPE.ATTACH,
 ];
 
 export const makeAnswerForBlock = (block) => {
@@ -175,6 +178,9 @@ export const prepareBlocksForApi = (blocks) =>
 export const getConfig = (t) => ({
   holder: 'editorjs',
   tools: {
+    attach: {
+      class: Attach,
+    },
     next: Next,
     image: {
       class: Image,
