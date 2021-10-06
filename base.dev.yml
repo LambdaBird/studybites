@@ -18,6 +18,7 @@ services:
       dockerfile: .docker/Dockerfile.dev
     depends_on:
       - db
+      - s3
     environment:
       SB_ADMIN_EMAIL: ${SB_ADMIN_EMAIL}
       SB_ADMIN_PASSWORD: ${SB_ADMIN_PASSWORD}
