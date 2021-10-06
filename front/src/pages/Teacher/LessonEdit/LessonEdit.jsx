@@ -246,7 +246,6 @@ const LessonEdit = () => {
       instanceRef: (instance) => {
         editorJSRef.current = instance;
       },
-      minHeight: 0,
     }),
     [dataBlocks, t],
   );
