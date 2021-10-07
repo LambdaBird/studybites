@@ -90,6 +90,10 @@ export default class Image {
     });
   };
 
+  handleLabelClick = () => {
+    this.nodes.fileInput.click();
+  };
+
   onUploadSuccess = (response) => {
     this.data = response.data;
     this.nodes.contentDisplay.src = this.data.location;
@@ -147,17 +151,17 @@ export default class Image {
       classList: [this.CSS.fileInput],
       attrs: {
         type: 'file',
-        id: 'file',
         accept: allowedImageTypes,
-        onchange: this.onFileSelect,
         disabled: this.readOnly || false,
       },
     });
+    this.nodes.fileInput.addEventListener('change', this.onFileSelect);
     this.nodes.fileLabel = createElement({
       tagName: 'label',
       attrs: {
         htmlFor: 'file',
         innerText: this.api.i18n.t('select'),
+        onclick: this.handleLabelClick,
       },
     });
     return createElement({
@@ -172,10 +176,10 @@ export default class Image {
       classList: [this.CSS.input],
       attrs: {
         placeholder: this.api.i18n.t('input'),
-        oninput: this.onLinkInput,
         disabled: this.readOnly || false,
       },
     });
+    this.nodes.linkInput.addEventListener('input', this.onLinkInput);
     return createElement({
       children: [this.nodes.linkInput],
     });
@@ -187,10 +191,10 @@ export default class Image {
       classList: [this.CSS.contentDisplay],
       attrs: {
         src: this.data.location || '',
-        onload: this.onSuccess,
-        onerror: this.onError,
       },
     });
+    this.nodes.contentDisplay.addEventListener('load', this.onSuccess);
+    this.nodes.contentDisplay.addEventListener('error', this.onError);
     return createElement({
       children: [this.nodes.contentDisplay],
     });
@@ -202,11 +206,11 @@ export default class Image {
       classList: [this.CSS.input],
       attrs: {
         innerHTML: this.data.caption || '',
-        oninput: this.onCaptionInput,
         disabled: this.readOnly || false,
         contentEditable: this.readOnly ? 'false' : 'true',
       },
     });
+    this.nodes.caption.addEventListener('input', this.onCaptionInput);
     this.nodes.caption.setAttribute('placeholder', this.api.i18n.t('caption'));
     return this.nodes.caption;
   }
