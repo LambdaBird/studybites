@@ -37,7 +37,8 @@ const LessonEdit = () => {
   const [isEditLesson] = useState(lessonId !== 'new');
   const isCurrentlyEditing = useMemo(() => lessonId !== 'new', [lessonId]);
 
-  const { t } = useTranslation('teacher');
+  const { t, i18n } = useTranslation('teacher');
+  const { language } = i18n;
   const history = useHistory();
 
   const { updateLessonStatusMutation, isUpdateInProgress } = useLessonStatus({
@@ -243,12 +244,13 @@ const LessonEdit = () => {
       ref: undoPluginRef,
       tools: getConfig(t).tools,
       data: dataBlocks,
+      language,
       instanceRef: (instance) => {
         editorJSRef.current = instance;
       },
       minHeight: 0,
     }),
-    [dataBlocks, t],
+    [dataBlocks, language, t],
   );
 
   const [headerHide, setHeaderHide] = useState(false);

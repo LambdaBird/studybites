@@ -1,68 +1,53 @@
-import { signUpHandler, signUpOptions } from './handlers/signUp';
-
-import { signInHandler, signInOptions } from './handlers/signIn';
-
-import {
-  refreshTokenHandler,
-  refreshTokenOptions,
-} from './handlers/refreshToken';
-
-import { selfHandler, selfOptions } from './handlers/self';
-
-import { updateSelfHandler, updateSelfOptions } from './handlers/updateSelf';
-
-import { getAllUsersHandler, getAllUsersOptions } from './handlers/getAllUsers';
-
-import { getUserHandler, getUserOptions } from './handlers/getUser';
-
-import { updateUserHandler, updateUserOptions } from './handlers/updateUser';
-
-import { deleteUserHandler, deleteUserOptions } from './handlers/deleteUser';
-
-import { addTeacherHandler, addTeacherOptions } from './handlers/addTeacher';
-
-import {
-  removeTeacherHandler,
-  removeTeacherOptions,
-} from './handlers/removeTeacher';
-import {
-  updateUserLanguageHandler,
-  updateUserLanguageOptions,
-} from './handlers/updateUserLanguage';
-
-import {
-  getAllAuthorsHandler,
-  getAllAuthorsOptions,
-} from './handlers/getAllAuthors';
+import signUp from './controllers/signUp';
+import signIn from './controllers/signIn';
+import refreshToken from './controllers/refreshToken';
+import getSelf from './controllers/getSelf';
+import updateSelf from './controllers/updateSelf';
+import getAllAuthors from './controllers/getAllAuthors';
+import getAllUsers from './controllers/getAllUsers';
+import getUser from './controllers/getUser';
+import updateUser from './controllers/updateUser';
+import deleteUser from './controllers/deleteUser';
+import addTeacherRole from './controllers/addTeacherRole';
+import removeTeacherRole from './controllers/removeTeacherRole';
+import updateUserLanguage from './controllers/updateUserLanguage';
 
 export default async function router(instance) {
-  instance.post('/signup', signUpOptions, signUpHandler);
+  instance.post('/signup', signUp.options, signUp.handler);
 
-  instance.post('/signin', signInOptions, signInHandler);
+  instance.post('/signin', signIn.options, signIn.handler);
 
-  instance.post('/refresh_token', refreshTokenOptions, refreshTokenHandler);
+  instance.post('/refresh_token', refreshToken.options, refreshToken.handler);
 
-  instance.get('/self', selfOptions, selfHandler);
+  instance.get('/self', getSelf.options, getSelf.handler);
 
-  instance.patch('/self', updateSelfOptions, updateSelfHandler);
+  instance.patch('/self', updateSelf.options, updateSelf.handler);
 
-  instance.get('/authors', getAllAuthorsOptions, getAllAuthorsHandler);
+  instance.get('/authors', getAllAuthors.options, getAllAuthors.handler);
 
-  instance.get('/', getAllUsersOptions, getAllUsersHandler);
+  instance.get('/', getAllUsers.options, getAllUsers.handler);
 
-  instance.get('/:userId', getUserOptions, getUserHandler);
+  instance.get('/:userId', getUser.options, getUser.handler);
 
-  instance.patch('/:userId', updateUserOptions, updateUserHandler);
+  instance.patch('/:userId', updateUser.options, updateUser.handler);
 
-  instance.delete('/:userId', deleteUserOptions, deleteUserHandler);
+  instance.delete('/:userId', deleteUser.options, deleteUser.handler);
 
-  instance.post('/appoint_teacher', addTeacherOptions, addTeacherHandler);
+  instance.post(
+    '/appoint_teacher',
+    addTeacherRole.options,
+    addTeacherRole.handler,
+  );
 
-  instance.post('/remove_teacher', removeTeacherOptions, removeTeacherHandler);
+  instance.post(
+    '/remove_teacher',
+    removeTeacherRole.options,
+    removeTeacherRole.handler,
+  );
 
   instance.patch(
     '/language',
-    updateUserLanguageOptions,
-    updateUserLanguageHandler,
+    updateUserLanguage.options,
+    updateUserLanguage.handler,
   );
 }

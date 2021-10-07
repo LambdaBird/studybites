@@ -81,14 +81,17 @@ const Header = ({ className, hideOnScroll, bottom, children, handleHide }) => {
     history.push(SIGN_IN);
   }, [history]);
 
-  const { mutate: changeLanguage } = useMutation(patchLanguage);
+  const { mutate: changeLanguage } = useMutation(patchLanguage, {
+    onSuccess: () => {
+      queryClient.invalidateQueries(USER_BASE_QUERY);
+    },
+  });
 
   const handleMenuLanguageClick = useCallback(
     (key) => {
       const { key: languageCode } = MENU_LANGUAGES_LIST.get(key) || {};
       i18n.changeLanguage(languageCode);
       changeLanguage({ language: languageCode });
-      queryClient.invalidateQueries(USER_BASE_QUERY);
     },
     [changeLanguage, i18n],
   );

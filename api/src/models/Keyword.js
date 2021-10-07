@@ -2,7 +2,6 @@ import objection from 'objection';
 import path from 'path';
 
 import BaseModel from './BaseModel';
-import { resources } from '../config';
 import ResourceKeyword from './ResourceKeyword';
 
 export default class Keyword extends BaseModel {
@@ -48,11 +47,10 @@ export default class Keyword extends BaseModel {
 
     return this.query()
       .skipUndefined()
-      .where(
-        'name',
-        'ilike',
-        search ? `%${search.replace(/ /g, '%')}%` : undefined,
-      )
+      .search({
+        columns: ['name'],
+        searchString: search,
+      })
       .range(start, end);
   }
 
