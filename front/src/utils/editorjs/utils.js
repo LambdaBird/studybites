@@ -67,3 +67,13 @@ export const uploadFile = async ({ parent, onSuccess, onError }) => {
     onError(e);
   }
 };
+
+export const camelToSnakeCase = (str) =>
+  str.replace(/[A-Z]/g, (letter) => `_${letter.toLowerCase()}`);
+
+export const setPropsInTool = (tool, props) => {
+  Object.keys(props).forEach((prop) => {
+    // eslint-disable-next-line no-param-reassign
+    tool[prop] = props[prop];
+  });
+};

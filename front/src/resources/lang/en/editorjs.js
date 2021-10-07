@@ -97,6 +97,13 @@ export default {
       example: 'Example',
       none: 'none',
     },
+    graded_question: {
+      title: 'Graded Question',
+      description: 'Graded question',
+      hint: '* You`ll need to manually check the question',
+      placeholder: 'Question',
+      require_attachment: 'Require attachment',
+    },
     fill_the_gap: {
       title: 'Fill The Gap',
       description: 'Fill missed words',

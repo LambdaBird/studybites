@@ -97,6 +97,13 @@ export default {
       example: 'Пример',
       none: 'пусто',
     },
+    graded_question: {
+      title: 'Вопрос с оценкой',
+      description: 'Вопрос с оценкой',
+      hint: '* Вам нужно будет вручную проверить вопрос',
+      placeholder: 'Вопрос',
+      require_attachment: 'Требовать вложения',
+    },
     fill_the_gap: {
       title: 'Заполнить пропуски',
       description: 'Заполнить пропущенные слова',
