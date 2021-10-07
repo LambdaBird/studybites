@@ -16,4 +16,7 @@ export const GlobalStyles = createGlobalStyle`
   body{
     background-color: ${variables['body-background-color']}; 
   }
+  div.ant-upload {
+    width: 100%;
+  }
 `;

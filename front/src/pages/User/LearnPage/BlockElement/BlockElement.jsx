@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 
+import Attach from './Attach';
 import Bricks from './Bricks';
 import ClosedQuestion from './ClosedQuestion';
 import Code from './Code';
@@ -29,6 +30,8 @@ import Warning from './Warning';
 
 const BlockElement = ({ element }) => {
   switch (element.content.type) {
+    case BLOCKS_TYPE.ATTACH:
+      return <Attach {...element} />;
     case BLOCKS_TYPE.PARAGRAPH:
       return <Paragraph {...element} />;
     case BLOCKS_TYPE.QUIZ:
