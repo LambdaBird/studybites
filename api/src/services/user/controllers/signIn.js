@@ -1,7 +1,24 @@
-import { comparePasswords } from '../../../../../utils/salt';
-import { AuthorizationError } from '../../../../validation/errors';
+import { comparePasswords } from '../../../../utils/salt';
+import { AuthorizationError } from '../../../validation/errors';
 
-export async function signInHandler({ body: { email, password } }) {
+const options = {
+  schema: {
+    body: {
+      type: 'object',
+      properties: {
+        email: { type: 'string' },
+        password: { type: 'string' },
+      },
+      required: ['email', 'password'],
+    },
+    response: {
+      '4xx': { $ref: '4xx#' },
+      '5xx': { $ref: '5xx#' },
+    },
+  },
+};
+
+async function handler({ body: { email, password } }) {
   const {
     config: {
       userService: { userServiceErrors: errors },
@@ -26,3 +43,5 @@ export async function signInHandler({ body: { email, password } }) {
     refreshToken,
   };
 }
+
+export default { options, handler };

@@ -30,12 +30,9 @@ services:
       - ./api:/api
       - /api/node_modules
     environment:
-      SB_HOST: ${SB_HOST}
       PORT: ${API_PORT}
       DEVELOPMENT_MODE: 1
       DATABASE_URL: ${POSTGRES_URI}
-      REDIS_PORT: 6379
-      SMTP_PORT: 465
 
 volumes:
   studybites:

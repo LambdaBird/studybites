@@ -1,4 +1,7 @@
-export const updateUserOptions = {
+import { BadRequestError } from '../../../validation/errors';
+import { hashPassword } from '../../../../utils/salt';
+
+const options = {
   schema: {
     body: {
       type: 'object',
@@ -31,3 +34,31 @@ export const updateUserOptions = {
     this.validateEmail({ email });
   },
 };
+
+async function handler({ params: { userId }, user: { id }, body }) {
+  const {
+    config: {
+      userService: { userServiceErrors: errors },
+    },
+    models: { User },
+  } = this;
+
+  if (userId === id) {
+    throw new BadRequestError(errors.USER_ERR_INVALID_USER_ID);
+  }
+
+  let hash;
+
+  if (body.password) {
+    hash = await hashPassword(body.password);
+  }
+
+  const data = await User.updateOne({
+    userId,
+    userData: { ...body, password: hash },
+  });
+
+  return { data };
+}
+
+export default { options, handler };

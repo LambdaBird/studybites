@@ -1,6 +1,22 @@
-import { AuthorizationError } from '../../../../validation/errors';
+import { AuthorizationError } from '../../../validation/errors';
 
-export async function refreshTokenHandler(req) {
+const options = {
+  schema: {
+    body: {
+      type: 'object',
+      properties: {
+        refreshToken: { type: 'string' },
+      },
+      required: ['refreshToken'],
+    },
+    response: {
+      '4xx': { $ref: '4xx#' },
+      '5xx': { $ref: '5xx#' },
+    },
+  },
+};
+
+async function handler(req) {
   const {
     config: {
       userService: { userServiceErrors: errors },
@@ -34,3 +50,5 @@ export async function refreshTokenHandler(req) {
     refreshToken: newRefreshToken,
   };
 }
+
+export default { options, handler };
