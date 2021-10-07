@@ -10,6 +10,7 @@ import {
   Typography,
 } from 'antd';
 import { useCallback, useMemo, useState } from 'react';
+import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
 
@@ -20,6 +21,7 @@ import {
   getUsers,
   removeTeacher,
 } from '@sb-ui/utils/api/v1/admin';
+import { sbPostfix } from '@sb-ui/utils/constants';
 import { ADMIN_USERS_BASE_KEY } from '@sb-ui/utils/queries';
 
 import * as S from './Home.styled';
@@ -158,50 +160,58 @@ const Home = () => {
   );
 
   return (
-    <S.MainDiv>
-      <S.TableHeader>
-        <Col>
-          <Row>
-            <Space size="large">
-              <S.TitleHeader>{t('home.title')}</S.TitleHeader>
-              <DebouncedSearch
-                delay={500}
-                placeholder={t('home.search.placeholder')}
-                allowClear
-                onChange={setSearch}
-              />
-            </Space>
-          </Row>
-        </Col>
-        <Col>
-          <Button disabled>{t('home.buttons.add_user')}</Button>
-        </Col>
-      </S.TableHeader>
-      <Table
-        columns={columns}
-        dataSource={data}
-        rowKey="id"
-        pagination={
-          !isLoading &&
-          total > PAGE_SIZE && {
-            showSizeChanger: false,
-            current: currentPage,
-            pageSize: PAGE_SIZE,
-            total,
+    <>
+      <Helmet>
+        <title>
+          {t('pages.home')}
+          {sbPostfix}
+        </title>
+      </Helmet>
+      <S.MainDiv>
+        <S.TableHeader>
+          <Col>
+            <Row>
+              <Space size="large">
+                <S.TitleHeader>{t('home.title')}</S.TitleHeader>
+                <DebouncedSearch
+                  delay={500}
+                  placeholder={t('home.search.placeholder')}
+                  allowClear
+                  onChange={setSearch}
+                />
+              </Space>
+            </Row>
+          </Col>
+          <Col>
+            <Button disabled>{t('home.buttons.add_user')}</Button>
+          </Col>
+        </S.TableHeader>
+        <Table
+          columns={columns}
+          dataSource={data}
+          rowKey="id"
+          pagination={
+            !isLoading &&
+            total > PAGE_SIZE && {
+              showSizeChanger: false,
+              current: currentPage,
+              pageSize: PAGE_SIZE,
+              total,
+            }
           }
-        }
-        onChange={onChangeLessonsPage}
-        loading={isLoading || isPreviousData}
-        locale={{
-          emptyText: (
-            <Empty
-              image={Empty.PRESENTED_IMAGE_SIMPLE}
-              description={t('home.table.no_data')}
-            />
-          ),
-        }}
-      />
-    </S.MainDiv>
+          onChange={onChangeLessonsPage}
+          loading={isLoading || isPreviousData}
+          locale={{
+            emptyText: (
+              <Empty
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                description={t('home.table.no_data')}
+              />
+            ),
+          }}
+        />
+      </S.MainDiv>
+    </>
   );
 };
 

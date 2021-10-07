@@ -1,10 +1,12 @@
 import { Form, Input, message, Tag, Typography } from 'antd';
 import { useCallback, useMemo, useState } from 'react';
+import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
 
 import { queryClient } from '@sb-ui/query';
 import { getUser, patchUser } from '@sb-ui/utils/api/v1/user';
+import { sbPostfix } from '@sb-ui/utils/constants';
 import { USER_BASE_QUERY } from '@sb-ui/utils/queries';
 
 import * as S from './Profile.styled';
@@ -111,104 +113,112 @@ const Profile = () => {
   };
 
   return (
-    <S.Page>
-      <S.Profile>
-        <S.HeaderWrapper>
-          <S.NameWrapper>
-            <Title level={2}>{t('title')}</Title>
-          </S.NameWrapper>
-          {roleKey && (
-            <div>
-              <Tag>{t(roleKey)}</Tag>
-            </div>
-          )}
-        </S.HeaderWrapper>
-        <S.FormWrapper>
-          <S.FormInputsWrapper>
-            <Form
-              size="large"
-              onFieldsChange={handleFieldsChange}
-              form={form}
-              initialValues={{
-                firstName,
-                lastName,
-                email,
-                description,
-              }}
-              layout="vertical"
-            >
-              <Form.Item
-                name="firstName"
-                rules={formRules.firstName}
-                label={t('first_name.label')}
+    <>
+      <Helmet>
+        <title>
+          {t('title')}
+          {sbPostfix}
+        </title>
+      </Helmet>
+      <S.Page>
+        <S.Profile>
+          <S.HeaderWrapper>
+            <S.NameWrapper>
+              <Title level={2}>{t('title')}</Title>
+            </S.NameWrapper>
+            {roleKey && (
+              <div>
+                <Tag>{t(roleKey)}</Tag>
+              </div>
+            )}
+          </S.HeaderWrapper>
+          <S.FormWrapper>
+            <S.FormInputsWrapper>
+              <Form
+                size="large"
+                onFieldsChange={handleFieldsChange}
+                form={form}
+                initialValues={{
+                  firstName,
+                  lastName,
+                  email,
+                  description,
+                }}
+                layout="vertical"
               >
-                <Input
-                  maxLength={30}
-                  placeholder={t('first_name.placeholder')}
-                />
-              </Form.Item>
-              <Form.Item
-                name="lastName"
-                rules={formRules.lastName}
-                label={t('last_name.label')}
+                <Form.Item
+                  name="firstName"
+                  rules={formRules.firstName}
+                  label={t('first_name.label')}
+                >
+                  <Input
+                    maxLength={30}
+                    placeholder={t('first_name.placeholder')}
+                  />
+                </Form.Item>
+                <Form.Item
+                  name="lastName"
+                  rules={formRules.lastName}
+                  label={t('last_name.label')}
+                >
+                  <Input
+                    maxLength={30}
+                    placeholder={t('last_name.placeholder')}
+                  />
+                </Form.Item>
+                <Form.Item
+                  name="email"
+                  rules={formRules.email}
+                  label={t('email.label')}
+                >
+                  <Input placeholder={t('email.placeholder')} />
+                </Form.Item>
+                <Form.Item name="description" label={t('description.label')}>
+                  <TextArea
+                    placeholder={t('description.placeholder')}
+                    showCount
+                    maxLength={140}
+                  />
+                </Form.Item>
+              </Form>
+              <S.Button
+                disabled={isFormErrors}
+                loading={isLoading}
+                onClick={handleSave}
               >
-                <Input
-                  maxLength={30}
-                  placeholder={t('last_name.placeholder')}
-                />
-              </Form.Item>
-              <Form.Item
-                name="email"
-                rules={formRules.email}
-                label={t('email.label')}
-              >
-                <Input placeholder={t('email.placeholder')} />
-              </Form.Item>
-              <Form.Item name="description" label={t('description.label')}>
-                <TextArea
-                  placeholder={t('description.placeholder')}
-                  showCount
-                  maxLength={140}
-                />
-              </Form.Item>
-            </Form>
-            <S.Button
-              disabled={isFormErrors}
-              loading={isLoading}
-              onClick={handleSave}
-            >
-              {t('update_information_button')}
-            </S.Button>
-          </S.FormInputsWrapper>
-          <S.FormInputsWrapper>
-            <Form size="large" layout="vertical">
-              <Form.Item
-                label={t('current_password.label')}
-                name="current-password"
-              >
-                <Input.Password
-                  disabled
-                  placeholder={t('password_placeholder')}
-                />
-              </Form.Item>
-              <Form.Item label={t('new_password.label')} name="new-password">
-                <Input.Password
-                  disabled
-                  placeholder={t('password_placeholder')}
-                />
-              </Form.Item>
-              <Form.Item label={t('confirm_password.label')} name="password">
-                <Input.Password
-                  disabled
-                  placeholder={t('password_placeholder')}
-                />
-              </Form.Item>
-            </Form>
-            <S.UpdateButton>{t('update_password_button')}</S.UpdateButton>
-          </S.FormInputsWrapper>
-        </S.FormWrapper>
-      </S.Profile>
-    </S.Page>
+                {t('update_information_button')}
+              </S.Button>
+            </S.FormInputsWrapper>
+            <S.FormInputsWrapper>
+              <Form size="large" layout="vertical">
+                <Form.Item
+                  label={t('current_password.label')}
+                  name="current-password"
+                >
+                  <Input.Password
+                    disabled
+                    placeholder={t('password_placeholder')}
+                  />
+                </Form.Item>
+                <Form.Item label={t('new_password.label')} name="new-password">
+                  <Input.Password
+                    disabled
+                    placeholder={t('password_placeholder')}
+                  />
+                </Form.Item>
+                <Form.Item label={t('confirm_password.label')} name="password">
+                  <Input.Password
+                    disabled
+                    placeholder={t('password_placeholder')}
+                  />
+                </Form.Item>
+              </Form>
+              <S.UpdateButton>{t('update_password_button')}</S.UpdateButton>
+            </S.FormInputsWrapper>
+          </S.FormWrapper>
+        </S.Profile>
+      </S.Page>
+    </>
   );
 };
 

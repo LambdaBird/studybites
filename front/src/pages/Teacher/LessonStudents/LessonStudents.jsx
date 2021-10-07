@@ -1,5 +1,6 @@
 import { Button, Col, Empty, Row, Space, Table } from 'antd';
 import { useMemo } from 'react';
+import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
@@ -11,6 +12,7 @@ import {
   getLesson,
   getTeacherLessonStudents,
 } from '@sb-ui/utils/api/v1/teacher';
+import { sbPostfix } from '@sb-ui/utils/constants';
 import {
   TEACHER_LESSON_BASE_KEY,
   TEACHER_LESSON_STUDENTS_BASE_KEY,
@@ -147,55 +149,63 @@ const LessonStudents = () => {
   );
 
   return (
-    <S.Page>
-      <FunnelContainer lessonId={lessonId} />
-      <S.TableHeader>
-        <Col>
-          <Row>
-            <Space size="large">
-              <S.TitleHeader>
-                {t('lesson_students.title', { studentsCount: total })}
-              </S.TitleHeader>
-              <DebouncedSearch
-                delay={500}
-                placeholder={t('lesson_students.search.placeholder')}
-                allowClear
-                onChange={setSearch}
-              />
-            </Space>
-          </Row>
-        </Col>
-        <Col>
-          <Button disabled>
-            {t('lesson_students.buttons.invite_student')}
-          </Button>
-        </Col>
-      </S.TableHeader>
-      <Table
-        columns={columns}
-        dataSource={students}
-        rowKey="id"
-        pagination={
-          !(isLoading || isLessonLoading) &&
-          total > PAGE_SIZE && {
-            showSizeChanger: false,
-            current: currentPage,
-            pageSize: PAGE_SIZE,
-            total,
+    <>
+      <Helmet>
+        <title>
+          {t('pages.lesson_students')}
+          {sbPostfix}
+        </title>
+      </Helmet>
+      <S.Page>
+        <FunnelContainer lessonId={lessonId} />
+        <S.TableHeader>
+          <Col>
+            <Row>
+              <Space size="large">
+                <S.TitleHeader>
+                  {t('lesson_students.title', { studentsCount: total })}
+                </S.TitleHeader>
+                <DebouncedSearch
+                  delay={500}
+                  placeholder={t('lesson_students.search.placeholder')}
+                  allowClear
+                  onChange={setSearch}
+                />
+              </Space>
+            </Row>
+          </Col>
+          <Col>
+            <Button disabled>
+              {t('lesson_students.buttons.invite_student')}
+            </Button>
+          </Col>
+        </S.TableHeader>
+        <Table
+          columns={columns}
+          dataSource={students}
+          rowKey="id"
+          pagination={
+            !(isLoading || isLessonLoading) &&
+            total > PAGE_SIZE && {
+              showSizeChanger: false,
+              current: currentPage,
+              pageSize: PAGE_SIZE,
+              total,
+            }
           }
-        }
-        onChange={onChangeLessonsPage}
-        loading={isLoading || isPreviousData || isLessonLoading}
-        locale={{
-          emptyText: (
-            <Empty
-              image={Empty.PRESENTED_IMAGE_SIMPLE}
-              description={t('lesson_students.table.no_data')}
-            />
-          ),
-        }}
-      />
-    </S.Page>
+          onChange={onChangeLessonsPage}
+          loading={isLoading || isPreviousData || isLessonLoading}
+          locale={{
+            emptyText: (
+              <Empty
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                description={t('lesson_students.table.no_data')}
+              />
+            ),
+          }}
+        />
+      </S.Page>
+    </>
   );
 };
 

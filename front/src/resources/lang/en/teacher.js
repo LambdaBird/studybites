@@ -1,4 +1,14 @@
 export default {
+  pages: {
+    students: 'My students',
+    lesson_students: 'Lesson students',
+    create_lesson: 'Lesson creation',
+    edit_lesson: 'Lesson edit',
+    lesson_preview: 'Lesson preview',
+    create_course: 'Course creation',
+    edit_course: 'Course edit',
+    home: 'Home page',
+  },
   info: {
     greeting: 'Welcome back, {{fullName}}',
     lessons: 'Lessons',
