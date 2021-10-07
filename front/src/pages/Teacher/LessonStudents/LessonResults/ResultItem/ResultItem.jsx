@@ -13,6 +13,8 @@ const ResultItem = ({ icons, block, correctness, time }) => {
     [icons, block, t],
   );
 
+  const isShowCorrectness = typeof correctness === 'number';
+
   return (
     <S.RowResult>
       <S.IconWrapper>
@@ -23,7 +25,7 @@ const ResultItem = ({ icons, block, correctness, time }) => {
         {(time / 1000).toFixed(1)} {t('lesson_students_results.short_seconds')}
       </S.Time>
       <S.Correctness>
-        {correctness !== undefined && (
+        {isShowCorrectness && (
           <>
             {correctness === 1 ? (
               <CheckCircleTwoTone twoToneColor="#52c41a" />
