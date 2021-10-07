@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
 import { useTableSearch } from '@sb-ui/hooks/useTableSearch';
 import { getLanguageCodeByKey } from '@sb-ui/i18n';
+import { interactiveTypesBlocks } from '@sb-ui/utils/api/config';
 import {
   getLesson,
   getTeacherLessonStudents,
@@ -21,8 +22,6 @@ import FunnelContainer from './FunnelContainer';
 import * as S from './LessonStudents.styled';
 
 const PAGE_SIZE = 10;
-// TODO: take from shared place
-const interactiveTypesBlocks = ['next', 'next', 'closedQuestion', 'quiz'];
 
 const renderFirstActivityColumn = ({ results, t, languageCode }) => {
   const firstActivity = results?.[0]?.createdAt;
@@ -41,7 +40,6 @@ const renderLastActivityColumn = ({ results, t, languageCode }) => {
 };
 
 const renderProgressColumn = (results, interactiveBlocksNumber) => {
-  // eslint-disable-next-line react/destructuring-assignment
   const progress = results.filter(
     (result) => result.action !== 'start',
   )?.length;
@@ -92,7 +90,7 @@ const LessonStudents = () => {
     () =>
       lessonData?.lesson?.blocks.filter((block) =>
         interactiveTypesBlocks.includes(block.type),
-      )?.length || 0,
+      )?.length + 1 || 1,
     [lessonData],
   );
 

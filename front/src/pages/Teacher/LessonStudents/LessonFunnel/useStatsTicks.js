@@ -8,7 +8,8 @@ import {
   SPARK_LINE_WIDTH,
 } from './consts';
 
-const findMean = (arr) => arr.reduce((s, i) => s + i, 0) / arr.length;
+const findMean = (arr) =>
+  arr.filter((x) => !!x).reduce((s, i) => s + i, 0) / arr.length;
 
 const findMedian = (arr) => {
   const sorted = [...arr].sort((a, b) => a - b);
