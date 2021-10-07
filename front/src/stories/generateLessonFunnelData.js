@@ -1,14 +1,10 @@
 // eslint-disable-next-line import/no-extraneous-dependencies
 import * as d3Random from 'd3-random';
 
-// TODO: take from shared place
-export const staticTypesBlocks = ['paragraph', 'list', 'header', 'table'];
-export const interactiveTypesBlocks = [
-  'next',
-  'next',
-  'closedQuestion',
-  'quiz',
-];
+import {
+  interactiveTypesBlocks,
+  staticTypesBlocks,
+} from '@sb-ui/utils/api/config';
 
 const getCoef = (mi, ma) => mi + Math.random() * (ma - mi);
 const getMinCoef = (i, bitesCount) => {

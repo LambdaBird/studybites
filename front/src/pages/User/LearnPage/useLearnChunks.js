@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 
-import apiConfig from '@sb-ui/utils/api/config';
+import { interactiveTypesBlocks } from '@sb-ui/utils/api/config';
 import { LESSON_BASE_QUERY } from '@sb-ui/utils/queries';
 
 import { createFinishBlock, createStartBlock } from './useLearnChunks.util';
@@ -9,7 +9,7 @@ import { createFinishBlock, createStartBlock } from './useLearnChunks.util';
 export const convertBlocksToChunks = (blocks) => {
   let lastIndex = 0;
   const chunks = blocks.reduce((acc, block, i) => {
-    if (apiConfig.interactiveBlocks.includes(block.type)) {
+    if (interactiveTypesBlocks.includes(block.type)) {
       acc.push(blocks.slice(lastIndex, i + 1));
       lastIndex = i + 1;
     }
@@ -35,7 +35,7 @@ export const createChunksFromBlocks = ({
 
   const isLastInteractiveResolved = blocks[blocks.length - 1]?.isSolved;
 
-  const isLastNonInteractiveBlock = !apiConfig.interactiveBlocks.includes(
+  const isLastNonInteractiveBlock = !interactiveTypesBlocks.includes(
     blocks[blocks.length - 1]?.type,
   );
 
