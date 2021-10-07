@@ -10,20 +10,18 @@ import * as S from './Result.styled';
 
 const { Text } = Typography;
 
-const Result = ({ correct, result, gaps }) => {
-  return (
-    <>
-      <ResultTitle correct={correct} />
-      {correct !== CORRECT_ALL && (
-        <S.ResultWrapper>
-          <Text italic>
-            <GapsInput gaps={gaps} result={result} />
-          </Text>
-        </S.ResultWrapper>
-      )}
-    </>
-  );
-};
+const Result = ({ correct, result, gaps }) => (
+  <>
+    <ResultTitle correct={correct} />
+    {correct !== CORRECT_ALL && (
+      <S.ResultWrapper>
+        <Text italic>
+          <GapsInput gaps={gaps} result={result} />
+        </Text>
+      </S.ResultWrapper>
+    )}
+  </>
+);
 
 Result.propTypes = {
   correct: PropTypes.oneOf([CORRECT_ALL, CORRECT_NONE, CORRECT_PARTIAL]),
