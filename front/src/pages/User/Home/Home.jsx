@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 
+import { sbPostfix } from '@sb-ui/utils/constants';
 import { ChildrenType } from '@sb-ui/utils/types';
 
 import OngoingLessons from './OngoingLessons';
@@ -14,7 +15,10 @@ const Home = ({ children }) => {
   return (
     <>
       <Helmet>
-        <title>{t('pages.home')}</title>
+        <title>
+          {t('pages.home')}
+          {sbPostfix}
+        </title>
       </Helmet>
       <S.Main>
         <OngoingLessons />

@@ -12,6 +12,7 @@ import {
   getLesson,
   getTeacherLessonStudents,
 } from '@sb-ui/utils/api/v1/teacher';
+import { sbPostfix } from '@sb-ui/utils/constants';
 import {
   TEACHER_LESSON_BASE_KEY,
   TEACHER_LESSON_STUDENTS_BASE_KEY,
@@ -150,7 +151,10 @@ const LessonStudents = () => {
   return (
     <>
       <Helmet>
-        <title>{t('pages.lesson_students')}</title>
+        <title>
+          {t('pages.lesson_students')}
+          {sbPostfix}
+        </title>
       </Helmet>
       <S.Page>
         <FunnelContainer lessonId={lessonId} />

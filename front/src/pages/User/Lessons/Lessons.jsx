@@ -6,6 +6,7 @@ import {
   getEnrolledLessons,
   getEnrolledLessonsFinished,
 } from '@sb-ui/utils/api/v1/student';
+import { sbPostfix } from '@sb-ui/utils/constants';
 import {
   USER_ENROLLED_LESSONS_BASE_KEY,
   USER_ENROLLED_LESSONS_FINISHED_BASE_KEY,
@@ -20,7 +21,10 @@ const Lessons = () => {
   return (
     <>
       <Helmet>
-        <title>{t('pages.lessons')}</title>
+        <title>
+          {t('pages.lessons')}
+          {sbPostfix}
+        </title>
       </Helmet>
       <S.MainDiv>
         <ResourcesList

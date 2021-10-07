@@ -6,6 +6,7 @@ import { useMutation, useQuery } from 'react-query';
 
 import { queryClient } from '@sb-ui/query';
 import { getUser, patchUser } from '@sb-ui/utils/api/v1/user';
+import { sbPostfix } from '@sb-ui/utils/constants';
 import { USER_BASE_QUERY } from '@sb-ui/utils/queries';
 
 import * as S from './Profile.styled';
@@ -114,7 +115,10 @@ const Profile = () => {
   return (
     <>
       <Helmet>
-        <title>{t('title')}</title>
+        <title>
+          {t('title')}
+          {sbPostfix}
+        </title>
       </Helmet>
       <S.Page>
         <S.Profile>

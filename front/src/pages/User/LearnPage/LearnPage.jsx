@@ -7,6 +7,7 @@ import Header from '@sb-ui/components/molecules/Header';
 import LearnContext from '@sb-ui/contexts/LearnContext';
 import InfoBlock from '@sb-ui/pages/User/LearnPage/InfoBlock';
 import { getEnrolledLesson, postLessonById } from '@sb-ui/utils/api/v1/student';
+import { sbPostfix } from '@sb-ui/utils/constants';
 
 import LearnChunk from './LearnChunk';
 import { useLearnChunks } from './useLearnChunks';
@@ -32,7 +33,10 @@ const LearnPage = () => {
   return (
     <>
       <Helmet>
-        <title>{t('pages.learn')}</title>
+        <title>
+          {t('pages.learn')}
+          {sbPostfix}
+        </title>
       </Helmet>
       <Header
         hideOnScroll

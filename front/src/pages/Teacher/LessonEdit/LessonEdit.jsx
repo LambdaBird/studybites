@@ -16,6 +16,7 @@ import {
   getLesson,
   putLesson,
 } from '@sb-ui/utils/api/v1/teacher';
+import { sbPostfix } from '@sb-ui/utils/constants';
 import EditorJs from '@sb-ui/utils/editorjs/EditorJsContainer';
 import {
   LESSONS_EDIT,
@@ -261,6 +262,7 @@ const LessonEdit = () => {
           {isCurrentlyEditing
             ? t('pages.edit_lesson')
             : t('pages.create_lesson')}
+          {sbPostfix}
         </title>
       </Helmet>
       <Header hideOnScroll handleHide={setHeaderHide}>

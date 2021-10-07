@@ -21,6 +21,7 @@ import {
   getUsers,
   removeTeacher,
 } from '@sb-ui/utils/api/v1/admin';
+import { sbPostfix } from '@sb-ui/utils/constants';
 import { ADMIN_USERS_BASE_KEY } from '@sb-ui/utils/queries';
 
 import * as S from './Home.styled';
@@ -161,7 +162,10 @@ const Home = () => {
   return (
     <>
       <Helmet>
-        <title>{t('pages.home')}</title>
+        <title>
+          {t('pages.home')}
+          {sbPostfix}
+        </title>
       </Helmet>
       <S.MainDiv>
         <S.TableHeader>

@@ -8,6 +8,7 @@ import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
 import { useTableSearch } from '@sb-ui/hooks/useTableSearch';
 import { getLanguageCodeByKey } from '@sb-ui/i18n';
 import { getTeacherStudents } from '@sb-ui/utils/api/v1/teacher';
+import { sbPostfix } from '@sb-ui/utils/constants';
 import { TEACHER_STUDENTS_BASE_KEY } from '@sb-ui/utils/queries';
 import { formatDate } from '@sb-ui/utils/utils';
 
@@ -79,7 +80,10 @@ const Students = () => {
   return (
     <>
       <Helmet>
-        <title>{t('pages.students')}</title>
+        <title>
+          {t('pages.students')}
+          {sbPostfix}
+        </title>
       </Helmet>
       <S.Page>
         <S.TableHeader>
