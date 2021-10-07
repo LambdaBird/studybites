@@ -134,6 +134,7 @@ export default {
       forward: 'Forward',
       preview: 'Preview',
       move_to_draft: 'Move to draft',
+      upload: 'Click to select file',
     },
     cover_image: {
       title: 'Cover image link',

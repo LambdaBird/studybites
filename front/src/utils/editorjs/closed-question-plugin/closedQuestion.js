@@ -1,3 +1,4 @@
+import PluginBase from '../PluginBase';
 import * as Utils from '../utils';
 
 import { createRemoveIcon, icon } from './resources';
@@ -6,8 +7,12 @@ import './closedQuestion.css';
 
 const MAX_ANSWER_LENGTH = 50;
 
-export default class ClosedQuestion {
+export default class ClosedQuestion extends PluginBase {
   constructor({ data, api, readOnly }) {
+    super({
+      title: api.i18n.t('title'),
+    });
+
     this.api = api;
     this.data = data;
     this.readOnly = readOnly;
@@ -42,6 +47,7 @@ export default class ClosedQuestion {
     const container = document.createElement('div');
     this.container = container;
     container.classList.add(this.CSS.container);
+    container.appendChild(this.titleWrapper);
 
     const questionInput = document.createElement('div');
     questionInput.classList.add(this.CSS.input);

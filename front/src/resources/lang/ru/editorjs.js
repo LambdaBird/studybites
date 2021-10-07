@@ -19,6 +19,9 @@ export default {
     },
   },
   tools: {
+    hint: 'Нажмите "Tab" для комманд',
+    basic_blocks: 'Базовые блоки',
+    interactive_blocks: 'Интерактивные блоки',
     stub: {
       title: 'Блок не может быть отображен корректно',
     },
@@ -27,11 +30,13 @@ export default {
       select: 'Выберите файл для загрузки',
       error: 'Неудалось загрузить файл',
     },
-    text: {
+    paragraph: {
       title: 'Текст',
+      description: 'Начните с простого текста',
     },
     image: {
       title: 'Картинка',
+      description: 'Вставить ссылку',
       input: 'Введите ссылку',
       caption: 'Введите подпись',
       select: 'Выберите файл для загрузки',
@@ -39,34 +44,42 @@ export default {
     },
     next: {
       title: 'Далее',
+      description: 'Разбить уроки на блоки',
     },
     quiz: {
       title: 'Тест',
+      description: 'Создать простой тест',
       question: 'Вопрос',
       answer: 'Введите ответ',
     },
-    video: {
+    embed: {
       title: 'Видео',
+      description: 'Вставить ссылку с Youtube, Vimeo ...',
       input: 'Введите ссылку',
       caption: 'Введите подпись',
     },
-    heading: {
+    header: {
       title: 'Заголовок',
+      description: 'Создать заголовок',
       input: 'Введите заголовок',
     },
     list: {
       title: 'Список',
+      description: 'Создать простой список',
     },
     quote: {
       title: 'Цитата',
+      description: 'Записать цитату',
       input: 'Введите цитату',
       caption: 'Введите подпись',
     },
     delimiter: {
       title: 'Разделитель',
+      description: 'Визуально разделить блоки',
     },
     table: {
       title: 'Таблица',
+      description: 'Создать таблицу',
       col_before: 'Вставить столбец до',
       col_after: 'Вставить столбец после',
       row_before: 'Вставить ряд до',
@@ -76,6 +89,7 @@ export default {
     },
     closed_question: {
       title: 'Закрытый вопрос',
+      description: 'Вопрос с определенными ответами',
       question: 'Введите вопрос',
       answer: 'Введите ответ',
       explanation: 'Введите объяснение (опционально)',
@@ -84,10 +98,14 @@ export default {
       none: 'пусто',
     },
     fill_the_gap: {
+      title: 'Заполнить пропуски',
+      description: 'Заполнить пропущенные слова',
       hint: '* Текст внутри {{ }} будет скрыт для студентов',
       placeholder: 'Введите текст',
     },
     match: {
+      title: 'Соответствие',
+      description: 'Соединить блоки',
       input_left_placeholder: 'Введите левое значение',
       input_right_placeholder: 'Введите правое значение',
       hint: '* Слова будут перемешаны для студентов после сохранение',
@@ -95,11 +113,13 @@ export default {
     },
     warning: {
       title: 'Предупреждение',
+      description: 'Сделать текст заметным',
       placeholder: 'Заголовок',
       message: 'Сообщение',
     },
     code: {
       title: 'Код',
+      description: 'Сделать фрагмент кода',
       placeholder: 'Введите код',
     },
     marker: {
@@ -116,9 +136,11 @@ export default {
     },
     bricks: {
       title: 'Конструктор',
+      description: 'Составьте правильное предложение',
       question: '❓ Вопрос',
       answer: 'Введите слова и нажмите Enter',
       additional: 'Дополнительные слова',
+      hint: '* Слова будут перемешаны после сохранения',
     },
   },
 };

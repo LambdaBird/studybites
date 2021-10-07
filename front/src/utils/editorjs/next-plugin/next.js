@@ -1,8 +1,14 @@
 /* eslint-disable class-methods-use-this */
+import PluginBase from '../PluginBase';
+
 import './next.css';
 
-export default class Next {
+export default class Next extends PluginBase {
   constructor({ api, readOnly }) {
+    super({
+      title: api.i18n.t('title'),
+    });
+
     this.api = api;
     this.readOnly = readOnly;
   }
@@ -29,6 +35,7 @@ export default class Next {
 
   render() {
     const wrapper = document.createElement('div');
+    wrapper.appendChild(this.titleWrapper);
 
     wrapper.classList.add('next-tool__wrapper');
     const button = document.createElement('button');

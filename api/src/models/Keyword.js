@@ -48,11 +48,10 @@ export default class Keyword extends BaseModel {
 
     return this.query()
       .skipUndefined()
-      .where(
-        'name',
-        'ilike',
-        search ? `%${search.replace(/ /g, '%')}%` : undefined,
-      )
+      .search({
+        columns: ['name'],
+        searchString: search,
+      })
       .range(start, end);
   }
 

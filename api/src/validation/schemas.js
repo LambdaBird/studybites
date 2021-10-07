@@ -66,6 +66,14 @@ export const userSearch = {
   },
 };
 
+export const passwordResetIdParam = {
+  type: 'object',
+  properties: {
+    id: { type: 'string' },
+  },
+  required: ['id'],
+};
+
 export const keywordSearch = {
   type: 'object',
   properties: {

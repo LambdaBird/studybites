@@ -2,7 +2,7 @@ import { BadRequestError } from '../../../../validation/errors';
 
 export async function updateSelfHandler({
   user: { id: userId },
-  body: { firstName, lastName, email, description },
+  body: { firstName, lastName, description },
 }) {
   const {
     config: {
@@ -12,7 +12,6 @@ export async function updateSelfHandler({
   } = this;
   const firstNameTrimmed = firstName?.trim?.();
   const lastNameTrimmed = lastName?.trim?.();
-  const emailTrimmed = email?.trim?.();
   const descriptionTrimmed = description?.trim?.();
 
   const anySpaceRegex = /\s/g;
@@ -28,7 +27,6 @@ export async function updateSelfHandler({
     user: {
       firstName: firstNameTrimmed,
       lastName: lastNameTrimmed,
-      email: emailTrimmed,
       description: descriptionTrimmed,
     },
   });

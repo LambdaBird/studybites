@@ -87,6 +87,17 @@ class User extends BaseModel {
       .throwIfNotFound({ error: errors.USER_ERR_INVALID_UPDATE });
   }
 
+  static updatePassword({ password, userId }) {
+    return this.query()
+      .patch({
+        password,
+        updatedAt: new Date().toISOString(),
+      })
+      .findById(userId)
+      .returning('*')
+      .throwIfNotFound({ error: errors.USER_ERR_INVALID_UPDATE });
+  }
+
   static updateLanguage({ userId, language }) {
     return this.query()
       .patch({ language })
@@ -127,13 +138,15 @@ class User extends BaseModel {
       `),
       )
       .whereNot('users.id', userId)
-      .andWhere(
-        this.knex().raw(
-          `concat(users.first_name, ' ', users.last_name, ' ', users.first_name, ' ', users.email)`,
-        ),
-        'ilike',
-        `%${search ? search.replace(/ /g, '%') : '%'}%`,
-      )
+      .search({
+        columns: [
+          'users.first_name',
+          'users.last_name',
+          'users.first_name',
+          'users.email',
+        ],
+        searchString: search,
+      })
       .range(start, end);
   }
 
@@ -141,6 +154,16 @@ class User extends BaseModel {
     return this.query()
       .findById(userId)
       .select(constants.USER_CONST_ALLOWED_ADMIN_FIELDS)
+      .throwIfNotFound({
+        error: new NotFoundError(errors.USER_ERR_USER_NOT_FOUND),
+      });
+  }
+
+  static getUserByEmail({ email }) {
+    return this.query()
+      .select(constants.USER_CONST_ALLOWED_ADMIN_FIELDS)
+      .where({ email })
+      .first()
       .throwIfNotFound({
         error: new NotFoundError(errors.USER_ERR_USER_NOT_FOUND),
       });
