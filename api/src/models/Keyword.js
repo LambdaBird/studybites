@@ -2,7 +2,6 @@ import objection from 'objection';
 import path from 'path';
 
 import BaseModel from './BaseModel';
-import { resources } from '../config';
 import ResourceKeyword from './ResourceKeyword';
 
 export default class Keyword extends BaseModel {
