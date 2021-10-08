@@ -9,6 +9,6 @@
   },
   "email_confirmation": {
     "subject": "Email confirmation",
-    "html": "Confirm email link {{link}}",
+    "html": "Confirm email link {{link}}"
   }
 }

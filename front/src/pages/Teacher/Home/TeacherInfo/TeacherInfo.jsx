@@ -3,6 +3,7 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 
+import { SELF_STALE_TIME } from '@sb-ui/utils/api/config';
 import { getTeacherLessons } from '@sb-ui/utils/api/v1/teacher';
 import { getUser } from '@sb-ui/utils/api/v1/user';
 import {
@@ -16,7 +17,9 @@ const { Title, Text } = Typography;
 
 const TeacherInfo = () => {
   const { t } = useTranslation('teacher');
-  const { data: user } = useQuery(USER_BASE_QUERY, getUser);
+  const { data: user } = useQuery(USER_BASE_QUERY, getUser, {
+    staleTime: SELF_STALE_TIME,
+  });
 
   const { data: lessonsResponseData } = useQuery(
     TEACHER_LESSONS_BASE_KEY,

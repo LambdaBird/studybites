@@ -19,9 +19,9 @@ async function handler({ params: { id } }) {
         emailServiceMessages: messages,
       },
     },
-    emailUtils: { getEmailConfirmByUuid, invalidateConfirmationLink },
+    redisModel: Redis,
   } = this;
-  const email = await getEmailConfirmByUuid({ uuid: id });
+  const email = await Redis.getEmailConfirmByUuid({ uuid: id });
   if (!email) {
     throw new BadRequestError(errors.EMAIL_ERR_VERIFY);
   }
@@ -30,7 +30,7 @@ async function handler({ params: { id } }) {
     throw new BadRequestError(errors.EMAIL_ERR_ALREADY_VERIFIED);
   }
   await User.updateOne({ userData: { isConfirmed: true }, userId });
-  await invalidateConfirmationLink({ email, uuid: id });
+  await Redis.invalidateConfirmationLink({ email, uuid: id });
   return {
     message: messages.EMAIL_MESSAGE_EMAIL_VERIFIED,
   };

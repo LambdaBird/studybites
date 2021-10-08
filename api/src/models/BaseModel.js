@@ -1,5 +1,7 @@
 import objection from 'objection';
 
+import { QueryBuilder } from './QueryBuilder';
+
 import { globalErrors as errors } from '../config';
 import {
   BadRequestError,
@@ -10,6 +12,10 @@ import {
 export default class BaseModel extends objection.Model {
   static get columnNameMappers() {
     return objection.snakeCaseMappers();
+  }
+
+  static get QueryBuilder() {
+    return QueryBuilder;
   }
 
   static query(trx) {

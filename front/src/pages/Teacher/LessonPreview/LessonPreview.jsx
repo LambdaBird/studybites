@@ -12,6 +12,7 @@ import InfoBlock from '@sb-ui/pages/User/LearnPage/InfoBlock';
 import LearnChunk from '@sb-ui/pages/User/LearnPage/LearnChunk';
 import * as S from '@sb-ui/pages/User/LearnPage/LearnPage.styled';
 import { useLearnChunks } from '@sb-ui/pages/User/LearnPage/useLearnChunks';
+import { SELF_STALE_TIME } from '@sb-ui/utils/api/config';
 import { getLesson } from '@sb-ui/utils/api/v1/teacher';
 import { getUser } from '@sb-ui/utils/api/v1/user';
 import { TEACHER_LESSON_BASE_KEY, USER_BASE_QUERY } from '@sb-ui/utils/queries';
@@ -39,7 +40,9 @@ const LessonPreview = () => {
     getLesson,
   );
 
-  const { data: user } = useQuery(USER_BASE_QUERY, getUser);
+  const { data: user } = useQuery(USER_BASE_QUERY, getUser, {
+    staleTime: SELF_STALE_TIME,
+  });
 
   const postLessonByIdPreviewNew = useMemo(
     () => postLessonByIdPreview(lessonData),

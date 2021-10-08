@@ -5,6 +5,7 @@ import { useMutation, useQuery } from 'react-query';
 import { useHistory } from 'react-router-dom';
 
 import { queryClient } from '@sb-ui/query';
+import { SELF_STALE_TIME } from '@sb-ui/utils/api/config';
 import { resetPassword } from '@sb-ui/utils/api/v1/email';
 import { getUser, patchUser } from '@sb-ui/utils/api/v1/user';
 import { EMAIL_ERR_TOO_FREQUENTLY } from '@sb-ui/utils/errors';
@@ -30,7 +31,9 @@ const Profile = () => {
   const { t } = useTranslation('profile');
   const [form] = Form.useForm();
   const history = useHistory();
-  const { data: user } = useQuery(USER_BASE_QUERY, getUser);
+  const { data: user } = useQuery(USER_BASE_QUERY, getUser, {
+    staleTime: SELF_STALE_TIME,
+  });
   const { email, firstName, lastName, description, roles } = user || {};
   const [isFormErrors, setIsFormErrors] = useState(false);
 
