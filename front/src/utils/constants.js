@@ -3,9 +3,10 @@ export const Roles = {
   TEACHER: 'Teacher',
 };
 
+export const allowedImageTypes = ['image/png', 'image/jpeg'];
+
 export const allowedTypes = [
-  'image/png',
-  'image/jpeg',
+  ...allowedImageTypes,
   'application/msword',
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   'application/vnd.ms-powerpoint',
@@ -20,3 +21,5 @@ export const allowedTypes = [
   'text/plain',
   'application/pdf',
 ];
+
+export const sbPostfix = ' · StudyBites';

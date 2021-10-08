@@ -1,4 +1,4 @@
-import api from '@sb-ui/utils/api';
+import api from '../api';
 
 export const createInput = ({
   readOnly = false,

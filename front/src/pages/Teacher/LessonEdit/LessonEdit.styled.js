@@ -49,7 +49,7 @@ export const RightColContent = styled(Col)`
   padding: 0 2rem 2rem;
   overflow-y: auto;
   transition: transform 0.3s ease-in-out;
-  transform: translateY(${(props) => (props.headerHide ? '-54' : '0')}px);
+  transform: translateY(${(props) => (props.$headerHide ? '-54' : '0')}px);
 `;
 
 export const InputTitle = styled.input`

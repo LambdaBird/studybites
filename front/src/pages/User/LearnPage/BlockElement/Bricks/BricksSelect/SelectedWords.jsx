@@ -9,9 +9,9 @@ const SelectedWords = ({
   if (disabled) {
     return words
       ?.map((word, index) => ({ word, key: index }))
-      ?.map(({ word, key }) => {
-        return <S.WordDisabled key={`${word}-${key}`}>{word}</S.WordDisabled>;
-      });
+      ?.map(({ word, key }) => (
+        <S.WordDisabled key={`${word}-${key}`}>{word}</S.WordDisabled>
+      ));
   }
 
   return selectedWordsId.map((wordId) => {

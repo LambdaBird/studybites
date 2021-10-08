@@ -23,4 +23,5 @@ export default {
     one_numerical: 'At least one numerical',
   },
   button: 'Sign up',
+  email_verification: 'Email verification sent successfully!',
 };

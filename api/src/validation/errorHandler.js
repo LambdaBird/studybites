@@ -2,7 +2,7 @@ import { globalErrors } from '../config';
 
 export default function errorHandler(err, req, reply) {
   req.log.error(err);
-  const { validation, statusCode, message } = err;
+  const { validation, statusCode, message, payload } = err;
   if (validation) {
     return reply.status(400).send({
       statusCode: 400,
@@ -15,5 +15,5 @@ export default function errorHandler(err, req, reply) {
       message: globalErrors.GLOBAL_ERR_INTERNAL_SERVER_ERROR,
     });
   }
-  return reply.status(statusCode).send({ statusCode, message });
+  return reply.status(statusCode).send({ statusCode, message, payload });
 }

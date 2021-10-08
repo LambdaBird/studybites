@@ -1,0 +1,37 @@
+.image-plugin__container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.image-plugin__title {
+    cursor: default;
+    user-select: none;
+    font-size: 12px;
+    color: rgba(0, 0, 0, 0.45);
+}
+
+.image-plugin__fileInput {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+}
+
+.image-plugin__file label {
+    position: relative;
+    width: 100%;
+    height: 3rem;
+    background: #098C8C;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 2px;
+}
+
+.image-plugin__contentDisplay {
+    width: 100%;
+    object-fit: cover;
+}
