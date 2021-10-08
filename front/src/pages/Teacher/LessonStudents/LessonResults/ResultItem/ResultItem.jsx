@@ -6,14 +6,20 @@ import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons';
 import { getTitleAndIcon } from './getTitleAndIcon';
 import * as S from './ResulItem.styled';
 
-const ResultItem = ({ icons, block, correctness, time }) => {
+const ResultItem = ({ icons, block, correctness, time, showCircle }) => {
   const { t } = useTranslation(['teacher', 'editorjs']);
   const { icon, title } = useMemo(
     () => getTitleAndIcon(icons, block, t),
     [icons, block, t],
   );
 
-  const isShowCorrectness = typeof correctness === 'number';
+  const blockTime = useMemo(
+    () =>
+      t('lesson_students_results.short_seconds', {
+        time: (time / 1000).toFixed(1),
+      }),
+    [t, time],
+  );
 
   return (
     <S.RowResult>
@@ -21,11 +27,9 @@ const ResultItem = ({ icons, block, correctness, time }) => {
         <S.Icon>{icon}</S.Icon>
         <S.IconTitle>{title}</S.IconTitle>
       </S.IconWrapper>
-      <S.Time>
-        {(time / 1000).toFixed(1)} {t('lesson_students_results.short_seconds')}
-      </S.Time>
+      <S.Time>{blockTime}</S.Time>
       <S.Correctness>
-        {isShowCorrectness && (
+        {showCircle && (
           <>
             {correctness === 1 ? (
               <CheckCircleTwoTone twoToneColor="#52c41a" />
@@ -44,6 +48,7 @@ ResultItem.propTypes = {
   block: T.shape({}),
   correctness: T.number,
   time: T.number,
+  showCircle: T.bool,
 };
 
 export default ResultItem;
