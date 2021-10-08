@@ -21,8 +21,10 @@ const { TextArea } = Input;
 
 const CourseEdit = () => {
   const { id: courseId } = useParams();
-  const isEditCourse = useMemo(() => courseId !== 'new', []);
   const isCurrentlyEditing = courseId !== 'new';
+  // Invariant variable
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const isEditCourse = useMemo(() => isCurrentlyEditing, []);
 
   const { t } = useTranslation('teacher');
   const [search, setSearch] = useState('');

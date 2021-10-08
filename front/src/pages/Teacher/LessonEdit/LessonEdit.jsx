@@ -323,7 +323,7 @@ const LessonEdit = () => {
             </S.EditorWrapper>
           </S.LeftCol>
           <S.RightCol>
-            <S.RightColContent headerHide={headerHide}>
+            <S.RightColContent $headerHide={headerHide}>
               <S.RowStyled gutter={[32, 32]}>
                 <Col span={24}>
                   <S.SaveButton

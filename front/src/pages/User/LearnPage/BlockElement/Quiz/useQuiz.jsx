@@ -6,13 +6,12 @@ import { htmlToReact, RESPONSE_TYPE } from '@sb-ui/pages/User/LearnPage/utils';
 import { verifyAnswers } from './verifyAnswers';
 import * as S from './Quiz.styled';
 
-const convertDataToOptions = (data) => {
-  return data?.map(({ value, correct }, i) => ({
+const convertDataToOptions = (data) =>
+  data?.map(({ value, correct }, i) => ({
     label: <S.CheckboxText>{htmlToReact(value)}</S.CheckboxText>,
     value: i,
     correct,
   }));
-};
 
 export const useQuiz = ({ blockId, revision, answer, content, reply }) => {
   const { handleInteractiveClick, id } = useContext(LearnContext);
