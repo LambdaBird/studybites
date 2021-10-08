@@ -1,5 +1,4 @@
 import { Checkbox } from 'antd';
-import T from 'prop-types';
 import { useCallback, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -7,6 +6,7 @@ import { setPropsInTool } from '@sb-ui/utils/editorjs/utils';
 
 import BaseHeader from '../../PluginBase/BaseHeader';
 
+import { ToolType } from './types';
 import * as S from './GradedQuestion.styled';
 
 const GradedQuestion = ({ tool }) => {
@@ -51,23 +51,7 @@ const GradedQuestion = ({ tool }) => {
 };
 
 GradedQuestion.propTypes = {
-  tool: T.shape({
-    api: T.shape({
-      i18n: T.shape({
-        t: T.func,
-      }),
-    }),
-    block: T.shape({
-      name: T.string,
-    }),
-    data: T.shape({
-      requireAttachment: T.bool,
-      questionInput: T.element,
-    }),
-    requireAttachment: T.bool,
-    questionInput: T.element,
-    readOnly: T.bool,
-  }),
+  tool: ToolType,
 };
 
 export default GradedQuestion;

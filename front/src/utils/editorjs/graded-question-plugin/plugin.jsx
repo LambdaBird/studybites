@@ -1,11 +1,9 @@
-import { render } from 'react-dom';
+import ReactDOM from 'react-dom';
 
 import { sanitizeBlocks } from '@sb-ui/utils/editorjs/utils';
 
 import GradedQuestionComponent from './GradedQuestion/GradedQuestion';
 import { ToolboxIcon } from './resources';
-
-import './gradedQuestion.css';
 
 export default class GradedQuestion {
   constructor({ data, api, readOnly, block }) {
@@ -47,7 +45,7 @@ export default class GradedQuestion {
 
   render() {
     const container = document.createElement('div');
-    render(<GradedQuestionComponent tool={this} />, container);
+    ReactDOM.render(<GradedQuestionComponent tool={this} />, container);
     return container;
   }
 }
