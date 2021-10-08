@@ -2,6 +2,7 @@ import { Button, Col, Input, message, Row, Typography } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
+import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { SaveOutlined } from '@ant-design/icons';
@@ -9,6 +10,7 @@ import { SaveOutlined } from '@ant-design/icons';
 import Header from '@sb-ui/components/molecules/Header';
 import KeywordsSelect from '@sb-ui/components/molecules/KeywordsSelect';
 import { Statuses } from '@sb-ui/pages/Teacher/Home/Dashboard/constants';
+import { sbPostfix } from '@sb-ui/utils/constants';
 
 import CourseLesson from './CourseLesson';
 import { useCourse } from './useCourse';
@@ -174,6 +176,14 @@ const CourseEdit = () => {
 
   return (
     <>
+      <Helmet>
+        <title>
+          {isCurrentlyEditing
+            ? t('pages.edit_course')
+            : t('pages.create_course')}
+          {sbPostfix}
+        </title>
+      </Helmet>
       <Header hideOnScroll>
         <S.HeaderButtons>
           <Button disabled={!isCurrentlyEditing}>

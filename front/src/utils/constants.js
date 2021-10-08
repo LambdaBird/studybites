@@ -21,3 +21,5 @@ export const allowedTypes = [
   'text/plain',
   'application/pdf',
 ];
+
+export const sbPostfix = ' · StudyBites';

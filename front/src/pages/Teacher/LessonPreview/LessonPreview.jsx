@@ -1,4 +1,6 @@
 import { useMemo } from 'react';
+import { Helmet } from 'react-helmet';
+import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useParams } from 'react-router-dom';
 
@@ -15,6 +17,7 @@ import { useLearnChunks } from '@sb-ui/pages/User/LearnPage/useLearnChunks';
 import { SELF_STALE_TIME } from '@sb-ui/utils/api/config';
 import { getLesson } from '@sb-ui/utils/api/v1/teacher';
 import { getUser } from '@sb-ui/utils/api/v1/user';
+import { sbPostfix } from '@sb-ui/utils/constants';
 import { TEACHER_LESSON_BASE_KEY, USER_BASE_QUERY } from '@sb-ui/utils/queries';
 
 const getLessonByIdPreview = async ({ queryKey }) => {
@@ -33,6 +36,7 @@ const getLessonByIdPreview = async ({ queryKey }) => {
 };
 
 const LessonPreview = () => {
+  const { t } = useTranslation('teacher');
   const { id: lessonId } = useParams();
 
   const { data: lessonData } = useQuery(
@@ -72,6 +76,12 @@ const LessonPreview = () => {
 
   return (
     <>
+      <Helmet>
+        <title>
+          {t('pages.lesson_preview')}
+          {sbPostfix}
+        </title>
+      </Helmet>
       <Header hideOnScroll bottom={<S.Progress percent={learnProgress} />} />
       <S.Wrapper>
         <S.GlobalStylesLearnPage />

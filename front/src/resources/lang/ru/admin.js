@@ -1,4 +1,7 @@
 export default {
+  pages: {
+    home: 'Панель администратора',
+  },
   messages: {
     success_alter_role: 'Роль успешно изменена',
   },
