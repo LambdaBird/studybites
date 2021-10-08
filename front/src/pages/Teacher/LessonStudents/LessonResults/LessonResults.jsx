@@ -1,40 +1,21 @@
 import T from 'prop-types';
-import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { getLanguageCodeByKey } from '@sb-ui/i18n';
-import { useBlockIcons } from '@sb-ui/pages/Teacher/LessonStudents/LessonResults/useBlockIcons';
-import BlockElement from '@sb-ui/pages/User/LearnPage/BlockElement';
-import { LearnWrapper } from '@sb-ui/pages/User/LearnPage/LearnPage.styled';
-import { formatDate } from '@sb-ui/utils/utils';
+import { useLessonResults } from '@sb-ui/pages/Teacher/LessonStudents/LessonResults/useLessonResults';
 
 import { getInteractiveResults } from './getInteractiveResults';
-import ResultItem from './ResultItem';
+import InteractiveResults from './InteractiveResults';
 import * as S from './LessonResults.styled';
 
 const LessonResults = ({ results, startTime }) => {
-  const { t, i18n } = useTranslation('teacher');
+  const { t } = useTranslation('teacher');
 
-  const blockIcons = useBlockIcons();
-
-  const languageCode = useMemo(
-    () => getLanguageCodeByKey(i18n.language),
-    [i18n.language],
-  );
   const [start, finish, interactiveResults] = getInteractiveResults({
     results,
   });
 
-  const formattedStartTime = formatDate(startTime, languageCode);
-  const finishTimeMillis = interactiveResults.reduce(
-    (acc, next) => acc + next.time,
-    0,
-  );
-
-  const formattedFinishTime = formatDate(
-    new Date(new Date(startTime).getTime() + finishTimeMillis),
-    languageCode,
-  );
+  const { formattedStartTime, formattedFinishTime, finishTimeMillis } =
+    useLessonResults({ startTime, results: interactiveResults });
 
   return (
     <S.Wrapper>
@@ -44,41 +25,7 @@ const LessonResults = ({ results, startTime }) => {
           <S.Time>{formattedStartTime}</S.Time>
         </S.Start>
       )}
-      <S.Collapse>
-        {interactiveResults.map(
-          ({ block, data, correctness, time = 0 }, index) => {
-            const isResult = !!correctness || correctness === 0;
-            return (
-              <S.Panel
-                key={block.id}
-                isResult={isResult}
-                header={
-                  <ResultItem
-                    showCircle={isResult}
-                    icons={blockIcons}
-                    block={block}
-                    correctness={correctness}
-                    time={time}
-                  />
-                }
-              >
-                {isResult && (
-                  <LearnWrapper>
-                    <BlockElement
-                      element={{
-                        blockId: `${index}`,
-                        ...block,
-                        reply: data,
-                        isSolved: true,
-                      }}
-                    />
-                  </LearnWrapper>
-                )}
-              </S.Panel>
-            );
-          },
-        )}
-      </S.Collapse>
+      <InteractiveResults interactiveResults={interactiveResults} />
       {finish && (
         <S.Finish>
           <span>{t('lesson_students_results.finish')} </span>
