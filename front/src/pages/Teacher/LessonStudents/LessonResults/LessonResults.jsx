@@ -2,15 +2,9 @@ import T from 'prop-types';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import LearnContext from '@sb-ui/contexts/LearnContext';
-import { getLanguageCodeByKey } from '@sb-ui/i18n';
-import { useBlockIcons } from '@sb-ui/pages/Teacher/LessonStudents/LessonResults/useBlockIcons';
-import BlockElement from '@sb-ui/pages/User/LearnPage/BlockElement';
-import { LearnWrapper } from '@sb-ui/pages/User/LearnPage/LearnPage.styled';
-import { formatDate } from '@sb-ui/utils/utils';
+import { useLessonResults } from '@sb-ui/pages/Teacher/LessonStudents/LessonResults/useLessonResults';
 
-import { getInteractiveResults } from './getInteractiveResults';
-import ResultItem from './ResultItem';
+import InteractiveResults from './InteractiveResults';
 import * as S from './LessonResults.styled';
 
 const generateResultsWithTime = (results) =>
@@ -22,34 +16,21 @@ const generateResultsWithTime = (results) =>
   }));
 
 const LessonResults = ({ results }) => {
+  const { t } = useTranslation('teacher');
+
   const resultsWithTime = useMemo(
     () => generateResultsWithTime(results),
     [results],
   );
 
-  const { t, i18n } = useTranslation('teacher');
-  const blockIcons = useBlockIcons();
-
-  const languageCode = useMemo(
-    () => getLanguageCodeByKey(i18n.language),
-    [i18n.language],
-  );
-  const [start, finish, interactiveResults] = getInteractiveResults({
-    results: resultsWithTime,
-  });
-  const startTime = start && resultsWithTime?.[0]?.createdAt;
-
-  const formattedStartTime = start && formatDate(startTime, languageCode);
-  const finishTimeMillis =
-    finish &&
-    interactiveResults.reduce((acc, next) => acc + next.time, 0) + finish?.time;
-
-  const formattedFinishTime =
-    finish &&
-    formatDate(
-      new Date(new Date(startTime).getTime() + finishTimeMillis),
-      languageCode,
-    );
+  const {
+    start,
+    finish,
+    formattedStartTime,
+    formattedFinishTime,
+    finishTimeMillis,
+    interactiveResults,
+  } = useLessonResults({ results: resultsWithTime });
 
   return (
     <S.Wrapper>
@@ -59,43 +40,7 @@ const LessonResults = ({ results }) => {
           <S.Time>{formattedStartTime}</S.Time>
         </S.Start>
       )}
-      <LearnContext.Provider value={{ handleInteractiveClick: () => {} }}>
-        <S.Collapse>
-          {interactiveResults.map(
-            ({ block, data, correctness, time = 0 }, index) => {
-              const isResult = !!correctness || correctness === 0;
-              return (
-                <S.Panel
-                  key={block.blockId}
-                  isResult={isResult}
-                  header={
-                    <ResultItem
-                      showCircle={isResult}
-                      icons={blockIcons}
-                      block={block}
-                      correctness={correctness}
-                      time={time}
-                    />
-                  }
-                >
-                  {isResult && (
-                    <LearnWrapper>
-                      <BlockElement
-                        element={{
-                          blockId: `${index}`,
-                          ...block,
-                          reply: data,
-                          isSolved: true,
-                        }}
-                      />
-                    </LearnWrapper>
-                  )}
-                </S.Panel>
-              );
-            },
-          )}
-        </S.Collapse>
-      </LearnContext.Provider>
+      <InteractiveResults interactiveResults={interactiveResults} />
       {finish && (
         <S.Finish>
           <span>{t('lesson_students_results.finish')} </span>
