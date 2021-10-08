@@ -161,8 +161,8 @@ export default {
   lesson_students_results: {
     start: 'Начало',
     finish: 'Конец',
-    seconds: 'секунд',
-    short_seconds: 'сек.',
+    seconds: '{{time}} секунд',
+    short_seconds: '{{time}} сек.',
   },
   lesson_students: {
     title: 'Студенты урока ({{studentsCount}})',

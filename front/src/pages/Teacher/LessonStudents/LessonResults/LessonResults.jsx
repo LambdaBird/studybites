@@ -47,13 +47,14 @@ const LessonResults = ({ results, startTime }) => {
       <S.Collapse>
         {interactiveResults.map(
           ({ block, data, correctness, time = 0 }, index) => {
-            const isResult = correctness !== undefined;
+            const isResult = !!correctness || correctness === 0;
             return (
               <S.Panel
                 key={block.id}
                 isResult={isResult}
                 header={
                   <ResultItem
+                    showCircle={isResult}
                     icons={blockIcons}
                     block={block}
                     correctness={correctness}
@@ -84,7 +85,11 @@ const LessonResults = ({ results, startTime }) => {
           <S.Time>
             <span>{formattedFinishTime}</span>
             <b>
-              ({finishTimeMillis / 1000} {t('lesson_students_results.seconds')})
+              (
+              {t('lesson_students_results.seconds', {
+                time: finishTimeMillis / 1000,
+              })}
+              )
             </b>
           </S.Time>
         </S.Finish>
