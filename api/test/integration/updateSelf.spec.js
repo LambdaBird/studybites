@@ -35,16 +35,24 @@ describe('PATCH /api/v1/user/self', () => {
     await testContext.app.close();
   });
 
+  it('should not change email', async () => {
+    const body = {
+      email: 'valid.email@mail.com',
+    };
+    const response = await testContext.request({ body });
+    const payload = JSON.parse(response.payload);
+    expect(response.statusCode).toBe(200);
+    expect(payload).not.toMatchObject(body);
+  });
+
   it.each([
     {
       firstName: 'GoodName',
       lastName: 'GoodLastName',
-      email: 'valid@mail.ru',
     },
     {
       firstName: 'A',
       lastName: 'B',
-      email: 'valid@mail.ru',
     },
     {
       firstName: 'Test',
@@ -76,12 +84,6 @@ describe('PATCH /api/v1/user/self', () => {
     [
       { firstName: '', lastName: '', email: 'valid@mail.ru' },
       'validation.minLength.firstName',
-    ],
-    [
-      {
-        email: 'notvalid',
-      },
-      'validation.pattern.email',
     ],
     [
       {
