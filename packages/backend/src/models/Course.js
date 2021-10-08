@@ -1,7 +1,8 @@
 import objection from 'objection';
 import * as path from 'path';
 
-import { courseServiceErrors as errors, resources, roles } from '../config';
+import { courseServiceErrors as errors } from 'sb-config';
+import { resources, roles } from '../config';
 import { BadRequestError, NotFoundError } from '../validation/errors';
 
 import BaseModel from './BaseModel';

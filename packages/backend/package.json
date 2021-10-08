@@ -1,5 +1,5 @@
 {
-  "name": "studybites-api",
+  "name": "backend",
   "version": "0.0.1",
   "license": "Apache-2.0",
   "main": "src/server.js",
@@ -11,7 +11,7 @@
     "prepare:integrationTests": "knex --esm migrate:latest && yarn seed:test",
     "run:integrationTests": "babel-node node_modules/.bin/jest --coverage --verbose --colors test/integration/",
     "migrate:make": "knex --esm migrate:make",
-    "run:dev": "yarn && nodemon --exec babel-node src/server.js",
+    "run:dev": "nodemon --exec babel-node src/server.js",
     "migrate": "babel-node init.js"
   },
   "dependencies": {
@@ -32,6 +32,7 @@
     "objection": "^2.2.15",
     "pg": "^8.6.0",
     "qs": "^6.10.1",
+    "sb-config": "1.0.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

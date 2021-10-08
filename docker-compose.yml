@@ -1,0 +1,68 @@
+version: '3.7'
+
+services:
+  redis:
+    image: "redis:alpine"
+    command: redis-server
+    ports:
+      - "6379:6379"
+    environment:
+      - REDIS_REPLICATION_MODE=master
+
+  db:
+    image: postgres
+    restart: always
+    ports:
+      - '5503:5432'
+    volumes:
+      - studybites:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+  s3:
+    image: minio/minio
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    volumes:
+      - ./storage:/data
+    command: server --address 0.0.0.0:9000 --console-address 0.0.0.0:9001 /data
+    environment:
+      MINIO_ROOT_USER: ${S3_ACCESS_KEY}
+      MINIO_ROOT_PASSWORD: ${S3_SECRET_KEY}
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BUILD_CONTEXT: backend
+    depends_on:
+      - db
+      - s3
+    volumes:
+      - ./packages/backend:/base/packages/backend
+      - /base/packages/backend/node_modules
+    ports:
+      - '3017:3017'
+    command: yarn start:backend
+    environment:
+      SB_ADMIN_EMAIL: ${SB_ADMIN_EMAIL}
+      SB_ADMIN_PASSWORD: ${SB_ADMIN_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      S3_HOST: s3
+      S3_PORT: 9000
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY}
+      S3_SECRET_KEY: ${S3_SECRET_KEY}
+      S3_BUCKET: storage
+      SB_HOST: ${SB_HOST}
+      REDIS_PORT: 6379
+      SMTP_PORT: 465
+      PORT: ${API_PORT}
+      DEVELOPMENT_MODE: 1
+      DATABASE_URL: ${POSTGRES_URI}
+
+volumes:
+  studybites:

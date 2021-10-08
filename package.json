@@ -9,6 +9,8 @@
     "course",
     "lesson"
   ],
+  "private": true,
+  "workspaces": ["packages/*"],
   "devDependencies": {
     "eslint": "^7.26.0",
     "husky": "^6.0.0",
@@ -30,6 +32,7 @@
     ]
   },
   "scripts": {
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "start:backend": "yarn workspace backend run:dev"
   }
 }
