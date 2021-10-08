@@ -6,5 +6,9 @@
   "password_changed": {
     "subject": "Пароль изменен",
     "html": "Ваш пароль был успешно изменен."
+  },
+  "email_confirmation": {
+    "subject": "Email подтверждение",
+    "html": "Подтвердите ссылку на электронную почту {{link}}"
   }
 }
