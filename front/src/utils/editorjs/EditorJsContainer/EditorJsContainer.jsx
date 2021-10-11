@@ -336,8 +336,8 @@ const EditorJsContainer = forwardRef((props, ref) => {
 
   useEffect(() => {
     if (language !== initialLanguage.current) {
-      // initialLanguage.current = language;
-      // renderEditorWithBlocks();
+      initialLanguage.current = language;
+      renderEditorWithBlocks();
     }
   }, [destroyEditor, initEditor, language, renderEditorWithBlocks]);
 
