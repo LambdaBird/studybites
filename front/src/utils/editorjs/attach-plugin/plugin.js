@@ -73,10 +73,14 @@ export default class AttachPlugin {
     }
   };
 
-  onError = () => {
+  onError = ({ response }) => {
     this.isLoading = false;
     this.nodes.fileInput.disabled = false;
-    this.nodes.label.innerText = this.api.i18n.t('error');
+    if (response.status === 400) {
+      this.nodes.label.innerText = this.api.i18n.t('bad_request');
+    } else {
+      this.nodes.label.innerText = this.api.i18n.t('error');
+    }
   };
 
   onChange = async () => {

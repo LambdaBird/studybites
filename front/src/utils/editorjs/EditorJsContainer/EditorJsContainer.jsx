@@ -167,6 +167,7 @@ const EditorJsContainer = forwardRef((props, ref) => {
                 title: t('tools.attach.title'),
                 select: t('tools.attach.select'),
                 error: t('tools.attach.error'),
+                bad_request: t('tools.attach.bad_request'),
               },
               image: {
                 title: t('tools.image.title'),
