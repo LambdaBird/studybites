@@ -57,6 +57,27 @@ describe('POST /api/v1/user/signup', () => {
     expect(payload.statusCode).toBe(409);
     expect(payload.message).toBe(globalErrors.GLOBAL_ERR_UNIQUE_VIOLATION);
   });
+
+  it('email should not be case sensitive', async () => {
+    const body = {
+      email: 'NewUser@Test.io',
+      password: 'passwd3',
+      firstName: 'New',
+      lastName: 'User',
+    };
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/v1/user/signup',
+      body,
+    });
+
+    const payload = JSON.parse(response.payload);
+
+    expect(response.statusCode).toBe(409);
+    expect(payload.statusCode).toBe(409);
+    expect(payload.message).toBe(globalErrors.GLOBAL_ERR_UNIQUE_VIOLATION);
+  });
 });
 
 describe('POST /api/v1/user/signin', () => {
@@ -73,6 +94,25 @@ describe('POST /api/v1/user/signin', () => {
   it('should return access and refresh tokens', async () => {
     const body = {
       email: 'john@test.io',
+      password: 'passwd3',
+    };
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/v1/user/signin',
+      body,
+    });
+
+    const payload = JSON.parse(response.payload);
+
+    expect(response.statusCode).toBe(200);
+    expect(payload).toHaveProperty('accessToken');
+    expect(payload).toHaveProperty('refreshToken');
+  });
+
+  it('email should not be case sensitive', async () => {
+    const body = {
+      email: 'John@Test.io',
       password: 'passwd3',
     };
 
