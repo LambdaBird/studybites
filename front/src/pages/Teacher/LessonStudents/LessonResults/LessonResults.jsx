@@ -3,19 +3,20 @@ import { useTranslation } from 'react-i18next';
 
 import { useLessonResults } from '@sb-ui/pages/Teacher/LessonStudents/LessonResults/useLessonResults';
 
-import { getInteractiveResults } from './getInteractiveResults';
 import InteractiveResults from './InteractiveResults';
 import * as S from './LessonResults.styled';
 
 const LessonResults = ({ results, startTime }) => {
   const { t } = useTranslation('teacher');
 
-  const [start, finish, interactiveResults] = getInteractiveResults({
-    results,
-  });
-
-  const { formattedStartTime, formattedFinishTime, finishTimeMillis } =
-    useLessonResults({ startTime, results: interactiveResults });
+  const {
+    start,
+    finish,
+    interactiveResults,
+    formattedStartTime,
+    formattedFinishTime,
+    finishTimeMillis,
+  } = useLessonResults({ startTime, results });
 
   return (
     <S.Wrapper>

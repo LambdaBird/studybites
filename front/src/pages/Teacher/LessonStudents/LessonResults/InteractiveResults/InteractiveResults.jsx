@@ -13,9 +13,10 @@ const InteractiveResults = ({ interactiveResults }) => {
   return (
     <S.Collapse>
       {interactiveResults.map(({ block, correctness, time, data }) => {
-        const isResult = correctness >= 0;
+        const isResult = !!correctness || correctness === 0;
         return (
           <S.Panel
+            key={block.id}
             $isResult={isResult}
             header={
               <ResultItem
