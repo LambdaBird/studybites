@@ -166,8 +166,9 @@ const EditorJsContainer = forwardRef((props, ref) => {
               attach: {
                 title: t('tools.attach.title'),
                 select: t('tools.attach.select'),
+                file_size_limit: t('tools.attach.file_size'),
+                file_invalid_type: t('tools.attach.file_type'),
                 error: t('tools.attach.error'),
-                bad_request: t('tools.attach.bad_request'),
               },
               image: {
                 title: t('tools.image.title'),
