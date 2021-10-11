@@ -29,7 +29,7 @@ export default {
       title: 'File',
       select: 'Select a file to upload',
       error: 'Failed to upload the file',
-      description: 'Attach a file',
+      bad_request: 'Invalid file type or file size limit exceeded',
     },
     paragraph: {
       title: 'Text',
