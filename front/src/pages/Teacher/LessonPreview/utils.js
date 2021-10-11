@@ -7,6 +7,7 @@ export const apiInteractiveBlocks = [
   BLOCKS_TYPE.FILL_THE_GAP,
   BLOCKS_TYPE.MATCH,
   BLOCKS_TYPE.BRICKS,
+  BLOCKS_TYPE.GRADED_QUESTION,
 ];
 
 const findChunk = ({ blocks, startIndex, fromStart = false }) => {

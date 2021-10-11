@@ -95,7 +95,7 @@ class Block extends BaseModel {
         });
       }
       default:
-        return { error: null, correctness: 0 };
+        return undefined;
     }
   }
 }

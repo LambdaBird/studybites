@@ -20,6 +20,7 @@ const options = {
             words: { type: ['array', 'string'] },
             isSolved: { type: 'boolean' },
             value: { type: 'string' },
+            files: { type: ['array', 'null'] },
           },
           oneOf: [
             {
@@ -67,7 +68,6 @@ const options = {
   },
   async preHandler({ user: { id: userId }, params: { lessonId: resourceId } }) {
     const { resources, roles } = this.config.globals;
-
     await this.access({
       userId,
       resourceId,

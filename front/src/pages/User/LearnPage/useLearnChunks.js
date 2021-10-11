@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-query';
 
+import { apiInteractiveBlocks } from '@sb-ui/pages/Teacher/LessonPreview/utils';
 import apiConfig from '@sb-ui/utils/api/config';
 import { LESSON_BASE_QUERY } from '@sb-ui/utils/queries';
 
@@ -69,7 +70,8 @@ export const handleAnswer = ({ data: serverData, prevChunks }) => {
   const lastChunk = prevChunks?.[prevChunks.length - 1];
 
   const interactiveBlock = lastChunk[lastChunk.length - 1];
-  if (Object.keys(answer || {}).length > 0) {
+
+  if (apiInteractiveBlocks.includes(interactiveBlock.type)) {
     interactiveBlock.answer = answer;
     interactiveBlock.reply = reply;
   }
