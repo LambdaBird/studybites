@@ -59,6 +59,71 @@ describe('POST /api/v1/user/signup', () => {
   });
 });
 
+describe('Test email address case sensitivity', () => {
+  const app = build();
+
+  beforeAll(async () => {
+    await app.ready();
+
+    const body = {
+      email: 'caseinsensitive@test.io',
+      password: 'passwd3',
+      firstName: 'New',
+      lastName: 'User',
+    };
+
+    await app.inject({
+      method: 'POST',
+      url: '/api/v1/user/signup',
+      body,
+    });
+  });
+
+  afterAll(async () => {
+    await app.close();
+  });
+
+  it('should not be able to sign up with the same email in a different case', async () => {
+    const body = {
+      email: 'CaseInsensitive@Test.io',
+      password: 'passwd3',
+      firstName: 'New',
+      lastName: 'User',
+    };
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/v1/user/signup',
+      body,
+    });
+
+    const payload = JSON.parse(response.payload);
+
+    expect(response.statusCode).toBe(409);
+    expect(payload.statusCode).toBe(409);
+    expect(payload.message).toBe(globalErrors.GLOBAL_ERR_UNIQUE_VIOLATION);
+  });
+
+  it('should be able to sign in with an email in a different case', async () => {
+    const body = {
+      email: 'CaseInsensitive@Test.io',
+      password: 'passwd3',
+    };
+
+    const response = await app.inject({
+      method: 'POST',
+      url: '/api/v1/user/signin',
+      body,
+    });
+
+    const payload = JSON.parse(response.payload);
+
+    expect(response.statusCode).toBe(200);
+    expect(payload).toHaveProperty('accessToken');
+    expect(payload).toHaveProperty('refreshToken');
+  });
+});
+
 describe('POST /api/v1/user/signin', () => {
   const app = build();
 
