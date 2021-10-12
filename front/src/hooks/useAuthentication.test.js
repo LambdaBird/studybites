@@ -36,7 +36,7 @@ describe('Test useAuthentication', () => {
       useTranslation.mockImplementation(() => ({
         t: () => WRONG_CREDENTIALS,
       }));
-      const [auth] = await useAuthentication(postSignIn);
+      const [auth] = await useAuthentication({ requestFunc: postSignIn });
       postSignIn.mockImplementation(() => ({
         status: 401,
         data: {
@@ -65,7 +65,7 @@ describe('Test useAuthentication', () => {
       useTranslation.mockImplementation(() => ({
         t: (x) => x,
       }));
-      const [auth] = await useAuthentication(postSignIn);
+      const [auth] = await useAuthentication({ requestFunc: postSignIn });
       const setJWTMocked = jest.fn();
       setJWT.mockImplementation(setJWTMocked);
       postSignIn.mockImplementation(() => ({

@@ -1,4 +1,7 @@
 export default {
+  errors: {
+    unique_violation: 'E-mail already registered',
+  },
   have_account: 'Already have an account? Sign in!',
   title: 'Sign up',
   first_name: {
