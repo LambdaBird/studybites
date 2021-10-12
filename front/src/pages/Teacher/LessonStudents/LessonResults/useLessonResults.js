@@ -24,7 +24,9 @@ export const useLessonResults = ({ results }) => {
   );
 
   const finishTimeMillis = useMemo(
-    () => finish && results.reduce((acc, next) => acc + next.time, 0),
+    () =>
+      finish &&
+      results.reduce((acc, next) => acc + next.time, 0) + (finish?.time || 0),
     [finish, results],
   );
 
