@@ -1,4 +1,5 @@
 export default {
+  welcome: 'Добро пожаловать',
   no_account: 'Нет аккаунта? Зарегестрируйтесь!',
   forgot_password: 'Забыли пароль?',
   button: 'Войти',
