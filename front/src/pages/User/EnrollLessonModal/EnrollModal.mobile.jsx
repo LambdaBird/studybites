@@ -108,7 +108,9 @@ const EnrollModalMobile = () => {
     });
   }, [historyPushLesson, id, mutatePostEnroll]);
 
-  if (isFetching || responseData?.lesson?.isEnrolled) return null;
+  if (isFetching || responseData?.lesson?.isEnrolled) {
+    return null;
+  }
 
   return (
     <S.Main>

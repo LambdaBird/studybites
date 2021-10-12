@@ -82,7 +82,9 @@ const EnrollModalDesktop = () => {
     });
   }, [mutatePostEnroll, id, historyPushCourse]);
 
-  if (isFetching || responseData?.course?.isEnrolled) return null;
+  if (isFetching || responseData?.course?.isEnrolled) {
+    return null;
+  }
 
   return (
     <Modal
