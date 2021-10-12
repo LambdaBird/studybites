@@ -8,6 +8,17 @@ export const GlobalStylesEditorPage = createGlobalStyle`
     flex-direction: column;
     gap: 1rem;
   }
+  .toolbox-item-none{
+    display: none!important;
+  }
+  .toolbox-input-search{
+    &:focus{
+      outline: none;
+    }
+    border: 1px solid #d9d9d9;
+    padding: 0 0.5rem;
+    margin-bottom: 0.5rem;
+  }
   
   .ce-toolbar__plus::after{
     content: '${(props) => props.toolbarHint}';

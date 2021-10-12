@@ -20,6 +20,20 @@ export const createDivWithClassName = ({
   return element;
 };
 
+export const createInputWithClassName = ({
+  className,
+  placeholder,
+  events,
+}) => {
+  const element = document.createElement('input');
+  element.classList.add(className);
+  element.placeholder = placeholder;
+  Object.entries(events).forEach(([eventName, func]) => {
+    element.addEventListener(eventName, func);
+  });
+  return element;
+};
+
 export const getToolboxItems = (parent) =>
   parent?.querySelectorAll('.ce-toolbox__button') || [];
 
