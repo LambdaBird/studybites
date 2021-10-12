@@ -100,7 +100,7 @@ const EnrollModalMobile = () => {
     if (responseData?.lesson?.isEnrolled) {
       history.push(USER_HOME);
     }
-  }, [responseData?.lesson?.isEnrolled]);
+  }, [responseData?.lesson?.isEnrolled, history]);
 
   const onClickStartEnroll = useCallback(async () => {
     mutatePostEnroll(id, {

@@ -1,7 +1,6 @@
 import HtmlToReact from 'html-to-react';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import Paragraph from '@editorjs/paragraph'; // TODO: remove this when tools will be defined in one place
 
 import { getConfig } from '../../LessonEdit/utils';
 
@@ -13,10 +12,6 @@ const useBlocksIcons = ({ blocks }) => {
   const blocksList = useMemo(
     () => ({
       ...getConfig(t).tools,
-      paragraph: {
-        class: Paragraph,
-        inlineToolbar: true,
-      },
     }),
     [t],
   );

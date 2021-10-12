@@ -14,6 +14,7 @@ import {
   courseStatus,
   courseIdParam,
   keywordSearch,
+  passwordResetIdParam,
 } from './schemas';
 import errorHandler from './errorHandler';
 import { NotFoundError } from './errors';
@@ -74,6 +75,11 @@ export default fp((instance, opts, next) => {
   instance.addSchema({
     $id: 'passwordPattern',
     ...passwordPattern,
+  });
+
+  instance.addSchema({
+    $id: 'passwordResetId',
+    ...passwordResetIdParam,
   });
 
   instance.setErrorHandler(errorHandler);

@@ -14,6 +14,10 @@ export const LogoImg = styled.img.attrs({
   src: LogoSvg,
 })``;
 
+export const LogoLink = styled.div`
+  cursor: pointer;
+`;
+
 export const DropdownWrapper = styled.div`
   display: flex;
   align-items: center;

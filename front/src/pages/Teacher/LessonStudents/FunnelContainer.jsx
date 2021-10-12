@@ -3,6 +3,7 @@ import T from 'prop-types';
 import { useMemo } from 'react';
 import { useQuery } from 'react-query';
 
+import { interactiveTypesBlocks } from '@sb-ui/utils/api/config';
 import {
   getLesson,
   getTeacherLessonStudents,
@@ -14,15 +15,6 @@ import {
 
 import LessonFunnel from './LessonFunnel';
 import { FunnelContainerWrapper } from './LessonStudents.styled';
-
-// TODO: take from shared place
-export const staticTypesBlocks = ['paragraph', 'list', 'header', 'table'];
-export const interactiveTypesBlocks = [
-  'next',
-  'next',
-  'closedQuestion',
-  'quiz',
-];
 
 const FunnelContainer = ({ lessonId }) => {
   const { data: students, isLoading: isStudentsLoading } = useQuery(

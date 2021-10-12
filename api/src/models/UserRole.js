@@ -86,13 +86,15 @@ class UserRole extends BaseModel {
       )
       .where('users_roles.resource_id', resourceId)
       .groupBy('users.id', 'users_roles.user_id')
-      .andWhere(
-        this.knex().raw(
-          `concat(users.email, ' ', users.first_name, ' ', users.last_name, ' ', users.first_name)`,
-        ),
-        'ilike',
-        search ? `%${search.replace(/ /g, '%')}%` : undefined,
-      )
+      .search({
+        columns: [
+          'users.first_name',
+          'users.last_name',
+          'users.first_name',
+          'users.email',
+        ],
+        searchString: search,
+      })
       .range(start, end);
 
     if (resourceType === resources.LESSON.name) {
@@ -136,13 +138,15 @@ class UserRole extends BaseModel {
       .andWhere('users_roles.role_id', roles.MAINTAINER.id)
       .andWhere('users_roles.resource_type', resources.LESSON.name)
       .andWhere('students.role_id', roles.STUDENT.id)
-      .andWhere(
-        this.knex().raw(
-          `concat(users.email, ' ', users.first_name, ' ', users.last_name, ' ', users.first_name)`,
-        ),
-        'ilike',
-        search ? `%${search.replace(/ /g, '%')}%` : undefined,
-      )
+      .search({
+        columns: [
+          'users.first_name',
+          'users.last_name',
+          'users.first_name',
+          'users.email',
+        ],
+        searchString: search,
+      })
       .groupBy('users.id')
       .range(start, end);
   }
@@ -172,13 +176,15 @@ class UserRole extends BaseModel {
       .andWhere('users_roles.role_id', roles.MAINTAINER.id)
       .andWhere('users_roles.resource_type', resources.COURSE.name)
       .andWhere('students.role_id', roles.STUDENT.id)
-      .andWhere(
-        this.knex().raw(
-          `concat(users.email, ' ', users.first_name, ' ', users.last_name, ' ', users.first_name)`,
-        ),
-        'ilike',
-        search ? `%${search.replace(/ /g, '%')}%` : undefined,
-      )
+      .search({
+        columns: [
+          'users.first_name',
+          'users.last_name',
+          'users.first_name',
+          'users.email',
+        ],
+        searchString: search,
+      })
       .groupBy('users.id')
       .range(start, end);
   }
@@ -288,13 +294,15 @@ class UserRole extends BaseModel {
         role_id: roles.TEACHER.id,
       })
       .join('users', 'users.id', '=', 'users_roles.user_id')
-      .andWhere(
-        this.knex().raw(
-          `concat(users.email, ' ', users.first_name, ' ', users.last_name, ' ', users.first_name)`,
-        ),
-        'ilike',
-        search ? `%${search.replace(/ /g, '%')}%` : undefined,
-      )
+      .search({
+        columns: [
+          'users.first_name',
+          'users.last_name',
+          'users.first_name',
+          'users.email',
+        ],
+        searchString: search,
+      })
       .range(start, end);
   }
 }

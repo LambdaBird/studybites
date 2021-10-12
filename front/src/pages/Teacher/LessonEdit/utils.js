@@ -2,6 +2,7 @@ import hash from 'object-hash';
 import Marker from '@editorjs/marker';
 
 import { BLOCKS_TYPE } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
+import Attach from '@sb-ui/utils/editorjs/attach-plugin';
 import Bricks from '@sb-ui/utils/editorjs/bricks-plugin';
 import ClosedQuestion from '@sb-ui/utils/editorjs/closed-question-plugin';
 import CodeTool from '@sb-ui/utils/editorjs/code-plugin';
@@ -13,6 +14,7 @@ import Image from '@sb-ui/utils/editorjs/image-plugin';
 import List from '@sb-ui/utils/editorjs/list-plugin';
 import Match from '@sb-ui/utils/editorjs/match-plugin';
 import Next from '@sb-ui/utils/editorjs/next-plugin';
+import Paragraph from '@sb-ui/utils/editorjs/paragraph-plugin';
 import Quiz from '@sb-ui/utils/editorjs/quiz-plugin';
 import Quote from '@sb-ui/utils/editorjs/quote-plugin';
 import Table from '@sb-ui/utils/editorjs/table-plugin';
@@ -107,7 +109,8 @@ export const prepareBlocksDataForApi = (data, type) => {
         ...data,
         values: prepareMatchValues(data.values),
       };
-
+    case BLOCKS_TYPE.ATTACH:
+      return data.location ? data : null;
     default:
       return data;
   }
@@ -120,6 +123,7 @@ const SKIP_BLOCKS = [
   BLOCKS_TYPE.FILL_THE_GAP,
   BLOCKS_TYPE.MATCH,
   BLOCKS_TYPE.BRICKS,
+  BLOCKS_TYPE.ATTACH,
 ];
 
 export const makeAnswerForBlock = (block) => {
@@ -172,71 +176,89 @@ export const prepareBlocksForApi = (blocks) =>
     )
     .filter((block) => JSON.stringify(block).length < MAX_BODY_LENGTH);
 
+export const getBaseBlocks = (t) => ({
+  paragraph: {
+    class: Paragraph,
+    inlineToolbar: true,
+  },
+  header: {
+    class: HeaderTool,
+    config: {
+      placeholder: t('editor_js.header.placeholder'),
+      levels: [1, 2, 3, 4, 5],
+      defaultLevel: 2,
+    },
+    inlineToolbar: true,
+  },
+  image: {
+    class: Image,
+    inlineToolbar: true,
+  },
+  embed: {
+    class: Embed,
+    inlineToolbar: true,
+  },
+  attach: {
+    class: Attach,
+  },
+  list: {
+    class: List,
+    inlineToolbar: true,
+  },
+  warning: {
+    class: Warning,
+    inlineToolbar: true,
+    config: {
+      titlePlaceholder: t('editor_js.tools.warning_title'),
+      messagePlaceholder: t('editor_js.tools.warning_message'),
+    },
+  },
+  quote: {
+    class: Quote,
+    inlineToolbar: true,
+  },
+  code: CodeTool,
+  table: {
+    class: Table,
+    inlineToolbar: true,
+  },
+  delimiter: Delimiter,
+});
+
+export const getInteractiveBlocks = () => ({
+  next: Next,
+  quiz: {
+    class: Quiz,
+    inlineToolbar: true,
+  },
+  closedQuestion: {
+    class: ClosedQuestion,
+    inlineToolbar: true,
+  },
+  fillTheGap: {
+    class: FillTheGap,
+    inlineToolbar: true,
+  },
+  match: {
+    class: Match,
+    inlineToolbar: true,
+  },
+  bricks: {
+    class: Bricks,
+    inlineToolbar: true,
+  },
+});
+
+export const getInlineTool = () => ({
+  marker: Marker,
+});
+
 export const getConfig = (t) => ({
   holder: 'editorjs',
   tools: {
-    next: Next,
-    image: {
-      class: Image,
-      inlineToolbar: true,
-    },
-    embed: {
-      class: Embed,
-      inlineToolbar: true,
-    },
-    quiz: {
-      class: Quiz,
-      inlineToolbar: true,
-    },
-    closedQuestion: {
-      class: ClosedQuestion,
-      inlineToolbar: true,
-    },
-    warning: {
-      class: Warning,
-      inlineToolbar: true,
-      config: {
-        titlePlaceholder: t('editor_js.tools.warning_title'),
-        messagePlaceholder: t('editor_js.tools.warning_message'),
-      },
-    },
-    match: {
-      class: Match,
-      inlineToolbar: true,
-    },
-    header: {
-      class: HeaderTool,
-      config: {
-        placeholder: t('editor_js.header.placeholder'),
-        levels: [1, 2, 3, 4, 5],
-        defaultLevel: 2,
-      },
-      inlineToolbar: true,
-    },
-    list: {
-      class: List,
-      inlineToolbar: true,
-    },
-    quote: {
-      class: Quote,
-      inlineToolbar: true,
-    },
-    delimiter: Delimiter,
-    marker: Marker,
-
-    table: {
-      class: Table,
-      inlineToolbar: true,
-    },
-    code: CodeTool,
-    fillTheGap: {
-      class: FillTheGap,
-      inlineToolbar: true,
-    },
-    bricks: {
-      class: Bricks,
-      inlineToolbar: true,
-    },
+    ...getBaseBlocks(t),
+    ...getInteractiveBlocks(t),
+    ...getInlineTool(t),
   },
   plugins: [],
 });

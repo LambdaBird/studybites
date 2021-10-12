@@ -1,4 +1,9 @@
 export default {
+  pages: {
+    courses: 'My courses',
+    lessons: 'My lessons',
+    home: 'Home page',
+  },
   enroll_modal: {
     review: {
       header: 'Reviews',
@@ -47,6 +52,9 @@ export default {
     lessons: 'lessons',
   },
   lesson: {
+    attach: {
+      download: 'Download the attached file',
+    },
     results: {
       title: 'Results',
       correct_answers: 'Correct answers in the lesson',

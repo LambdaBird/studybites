@@ -1,3 +1,10 @@
+export const EMAIL_SETTINGS = {
+  fromName: 'StudyBites',
+  host: 'smtp.gmail.com',
+};
+
+export const host = process.env.SB_HOST;
+
 export const jwt = {
   ACCESS_JWT_EXPIRES_IN: 60 * 5,
   REFRESH_JWT_EXPIRES_IN: 60 * 60 * 24 * 7,
@@ -16,6 +23,13 @@ export const roles = {
     id: 3,
     name: 'Student',
   },
+};
+
+// Time in seconds
+export const emailTimes = {
+  RESET_LINK_EXPIRE_TIME: 60 * 5,
+  AGAIN_GENERATE_LINK_NOT_ALLOWED_TIME: 5,
+  RESET_PASSWORD_NOT_ALLOWED_TIME: 5,
 };
 
 export const searchLimits = {
@@ -112,3 +126,7 @@ export const globalErrors = {
   GLOBAL_ERR_NOT_FOUND: 'errors.not_found',
   GLOBAL_ERR_VALIDATION_ERROR: 'errors.validation',
 };
+
+export const S3_URL = 'http://s3:9000/storage/';
+
+export const FILE_SIZE_LIMIT = 1_000_000; // 1 MB

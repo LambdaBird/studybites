@@ -1,5 +1,6 @@
 import { Button, Col, Input, message, Row, Typography } from 'antd';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
 import { useHistory, useParams } from 'react-router-dom';
@@ -15,6 +16,7 @@ import {
   getLesson,
   putLesson,
 } from '@sb-ui/utils/api/v1/teacher';
+import { sbPostfix } from '@sb-ui/utils/constants';
 import EditorJs from '@sb-ui/utils/editorjs/EditorJsContainer';
 import {
   LESSONS_EDIT,
@@ -37,7 +39,8 @@ const LessonEdit = () => {
   const [isEditLesson] = useState(lessonId !== 'new');
   const isCurrentlyEditing = useMemo(() => lessonId !== 'new', [lessonId]);
 
-  const { t } = useTranslation('teacher');
+  const { t, i18n } = useTranslation('teacher');
+  const { language } = i18n;
   const history = useHistory();
 
   const { updateLessonStatusMutation, isUpdateInProgress } = useLessonStatus({
@@ -243,18 +246,26 @@ const LessonEdit = () => {
       ref: undoPluginRef,
       tools: getConfig(t).tools,
       data: dataBlocks,
+      language,
       instanceRef: (instance) => {
         editorJSRef.current = instance;
       },
-      minHeight: 0,
     }),
-    [dataBlocks, t],
+    [dataBlocks, language, t],
   );
 
   const [headerHide, setHeaderHide] = useState(false);
 
   return (
     <>
+      <Helmet>
+        <title>
+          {isCurrentlyEditing
+            ? t('pages.edit_lesson')
+            : t('pages.create_lesson')}
+          {sbPostfix}
+        </title>
+      </Helmet>
       <Header hideOnScroll handleHide={setHeaderHide}>
         <S.HeaderButtons>
           <Button disabled={!isCurrentlyEditing} onClick={handlePreview}>
@@ -312,7 +323,7 @@ const LessonEdit = () => {
             </S.EditorWrapper>
           </S.LeftCol>
           <S.RightCol>
-            <S.RightColContent headerHide={headerHide}>
+            <S.RightColContent $headerHide={headerHide}>
               <S.RowStyled gutter={[32, 32]}>
                 <Col span={24}>
                   <S.SaveButton

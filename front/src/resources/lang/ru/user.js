@@ -1,4 +1,9 @@
 export default {
+  pages: {
+    courses: 'Мои курсы',
+    lessons: 'Мои уроки',
+    home: 'Домашняя страница',
+  },
   enroll_modal: {
     review: {
       header: 'Отзывы',
@@ -47,6 +52,9 @@ export default {
     lessons: 'урока(-ов)',
   },
   lesson: {
+    attach: {
+      download: 'Скачать прикреплённый файл',
+    },
     results: {
       title: 'Результаты',
       correct_answers: 'Правильные ответы в уроке',
