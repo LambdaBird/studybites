@@ -34,9 +34,9 @@ const ResolveSpark = ({ replySeries, sparkTimeScale, isStart }) => {
       <S.SparkWrapper>
         {!isStart && (
           <svg width={svgWidth} height={svgHeight} viewBox={svgViewBox}>
-            <path stroke="black" fill="none" strokeWidth={2} d={replyLine} />
-            <path stroke="black" fill="none" strokeWidth={1} d={medianLine} />
-            <path stroke="black" fill="none" strokeWidth={1} d={meanLine} />
+            <path stroke="black" fill="none" strokeWidth={1} d={replyLine} />
+            <path stroke="#888" fill="none" strokeWidth={1} d={medianLine} />
+            <path stroke="#888" fill="none" strokeWidth={1} d={meanLine} />
           </svg>
         )}
       </S.SparkWrapper>
