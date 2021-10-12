@@ -54,24 +54,25 @@ export const SeriesWrapper = styled.div`
   display: flex;
 `;
 
-export const MedianWrapper = styled.div`
+const TickWrapper = styled.div`
   display: flex;
+  font-size: 0.75em;
+  position: relative;
+  color: #888;
+`;
+
+export const MedianWrapper = styled(TickWrapper)`
   align-items: ${({ isTop }) => (isTop ? 'flex-start' : 'flex-end')};
   justify-content: flex-end;
   text-align: right;
-  font-size: 0.75em;
-  position: relative;
   left: -2px;
   top: -2px;
 `;
 
-export const MeanWrapper = styled.div`
-  display: flex;
+export const MeanWrapper = styled(TickWrapper)`
   align-items: flex-end;
   justify-content: flex-start;
   text-align: left;
-  font-size: 0.75em;
-  position: relative;
   left: 2px;
   top: -0.5em;
 `;

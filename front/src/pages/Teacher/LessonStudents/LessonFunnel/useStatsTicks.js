@@ -41,10 +41,10 @@ const useStatsTicks = (replySeries, sparkTimeScale) =>
       medianLine: d3Shape.line()([
         [0, 0],
         [xMedian * SP_WD_RAT, 0],
-        [xMedian * SP_WD_RAT, SPARK_LINE_HEIGHT],
+        [xMedian * SP_WD_RAT, 5],
       ]),
       meanLine: d3Shape.line()([
-        [xMean * SP_WD_RAT, SPARK_LINE_PADD * 2],
+        [xMean * SP_WD_RAT, SPARK_LINE_HEIGHT + SPARK_LINE_PADD * 2 - 5],
         [xMean * SP_WD_RAT, SPARK_LINE_HEIGHT + SPARK_LINE_PADD * 2],
         [SPARK_LINE_WIDTH, SPARK_LINE_HEIGHT + SPARK_LINE_PADD * 2],
       ]),
