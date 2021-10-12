@@ -1,0 +1,47 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+
+import LessonResults from '@sb-ui/pages/Teacher/LessonStudents/LessonResults';
+import { LearnContextDecorator } from '@sb-ui/stories/decorators';
+import {
+  exampleData,
+  allBlocksData,
+  noBlocksData,
+  onlyStartData,
+  startWithFinishData,
+} from './data';
+
+<Meta
+  title="atoms/LessonResults"
+  decorators={[
+    (Story) => (
+      <LearnContextDecorator>
+        <Story />
+      </LearnContextDecorator>
+    ),
+  ]}
+  component={LessonResults}
+/>
+
+# LessonResults
+
+Component `LessonResults` render
+
+export const Template = (args) => <LessonResults {...args} />;
+
+<Canvas>
+  <Story name="Example" args={exampleData}>
+    {Template.bind({})}
+  </Story>
+  <Story name="All blocks" args={allBlocksData}>
+    {Template.bind({})}
+  </Story>
+  <Story name="No blocks" args={noBlocksData}>
+    {Template.bind({})}
+  </Story>
+  <Story name="Only Start" args={onlyStartData}>
+    {Template.bind({})}
+  </Story>
+  <Story name="Start with finish" args={startWithFinishData}>
+    {Template.bind({})}
+  </Story>
+</Canvas>
