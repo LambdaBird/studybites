@@ -12,7 +12,6 @@ export const useGradedQuestion = ({
 }) => {
   const { handleInteractiveClick, id } = useContext(LearnContext);
   const [input, setInput] = useState('');
-
   const [fileList, setFileList] = useState([]);
 
   const token = getJWTAccessToken();
@@ -24,16 +23,17 @@ export const useGradedQuestion = ({
     [token],
   );
 
-  const onFileChange = ({ fileList: fileListNew }) => {
+  const onFileChange = useCallback(({ fileList: fileListNew }) => {
     setFileList([...fileListNew]);
-  };
+  }, []);
 
-  const onRemoveFile = (uid) => {
+  const onRemoveFile = useCallback((uid) => {
     setFileList((prev) => prev.filter((x) => x.uid !== uid));
-  };
+  }, []);
 
+  const notErrorCheck = useCallback((file) => file.status !== 'error', []);
   const allowSend = requireAttachment
-    ? fileList.length > 0 && fileList.some((file) => file.status !== 'error')
+    ? fileList.length > 0 && fileList.some(notErrorCheck)
     : true;
 
   const { value, files } = reply || {};
