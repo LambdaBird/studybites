@@ -1,4 +1,7 @@
 export default {
+  errors: {
+    unique_violation: 'E-mail уже зарегистрирован',
+  },
   have_account: 'Уже есть аккаунт? Ввойдите!',
   title: 'Регистрация',
   first_name: {
