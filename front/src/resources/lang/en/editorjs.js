@@ -29,6 +29,8 @@ export default {
       title: 'Attach a file',
       select: 'Select a file to upload',
       error: 'Failed to upload the file',
+      file_size: 'File size limit exceeded',
+      file_type: 'Invalid file type',
     },
     paragraph: {
       title: 'Text',
