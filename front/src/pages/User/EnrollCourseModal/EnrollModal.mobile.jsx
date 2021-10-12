@@ -107,7 +107,9 @@ const EnrollModalMobile = () => {
     });
   }, [historyPushCourse, id, mutatePostEnroll]);
 
-  if (isFetching || responseData?.course?.isEnrolled) return null;
+  if (isFetching || responseData?.course?.isEnrolled) {
+    return null;
+  }
 
   return (
     <S.Main>
