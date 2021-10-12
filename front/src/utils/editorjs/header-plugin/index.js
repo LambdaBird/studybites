@@ -236,13 +236,12 @@ export default class Header extends PluginBase {
   /**
    * Extract Tool's data from the view
    *
-   * @param {HTMLHeadingElement} toolsContent - Text tools rendered view
    * @returns {HeaderData} - saved data
    * @public
    */
-  save(toolsContent) {
+  save() {
     return {
-      text: toolsContent.innerHTML,
+      text: this._element.innerHTML,
       level: this.currentLevel.number,
     };
   }
