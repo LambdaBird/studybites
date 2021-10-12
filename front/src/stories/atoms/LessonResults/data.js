@@ -1,7 +1,6 @@
 export const exampleData = {
-  startTime: '2021-09-21T11:12:07.697Z',
   results: [
-    { action: 'start' },
+    { action: 'start', createdAt: '2021-09-21T11:12:07.697Z' },
     {
       action: 'response',
       block: {
@@ -20,9 +19,9 @@ export const exampleData = {
           results: ['Пример'],
         },
       },
+      createdAt: '2021-09-21T11:13:07.697Z',
       data: { value: '123' },
       correctness: 0,
-      time: 2000,
     },
     {
       action: 'next',
@@ -36,8 +35,8 @@ export const exampleData = {
         },
         type: 'next',
       },
+      createdAt: '2021-09-21T11:13:36.697Z',
       data: { isSolved: true },
-      time: 4200,
     },
     {
       action: 'response',
@@ -51,8 +50,8 @@ export const exampleData = {
         },
         type: 'next',
       },
+      createdAt: '2021-09-21T11:15:07.697Z',
       data: { isSolved: true },
-      time: 3549,
     },
     {
       action: 'response',
@@ -69,19 +68,19 @@ export const exampleData = {
           results: [true],
         },
       },
+      createdAt: '2021-09-21T11:16:07.697Z',
       data: { response: [true] },
       correctness: 1,
-      time: 2500,
     },
-    { action: 'finish', time: 1400 },
+    { action: 'finish', createdAt: '2021-09-21T11:19:01.697Z' },
   ],
 };
 
 export const allBlocksData = {
-  startTime: '2021-09-21T11:12:07.697Z',
   results: [
     {
       action: 'start',
+      createdAt: '2021-09-21T11:12:07.697Z',
     },
     {
       action: 'next',
@@ -93,7 +92,7 @@ export const allBlocksData = {
       },
       data: { isSolved: true },
       correctness: null,
-      time: 500,
+      createdAt: '2021-09-21T11:12:22.697Z',
     },
     {
       action: 'response',
@@ -112,7 +111,7 @@ export const allBlocksData = {
       },
       data: { words: ['a', 'b', 'c', 'd', '1'] },
       correctness: 0,
-      time: 2500,
+      createdAt: '2021-09-21T11:12:36.697Z',
     },
     {
       action: 'response',
@@ -151,7 +150,7 @@ export const allBlocksData = {
         ],
       },
       correctness: 0,
-      time: 3450,
+      createdAt: '2021-09-21T11:13:01.697Z',
     },
     {
       action: 'response',
@@ -183,7 +182,7 @@ export const allBlocksData = {
         ],
       },
       correctness: 1,
-      time: 600,
+      createdAt: '2021-09-21T11:13:06.697Z',
     },
     {
       action: 'response',
@@ -200,7 +199,7 @@ export const allBlocksData = {
       },
       data: { value: '767' },
       correctness: 0,
-      time: 3400,
+      createdAt: '2021-09-21T11:13:09.697Z',
     },
     {
       action: 'response',
@@ -217,38 +216,37 @@ export const allBlocksData = {
       },
       data: { response: [true, false] },
       correctness: 1,
-      time: 1200,
+      createdAt: '2021-09-21T11:14:22.797Z',
     },
     {
       action: 'finish',
-      time: 100,
+      createdAt: '2021-09-21T11:14:23.997Z',
     },
   ],
 };
 
 export const noBlocksData = {
-  startTime: '2021-09-21T11:12:07.697Z',
   results: [],
 };
 
 export const onlyStartData = {
-  startTime: '2021-09-21T11:12:07.697Z',
   results: [
     {
       action: 'start',
+      createdAt: '2021-09-21T11:12:07.697Z',
     },
   ],
 };
 
 export const startWithFinishData = {
-  startTime: '2021-09-21T11:12:07.697Z',
   results: [
     {
       action: 'start',
+      createdAt: '2021-09-21T11:12:07.697Z',
     },
     {
       action: 'finish',
-      time: 1234,
+      createdAt: '2021-09-21T11:12:09.102Z',
     },
   ],
 };

@@ -1,4 +1,5 @@
 import T from 'prop-types';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useLessonResults } from '@sb-ui/pages/Teacher/LessonStudents/LessonResults/useLessonResults';
@@ -6,17 +7,30 @@ import { useLessonResults } from '@sb-ui/pages/Teacher/LessonStudents/LessonResu
 import InteractiveResults from './InteractiveResults';
 import * as S from './LessonResults.styled';
 
-const LessonResults = ({ results, startTime }) => {
+const generateResultsWithTime = (results) =>
+  results.map((result, i) => ({
+    ...result,
+    time:
+      new Date(result.createdAt).getTime() -
+      new Date(results?.[i - 1]?.createdAt || result.createdAt).getTime(),
+  }));
+
+const LessonResults = ({ results }) => {
   const { t } = useTranslation('teacher');
+
+  const resultsWithTime = useMemo(
+    () => generateResultsWithTime(results),
+    [results],
+  );
 
   const {
     start,
     finish,
-    interactiveResults,
     formattedStartTime,
     formattedFinishTime,
     finishTimeMillis,
-  } = useLessonResults({ startTime, results });
+    interactiveResults,
+  } = useLessonResults({ results: resultsWithTime });
 
   return (
     <S.Wrapper>
@@ -56,7 +70,6 @@ LessonResults.propTypes = {
       time: T.number,
     }),
   ),
-  startTime: T.string,
 };
 
 export default LessonResults;

@@ -5,12 +5,14 @@ import { getLanguageCodeByKey } from '@sb-ui/i18n';
 import { getInteractiveResults } from '@sb-ui/pages/Teacher/LessonStudents/LessonResults/getInteractiveResults';
 import { formatDate } from '@sb-ui/utils/utils';
 
-export const useLessonResults = ({ startTime, results }) => {
+export const useLessonResults = ({ results }) => {
   const { i18n } = useTranslation('teacher');
 
   const [start, finish, interactiveResults] = getInteractiveResults({
     results,
   });
+
+  const startTime = start && results?.[0]?.createdAt;
 
   const languageCode = useMemo(
     () => getLanguageCodeByKey(i18n.language),
@@ -20,12 +22,12 @@ export const useLessonResults = ({ startTime, results }) => {
     () => start && formatDate(startTime, languageCode),
     [languageCode, start, startTime],
   );
+
   const finishTimeMillis = useMemo(
     () =>
       finish &&
-      interactiveResults.reduce((acc, next) => acc + next.time, 0) +
-        (finish?.time || 0),
-    [finish, interactiveResults],
+      results.reduce((acc, next) => acc + next.time, 0) + (finish?.time || 0),
+    [finish, results],
   );
 
   const formattedFinishTime = useMemo(
