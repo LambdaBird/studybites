@@ -56,7 +56,7 @@ const EnrollModalMobile = () => {
     history.push(LEARN_COURSE_PAGE.replace(':id', id));
   }, [history, id]);
 
-  const { data: responseData } = useQuery(
+  const { data: responseData, isFetching } = useQuery(
     [USER_COURSE_MODAL_BASE_KEY, { id }],
     getCourse,
     { keepPreviousData: true },
@@ -106,6 +106,10 @@ const EnrollModalMobile = () => {
       onSuccess: historyPushCourse,
     });
   }, [historyPushCourse, id, mutatePostEnroll]);
+
+  if (isFetching || responseData?.course?.isEnrolled) {
+    return null;
+  }
 
   return (
     <S.Main>
