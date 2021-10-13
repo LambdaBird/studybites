@@ -90,6 +90,7 @@ export default class AttachPlugin {
       onSuccess: this.onSuccess,
       onError: this.onError,
     });
+    this.nodes.fileInput.disabled = false;
   };
 
   preparePluginTitle() {
