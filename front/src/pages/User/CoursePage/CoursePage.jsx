@@ -1,12 +1,13 @@
 import { Skeleton, Typography } from 'antd';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 
 import Public from '@sb-ui/components/resourceBlocks/Public';
 import { PAGE_SIZE } from '@sb-ui/pages/User/Lessons/ResourcesList/constants';
 import { getCourseLessons } from '@sb-ui/utils/api/v1/student';
+import { USER_HOME } from '@sb-ui/utils/paths';
 import { USER_ENROLLED_COURSE } from '@sb-ui/utils/queries';
 import { skeletonArray } from '@sb-ui/utils/utils';
 
@@ -16,6 +17,7 @@ const { Text } = Typography;
 
 const CoursePage = () => {
   const { t } = useTranslation('user');
+  const history = useHistory();
 
   const { id: courseId } = useParams();
   const { data: responseData, isLoading } = useQuery(
@@ -36,6 +38,15 @@ const CoursePage = () => {
     () =>
       `${responseData?.course.author?.firstName} ${responseData?.course.author?.lastName}`,
     [responseData?.course.author],
+  );
+
+  useEffect(
+    () => () => {
+      if (history.action === 'POP') {
+        history.replace(USER_HOME);
+      }
+    },
+    [history],
   );
 
   return (
