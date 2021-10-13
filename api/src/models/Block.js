@@ -52,6 +52,8 @@ class Block extends BaseModel {
       );
   }
 
+  // getCorrectness can have not the correctness of block
+  // eslint-disable-next-line consistent-return
   static async getCorrectness({ blockId, revision, userResponse }) {
     const { answer, type, weight } = await Block.getBlock({
       blockId,
@@ -95,7 +97,6 @@ class Block extends BaseModel {
         });
       }
       default:
-        return undefined;
     }
   }
 }
