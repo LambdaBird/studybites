@@ -190,6 +190,12 @@ export default {
       invite_student: 'Invite student',
     },
   },
+  lesson_students_results: {
+    start: 'Start',
+    finish: 'Finish',
+    seconds: '{{time}} seconds',
+    short_seconds: '{{time}} sec.',
+  },
   students: {
     title: 'Lessons students ({{studentsCount}})',
     table: {

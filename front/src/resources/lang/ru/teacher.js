@@ -169,6 +169,12 @@ export default {
       ok: 'Ок',
     },
   },
+  lesson_students_results: {
+    start: 'Начало',
+    finish: 'Конец',
+    seconds: '{{time}} секунд',
+    short_seconds: '{{time}} сек.',
+  },
   lesson_students: {
     title: 'Студенты урока ({{studentsCount}})',
     table: {
