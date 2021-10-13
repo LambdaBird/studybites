@@ -67,6 +67,33 @@ export const russian = {
   },
 };
 
+export const ukrainian = {
+  id: 10005,
+  name: 'Ukrainian',
+  status: 'Public',
+  _blocks: {
+    _indexesOfInteractive: [0],
+    _current: [
+      {
+        id: '0b7e5d54-a78c-4340-abec-ee08713d43bc',
+        block_id: '7142e20a-0d30-47e5-aea8-546e1ec5e395',
+        _revisions: [
+          {
+            content: {
+              data: {
+                question: 'Graded question',
+              },
+            },
+            type: 'gradedQuestion',
+            answer: {},
+            revision: '06421c44-a853-4708-8f40-81c55a0e8862',
+          },
+        ],
+      },
+    ].map(assingParents),
+  },
+};
+
 export const french = {
   id: 20003,
   name: 'French',
@@ -163,13 +190,14 @@ export const lessons = [
   literature,
   french,
   russian,
+  ukrainian,
 ].map((lesson) => ({
   id: lesson.id,
   name: lesson.name,
   status: lesson.status,
 }));
 
-export const lessonBlockStructure = [math, french, russian].reduce(
+export const lessonBlockStructure = [math, french, russian, ukrainian].reduce(
   (structure, lesson) => {
     const lessonStructure = lesson._blocks._current.map((structureItem) => ({
       id: structureItem.id,
@@ -184,21 +212,24 @@ export const lessonBlockStructure = [math, french, russian].reduce(
   [],
 );
 
-export const blocks = [math, french, russian].reduce((blocksList, lesson) => {
-  const lessonBlocks = lesson._blocks._current.reduce(
-    (revisions, structureItem) => {
-      const itemBlocks = structureItem._revisions.map((block) => ({
-        ...block,
-        block_id: structureItem.block_id,
-      }));
+export const blocks = [math, french, russian, ukrainian].reduce(
+  (blocksList, lesson) => {
+    const lessonBlocks = lesson._blocks._current.reduce(
+      (revisions, structureItem) => {
+        const itemBlocks = structureItem._revisions.map((block) => ({
+          ...block,
+          block_id: structureItem.block_id,
+        }));
 
-      return [...revisions, ...itemBlocks];
-    },
-    [],
-  );
+        return [...revisions, ...itemBlocks];
+      },
+      [],
+    );
 
-  return [...blocksList, ...lessonBlocks];
-}, []);
+    return [...blocksList, ...lessonBlocks];
+  },
+  [],
+);
 
 function assingParents(structureItem, index, list) {
   const parent = list[index - 1] || null;

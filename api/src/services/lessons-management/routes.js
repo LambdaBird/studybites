@@ -11,6 +11,7 @@ import getAllStudents from './controllers/getAllStudents';
 import studentsOptions from './controllers/studentsOptions';
 import updateStatus from './controllers/updateStatus';
 import statusOptions from './controllers/statusOptions';
+import reviewStudentAnswer from './controllers/reviewStudentAnswer';
 
 export async function router(instance) {
   instance.get('/lessons', getLessons.options, getLessons.handler);
@@ -62,5 +63,11 @@ export async function router(instance) {
     '/students',
     studentsOptions.options,
     studentsOptions.handler,
+  );
+
+  instance.post(
+    '/review/:lessonId',
+    reviewStudentAnswer.options,
+    reviewStudentAnswer.handler,
   );
 }
