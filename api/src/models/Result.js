@@ -103,6 +103,10 @@ class Result extends BaseModel {
       throw new BadRequestError(error);
     }
   }
+
+  static setCorrectness({ resultId, correctness }) {
+    return this.query().findById(resultId).patch({ correctness });
+  }
 }
 
 export default Result;

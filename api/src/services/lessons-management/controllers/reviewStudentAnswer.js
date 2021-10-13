@@ -37,9 +37,10 @@ async function handler({ body }) {
     },
   } = this;
 
-  await Result.query()
-    .findById(body.id)
-    .patch({ correctness: body.correctness });
+  await Result.setCorrectness({
+    resultId: body.id,
+    correctness: body.correctness,
+  });
 
   return { message: messages.LESSON_MSG_SUCCESS_REVIEW };
 }
