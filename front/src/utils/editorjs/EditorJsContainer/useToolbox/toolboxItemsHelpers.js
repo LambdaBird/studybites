@@ -43,6 +43,8 @@ export const getTranslationKey = (name) => {
       return 'fill_the_gap';
     case 'closedQuestion':
       return 'closed_question';
+    case 'gradedQuestion':
+      return 'graded_question';
     default:
       return name;
   }
