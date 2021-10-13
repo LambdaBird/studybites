@@ -13,6 +13,7 @@ import {
 } from '@sb-ui/utils/editorjs/EditorJsContainer/useToolbox/toolboxItemsHelpers';
 
 import {
+  INPUT_FOCUS_AFTER_TIME,
   KEYS,
   TOOLBOX_BUTTON_ACTIVE_CLASS,
   TOOLBOX_ITEM_NONE,
@@ -74,7 +75,9 @@ export const useSearch = ({
 
   useEffect(() => {
     if (isOpen) {
-      inputRef.current.focus();
+      setTimeout(() => {
+        inputRef.current?.focus?.();
+      }, INPUT_FOCUS_AFTER_TIME);
       setCurrentRefValue(inputRef, '');
       makeFirstItemActive(itemsRef.current, currentItemRef);
       inputRef.current?.addEventListener('keydown', handleKeyDown);
