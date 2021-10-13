@@ -19,6 +19,7 @@ export const BLOCKS_TYPE = {
   NEXT: 'next',
   START: 'start',
   CLOSED_QUESTION: 'closedQuestion',
+  GRADED_QUESTION: 'gradedQuestion',
   FILL_THE_GAP: 'fillTheGap',
   BRICKS: 'bricks',
 };
@@ -94,6 +95,11 @@ export const QuizBlockAnswerType = PropTypes.shape({
 
 export const QuizBlockReplyType = PropTypes.shape({
   results: PropTypes.arrayOf(PropTypes.bool),
+});
+
+export const GradedQuestionBlockReplyType = PropTypes.shape({
+  value: PropTypes.string,
+  files: PropTypes.arrayOf(PropTypes.shape({})),
 });
 
 export const ClosedQuestionResponseDataType = PropTypes.shape({

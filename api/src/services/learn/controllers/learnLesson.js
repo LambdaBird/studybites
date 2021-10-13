@@ -20,6 +20,7 @@ const options = {
             words: { type: ['array', 'string'] },
             isSolved: { type: 'boolean' },
             value: { type: 'string' },
+            files: { type: ['array', 'null'] },
           },
           oneOf: [
             {
