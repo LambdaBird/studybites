@@ -51,6 +51,7 @@ class Paragraph {
     div.classList.add(this._CSS.wrapper, this._CSS.block);
     div.contentEditable = false;
     div.dataset.placeholder = this.api.i18n.t(this._placeholder);
+    div.title = this.api.i18n.t('title');
 
     if (!this.readOnly) {
       div.contentEditable = true;
