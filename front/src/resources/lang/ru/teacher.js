@@ -155,7 +155,8 @@ export default {
       placeholder: 'Название урока',
     },
     links: {
-      invite: 'Пригласить соавторов',
+      invite_collaborators: 'Пригласить соавторов',
+      invite_students: 'Пригласить студентов',
       students: 'Студенты',
       analytics: 'Аналитика',
       archive: 'Архив',
@@ -213,5 +214,12 @@ export default {
     buttons: {
       invite_student: 'Пригласить студента',
     },
+  },
+  invite_students: {
+    title: 'Пригласить студентов',
+    input_placeholder: 'Email, через кому',
+    add_button: 'Добавить',
+    resend_button: 'Отправить повторно',
+    copy_link: 'Скопировать ссылку',
   },
 };

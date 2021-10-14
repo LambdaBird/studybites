@@ -7,6 +7,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { RedoOutlined, SaveOutlined, UndoOutlined } from '@ant-design/icons';
 
 import Header from '@sb-ui/components/molecules/Header';
+import InviteStudentsModal from '@sb-ui/components/molecules/InviteStudentsModal';
 import KeywordsSelect from '@sb-ui/components/molecules/KeywordsSelect';
 import { useLessonStatus } from '@sb-ui/hooks/useLessonStatus';
 import { Statuses } from '@sb-ui/pages/Teacher/Home/Dashboard/constants';
@@ -52,6 +53,7 @@ const LessonEdit = () => {
   const [image, setImage] = useState('');
   const [imageError, setImageError] = useState(false);
   const [isEditorDisabled, setIsEditorDisabled] = useState(false);
+  const [showInviteStudentsModal, setShowInviteStudentsModal] = useState(false);
 
   const inputTitle = useRef(null);
 
@@ -290,6 +292,10 @@ const LessonEdit = () => {
           )}
         </S.HeaderButtons>
       </Header>
+      <InviteStudentsModal
+        show={showInviteStudentsModal}
+        setShow={setShowInviteStudentsModal}
+      />
       <S.Page>
         <S.StyledRow align="top">
           <S.LeftCol>
@@ -357,8 +363,16 @@ const LessonEdit = () => {
               </S.RowStyled>
               <S.RowStyled gutter={[0, 10]}>
                 <Col span={24}>
-                  <S.TextLink underline>
-                    {t('lesson_edit.links.invite')}
+                  <S.TextDisabled>
+                    {t('lesson_edit.links.invite_collaborators')}
+                  </S.TextDisabled>
+                </Col>
+                <Col span={24}>
+                  <S.TextLink
+                    underline
+                    onClick={() => setShowInviteStudentsModal((prev) => !prev)}
+                  >
+                    {t('lesson_edit.links.invite_students')}
                   </S.TextLink>
                 </Col>
                 <S.StudentsCol span={24}>

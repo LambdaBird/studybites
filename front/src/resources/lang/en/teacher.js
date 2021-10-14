@@ -155,7 +155,8 @@ export default {
       placeholder: 'Lesson title',
     },
     links: {
-      invite: 'Invite Collaborators',
+      invite_collaborators: 'Invite Collaborators',
+      invite_students: 'Invite Students',
       students: 'Students',
       analytics: 'Analytics',
       archive: 'Archive',
@@ -213,5 +214,12 @@ export default {
     buttons: {
       invite_student: 'Invite student',
     },
+  },
+  invite_students: {
+    title: 'Invite students',
+    input_placeholder: 'Email, comma separated',
+    add_button: 'Add',
+    resend_button: 'Resend invitation',
+    copy_link: 'Copy link',
   },
 };
