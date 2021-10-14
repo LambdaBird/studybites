@@ -1,4 +1,14 @@
 export default {
+  pages: {
+    students: 'My students',
+    lesson_students: 'Lesson students',
+    create_lesson: 'Lesson creation',
+    edit_lesson: 'Lesson edit',
+    lesson_preview: 'Lesson preview',
+    create_course: 'Course creation',
+    edit_course: 'Course edit',
+    home: 'Home page',
+  },
   info: {
     greeting: 'Welcome back, {{fullName}}',
     lessons: 'Lessons',
@@ -179,6 +189,12 @@ export default {
     buttons: {
       invite_student: 'Invite student',
     },
+  },
+  lesson_students_results: {
+    start: 'Start',
+    finish: 'Finish',
+    seconds: '{{time}} seconds',
+    short_seconds: '{{time}} sec.',
   },
   students: {
     title: 'Lessons students ({{studentsCount}})',

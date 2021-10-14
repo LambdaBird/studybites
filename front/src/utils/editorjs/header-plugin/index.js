@@ -4,6 +4,8 @@
  */
 import PluginBase from '../PluginBase';
 
+import { ToolboxIcon } from './resources';
+
 import './index.css';
 
 /**
@@ -234,13 +236,12 @@ export default class Header extends PluginBase {
   /**
    * Extract Tool's data from the view
    *
-   * @param {HTMLHeadingElement} toolsContent - Text tools rendered view
    * @returns {HeaderData} - saved data
    * @public
    */
-  save(toolsContent) {
+  save() {
     return {
-      text: toolsContent.innerHTML,
+      text: this._element.innerHTML,
       level: this.currentLevel.number,
     };
   }
@@ -539,9 +540,7 @@ export default class Header extends PluginBase {
    */
   static get toolbox() {
     return {
-      icon: `<svg width="10" height="14" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 14">
-              <path d="M7.6 8.15H2.25v4.525a1.125 1.125 0 0 1-2.25 0V1.125a1.125 1.125 0 1 1 2.25 0V5.9H7.6V1.125a1.125 1.125 0 0 1 2.25 0v11.55a1.125 1.125 0 0 1-2.25 0V8.15z"/>
-            </svg>`,
+      icon: ToolboxIcon,
       title: 'Heading',
     };
   }

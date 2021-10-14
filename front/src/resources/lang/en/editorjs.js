@@ -26,13 +26,14 @@ export default {
       title: 'The block can not be displayed correctly',
     },
     attach: {
-      title: 'Attach a file',
+      title: 'File',
       select: 'Select a file to upload',
       error: 'Failed to upload the file',
+      description: 'Attach a file',
     },
     paragraph: {
       title: 'Text',
-      description: 'Just start writing with plain tex',
+      description: 'Just start writing with plain text',
     },
     image: {
       title: 'Image',

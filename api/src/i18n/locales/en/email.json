@@ -6,5 +6,9 @@
   "password_changed": {
     "subject": "Password changed",
     "html": "Your password were successfully changed"
+  },
+  "email_confirmation": {
+    "subject": "Email confirmation",
+    "html": "Confirm email link {{link}}"
   }
 }

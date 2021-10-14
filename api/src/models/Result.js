@@ -1,3 +1,5 @@
+import objection from 'objection';
+import path from 'path';
 import BaseModel from './BaseModel';
 import { BadRequestError } from '../validation/errors';
 
@@ -20,6 +22,19 @@ class Result extends BaseModel {
         correctness: { type: 'number' },
         meta: { type: 'object' },
         createdAt: { type: 'string' },
+      },
+    };
+  }
+
+  static relationMappings() {
+    return {
+      block: {
+        relation: objection.Model.HasOneRelation,
+        modelClass: path.join(__dirname, 'Block'),
+        join: {
+          from: 'results.block_id',
+          to: 'blocks.block_id',
+        },
       },
     };
   }

@@ -1,4 +1,9 @@
 export default {
+  pages: {
+    courses: 'My courses',
+    lessons: 'My lessons',
+    home: 'Home page',
+  },
   enroll_modal: {
     review: {
       header: 'Reviews',

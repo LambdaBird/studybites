@@ -73,6 +73,14 @@ class Email {
       html: this.t('email:password_changed.html', { lng: language }),
     });
   }
+
+  async sendEmailConfirmation({ email, link, language = 'en' }) {
+    return this.sendMailWithLogging({
+      to: email,
+      subject: this.t('email:email_confirmation.subject', { lng: language }),
+      html: this.t('email:email_confirmation.html', { link, lng: language }),
+    });
+  }
 }
 
 export default Email;

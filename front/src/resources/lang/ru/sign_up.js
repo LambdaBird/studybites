@@ -23,4 +23,5 @@ export default {
     one_numerical: 'Хотя бы одна цифра',
   },
   button: 'Зарегистрироваться',
+  email_verification: 'Подтверждение Email успешно отправлено на почту!',
 };

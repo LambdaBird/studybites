@@ -28,7 +28,9 @@ async function handler({ body: { email, password } }) {
     createRefreshToken,
   } = this;
 
-  const { id, password: userPassword } = await User.checkIfExist({ email });
+  const { id, password: userPassword } = await User.checkIfExist({
+    email: email.toLowerCase(),
+  });
 
   const compareResult = await comparePasswords(password, userPassword);
   if (!compareResult) {

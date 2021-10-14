@@ -19,6 +19,13 @@ export const verifyPasswordReset = async ({ queryKey }) => {
   return data;
 };
 
+export const verifyEmail = async ({ queryKey }) => {
+  const [, paramsData] = queryKey;
+  const { id } = paramsData;
+  const { data } = await api.get(`${PATH}/verify-email/${id}`);
+  return data;
+};
+
 export const updatePassword = async (params) => {
   const { data } = await api.put(
     `${PATH}/update-password/${params.id}`,

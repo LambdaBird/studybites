@@ -2,37 +2,54 @@ import { v4 } from 'uuid';
 import { emailTimes } from '../../../config';
 
 const CHANGE_PASSWORD_PATH = 'change-password';
+const VERIFY_EMAIL_PATH = 'verify-email';
 
 class TokenStorage {
   static redisClient;
 
   static async invalidateLink({ email, uuid }) {
-    TokenStorage.redisClient.del(email);
-    TokenStorage.redisClient.del(uuid);
-    TokenStorage.redisClient.del(`${uuid}-email`);
+    await TokenStorage.redisClient.del(email);
+    await TokenStorage.redisClient.del(uuid);
+    await TokenStorage.redisClient.del(`${uuid}-email`);
   }
 
   static async generateLink({ host: frontHost, email }) {
     const uuid = v4();
-    TokenStorage.redisClient.set(
+    await TokenStorage.redisClient.set(
       email,
       uuid,
       'EX',
       emailTimes.RESET_LINK_EXPIRE_TIME,
     );
-    TokenStorage.redisClient.set(
+    await TokenStorage.redisClient.set(
       `${uuid}-email`,
       email,
       'EX',
       emailTimes.RESET_LINK_EXPIRE_TIME,
     );
-    TokenStorage.redisClient.set(
+    await TokenStorage.redisClient.set(
       uuid,
       true,
       'EX',
       emailTimes.AGAIN_GENERATE_LINK_NOT_ALLOWED_TIME,
     );
     return `${frontHost}/${CHANGE_PASSWORD_PATH}/${uuid}`;
+  }
+
+  static async generateConfirmationLink({ host: frontHost, email }) {
+    const uuid = v4();
+    await TokenStorage.redisClient.set(`${email}-confirm`, uuid);
+    await TokenStorage.redisClient.set(`${uuid}-confirm`, email);
+    return `${frontHost}/${VERIFY_EMAIL_PATH}/${uuid}`;
+  }
+
+  static async invalidateConfirmationLink({ email, uuid }) {
+    await TokenStorage.redisClient.del(`${email}-confirm`);
+    await TokenStorage.redisClient.del(`${uuid}-confirm`);
+  }
+
+  static async getEmailConfirmByUuid({ uuid }) {
+    return TokenStorage.redisClient.get(`${uuid}-confirm`);
   }
 
   static async getEmailByUuid({ uuid }) {

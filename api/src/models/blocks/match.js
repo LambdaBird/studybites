@@ -9,5 +9,5 @@ export function getMatchCorrectness({
     })
     ?.filter((x) => !!x);
 
-  return blockWeight * Math.max(correctAnswer / solution.length, 0);
+  return blockWeight * Math.max(correctAnswer.length / solution.length, 0);
 }

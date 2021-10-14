@@ -41,9 +41,15 @@ async function handler({ body: { email }, socket, headers }) {
   await Redis.setUserIp({ userIp });
 
   try {
-    const { language } = await User.getUserByEmail({ email });
-    const link = await Redis.generateLink({ host, email });
-    await Email.sendResetPassword({ email, link, language });
+    const { language } = await User.getUserByEmail({
+      email: email.toLowerCase(),
+    });
+    const link = await Redis.generateLink({ host, email: email.toLowerCase() });
+    await Email.sendResetPassword({
+      email: email.toLowerCase(),
+      link,
+      language,
+    });
   } catch (e) {
     // Do nothing if user not found with this email
   }

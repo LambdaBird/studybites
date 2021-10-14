@@ -1,4 +1,14 @@
 export default {
+  pages: {
+    students: 'Мои студенты',
+    lesson_students: 'Студенты урока',
+    create_lesson: 'Создание урока',
+    edit_lesson: 'Редактирование урока',
+    lesson_preview: 'Предпросмотр урока',
+    create_course: 'Создание курса',
+    edit_course: 'Редактирование курса',
+    home: 'Домашняя страница',
+  },
   info: {
     greeting: 'Добрый день, {{fullName}}',
     lessons: 'Уроки',
@@ -158,6 +168,12 @@ export default {
       title: 'Теперь урок доступен всем студентам',
       ok: 'Ок',
     },
+  },
+  lesson_students_results: {
+    start: 'Начало',
+    finish: 'Конец',
+    seconds: '{{time}} секунд',
+    short_seconds: '{{time}} сек.',
   },
   lesson_students: {
     title: 'Студенты урока ({{studentsCount}})',
