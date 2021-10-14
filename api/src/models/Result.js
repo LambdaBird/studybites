@@ -104,8 +104,8 @@ class Result extends BaseModel {
     }
   }
 
-  static setCorrectness({ resultId, correctness }) {
-    return this.query().findById(resultId).patch({ correctness });
+  static setCorrectness({ resultId, correctness, meta }) {
+    return this.query().findById(resultId).patch({ correctness, meta });
   }
 }
 

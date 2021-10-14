@@ -29,7 +29,7 @@ const options = {
   },
 };
 
-async function handler({ body }) {
+async function handler({ body, user }) {
   const {
     models: { Result },
     config: {
@@ -40,6 +40,10 @@ async function handler({ body }) {
   await Result.setCorrectness({
     resultId: body.id,
     correctness: body.correctness,
+    meta: {
+      reviewer: user.id,
+      reviewedAt: new Date().toISOString(),
+    },
   });
 
   return { message: messages.LESSON_MSG_SUCCESS_REVIEW };
