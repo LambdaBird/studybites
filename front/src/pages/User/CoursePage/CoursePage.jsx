@@ -2,7 +2,7 @@ import { Skeleton, Typography } from 'antd';
 import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 
 import Public from '@sb-ui/components/resourceBlocks/Public';
 import { PAGE_SIZE } from '@sb-ui/pages/User/Lessons/ResourcesList/constants';
@@ -15,9 +15,12 @@ import * as S from './CoursePage.styled';
 
 const { Text } = Typography;
 
+const HISTORY_BACK = 'POP';
+
 const CoursePage = () => {
   const { t } = useTranslation('user');
   const history = useHistory();
+  const location = useLocation();
 
   const { id: courseId } = useParams();
   const { data: responseData, isLoading } = useQuery(
@@ -42,11 +45,11 @@ const CoursePage = () => {
 
   useEffect(
     () => () => {
-      if (history.action === 'POP') {
+      if (location.state.fromEnroll && history.action === HISTORY_BACK) {
         history.replace(USER_HOME);
       }
     },
-    [history],
+    [history, location],
   );
 
   return (
