@@ -3,6 +3,8 @@ import styled from 'styled-components';
 
 import variables from '@sb-ui/theme/variables';
 
+import LessonShare from './LessonShare';
+
 export const Page = styled.div`
   height: 100%;
   width: 100%;
@@ -136,16 +138,6 @@ export const Image = styled.img`
   width: 100%;
 `;
 
-export const ImageFallback = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 15rem;
-  width: 100%;
-  font-size: xx-large;
-  background-color: rgba(0, 0, 0, 0.2);
-`;
-
-export const ImageFallbackTitle = styled.span`
-  margin-right: 1rem;
+export const LessonShareStyled = styled(LessonShare)`
+  margin-bottom: 2rem;
 `;

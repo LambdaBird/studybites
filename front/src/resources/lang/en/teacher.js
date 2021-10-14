@@ -151,6 +151,16 @@ export default {
       input_placeholder: 'Your image link',
       not_found: 'Not found',
     },
+    share: {
+      title: 'Share',
+      invite_button: 'Invite only',
+      everyone_button: 'Everyone can enroll',
+      copy_button: 'Copy',
+      generate_button: 'Generate link',
+      link_placeholder: 'Here is will be link...',
+      link_copy: 'Link copied successfully',
+    },
+
     title: {
       placeholder: 'Lesson title',
     },

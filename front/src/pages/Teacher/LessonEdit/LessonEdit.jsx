@@ -385,6 +385,7 @@ const LessonEdit = () => {
                   </Typography.Link>
                 </Col>
               </S.RowStyled>
+              <S.LessonShareStyled />
               <Row gutter={[0, 8]}>
                 <Col span={24}>{t('lesson_edit.description.title')}</Col>
                 <Col span={24}>

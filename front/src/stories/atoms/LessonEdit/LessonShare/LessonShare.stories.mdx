@@ -1,0 +1,15 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+
+import LessonShare from '@sb-ui/pages/Teacher/LessonEdit/LessonShare';
+
+<Meta title="atoms/LessonEdit/LessonShare" component={LessonShare} />
+
+# LessonShare
+
+Component `LessonShare` render
+
+export const Template = (args) => <LessonShare {...args} />;
+
+<Canvas>
+  <Story name="Example">{Template.bind({})}</Story>
+</Canvas>
