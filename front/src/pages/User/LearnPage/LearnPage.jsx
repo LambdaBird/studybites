@@ -9,11 +9,13 @@ import LearnContext from '@sb-ui/contexts/LearnContext';
 import InfoBlock from '@sb-ui/pages/User/LearnPage/InfoBlock';
 import { getEnrolledLesson, postLessonById } from '@sb-ui/utils/api/v1/student';
 import { sbPostfix } from '@sb-ui/utils/constants';
-import { LEARN_PAGE, USER_HOME } from '@sb-ui/utils/paths';
+import { USER_HOME } from '@sb-ui/utils/paths';
 
 import LearnChunk from './LearnChunk';
 import { useLearnChunks } from './useLearnChunks';
 import * as S from './LearnPage.styled';
+
+const HISTORY_BACK = 'POP';
 
 const LearnPage = () => {
   const { t } = useTranslation('user');
@@ -32,14 +34,15 @@ const LearnPage = () => {
     postLessonById,
   });
   const history = useHistory();
+  const location = useLocation();
 
   useEffect(
     () => () => {
-      if (history.action === 'POP') {
+      if (location.state.fromEnroll && history.action === HISTORY_BACK) {
         history.replace(USER_HOME);
       }
     },
-    [history],
+    [history, location],
   );
 
   return (

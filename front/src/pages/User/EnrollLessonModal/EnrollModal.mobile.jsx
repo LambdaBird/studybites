@@ -53,7 +53,10 @@ const EnrollModalMobile = () => {
   const { id } = useParams();
 
   const historyPushLesson = useCallback(() => {
-    history.push(LEARN_PAGE.replace(':id', id));
+    history.push({
+      pathname: LEARN_PAGE.replace(':id', id),
+      state: { fromEnroll: true },
+    });
   }, [history, id]);
 
   const { data: responseData, isFetching } = useQuery(
