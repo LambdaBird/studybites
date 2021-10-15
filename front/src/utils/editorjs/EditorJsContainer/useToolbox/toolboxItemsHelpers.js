@@ -2,10 +2,8 @@ import {
   getBaseBlocks,
   getInteractiveBlocks,
 } from '@sb-ui/pages/Teacher/LessonEdit/utils';
-import {
-  TOOLBOX_BUTTON_ACTIVE_CLASS,
-  TOOLBOX_ITEM_NONE,
-} from '@sb-ui/utils/editorjs/EditorJsContainer/useToolbox/constants';
+
+import { TOOLBOX_BUTTON_ACTIVE_CLASS, TOOLBOX_ITEM_NONE } from './constants';
 
 const createMenuItems = (blocksName, items) => {
   const menuItems = new Map();
@@ -69,6 +67,12 @@ export const selectItemsDescKeys = (item) => {
   ];
 };
 
+/**
+ * Get selecting indexes of toolbox
+ * @returns {Array.<Number>} [fromIndex,toIndex]
+ * first value of array is index from select,
+ * second value is index to select
+ */
 export const getSelectingIndexes = (current, items, tabNext) => {
   const index = items.findIndex((item) => item === current);
 

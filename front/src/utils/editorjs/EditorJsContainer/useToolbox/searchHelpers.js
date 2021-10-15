@@ -1,8 +1,4 @@
-import {
-  TOOLBOX_BUTTON_ACTIVE_CLASS,
-  TOOLBOX_ITEM_NONE,
-} from '@sb-ui/utils/editorjs/EditorJsContainer/useToolbox/constants';
-
+import { TOOLBOX_BUTTON_ACTIVE_CLASS, TOOLBOX_ITEM_NONE } from './constants';
 import { getTranslationKey } from './toolboxItemsHelpers';
 
 export const getItemsFilteredByValue = (value, items, t) =>
