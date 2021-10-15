@@ -8,6 +8,7 @@ import { useParams } from 'react-router-dom';
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
 import { useTableSearch } from '@sb-ui/hooks/useTableSearch';
 import { getLanguageCodeByKey } from '@sb-ui/i18n';
+import LessonResults from '@sb-ui/pages/Teacher/LessonStudents/LessonResults';
 import { interactiveTypesBlocks } from '@sb-ui/utils/api/config';
 import {
   getLesson,
@@ -193,6 +194,10 @@ const LessonStudents = () => {
           }
           onChange={onChangeLessonsPage}
           loading={isLoading || isPreviousData || isLessonLoading}
+          expandable={{
+            expandedRowRender: (record) => <LessonResults {...record} />,
+            rowExpandable: (record) => record?.results?.length > 0,
+          }}
           locale={{
             emptyText: (
               <Empty

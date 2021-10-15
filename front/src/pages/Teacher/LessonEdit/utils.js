@@ -1,6 +1,5 @@
 import hash from 'object-hash';
 import Marker from '@editorjs/marker';
-import Paragraph from '@editorjs/paragraph';
 
 import { BLOCKS_TYPE } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
 import Attach from '@sb-ui/utils/editorjs/attach-plugin';
@@ -15,6 +14,7 @@ import Image from '@sb-ui/utils/editorjs/image-plugin';
 import List from '@sb-ui/utils/editorjs/list-plugin';
 import Match from '@sb-ui/utils/editorjs/match-plugin';
 import Next from '@sb-ui/utils/editorjs/next-plugin';
+import Paragraph from '@sb-ui/utils/editorjs/paragraph-plugin';
 import Quiz from '@sb-ui/utils/editorjs/quiz-plugin';
 import Quote from '@sb-ui/utils/editorjs/quote-plugin';
 import Table from '@sb-ui/utils/editorjs/table-plugin';
@@ -181,8 +181,29 @@ export const getBaseBlocks = (t) => ({
     class: Paragraph,
     inlineToolbar: true,
   },
+  header: {
+    class: HeaderTool,
+    config: {
+      placeholder: t('editor_js.header.placeholder'),
+      levels: [1, 2, 3, 4, 5],
+      defaultLevel: 2,
+    },
+    inlineToolbar: true,
+  },
+  image: {
+    class: Image,
+    inlineToolbar: true,
+  },
+  embed: {
+    class: Embed,
+    inlineToolbar: true,
+  },
   attach: {
     class: Attach,
+  },
+  list: {
+    class: List,
+    inlineToolbar: true,
   },
   warning: {
     class: Warning,
@@ -191,14 +212,6 @@ export const getBaseBlocks = (t) => ({
       titlePlaceholder: t('editor_js.tools.warning_title'),
       messagePlaceholder: t('editor_js.tools.warning_message'),
     },
-  },
-  image: {
-    class: Image,
-    inlineToolbar: true,
-  },
-  list: {
-    class: List,
-    inlineToolbar: true,
   },
   quote: {
     class: Quote,
@@ -209,20 +222,7 @@ export const getBaseBlocks = (t) => ({
     class: Table,
     inlineToolbar: true,
   },
-  embed: {
-    class: Embed,
-    inlineToolbar: true,
-  },
   delimiter: Delimiter,
-  header: {
-    class: HeaderTool,
-    config: {
-      placeholder: t('editor_js.header.placeholder'),
-      levels: [1, 2, 3, 4, 5],
-      defaultLevel: 2,
-    },
-    inlineToolbar: true,
-  },
 });
 
 export const getInteractiveBlocks = () => ({

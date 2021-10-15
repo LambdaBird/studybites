@@ -34,7 +34,7 @@ async function handler({ body, headers }) {
   const hash = await hashPassword(body.password);
 
   const { id, email } = await User.createOne({
-    userData: { ...body, password: hash },
+    userData: { ...body, email: body.email.toLowerCase(), password: hash },
   });
 
   const accessToken = createAccessToken(this, id);

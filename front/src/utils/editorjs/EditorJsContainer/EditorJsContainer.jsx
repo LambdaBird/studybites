@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { forwardRef, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import EditorJS from '@editorjs/editorjs';
-import Paragraph from '@editorjs/paragraph';
 
 import { useToolbox } from '@sb-ui/utils/editorjs/EditorJsContainer/useToolbox';
 import Undo from '@sb-ui/utils/editorjs/undo-plugin';
@@ -81,21 +80,12 @@ const EditorJsContainer = forwardRef((props, ref) => {
         ...anotherProps
       } = props;
 
-      const extendTools = {
-        // default tools
-        paragraph: {
-          class: Paragraph,
-          inlineToolbar: true,
-        },
-        ...tools,
-      };
-
       if (instance.current) {
         return;
       }
 
       const newInstance = new EditorJS({
-        tools: extendTools,
+        tools,
         holder,
 
         onReady: () => handleReady(newInstance),
