@@ -172,6 +172,9 @@ const EditorJsContainer = forwardRef((props, ref) => {
                 title: t('tools.next.title'),
                 button: t('tools.next.title'),
               },
+              paragraph: {
+                title: t('tools.paragraph.title'),
+              },
               list: {
                 title: t('tools.list.title'),
               },
