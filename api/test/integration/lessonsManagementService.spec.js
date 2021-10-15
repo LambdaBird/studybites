@@ -1,18 +1,22 @@
+/* eslint-disable no-underscore-dangle */
 import { v4 } from 'uuid';
 
 import build from '../../src/app';
 
 import {
-  teacherMike,
-  teacherNathan,
   defaultPassword,
   studentJohn,
+  teacherMike,
+  teacherNathan,
 } from '../../seeds/testData/users';
-import { french } from '../../seeds/testData/lessons';
+import { french, ukrainian } from '../../seeds/testData/lessons';
 
 import { authorizeUser, createLesson, prepareLessonFromSeed } from './utils';
 
-import { userServiceErrors as errors } from '../../src/config';
+import {
+  lessonServiceMessages,
+  userServiceErrors as errors,
+} from '../../src/config';
 
 describe('Maintainer flow', () => {
   const testContext = {};
@@ -530,6 +534,91 @@ describe('Maintainer flow', () => {
       expect(payload).toHaveProperty('total');
       expect(payload).toHaveProperty('students');
       expect(payload.total).toBe(0);
+    });
+  });
+
+  describe('Result review mechanics', () => {
+    let lessonWithGradedQuestion;
+    let gradedQuestionResult;
+    const CORRECTNESS = 0.4;
+
+    beforeAll(async () => {
+      lessonWithGradedQuestion = await createLesson({
+        app: testContext.app,
+        credentials: teacherCredentials,
+        body: prepareLessonFromSeed(ukrainian),
+      });
+
+      await testContext.studentRequest({
+        url: `lessons/${lessonWithGradedQuestion.lesson.id}/enroll`,
+      });
+
+      await testContext.studentRequest({
+        url: `learn/lessons/${lessonWithGradedQuestion.lesson.id}/reply`,
+        body: {
+          action: 'start',
+        },
+      });
+
+      await testContext.studentRequest({
+        url: `learn/lessons/${lessonWithGradedQuestion.lesson.id}/reply`,
+        body: {
+          action: 'response',
+          blockId:
+            lessonWithGradedQuestion.lesson.blocks[
+              ukrainian._blocks._indexesOfInteractive[0]
+            ].blockId,
+          revision:
+            lessonWithGradedQuestion.lesson.blocks[
+              ukrainian._blocks._indexesOfInteractive[0]
+            ].revision,
+          reply: {
+            files: [],
+            value: 'answer',
+          },
+        },
+      });
+
+      const response = await testContext.request({
+        method: 'GET',
+        url: `lessons/${lessonWithGradedQuestion.lesson.id}/students`,
+      });
+
+      const [student] = JSON.parse(response.payload).students;
+      [, gradedQuestionResult] = student.results;
+    });
+
+    it('correctness should be null after student`s response', () => {
+      expect(gradedQuestionResult.correctness).toBe(null);
+    });
+
+    it('should successfully set correctness', async () => {
+      const response = await testContext.request({
+        url: `review/${lessonWithGradedQuestion.lesson.id}`,
+        body: {
+          id: gradedQuestionResult.id,
+          correctness: CORRECTNESS,
+        },
+      });
+
+      const payload = JSON.parse(response.payload);
+
+      expect(response.statusCode).toBe(200);
+      expect(payload).toMatchObject({
+        message: lessonServiceMessages.LESSON_MSG_SUCCESS_REVIEW,
+      });
+    });
+
+    it('correctness should be changed successfully', async () => {
+      const response = await testContext.request({
+        method: 'GET',
+        url: `lessons/${lessonWithGradedQuestion.lesson.id}/students`,
+      });
+
+      const [student] = JSON.parse(response.payload).students;
+      const [, newResult] = student.results;
+
+      expect(newResult.correctness).toBe(CORRECTNESS);
     });
   });
 });
