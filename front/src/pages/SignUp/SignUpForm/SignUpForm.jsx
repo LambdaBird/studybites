@@ -19,7 +19,10 @@ const SignUpForm = () => {
 
   const [form] = Form.useForm();
 
-  const [auth, error, setError, loading] = useAuthentication(postSignUp);
+  const [auth, error, setError, loading] = useAuthentication({
+    requestFunc: postSignUp,
+    message: 'sign_up:email_verification',
+  });
 
   const [message, setMessage] = useState('');
   const [isFormErrors, setIsFormErrors] = useState(false);
@@ -86,7 +89,7 @@ const SignUpForm = () => {
         <Form.Item>
           <Alert
             onClose={() => setError(null)}
-            message={error}
+            message={t(error)}
             type="error"
             showIcon
             closable

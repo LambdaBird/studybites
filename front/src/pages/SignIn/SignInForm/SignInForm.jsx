@@ -34,7 +34,10 @@ const SignInForm = () => {
     }),
     [t],
   );
-  const [auth, error, setError, loading] = useAuthentication(postSignIn);
+  const [auth, error, setError, loading] = useAuthentication({
+    requestFunc: postSignIn,
+    message: 'sign_in:welcome',
+  });
 
   const [message, setMessage] = useState('');
   const [isFormErrors, setIsFormErrors] = useState(false);
