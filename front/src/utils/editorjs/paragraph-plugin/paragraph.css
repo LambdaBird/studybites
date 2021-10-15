@@ -11,8 +11,8 @@
   margin-bottom: 0.5rem;
   cursor: default;
   user-select: none;
-  font-size: 12px;
-  line-height: 20px;
+  font-size: 0.75rem;
+  line-height: 1.25rem;
   color: rgba(0, 0, 0, 0.45);
 }
 
