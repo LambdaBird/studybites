@@ -37,7 +37,7 @@ async function handler({ body: { email, password } }) {
     throw new AuthorizationError(errors.USER_ERR_UNAUTHORIZED);
   }
 
-  const accessToken = createAccessToken(this, id);
+  const accessToken = createAccessToken(this, id, email);
   const refreshToken = createRefreshToken(this, id);
 
   return {

@@ -34,7 +34,7 @@ async function handler(req) {
     throw new AuthorizationError(errors.USER_ERR_TOKEN_EXPIRED);
   }
 
-  const { id, updatedAt } = await User.getUser({ userId: decoded.id });
+  const { id, email, updatedAt } = await User.getUser({ userId: decoded.id });
 
   const lastUpdateUserTime = Math.floor(new Date(updatedAt).getTime() / 1000);
   const tokenCreatedTime = decoded.iat;
@@ -42,7 +42,7 @@ async function handler(req) {
     throw new AuthorizationError(errors.USER_ERR_TOKEN_EXPIRED);
   }
 
-  const newAccessToken = createAccessToken(this, id);
+  const newAccessToken = createAccessToken(this, id, email);
   const newRefreshToken = createRefreshToken(this, id);
 
   return {

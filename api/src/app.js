@@ -17,6 +17,7 @@ import Keyword from './models/Keyword';
 import ResourceKeyword from './models/ResourceKeyword';
 import File from './models/File';
 import ResourceFile from './models/ResourceFile';
+import Invite from './models/Invite';
 
 import userService from './services/user';
 import lessonsService from './services/lessons';
@@ -27,6 +28,7 @@ import coursesService from './services/courses';
 import emailService from './services/email';
 import keywordsService from './services/keywords';
 import filesService from './services/files';
+import invitesService from './services/invites';
 
 import errorsAndValidation from './validation';
 import i18n from './i18n';
@@ -71,6 +73,7 @@ export default (options = {}) => {
       ResourceKeyword,
       File,
       ResourceFile,
+      Invite,
     ],
   });
 
@@ -108,6 +111,10 @@ export default (options = {}) => {
 
   app.register(emailService, {
     prefix: '/api/v1/email',
+  });
+
+  app.register(invitesService, {
+    prefix: '/api/v1/invites',
   });
 
   return app;

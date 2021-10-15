@@ -37,7 +37,7 @@ async function handler({ body, headers }) {
     userData: { ...body, email: body.email.toLowerCase(), password: hash },
   });
 
-  const accessToken = createAccessToken(this, id);
+  const accessToken = createAccessToken(this, id, email);
   const refreshToken = createRefreshToken(this, id);
 
   const link = await Redis.generateConfirmationLink({ host, email });

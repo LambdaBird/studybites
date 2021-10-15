@@ -43,7 +43,7 @@ async function handler({ params: { id: uuid }, body: { password } }) {
     userId,
   });
 
-  const accessToken = createAccessToken(this, userId);
+  const accessToken = createAccessToken(this, userId, email);
   const refreshToken = createRefreshToken(this, userId);
 
   await Redis.invalidateLink({ email, uuid });
