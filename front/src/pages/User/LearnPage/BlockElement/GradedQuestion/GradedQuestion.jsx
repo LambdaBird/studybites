@@ -23,6 +23,7 @@ const GradedQuestion = ({ blockId, revision, content, reply, isSolved }) => {
     handleSendButton,
     onRemoveFile,
     onFileChange,
+    isSendDisabled,
     uploadHeaders,
     input,
     setInput,
@@ -44,14 +45,16 @@ const GradedQuestion = ({ blockId, revision, content, reply, isSolved }) => {
       {isSolved ? (
         <ChunkWrapper>
           {value && <p>{value}</p>}
-          <S.UploadedFileWrapper>
-            {files.map(({ location, name }) => (
-              <a key={name} href={location}>
-                <FileOutlined />
-                <S.UploadedFileName>{name}</S.UploadedFileName>
-              </a>
-            ))}
-          </S.UploadedFileWrapper>
+          {files.length && (
+            <S.UploadedFileWrapper>
+              {files.map(({ location, name }) => (
+                <a key={name} href={location}>
+                  <FileOutlined />
+                  <S.UploadedFileName>{name}</S.UploadedFileName>
+                </a>
+              ))}
+            </S.UploadedFileWrapper>
+          )}
         </ChunkWrapper>
       ) : (
         <>
@@ -74,7 +77,11 @@ const GradedQuestion = ({ blockId, revision, content, reply, isSolved }) => {
               onChange={(e) => setInput(e.target.value)}
               placeholder={t('lesson.input_answer')}
             />
-            <S.SendButton $allowSend={allowSend} onClick={handleSendButton}>
+            <S.SendButton
+              disabled={isSendDisabled}
+              $allowSend={allowSend}
+              onClick={handleSendButton}
+            >
               <S.RightOutlined />
             </S.SendButton>
           </S.BlockWrapperWhite>

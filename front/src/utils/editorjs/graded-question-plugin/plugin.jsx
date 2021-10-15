@@ -30,10 +30,16 @@ export default class GradedQuestion {
     };
   }
 
-  save = () => ({
-    question: this.questionInput?.innerHTML,
-    requireAttachment: this.requireAttachment,
-  });
+  save = () => {
+    const question = this.questionInput?.innerHTML?.trim?.();
+    if (!question) {
+      return null;
+    }
+    return {
+      question,
+      requireAttachment: this.requireAttachment,
+    };
+  };
 
   static get sanitize() {
     return {

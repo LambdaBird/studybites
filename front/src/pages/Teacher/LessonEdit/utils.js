@@ -125,6 +125,7 @@ const SKIP_BLOCKS = [
   BLOCKS_TYPE.MATCH,
   BLOCKS_TYPE.BRICKS,
   BLOCKS_TYPE.ATTACH,
+  BLOCKS_TYPE.GRADED_QUESTION,
 ];
 
 export const makeAnswerForBlock = (block) => {

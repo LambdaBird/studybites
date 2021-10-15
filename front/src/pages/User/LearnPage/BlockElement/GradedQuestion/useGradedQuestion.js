@@ -32,9 +32,11 @@ export const useGradedQuestion = ({
   }, []);
 
   const notErrorCheck = useCallback((file) => file.status !== 'error', []);
-  const allowSend = requireAttachment
-    ? fileList.length > 0 && fileList.some(notErrorCheck)
-    : true;
+
+  const allowSend = useMemo(
+    () => (requireAttachment ? fileList?.some(notErrorCheck) : true),
+    [fileList, notErrorCheck, requireAttachment],
+  );
 
   const { value, files } = reply || {};
 
@@ -53,6 +55,13 @@ export const useGradedQuestion = ({
     });
   }, [blockId, fileList, handleInteractiveClick, id, input, revision]);
 
+  const isSendDisabled = useMemo(() => {
+    if (fileList?.some(notErrorCheck)) {
+      return false;
+    }
+    return input.trim().length === 0;
+  }, [fileList, input, notErrorCheck]);
+
   return {
     handleSendButton,
     onFileChange,
@@ -64,5 +73,6 @@ export const useGradedQuestion = ({
     allowSend,
     input,
     setInput,
+    isSendDisabled,
   };
 };
