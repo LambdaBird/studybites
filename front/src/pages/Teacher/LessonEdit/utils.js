@@ -9,6 +9,7 @@ import CodeTool from '@sb-ui/utils/editorjs/code-plugin';
 import Delimiter from '@sb-ui/utils/editorjs/delimiter-plugin';
 import Embed from '@sb-ui/utils/editorjs/embed-plugin';
 import FillTheGap from '@sb-ui/utils/editorjs/fill-the-gap/plugin';
+import GradedQuestion from '@sb-ui/utils/editorjs/graded-question-plugin';
 import HeaderTool from '@sb-ui/utils/editorjs/header-plugin';
 import Image from '@sb-ui/utils/editorjs/image-plugin';
 import List from '@sb-ui/utils/editorjs/list-plugin';
@@ -124,6 +125,7 @@ const SKIP_BLOCKS = [
   BLOCKS_TYPE.MATCH,
   BLOCKS_TYPE.BRICKS,
   BLOCKS_TYPE.ATTACH,
+  BLOCKS_TYPE.GRADED_QUESTION,
 ];
 
 export const makeAnswerForBlock = (block) => {
@@ -245,6 +247,10 @@ export const getInteractiveBlocks = () => ({
   },
   bricks: {
     class: Bricks,
+    inlineToolbar: true,
+  },
+  gradedQuestion: {
+    class: GradedQuestion,
     inlineToolbar: true,
   },
 });

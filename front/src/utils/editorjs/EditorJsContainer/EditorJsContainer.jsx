@@ -140,6 +140,7 @@ const EditorJsContainer = forwardRef((props, ref) => {
               Delimiter: t('tools.delimiter.title'),
               Table: t('tools.table.title'),
               'Closed Question': t('tools.closed_question.title'),
+              'Graded Question': t('tools.graded_question.title'),
               Warning: t('tools.warning.title'),
               Code: t('tools.code.title'),
               Marker: t('tools.marker.title'),
@@ -211,6 +212,14 @@ const EditorJsContainer = forwardRef((props, ref) => {
                 tag_title: t('tools.closed_question.tag_title'),
                 example: t('tools.closed_question.example'),
                 none: t('tools.closed_question.none'),
+              },
+              gradedQuestion: {
+                title: t('tools.graded_question.title'),
+                hint: t('tools.graded_question.hint'),
+                placeholder: t('tools.graded_question.placeholder'),
+                require_attachment: t(
+                  'tools.graded_question.require_attachment',
+                ),
               },
               fillTheGap: {
                 title: t('tools.fill_the_gap.title'),

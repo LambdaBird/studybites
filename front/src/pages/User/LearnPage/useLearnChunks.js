@@ -69,7 +69,8 @@ export const handleAnswer = ({ data: serverData, prevChunks }) => {
   const lastChunk = prevChunks?.[prevChunks.length - 1];
 
   const interactiveBlock = lastChunk[lastChunk.length - 1];
-  if (Object.keys(answer || {}).length > 0) {
+
+  if (interactiveTypesBlocks.includes(interactiveBlock.type)) {
     interactiveBlock.answer = answer;
     interactiveBlock.reply = reply;
   }

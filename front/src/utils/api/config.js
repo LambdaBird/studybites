@@ -10,6 +10,7 @@ export const interactiveTypesBlocks = [
   BLOCKS_TYPE.BRICKS,
   BLOCKS_TYPE.MATCH,
   BLOCKS_TYPE.FINISH,
+  BLOCKS_TYPE.GRADED_QUESTION,
 ];
 export const staticTypesBlocks = [
   BLOCKS_TYPE.PARAGRAPH,
