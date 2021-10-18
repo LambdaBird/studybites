@@ -53,10 +53,13 @@ const EnrollModalMobile = () => {
   const { id } = useParams();
 
   const historyPushLesson = useCallback(() => {
-    history.push(LEARN_PAGE.replace(':id', id));
+    history.push({
+      pathname: LEARN_PAGE.replace(':id', id),
+      state: { fromEnroll: true },
+    });
   }, [history, id]);
 
-  const { data: responseData } = useQuery(
+  const { data: responseData, isFetching } = useQuery(
     [USER_LESSON_MODAL_BASE_KEY, { id }],
     getLesson,
     { keepPreviousData: true },
@@ -107,6 +110,10 @@ const EnrollModalMobile = () => {
       onSuccess: historyPushLesson,
     });
   }, [historyPushLesson, id, mutatePostEnroll]);
+
+  if (isFetching || responseData?.lesson?.isEnrolled) {
+    return null;
+  }
 
   return (
     <S.Main>
