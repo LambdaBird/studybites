@@ -9,6 +9,16 @@ export const sleep = (ms) =>
     }, [ms]);
   });
 
+export function debounce(func, timeout = 300) {
+  let timer;
+  return (...args) => {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      func.apply(this, args);
+    }, timeout);
+  };
+}
+
 export const getQueryPage = (params) => {
   let incorrect = false;
   let pageNumber = parseInt(new URLSearchParams(params).get('page'), 10);
