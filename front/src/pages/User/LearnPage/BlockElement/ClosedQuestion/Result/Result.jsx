@@ -9,6 +9,7 @@ import {
 import { ChunkWrapper } from '@sb-ui/pages/User/LearnPage/LearnPage.styled';
 
 import AnswerResult from './AnswerResult';
+import { verifyAnswers } from './verifyAnswers';
 
 const Result = ({ answer, data, reply }) => {
   const { question } = data;
@@ -16,12 +17,8 @@ const Result = ({ answer, data, reply }) => {
   const { value: userValue } = reply;
 
   const isCorrect = useMemo(
-    () =>
-      results?.some(
-        (result) =>
-          result?.trim()?.toLowerCase() === userValue.trim()?.toLowerCase(),
-      ),
-    [userValue, results],
+    () => verifyAnswers(results, userValue),
+    [results, userValue],
   );
 
   return (
