@@ -19,20 +19,13 @@ export const IconTitle = styled.div`
   }
 `;
 
-export const Icon = styled.span.attrs((props) => ({
-  children: props.children || props.emoji,
-  'aria-label': 'hand-up',
-  role: 'img',
-}))`
-  font-size: large;
-`;
-
 export const Title = styled.span`
-  padding-left: 1rem;
   font-weight: bold;
   text-align: center;
 `;
 
 export const Message = styled.span`
-  padding-left: 1rem;
+  @media (min-width: 767px) {
+    padding-left: 1rem;
+  }
 `;
