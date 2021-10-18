@@ -93,4 +93,7 @@ export const GlobalStylesEditorPage = createGlobalStyle`
       }
     }
   }
+  .cte-toolbox-upper{
+    transform: translate3d(0px,calc(-100% + 25px),0px)!important;
+  }
 `;

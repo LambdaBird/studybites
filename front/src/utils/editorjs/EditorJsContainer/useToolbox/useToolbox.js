@@ -1,13 +1,21 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useSearch } from '@sb-ui/utils/editorjs/EditorJsContainer/useToolbox/useSearch';
+import { debounce } from '@sb-ui/utils/utils';
 
+import {
+  DEBOUNCE_SCROLL_TOOLBOX_TIME,
+  TOOLBOX_OPENED,
+  TOOLBOX_UPPER,
+} from './constants';
 import {
   appendItems,
   createDivWithClassName,
   createInputWithClassName,
+  getElementOverlapsPosition,
   getToolboxItems,
+  toggleToolboxPosition,
   transformDefaultMenuItems,
   updateInnerText,
 } from './domToolboxHelpers';
@@ -111,6 +119,32 @@ export const useToolbox = () => {
     transformDefaultMenuItems(basicItems, basicMenuItemsWrapper, t);
     setIsReady(true);
   }, [t]);
+
+  useEffect(() => {
+    if (isOpen) {
+      const position = getElementOverlapsPosition(toolbox.current);
+      toggleToolboxPosition(toolbox.current, position);
+    } else {
+      toolbox.current?.classList?.remove?.(TOOLBOX_UPPER);
+    }
+  }, [isOpen]);
+
+  const handleScroll = useCallback(() => {
+    const position = getElementOverlapsPosition(toolbox.current);
+    if (position && toolbox.current.classList.contains(TOOLBOX_OPENED)) {
+      toggleToolboxPosition(toolbox.current, position);
+    }
+  }, []);
+
+  const handleScrollDebounced = useMemo(
+    () => debounce(handleScroll, DEBOUNCE_SCROLL_TOOLBOX_TIME),
+    [handleScroll],
+  );
+
+  useEffect(() => {
+    document.addEventListener('scroll', handleScrollDebounced);
+    return () => document.removeEventListener('scroll', handleScrollDebounced);
+  }, [handleScrollDebounced]);
 
   return {
     prepareToolbox,

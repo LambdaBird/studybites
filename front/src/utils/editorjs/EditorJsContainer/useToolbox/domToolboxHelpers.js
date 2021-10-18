@@ -1,3 +1,5 @@
+import { TOOLBOX_UPPER } from '@sb-ui/utils/editorjs/EditorJsContainer/useToolbox/constants';
+
 import { getTranslationKey } from './toolboxItemsHelpers';
 
 export const appendItems = ({ node, items = [] }) => {
@@ -78,4 +80,29 @@ export const transformDefaultMenuItems = (items, block, t) => {
       ],
     });
   });
+};
+
+export const TOP_OVERLAPS = 'top';
+export const BOTTOM_OVERLAPS = 'bottom';
+
+export const getElementOverlapsPosition = (el) => {
+  const rect = el.getBoundingClientRect();
+  if (rect.top < 0) {
+    return TOP_OVERLAPS;
+  }
+  if (
+    rect.bottom > (window.innerHeight || document.documentElement.clientHeight)
+  ) {
+    return BOTTOM_OVERLAPS;
+  }
+
+  return null;
+};
+
+export const toggleToolboxPosition = (element, position) => {
+  if (position === BOTTOM_OVERLAPS) {
+    element.classList.add(TOOLBOX_UPPER);
+  } else {
+    element.classList.remove(TOOLBOX_UPPER);
+  }
 };
