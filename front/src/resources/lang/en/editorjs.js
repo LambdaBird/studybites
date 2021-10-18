@@ -109,7 +109,8 @@ export default {
     fill_the_gap: {
       title: 'Fill The Gap',
       description: 'Fill missed words',
-      hint: '* Text inside {{ }} will be hidden for students',
+      hint_part_one: '* Text inside ',
+      hint_part_two: ' will be hidden for students',
       placeholder: 'Enter a text',
     },
     match: {

@@ -228,7 +228,8 @@ const EditorJsContainer = forwardRef((props, ref) => {
               },
               fillTheGap: {
                 title: t('tools.fill_the_gap.title'),
-                hint: t('tools.fill_the_gap.hint'),
+                hint_part_one: t('tools.fill_the_gap.hint_part_one'),
+                hint_part_two: t('tools.fill_the_gap.hint_part_two'),
                 placeholder: t('tools.fill_the_gap.placeholder'),
               },
               match: {
