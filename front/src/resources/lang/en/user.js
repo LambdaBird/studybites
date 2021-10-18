@@ -59,6 +59,7 @@ export default {
       title: 'Results',
       correct_answers: 'Correct answers in the lesson',
       total_answers: 'Total questions in the chapter',
+      graded_pending: 'Pending graded question',
       percentage: '{{percentage}}% correct answers',
     },
     answer_result: {
