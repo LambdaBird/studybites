@@ -85,6 +85,7 @@ export const MenuWrapper = styled.div`
   z-index: 3;
   width: 100%;
   transition: transform 0.3s ease-in-out;
+  margin-top: 0;
   transform: ${(props) =>
     props.visible ? `translateY(${HEADER_HEIGHT}px)` : 'translateY(-100%)'};
 `;
