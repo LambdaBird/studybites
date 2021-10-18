@@ -16,7 +16,7 @@ export const GlobalStylesEditorPage = createGlobalStyle`
       outline: none;
     }
     border: 1px solid #d9d9d9;
-    padding: 0 0.5rem;
+    padding: 0.5rem 0.75rem;
     margin-bottom: 0.5rem;
   }
   
