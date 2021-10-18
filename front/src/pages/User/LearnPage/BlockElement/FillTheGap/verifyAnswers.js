@@ -21,7 +21,7 @@ export const verifyAnswers = (results, answers) => {
         .value.find(
           (res) =>
             res.trim().toLowerCase() === answer.value.trim().toLowerCase(),
-        )
+        ) !== undefined
     ) {
       return {
         correct: true,
