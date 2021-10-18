@@ -53,6 +53,9 @@ export const createChunksFromBlocks = ({
   if (!isPost && isFinished && isEmptyBlocks) {
     chunks.push([createFinishBlock(true)]);
   }
+  if (!isPost && chunks?.[0]?.[0]?.type !== 'start') {
+    chunks.splice(0, 0, [createStartBlock(true)]);
+  }
 
   return chunks;
 };
@@ -78,6 +81,7 @@ export const handleAnswer = ({ data: serverData, prevChunks }) => {
   if (interactiveBlock) {
     interactiveBlock.isSolved = true;
   }
+
   return [
     ...prevChunks,
     ...createChunksFromBlocks({

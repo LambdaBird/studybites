@@ -107,6 +107,7 @@ describe('Test useLearnChunks', () => {
         isPost: false,
       });
       expect(chunks).toStrictEqual([
+        [createStartBlock(true)],
         [createParagraphBlock(1, 'Paragraph1'), createFinishBlock(false)],
       ]);
     });
@@ -121,6 +122,8 @@ describe('Test useLearnChunks', () => {
         isPost: false,
       });
       expect(chunks).toStrictEqual([
+        [createStartBlock(true)],
+
         [
           createParagraphBlock(1, 'Paragraph1'),
           createQuizResultBlock(2, [true, true], [true, true]),
@@ -139,6 +142,8 @@ describe('Test useLearnChunks', () => {
         isPost: false,
       });
       expect(chunks).toStrictEqual([
+        [createStartBlock(true)],
+
         [createParagraphBlock(1, 'Paragraph1'), createNextBlock(2, false)],
       ]);
     });
@@ -153,6 +158,8 @@ describe('Test useLearnChunks', () => {
         isPost: false,
       });
       expect(chunks).toStrictEqual([
+        [createStartBlock(true)],
+
         [
           createParagraphBlock(1, 'Paragraph1'),
           createQuizResultBlock(2, [true, true], [true, true]),
@@ -167,7 +174,10 @@ describe('Test useLearnChunks', () => {
         isFinished: true,
         isPost: false,
       });
-      expect(chunks).toStrictEqual([[createFinishBlock(true)]]);
+      expect(chunks).toStrictEqual([
+        [createStartBlock(true)],
+        [createFinishBlock(true)],
+      ]);
     });
   });
 
