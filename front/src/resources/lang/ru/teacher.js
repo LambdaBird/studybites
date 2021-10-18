@@ -151,6 +151,15 @@ export default {
       input_placeholder: 'Введите вашу ссылку',
       not_found: 'Не найдено',
     },
+    share: {
+      title: 'Поделиться',
+      invite_button: 'Только по приглашению',
+      everyone_button: 'Каждый может записаться',
+      copy_button: 'Скопировать',
+      generate_button: 'Сгенерировать ссылку',
+      link_placeholder: 'Тут будет ссылка...',
+      link_copy: 'Ссылка успешно скопирована',
+    },
     title: {
       placeholder: 'Название урока',
     },
