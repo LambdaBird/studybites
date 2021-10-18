@@ -7,7 +7,6 @@ const Warning = ({ content }) => {
   return (
     <S.Wrapper>
       <S.IconTitle>
-        <S.Icon emoji="☝" />
         <S.Title>{title}</S.Title>
       </S.IconTitle>
       <S.Message>{message}</S.Message>
