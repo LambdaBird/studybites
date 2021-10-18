@@ -1,0 +1,23 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+
+import InviteStudentsModal from '@sb-ui/components/molecules/InviteStudentsModal';
+
+<Meta title="atoms/InviteStudentsModal" component={InviteStudentsModal} />
+
+# InviteStudentsModal
+
+Component `InviteStudentsModal` render
+
+export const Template = (args) => <InviteStudentsModal {...args} />;
+
+<Canvas>
+  <Story
+    name="Example"
+    args={{
+      setShow: () => {},
+      show: true,
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
