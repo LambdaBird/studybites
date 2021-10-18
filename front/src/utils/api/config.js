@@ -12,6 +12,17 @@ export const interactiveTypesBlocks = [
   BLOCKS_TYPE.FINISH,
   BLOCKS_TYPE.GRADED_QUESTION,
 ];
+
+export const interactiveResultTypesBlocks = [
+  BLOCKS_TYPE.QUIZ,
+  BLOCKS_TYPE.CLOSED_QUESTION,
+  BLOCKS_TYPE.FILL_THE_GAP,
+  BLOCKS_TYPE.BRICKS,
+  BLOCKS_TYPE.MATCH,
+];
+
+export const interactiveGradedResultTypesBlocks = [BLOCKS_TYPE.GRADED_QUESTION];
+
 export const staticTypesBlocks = [
   BLOCKS_TYPE.PARAGRAPH,
   BLOCKS_TYPE.EMBED,

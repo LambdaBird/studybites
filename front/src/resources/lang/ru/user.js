@@ -59,6 +59,7 @@ export default {
       title: 'Результаты',
       correct_answers: 'Правильные ответы в уроке',
       total_answers: 'Общее количество вопросов в уроке',
+      graded_pending: 'Вопросы с оценкой, ожидающие рассмотрения',
       percentage: '{{percentage}}% правильных ответов',
     },
     answer_result: {
