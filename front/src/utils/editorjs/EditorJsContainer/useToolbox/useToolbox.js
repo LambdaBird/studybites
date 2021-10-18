@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { useSearch } from '@sb-ui/utils/editorjs/EditorJsContainer/useToolbox/useSearch';
+
 import {
   appendItems,
   createDivWithClassName,
+  createInputWithClassName,
   getToolboxItems,
   transformDefaultMenuItems,
   updateInnerText,
@@ -19,9 +22,19 @@ export const useToolbox = () => {
   const { t } = useTranslation('editorjs');
   const toolbox = useRef(null);
   const [isReady, setIsReady] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [value, setValue] = useState('');
+  const inputRef = useRef(null);
+  const itemsRef = useRef(null);
+  const currentItemRef = useRef(null);
+
+  useSearch({ itemsRef, inputRef, currentItemRef, isOpen, value });
+
   useEffect(() => {
     if (isReady) {
-      const observer = initObserver(toolbox.current);
+      const observer = initObserver(toolbox.current, {
+        setIsOpen,
+      });
       return () => {
         destroyObserver(observer);
       };
@@ -60,9 +73,23 @@ export const useToolbox = () => {
       className: 'toolbox-interactive-items',
     });
 
+    const input = createInputWithClassName({
+      className: 'toolbox-input-search',
+      placeholder: t('tools.search_placeholder'),
+      events: {
+        input: (e) => {
+          setValue(e.target.value);
+        },
+        focusout: () => {
+          input.focus({ preventScroll: true });
+        },
+      },
+    });
+    inputRef.current = input;
     appendItems({
       node: wrapper,
       items: [
+        input,
         createDivWithClassName({
           className: 'toolbox-basic-items-title',
           innerText: t('tools.basic_blocks'),
@@ -77,6 +104,7 @@ export const useToolbox = () => {
     });
 
     const items = Array.from(getToolboxItems(toolbox.current));
+    itemsRef.current = items;
     const [basicItems, interactiveItems] = getBasicAndInteractiveItems(items);
 
     transformDefaultMenuItems(interactiveItems, interactiveMenuItemsWrapper, t);
