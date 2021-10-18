@@ -1,5 +1,7 @@
-import { Button, Checkbox, Row, Typography } from 'antd';
+import { Button, Checkbox, Typography } from 'antd';
 import styled from 'styled-components';
+
+import { BlockElementWrapperWhite } from '../BlockElement.styled';
 
 const { Text } = Typography;
 
@@ -18,21 +20,8 @@ export const Question = styled(Text)`
   font-style: italic;
 `;
 
-export const BlockWrapperWhite = styled(Row)`
-  width: 100%;
-  padding: 2rem 2rem 0 2rem;
-  background-color: white;
-  box-shadow: 0px -4px 10px rgba(231, 231, 231, 0.5);
-  border-radius: 8px;
-  max-width: 614px;
-  display: flex;
+export const BlockWrapperWhite = styled(BlockElementWrapperWhite)`
   flex-direction: column;
-
-  @media (max-width: 767px) {
-    max-width: none;
-    overflow-x: hidden;
-    width: 100vw;
-  }
 `;
 
 export const LessonButtonSend = styled(Button).attrs({

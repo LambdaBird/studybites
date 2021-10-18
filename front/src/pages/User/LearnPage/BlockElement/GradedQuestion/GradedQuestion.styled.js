@@ -1,4 +1,4 @@
-import { Button, Row, Typography, Upload as UploadAntd } from 'antd';
+import { Button, Typography, Upload as UploadAntd } from 'antd';
 import styled from 'styled-components';
 import {
   PaperClipOutlined,
@@ -7,23 +7,13 @@ import {
 
 import variables from '@sb-ui/theme/variables';
 
+import { BlockElementWrapperWhite } from '../BlockElement.styled';
+
 const { Text } = Typography;
 
-export const BlockWrapperWhite = styled(Row)`
-  width: 100%;
-  background-color: white;
-  box-shadow: 0px -4px 10px rgba(231, 231, 231, 0.5);
-  border-radius: 8px;
-  max-width: 614px;
-  display: flex;
+export const BlockWrapperWhite = styled(BlockElementWrapperWhite)`
   align-items: center;
-  padding: 0.5rem 1rem;
   overflow-y: hidden;
-  @media (max-width: 767px) {
-    max-width: none;
-    overflow-x: hidden;
-    width: 100vw;
-  }
 `;
 
 export const Upload = styled(UploadAntd).attrs({
