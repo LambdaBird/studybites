@@ -1,7 +1,8 @@
 import T from 'prop-types';
 
+import DistributionSpark from '@sb-ui/components/atoms/DistributionSpark';
+
 import BiteDescription from './BiteDescription';
-import ResolveSpark from './ResolveSpark';
 import { Bite } from './types';
 import * as S from './LessonFunnel.styled';
 
@@ -28,10 +29,10 @@ const FunnelBite = ({ bite, sparkTimeScale, bitesNumber, isFirst, isLast }) => {
         {!isFirst && studentsChangePercent}
       </S.DiffNumber>
       <BiteDescription isStart={isFirst} isFinish={isLast} blocks={blocks} />
-      <ResolveSpark
+      <DistributionSpark
         replySeries={replySeries}
-        sparkTimeScale={sparkTimeScale}
-        isStart={isFirst}
+        timeCohortScale={sparkTimeScale}
+        isHeader={isFirst}
       />
     </>
   );

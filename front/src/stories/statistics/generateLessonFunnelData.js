@@ -52,7 +52,10 @@ const generateBlocks = () => [
 ];
 
 export const getBarSparkArgs = () => {
-  const series = getReplySeries({ landed: 214, blocks: generateBlocks() }, 1);
+  const series1 = getReplySeries({ landed: 94, blocks: generateBlocks() }, 1);
+  const series2 = getReplySeries({ landed: 101, blocks: generateBlocks() }, 1);
+
+  const series = [...series1, ...series2.map((v) => v + 5000)];
 
   const maxReplyTime = Math.max(...series);
   const minReplyTime = Math.min(...series);
@@ -64,6 +67,27 @@ export const getBarSparkArgs = () => {
     Math.round(((v - minReplyTime) / domain + 2) * range);
 
   return { series, seriesBandScale };
+};
+
+export const getDistSparkArgs = () => {
+  const series1 = getReplySeries({ landed: 294, blocks: generateBlocks() }, 1);
+  const series2 = getReplySeries({ landed: 101, blocks: generateBlocks() }, 1);
+
+  const series = [...series1, ...series2.map((v) => v + 16000)];
+
+  const maxReplyTime = Math.max(...series);
+  const minReplyTime = Math.min(...series);
+
+  const range = 10;
+  const domain = maxReplyTime - minReplyTime;
+
+  const seriesBandScale = (v) =>
+    Math.round(((v - minReplyTime) / domain + 2) * range);
+
+  return {
+    timeCohortScale: seriesBandScale,
+    replySeries: series,
+  };
 };
 
 export const getSparkBarGroup = ({ count = 7, landed = 214 }) => {

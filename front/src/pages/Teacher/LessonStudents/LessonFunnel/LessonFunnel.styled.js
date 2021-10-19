@@ -1,7 +1,5 @@
 import styled, { css } from 'styled-components';
 
-import { SPARK_LINE_WIDTH } from './consts';
-
 export const FunnelWrapper = styled.div`
   display: grid;
   grid-template-columns: 12fr 1fr 1fr 6fr 12fr;
@@ -50,37 +48,6 @@ export const DiffNumber = styled.div`
   justify-content: flex-end;
 `;
 
-export const SeriesWrapper = styled.div`
-  display: flex;
-`;
-
-const TickWrapper = styled.div`
-  display: flex;
-  font-size: 0.75em;
-  position: relative;
-  color: #888;
-`;
-
-export const MedianWrapper = styled(TickWrapper)`
-  align-items: ${({ isTop }) => (isTop ? 'flex-start' : 'flex-end')};
-  justify-content: flex-end;
-  text-align: right;
-  left: -2px;
-  top: -2px;
-`;
-
-export const MeanWrapper = styled(TickWrapper)`
-  align-items: flex-end;
-  justify-content: flex-start;
-  text-align: left;
-  left: 2px;
-  top: -0.5em;
-`;
-
-export const SparkWrapper = styled.div`
-  padding: 0.5em 1px;
-  width: ${SPARK_LINE_WIDTH}px;
-`;
 export const BiteBarWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
