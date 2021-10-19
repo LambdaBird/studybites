@@ -31,10 +31,23 @@ const GradedQuestion = ({ tool }) => {
     [tool],
   );
 
+  const handleInputKeyDown = useCallback(
+    (event) => {
+      if (
+        event.code === 'Backspace' &&
+        input.current.innerText.trim().length === 0
+      ) {
+        tool.api.blocks.delete();
+      }
+    },
+    [tool],
+  );
+
   return (
     <>
       <BaseHeader toolName={block?.name} />
       <S.Input
+        onKeyDown={handleInputKeyDown}
         ref={input}
         placeholder={t('tools.graded_question.placeholder')}
       />

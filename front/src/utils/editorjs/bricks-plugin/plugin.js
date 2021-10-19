@@ -223,6 +223,13 @@ export default class Bricks extends PluginBase {
     return inputWrapper;
   }
 
+  backspacePressed(event) {
+    event.stopPropagation();
+    if (this.elements.questionInput.innerText.trim().length === 0) {
+      this.api.blocks.delete();
+    }
+  }
+
   render() {
     const container = document.createElement('div');
     container.classList.add(this.CSS.container);
@@ -263,6 +270,12 @@ export default class Bricks extends PluginBase {
     container.appendChild(answerInputWrapper);
     container.appendChild(this.elements.tagsWrapper);
     container.appendChild(additionalInputWrapper);
+
+    this.elements.questionInput.addEventListener('keydown', (event) => {
+      if (event.code === 'Backspace') {
+        this.backspacePressed(event);
+      }
+    });
 
     return container;
   }
