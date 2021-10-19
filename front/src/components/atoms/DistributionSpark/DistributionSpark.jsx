@@ -81,7 +81,7 @@ const SP_WD_RAT = SPARK_LINE_WIDTH / 100;
 DistributionSpark.defaultProps = {
   isHeader: false,
   verticalPadding: 5,
-  sparkHeight: 10,
+  sparkHeight: 16,
   sparkWidth: SPARK_LINE_WIDTH,
   ySparkScale: (v) => v * SP_WD_RAT,
 };
