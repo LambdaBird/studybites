@@ -22,7 +22,10 @@ const useFunnelScales = (bites) =>
     const range = MXN_RANGE - MIN_RANGE;
     const domain = maxReplyTime - minReplyTime;
     const sparkTimeScale = (v) =>
-      Math.round(((v - minReplyTime) / domain) * range);
+      Math.min(
+        MXN_RANGE,
+        Math.max(MIN_RANGE, Math.round(((v - minReplyTime) / domain) * range)),
+      );
 
     return { sparkTimeScale, maxReplyTime, minReplyTime };
   }, [bites]);
