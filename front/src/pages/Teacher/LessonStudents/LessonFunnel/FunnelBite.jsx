@@ -24,6 +24,7 @@ const FunnelBite = ({ bite, sparkTimeScale, bitesNumber, isFirst, isLast }) => {
           number={id}
         >
           <S.LandedNumber>{landed}</S.LandedNumber>
+          <div>&nbsp;</div>
         </S.BiteBar>
       </S.BiteBarWrapper>
       <S.DiffNumber value={diffNumber || 0}>
