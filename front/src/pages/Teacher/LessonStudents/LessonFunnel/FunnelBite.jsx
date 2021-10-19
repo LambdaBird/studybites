@@ -22,12 +22,14 @@ const FunnelBite = ({ bite, sparkTimeScale, bitesNumber, isFirst, isLast }) => {
           initialLanded={initialLanded}
           whole={bitesNumber}
           number={id}
-        />
+        >
+          <S.LandedNumber>{landed}</S.LandedNumber>
+        </S.BiteBar>
       </S.BiteBarWrapper>
-      <S.NumberWrapper>{landed}</S.NumberWrapper>
       <S.DiffNumber value={diffNumber || 0}>
         {!isFirst && studentsChangePercent}
       </S.DiffNumber>
+      <div />
       <BiteDescription isStart={isFirst} isFinish={isLast} blocks={blocks} />
       <DistributionSpark
         replySeries={replySeries}

@@ -2,14 +2,15 @@ import styled from 'styled-components';
 
 export const SeriesWrapper = styled.div`
   display: flex;
+  justify-content: center;
 `;
 
 const TickWrapper = styled.div`
   display: flex;
   font-size: 0.75em;
   position: relative;
-  color: #aaa;
-  width: 50px;
+  color: #888;
+  width: 40px;
 `;
 
 export const MedianWrapper = styled(TickWrapper)`
@@ -31,6 +32,7 @@ export const MeanWrapper = styled(TickWrapper)`
 const HeaderWrapper = styled(TickWrapper)`
   align-items: flex-end;
   top: -4px;
+  color: #555;
 `;
 
 export const HeaderMeanWrapper = styled(HeaderWrapper)`
