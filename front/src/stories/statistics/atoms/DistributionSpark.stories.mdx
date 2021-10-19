@@ -1,0 +1,87 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+
+import DistributionSpark from '@sb-ui/components/atoms/DistributionSpark';
+
+import { getDistSparkArgs } from '../generateLessonFunnelData';
+
+<Meta
+  title="statistics/DistributionSpark"
+  component={DistributionSpark}
+/>
+
+# BarSpark
+
+Component `DistributionSpark` examples
+
+export const sparkArgsData1 = getDistSparkArgs()
+
+export const TemplateDefaultHeader = (args) => <DistributionSpark {...args} />;
+export const TemplateDefault = (args) => <DistributionSpark {...args} />;
+
+export const TemplateSmall = (args) => <div style={{ fontSize: '10px' }}>
+  <DistributionSpark
+    {...args}
+    verticalPadding={3}
+    sparkHeight={6}
+    sparkWidth={80}
+    ySparkScale={(v) => v * (80 / 100)}
+  />
+</div>;
+
+export const TemplateLarge = (args) => <div style={{ fontSize: '20px' }}>
+  <DistributionSpark
+    {...args}
+    verticalPadding={10}
+    sparkHeight={40}
+    sparkWidth={200}
+    ySparkScale={(v) => v * (200 / 100)}
+  />
+</div>;
+
+
+1. DistributionSpark with default size
+
+<Canvas>
+  <Story
+    name="DistributionSpark default size"
+    args={sparkArgsData1}
+  >
+    {TemplateDefault.bind({})}
+  </Story>
+</Canvas>
+
+2. DistributionSpark with small size
+
+<Canvas>
+  <Story
+    name="DistributionSpark small size"
+    args={sparkArgsData1}
+  >
+    {TemplateSmall.bind({})}
+  </Story>
+</Canvas>
+
+3. DistributionSpark with large size
+
+<Canvas>
+  <Story
+    name="DistributionSpark large size"
+    args={sparkArgsData1}
+  >
+    {TemplateLarge.bind({})}
+  </Story>
+</Canvas>
+
+
+DistributionSpark header
+
+<Canvas>
+  <Story
+    name="DistributionSpark default size header"
+    args={{ ...sparkArgsData1, isHeader: true }}
+  >
+    {TemplateDefaultHeader.bind({})}
+  </Story>
+</Canvas>
+
+

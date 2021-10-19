@@ -1,0 +1,27 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+
+import BarSpark from '@sb-ui/components/molecules/BarSpark';
+
+import { getBarSparkArgs } from './generateLessonFunnelData';
+
+<Meta
+  title="statistics/BarSpark"
+  component={BarSpark}
+/>
+
+# BarSpark
+
+Component `BarSpark` render
+
+export const Template = (args) => <BarSpark {...args} />;
+
+1. Empty value `''`
+
+<Canvas>
+  <Story
+    name="Bar spark"
+    args={getBarSparkArgs()}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
