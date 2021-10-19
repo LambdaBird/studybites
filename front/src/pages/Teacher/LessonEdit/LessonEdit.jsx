@@ -1,4 +1,4 @@
-import { Button, Col, Input, message, Row, Typography } from 'antd';
+import { Button, Col, Input, message, Row } from 'antd';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
@@ -216,6 +216,13 @@ const LessonEdit = () => {
     updateLessonStatusMutation.mutate({ id: lessonId, status: Statuses.DRAFT });
   };
 
+  const handleArchive = async () => {
+    updateLessonStatusMutation.mutate({
+      id: lessonId,
+      status: Statuses.ARCHIVED,
+    });
+  };
+
   const handleInputTitle = (e) => {
     const newText = e.target.value;
     if (newText.length < MAX_NAME_LENGTH) {
@@ -262,6 +269,11 @@ const LessonEdit = () => {
     const key = status ? convertStatusToTranslation(status) : 'draft';
     return `lesson_dashboard.status.${key}`;
   }, [lessonData?.lesson?.status]);
+
+  const isArchived = useMemo(
+    () => lessonData?.lesson?.status === Statuses.ARCHIVED,
+    [lessonData?.lesson?.status],
+  );
 
   return (
     <>
@@ -358,9 +370,9 @@ const LessonEdit = () => {
               </S.RowStyled>
               <S.RowStyled gutter={[0, 10]}>
                 <Col span={24}>
-                  <S.TextLink underline>
+                  <S.DisabledLink>
                     {t('lesson_edit.links.invite')}
-                  </S.TextLink>
+                  </S.DisabledLink>
                 </Col>
                 <S.StudentsCol span={24}>
                   <S.TextLink
@@ -376,14 +388,14 @@ const LessonEdit = () => {
                   />
                 </S.StudentsCol>
                 <Col span={24}>
-                  <S.TextLink underline>
+                  <S.DisabledLink>
                     {t('lesson_edit.links.analytics')}
-                  </S.TextLink>
+                  </S.DisabledLink>
                 </Col>
                 <Col span={24}>
-                  <Typography.Link type="danger" underline>
+                  <S.DangerLink disabled={isArchived} onClick={handleArchive}>
                     {t('lesson_edit.links.archive')}
-                  </Typography.Link>
+                  </S.DangerLink>
                 </Col>
               </S.RowStyled>
               <Row gutter={[0, 8]}>
