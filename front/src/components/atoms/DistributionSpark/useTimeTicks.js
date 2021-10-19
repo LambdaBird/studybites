@@ -1,13 +1,6 @@
 import * as d3Shape from 'd3-shape';
 import { useMemo } from 'react';
 
-import {
-  SP_WD_RAT,
-  SPARK_LINE_HEIGHT,
-  SPARK_LINE_PADD,
-  SPARK_LINE_WIDTH,
-} from './consts';
-
 const findMean = (arr) =>
   arr.filter((x) => !!x).reduce((s, i) => s + i, 0) / arr.length;
 
@@ -23,7 +16,14 @@ const findMedian = (arr) => {
   return sorted[Math.floor(sorted.length / 2)];
 };
 
-const useStatsTicks = (replySeries, sparkTimeScale) =>
+const useTimeTicks = ({
+  replySeries,
+  timeCohortScale,
+  ySparkScale,
+  verticalPadding,
+  sparkHeight,
+  sparkWidth,
+}) =>
   useMemo(() => {
     if (!replySeries?.length) {
       return {};
@@ -32,23 +32,30 @@ const useStatsTicks = (replySeries, sparkTimeScale) =>
     const seriesMedian = findMedian(replySeries);
     const seriesMean = findMean(replySeries);
 
-    const xMedian = sparkTimeScale(seriesMedian);
-    const xMean = sparkTimeScale(seriesMean);
+    const xMedian = timeCohortScale(seriesMedian);
+    const xMean = timeCohortScale(seriesMean);
 
     return {
       median: `${(seriesMedian / 1000).toFixed(2)}s`,
       mean: `${(seriesMean / 1000).toFixed(2)}s`,
       medianLine: d3Shape.line()([
         [0, 0],
-        [xMedian * SP_WD_RAT, 0],
-        [xMedian * SP_WD_RAT, 5],
+        [ySparkScale(xMedian), 0],
+        [ySparkScale(xMedian), verticalPadding],
       ]),
       meanLine: d3Shape.line()([
-        [xMean * SP_WD_RAT, SPARK_LINE_HEIGHT + SPARK_LINE_PADD * 2 - 5],
-        [xMean * SP_WD_RAT, SPARK_LINE_HEIGHT + SPARK_LINE_PADD * 2],
-        [SPARK_LINE_WIDTH, SPARK_LINE_HEIGHT + SPARK_LINE_PADD * 2],
+        [ySparkScale(xMean), sparkHeight + verticalPadding],
+        [ySparkScale(xMean), sparkHeight + verticalPadding * 2],
+        [sparkWidth, sparkHeight + verticalPadding * 2],
       ]),
     };
-  }, [replySeries, sparkTimeScale]);
+  }, [
+    replySeries,
+    timeCohortScale,
+    sparkHeight,
+    verticalPadding,
+    ySparkScale,
+    sparkWidth,
+  ]);
 
-export default useStatsTicks;
+export default useTimeTicks;

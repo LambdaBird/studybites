@@ -7,7 +7,7 @@ const SPARK_LINE_WIDTH = 200;
 const SPARK_LINE_HEIGHT = 32;
 const SPARK_TOP_PADD = 16;
 const SPARK_LINE_PADD = 4;
-const LEFT_MARGIN = 28;
+const LEFT_MARGIN = 42;
 const SP_WD_RAT = (SPARK_LINE_WIDTH - LEFT_MARGIN - 7 * 4) / 7;
 
 const svgWidth = `${SPARK_LINE_WIDTH}px`;
@@ -100,7 +100,10 @@ const BarSpark = ({ series }) => {
       d3Shape.line()([
         [LEFT_MARGIN - 8, 12],
         [xOfMax + LEFT_MARGIN + SP_WD_RAT / 2, 12],
-        [xOfMax + LEFT_MARGIN + SP_WD_RAT / 2, SPARK_LINE_HEIGHT + SPARK_TOP_PADD - heightOfMax],
+        [
+          xOfMax + LEFT_MARGIN + SP_WD_RAT / 2,
+          SPARK_LINE_HEIGHT + SPARK_TOP_PADD - heightOfMax,
+        ],
       ]),
     [xOfMax, heightOfMax],
   );
@@ -119,7 +122,7 @@ const BarSpark = ({ series }) => {
         />
       ))}
       <path stroke="#888" fill="none" strokeWidth={1} d={tickLine} />
-      <text fill="#000" x="0" y="17" style={{ fontSize: '16px' }}>
+      <text fill="#000" x="0" y={SPARK_LINE_HEIGHT + SPARK_LINE_PADD} style={{ fontSize: '32px' }}>
         {bands[indexOfMax]?.count}
       </text>
     </svg>
