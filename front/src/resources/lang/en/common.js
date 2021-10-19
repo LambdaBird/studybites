@@ -20,6 +20,10 @@ export default {
     back_home_button: 'Back Home',
     refresh_page_button: 'Refresh page',
   },
+  keywords_filter: {
+    placeholder: 'Select keyword',
+    no_data: 'No keywords',
+  },
   filter: {
     placeholder: 'Select item',
   },
