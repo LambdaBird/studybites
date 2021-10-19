@@ -77,12 +77,19 @@ const barColor = css`
 export const BiteBar = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: flex-end;
   width: ${countWidthPercent}%;
   ${barColor}
+
+  div {
+    flex-grow: 1;
+  }
 `;
 
 export const LandedNumber = styled.div`
+  div& {
+    flex-grow: 0;
+  }
   padding: 0.3em;
   text-align: right;
   font-size: 1em;
