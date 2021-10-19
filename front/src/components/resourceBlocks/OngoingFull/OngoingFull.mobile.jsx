@@ -10,7 +10,7 @@ import DefaultLessonImage from '@sb-ui/resources/img/lesson.svg';
 import { useResource } from './useResource';
 import * as S from './OngoingFull.mobile.styled';
 
-const OngoingFullMobile = ({ resource, resourceKey }) => {
+const OngoingFullMobile = ({ resource, resourceKey, isFinished }) => {
   const { t } = useTranslation('user');
   const {
     name,
@@ -35,6 +35,10 @@ const OngoingFullMobile = ({ resource, resourceKey }) => {
     }
     return Math.round((interactivePassed / interactiveTotal) * 100);
   }, [resource, interactivePassed, interactiveTotal]);
+
+  const buttonTranslationKey = `home.ongoing_lessons.${
+    isFinished ? 'view_button' : 'continue_button'
+  }`;
 
   return (
     <S.Main size="large" wrap={false}>
@@ -65,7 +69,7 @@ const OngoingFullMobile = ({ resource, resourceKey }) => {
       </S.DescriptionRow>
       <S.EnrollRow>
         <S.Enroll type="primary" onClick={handleContinueResource}>
-          {t('home.ongoing_lessons.continue_button')}
+          {t(buttonTranslationKey)}
         </S.Enroll>
       </S.EnrollRow>
       <S.AuthorContainer>
@@ -79,6 +83,7 @@ const OngoingFullMobile = ({ resource, resourceKey }) => {
 OngoingFullMobile.propTypes = {
   resource: LessonType.isRequired,
   resourceKey: PropTypes.string.isRequired,
+  isFinished: PropTypes.bool,
 };
 
 export default OngoingFullMobile;
