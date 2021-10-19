@@ -109,7 +109,8 @@ export default {
     fill_the_gap: {
       title: 'Заполнить пропуски',
       description: 'Заполнить пропущенные слова',
-      hint: '* Текст внутри {{ }} будет скрыт для студентов',
+      hint_part_one: '* Текст внутри ',
+      hint_part_two: ' будет скрыт для студентов',
       placeholder: 'Введите текст',
     },
     match: {
