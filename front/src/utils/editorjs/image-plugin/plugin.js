@@ -1,4 +1,5 @@
 import { allowedImageTypes } from '@sb-ui/utils/constants';
+import { isBackspaceValid } from '@sb-ui/utils/editorjs/toolsHelper';
 
 import { uploadFile } from '../utils';
 
@@ -170,6 +171,12 @@ export default class Image {
     });
   }
 
+  linkKeydown(event) {
+    if (isBackspaceValid(event, this.nodes.linkInput.value)) {
+      this.api.blocks.delete();
+    }
+  }
+
   createLinkInput() {
     this.nodes.linkInput = createElement({
       tagName: 'input',
@@ -180,6 +187,10 @@ export default class Image {
       },
     });
     this.nodes.linkInput.addEventListener('input', this.onLinkInput);
+    this.nodes.linkInput.addEventListener(
+      'keydown',
+      this.linkKeydown.bind(this),
+    );
     return createElement({
       children: [this.nodes.linkInput],
     });
