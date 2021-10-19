@@ -1,4 +1,4 @@
-import { Button, Col, Input, message, Row, Typography } from 'antd';
+import { Button, Col, Input, message, Row } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -36,7 +36,7 @@ const CourseEdit = () => {
     handlePublish,
     handleDraft,
     isUpdateInProgress,
-    isSaveButtonDisabled,
+    isButtonsDisabled,
   } = useCourse({
     isEditCourse,
     courseId,
@@ -283,7 +283,7 @@ const CourseEdit = () => {
             <S.RowStyled>
               <Col span={24}>
                 <S.SaveButton
-                  disabled={isSaveButtonDisabled}
+                  disabled={isButtonsDisabled}
                   onClick={handleSave}
                   icon={<SaveOutlined />}
                 >
@@ -293,25 +293,23 @@ const CourseEdit = () => {
             </S.RowStyled>
             <S.RowStyled gutter={[0, 10]}>
               <Col span={24}>
-                <S.TextLink disabled underline>
-                  {t('lesson_edit.links.invite')}
-                </S.TextLink>
+                <S.DisabledLink>{t('lesson_edit.links.invite')}</S.DisabledLink>
               </Col>
               <S.StudentsCol span={24}>
-                <S.TextLink disabled underline>
+                <S.DisabledLink>
                   {t('lesson_edit.links.students')}
-                </S.TextLink>
+                </S.DisabledLink>
                 <S.StudentsCount showZero count={0} />
               </S.StudentsCol>
               <Col span={24}>
-                <S.TextLink disabled underline>
+                <S.DisabledLink>
                   {t('lesson_edit.links.analytics')}
-                </S.TextLink>
+                </S.DisabledLink>
               </Col>
               <Col span={24}>
-                <Typography.Link disabled type="danger" underline>
+                <S.DisabledLink type="danger">
                   {t('lesson_edit.links.archive')}
-                </Typography.Link>
+                </S.DisabledLink>
               </Col>
             </S.RowStyled>
             <Row gutter={[0, 16]}>
@@ -319,6 +317,7 @@ const CourseEdit = () => {
               <Col span={24}>
                 <TextArea
                   value={description}
+                  disabled={isButtonsDisabled}
                   placeholder={t('lesson_edit.description.placeholder')}
                   onChange={handleChangeDescription}
                   showCount
@@ -329,7 +328,11 @@ const CourseEdit = () => {
             <Row gutter={[0, 16]}>
               <Col span={24}>{t('course_edit.keywords')}</Col>
               <Col span={24}>
-                <KeywordsSelect values={keywords} setValues={setKeywords} />
+                <KeywordsSelect
+                  disabled={isButtonsDisabled}
+                  values={keywords}
+                  setValues={setKeywords}
+                />
               </Col>
             </Row>
           </S.RightCol>
