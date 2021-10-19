@@ -80,3 +80,17 @@ export const setPropsInTool = (tool, props) => {
     tool[prop] = props[prop];
   });
 };
+
+export const deletePropsFromTool = (tool, propsArray) => {
+  // eslint-disable-next-line no-param-reassign
+  propsArray.forEach((prop) => delete tool[prop]);
+};
+
+export const moveCaret = (win, charCount) => {
+  const selection = win.getSelection();
+  if (selection.rangeCount > 0) {
+    const textNode = selection.focusNode;
+    const newOffset = selection.focusOffset + charCount;
+    selection.collapse(textNode, Math.min(textNode.length, newOffset));
+  }
+};
