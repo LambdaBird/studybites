@@ -20,6 +20,10 @@ export default {
     back_home_button: 'Назад на Главную',
     refresh_page_button: 'Обновить страницу',
   },
+  keywords_filter: {
+    placeholder: 'Выберите ключевое слово',
+    no_data: 'Нет ключевых слов',
+  },
   filter: {
     placeholder: 'Выберите элемент',
   },
