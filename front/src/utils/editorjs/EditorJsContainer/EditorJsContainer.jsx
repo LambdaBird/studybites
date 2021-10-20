@@ -12,7 +12,9 @@ import * as S from './EditorJsContainer.styled';
 const EditorJsContainer = forwardRef((props, ref) => {
   const mounted = useRef();
   const { t } = useTranslation('editorjs');
-  const { prepareToolbox, updateLanguage } = useToolbox();
+  const instance = useRef(null);
+
+  const { prepareToolbox, updateLanguage } = useToolbox({ editor: instance });
 
   const { children, language } = props;
   const holder = useMemo(
@@ -24,7 +26,6 @@ const EditorJsContainer = forwardRef((props, ref) => {
   );
 
   const initialLanguage = useRef(language);
-  const instance = useRef(null);
 
   const handleChange = useCallback(
     async (api) => {

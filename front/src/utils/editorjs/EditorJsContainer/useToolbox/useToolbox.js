@@ -6,6 +6,7 @@ import { debounce } from '@sb-ui/utils/utils';
 
 import {
   DEBOUNCE_SCROLL_TOOLBOX_TIME,
+  KEYS,
   TOOLBOX_OPENED,
   TOOLBOX_UPPER,
 } from './constants';
@@ -26,7 +27,7 @@ import {
 } from './toolboxItemsHelpers';
 import { destroyObserver, initObserver } from './toolboxObserver';
 
-export const useToolbox = () => {
+export const useToolbox = ({ editor }) => {
   const { t } = useTranslation('editorjs');
   const toolbox = useRef(null);
   const [isReady, setIsReady] = useState(false);
@@ -69,6 +70,12 @@ export const useToolbox = () => {
   const prepareToolbox = useCallback(() => {
     toolbox.current = document.querySelector('.ce-toolbox');
     const wrapper = toolbox.current;
+    wrapper.addEventListener('keydown', (e) => {
+      if (e.code === KEYS.ESCAPE) {
+        const currentBlockIndex = editor.current.blocks.getCurrentBlockIndex();
+        editor.current.caret.setToBlock(currentBlockIndex);
+      }
+    });
     const basicCheck = wrapper?.querySelector('.toolbox-basic-items');
     if (!wrapper || basicCheck) {
       return;
@@ -118,6 +125,9 @@ export const useToolbox = () => {
     transformDefaultMenuItems(interactiveItems, interactiveMenuItemsWrapper, t);
     transformDefaultMenuItems(basicItems, basicMenuItemsWrapper, t);
     setIsReady(true);
+    // EditorJS instance ref is passing (creating with useRef())
+    // No need passing to useCallback dependencies
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [t]);
 
   useEffect(() => {
