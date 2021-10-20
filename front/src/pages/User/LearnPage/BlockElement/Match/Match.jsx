@@ -1,7 +1,6 @@
 import { Typography } from 'antd';
 import { useCallback, useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons';
 
 import LearnContext from '@sb-ui/contexts/LearnContext';
 import MatchSelect from '@sb-ui/pages/User/LearnPage/BlockElement/Match/MatchSelect/MatchSelect';
@@ -18,6 +17,7 @@ import { ChunkWrapper } from '@sb-ui/pages/User/LearnPage/LearnPage.styled';
 import { RESPONSE_TYPE } from '@sb-ui/pages/User/LearnPage/utils';
 
 import { verifyAnswers } from './verifyAnswers';
+import { FailCircle, SuccessCircle } from '../BlockElement.styled';
 import * as S from './Match.styled';
 
 const { Text } = Typography;
@@ -81,14 +81,14 @@ const Match = ({ blockId, revision, answer, content, reply, isSolved }) => {
         {correct ? (
           <S.AnswerWrapper>
             <Text>{t('lesson.answer_result.correct')}</Text>
-            <CheckCircleTwoTone twoToneColor="#52c41a" />
+            <SuccessCircle />
           </S.AnswerWrapper>
         ) : (
           <>
             <S.AnswerWrapperWrong>
               <S.AnswerWrapperWrongTitle>
                 <Text>{t('lesson.answer_result.wrong')}</Text>
-                <CloseCircleTwoTone twoToneColor="#F5222D" />
+                <FailCircle />
               </S.AnswerWrapperWrongTitle>
               <S.MatchWrapper>
                 <MatchSelect {...correctResult} disabled showCorrect />
