@@ -74,7 +74,7 @@ async function handler({ user: { id: userId }, params: { lessonId } }) {
   /**
    * get lesson
    */
-  const lesson = await Lesson.getLessonWithProgress({ lessonId });
+  const lesson = await Lesson.getLessonWithProgress({ lessonId, userId });
   /**
    * get last record from the results table
    */
