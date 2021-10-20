@@ -33,6 +33,7 @@ export default {
       view_all_lessons: 'Посмотреть все мои уроки',
       view_all_courses: 'Посмотреть все мои курсы',
       continue_button: 'Продолжить',
+      view_button: 'Посмотреть',
     },
     ongoing_courses: {
       title: 'Текущие курсы',

@@ -33,6 +33,7 @@ export default {
       view_all_lessons: 'View all my lessons',
       view_all_courses: 'View all my courses',
       continue_button: 'Continue',
+      view_button: 'View',
     },
     ongoing_courses: {
       title: 'Ongoing courses',

@@ -10,7 +10,7 @@ import DefaultLessonImage from '@sb-ui/resources/img/lesson.svg';
 import { useResource } from './useResource';
 import * as S from './OngoingFull.desktop.styled';
 
-const OngoingFullDesktop = ({ resource, resourceKey }) => {
+const OngoingFullDesktop = ({ resource, resourceKey, isFinished }) => {
   const { t } = useTranslation('user');
   const {
     name,
@@ -35,6 +35,10 @@ const OngoingFullDesktop = ({ resource, resourceKey }) => {
     }
     return Math.round((interactivePassed / interactiveTotal) * 100);
   }, [resource, interactivePassed, interactiveTotal]);
+
+  const buttonTranslationKey = `home.ongoing_lessons.${
+    isFinished ? 'view_button' : 'continue_button'
+  }`;
 
   return (
     <>
@@ -69,7 +73,7 @@ const OngoingFullDesktop = ({ resource, resourceKey }) => {
             </S.EnrollColKeyword>
             <S.EnrollColButton>
               <Button type="primary" onClick={handleContinueResource}>
-                {t('home.ongoing_lessons.continue_button')}
+                {t(buttonTranslationKey)}
               </Button>
             </S.EnrollColButton>
           </S.EnrollRow>
@@ -82,6 +86,7 @@ const OngoingFullDesktop = ({ resource, resourceKey }) => {
 OngoingFullDesktop.propTypes = {
   resource: LessonType.isRequired,
   resourceKey: PropTypes.string.isRequired,
+  isFinished: PropTypes.bool,
 };
 
 export default OngoingFullDesktop;
