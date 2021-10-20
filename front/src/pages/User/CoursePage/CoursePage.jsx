@@ -45,7 +45,7 @@ const CoursePage = () => {
 
   useEffect(
     () => () => {
-      if (location.state.fromEnroll && history.action === HISTORY_BACK) {
+      if (location?.state?.fromEnroll && history.action === HISTORY_BACK) {
         history.replace(USER_HOME);
       }
     },
