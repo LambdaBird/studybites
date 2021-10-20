@@ -8,6 +8,7 @@ export const DEBOUNCE_SCROLL_TOOLBOX_TIME = 50; // ms;
 export const KEYS = {
   TAB: 'Tab',
   ENTER: 'Enter',
+  ESCAPE: 'Escape',
   ARROW_UP: 'ArrowUp',
   ARROW_DOWN: 'ArrowDown',
 };
