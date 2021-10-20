@@ -57,7 +57,7 @@ export const ChunkWrapper = styled.div`
   width: 100%;
   background-color: ${variables['learn-chunk-background']};
   border-radius: 8px;
-  padding: 2rem;
+  padding: 1rem;
 
   @media (max-width: 767px) {
     margin-top: ${(props) => (props.isBottom ? 'auto' : '')};
