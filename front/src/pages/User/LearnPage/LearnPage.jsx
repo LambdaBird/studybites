@@ -49,7 +49,7 @@ const LearnPage = () => {
     <>
       <Helmet>
         <title>
-          {t('pages.learn')}
+          {t('pages.learn', { id: lessonId })}
           {sbPostfix}
         </title>
       </Helmet>
