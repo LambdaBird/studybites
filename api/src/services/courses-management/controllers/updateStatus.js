@@ -44,16 +44,24 @@ export const options = {
 
 async function handler({ body: { status }, params: { courseId } }) {
   const {
-    models: { Course },
+    models: { Course, Lesson },
   } = this;
 
   const course = await Course.getCourseWithLessons({ courseId });
 
   if (status === 'Public') {
     const isCanPublish = !course.lessons?.some(
-      (lesson) => lesson.status === 'Draft' || lesson.status === 'Archived',
+      (lesson) => lesson.status === 'Archived',
     );
     if (isCanPublish) {
+      const draftLessons = course.lessons.filter(
+        (lesson) => lesson.status === 'Draft',
+      );
+      await Lesson.updateLessonsStatus({
+        lessons: draftLessons,
+        status: 'CourseOnly',
+      });
+
       return Course.updateCourseStatus({ courseId, status });
     }
     throw new BadRequestError(errors.USER_ERR_PUBLISH_RESTRICTED);

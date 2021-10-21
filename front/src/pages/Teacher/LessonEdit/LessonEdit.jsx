@@ -10,6 +10,7 @@ import Header from '@sb-ui/components/molecules/Header';
 import KeywordsSelect from '@sb-ui/components/molecules/KeywordsSelect';
 import { useLessonStatus } from '@sb-ui/hooks/useLessonStatus';
 import { Statuses } from '@sb-ui/pages/Teacher/Home/Dashboard/constants';
+import { convertStatusToTranslation } from '@sb-ui/pages/Teacher/LessonEdit/statusHelper';
 import { queryClient } from '@sb-ui/query';
 import {
   createLesson,
@@ -256,6 +257,12 @@ const LessonEdit = () => {
 
   const [headerHide, setHeaderHide] = useState(false);
 
+  const lessonStatusKey = useMemo(() => {
+    const status = lessonData?.lesson?.status;
+    const key = status ? convertStatusToTranslation(status) : 'draft';
+    return `lesson_dashboard.status.${key}`;
+  }, [lessonData?.lesson?.status]);
+
   return (
     <>
       <Helmet>
@@ -305,13 +312,7 @@ const LessonEdit = () => {
               />
               <S.BadgeWrapper>
                 <S.CardBadge>
-                  <S.StatusText>
-                    {lessonData?.lesson.status
-                      ? t(
-                          `lesson_dashboard.status.${lessonData?.lesson.status.toLocaleLowerCase()}`,
-                        )
-                      : t('lesson_dashboard.status.draft')}
-                  </S.StatusText>
+                  <S.StatusText>{t(lessonStatusKey)}</S.StatusText>
                 </S.CardBadge>
               </S.BadgeWrapper>
               {isRenderEditor && isEditorDisabled === true && (
