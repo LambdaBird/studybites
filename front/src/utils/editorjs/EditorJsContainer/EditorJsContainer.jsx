@@ -91,7 +91,7 @@ const EditorJsContainer = forwardRef((props, ref) => {
         onReady: () => handleReady(newInstance),
 
         ...(onChange && {
-          onChange: handleChange,
+          onChange: () => handleChange(newInstance),
         }),
         ...anotherProps,
         ...data,

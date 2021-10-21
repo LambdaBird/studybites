@@ -1,5 +1,5 @@
-import { Button, Col, Input, message, Row, Typography } from 'antd';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { Button, Col, Input, message, Modal, Row, Typography } from 'antd';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
@@ -32,10 +32,10 @@ import * as S from './LessonEdit.styled';
 const { TextArea } = Input;
 
 const MAX_NAME_LENGTH = 255;
+const HISTORY_POP = 'POP';
 
 const LessonEdit = () => {
   const { id: lessonId } = useParams();
-
   const [isEditLesson] = useState(lessonId !== 'new');
   const isCurrentlyEditing = useMemo(() => lessonId !== 'new', [lessonId]);
 
@@ -54,10 +54,17 @@ const LessonEdit = () => {
   const [isEditorDisabled, setIsEditorDisabled] = useState(false);
 
   const inputTitle = useRef(null);
-
+  const lastHistory = useRef(null);
+  const unblockFunc = useRef(null);
+  const [currentBlocks, setCurrentBlocks] = useState(null);
+  const [allowNavigation, setAllowNavigation] = useState(true);
   const editorJSRef = useRef(null);
   const [dataBlocks, setDataBlocks] = useState(null);
   const undoPluginRef = useRef(null);
+  const currentLocation = useMemo(
+    () => LESSONS_EDIT.replace(':id', lessonId),
+    [lessonId],
+  );
 
   const { data: lessonData, isLoading } = useQuery(
     [TEACHER_LESSON_BASE_KEY, { id: lessonId }],
@@ -147,10 +154,45 @@ const LessonEdit = () => {
     }
   }, [lessonData?.lesson]);
 
+  const checkUnsaved = useCallback(
+    ({
+      onDiscard = () => {},
+      onSettled = () => {},
+      onSaved = () => {},
+      onCancel = () => {},
+    }) => {
+      if (!allowNavigation) {
+        Modal.destroyAll();
+        setTimeout(() => {
+          Modal.confirm({
+            title: t('lesson_edit.unsaved_modal.title'),
+            content: t('lesson_edit.unsaved_modal.content'),
+            okText: t('lesson_edit.unsaved_modal.ok_text'),
+            cancelText: t('lesson_edit.unsaved_modal.cancel_text'),
+            onOk: () => {
+              onDiscard();
+              onSaved();
+            },
+            onCancel: () => {
+              onCancel();
+            },
+          });
+        }, 50);
+
+        return;
+      }
+      onSettled();
+      onSaved();
+    },
+    [allowNavigation, t],
+  );
+
   useEffect(() => {
     if (lessonData) {
+      const blocks = prepareEditorData(lessonData?.lesson?.blocks);
+      setCurrentBlocks(blocks);
       setDataBlocks({
-        blocks: prepareEditorData(lessonData?.lesson?.blocks),
+        blocks,
       });
       if (!lessonData.lesson.status || lessonData?.lesson.status === 'Draft') {
         setIsEditorDisabled(false);
@@ -204,10 +246,20 @@ const LessonEdit = () => {
     }
   };
 
+  const isBlocksChanged = useCallback(() => {
+    const oldBlocks = prepareEditorData(lessonData?.lesson?.blocks);
+    // TODO: Compare with fast-deep-equal after adding this library
+    return JSON.stringify(oldBlocks) !== JSON.stringify(currentBlocks);
+  }, [currentBlocks, lessonData?.lesson?.blocks]);
+
   const handlePublish = async () => {
-    updateLessonStatusMutation.mutate({
-      id: lessonId,
-      status: Statuses.PUBLIC,
+    checkUnsaved({
+      onSaved: () => {
+        updateLessonStatusMutation.mutate({
+          id: lessonId,
+          status: Statuses.PUBLIC,
+        });
+      },
     });
   };
 
@@ -250,11 +302,92 @@ const LessonEdit = () => {
       instanceRef: (instance) => {
         editorJSRef.current = instance;
       },
+      onChange: (api, blocks) => {
+        setCurrentBlocks(blocks.blocks);
+      },
     }),
     [dataBlocks, language, t],
   );
 
   const [headerHide, setHeaderHide] = useState(false);
+
+  useEffect(() => {
+    if (allowNavigation) {
+      unblockFunc.current?.();
+      const { location, action } = lastHistory.current || {};
+      if (location) {
+        lastHistory.current = null;
+        if (action !== HISTORY_POP) {
+          history.push({ ...location });
+        } else {
+          window.location.href = location.pathname;
+        }
+      }
+    } else {
+      if (unblockFunc.current) {
+        unblockFunc.current?.();
+      }
+      unblockFunc.current = history.block((location, action) => {
+        lastHistory.current = {
+          location,
+          action,
+        };
+        if (action !== HISTORY_POP) {
+          checkUnsaved({
+            onDiscard: () => {
+              setAllowNavigation(true);
+            },
+          });
+          return false;
+        }
+        if (action === HISTORY_POP) {
+          checkUnsaved({
+            onCancel: () => {
+              window.history.pushState('', '', currentLocation);
+            },
+            onDiscard: () => {
+              setAllowNavigation(true);
+            },
+          });
+          return false;
+        }
+
+        return true;
+      });
+    }
+
+    return () => {
+      unblockFunc.current?.();
+    };
+  }, [allowNavigation, checkUnsaved, currentLocation, history]);
+
+  useEffect(() => {
+    if (isBlocksChanged()) {
+      setAllowNavigation(false);
+    } else {
+      lastHistory.current = null;
+      setAllowNavigation(true);
+    }
+  }, [currentBlocks, isBlocksChanged]);
+
+  const handlerBeforeUnload = useCallback(
+    (event) => {
+      if (!allowNavigation) {
+        event.preventDefault();
+        // eslint-disable-next-line no-param-reassign
+        event.returnValue = '';
+      }
+    },
+    [allowNavigation],
+  );
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', handlerBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handlerBeforeUnload);
+    };
+  }, [allowNavigation, handlerBeforeUnload, history]);
 
   return (
     <>
