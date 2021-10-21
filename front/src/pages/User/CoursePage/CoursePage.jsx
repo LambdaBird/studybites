@@ -37,7 +37,7 @@ const CoursePage = () => {
       keepPreviousData: true,
     },
   );
-  const { lessons } = responseData?.course || {};
+  const { lessons, name } = responseData?.course || {};
 
   const author = useMemo(
     () =>
@@ -58,7 +58,7 @@ const CoursePage = () => {
     <S.Page>
       <Helmet>
         <title>
-          {t('pages.course', { id: courseId })}
+          {t('pages.course', { name })}
           {sbPostfix}
         </title>
       </Helmet>
