@@ -1,5 +1,6 @@
 import { Skeleton, Typography } from 'antd';
 import { useEffect, useMemo } from 'react';
+import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
@@ -7,6 +8,7 @@ import { useHistory, useLocation, useParams } from 'react-router-dom';
 import Public from '@sb-ui/components/resourceBlocks/Public';
 import { PAGE_SIZE } from '@sb-ui/pages/User/Lessons/ResourcesList/constants';
 import { getCourseLessons } from '@sb-ui/utils/api/v1/student';
+import { sbPostfix } from '@sb-ui/utils/constants';
 import { USER_HOME } from '@sb-ui/utils/paths';
 import { USER_ENROLLED_COURSE } from '@sb-ui/utils/queries';
 import { skeletonArray } from '@sb-ui/utils/utils';
@@ -35,7 +37,7 @@ const CoursePage = () => {
       keepPreviousData: true,
     },
   );
-  const { lessons } = responseData?.course || {};
+  const { lessons, name } = responseData?.course || {};
 
   const author = useMemo(
     () =>
@@ -54,6 +56,12 @@ const CoursePage = () => {
 
   return (
     <S.Page>
+      <Helmet>
+        <title>
+          {t('pages.course', { name })}
+          {sbPostfix}
+        </title>
+      </Helmet>
       <S.BlockWrapper justify="start" align="top">
         {isLoading ? (
           <Skeleton loading={isLoading} paragraph={{ rows: 1 }} active />

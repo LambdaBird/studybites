@@ -3,6 +3,8 @@ export default {
     courses: 'Мои курсы',
     lessons: 'Мои уроки',
     home: 'Домашняя страница',
+    learn: 'Урок {{ name }}',
+    course: 'Курс {{ name }}',
   },
   enroll_modal: {
     review: {
