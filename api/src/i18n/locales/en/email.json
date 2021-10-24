@@ -10,5 +10,9 @@
   "email_confirmation": {
     "subject": "Email confirmation",
     "html": "Confirm email link {{link}}"
+  },
+  "invite": {
+    "subject": "You were invited to start learning at StudyBites",
+    "html": "Follow the link to start: {{link}}"
   }
 }

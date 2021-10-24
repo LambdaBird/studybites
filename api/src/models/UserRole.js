@@ -251,12 +251,13 @@ class UserRole extends BaseModel {
   }
 
   static async enrollToResource({
+    trx,
     userId,
     resourceId,
     resourceType,
     resourceStatuses,
   }) {
-    await this.query()
+    await this.query(trx)
       .findById(resourceId)
       .from(resourceType === resources.COURSE.name ? 'courses' : 'lessons')
       .whereIn('status', resourceStatuses)

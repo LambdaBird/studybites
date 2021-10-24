@@ -5,8 +5,19 @@ import {
   studentJohn,
   defaultPassword,
 } from '../../seeds/testData/users';
-import { authorizeUser, createLesson } from './utils';
-import { lessonServiceErrors, lessonServiceMessages } from '../../src/config';
+import {
+  authorizeUser,
+  createCourse,
+  createLesson,
+  prepareCourseFromSeed,
+} from './utils';
+import {
+  courseServiceErrors,
+  courseServiceMessages,
+  lessonServiceErrors,
+  lessonServiceMessages,
+} from '../../src/config';
+import { courseToTest } from '../../seeds/testData/courses';
 
 describe('Invites service test', () => {
   const testContext = {
@@ -71,377 +82,753 @@ describe('Invites service test', () => {
     await testContext.app.close();
   });
 
-  describe('Private lesson should not be enrollable without an invite', () => {
-    let lessonToEnroll;
+  describe('Enroll to a lesson with an invite', () => {
+    describe('Private lesson should not be enrollable without an invite', () => {
+      let lessonToEnroll;
 
-    beforeAll(async () => {
-      lessonToEnroll = await createLesson({
-        app: testContext.app,
-        credentials: teachersCredentials,
-        body: {
-          lesson: {
-            name: 'Private Lesson',
-            status: 'Private',
+      beforeAll(async () => {
+        lessonToEnroll = await createLesson({
+          app: testContext.app,
+          credentials: teachersCredentials,
+          body: {
+            lesson: {
+              name: 'Private Lesson',
+              status: 'Private',
+            },
           },
-        },
+        });
+      });
+
+      it('should return an error', async () => {
+        const response = await testContext.studentsRequest({
+          url: `lessons/${lessonToEnroll.lesson.id}/enroll`,
+        });
+
+        const payload = JSON.parse(response.payload);
+
+        expect(response.statusCode).toBe(400);
+        expect(payload).toHaveProperty('message');
+        expect(payload.message).toBe(
+          lessonServiceErrors.LESSON_ERR_FAIL_ENROLL,
+        );
       });
     });
 
-    it('should return an error', async () => {
-      const response = await testContext.studentsRequest({
-        url: `lessons/${lessonToEnroll.lesson.id}/enroll`,
+    describe('Creation of a general link', () => {
+      let lessonToInvite;
+
+      beforeAll(async () => {
+        lessonToInvite = await createLesson({
+          app: testContext.app,
+          credentials: teachersCredentials,
+          body: {
+            lesson: {
+              name: 'Private Lesson',
+              status: 'Private',
+            },
+          },
+        });
       });
 
-      const payload = JSON.parse(response.payload);
+      it('should successfully create a link', async () => {
+        const response = await testContext.teachersRequest({
+          url: `invites`,
+          body: {
+            resourceId: lessonToInvite.lesson.id,
+            resourceType: 'lesson',
+          },
+        });
 
-      expect(response.statusCode).toBe(400);
-      expect(payload).toHaveProperty('message');
-      expect(payload.message).toBe(lessonServiceErrors.LESSON_ERR_FAIL_ENROLL);
+        const payload = JSON.parse(response.payload);
+
+        expect(response.statusCode).toBe(200);
+        expect(payload).toHaveProperty('invites');
+        expect(payload.invites[0]).toMatchObject({
+          email: null,
+          invite: expect.any(String),
+        });
+      });
+    });
+
+    describe('Enroll with a general link', () => {
+      let lessonToEnroll;
+      let invite;
+
+      beforeAll(async () => {
+        lessonToEnroll = await createLesson({
+          app: testContext.app,
+          credentials: teachersCredentials,
+          body: {
+            lesson: {
+              name: 'Private Lesson',
+              status: 'Private',
+            },
+          },
+        });
+
+        const response = await testContext.teachersRequest({
+          url: `invites`,
+          body: {
+            resourceId: lessonToEnroll.lesson.id,
+            resourceType: 'lesson',
+          },
+        });
+
+        const { invites } = JSON.parse(response.payload);
+        invite = invites[0].invite;
+      });
+
+      it('should be enrollable', async () => {
+        const response = await testContext.studentsRequest({
+          url: `lessons/${lessonToEnroll.lesson.id}/enroll`,
+          body: {
+            invite,
+          },
+        });
+
+        const payload = JSON.parse(response.payload);
+
+        expect(response.statusCode).toBe(200);
+        expect(payload).toHaveProperty('message');
+        expect(payload.message).toBe(
+          lessonServiceMessages.LESSON_MSG_SUCCESS_ENROLL,
+        );
+      });
+    });
+
+    describe('Enroll with an invalid invite', () => {
+      let lessonToEnroll;
+      let lessonToInvite;
+      let invite;
+
+      beforeAll(async () => {
+        lessonToEnroll = await createLesson({
+          app: testContext.app,
+          credentials: teachersCredentials,
+          body: {
+            lesson: {
+              name: 'Private Lesson',
+              status: 'Private',
+            },
+          },
+        });
+        lessonToInvite = await createLesson({
+          app: testContext.app,
+          credentials: teachersCredentials,
+          body: {
+            lesson: {
+              name: 'Private Lesson',
+              status: 'Private',
+            },
+          },
+        });
+
+        const response = await testContext.teachersRequest({
+          url: `invites`,
+          body: {
+            resourceId: lessonToInvite.lesson.id,
+            resourceType: 'lesson',
+          },
+        });
+
+        const { invites } = JSON.parse(response.payload);
+        invite = invites[0].invite;
+      });
+
+      it('should return an error', async () => {
+        const response = await testContext.studentsRequest({
+          url: `lessons/${lessonToEnroll.lesson.id}/enroll`,
+          body: {
+            invite,
+          },
+        });
+
+        const payload = JSON.parse(response.payload);
+
+        expect(response.statusCode).toBe(400);
+        expect(payload).toHaveProperty('message');
+        expect(payload.message).toBe(
+          lessonServiceErrors.LESSON_ERR_FAIL_ENROLL,
+        );
+      });
+    });
+
+    describe('Creation of an invite with an email', () => {
+      let lessonToInvite;
+
+      beforeAll(async () => {
+        lessonToInvite = await createLesson({
+          app: testContext.app,
+          credentials: teachersCredentials,
+          body: {
+            lesson: {
+              name: 'Private Lesson',
+              status: 'Private',
+            },
+          },
+        });
+      });
+
+      it('should successfully create a link', async () => {
+        const response = await testContext.teachersRequest({
+          url: `invites`,
+          body: {
+            resourceId: lessonToInvite.lesson.id,
+            resourceType: 'lesson',
+            emails: [studentJohn.email],
+          },
+        });
+
+        const payload = JSON.parse(response.payload);
+
+        expect(response.statusCode).toBe(200);
+        expect(payload).toHaveProperty('invites');
+        expect(payload.invites[0]).toMatchObject({
+          email: studentJohn.email,
+          invite: expect.any(String),
+        });
+      });
+    });
+
+    describe('Enroll with an invite', () => {
+      let lessonToEnroll;
+      let invite;
+
+      beforeAll(async () => {
+        lessonToEnroll = await createLesson({
+          app: testContext.app,
+          credentials: teachersCredentials,
+          body: {
+            lesson: {
+              name: 'Private Lesson',
+              status: 'Private',
+            },
+          },
+        });
+
+        const response = await testContext.teachersRequest({
+          url: `invites`,
+          body: {
+            resourceId: lessonToEnroll.lesson.id,
+            resourceType: 'lesson',
+            emails: [studentJohn.email],
+          },
+        });
+
+        const { invites } = JSON.parse(response.payload);
+        invite = invites[0].invite;
+      });
+
+      it('should be enrollable', async () => {
+        const response = await testContext.studentsRequest({
+          url: `lessons/${lessonToEnroll.lesson.id}/enroll`,
+          body: {
+            invite,
+          },
+        });
+
+        const payload = JSON.parse(response.payload);
+
+        expect(response.statusCode).toBe(200);
+        expect(payload).toHaveProperty('message');
+        expect(payload.message).toBe(
+          lessonServiceMessages.LESSON_MSG_SUCCESS_ENROLL,
+        );
+      });
+    });
+
+    describe('Enroll with an invalid invite', () => {
+      let lessonToEnroll;
+      let invite;
+
+      beforeAll(async () => {
+        lessonToEnroll = await createLesson({
+          app: testContext.app,
+          credentials: teachersCredentials,
+          body: {
+            lesson: {
+              name: 'Private Lesson',
+              status: 'Private',
+            },
+          },
+        });
+
+        const response = await testContext.teachersRequest({
+          url: `invites`,
+          body: {
+            resourceId: lessonToEnroll.lesson.id,
+            resourceType: 'lesson',
+            emails: ['student@test.io'],
+          },
+        });
+
+        const { invites } = JSON.parse(response.payload);
+        invite = invites[0].invite;
+      });
+
+      it('should return an error', async () => {
+        const response = await testContext.studentsRequest({
+          url: `lessons/${lessonToEnroll.lesson.id}/enroll`,
+          body: {
+            invite,
+          },
+        });
+
+        const payload = JSON.parse(response.payload);
+
+        expect(response.statusCode).toBe(400);
+        expect(payload).toHaveProperty('message');
+        expect(payload.message).toBe(
+          lessonServiceErrors.LESSON_ERR_FAIL_ENROLL,
+        );
+      });
+    });
+
+    describe('Revoking an invite by creating a new one', () => {
+      let lessonToEnroll;
+      let revokedInvite;
+      let workingInvite;
+
+      beforeAll(async () => {
+        lessonToEnroll = await createLesson({
+          app: testContext.app,
+          credentials: teachersCredentials,
+          body: {
+            lesson: {
+              name: 'Private Lesson',
+              status: 'Private',
+            },
+          },
+        });
+
+        const revokedInviteResponse = await testContext.teachersRequest({
+          url: `invites`,
+          body: {
+            resourceId: lessonToEnroll.lesson.id,
+            resourceType: 'lesson',
+            emails: [studentJohn.email],
+          },
+        });
+
+        const { invites: revokedInvitesPayload } = JSON.parse(
+          revokedInviteResponse.payload,
+        );
+        revokedInvite = revokedInvitesPayload[0].invite;
+
+        const workingInviteResponse = await testContext.teachersRequest({
+          url: `invites`,
+          body: {
+            resourceId: lessonToEnroll.lesson.id,
+            resourceType: 'lesson',
+            emails: [studentJohn.email],
+          },
+        });
+
+        const { invites: workingInvitePayload } = JSON.parse(
+          workingInviteResponse.payload,
+        );
+        workingInvite = workingInvitePayload[0].invite;
+      });
+
+      it('should return an error if enroll with a revoked invite', async () => {
+        const response = await testContext.studentsRequest({
+          url: `lessons/${lessonToEnroll.lesson.id}/enroll`,
+          body: {
+            invite: revokedInvite,
+          },
+        });
+
+        const payload = JSON.parse(response.payload);
+
+        expect(response.statusCode).toBe(400);
+        expect(payload).toHaveProperty('message');
+        expect(payload.message).toBe(
+          lessonServiceErrors.LESSON_ERR_FAIL_ENROLL,
+        );
+      });
+
+      it('should successfully enroll with a working invite', async () => {
+        const response = await testContext.studentsRequest({
+          url: `lessons/${lessonToEnroll.lesson.id}/enroll`,
+          body: {
+            invite: workingInvite,
+          },
+        });
+
+        const payload = JSON.parse(response.payload);
+
+        expect(response.statusCode).toBe(200);
+        expect(payload).toHaveProperty('message');
+        expect(payload.message).toBe(
+          lessonServiceMessages.LESSON_MSG_SUCCESS_ENROLL,
+        );
+      });
     });
   });
 
-  describe('Creation of a general link', () => {
-    let lessonToInvite;
+  describe('Enroll to a course with an invite', () => {
+    describe('Private course should not be enrollable without an invite', () => {
+      let courseToEnroll;
 
-    beforeAll(async () => {
-      lessonToInvite = await createLesson({
-        app: testContext.app,
-        credentials: teachersCredentials,
-        body: {
-          lesson: {
-            name: 'Private Lesson',
+      beforeAll(async () => {
+        courseToEnroll = await createCourse({
+          app: testContext.app,
+          credentials: teachersCredentials,
+          body: prepareCourseFromSeed({
             status: 'Private',
-          },
-        },
+            seed: courseToTest,
+          }),
+        });
+      });
+
+      it('should return an error', async () => {
+        const response = await testContext.studentsRequest({
+          url: `courses/${courseToEnroll.course.id}/enroll`,
+        });
+
+        const payload = JSON.parse(response.payload);
+
+        expect(response.statusCode).toBe(400);
+        expect(payload).toHaveProperty('message');
+        expect(payload.message).toBe(
+          lessonServiceErrors.LESSON_ERR_FAIL_ENROLL,
+        );
       });
     });
 
-    it('should successfully create a link', async () => {
-      const response = await testContext.teachersRequest({
-        url: `invites`,
-        body: {
-          resourceId: lessonToInvite.lesson.id,
-          resourceType: 'lesson',
-        },
-      });
+    describe('Creation of a general link', () => {
+      let courseToInvite;
 
-      const payload = JSON.parse(response.payload);
-
-      expect(response.statusCode).toBe(200);
-      expect(payload).toHaveProperty('invites');
-      expect(payload.invites[0]).toMatchObject({
-        email: null,
-        invite: expect.any(String),
-      });
-    });
-  });
-
-  describe('Enroll with a general link', () => {
-    let lessonToEnroll;
-    let invite;
-
-    beforeAll(async () => {
-      lessonToEnroll = await createLesson({
-        app: testContext.app,
-        credentials: teachersCredentials,
-        body: {
-          lesson: {
-            name: 'Private Lesson',
+      beforeAll(async () => {
+        courseToInvite = await createCourse({
+          app: testContext.app,
+          credentials: teachersCredentials,
+          body: prepareCourseFromSeed({
             status: 'Private',
+            seed: courseToTest,
+          }),
+        });
+      });
+
+      it('should successfully create a link', async () => {
+        const response = await testContext.teachersRequest({
+          url: `invites`,
+          body: {
+            resourceId: courseToInvite.course.id,
+            resourceType: 'course',
           },
-        },
-      });
+        });
 
-      const response = await testContext.teachersRequest({
-        url: `invites`,
-        body: {
-          resourceId: lessonToEnroll.lesson.id,
-          resourceType: 'lesson',
-        },
-      });
+        const payload = JSON.parse(response.payload);
 
-      const { invites } = JSON.parse(response.payload);
-      invite = invites[0].invite;
+        expect(response.statusCode).toBe(200);
+        expect(payload).toHaveProperty('invites');
+        expect(payload.invites[0]).toMatchObject({
+          email: null,
+          invite: expect.any(String),
+        });
+      });
     });
 
-    it('should be enrollable', async () => {
-      const response = await testContext.studentsRequest({
-        url: `lessons/${lessonToEnroll.lesson.id}/enroll`,
-        body: {
-          invite,
-        },
-      });
+    describe('Enroll with a general link', () => {
+      let courseToEnroll;
+      let invite;
 
-      const payload = JSON.parse(response.payload);
-
-      expect(response.statusCode).toBe(200);
-      expect(payload).toHaveProperty('message');
-      expect(payload.message).toBe(
-        lessonServiceMessages.LESSON_MSG_SUCCESS_ENROLL,
-      );
-    });
-  });
-
-  describe('Enroll with an invalid invite', () => {
-    let lessonToEnroll;
-    let lessonToInvite;
-    let invite;
-
-    beforeAll(async () => {
-      lessonToEnroll = await createLesson({
-        app: testContext.app,
-        credentials: teachersCredentials,
-        body: {
-          lesson: {
-            name: 'Private Lesson',
+      beforeAll(async () => {
+        courseToEnroll = await createCourse({
+          app: testContext.app,
+          credentials: teachersCredentials,
+          body: prepareCourseFromSeed({
             status: 'Private',
+            seed: courseToTest,
+          }),
+        });
+
+        const response = await testContext.teachersRequest({
+          url: `invites`,
+          body: {
+            resourceId: courseToEnroll.course.id,
+            resourceType: 'course',
           },
-        },
+        });
+
+        const { invites } = JSON.parse(response.payload);
+        invite = invites[0].invite;
       });
-      lessonToInvite = await createLesson({
-        app: testContext.app,
-        credentials: teachersCredentials,
-        body: {
-          lesson: {
-            name: 'Private Lesson',
+
+      it('should be enrollable', async () => {
+        const response = await testContext.studentsRequest({
+          url: `courses/${courseToEnroll.course.id}/enroll`,
+          body: {
+            invite,
+          },
+        });
+
+        const payload = JSON.parse(response.payload);
+
+        expect(response.statusCode).toBe(200);
+        expect(payload).toHaveProperty('message');
+        expect(payload.message).toBe(
+          courseServiceMessages.COURSE_MSG_SUCCESS_ENROLL,
+        );
+      });
+    });
+
+    describe('Enroll with an invalid invite', () => {
+      let courseToEnroll;
+      let courseToInvite;
+      let invite;
+
+      beforeAll(async () => {
+        courseToEnroll = await createCourse({
+          app: testContext.app,
+          credentials: teachersCredentials,
+          body: prepareCourseFromSeed({
             status: 'Private',
-          },
-        },
-      });
-
-      const response = await testContext.teachersRequest({
-        url: `invites`,
-        body: {
-          resourceId: lessonToInvite.lesson.id,
-          resourceType: 'lesson',
-        },
-      });
-
-      const { invites } = JSON.parse(response.payload);
-      invite = invites[0].invite;
-    });
-
-    it('should return an error', async () => {
-      const response = await testContext.studentsRequest({
-        url: `lessons/${lessonToEnroll.lesson.id}/enroll`,
-        body: {
-          invite,
-        },
-      });
-
-      const payload = JSON.parse(response.payload);
-
-      expect(response.statusCode).toBe(400);
-      expect(payload).toHaveProperty('message');
-      expect(payload.message).toBe(lessonServiceErrors.LESSON_ERR_FAIL_ENROLL);
-    });
-  });
-
-  describe('Creation of an invite with an email', () => {
-    let lessonToInvite;
-
-    beforeAll(async () => {
-      lessonToInvite = await createLesson({
-        app: testContext.app,
-        credentials: teachersCredentials,
-        body: {
-          lesson: {
-            name: 'Private Lesson',
+            seed: courseToTest,
+          }),
+        });
+        courseToInvite = await createCourse({
+          app: testContext.app,
+          credentials: teachersCredentials,
+          body: prepareCourseFromSeed({
             status: 'Private',
+            seed: courseToTest,
+          }),
+        });
+
+        const response = await testContext.teachersRequest({
+          url: `invites`,
+          body: {
+            resourceId: courseToInvite.course.id,
+            resourceType: 'course',
           },
-        },
+        });
+
+        const { invites } = JSON.parse(response.payload);
+        invite = invites[0].invite;
+      });
+
+      it('should return an error', async () => {
+        const response = await testContext.studentsRequest({
+          url: `courses/${courseToEnroll.course.id}/enroll`,
+          body: {
+            invite,
+          },
+        });
+
+        const payload = JSON.parse(response.payload);
+
+        expect(response.statusCode).toBe(400);
+        expect(payload).toHaveProperty('message');
+        expect(payload.message).toBe(
+          courseServiceErrors.COURSE_ERR_FAIL_ENROLL,
+        );
       });
     });
 
-    it('should successfully create a link', async () => {
-      const response = await testContext.teachersRequest({
-        url: `invites`,
-        body: {
-          resourceId: lessonToInvite.lesson.id,
-          resourceType: 'lesson',
-          emails: [studentJohn.email],
-        },
-      });
+    describe('Creation of an invite with an email', () => {
+      let courseToInvite;
 
-      const payload = JSON.parse(response.payload);
-
-      expect(response.statusCode).toBe(200);
-      expect(payload).toHaveProperty('invites');
-      expect(payload.invites[0]).toMatchObject({
-        email: studentJohn.email,
-        invite: expect.any(String),
-      });
-    });
-  });
-
-  describe('Enroll with an invite', () => {
-    let lessonToEnroll;
-    let invite;
-
-    beforeAll(async () => {
-      lessonToEnroll = await createLesson({
-        app: testContext.app,
-        credentials: teachersCredentials,
-        body: {
-          lesson: {
-            name: 'Private Lesson',
+      beforeAll(async () => {
+        courseToInvite = await createCourse({
+          app: testContext.app,
+          credentials: teachersCredentials,
+          body: prepareCourseFromSeed({
             status: 'Private',
+            seed: courseToTest,
+          }),
+        });
+      });
+
+      it('should successfully create a link', async () => {
+        const response = await testContext.teachersRequest({
+          url: `invites`,
+          body: {
+            resourceId: courseToInvite.course.id,
+            resourceType: 'course',
+            emails: [studentJohn.email],
           },
-        },
-      });
+        });
 
-      const response = await testContext.teachersRequest({
-        url: `invites`,
-        body: {
-          resourceId: lessonToEnroll.lesson.id,
-          resourceType: 'lesson',
-          emails: [studentJohn.email],
-        },
-      });
+        const payload = JSON.parse(response.payload);
 
-      const { invites } = JSON.parse(response.payload);
-      invite = invites[0].invite;
+        expect(response.statusCode).toBe(200);
+        expect(payload).toHaveProperty('invites');
+        expect(payload.invites[0]).toMatchObject({
+          email: studentJohn.email,
+          invite: expect.any(String),
+        });
+      });
     });
 
-    it('should be enrollable', async () => {
-      const response = await testContext.studentsRequest({
-        url: `lessons/${lessonToEnroll.lesson.id}/enroll`,
-        body: {
-          invite,
-        },
-      });
+    describe('Enroll with an invite', () => {
+      let courseToEnroll;
+      let invite;
 
-      const payload = JSON.parse(response.payload);
-
-      expect(response.statusCode).toBe(200);
-      expect(payload).toHaveProperty('message');
-      expect(payload.message).toBe(
-        lessonServiceMessages.LESSON_MSG_SUCCESS_ENROLL,
-      );
-    });
-  });
-
-  describe('Enroll with an invalid invite', () => {
-    let lessonToEnroll;
-    let invite;
-
-    beforeAll(async () => {
-      lessonToEnroll = await createLesson({
-        app: testContext.app,
-        credentials: teachersCredentials,
-        body: {
-          lesson: {
-            name: 'Private Lesson',
+      beforeAll(async () => {
+        courseToEnroll = await createCourse({
+          app: testContext.app,
+          credentials: teachersCredentials,
+          body: prepareCourseFromSeed({
             status: 'Private',
+            seed: courseToTest,
+          }),
+        });
+
+        const response = await testContext.teachersRequest({
+          url: `invites`,
+          body: {
+            resourceId: courseToEnroll.course.id,
+            resourceType: 'course',
+            emails: [studentJohn.email],
           },
-        },
+        });
+
+        const { invites } = JSON.parse(response.payload);
+        invite = invites[0].invite;
       });
 
-      const response = await testContext.teachersRequest({
-        url: `invites`,
-        body: {
-          resourceId: lessonToEnroll.lesson.id,
-          resourceType: 'lesson',
-          emails: ['student@test.io'],
-        },
-      });
+      it('should be enrollable', async () => {
+        const response = await testContext.studentsRequest({
+          url: `courses/${courseToEnroll.course.id}/enroll`,
+          body: {
+            invite,
+          },
+        });
 
-      const { invites } = JSON.parse(response.payload);
-      invite = invites[0].invite;
+        const payload = JSON.parse(response.payload);
+
+        expect(response.statusCode).toBe(200);
+        expect(payload).toHaveProperty('message');
+        expect(payload.message).toBe(
+          courseServiceMessages.COURSE_MSG_SUCCESS_ENROLL,
+        );
+      });
     });
 
-    it('should return an error', async () => {
-      const response = await testContext.studentsRequest({
-        url: `lessons/${lessonToEnroll.lesson.id}/enroll`,
-        body: {
-          invite,
-        },
-      });
+    describe('Enroll with an invalid invite', () => {
+      let courseToEnroll;
+      let invite;
 
-      const payload = JSON.parse(response.payload);
-
-      expect(response.statusCode).toBe(400);
-      expect(payload).toHaveProperty('message');
-      expect(payload.message).toBe(lessonServiceErrors.LESSON_ERR_FAIL_ENROLL);
-    });
-  });
-
-  describe('Revoking an invite by creating a new one', () => {
-    let lessonToEnroll;
-    let revokedInvite;
-    let workingInvite;
-
-    beforeAll(async () => {
-      lessonToEnroll = await createLesson({
-        app: testContext.app,
-        credentials: teachersCredentials,
-        body: {
-          lesson: {
-            name: 'Private Lesson',
+      beforeAll(async () => {
+        courseToEnroll = await createCourse({
+          app: testContext.app,
+          credentials: teachersCredentials,
+          body: prepareCourseFromSeed({
             status: 'Private',
+            seed: courseToTest,
+          }),
+        });
+
+        const response = await testContext.teachersRequest({
+          url: `invites`,
+          body: {
+            resourceId: courseToEnroll.course.id,
+            resourceType: 'course',
+            emails: ['student@test.io'],
           },
-        },
+        });
+
+        const { invites } = JSON.parse(response.payload);
+        invite = invites[0].invite;
       });
 
-      const revokedInviteResponse = await testContext.teachersRequest({
-        url: `invites`,
-        body: {
-          resourceId: lessonToEnroll.lesson.id,
-          resourceType: 'lesson',
-          emails: [studentJohn.email],
-        },
+      it('should return an error', async () => {
+        const response = await testContext.studentsRequest({
+          url: `courses/${courseToEnroll.course.id}/enroll`,
+          body: {
+            invite,
+          },
+        });
+
+        const payload = JSON.parse(response.payload);
+
+        expect(response.statusCode).toBe(400);
+        expect(payload).toHaveProperty('message');
+        expect(payload.message).toBe(
+          courseServiceErrors.COURSE_ERR_FAIL_ENROLL,
+        );
       });
-
-      const { invites: revokedInvitesPayload } = JSON.parse(
-        revokedInviteResponse.payload,
-      );
-      revokedInvite = revokedInvitesPayload[0].invite;
-
-      const workingInviteResponse = await testContext.teachersRequest({
-        url: `invites`,
-        body: {
-          resourceId: lessonToEnroll.lesson.id,
-          resourceType: 'lesson',
-          emails: [studentJohn.email],
-        },
-      });
-
-      const { invites: workingInvitePayload } = JSON.parse(
-        workingInviteResponse.payload,
-      );
-      workingInvite = workingInvitePayload[0].invite;
     });
 
-    it('should return an error if enroll with a revoked invite', async () => {
-      const response = await testContext.studentsRequest({
-        url: `lessons/${lessonToEnroll.lesson.id}/enroll`,
-        body: {
-          invite: revokedInvite,
-        },
+    describe('Revoking an invite by creating a new one', () => {
+      let courseToEnroll;
+      let revokedInvite;
+      let workingInvite;
+
+      beforeAll(async () => {
+        courseToEnroll = await createCourse({
+          app: testContext.app,
+          credentials: teachersCredentials,
+          body: prepareCourseFromSeed({
+            status: 'Private',
+            seed: courseToTest,
+          }),
+        });
+
+        const revokedInviteResponse = await testContext.teachersRequest({
+          url: `invites`,
+          body: {
+            resourceId: courseToEnroll.course.id,
+            resourceType: 'course',
+            emails: [studentJohn.email],
+          },
+        });
+
+        const { invites: revokedInvitesPayload } = JSON.parse(
+          revokedInviteResponse.payload,
+        );
+        revokedInvite = revokedInvitesPayload[0].invite;
+
+        const workingInviteResponse = await testContext.teachersRequest({
+          url: `invites`,
+          body: {
+            resourceId: courseToEnroll.course.id,
+            resourceType: 'course',
+            emails: [studentJohn.email],
+          },
+        });
+
+        const { invites: workingInvitePayload } = JSON.parse(
+          workingInviteResponse.payload,
+        );
+        workingInvite = workingInvitePayload[0].invite;
       });
 
-      const payload = JSON.parse(response.payload);
+      it('should return an error if enroll with a revoked invite', async () => {
+        const response = await testContext.studentsRequest({
+          url: `courses/${courseToEnroll.course.id}/enroll`,
+          body: {
+            invite: revokedInvite,
+          },
+        });
 
-      expect(response.statusCode).toBe(400);
-      expect(payload).toHaveProperty('message');
-      expect(payload.message).toBe(lessonServiceErrors.LESSON_ERR_FAIL_ENROLL);
-    });
+        const payload = JSON.parse(response.payload);
 
-    it('should successfully enroll with a working invite', async () => {
-      const response = await testContext.studentsRequest({
-        url: `lessons/${lessonToEnroll.lesson.id}/enroll`,
-        body: {
-          invite: workingInvite,
-        },
+        expect(response.statusCode).toBe(400);
+        expect(payload).toHaveProperty('message');
+        expect(payload.message).toBe(
+          courseServiceErrors.COURSE_ERR_FAIL_ENROLL,
+        );
       });
 
-      const payload = JSON.parse(response.payload);
+      it('should successfully enroll with a working invite', async () => {
+        const response = await testContext.studentsRequest({
+          url: `courses/${courseToEnroll.course.id}/enroll`,
+          body: {
+            invite: workingInvite,
+          },
+        });
 
-      expect(response.statusCode).toBe(200);
-      expect(payload).toHaveProperty('message');
-      expect(payload.message).toBe(
-        lessonServiceMessages.LESSON_MSG_SUCCESS_ENROLL,
-      );
+        const payload = JSON.parse(response.payload);
+
+        expect(response.statusCode).toBe(200);
+        expect(payload).toHaveProperty('message');
+        expect(payload.message).toBe(
+          courseServiceMessages.COURSE_MSG_SUCCESS_ENROLL,
+        );
+      });
     });
   });
 });

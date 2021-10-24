@@ -81,6 +81,14 @@ class Email {
       html: this.t('email:email_confirmation.html', { link, lng: language }),
     });
   }
+
+  async sendInvite({ email, language = 'en', resourceType, link }) {
+    return this.sendMailWithLogging({
+      to: email,
+      subject: this.t('email:invite.subject', { lng: language }),
+      html: this.t('email:invite.html', { lng: language, resourceType, link }),
+    });
+  }
 }
 
 export default Email;

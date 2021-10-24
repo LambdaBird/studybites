@@ -1,5 +1,3 @@
-import { BadRequestError } from '../../../validation/errors';
-
 const options = {
   schema: {
     params: {
@@ -21,9 +19,7 @@ const options = {
       },
     } = this;
 
-    const invite = await Invite.query()
-      .findById(params.inviteId)
-      .throwIfNotFound({ error: new BadRequestError('invalid invite') });
+    const invite = await Invite.getInviteById({ inviteId: params.inviteId });
 
     await this.access({
       userId: user.id,
@@ -37,11 +33,14 @@ const options = {
 async function handler({ params }) {
   const {
     models: { Invite },
+    config: {
+      invitesService: { invitesServiceMessages: messages },
+    },
   } = this;
 
-  await Invite.query().findById(params.inviteId).patch({ status: 'revoked' });
+  await Invite.revokeOneInvite({ inviteId: params.inviteId });
 
-  return { message: 'success' };
+  return { message: messages.INVITE_MSG_REVOKE_SUCCESS };
 }
 
 export default { options, handler };
