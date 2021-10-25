@@ -58,6 +58,7 @@ const EditorJsContainer = forwardRef((props, ref) => {
         });
         // eslint-disable-next-line no-new
         new DragDrop(editor);
+        ref.current.initialize(props.data);
       } catch (e) {
         // eslint-disable-next-line no-param-reassign
         ref.current = null;
