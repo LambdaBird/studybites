@@ -12,9 +12,14 @@ import * as S from './Public.mobile.styled';
 const PublicMobile = ({ resource, isCourse, isCourseLesson }) => {
   const { t } = useTranslation('user');
 
-  const { name, description, isEnrolled, image, keywords } = resource;
-  const { fullName, firstNameLetter, handleContinueLesson, handleEnroll } =
-    useResource({ resource, isCourse });
+  const { name, description, image, keywords } = resource;
+  const {
+    fullName,
+    firstNameLetter,
+    buttonType,
+    buttonTitleKey,
+    buttonClickHandler,
+  } = useResource({ resource, isCourse, isCourseLesson });
 
   const isButtonDisabled =
     isCourseLesson && !resource.isFinished && !resource.isCurrent;
@@ -47,24 +52,13 @@ const PublicMobile = ({ resource, isCourse, isCourseLesson }) => {
         </Col>
       </S.DescriptionRow>
       <S.EnrollRow>
-        {isEnrolled ? (
-          <S.Enroll
-            type="primary"
-            onClick={handleContinueLesson}
-            disabled={isButtonDisabled}
-          >
-            {t('home.ongoing_lessons.continue_button')}
-          </S.Enroll>
-        ) : (
-          <S.Enroll
-            size="medium"
-            type="secondary"
-            onClick={handleEnroll}
-            disabled={isButtonDisabled}
-          >
-            {t('home.open_lessons.enroll_button')}
-          </S.Enroll>
-        )}
+        <S.Enroll
+          type={buttonType}
+          onClick={buttonClickHandler}
+          disabled={isButtonDisabled}
+        >
+          {t(buttonTitleKey)}
+        </S.Enroll>
       </S.EnrollRow>
       <S.AuthorContainer>
         <S.AuthorAvatar>{firstNameLetter}</S.AuthorAvatar>

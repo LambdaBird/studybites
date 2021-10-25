@@ -1,4 +1,4 @@
-import { Button, Col, Input, message, Modal, Row, Typography } from 'antd';
+import { Button, Col, Input, message, Modal, Row } from 'antd';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +10,7 @@ import Header from '@sb-ui/components/molecules/Header';
 import KeywordsSelect from '@sb-ui/components/molecules/KeywordsSelect';
 import { useLessonStatus } from '@sb-ui/hooks/useLessonStatus';
 import { Statuses } from '@sb-ui/pages/Teacher/Home/Dashboard/constants';
+import { convertStatusToTranslation } from '@sb-ui/pages/Teacher/LessonEdit/statusHelper';
 import { queryClient } from '@sb-ui/query';
 import {
   createLesson,
@@ -267,6 +268,17 @@ const LessonEdit = () => {
     updateLessonStatusMutation.mutate({ id: lessonId, status: Statuses.DRAFT });
   };
 
+  const handleArchive = async () => {
+    checkUnsaved({
+      onSaved: () => {
+        updateLessonStatusMutation.mutate({
+          id: lessonId,
+          status: Statuses.ARCHIVED,
+        });
+      },
+    });
+  };
+
   const handleInputTitle = (e) => {
     const newText = e.target.value;
     if (newText.length < MAX_NAME_LENGTH) {
@@ -310,6 +322,17 @@ const LessonEdit = () => {
   );
 
   const [headerHide, setHeaderHide] = useState(false);
+
+  const isArchived = useMemo(
+    () => lessonData?.lesson?.status === Statuses.ARCHIVED,
+    [lessonData?.lesson?.status],
+  );
+
+  const lessonStatusKey = useMemo(() => {
+    const status = lessonData?.lesson?.status;
+    const key = status ? convertStatusToTranslation(status) : 'draft';
+    return `lesson_dashboard.status.${key}`;
+  }, [lessonData?.lesson?.status]);
 
   useEffect(() => {
     if (allowNavigation) {
@@ -438,13 +461,7 @@ const LessonEdit = () => {
               />
               <S.BadgeWrapper>
                 <S.CardBadge>
-                  <S.StatusText>
-                    {lessonData?.lesson.status
-                      ? t(
-                          `lesson_dashboard.status.${lessonData?.lesson.status.toLocaleLowerCase()}`,
-                        )
-                      : t('lesson_dashboard.status.draft')}
-                  </S.StatusText>
+                  <S.StatusText>{t(lessonStatusKey)}</S.StatusText>
                 </S.CardBadge>
               </S.BadgeWrapper>
               {isRenderEditor && isEditorDisabled === true && (
@@ -490,9 +507,9 @@ const LessonEdit = () => {
               </S.RowStyled>
               <S.RowStyled gutter={[0, 10]}>
                 <Col span={24}>
-                  <S.TextLink underline>
+                  <S.DisabledLink>
                     {t('lesson_edit.links.invite')}
-                  </S.TextLink>
+                  </S.DisabledLink>
                 </Col>
                 <S.StudentsCol span={24}>
                   <S.TextLink
@@ -508,14 +525,14 @@ const LessonEdit = () => {
                   />
                 </S.StudentsCol>
                 <Col span={24}>
-                  <S.TextLink underline>
+                  <S.DisabledLink>
                     {t('lesson_edit.links.analytics')}
-                  </S.TextLink>
+                  </S.DisabledLink>
                 </Col>
                 <Col span={24}>
-                  <Typography.Link type="danger" underline>
+                  <S.DangerLink disabled={isArchived} onClick={handleArchive}>
                     {t('lesson_edit.links.archive')}
-                  </Typography.Link>
+                  </S.DangerLink>
                 </Col>
               </S.RowStyled>
               <Row gutter={[0, 8]}>

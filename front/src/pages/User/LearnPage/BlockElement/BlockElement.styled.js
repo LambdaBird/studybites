@@ -1,5 +1,8 @@
 import { Row } from 'antd';
 import styled from 'styled-components';
+import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons';
+
+import variables from '@sb-ui/theme/variables';
 
 export const BlockElementWrapperWhite = styled(Row)`
   width: 100%;
@@ -16,4 +19,22 @@ export const BlockElementWrapperWhite = styled(Row)`
     overflow-x: hidden;
     width: 100vw;
   }
+`;
+
+export const SuccessCircle = styled(CheckCircleTwoTone).attrs({
+  twoToneColor: variables['success-color'],
+})`
+  font-size: 24px;
+`;
+
+export const PartialFailCircle = styled(CloseCircleTwoTone).attrs({
+  twoToneColor: variables['partial-wrong-color'],
+})`
+  font-size: 24px;
+`;
+
+export const FailCircle = styled(CloseCircleTwoTone).attrs({
+  twoToneColor: variables['wrong-color'],
+})`
+  font-size: 24px;
 `;

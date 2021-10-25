@@ -48,6 +48,6 @@ export const HeaderMedianWrapper = styled(HeaderWrapper)`
 `;
 
 export const SparkWrapper = styled.div`
-  padding: 0.5em 1px;
+  padding: 0.2em 1px;
   width: ${({ $sparkWidth }) => $sparkWidth}px;
 `;

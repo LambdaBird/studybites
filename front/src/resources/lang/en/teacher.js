@@ -128,7 +128,7 @@ export default {
     publish_modal_fail: {
       title: 'Can not publish course',
       content:
-        'Can not publish course if at least one of its Lesson have status “Draft“ or “Archived”',
+        'Can not publish course if at least one of its Lesson have status “Archived”',
       ok: 'Ok',
     },
     message: {

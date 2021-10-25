@@ -39,6 +39,7 @@ const Courses = () => {
           resourceKey={COURSES_RESOURCE_KEY}
           title={t('home.finished_courses.title')}
           notFound={t('home.finished_courses.not_found')}
+          isFinished
           query={{
             key: USER_ENROLLED_COURSES_FINISHED_BASE_KEY,
             func: getEnrolledCoursesFinished,

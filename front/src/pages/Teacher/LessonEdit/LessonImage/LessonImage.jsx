@@ -64,7 +64,9 @@ const LessonImage = ({
       </S.Col>
       <S.Col>
         <Upload {...uploadProps}>
-          <S.UploadButton>{t('lesson_edit.buttons.upload')}</S.UploadButton>
+          <S.UploadButton disabled={disabled}>
+            {t('lesson_edit.buttons.upload')}
+          </S.UploadButton>
         </Upload>
       </S.Col>
       {isLoading === false && (

@@ -17,7 +17,7 @@ import { PAGE_SIZE } from './constants';
 import { LessonsListPropTypes } from './types';
 import * as S from './ResourcesList.styled';
 
-const ResourcesList = ({ title, notFound, query, resourceKey }) => {
+const ResourcesList = ({ title, notFound, query, resourceKey, isFinished }) => {
   const { key: queryKey, func: queryFunc } = query;
   const [currentPage, setCurrentPage] = useState(1);
   const [searchText, setSearchText] = useState(null);
@@ -84,6 +84,7 @@ const ResourcesList = ({ title, notFound, query, resourceKey }) => {
                 <OngoingFullResource
                   resource={resource}
                   resourceKey={resourceKey}
+                  isFinished={isFinished}
                 />
               </S.LessonCol>
             ))}

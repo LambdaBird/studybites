@@ -1,3 +1,4 @@
+import { Empty } from 'antd';
 import PropTypes from 'prop-types';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -23,8 +24,14 @@ const KeywordsFilter = ({ width = '250px', setValues }) => {
 
   return (
     <S.Select
+      notFoundContent={
+        <Empty
+          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          description={t('keywords_filter.no_data')}
+        />
+      }
       width={width}
-      placeholder={t('filter.placeholder')}
+      placeholder={t('keywords_filter.placeholder')}
       onSearch={handleSearch}
       onChange={setValues}
       options={options}
