@@ -1,3 +1,5 @@
+import { inviteEmail } from '../bull';
+
 const options = {
   schema: {
     body: {
@@ -50,14 +52,9 @@ const options = {
   },
 };
 
-async function sendInvites({ emailModel, data, host }) {
-  return Promise.all(
-    data.map(async (invite) =>
-      emailModel.sendInvite({
-        email: invite.email,
-        link: `${host}/invite=${invite.id}`,
-      }),
-    ),
+function sendInvites({ data, host }) {
+  data.map(async (invite) =>
+    inviteEmail({ email: invite.email, link: `${host}/invite=${invite.id}` }),
   );
 }
 
