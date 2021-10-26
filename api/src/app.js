@@ -33,6 +33,8 @@ import invitesService from './services/invites';
 import errorsAndValidation from './validation';
 import i18n from './i18n';
 
+import { MessageBroker } from './publisher';
+
 const REDIS_PORT = process.env.REDIS_PORT || 6379;
 
 export default (options = {}) => {
@@ -45,6 +47,8 @@ export default (options = {}) => {
       },
     },
   });
+
+  app.decorate('rabbit', MessageBroker);
 
   app.register(fastifyCors);
 

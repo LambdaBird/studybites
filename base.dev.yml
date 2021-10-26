@@ -12,6 +12,14 @@ services:
     environment:
       MINIO_ROOT_USER: ${S3_ACCESS_KEY}
       MINIO_ROOT_PASSWORD: ${S3_SECRET_KEY}
+  rabbit:
+    image: rabbitmq:alpine
+  mailer:
+    build:
+      context: ./mailer
+      dockerfile: .docker/Dockerfile.dev
+    depends_on:
+      - rabbit
   api:
     build:
       context: ./api
@@ -19,6 +27,7 @@ services:
     depends_on:
       - db
       - s3
+      - rabbit
     environment:
       SB_ADMIN_EMAIL: ${SB_ADMIN_EMAIL}
       SB_ADMIN_PASSWORD: ${SB_ADMIN_PASSWORD}

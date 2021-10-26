@@ -22,6 +22,18 @@ services:
     volumes:
       - ./storage:/data
     command: server --address 0.0.0.0:9000 --console-address 0.0.0.0:9001 /data
+  rabbit:
+    ports:
+      - '15673:15672'
+    volumes:
+      - ./rabbitmq/data/:/var/lib/rabbitmq/
+  mailer:
+    command: yarn run:dev
+    ports:
+      - '3020:3020'
+    volumes:
+      - ./mailer:/mailer
+      - /mailer/node_modules
   api:
     command: yarn run:dev
     ports:

@@ -50,12 +50,17 @@ const options = {
   },
 };
 
-async function sendInvites({ emailModel, data, host }) {
+async function sendInvites({ broker, data, host }) {
   return Promise.all(
     data.map(async (invite) =>
-      emailModel.sendInvite({
-        email: invite.email,
-        link: `${host}/invite=${invite.id}`,
+      broker.send({
+        queue: 'mail',
+        msg: Buffer.from(
+          JSON.stringify({
+            email: invite.email,
+            link: `${host}/invite=${invite.id}`,
+          }),
+        ),
       }),
     ),
   );
@@ -67,7 +72,7 @@ async function handler({ body, headers }) {
     config: {
       globals: { invitesStatuses },
     },
-    emailModel,
+    rabbit,
   } = this;
 
   const invites = await Invite.transaction(async (trx) => {
@@ -95,7 +100,8 @@ async function handler({ body, headers }) {
 
     if (data.length) {
       const host = headers['x-forwarded-host'];
-      await sendInvites({ emailModel, data: createdInvites, host });
+      const broker = await rabbit.getInstance();
+      await sendInvites({ broker, data: createdInvites, host });
     }
 
     return createdInvites;
