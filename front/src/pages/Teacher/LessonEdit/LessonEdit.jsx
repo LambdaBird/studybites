@@ -56,9 +56,9 @@ const LessonEdit = () => {
 
   const inputTitle = useRef(null);
   const lastHistory = useRef(null);
-  const unblockFunc = useRef(null);
+  const navigationPermit = useRef(null);
   const [currentBlocks, setCurrentBlocks] = useState(null);
-  const [allowNavigation, setAllowNavigation] = useState(true);
+  const [isNavigationAllowed, setIsNavigationAllowed] = useState(true);
   const editorJSRef = useRef(null);
   const [dataBlocks, setDataBlocks] = useState(null);
   const undoPluginRef = useRef(null);
@@ -162,7 +162,7 @@ const LessonEdit = () => {
       onSaved = () => {},
       onCancel = () => {},
     }) => {
-      if (!allowNavigation) {
+      if (!isNavigationAllowed) {
         Modal.destroyAll();
         setTimeout(() => {
           Modal.confirm({
@@ -185,7 +185,7 @@ const LessonEdit = () => {
       onSettled();
       onSaved();
     },
-    [allowNavigation, t],
+    [isNavigationAllowed, t],
   );
 
   useEffect(() => {
@@ -335,8 +335,8 @@ const LessonEdit = () => {
   }, [lessonData?.lesson?.status]);
 
   useEffect(() => {
-    if (allowNavigation) {
-      unblockFunc.current?.();
+    if (isNavigationAllowed) {
+      navigationPermit.current?.();
       const { location, action } = lastHistory.current || {};
       if (location) {
         lastHistory.current = null;
@@ -347,10 +347,10 @@ const LessonEdit = () => {
         }
       }
     } else {
-      if (unblockFunc.current) {
-        unblockFunc.current?.();
+      if (navigationPermit.current) {
+        navigationPermit.current?.();
       }
-      unblockFunc.current = history.block((location, action) => {
+      navigationPermit.current = history.block((location, action) => {
         lastHistory.current = {
           location,
           action,
@@ -358,7 +358,7 @@ const LessonEdit = () => {
         if (action !== HISTORY_POP) {
           checkUnsaved({
             onDiscard: () => {
-              setAllowNavigation(true);
+              setIsNavigationAllowed(true);
             },
           });
           return false;
@@ -369,7 +369,7 @@ const LessonEdit = () => {
               window.history.pushState('', '', currentLocation);
             },
             onDiscard: () => {
-              setAllowNavigation(true);
+              setIsNavigationAllowed(true);
             },
           });
           return false;
@@ -380,28 +380,28 @@ const LessonEdit = () => {
     }
 
     return () => {
-      unblockFunc.current?.();
+      navigationPermit.current?.();
     };
-  }, [allowNavigation, checkUnsaved, currentLocation, history]);
+  }, [isNavigationAllowed, checkUnsaved, currentLocation, history]);
 
   useEffect(() => {
     if (isBlocksChanged()) {
-      setAllowNavigation(false);
+      setIsNavigationAllowed(false);
     } else {
       lastHistory.current = null;
-      setAllowNavigation(true);
+      setIsNavigationAllowed(true);
     }
   }, [currentBlocks, isBlocksChanged]);
 
   const handlerBeforeUnload = useCallback(
     (event) => {
-      if (!allowNavigation) {
+      if (!isNavigationAllowed) {
         event.preventDefault();
         // eslint-disable-next-line no-param-reassign
         event.returnValue = '';
       }
     },
-    [allowNavigation],
+    [isNavigationAllowed],
   );
 
   useEffect(() => {
@@ -410,7 +410,7 @@ const LessonEdit = () => {
     return () => {
       window.removeEventListener('beforeunload', handlerBeforeUnload);
     };
-  }, [allowNavigation, handlerBeforeUnload, history]);
+  }, [isNavigationAllowed, handlerBeforeUnload, history]);
 
   return (
     <>
