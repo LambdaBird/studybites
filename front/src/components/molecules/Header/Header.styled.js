@@ -12,6 +12,13 @@ export const Container = styled.header`
   height: ${HEADER_HEIGHT}px;
   z-index: 4;
   ${(props) =>
+    props.isFixed &&
+    `
+    width: 100%;
+    position: fixed;
+    top: 0;
+    `}
+  ${(props) =>
     props.hideOnScroll &&
     `
     width: 100%;
