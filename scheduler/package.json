@@ -1,0 +1,18 @@
+{
+  "name": "scheduler",
+  "version": "0.1.0",
+  "main": "scheduler.js",
+  "license": "Apache-2.0",
+  "scripts": {
+    "run:dev": "nodemon scheduler.js"
+  },
+  "dependencies": {
+    "knex": "^0.95.11",
+    "node-cron": "^3.0.0",
+    "nodemailer": "^6.7.0",
+    "pg": "^8.7.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.14"
+  }
+}

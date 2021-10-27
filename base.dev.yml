@@ -12,6 +12,13 @@ services:
     environment:
       MINIO_ROOT_USER: ${S3_ACCESS_KEY}
       MINIO_ROOT_PASSWORD: ${S3_SECRET_KEY}
+  scheduler:
+    build:
+      context: ./scheduler
+      dockerfile: .docker/Dockerfile
+    restart: always
+    depends_on:
+      - db
   api:
     build:
       context: ./api

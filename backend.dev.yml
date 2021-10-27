@@ -22,6 +22,13 @@ services:
     volumes:
       - ./storage:/data
     command: server --address 0.0.0.0:9000 --console-address 0.0.0.0:9001 /data
+  scheduler:
+    command: yarn run:dev
+    volumes:
+      - ./scheduler:/scheduler
+      - /scheduler/node_modules
+    environment:
+      DATABASE_URL: ${POSTGRES_URI}
   api:
     command: yarn run:dev
     ports:
