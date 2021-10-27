@@ -32,6 +32,7 @@ export default {
       error: 'Failed to upload the file',
       file_size: 'File size limit exceeded',
       file_type: 'Invalid file type',
+      description: 'Attach a file',
     },
     paragraph: {
       title: 'Text',
