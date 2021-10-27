@@ -94,8 +94,11 @@ async function handler({ body, headers }) {
     const createdInvites = await Invite.createInvites({ trx, data });
 
     if (data.length) {
-      const host = headers['x-forwarded-host'];
-      await sendInvites({ emailModel, data: createdInvites, host });
+      await sendInvites({
+        emailModel,
+        data: createdInvites,
+        host: process.env.SB_HOST,
+      });
     }
 
     return createdInvites;
