@@ -79,10 +79,13 @@ export default {
     all: 'View all',
   },
   lesson_funnel: {
-    finish_bite: 'Email sumbited!',
-    start_bite: 'Lesson start',
+    finish_bite: 'Finish',
+    start_bite: 'Start',
     mean: 'Average',
     median: 'Median',
+    bar_title: 'Students funnel',
+    content_title: 'Bite content',
+    spark_title: 'Time distribution',
   },
   editor_js: {
     tool_names: {
@@ -125,7 +128,7 @@ export default {
     publish_modal_fail: {
       title: 'Can not publish course',
       content:
-        'Can not publish course if at least one of its Lesson have status “Draft“ or “Archived”',
+        'Can not publish course if at least one of its Lesson have status “Archived”',
       ok: 'Ok',
     },
     message: {

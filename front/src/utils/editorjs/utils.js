@@ -51,18 +51,21 @@ export const uploadFile = async ({ parent, onSuccess, onError }) => {
     const {
       files: [file],
     } = parent;
-    formData.append('file', file);
 
-    const response = await api.post(
-      `${process.env.REACT_APP_SB_HOST}/api/v1/files`,
-      formData,
-      {
-        headers: {
-          'content-type': 'multipart/form-data',
+    if (file) {
+      formData.append('file', file);
+
+      const response = await api.post(
+        `${process.env.REACT_APP_SB_HOST}/api/v1/files`,
+        formData,
+        {
+          headers: {
+            'content-type': 'multipart/form-data',
+          },
         },
-      },
-    );
-    onSuccess(response);
+      );
+      onSuccess(response);
+    }
   } catch (e) {
     onError(e);
   }

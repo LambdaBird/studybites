@@ -23,9 +23,14 @@ import {
 } from '@sb-ui/pages/User';
 import { Roles } from '@sb-ui/utils/constants';
 import * as paths from '@sb-ui/utils/paths';
-import { COURSES_EDIT, LEARN_PAGE, LESSONS_EDIT } from '@sb-ui/utils/paths';
+import {
+  COURSES_EDIT,
+  LEARN_PAGE,
+  LESSONS_EDIT,
+  LESSONS_PREVIEW,
+} from '@sb-ui/utils/paths';
 
-const SKIP_HEADER = [LESSONS_EDIT, LEARN_PAGE, COURSES_EDIT];
+const SKIP_HEADER = [LESSONS_EDIT, LEARN_PAGE, LESSONS_PREVIEW, COURSES_EDIT];
 
 export const checkPermission = (roles, permissions) => {
   if (!permissions) return true;

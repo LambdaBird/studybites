@@ -1,10 +1,10 @@
 import { Typography } from 'antd';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons';
 
 import ColumnDisabledCheckbox from '@sb-ui/components/atoms/ColumnDisabledCheckbox';
 
+import { FailCircle, SuccessCircle } from '../BlockElement.styled';
 import * as S from './Quiz.styled';
 
 const { Text } = Typography;
@@ -16,7 +16,7 @@ const QuizResult = ({ correct, value, options }) => {
     return (
       <S.AnswerWrapper>
         <Text>{t('lesson.answer_result.correct')}</Text>
-        <CheckCircleTwoTone twoToneColor="#52c41a" />
+        <SuccessCircle />
       </S.AnswerWrapper>
     );
   }
@@ -25,7 +25,7 @@ const QuizResult = ({ correct, value, options }) => {
     <>
       <S.AnswerWrapper>
         <Text>{t('lesson.answer_result.wrong')}</Text>
-        <CloseCircleTwoTone twoToneColor="#F5222D" />
+        <FailCircle />
       </S.AnswerWrapper>
       <ColumnDisabledCheckbox value={value} options={options} />
     </>

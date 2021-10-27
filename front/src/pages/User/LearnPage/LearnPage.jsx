@@ -1,17 +1,21 @@
 /* eslint no-use-before-define: "off" */
+import { useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 
 import Header from '@sb-ui/components/molecules/Header';
 import LearnContext from '@sb-ui/contexts/LearnContext';
 import InfoBlock from '@sb-ui/pages/User/LearnPage/InfoBlock';
 import { getEnrolledLesson, postLessonById } from '@sb-ui/utils/api/v1/student';
 import { sbPostfix } from '@sb-ui/utils/constants';
+import { USER_HOME } from '@sb-ui/utils/paths';
 
 import LearnChunk from './LearnChunk';
 import { useLearnChunks } from './useLearnChunks';
 import * as S from './LearnPage.styled';
+
+const HISTORY_BACK = 'POP';
 
 const LearnPage = () => {
   const { t } = useTranslation('user');
@@ -29,12 +33,23 @@ const LearnPage = () => {
     getEnrolledLesson,
     postLessonById,
   });
+  const history = useHistory();
+  const location = useLocation();
+
+  useEffect(
+    () => () => {
+      if (location.state.fromEnroll && history.action === HISTORY_BACK) {
+        history.replace(USER_HOME);
+      }
+    },
+    [history, location],
+  );
 
   return (
     <>
       <Helmet>
         <title>
-          {t('pages.learn')}
+          {t('pages.learn', { name: lesson?.name })}
           {sbPostfix}
         </title>
       </Helmet>

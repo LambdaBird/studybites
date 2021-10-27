@@ -35,10 +35,13 @@ const EnrollModalDesktop = () => {
   }, [query, history]);
 
   const historyPushCourse = useCallback(() => {
-    history.push(LEARN_COURSE_PAGE.replace(':id', id));
+    history.push({
+      pathname: LEARN_COURSE_PAGE.replace(':id', id),
+      state: { fromEnroll: true },
+    });
   }, [history, id]);
 
-  const { data: responseData } = useQuery(
+  const { data: responseData, isFetching } = useQuery(
     [USER_COURSE_MODAL_BASE_KEY, { id }],
     getCourse,
   );
@@ -81,6 +84,10 @@ const EnrollModalDesktop = () => {
       onSuccess: historyPushCourse,
     });
   }, [mutatePostEnroll, id, historyPushCourse]);
+
+  if (isFetching || responseData?.course?.isEnrolled) {
+    return null;
+  }
 
   return (
     <Modal

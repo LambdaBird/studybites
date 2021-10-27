@@ -3,6 +3,8 @@ export default {
     courses: 'Мои курсы',
     lessons: 'Мои уроки',
     home: 'Домашняя страница',
+    learn: 'Урок {{ name }}',
+    course: 'Курс {{ name }}',
   },
   enroll_modal: {
     review: {
@@ -33,6 +35,7 @@ export default {
       view_all_lessons: 'Посмотреть все мои уроки',
       view_all_courses: 'Посмотреть все мои курсы',
       continue_button: 'Продолжить',
+      view_button: 'Посмотреть',
     },
     ongoing_courses: {
       title: 'Текущие курсы',
@@ -59,6 +62,7 @@ export default {
       title: 'Результаты',
       correct_answers: 'Правильные ответы в уроке',
       total_answers: 'Общее количество вопросов в уроке',
+      graded_pending: 'Вопросы с оценкой, ожидающие рассмотрения',
       percentage: '{{percentage}}% правильных ответов',
     },
     answer_result: {

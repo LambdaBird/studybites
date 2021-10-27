@@ -8,6 +8,17 @@ export const GlobalStylesEditorPage = createGlobalStyle`
     flex-direction: column;
     gap: 1rem;
   }
+  .toolbox-item-none{
+    display: none!important;
+  }
+  .toolbox-input-search{
+    &:focus{
+      outline: none;
+    }
+    border: 1px solid #d9d9d9;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0.5rem;
+  }
   
   .ce-toolbar__plus::after{
     content: '${(props) => props.toolbarHint}';
@@ -81,5 +92,8 @@ export const GlobalStylesEditorPage = createGlobalStyle`
         color: rgba(0, 0, 0, 0.45);
       }
     }
+  }
+  .cte-toolbox-upper{
+    transform: translate3d(0px,calc(-100% + 25px),0px)!important;
   }
 `;

@@ -1,13 +1,19 @@
-const TOOLBOX_BUTTON_ACTIVE_CLASS = 'ce-toolbox__button--active';
+import {
+  TOOLBOX_BUTTON_ACTIVE_CLASS,
+  TOOLBOX_OPENED,
+  TOOLBOX_TOOLBOX,
+} from './constants';
 
-export const initObserver = (targetNode) => {
+export const initObserver = (targetNode, { setIsOpen }) => {
   const observer = new MutationObserver((mutations) => {
     mutations.forEach(({ attributeName, target }) => {
-      if (
-        attributeName === 'class' &&
-        target.classList.contains(TOOLBOX_BUTTON_ACTIVE_CLASS)
-      ) {
-        target.scrollIntoViewIfNeeded();
+      if (attributeName === 'class') {
+        if (target.classList.contains(TOOLBOX_TOOLBOX)) {
+          setIsOpen(target.classList.contains(TOOLBOX_OPENED));
+        }
+        if (target.classList.contains(TOOLBOX_BUTTON_ACTIVE_CLASS)) {
+          target.scrollIntoViewIfNeeded();
+        }
       }
     });
   });

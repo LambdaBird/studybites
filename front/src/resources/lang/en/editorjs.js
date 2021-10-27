@@ -19,6 +19,7 @@ export default {
     },
   },
   tools: {
+    search_placeholder: 'Input block name',
     hint: 'Click "Tab" for commands',
     basic_blocks: 'Basic blocks',
     interactive_blocks: 'Interactive blocks',
@@ -29,6 +30,8 @@ export default {
       title: 'File',
       select: 'Select a file to upload',
       error: 'Failed to upload the file',
+      file_size: 'File size limit exceeded',
+      file_type: 'Invalid file type',
       description: 'Attach a file',
     },
     paragraph: {
@@ -108,7 +111,8 @@ export default {
     fill_the_gap: {
       title: 'Fill The Gap',
       description: 'Fill missed words',
-      hint: '* Text inside {{ }} will be hidden for students',
+      hint_part_one: '* Text inside ',
+      hint_part_two: ' will be hidden for students',
       placeholder: 'Enter a text',
     },
     match: {

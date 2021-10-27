@@ -1,0 +1,74 @@
+import { Meta, Story, Canvas } from '@storybook/addon-docs';
+
+import SparkBars from '@sb-ui/components/atoms/SparkBars';
+
+import { getSparkBarGroup } from '../generateLessonFunnelData';
+
+<Meta
+  title="statistics/SparkBars"
+  component={SparkBars}
+/>
+
+# BarSpark
+
+Component `SparkBars` examples
+
+export const Template = (args) => <div style={{ width: '150px', height: '20px' }}>
+  <SparkBars {...args} />
+</div>;
+
+export const Template2 = (args) => <div style={{ width: '300px', height: '100px' }}>
+  <SparkBars {...args} />
+</div>;
+
+export const Template3 = (args) => <div style={{ width: '160px', height: '40px' }}>
+  <SparkBars {...args} />
+</div>;
+
+1. 7 groups of values with 214 students `150px * 20px`
+
+<Canvas>
+  <Story
+    name="Bar spark 1"
+    args={{
+      groups: getSparkBarGroup({ count: 7, landed: 214 }),
+    }}
+  >
+    {Template.bind({})}
+  </Story>
+</Canvas>
+
+2. 10 groups of values with 500 students `300px * 100px`
+
+<Canvas>
+  <Story
+    name="Bar spark 2"
+    args={{
+      groups: getSparkBarGroup({ count: 10, landed: 500 }),
+    }}
+  >
+    {Template2.bind({})}
+  </Story>
+</Canvas>
+
+3. Distribution of students by time `160px * 40px`
+
+<Canvas>
+  <Story
+    name="Bar spark: Distribution of time"
+    args={{
+      groups: [
+        { value: 32, order: '0', title: '<1s: 32' },
+        { value: 2, order: '1', title: '1s — 3s: 2' },
+        { value: 27, order: '2', title: '3s — 5s: 27' },
+        { value: 50, order: '3', title: '5s — 10s: 50' },
+        { value: 54, order: '4', title: '10s — 20s: 54' },
+        { value: 8, order: '5', title: '20s — 30s: 8' },
+        { value: 37, order: '6', title: '>30s: 38' },
+      ],
+    }}
+  >
+    {Template3.bind({})}
+  </Story>
+</Canvas>
+
