@@ -1,3 +1,4 @@
+import { HEADER_HEIGHT } from '@sb-ui/components/molecules/Header/Header.styled';
 import { TOOLBOX_UPPER } from '@sb-ui/utils/editorjs/EditorJsContainer/useToolbox/constants';
 
 import { getTranslationKey } from './toolboxItemsHelpers';
@@ -86,13 +87,11 @@ export const TOP_OVERLAPS = 'top';
 export const BOTTOM_OVERLAPS = 'bottom';
 
 export const getElementOverlapsPosition = (el) => {
-  const rect = el.getBoundingClientRect();
-  if (rect.top < 0) {
+  const { top, height, bottom } = el.getBoundingClientRect();
+  if (top < HEADER_HEIGHT || window.innerHeight < height * 2 + HEADER_HEIGHT) {
     return TOP_OVERLAPS;
   }
-  if (
-    rect.bottom > (window.innerHeight || document.documentElement.clientHeight)
-  ) {
+  if (bottom > (window.innerHeight || document.documentElement.clientHeight)) {
     return BOTTOM_OVERLAPS;
   }
 
