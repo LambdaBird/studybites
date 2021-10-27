@@ -34,6 +34,10 @@ const options = {
       roleId: roles.MAINTAINER.id,
     });
 
+    if (body.emails.length) {
+      body.emails.map((email) => this.validateEmail({ email }));
+    }
+
     const isLesson = body.resourceType === resources.LESSON.name;
     await (isLesson ? Lesson : Course)
       .query()
@@ -46,61 +50,69 @@ const options = {
   },
 };
 
-async function handler({ body }) {
+async function sendInvites({ emailModel, data, host }) {
+  return Promise.all(
+    data.map(async (invite) =>
+      emailModel.sendInvite({
+        email: invite.email,
+        link: `${host}/invite=${invite.id}`,
+      }),
+    ),
+  );
+}
+
+async function handler({ body, headers }) {
   const {
     models: { Invite },
+    config: {
+      globals: { invitesStatuses },
+    },
+    emailModel,
   } = this;
-  // trx
-  let data;
 
-  if (body.emails.length) {
-    await Invite.query()
-      .patch({ status: 'revoked' })
-      .where({
-        resource_id: body.resourceId,
-        resource_type: body.resourceType,
-        status: 'pending',
-      })
-      .whereIn('email', body.emails)
-      .returning('*');
+  const invites = await Invite.transaction(async (trx) => {
+    await Invite.revokeInvites({
+      trx,
+      resourceId: body.resourceId,
+      resourceType: body.resourceType,
+      emails: body.emails,
+    });
 
-    data = body.emails.map((email) => ({
-      resource_id: body.resourceId,
-      resource_type: body.resourceType,
-      status: 'pending',
-      email,
-    }));
-  } else {
-    await Invite.query()
-      .patch({ status: 'revoked' })
-      .where({
-        resource_id: body.resourceId,
-        resource_type: body.resourceType,
-        status: 'pending',
-      })
-      .whereNull('email')
-      .returning('*');
+    const data = body.emails.length
+      ? body.emails.map((email) => ({
+          resource_id: body.resourceId,
+          resource_type: body.resourceType,
+          status: invitesStatuses.PENDING,
+          email,
+        }))
+      : {
+          resource_id: body.resourceId,
+          resource_type: body.resourceType,
+          status: invitesStatuses.PENDING,
+        };
 
-    data = {
-      resource_id: body.resourceId,
-      resource_type: body.resourceType,
-      status: 'pending',
+    const createdInvites = await Invite.createInvites({ trx, data });
+
+    if (data.length) {
+      await sendInvites({
+        emailModel,
+        data: createdInvites,
+        host: process.env.SB_HOST,
+      });
+    }
+
+    return createdInvites;
+  });
+
+  if (invites.length) {
+    return {
+      invites: invites.map((invite) => ({
+        email: invite.email,
+        invite: invite.id,
+      })),
     };
   }
-
-  const invites = await Invite.query()
-    .skipUndefined()
-    .insert(data)
-    .returning('*');
-
-  // send email here
-
-  return {
-    invites: invites.map?.((invite) => ({
-      email: invite.email,
-      invite: invite.id,
-    })) || [{ email: invites.email, invite: invites.id }],
-  };
+  return { invites: [{ email: invites.email, invite: invites.id }] };
 }
 
 export default { options, handler };

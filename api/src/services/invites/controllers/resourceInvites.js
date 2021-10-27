@@ -16,9 +16,9 @@ async function handler({ params }) {
     models: { Invite },
   } = this;
 
-  const invites = await Invite.query().where({
-    resource_id: params.resourceId,
-    resource_type: params.resourceType,
+  const invites = await Invite.getResourceInvites({
+    resourceId: params.resourceId,
+    resourceType: params.resourceType,
   });
 
   return { invites };

@@ -1,5 +1,3 @@
-import { NotFoundError } from '../../../validation/errors';
-
 const options = {
   schema: {
     params: {
@@ -17,10 +15,8 @@ async function handler({ params }) {
     models: { Invite, User },
   } = this;
 
-  const invite = await Invite.query()
-    .findById(params.inviteId)
-    .throwIfNotFound({ errors: new NotFoundError('err') });
-  const user = await User.query().first().where({ email: invite.email });
+  const invite = await Invite.getInviteById({ inviteId: params.inviteId });
+  const user = await User.getUserByEmail({ email: invite.email });
 
   return {
     invite: invite.id,
