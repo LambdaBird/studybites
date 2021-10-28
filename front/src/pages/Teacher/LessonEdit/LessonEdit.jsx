@@ -4,7 +4,7 @@ import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
 import { useHistory, useParams } from 'react-router-dom';
-import { RedoOutlined, SaveOutlined, UndoOutlined } from '@ant-design/icons';
+import { RedoOutlined, UndoOutlined } from '@ant-design/icons';
 
 import Header from '@sb-ui/components/molecules/Header';
 import KeywordsSelect from '@sb-ui/components/molecules/KeywordsSelect';
@@ -321,8 +321,6 @@ const LessonEdit = () => {
     [dataBlocks, language, t],
   );
 
-  const [headerHide, setHeaderHide] = useState(false);
-
   const isArchived = useMemo(
     () => lessonData?.lesson?.status === Statuses.ARCHIVED,
     [lessonData?.lesson?.status],
@@ -425,11 +423,7 @@ const LessonEdit = () => {
           {sbPostfix}
         </title>
       </Helmet>
-      <Header
-        hideOnScroll
-        handleHide={setHeaderHide}
-        checkUnsaved={checkUnsaved}
-      >
+      <Header isFixed checkUnsaved={checkUnsaved}>
         <S.HeaderButtons>
           <Button disabled={!isCurrentlyEditing} onClick={handlePreview}>
             {t('lesson_edit.buttons.preview')}
@@ -480,20 +474,12 @@ const LessonEdit = () => {
             </S.EditorWrapper>
           </S.LeftCol>
           <S.RightCol>
-            <S.RightColContent $headerHide={headerHide}>
-              <S.RowStyled gutter={[32, 32]}>
-                <Col span={24}>
-                  <S.SaveButton
-                    onClick={handleSave}
-                    disabled={isEditorDisabled}
-                    icon={<SaveOutlined />}
-                    type="primary"
-                    size="large"
-                  >
-                    {t('lesson_edit.buttons.save')}
-                  </S.SaveButton>
-                </Col>
-                <Col span={12}>
+            <S.RightColContent>
+              <S.RowS>
+                <S.SaveButton onClick={handleSave} disabled={isEditorDisabled}>
+                  {t('lesson_edit.buttons.save')}
+                </S.SaveButton>
+                <S.UndoRedoWrapper>
                   <S.MoveButton
                     id="undo-button"
                     icon={<UndoOutlined />}
@@ -501,17 +487,15 @@ const LessonEdit = () => {
                   >
                     {t('lesson_edit.buttons.back')}
                   </S.MoveButton>
-                </Col>
-                <Col span={12}>
                   <S.MoveButton
-                    disabled={isEditorDisabled}
                     id="redo-button"
                     icon={<RedoOutlined />}
+                    disabled={isEditorDisabled}
                   >
                     {t('lesson_edit.buttons.forward')}
                   </S.MoveButton>
-                </Col>
-              </S.RowStyled>
+                </S.UndoRedoWrapper>
+              </S.RowS>
               <S.RowStyled gutter={[0, 10]}>
                 <Col span={24}>
                   <S.DisabledLink>

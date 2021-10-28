@@ -33,6 +33,7 @@ import {
   ClassNameType,
   HandleHideType,
   HideOnScrollType,
+  IsFixedType,
 } from '@sb-ui/utils/types';
 
 import * as S from './Header.styled';
@@ -60,6 +61,7 @@ const MENU_LANGUAGES_LIST = new Map(
 );
 
 const Header = ({
+  isFixed,
   className,
   hideOnScroll,
   bottom,
@@ -288,6 +290,7 @@ const Header = ({
   return (
     <>
       <S.Container
+        isFixed={isFixed}
         className={className}
         hideOnScroll={hideOnScroll}
         scroll={scroll}
@@ -347,6 +350,7 @@ Header.defaultProps = {
 Header.propTypes = {
   children: ChildrenType,
   className: ClassNameType,
+  isFixed: IsFixedType,
   bottom: ChildrenType,
   hideOnScroll: HideOnScrollType,
   handleHide: HandleHideType,
