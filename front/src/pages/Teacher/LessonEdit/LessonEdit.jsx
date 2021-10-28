@@ -355,6 +355,9 @@ const LessonEdit = () => {
           location,
           action,
         };
+        if (location?.state?.forceSkip) {
+          return true;
+        }
         if (action !== HISTORY_POP) {
           checkUnsaved({
             onDiscard: () => {
@@ -422,7 +425,11 @@ const LessonEdit = () => {
           {sbPostfix}
         </title>
       </Helmet>
-      <Header hideOnScroll handleHide={setHeaderHide}>
+      <Header
+        hideOnScroll
+        handleHide={setHeaderHide}
+        checkUnsaved={checkUnsaved}
+      >
         <S.HeaderButtons>
           <Button disabled={!isCurrentlyEditing} onClick={handlePreview}>
             {t('lesson_edit.buttons.preview')}
