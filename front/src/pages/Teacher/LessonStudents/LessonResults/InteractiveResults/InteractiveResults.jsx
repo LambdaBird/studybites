@@ -20,10 +20,10 @@ const InteractiveResults = ({ interactiveResults }) => {
             const isResult =
               !!correctness ||
               correctness === 0 ||
-              BLOCKS_TYPE_LIST_RATED.includes(block.type);
+              BLOCKS_TYPE_LIST_RATED.includes(block?.type);
             return (
               <S.Panel
-                key={block.blockId}
+                key={block?.blockId}
                 $isResult={isResult}
                 header={
                   <ResultItem
@@ -41,7 +41,7 @@ const InteractiveResults = ({ interactiveResults }) => {
                   <LearnWrapper>
                     <BlockElement
                       element={{
-                        blockId: block.id,
+                        blockId: block?.blockId,
                         ...block,
                         reply: data,
                         isSolved: true,

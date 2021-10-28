@@ -12,7 +12,8 @@ import { getTitleAndIcon } from './getTitleAndIcon';
 import * as S from './ResulItem.styled';
 
 const convertRateToCorrectness = (star) => star * 0.2;
-const convertCorrectnessToRate = (correctness) => correctness / 0.2;
+const convertCorrectnessToRate = (correctness) =>
+  parseFloat((correctness / 0.2).toFixed(1));
 
 const ResultItem = ({
   id,
