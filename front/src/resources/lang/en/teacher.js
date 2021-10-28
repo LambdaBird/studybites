@@ -198,6 +198,10 @@ export default {
     finish: 'Finish',
     seconds: '{{time}} seconds',
     short_seconds: '{{time}} sec.',
+    grade: {
+      success: 'Grade success!',
+      error: 'Grade failed!',
+    },
   },
   students: {
     title: 'Lessons students ({{studentsCount}})',

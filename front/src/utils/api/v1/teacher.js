@@ -12,6 +12,11 @@ export const putLesson = async (params) => {
   return data;
 };
 
+export const putReview = async (params) => {
+  const { data } = await api.post(`${PATH}/review/${params.lessonId}`, params);
+  return data;
+};
+
 export const getLesson = async ({ queryKey }) => {
   const [, { id }] = queryKey;
 

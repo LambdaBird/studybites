@@ -4,10 +4,10 @@ const options = {
     body: {
       type: 'object',
       properties: {
-        id: { type: 'string' },
+        resultId: { type: 'string' },
         correctness: { type: 'number' },
       },
-      required: ['id', 'correctness'],
+      required: ['resultId', 'correctness'],
     },
     response: {
       '4xx': { $ref: '4xx#' },
@@ -38,7 +38,7 @@ async function handler({ body, user }) {
   } = this;
 
   await Result.setCorrectness({
-    resultId: body.id,
+    resultId: body.resultId,
     correctness: body.correctness,
     meta: {
       reviewer: user.id,

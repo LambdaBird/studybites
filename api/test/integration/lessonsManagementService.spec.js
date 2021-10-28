@@ -596,7 +596,7 @@ describe('Maintainer flow', () => {
       const response = await testContext.request({
         url: `review/${lessonWithGradedQuestion.lesson.id}`,
         body: {
-          id: gradedQuestionResult.id,
+          resultId: gradedQuestionResult.id,
           correctness: CORRECTNESS,
         },
       });

@@ -177,6 +177,10 @@ export default {
     finish: 'Конец',
     seconds: '{{time}} секунд',
     short_seconds: '{{time}} сек.',
+    grade: {
+      success: 'Оценка выставлена успешно!',
+      error: 'Не удалось выставить оценку',
+    },
   },
   lesson_students: {
     title: 'Студенты урока ({{studentsCount}})',
