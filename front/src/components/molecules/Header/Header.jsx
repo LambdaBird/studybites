@@ -28,6 +28,7 @@ import {
 } from '@sb-ui/utils/paths';
 import { USER_BASE_QUERY } from '@sb-ui/utils/queries';
 import {
+  CheckUnsavedType,
   ChildrenType,
   ClassNameType,
   HandleHideType,
@@ -66,6 +67,7 @@ const Header = ({
   bottom,
   children,
   handleHide,
+  checkUnsaved,
 }) => {
   const history = useHistory();
   const { t, i18n } = useTranslation(['common', 'user']);
@@ -84,10 +86,14 @@ const Header = ({
   }, [history]);
 
   const handleSignOut = useCallback(() => {
-    clearJWT();
-    queryClient.resetQueries();
-    history.push(SIGN_IN);
-  }, [history]);
+    checkUnsaved?.({
+      onSaved: () => {
+        clearJWT();
+        queryClient.resetQueries();
+        history.push(SIGN_IN, { forceSkip: true });
+      },
+    });
+  }, [checkUnsaved, history]);
 
   const { mutate: changeLanguage } = useMutation(patchLanguage, {
     onSuccess: () => {
@@ -335,6 +341,12 @@ const Header = ({
   );
 };
 
+Header.defaultProps = {
+  checkUnsaved: ({ onSaved }) => {
+    onSaved?.();
+  },
+};
+
 Header.propTypes = {
   children: ChildrenType,
   className: ClassNameType,
@@ -342,6 +354,7 @@ Header.propTypes = {
   bottom: ChildrenType,
   hideOnScroll: HideOnScrollType,
   handleHide: HandleHideType,
+  checkUnsaved: CheckUnsavedType,
 };
 
 export default Header;

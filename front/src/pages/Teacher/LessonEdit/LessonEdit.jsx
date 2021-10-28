@@ -1,5 +1,5 @@
-import { Button, Col, Input, message, Row } from 'antd';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { Button, Col, Input, message, Modal, Row } from 'antd';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
@@ -33,10 +33,10 @@ import * as S from './LessonEdit.styled';
 const { TextArea } = Input;
 
 const MAX_NAME_LENGTH = 255;
+const HISTORY_POP = 'POP';
 
 const LessonEdit = () => {
   const { id: lessonId } = useParams();
-
   const [isEditLesson] = useState(lessonId !== 'new');
   const isCurrentlyEditing = useMemo(() => lessonId !== 'new', [lessonId]);
 
@@ -55,10 +55,17 @@ const LessonEdit = () => {
   const [isEditorDisabled, setIsEditorDisabled] = useState(false);
 
   const inputTitle = useRef(null);
-
+  const lastHistory = useRef(null);
+  const navigationPermit = useRef(null);
+  const [currentBlocks, setCurrentBlocks] = useState(null);
+  const [isNavigationAllowed, setIsNavigationAllowed] = useState(true);
   const editorJSRef = useRef(null);
   const [dataBlocks, setDataBlocks] = useState(null);
   const undoPluginRef = useRef(null);
+  const currentLocation = useMemo(
+    () => LESSONS_EDIT.replace(':id', lessonId),
+    [lessonId],
+  );
 
   const { data: lessonData, isLoading } = useQuery(
     [TEACHER_LESSON_BASE_KEY, { id: lessonId }],
@@ -148,10 +155,45 @@ const LessonEdit = () => {
     }
   }, [lessonData?.lesson]);
 
+  const checkUnsaved = useCallback(
+    ({
+      onDiscard = () => {},
+      onSettled = () => {},
+      onSaved = () => {},
+      onCancel = () => {},
+    }) => {
+      if (!isNavigationAllowed) {
+        Modal.destroyAll();
+        setTimeout(() => {
+          Modal.confirm({
+            title: t('lesson_edit.unsaved_modal.title'),
+            content: t('lesson_edit.unsaved_modal.content'),
+            okText: t('lesson_edit.unsaved_modal.ok_text'),
+            cancelText: t('lesson_edit.unsaved_modal.cancel_text'),
+            onOk: () => {
+              onDiscard();
+              onSaved();
+            },
+            onCancel: () => {
+              onCancel();
+            },
+          });
+        }, 50);
+
+        return;
+      }
+      onSettled();
+      onSaved();
+    },
+    [isNavigationAllowed, t],
+  );
+
   useEffect(() => {
     if (lessonData) {
+      const blocks = prepareEditorData(lessonData?.lesson?.blocks);
+      setCurrentBlocks(blocks);
       setDataBlocks({
-        blocks: prepareEditorData(lessonData?.lesson?.blocks),
+        blocks,
       });
       if (!lessonData.lesson.status || lessonData?.lesson.status === 'Draft') {
         setIsEditorDisabled(false);
@@ -205,10 +247,20 @@ const LessonEdit = () => {
     }
   };
 
+  const isBlocksChanged = useCallback(() => {
+    const oldBlocks = prepareEditorData(lessonData?.lesson?.blocks);
+    // TODO: Compare with fast-deep-equal after adding this library
+    return JSON.stringify(oldBlocks) !== JSON.stringify(currentBlocks);
+  }, [currentBlocks, lessonData?.lesson?.blocks]);
+
   const handlePublish = async () => {
-    updateLessonStatusMutation.mutate({
-      id: lessonId,
-      status: Statuses.PUBLIC,
+    checkUnsaved({
+      onSaved: () => {
+        updateLessonStatusMutation.mutate({
+          id: lessonId,
+          status: Statuses.PUBLIC,
+        });
+      },
     });
   };
 
@@ -217,9 +269,13 @@ const LessonEdit = () => {
   };
 
   const handleArchive = async () => {
-    updateLessonStatusMutation.mutate({
-      id: lessonId,
-      status: Statuses.ARCHIVED,
+    checkUnsaved({
+      onSaved: () => {
+        updateLessonStatusMutation.mutate({
+          id: lessonId,
+          status: Statuses.ARCHIVED,
+        });
+      },
     });
   };
 
@@ -258,6 +314,9 @@ const LessonEdit = () => {
       instanceRef: (instance) => {
         editorJSRef.current = instance;
       },
+      onChange: (api, blocks) => {
+        setCurrentBlocks(blocks.blocks);
+      },
     }),
     [dataBlocks, language, t],
   );
@@ -273,6 +332,87 @@ const LessonEdit = () => {
     return `lesson_dashboard.status.${key}`;
   }, [lessonData?.lesson?.status]);
 
+  useEffect(() => {
+    if (isNavigationAllowed) {
+      navigationPermit.current?.();
+      const { location, action } = lastHistory.current || {};
+      if (location) {
+        lastHistory.current = null;
+        if (action !== HISTORY_POP) {
+          history.push({ ...location });
+        } else {
+          window.location.href = location.pathname;
+        }
+      }
+    } else {
+      if (navigationPermit.current) {
+        navigationPermit.current?.();
+      }
+      navigationPermit.current = history.block((location, action) => {
+        lastHistory.current = {
+          location,
+          action,
+        };
+        if (location?.state?.forceSkip) {
+          return true;
+        }
+        if (action !== HISTORY_POP) {
+          checkUnsaved({
+            onDiscard: () => {
+              setIsNavigationAllowed(true);
+            },
+          });
+          return false;
+        }
+        if (action === HISTORY_POP) {
+          checkUnsaved({
+            onCancel: () => {
+              window.history.pushState('', '', currentLocation);
+            },
+            onDiscard: () => {
+              setIsNavigationAllowed(true);
+            },
+          });
+          return false;
+        }
+
+        return true;
+      });
+    }
+
+    return () => {
+      navigationPermit.current?.();
+    };
+  }, [isNavigationAllowed, checkUnsaved, currentLocation, history]);
+
+  useEffect(() => {
+    if (isBlocksChanged()) {
+      setIsNavigationAllowed(false);
+    } else {
+      lastHistory.current = null;
+      setIsNavigationAllowed(true);
+    }
+  }, [currentBlocks, isBlocksChanged]);
+
+  const handlerBeforeUnload = useCallback(
+    (event) => {
+      if (!isNavigationAllowed) {
+        event.preventDefault();
+        // eslint-disable-next-line no-param-reassign
+        event.returnValue = '';
+      }
+    },
+    [isNavigationAllowed],
+  );
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', handlerBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handlerBeforeUnload);
+    };
+  }, [isNavigationAllowed, handlerBeforeUnload, history]);
+
   return (
     <>
       <Helmet>
@@ -283,7 +423,7 @@ const LessonEdit = () => {
           {sbPostfix}
         </title>
       </Helmet>
-      <Header isFixed>
+      <Header isFixed checkUnsaved={checkUnsaved}>
         <S.HeaderButtons>
           <Button disabled={!isCurrentlyEditing} onClick={handlePreview}>
             {t('lesson_edit.buttons.preview')}

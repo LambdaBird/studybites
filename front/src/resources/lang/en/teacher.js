@@ -140,6 +140,12 @@ export default {
     },
   },
   lesson_edit: {
+    unsaved_modal: {
+      title: 'You have unsaved changes',
+      content: `You've made updates in Lesson, but you haven't saved these changes. Do you want to discard this changes?`,
+      ok_text: 'Discard',
+      cancel_text: 'Cancel',
+    },
     buttons: {
       publish: 'Publish',
       save: 'Save',
