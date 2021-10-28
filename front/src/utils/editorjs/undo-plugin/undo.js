@@ -4,6 +4,7 @@ import { BLOCKS_TYPE } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
 import { moveCaret } from '@sb-ui/utils/editorjs/quiz-plugin/utils';
 import { createElementFromHTML } from '@sb-ui/utils/editorjs/utils';
 
+import { isSameElementAsCreated } from './domUtils';
 import Observer from './observer';
 
 const BODY_TAG_NAME = 'BODY';
@@ -174,6 +175,49 @@ export default class Undo {
     this.updateBlocks();
   }
 
+  getHolderWithCorrectIndex(index) {
+    const countBlocks = this.editor.blocks.getBlocksCount();
+    const correctIndex = index + 1 > countBlocks ? countBlocks - 1 : index;
+    const holderByIndex =
+      this.editor.blocks?.getBlockByIndex(correctIndex)?.holder;
+    const holder =
+      holderByIndex || this.editor.blocks.getBlockByIndex(0)?.holder;
+    return { holder, correctIndex };
+  }
+
+  getRealElement({ holder, activeElementHTML }) {
+    const createdElement = createElementFromHTML(activeElementHTML);
+    const tagName = createdElement.tagName.toLowerCase();
+    const createdElementAttributes = [...createdElement.attributes];
+    const allElements = holder.querySelectorAll(tagName);
+    return (
+      [...allElements].find((element) =>
+        isSameElementAsCreated({ element, createdElementAttributes }),
+      ) ||
+      holder.querySelector(INPUT_SELECTORS) ||
+      this.addAndTakeLastBlockInput()
+    );
+  }
+
+  afterRenderNewBlocks({ index, activeElementHTML }) {
+    if (index < 0) {
+      return;
+    }
+    const { holder, correctIndex } = this.getHolderWithCorrectIndex(index);
+    if (activeElementHTML) {
+      const realElement = this.getRealElement({ holder, activeElementHTML });
+      if (realElement?.isContentEditable) {
+        moveCaret(realElement);
+      } else if (realElement?.tagName === INPUT_TAG_NAME) {
+        realElement?.focus();
+      }
+      realElement?.scrollIntoViewIfNeeded?.(true);
+    } else {
+      this.editor.caret.setToBlock(correctIndex, 'start');
+      holder?.scrollIntoViewIfNeeded?.(true);
+    }
+  }
+
   /**
    * Renders data in the editor by index with state
    */
@@ -184,71 +228,24 @@ export default class Undo {
     if (!state) {
       return;
     }
-    this.onUpdate();
     if (state.length === 0) {
       this.editor.clear();
-    } else {
-      const savedData = await this.editor.save?.();
-      if (equal(savedData?.blocks, state)) {
-        return;
-      }
-      this.toolbar?.classList?.remove?.(CE_TOOLBAR_OPENED);
-      const newState = state?.map((block) => ({
-        ...block,
-        data: block.data === null ? {} : block.data,
-      }));
-      this.editor.blocks.render({ blocks: newState }).then(() => {
-        if (index >= 0) {
-          const countBlocks = this.editor.blocks.getBlocksCount();
-          const correctIndex =
-            index + 1 > countBlocks ? countBlocks - 1 : index;
-          const holderByIndex =
-            this.editor.blocks?.getBlockByIndex(correctIndex)?.holder;
-          const holder =
-            holderByIndex || this.editor.blocks.getBlockByIndex(0)?.holder;
-
-          if (activeElementHTML) {
-            const createdElement = createElementFromHTML(activeElementHTML);
-            const tagName = createdElement.tagName.toLowerCase();
-            const createdElementAttributes = [...createdElement.attributes];
-            const allElements = holder.querySelectorAll(tagName);
-
-            const realElement =
-              [...allElements].find((element) => {
-                const realElementAttributes = [...element.attributes];
-                if (
-                  realElementAttributes.length !==
-                  createdElementAttributes.length
-                ) {
-                  return false;
-                }
-                return realElementAttributes.every((attribute, i) => {
-                  const firstNodeValue = createdElementAttributes[i].nodeValue;
-                  const secondNodeValue = attribute.nodeValue;
-                  return firstNodeValue === secondNodeValue
-                    ? true
-                    : !!(
-                        firstNodeValue?.includes(secondNodeValue) ||
-                        secondNodeValue?.includes(firstNodeValue)
-                      );
-                });
-              }) ||
-              holder.querySelector(INPUT_SELECTORS) ||
-              this.addAndTakeLastBlockInput();
-
-            if (realElement?.contentEditable === 'true') {
-              moveCaret(realElement);
-            } else if (realElement?.tagName === INPUT_TAG_NAME) {
-              realElement?.focus();
-            }
-            realElement?.scrollIntoViewIfNeeded?.(true);
-          } else {
-            this.editor.caret.setToBlock(correctIndex, 'start');
-            holder?.scrollIntoViewIfNeeded?.(true);
-          }
-        }
-      });
+      return;
     }
+
+    this.onUpdate();
+    const savedData = await this.editor.save?.();
+    if (equal(savedData?.blocks, state)) {
+      return;
+    }
+    this.toolbar?.classList?.remove?.(CE_TOOLBAR_OPENED);
+    const newState = state?.map((block) => ({
+      ...block,
+      data: block.data === null ? {} : block.data,
+    }));
+    this.editor.blocks.render({ blocks: newState }).then(() => {
+      this.afterRenderNewBlocks({ index, activeElementHTML });
+    });
   }
 
   addAndTakeLastBlockInput() {
