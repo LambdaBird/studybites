@@ -6,7 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { setJWT } from '@sb-ui/utils/jwt';
 import { HOME } from '@sb-ui/utils/paths';
 
-export const useAuthentication = (requestFunc) => {
+export const useAuthentication = ({ requestFunc, message }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const [error, setError] = useState(null);
@@ -20,13 +20,13 @@ export const useAuthentication = (requestFunc) => {
     if (status.toString().startsWith('2')) {
       setJWT(data);
       MessageAntd.success({
-        content: t('sign_up:email_verification'),
+        content: t(message),
         duration: 2,
       });
       history.push(HOME);
     } else {
-      const { message } = data;
-      let textError = t(message);
+      const { message: messageKey } = data;
+      let textError = t(messageKey);
       if (!textError) {
         textError = t('errors.no_internet');
       }

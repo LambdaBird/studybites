@@ -12,6 +12,13 @@ export const Container = styled.header`
   height: ${HEADER_HEIGHT}px;
   z-index: 4;
   ${(props) =>
+    props.isFixed &&
+    `
+    width: 100%;
+    position: fixed;
+    top: 0;
+    `}
+  ${(props) =>
     props.hideOnScroll &&
     `
     width: 100%;
@@ -85,6 +92,7 @@ export const MenuWrapper = styled.div`
   z-index: 3;
   width: 100%;
   transition: transform 0.3s ease-in-out;
+  margin-top: 0;
   transform: ${(props) =>
     props.visible ? `translateY(${HEADER_HEIGHT}px)` : 'translateY(-100%)'};
 `;

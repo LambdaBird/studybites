@@ -4,47 +4,56 @@ import { useContext, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import LearnContext from '@sb-ui/contexts/LearnContext';
-import { verifyAnswers } from '@sb-ui/pages/User/LearnPage/BlockElement/Quiz/verifyAnswers';
+import { chunksToInteractiveBlocks } from '@sb-ui/pages/User/LearnPage/BlockElement/Results/chunksToInteractiveBlocks';
 import { BLOCKS_TYPE } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
+import {
+  interactiveGradedResultTypesBlocks,
+  interactiveResultTypesBlocks,
+} from '@sb-ui/utils/api/config';
 
+import {
+  calculateBricks,
+  calculateClosedQuestion,
+  calculateFillTheGap,
+  calculateMatch,
+  calculateQuiz,
+} from './calculateAnswer';
 import * as S from './Results.styled';
 
 const { Text, Title } = Typography;
-
-const interactiveAnswerTypes = [BLOCKS_TYPE.QUIZ, BLOCKS_TYPE.CLOSED_QUESTION];
 
 const Results = ({ callbackRef }) => {
   const { t } = useTranslation('user');
   const { chunks } = useContext(LearnContext);
 
   const interactiveAnswerBlocks = useMemo(
-    () =>
-      chunks
-        ?.flat()
-        ?.filter((block) => interactiveAnswerTypes.includes(block.type)) || [],
+    () => chunksToInteractiveBlocks(chunks, interactiveResultTypesBlocks),
+    [chunks],
+  );
+
+  const interactiveGradedBlocks = useMemo(
+    () => chunksToInteractiveBlocks(chunks, interactiveGradedResultTypesBlocks),
     [chunks],
   );
 
   const correctInteractiveAnswer = useMemo(
     () =>
       interactiveAnswerBlocks
-        .map(({ type, reply, answer, content }) => {
-          if (type === BLOCKS_TYPE.QUIZ) {
-            const userAnswer =
-              reply?.response?.map((x) => ({ correct: x })) ||
-              content?.data?.answers;
-            const { correct } = verifyAnswers(userAnswer, answer?.results);
-            return correct;
+        .map(({ type, ...block }) => {
+          switch (type) {
+            case BLOCKS_TYPE.QUIZ:
+              return calculateQuiz(block);
+            case BLOCKS_TYPE.CLOSED_QUESTION:
+              return calculateClosedQuestion(block);
+            case BLOCKS_TYPE.FILL_THE_GAP:
+              return calculateFillTheGap(block);
+            case BLOCKS_TYPE.BRICKS:
+              return calculateBricks(block);
+            case BLOCKS_TYPE.MATCH:
+              return calculateMatch(block);
+            default:
+              return false;
           }
-          if (type === BLOCKS_TYPE.CLOSED_QUESTION) {
-            const userAnswer = content?.data?.answer;
-            return answer?.results?.some(
-              (result) =>
-                result.trim().toLowerCase() ===
-                userAnswer?.trim()?.toLowerCase(),
-            );
-          }
-          return false;
         })
         .filter((x) => x)?.length,
     [interactiveAnswerBlocks],
@@ -54,6 +63,8 @@ const Results = ({ callbackRef }) => {
     () => (correctInteractiveAnswer / interactiveAnswerBlocks.length) * 100,
     [correctInteractiveAnswer, interactiveAnswerBlocks.length],
   );
+
+  const gradedPendingCount = interactiveGradedBlocks.length;
 
   return (
     <S.Row ref={callbackRef}>
@@ -72,6 +83,15 @@ const Results = ({ callbackRef }) => {
           value={interactiveAnswerBlocks.length}
         />
       </S.Col>
+      {gradedPendingCount > 0 && (
+        <S.Col>
+          <Statistic
+            title={t('lesson.results.graded_pending')}
+            value={gradedPendingCount}
+          />
+        </S.Col>
+      )}
+
       {interactiveAnswerBlocks.length > 0 && (
         <S.Col>
           <Text strong>

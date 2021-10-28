@@ -1,3 +1,6 @@
+import { HEADER_HEIGHT } from '@sb-ui/components/molecules/Header/Header.styled';
+import { TOOLBOX_UPPER } from '@sb-ui/utils/editorjs/EditorJsContainer/useToolbox/constants';
+
 import { getTranslationKey } from './toolboxItemsHelpers';
 
 export const appendItems = ({ node, items = [] }) => {
@@ -16,6 +19,20 @@ export const createDivWithClassName = ({
   element.innerText = innerText;
   items.forEach((item) => {
     element.appendChild(item);
+  });
+  return element;
+};
+
+export const createInputWithClassName = ({
+  className,
+  placeholder,
+  events,
+}) => {
+  const element = document.createElement('input');
+  element.classList.add(className);
+  element.placeholder = placeholder;
+  Object.entries(events).forEach(([eventName, func]) => {
+    element.addEventListener(eventName, func);
   });
   return element;
 };
@@ -64,4 +81,27 @@ export const transformDefaultMenuItems = (items, block, t) => {
       ],
     });
   });
+};
+
+export const TOP_OVERLAPS = 'top';
+export const BOTTOM_OVERLAPS = 'bottom';
+
+export const getElementOverlapsPosition = (el) => {
+  const { top, height, bottom } = el.getBoundingClientRect();
+  if (top < HEADER_HEIGHT || window.innerHeight < height * 2 + HEADER_HEIGHT) {
+    return TOP_OVERLAPS;
+  }
+  if (bottom > (window.innerHeight || document.documentElement.clientHeight)) {
+    return BOTTOM_OVERLAPS;
+  }
+
+  return null;
+};
+
+export const toggleToolboxPosition = (element, position) => {
+  if (position === BOTTOM_OVERLAPS) {
+    element.classList.add(TOOLBOX_UPPER);
+  } else {
+    element.classList.remove(TOOLBOX_UPPER);
+  }
 };

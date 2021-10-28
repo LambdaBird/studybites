@@ -96,7 +96,7 @@ export const useCourse = ({ isEditCourse, courseId, search }) => {
     courseId,
   });
 
-  const isSaveButtonDisabled = useMemo(
+  const isButtonsDisabled = useMemo(
     () =>
       !(
         courseData?.course?.status === Statuses.DRAFT ||
@@ -114,6 +114,6 @@ export const useCourse = ({ isEditCourse, courseId, search }) => {
     handleDraft,
     isLoading,
     isUpdateInProgress,
-    isSaveButtonDisabled,
+    isButtonsDisabled,
   };
 };

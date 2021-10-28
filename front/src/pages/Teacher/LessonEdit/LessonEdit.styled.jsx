@@ -1,6 +1,8 @@
 import { Badge, Button, Col, Row, Typography } from 'antd';
 import styled from 'styled-components';
+import { SaveOutlined } from '@ant-design/icons';
 
+import { HEADER_HEIGHT } from '@sb-ui/components/molecules/Header/Header.styled';
 import variables from '@sb-ui/theme/variables';
 
 import LessonShare from './LessonShare';
@@ -9,49 +11,58 @@ export const Page = styled.div`
   height: 100%;
   width: 100%;
   padding: 2rem;
+  margin-top: ${HEADER_HEIGHT}px;
 `;
 
 export const StyledRow = styled(Row)`
   height: 100%;
   width: 100%;
   display: flex;
+  justify-content: center;
   flex-wrap: nowrap;
-  gap: 3rem;
+  gap: 4rem;
+  @media (max-width: 1200px) {
+    gap: 2rem;
+  }
 `;
 
-export const LeftCol = styled(Col)`
+export const LeftCol = styled.div`
   min-height: 100%;
   display: flex;
   justify-content: center;
-  flex: 3 1 auto;
+  flex-basis: 800px;
 `;
 
 export const EditorWrapper = styled.div`
   background-color: white;
   border: 32px solid #e2eff8;
   border-radius: 40px;
-  width: 100%;
   min-height: 100%;
   padding: 2rem;
-  max-width: 850px;
+  width: 100%;
   position: relative;
 `;
 
-export const RightCol = styled(Col)`
-  height: 100%;
-  flex: 1 1 400px;
-  display: flex;
-  max-width: 450px;
-  justify-content: center;
+export const RightColWidth = `
+  width: 350px;
+  @media (max-width: 1200px) {
+    width: 100%;
+    max-width: 300px;
+  }
 `;
 
-export const RightColContent = styled(Col)`
+export const RightCol = styled.div`
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  ${RightColWidth};
+`;
+
+export const RightColContent = styled.div`
   position: fixed;
   height: 100vh;
-  padding: 0 2rem 2rem;
   overflow-y: auto;
-  transition: transform 0.3s ease-in-out;
-  transform: translateY(${(props) => (props.$headerHide ? '-54' : '0')}px);
+  ${RightColWidth};
 `;
 
 export const InputTitle = styled.input`
@@ -61,14 +72,18 @@ export const InputTitle = styled.input`
     outline: none;
   }
   font-size: 1.5rem;
-  width: 100%;
-
-  @media (min-width: 1200px) {
-    padding: 0 2.25rem;
+  padding-left: 0.625rem;
+  @media (max-width: 1200px) {
+    padding-left: 0;
   }
+  width: 100%;
 `;
 
-export const SaveButton = styled(Button)`
+export const SaveButton = styled(Button).attrs({
+  icon: <SaveOutlined />,
+  type: 'primary',
+  size: 'large',
+})`
   width: 100%;
 `;
 
@@ -91,6 +106,16 @@ export const TextLink = styled(Typography.Link)`
   color: ${variables['text-color']}!important;
 `;
 
+export const DisabledLink = styled(Typography.Link).attrs({
+  disabled: true,
+  underline: true,
+})``;
+
+export const DangerLink = styled(Typography.Link).attrs({
+  underline: true,
+  type: 'danger',
+})``;
+
 export const TextDisabled = styled(Typography.Link).attrs({
   disabled: true,
 })``;
@@ -102,6 +127,19 @@ export const HeaderButtons = styled(Col)`
 
 export const PublishButton = styled(Button)`
   margin-left: 1rem;
+`;
+
+export const RowS = styled.div`
+  display: flex;
+  flex-direction: column;
+  row-gap: 2.375rem;
+  margin-bottom: 2rem;
+`;
+
+export const UndoRedoWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
 `;
 
 export const RowStyled = styled(Row)`

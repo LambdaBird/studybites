@@ -73,10 +73,12 @@ export default class AttachPlugin {
     }
   };
 
-  onError = () => {
+  onError = ({ response }) => {
     this.isLoading = false;
     this.nodes.fileInput.disabled = false;
-    this.nodes.label.innerText = this.api.i18n.t('error');
+    const [, errorMessage] = response?.data?.message?.split('.');
+    const labelKey = response?.status === 400 ? errorMessage : 'error';
+    this.nodes.label.innerText = this.api.i18n.t(labelKey);
   };
 
   onChange = async () => {
@@ -88,6 +90,7 @@ export default class AttachPlugin {
       onSuccess: this.onSuccess,
       onError: this.onError,
     });
+    this.nodes.fileInput.disabled = false;
   };
 
   preparePluginTitle() {

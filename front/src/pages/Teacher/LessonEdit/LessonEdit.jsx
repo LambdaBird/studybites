@@ -1,16 +1,17 @@
-import { Button, Col, Input, message, Row, Typography } from 'antd';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { Button, Col, Input, message, Modal, Row } from 'antd';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
 import { useHistory, useParams } from 'react-router-dom';
-import { RedoOutlined, SaveOutlined, UndoOutlined } from '@ant-design/icons';
+import { RedoOutlined, UndoOutlined } from '@ant-design/icons';
 
 import Header from '@sb-ui/components/molecules/Header';
 import InviteStudentsModal from '@sb-ui/components/molecules/InviteStudentsModal';
 import KeywordsSelect from '@sb-ui/components/molecules/KeywordsSelect';
 import { useLessonStatus } from '@sb-ui/hooks/useLessonStatus';
 import { Statuses } from '@sb-ui/pages/Teacher/Home/Dashboard/constants';
+import { convertStatusToTranslation } from '@sb-ui/pages/Teacher/LessonEdit/statusHelper';
 import { queryClient } from '@sb-ui/query';
 import {
   createLesson,
@@ -33,10 +34,10 @@ import * as S from './LessonEdit.styled';
 const { TextArea } = Input;
 
 const MAX_NAME_LENGTH = 255;
+const HISTORY_POP = 'POP';
 
 const LessonEdit = () => {
   const { id: lessonId } = useParams();
-
   const [isEditLesson] = useState(lessonId !== 'new');
   const isCurrentlyEditing = useMemo(() => lessonId !== 'new', [lessonId]);
 
@@ -56,10 +57,17 @@ const LessonEdit = () => {
   const [showInviteStudentsModal, setShowInviteStudentsModal] = useState(false);
 
   const inputTitle = useRef(null);
-
+  const lastHistory = useRef(null);
+  const navigationPermit = useRef(null);
+  const [currentBlocks, setCurrentBlocks] = useState(null);
+  const [isNavigationAllowed, setIsNavigationAllowed] = useState(true);
   const editorJSRef = useRef(null);
   const [dataBlocks, setDataBlocks] = useState(null);
   const undoPluginRef = useRef(null);
+  const currentLocation = useMemo(
+    () => LESSONS_EDIT.replace(':id', lessonId),
+    [lessonId],
+  );
 
   const { data: lessonData, isLoading } = useQuery(
     [TEACHER_LESSON_BASE_KEY, { id: lessonId }],
@@ -84,7 +92,7 @@ const LessonEdit = () => {
   const createLessonMutation = useMutation(createLesson, {
     onSuccess: (data) => {
       const { id } = data?.lesson;
-      history.replace(LESSONS_EDIT.replace(':id', id));
+      history.replace(LESSONS_EDIT.replace(':id', id), { forceSkip: true });
       message.success({
         content: t('editor_js.message.success_created'),
         duration: 2,
@@ -120,6 +128,8 @@ const LessonEdit = () => {
         content: t('editor_js.message.success_updated'),
         duration: 2,
       });
+      lastHistory.current = null;
+      setIsNavigationAllowed(true);
     },
     onError: () => {
       message.error({
@@ -149,10 +159,45 @@ const LessonEdit = () => {
     }
   }, [lessonData?.lesson]);
 
+  const checkUnsaved = useCallback(
+    ({
+      onDiscard = () => {},
+      onSettled = () => {},
+      onSaved = () => {},
+      onCancel = () => {},
+    }) => {
+      if (!isNavigationAllowed) {
+        Modal.destroyAll();
+        setTimeout(() => {
+          Modal.confirm({
+            title: t('lesson_edit.unsaved_modal.title'),
+            content: t('lesson_edit.unsaved_modal.content'),
+            okText: t('lesson_edit.unsaved_modal.ok_text'),
+            cancelText: t('lesson_edit.unsaved_modal.cancel_text'),
+            onOk: () => {
+              onDiscard();
+              onSaved();
+            },
+            onCancel: () => {
+              onCancel();
+            },
+          });
+        }, 50);
+
+        return;
+      }
+      onSettled();
+      onSaved();
+    },
+    [isNavigationAllowed, t],
+  );
+
   useEffect(() => {
     if (lessonData) {
+      const blocks = prepareEditorData(lessonData?.lesson?.blocks);
+      setCurrentBlocks(blocks);
       setDataBlocks({
-        blocks: prepareEditorData(lessonData?.lesson?.blocks),
+        blocks,
       });
       if (!lessonData.lesson.status || lessonData?.lesson.status === 'Draft') {
         setIsEditorDisabled(false);
@@ -206,15 +251,36 @@ const LessonEdit = () => {
     }
   };
 
+  const isBlocksChanged = useCallback(() => {
+    const oldBlocks = prepareEditorData(lessonData?.lesson?.blocks);
+    // TODO: Compare with fast-deep-equal after adding this library
+    return JSON.stringify(oldBlocks) !== JSON.stringify(currentBlocks);
+  }, [currentBlocks, lessonData?.lesson?.blocks]);
+
   const handlePublish = async () => {
-    updateLessonStatusMutation.mutate({
-      id: lessonId,
-      status: Statuses.PUBLIC,
+    checkUnsaved({
+      onSaved: () => {
+        updateLessonStatusMutation.mutate({
+          id: lessonId,
+          status: Statuses.PUBLIC,
+        });
+      },
     });
   };
 
   const handleDraft = async () => {
     updateLessonStatusMutation.mutate({ id: lessonId, status: Statuses.DRAFT });
+  };
+
+  const handleArchive = async () => {
+    checkUnsaved({
+      onSaved: () => {
+        updateLessonStatusMutation.mutate({
+          id: lessonId,
+          status: Statuses.ARCHIVED,
+        });
+      },
+    });
   };
 
   const handleInputTitle = (e) => {
@@ -252,11 +318,104 @@ const LessonEdit = () => {
       instanceRef: (instance) => {
         editorJSRef.current = instance;
       },
+      onChange: (api, blocks) => {
+        setCurrentBlocks(blocks.blocks);
+      },
     }),
     [dataBlocks, language, t],
   );
 
-  const [headerHide, setHeaderHide] = useState(false);
+  const isArchived = useMemo(
+    () => lessonData?.lesson?.status === Statuses.ARCHIVED,
+    [lessonData?.lesson?.status],
+  );
+
+  const lessonStatusKey = useMemo(() => {
+    const status = lessonData?.lesson?.status;
+    const key = status ? convertStatusToTranslation(status) : 'draft';
+    return `lesson_dashboard.status.${key}`;
+  }, [lessonData?.lesson?.status]);
+
+  useEffect(() => {
+    if (isNavigationAllowed) {
+      navigationPermit.current?.();
+      const { location, action } = lastHistory.current || {};
+      if (location) {
+        lastHistory.current = null;
+        if (action !== HISTORY_POP) {
+          history.push({ ...location });
+        } else {
+          window.location.href = location.pathname;
+        }
+      }
+    } else {
+      if (navigationPermit.current) {
+        navigationPermit.current?.();
+      }
+      navigationPermit.current = history.block((location, action) => {
+        lastHistory.current = {
+          location,
+          action,
+        };
+        if (location?.state?.forceSkip) {
+          return true;
+        }
+        if (action !== HISTORY_POP) {
+          checkUnsaved({
+            onDiscard: () => {
+              setIsNavigationAllowed(true);
+            },
+          });
+          return false;
+        }
+        if (action === HISTORY_POP) {
+          checkUnsaved({
+            onCancel: () => {
+              window.history.pushState('', '', currentLocation);
+            },
+            onDiscard: () => {
+              setIsNavigationAllowed(true);
+            },
+          });
+          return false;
+        }
+
+        return true;
+      });
+    }
+
+    return () => {
+      navigationPermit.current?.();
+    };
+  }, [isNavigationAllowed, checkUnsaved, currentLocation, history]);
+
+  useEffect(() => {
+    if (isBlocksChanged()) {
+      setIsNavigationAllowed(false);
+    } else {
+      lastHistory.current = null;
+      setIsNavigationAllowed(true);
+    }
+  }, [currentBlocks, isBlocksChanged]);
+
+  const handlerBeforeUnload = useCallback(
+    (event) => {
+      if (!isNavigationAllowed) {
+        event.preventDefault();
+        // eslint-disable-next-line no-param-reassign
+        event.returnValue = '';
+      }
+    },
+    [isNavigationAllowed],
+  );
+
+  useEffect(() => {
+    window.addEventListener('beforeunload', handlerBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handlerBeforeUnload);
+    };
+  }, [isNavigationAllowed, handlerBeforeUnload, history]);
 
   return (
     <>
@@ -268,7 +427,7 @@ const LessonEdit = () => {
           {sbPostfix}
         </title>
       </Helmet>
-      <Header hideOnScroll handleHide={setHeaderHide}>
+      <Header isFixed checkUnsaved={checkUnsaved}>
         <S.HeaderButtons>
           <Button disabled={!isCurrentlyEditing} onClick={handlePreview}>
             {t('lesson_edit.buttons.preview')}
@@ -311,13 +470,7 @@ const LessonEdit = () => {
               />
               <S.BadgeWrapper>
                 <S.CardBadge>
-                  <S.StatusText>
-                    {lessonData?.lesson.status
-                      ? t(
-                          `lesson_dashboard.status.${lessonData?.lesson.status.toLocaleLowerCase()}`,
-                        )
-                      : t('lesson_dashboard.status.draft')}
-                  </S.StatusText>
+                  <S.StatusText>{t(lessonStatusKey)}</S.StatusText>
                 </S.CardBadge>
               </S.BadgeWrapper>
               {isRenderEditor && isEditorDisabled === true && (
@@ -329,20 +482,12 @@ const LessonEdit = () => {
             </S.EditorWrapper>
           </S.LeftCol>
           <S.RightCol>
-            <S.RightColContent $headerHide={headerHide}>
-              <S.RowStyled gutter={[32, 32]}>
-                <Col span={24}>
-                  <S.SaveButton
-                    onClick={handleSave}
-                    disabled={isEditorDisabled}
-                    icon={<SaveOutlined />}
-                    type="primary"
-                    size="large"
-                  >
-                    {t('lesson_edit.buttons.save')}
-                  </S.SaveButton>
-                </Col>
-                <Col span={12}>
+            <S.RightColContent>
+              <S.RowS>
+                <S.SaveButton onClick={handleSave} disabled={isEditorDisabled}>
+                  {t('lesson_edit.buttons.save')}
+                </S.SaveButton>
+                <S.UndoRedoWrapper>
                   <S.MoveButton
                     id="undo-button"
                     icon={<UndoOutlined />}
@@ -350,22 +495,20 @@ const LessonEdit = () => {
                   >
                     {t('lesson_edit.buttons.back')}
                   </S.MoveButton>
-                </Col>
-                <Col span={12}>
                   <S.MoveButton
-                    disabled={isEditorDisabled}
                     id="redo-button"
                     icon={<RedoOutlined />}
+                    disabled={isEditorDisabled}
                   >
                     {t('lesson_edit.buttons.forward')}
                   </S.MoveButton>
-                </Col>
-              </S.RowStyled>
+                </S.UndoRedoWrapper>
+              </S.RowS>
               <S.RowStyled gutter={[0, 10]}>
                 <Col span={24}>
-                  <S.TextDisabled>
+                  <S.DisabledLink>
                     {t('lesson_edit.links.invite_collaborators')}
-                  </S.TextDisabled>
+                  </S.DisabledLink>
                 </Col>
                 <Col span={24}>
                   <S.TextLink
@@ -389,14 +532,14 @@ const LessonEdit = () => {
                   />
                 </S.StudentsCol>
                 <Col span={24}>
-                  <S.TextLink underline>
+                  <S.DisabledLink>
                     {t('lesson_edit.links.analytics')}
-                  </S.TextLink>
+                  </S.DisabledLink>
                 </Col>
                 <Col span={24}>
-                  <Typography.Link type="danger" underline>
+                  <S.DangerLink disabled={isArchived} onClick={handleArchive}>
                     {t('lesson_edit.links.archive')}
-                  </Typography.Link>
+                  </S.DangerLink>
                 </Col>
               </S.RowStyled>
               <S.LessonShareStyled />

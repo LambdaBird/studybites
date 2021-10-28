@@ -292,13 +292,16 @@ class Lesson extends BaseModel {
     return query.withGraphFetched('author');
   }
 
-  static getLessonWithProgress({ lessonId }) {
+  static getLessonWithProgress({ lessonId, userId }) {
     return this.query()
       .select(
         'lessons.*',
-        this.knex().raw(`
-          (select count(*) from results where lesson_id = lessons.id and action in ('next', 'response')) interactive_passed
-        `),
+        this.knex().raw(
+          `
+          (select count(*) from results where lesson_id = lessons.id and user_id = ? and action in ('next', 'response')) interactive_passed
+        `,
+          [userId],
+        ),
         this.knex().raw(`
           (select count(*) from lesson_block_structure join blocks on blocks.block_id = lesson_block_structure.block_id
           where blocks.type in ('next', 'quiz') and lesson_block_structure.lesson_id = lessons.id) interactive_total
@@ -310,6 +313,19 @@ class Lesson extends BaseModel {
 
   static updateLessonStatus({ lessonId, status }) {
     return this.query().findById(lessonId).patch({ status }).returning('*');
+  }
+
+  static updateLessonsStatus({ lessons, status }) {
+    return this.query()
+      .insert(
+        lessons.map(({ id, name }) => ({
+          id,
+          name,
+          status,
+        })),
+      )
+      .onConflict('id')
+      .merge('status');
   }
 
   static getAllFinishedLessons({

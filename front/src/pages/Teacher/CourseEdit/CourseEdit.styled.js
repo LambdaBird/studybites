@@ -92,6 +92,11 @@ export const TextLink = styled(Typography.Link)`
   color: ${variables['text-color']}!important;
 `;
 
+export const DisabledLink = styled(Typography.Link).attrs({
+  disabled: true,
+  underline: true,
+})``;
+
 export const HeaderButtons = styled(Col)`
   margin-left: auto;
   margin-right: 2rem;

@@ -10,7 +10,7 @@ export default class FillTheGap extends PluginBase {
   constructor({ data, api, readOnly }) {
     super({
       title: api.i18n.t('title'),
-      hint: api.i18n.t('hint'),
+      hint: `${api.i18n.t('hint_part_one')}{{ }}${api.i18n.t('hint_part_two')}`,
     });
 
     this.data = data;
@@ -54,7 +54,6 @@ export default class FillTheGap extends PluginBase {
         match.replace('{{', '').replace('}}', '').trim().split(','),
       )
       ?.map((phrases) => phrases.map((phrase) => phrase.trim()))
-      ?.map((phrases) => phrases.filter((phrase) => phrase))
       ?.map((answer) => [...new Set([...answer])]);
 
     const text = inputHTML.replace(this.bracketsRegexp, '{{ # }}');
@@ -118,7 +117,8 @@ export default class FillTheGap extends PluginBase {
         .join('');
     } else {
       this.input.innerText =
-        'Here is an example of a sentence with {{ empty, vacant, blank }} spaces that a {{ learner, student }} will need to fill in.';
+        'Here is an example of a sentence with {{ empty, vacant, blank }} spaces that a {{ learner, student }} will need to fill in. ' +
+        'Block also supports {{ }} (no value required)';
     }
 
     container.appendChild(this.titleWrapper);

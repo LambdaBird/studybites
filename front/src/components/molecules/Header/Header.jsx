@@ -28,10 +28,12 @@ import {
 } from '@sb-ui/utils/paths';
 import { USER_BASE_QUERY } from '@sb-ui/utils/queries';
 import {
+  CheckUnsavedType,
   ChildrenType,
   ClassNameType,
   HandleHideType,
   HideOnScrollType,
+  IsFixedType,
 } from '@sb-ui/utils/types';
 
 import * as S from './Header.styled';
@@ -58,7 +60,15 @@ const MENU_LANGUAGES_LIST = new Map(
   ]),
 );
 
-const Header = ({ className, hideOnScroll, bottom, children, handleHide }) => {
+const Header = ({
+  isFixed,
+  className,
+  hideOnScroll,
+  bottom,
+  children,
+  handleHide,
+  checkUnsaved,
+}) => {
   const history = useHistory();
   const { t, i18n } = useTranslation(['common', 'user']);
   const location = useLocation();
@@ -76,10 +86,14 @@ const Header = ({ className, hideOnScroll, bottom, children, handleHide }) => {
   }, [history]);
 
   const handleSignOut = useCallback(() => {
-    clearJWT();
-    queryClient.resetQueries();
-    history.push(SIGN_IN);
-  }, [history]);
+    checkUnsaved?.({
+      onSaved: () => {
+        clearJWT();
+        queryClient.resetQueries();
+        history.push(SIGN_IN, { forceSkip: true });
+      },
+    });
+  }, [checkUnsaved, history]);
 
   const { mutate: changeLanguage } = useMutation(patchLanguage, {
     onSuccess: () => {
@@ -276,6 +290,7 @@ const Header = ({ className, hideOnScroll, bottom, children, handleHide }) => {
   return (
     <>
       <S.Container
+        isFixed={isFixed}
         className={className}
         hideOnScroll={hideOnScroll}
         scroll={scroll}
@@ -326,12 +341,20 @@ const Header = ({ className, hideOnScroll, bottom, children, handleHide }) => {
   );
 };
 
+Header.defaultProps = {
+  checkUnsaved: ({ onSaved }) => {
+    onSaved?.();
+  },
+};
+
 Header.propTypes = {
   children: ChildrenType,
   className: ClassNameType,
+  isFixed: IsFixedType,
   bottom: ChildrenType,
   hideOnScroll: HideOnScrollType,
   handleHide: HandleHideType,
+  checkUnsaved: CheckUnsavedType,
 };
 
 export default Header;

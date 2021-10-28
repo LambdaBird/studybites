@@ -1,29 +1,19 @@
-import { Button, Row, Typography } from 'antd';
+import { Button, Typography } from 'antd';
 import styled from 'styled-components';
 import { RightOutlined as RightOutlinedAntd } from '@ant-design/icons';
 
 import variables from '@sb-ui/theme/variables';
 
-const { Text } = Typography;
+import { BlockElementWrapperWhite } from '../../BlockElement.styled';
 
-export const BlockWrapperWhite = styled(Row)`
-  width: 100%;
-  background-color: white;
-  box-shadow: 0px -4px 10px rgba(231, 231, 231, 0.5);
-  border-radius: 8px;
-  max-width: 614px;
-  display: flex;
-  align-items: center;
-  padding: 0.5rem 1rem;
-  @media (max-width: 767px) {
-    max-width: none;
-    overflow-x: hidden;
-    width: 100vw;
-  }
-`;
+const { Text } = Typography;
 
 export const Question = styled(Text)`
   font-style: italic;
+`;
+
+export const BlockWrapperWhite = styled(BlockElementWrapperWhite)`
+  align-items: center;
 `;
 
 export const Textarea = styled.textarea.attrs({

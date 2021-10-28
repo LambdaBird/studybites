@@ -1,7 +1,6 @@
 import { Typography } from 'antd';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { CheckCircleTwoTone, CloseCircleTwoTone } from '@ant-design/icons';
 
 import {
   CORRECT_ALL,
@@ -9,7 +8,12 @@ import {
   CORRECT_PARTIAL,
 } from '@sb-ui/pages/User/LearnPage/BlockElement/FillTheGap/constants';
 import * as S from '@sb-ui/pages/User/LearnPage/BlockElement/FillTheGap/Result/Result.styled';
-import variables from '@sb-ui/theme/variables';
+
+import {
+  FailCircle,
+  PartialFailCircle,
+  SuccessCircle,
+} from '../../BlockElement.styled';
 
 const { Text } = Typography;
 
@@ -20,21 +24,21 @@ const ResultTitle = ({ correct }) => {
       return (
         <S.AnswerWrapper>
           <Text>{t('lesson.answer_result.correct')}</Text>
-          <CheckCircleTwoTone twoToneColor={variables['success-color']} />
+          <SuccessCircle />
         </S.AnswerWrapper>
       );
     case CORRECT_PARTIAL:
       return (
         <S.AnswerWrapper>
           <Text>{t('lesson.answer_result.partially_wrong')}</Text>
-          <S.WarningTwoTone twoToneColor={variables['partial-wrong-color']} />
+          <PartialFailCircle />
         </S.AnswerWrapper>
       );
     case CORRECT_NONE:
       return (
         <S.AnswerWrapper>
           <Text>{t('lesson.answer_result.wrong')}</Text>
-          <CloseCircleTwoTone twoToneColor={variables['wrong-color']} />
+          <FailCircle />
         </S.AnswerWrapper>
       );
     default:

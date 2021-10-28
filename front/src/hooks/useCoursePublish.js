@@ -9,6 +9,7 @@ import { patchCourseStatus } from '@sb-ui/utils/api/v1/courses-management';
 import {
   TEACHER_COURSE_BASE_KEY,
   TEACHER_COURSES_BASE_KEY,
+  TEACHER_LESSONS_BASE_KEY,
 } from '@sb-ui/utils/queries';
 
 export const useCoursePublish = ({ courseId }) => {
@@ -17,6 +18,7 @@ export const useCoursePublish = ({ courseId }) => {
   const { mutateAsync: updateCourseStatus, isLoading: isUpdateInProgress } =
     useMutation(patchCourseStatus, {
       onSuccess: () => {
+        queryClient.invalidateQueries(TEACHER_LESSONS_BASE_KEY);
         queryClient.invalidateQueries(TEACHER_COURSES_BASE_KEY);
         queryClient.invalidateQueries([
           TEACHER_COURSE_BASE_KEY,

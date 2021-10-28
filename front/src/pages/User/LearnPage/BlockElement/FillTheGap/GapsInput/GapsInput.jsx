@@ -1,14 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 
 import { htmlToReact } from '@sb-ui/pages/User/LearnPage/utils';
 
 import * as S from './GapsInput.styled';
 
 const GapsInput = ({ gaps, setGaps, disabled, result }) => {
-  const { t } = useTranslation('user');
-
   const handleInputChange = (id, value) => {
     setGaps((prev) => {
       const newGaps = [...prev];
@@ -42,7 +39,6 @@ const GapsInput = ({ gaps, setGaps, disabled, result }) => {
           <S.Input
             key={id}
             value={value}
-            placeholder={t('lesson.input_fill_gap.placeholder')}
             onChange={(e) => handleInputChange(id, e.target.value)}
             disabled={disabled}
           />

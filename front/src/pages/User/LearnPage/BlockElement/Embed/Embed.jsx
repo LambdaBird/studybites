@@ -1,4 +1,4 @@
-import { Col, Row, Typography } from 'antd';
+import { Typography } from 'antd';
 
 import { htmlToReact } from '@sb-ui/pages/User/LearnPage/utils';
 
@@ -11,8 +11,8 @@ const { Text } = Typography;
 const Embed = ({ content }) => {
   const { caption, embed, height } = content.data;
   return (
-    <Row gutter={[0, 16]}>
-      <Col span={24}>
+    <S.Row>
+      <S.Col>
         <S.StyledIframe
           height={height}
           width="100%"
@@ -20,13 +20,13 @@ const Embed = ({ content }) => {
           src={embed}
           allowFullScreen
         />
-      </Col>
+      </S.Col>
       {caption && (
-        <Col span={24}>
+        <S.Col>
           <Text>{htmlToReact(caption)}</Text>
-        </Col>
+        </S.Col>
       )}
-    </Row>
+    </S.Row>
   );
 };
 

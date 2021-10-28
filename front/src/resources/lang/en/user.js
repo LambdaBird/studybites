@@ -3,6 +3,8 @@ export default {
     courses: 'My courses',
     lessons: 'My lessons',
     home: 'Home page',
+    learn: 'Lesson {{ name }}',
+    course: 'Course {{ name }}',
   },
   enroll_modal: {
     review: {
@@ -33,6 +35,7 @@ export default {
       view_all_lessons: 'View all my lessons',
       view_all_courses: 'View all my courses',
       continue_button: 'Continue',
+      view_button: 'View',
     },
     ongoing_courses: {
       title: 'Ongoing courses',
@@ -59,6 +62,7 @@ export default {
       title: 'Results',
       correct_answers: 'Correct answers in the lesson',
       total_answers: 'Total questions in the chapter',
+      graded_pending: 'Pending graded question',
       percentage: '{{percentage}}% correct answers',
     },
     answer_result: {

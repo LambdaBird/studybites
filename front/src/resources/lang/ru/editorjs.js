@@ -19,6 +19,7 @@ export default {
     },
   },
   tools: {
+    search_placeholder: 'Введите название блока',
     hint: 'Нажмите "Tab" для комманд',
     basic_blocks: 'Базовые блоки',
     interactive_blocks: 'Интерактивные блоки',
@@ -29,6 +30,8 @@ export default {
       title: 'Прикрепить файл',
       select: 'Выберите файл для загрузки',
       error: 'Неудалось загрузить файл',
+      file_size: 'Превышен лимит размера файла',
+      file_type: 'Неправильный тип файла',
     },
     paragraph: {
       title: 'Текст',
@@ -97,10 +100,18 @@ export default {
       example: 'Пример',
       none: 'пусто',
     },
+    graded_question: {
+      title: 'Вопрос с оценкой',
+      description: 'Вопрос с оценкой',
+      hint: '* Вам нужно будет вручную проверить вопрос',
+      placeholder: 'Вопрос',
+      require_attachment: 'Требовать вложения',
+    },
     fill_the_gap: {
       title: 'Заполнить пропуски',
       description: 'Заполнить пропущенные слова',
-      hint: '* Текст внутри {{ }} будет скрыт для студентов',
+      hint_part_one: '* Текст внутри ',
+      hint_part_two: ' будет скрыт для студентов',
       placeholder: 'Введите текст',
     },
     match: {

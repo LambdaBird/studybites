@@ -12,7 +12,9 @@ import * as S from './EditorJsContainer.styled';
 const EditorJsContainer = forwardRef((props, ref) => {
   const mounted = useRef();
   const { t } = useTranslation('editorjs');
-  const { prepareToolbox, updateLanguage } = useToolbox();
+  const instance = useRef(null);
+
+  const { prepareToolbox, updateLanguage } = useToolbox({ editor: instance });
 
   const { children, language } = props;
   const holder = useMemo(
@@ -24,7 +26,6 @@ const EditorJsContainer = forwardRef((props, ref) => {
   );
 
   const initialLanguage = useRef(language);
-  const instance = useRef(null);
 
   const handleChange = useCallback(
     async (api) => {
@@ -91,7 +92,7 @@ const EditorJsContainer = forwardRef((props, ref) => {
         onReady: () => handleReady(newInstance),
 
         ...(onChange && {
-          onChange: handleChange,
+          onChange: () => handleChange(newInstance),
         }),
         ...anotherProps,
         ...data,
@@ -140,6 +141,7 @@ const EditorJsContainer = forwardRef((props, ref) => {
               Delimiter: t('tools.delimiter.title'),
               Table: t('tools.table.title'),
               'Closed Question': t('tools.closed_question.title'),
+              'Graded Question': t('tools.graded_question.title'),
               Warning: t('tools.warning.title'),
               Code: t('tools.code.title'),
               Marker: t('tools.marker.title'),
@@ -156,6 +158,8 @@ const EditorJsContainer = forwardRef((props, ref) => {
               attach: {
                 title: t('tools.attach.title'),
                 select: t('tools.attach.select'),
+                file_size_limit: t('tools.attach.file_size'),
+                file_invalid_type: t('tools.attach.file_type'),
                 error: t('tools.attach.error'),
               },
               image: {
@@ -168,6 +172,9 @@ const EditorJsContainer = forwardRef((props, ref) => {
               next: {
                 title: t('tools.next.title'),
                 button: t('tools.next.title'),
+              },
+              paragraph: {
+                title: t('tools.paragraph.title'),
               },
               list: {
                 title: t('tools.list.title'),
@@ -212,9 +219,18 @@ const EditorJsContainer = forwardRef((props, ref) => {
                 example: t('tools.closed_question.example'),
                 none: t('tools.closed_question.none'),
               },
+              gradedQuestion: {
+                title: t('tools.graded_question.title'),
+                hint: t('tools.graded_question.hint'),
+                placeholder: t('tools.graded_question.placeholder'),
+                require_attachment: t(
+                  'tools.graded_question.require_attachment',
+                ),
+              },
               fillTheGap: {
                 title: t('tools.fill_the_gap.title'),
-                hint: t('tools.fill_the_gap.hint'),
+                hint_part_one: t('tools.fill_the_gap.hint_part_one'),
+                hint_part_two: t('tools.fill_the_gap.hint_part_two'),
                 placeholder: t('tools.fill_the_gap.placeholder'),
               },
               match: {

@@ -1,4 +1,5 @@
 export default {
+  welcome: 'Welcome',
   no_account: 'Don’t have an account? Sign up!',
   forgot_password: 'Forgot password?',
   button: 'Sign in',
