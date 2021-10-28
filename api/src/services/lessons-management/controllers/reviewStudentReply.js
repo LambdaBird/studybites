@@ -5,10 +5,9 @@ const options = {
       type: 'object',
       properties: {
         resultId: { type: 'string' },
-        lessonId: { type: 'string' },
         correctness: { type: 'number' },
       },
-      required: ['resultId', 'lessonId', 'correctness'],
+      required: ['resultId', 'correctness'],
     },
     response: {
       '4xx': { $ref: '4xx#' },
