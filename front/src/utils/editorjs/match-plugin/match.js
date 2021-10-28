@@ -1,3 +1,6 @@
+import { CDX_INPUT } from '@sb-ui/utils/editorjs/constatnts';
+import { deleteIfBackspace } from '@sb-ui/utils/editorjs/toolsHelper';
+
 import PluginBase from '../PluginBase';
 import * as Utils from '../utils';
 
@@ -107,6 +110,11 @@ export default class Match extends PluginBase {
     if (!this.readOnly) {
       input.contentEditable = 'true';
     }
+    input.addEventListener('keydown', (event) => {
+      if (event.key === 'Backspace') {
+        this.backspacePressed(event);
+      }
+    });
     input.setAttribute('placeholder', this.api.i18n.t(placeholderKey));
     return input;
   }
@@ -158,6 +166,15 @@ export default class Match extends PluginBase {
         left: left?.innerHTML,
         right: right?.innerHTML,
       };
+    });
+  }
+
+  backspacePressed(event) {
+    deleteIfBackspace({
+      event,
+      api: this.api,
+      element: event.target,
+      elements: [...this.inputsWrapper.querySelectorAll(`.${CDX_INPUT}`)],
     });
   }
 

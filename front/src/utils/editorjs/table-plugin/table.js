@@ -1,4 +1,6 @@
 /* eslint-disable no-underscore-dangle,class-methods-use-this */
+import { deleteIfBackspace } from '@sb-ui/utils/editorjs/toolsHelper';
+
 import { create } from './documentUtils';
 
 import './table.css';
@@ -18,15 +20,17 @@ const CSS = {
 export class Table {
   /**
    * Creates
+   * @param {object} - Editor.js API
    * @param {boolean} readOnly - read-only mode flag
    */
-  constructor(readOnly) {
+  constructor({ api, readOnly }) {
     this._numberOfColumns = 0;
     this._numberOfRows = 0;
     this._element = this._createTableWrapper();
     this._table = this._element.querySelector('table');
     this._selectedCell = null;
     this.readOnly = readOnly;
+    this.api = api;
 
     if (!this.readOnly) {
       this._attachEvents();
@@ -322,6 +326,9 @@ export class Table {
     if (event.key === 'Enter' && event.ctrlKey) {
       this._containerEnterPressed(event);
     }
+    if (event.key === 'Backspace') {
+      this._containerBackspacePressed(event);
+    }
   }
 
   /**
@@ -333,5 +340,15 @@ export class Table {
     const newRow = this.insertRow(1);
 
     newRow.cells[0].click();
+  }
+
+  _containerBackspacePressed(event) {
+    deleteIfBackspace({
+      event,
+      api: this.api,
+      element: this._selectedCell,
+      elements: [...this._table.querySelectorAll('td')],
+      selectInCell: (cell) => cell?.childNodes?.[0]?.childNodes?.[0],
+    });
   }
 }
