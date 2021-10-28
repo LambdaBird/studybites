@@ -90,7 +90,7 @@ const LessonEdit = () => {
   const createLessonMutation = useMutation(createLesson, {
     onSuccess: (data) => {
       const { id } = data?.lesson;
-      history.replace(LESSONS_EDIT.replace(':id', id));
+      history.replace(LESSONS_EDIT.replace(':id', id), { forceSkip: true });
       message.success({
         content: t('editor_js.message.success_created'),
         duration: 2,
@@ -126,6 +126,8 @@ const LessonEdit = () => {
         content: t('editor_js.message.success_updated'),
         duration: 2,
       });
+      lastHistory.current = null;
+      setIsNavigationAllowed(true);
     },
     onError: () => {
       message.error({
