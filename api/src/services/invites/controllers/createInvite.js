@@ -55,13 +55,13 @@ async function sendInvites({ emailModel, data, host }) {
     data.map(async (invite) =>
       emailModel.sendInvite({
         email: invite.email,
-        link: `${host}/invite=${invite.id}`,
+        link: `${host}/invite/${invite.id}`,
       }),
     ),
   );
 }
 
-async function handler({ body, headers }) {
+async function handler({ body }) {
   const {
     models: { Invite },
     config: {
