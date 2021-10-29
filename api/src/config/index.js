@@ -4,6 +4,7 @@ import * as lessonService from './lessonService';
 import * as emailService from './emailService';
 import * as courseService from './courseService';
 import * as fileService from './fileService';
+import * as invitesService from './invitesService';
 
 export default {
   globals,
@@ -12,6 +13,7 @@ export default {
   lessonService,
   courseService,
   fileService,
+  invitesService,
 };
 
 export * from './globals';
@@ -20,3 +22,4 @@ export * from './lessonService';
 export * from './courseService';
 export * from './fileService';
 export * from './emailService';
+export * from './invitesService';

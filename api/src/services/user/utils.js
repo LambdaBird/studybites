@@ -1,10 +1,11 @@
 import { BadRequestError } from '../../validation/errors';
 
-export const createAccessToken = (instance, userId) =>
+export const createAccessToken = (instance, userId, email) =>
   instance.jwt.sign(
     {
       access: true,
       id: userId,
+      email,
     },
     { expiresIn: instance.config.globals.jwt.ACCESS_JWT_EXPIRES_IN },
   );

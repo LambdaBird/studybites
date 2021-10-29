@@ -1,5 +1,6 @@
 import nodemailer from 'nodemailer';
 import { EMAIL_SETTINGS } from '../../../config';
+import { DEFAULT_LANGUAGE } from '../../../config/i18n';
 
 const { fromName, host } = EMAIL_SETTINGS;
 
@@ -58,7 +59,7 @@ class Email {
     }
   }
 
-  async sendResetPassword({ email, link, language = 'en' }) {
+  async sendResetPassword({ email, link, language = DEFAULT_LANGUAGE }) {
     return this.sendMailWithLogging({
       to: email,
       subject: this.t('email:password_reset.subject', { lng: language }),
@@ -66,7 +67,7 @@ class Email {
     });
   }
 
-  async sendPasswordChanged({ email, language = 'en' }) {
+  async sendPasswordChanged({ email, language = DEFAULT_LANGUAGE }) {
     return this.sendMailWithLogging({
       to: email,
       subject: this.t('email:password_changed.subject', { lng: language }),
@@ -74,11 +75,19 @@ class Email {
     });
   }
 
-  async sendEmailConfirmation({ email, link, language = 'en' }) {
+  async sendEmailConfirmation({ email, link, language = DEFAULT_LANGUAGE }) {
     return this.sendMailWithLogging({
       to: email,
       subject: this.t('email:email_confirmation.subject', { lng: language }),
       html: this.t('email:email_confirmation.html', { link, lng: language }),
+    });
+  }
+
+  async sendInvite({ email, language = DEFAULT_LANGUAGE, resourceType, link }) {
+    return this.sendMailWithLogging({
+      to: email,
+      subject: this.t('email:invite.subject', { lng: language }),
+      html: this.t('email:invite.html', { lng: language, resourceType, link }),
     });
   }
 }
