@@ -47,6 +47,7 @@ export const getPrivateRoutes = ({ isMobile }) => [
     permissions: [Roles.SUPER_ADMIN],
     exact: true,
   },
+
   {
     component: Profile,
     path: paths.PROFILE,

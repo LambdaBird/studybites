@@ -15,6 +15,8 @@ export const USER_ENROLLED_SHORT_LESSONS_BASE_KEY =
   'user/enrolled_short_lessons';
 export const LESSON_BASE_QUERY = 'user/lesson';
 
+export const INVITE_LESSON_QUERY = 'invite/lesson';
+
 // TEACHER
 export const TEACHER_LESSONS_BASE_KEY = 'teacher/lessons';
 export const TEACHER_COURSES_BASE_KEY = 'teacher/courses';
