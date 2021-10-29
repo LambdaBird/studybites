@@ -7,6 +7,7 @@ export const VERIFY_EMAIL = '/verify-email/:id';
 export const EMAIL_SENT = '/email-sent';
 export const FORGOT_PASSWORD = '/forgot-password';
 
+export const INVITE = '/invite/:id';
 export const PROFILE = '/profile';
 export const USER_HOME = '/user';
 export const USER_LESSONS = `${USER_HOME}/lessons`;

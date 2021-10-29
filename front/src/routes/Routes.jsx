@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch } from 'react-router-dom';
 import ChangePassword from '../pages/ChangePassword';
 import EmailSent from '../pages/EmailSent';
 import ForgotPassword from '../pages/ForgotPassword';
+import Invite from '../pages/Invite';
 import SignIn from '../pages/SignIn';
 import SignUp from '../pages/SignUp';
 import VerifyEmail from '../pages/VerifyEmail';
@@ -25,6 +26,9 @@ const Routes = () => (
       </AuthRoute>
       <AuthRoute isPublic path={paths.CHANGE_PASSWORD}>
         <ChangePassword />
+      </AuthRoute>
+      <AuthRoute isPublic path={paths.INVITE}>
+        <Invite />
       </AuthRoute>
       <AuthRoute path={paths.SIGN_IN}>
         <SignIn />
