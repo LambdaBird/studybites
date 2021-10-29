@@ -62,6 +62,7 @@ const LessonEdit = () => {
   const editorJSRef = useRef(null);
   const [dataBlocks, setDataBlocks] = useState(null);
   const undoPluginRef = useRef(null);
+  const createdLessonBlocks = useRef(null);
   const currentLocation = useMemo(
     () => LESSONS_EDIT.replace(':id', lessonId),
     [lessonId],
@@ -89,12 +90,14 @@ const LessonEdit = () => {
 
   const createLessonMutation = useMutation(createLesson, {
     onSuccess: (data) => {
-      const { id } = data?.lesson;
+      const { id, blocks } = data?.lesson || {};
       history.replace(LESSONS_EDIT.replace(':id', id), { forceSkip: true });
       message.success({
         content: t('editor_js.message.success_created'),
         duration: 2,
       });
+      createdLessonBlocks.current = blocks;
+      setCurrentBlocks(blocks);
     },
     onError: () => {
       message.error({
@@ -250,7 +253,9 @@ const LessonEdit = () => {
   };
 
   const isBlocksChanged = useCallback(() => {
-    const oldBlocks = prepareEditorData(lessonData?.lesson?.blocks);
+    const oldBlocks =
+      prepareEditorData(lessonData?.lesson?.blocks) ||
+      createdLessonBlocks.current;
     // TODO: Compare with fast-deep-equal after adding this library
     return JSON.stringify(oldBlocks) !== JSON.stringify(currentBlocks);
   }, [currentBlocks, lessonData?.lesson?.blocks]);
