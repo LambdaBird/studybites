@@ -1,7 +1,9 @@
-const mailer = require('nodemailer');
+import mailer from 'nodemailer';
+import { DEFAULT_LANGUAGE } from './scheduler.js';
 
-class Email {
-  constructor() {
+export class Email {
+  constructor({ i18n }) {
+    this.t = i18n.t.bind(i18n);
     this.transporter = mailer.createTransport({
       pool: true,
       host: 'smtp.gmail.com',
@@ -25,13 +27,11 @@ class Email {
     console.log(Email.getMailMocked(params));
   }
 
-  async sendInvite({ email, link }) {
+  async sendInvite({ email, link, language = DEFAULT_LANGUAGE }) {
     return this.sendMailWithLogging({
       to: email,
-      subject: 'You have been invited to StudyBites',
-      html: `Invite link: ${link}`,
+      subject: this.t('email:invite.subject', { lng: language }),
+      html: this.t('email:invite.html', { lng: language, link }),
     });
   }
 }
-
-module.exports = Email;

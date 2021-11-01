@@ -1,10 +1,15 @@
-const knex = require('knex');
-const cron = require('node-cron');
-const Email = require('./email');
+import knex from 'knex';
+import cron from 'node-cron';
+import i18next from 'i18next';
+import Backend from 'i18next-fs-backend';
+import { Email } from './email.js';
+
+export const DEFAULT_LANGUAGE = 'en';
+export const LANGUAGES_LIST = ['en', 'ru'];
 
 class Scheduler {
-  constructor() {
-    this.mailer = new Email();
+  constructor({ i18n }) {
+    this.mailer = new Email({ i18n });
   }
 
   async start() {
@@ -36,7 +41,7 @@ class Scheduler {
       pendingInvites.map(async (invite) => {
         await this.mailer.sendInvite({
           email: invite.email,
-          link: `http://studybites/invite=${invite.id}`,
+          link: `${process.env.HOST}/invite/${invite.id}`,
         });
         await this.db('invites').where({ id: invite.id }).update({
           email_status: 'success',
@@ -49,6 +54,22 @@ class Scheduler {
 }
 
 (async () => {
-  const scheduler = new Scheduler();
+  await i18next.use(Backend).init({
+    initImmediate: false,
+    lng: DEFAULT_LANGUAGE,
+    fallbackLng: DEFAULT_LANGUAGE,
+    preload: LANGUAGES_LIST,
+    ns: ['email'],
+    keySeparator: '.',
+    interpolation: {
+      escapeValue: false,
+    },
+    backend: {
+      loadPath: `locales/{{lng}}/{{ns}}.json`,
+    },
+  });
+  const scheduler = new Scheduler({
+    i18n: i18next,
+  });
   await scheduler.start();
 })();

@@ -19,6 +19,8 @@ services:
     restart: always
     depends_on:
       - db
+    environment:
+      HOST: ${SB_HOST}
   api:
     build:
       context: ./api

@@ -1,0 +1,18 @@
+{
+  "password_reset": {
+    "subject": "Password reset",
+    "html": "Reset password link {{link}}"
+  },
+  "password_changed": {
+    "subject": "Password changed",
+    "html": "Your password were successfully changed"
+  },
+  "email_confirmation": {
+    "subject": "Email confirmation",
+    "html": "Confirm email link {{link}}"
+  },
+  "invite": {
+    "subject": "You were invited to start learning at StudyBites",
+    "html": "Follow the link to start: {{link}}"
+  }
+}
