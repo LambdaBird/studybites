@@ -50,24 +50,12 @@ const options = {
   },
 };
 
-async function sendInvites({ emailModel, data, host }) {
-  return Promise.all(
-    data.map(async (invite) =>
-      emailModel.sendInvite({
-        email: invite.email,
-        link: `${host}/invite/${invite.id}`,
-      }),
-    ),
-  );
-}
-
 async function handler({ body }) {
   const {
     models: { Invite },
     config: {
-      globals: { invitesStatuses },
+      globals: { invitesStatuses, emailStatuses },
     },
-    emailModel,
   } = this;
 
   const invites = await Invite.transaction(async (trx) => {
@@ -83,6 +71,7 @@ async function handler({ body }) {
           resource_id: body.resourceId,
           resource_type: body.resourceType,
           status: invitesStatuses.PENDING,
+          email_status: emailStatuses.PENDING,
           email,
         }))
       : {
@@ -92,14 +81,6 @@ async function handler({ body }) {
         };
 
     const createdInvites = await Invite.createInvites({ trx, data });
-
-    if (data.length) {
-      await sendInvites({
-        emailModel,
-        data: createdInvites,
-        host: process.env.SB_HOST,
-      });
-    }
 
     return createdInvites;
   });

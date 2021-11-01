@@ -136,3 +136,9 @@ export const invitesStatuses = {
   PENDING: 'pending',
   SUCCESS: 'success',
 };
+
+export const emailStatuses = {
+  ERROR: 'error',
+  PENDING: 'pending',
+  SUCCESS: 'success',
+};

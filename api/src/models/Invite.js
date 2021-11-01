@@ -4,7 +4,6 @@ import {
   invitesServiceErrors,
   invitesStatuses,
   lessonServiceErrors as errors,
-  resources,
 } from '../config';
 
 class Invite extends BaseModel {
@@ -21,6 +20,7 @@ class Invite extends BaseModel {
         resourceType: { type: 'string' },
         status: { type: 'string' },
         email: { type: 'string' },
+        emailStatus: { type: 'string' },
         createdAt: { type: 'string' },
       },
     };
