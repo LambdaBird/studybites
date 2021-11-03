@@ -12,7 +12,8 @@
     "run:integrationTests": "babel-node node_modules/.bin/jest --coverage --verbose --colors test/integration/",
     "migrate:make": "knex --esm migrate:make",
     "run:dev": "yarn && nodemon --exec babel-node src/server.js",
-    "migrate": "babel-node init.js"
+    "migrate": "babel-node init.js",
+    "run:prod": "babel-node src/server.js"
   },
   "dependencies": {
     "ajv": "^8.6.2",

@@ -1,0 +1,19 @@
+version: '3.7'
+
+services:
+  postgres:
+    image: postgres:14.0-alpine3.14
+    restart: always
+    tty: true
+
+  backend:
+    depends_on:
+      - postgres
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    restart: always
+    tty: true
+    volumes:
+      - ./api/:/api/
+      - /api/node_modules/

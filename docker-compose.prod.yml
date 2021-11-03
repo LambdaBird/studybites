@@ -1,0 +1,26 @@
+version: '3.7'
+
+services:
+  postgres:
+    volumes:
+      - postgres-prod:/var/lib/postgresql/data
+    ports:
+      - '7000:5432'
+    environment:
+      POSTGRES_DB: studybites
+      POSTGRES_USER: sb-admin
+      POSTGRES_PASSWORD: sb-password
+
+  backend:
+    ports:
+      - '3017:3017'
+    environment:
+      SB_ADMIN_EMAIL: admin@test.io
+      SB_ADMIN_PASSWORD: passwd3
+      JWT_SECRET: tvXqYGduhyMw28EzyBxaGrFP8zQsmRG93GZHrmADmHsU9WwB7nbULUsJ98aAqWzM
+      PORT: 3017
+      DATABASE_URL: postgres://sb-admin:sb-password@postgres:5432/studybites
+    command: yarn run:prod
+
+volumes:
+  postgres-prod: {}

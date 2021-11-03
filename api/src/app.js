@@ -1,7 +1,6 @@
 import fastify from 'fastify';
 import fastifyCors from 'fastify-cors';
 import fastifyObjection from 'fastify-objection';
-import fastifyRedis from 'fastify-redis';
 import qs from 'qs';
 
 import User from './models/User';
@@ -24,14 +23,10 @@ import learnService from './services/learn';
 import lessonsManagementService from './services/lessons-management';
 import coursesManagementService from './services/courses-management';
 import coursesService from './services/courses';
-import emailService from './services/email';
 import keywordsService from './services/keywords';
-import filesService from './services/files';
 
 import errorsAndValidation from './validation';
 import i18n from './i18n';
-
-const REDIS_PORT = process.env.REDIS_PORT || 6379;
 
 export default (options = {}) => {
   const app = fastify({
@@ -49,11 +44,6 @@ export default (options = {}) => {
   app.register(errorsAndValidation);
 
   app.register(i18n);
-
-  app.register(fastifyRedis, {
-    host: 'redis',
-    port: REDIS_PORT,
-  });
 
   app.register(fastifyObjection, {
     connection: process.env.DATABASE_URL,
@@ -100,14 +90,6 @@ export default (options = {}) => {
 
   app.register(keywordsService, {
     prefix: '/api/v1/keywords',
-  });
-
-  app.register(filesService, {
-    prefix: '/api/v1/files',
-  });
-
-  app.register(emailService, {
-    prefix: '/api/v1/email',
   });
 
   return app;
