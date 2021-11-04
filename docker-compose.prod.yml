@@ -22,5 +22,13 @@ services:
       DATABASE_URL: postgres://sb-admin:sb-password@postgres:5432/studybites
     command: yarn run:prod
 
+  frontend:
+    ports:
+      - '80:80'
+    environment:
+      PORT: 3018
+      API_PORT: 3017
+      REACT_APP_SB_HOST: http://poc.studybites.app:3017
+
 volumes:
   postgres-prod: {}

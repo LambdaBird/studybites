@@ -17,3 +17,13 @@ services:
     volumes:
       - ./api/:/api/
       - /api/node_modules/
+
+  frontend:
+    build:
+      context: ./front/
+      dockerfile: Dockerfile
+    restart: always
+    tty: true
+    volumes:
+      - ./front/:/front/
+      - /front/node_modules/
