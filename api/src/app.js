@@ -2,6 +2,7 @@ import fastify from 'fastify';
 import fastifyCors from 'fastify-cors';
 import fastifyObjection from 'fastify-objection';
 import qs from 'qs';
+import fs from 'fs';
 
 import User from './models/User';
 import Role from './models/Role';
@@ -31,12 +32,6 @@ import i18n from './i18n';
 export default (options = {}) => {
   const app = fastify({
     ...options,
-    http2: true,
-    https: {
-      allowHTTP1: true,
-      key: '/var/keys/backend-key.pem',
-      cert: '/var/keys/backend-cert.pem',
-    },
     querystringParser: (str) => qs.parse(str),
     ajv: {
       customOptions: {

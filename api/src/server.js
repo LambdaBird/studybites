@@ -4,7 +4,7 @@ const BODY_LIMIT = 4_000_000;
 
 const server = build({
   bodyLimit: BODY_LIMIT,
-  logger: +process.env.DEVELOPMENT_MODE ? 'info' : false,
+  logger: 'info',
 });
 
 try {

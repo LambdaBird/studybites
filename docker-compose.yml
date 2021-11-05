@@ -1,0 +1,53 @@
+version: '3.7'
+
+services:
+  postgres:
+    image: postgres:14.0-alpine3.14
+    restart: always
+    tty: true
+    volumes:
+      - postgres-prod:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: studybites
+      POSTGRES_USER: sb-admin
+      POSTGRES_PASSWORD: sb-password
+
+  backend:
+    depends_on:
+      - postgres
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    restart: always
+    tty: true
+    volumes:
+      - ./api/:/api/
+      - /api/node_modules/
+    environment:
+      SB_ADMIN_EMAIL: admin@test.io
+      SB_ADMIN_PASSWORD: passwd3
+      JWT_SECRET: tvXqYGduhyMw28EzyBxaGrFP8zQsmRG93GZHrmADmHsU9WwB7nbULUsJ98aAqWzM
+      PORT: 3017
+      DATABASE_URL: postgres://sb-admin:sb-password@postgres:5432/studybites
+    command: yarn run:prod
+
+  frontend:
+    depends_on:
+      - backend
+    build:
+      context: ./front/
+      dockerfile: Dockerfile
+    restart: always
+    tty: true
+    volumes:
+      - ./front/:/front/
+      - /front/node_modules/
+    ports:
+      - '80:80'
+    environment:
+      PORT: 3018
+      API_PORT: 80
+      REACT_APP_SB_HOST: http://poc.studybites.app
+
+volumes:
+  postgres-prod: {}

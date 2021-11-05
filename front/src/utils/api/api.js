@@ -14,7 +14,7 @@ import {
 } from '../jwt';
 
 export const api = axios.create({
-  baseURL: 'https://poc.studybites.app:3017',
+  baseURL: 'https://poc.studybites.app',
 });
 
 // request interceptor to add the auth token header to requests
