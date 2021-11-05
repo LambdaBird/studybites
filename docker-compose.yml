@@ -44,9 +44,10 @@ services:
       - /front/node_modules/
     ports:
       - '80:80'
+      - '443:443'
     environment:
       PORT: 3018
-      API_PORT: 80
+      API_PORT: 443
       REACT_APP_SB_HOST: http://poc.studybites.app
 
 volumes:
