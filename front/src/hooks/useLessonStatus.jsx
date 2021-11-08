@@ -1,8 +1,8 @@
 import { Modal } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-query';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
 
+import { ExclamationCircleOutlined } from '@sb-ui/components/Icons';
 import { Statuses } from '@sb-ui/pages/Teacher/Home/Dashboard/constants';
 import { queryClient } from '@sb-ui/query';
 import { patchCoursesStatus } from '@sb-ui/utils/api/v1/courses-management';

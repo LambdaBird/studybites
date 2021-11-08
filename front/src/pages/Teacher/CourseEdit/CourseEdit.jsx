@@ -5,8 +5,8 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
-import { SaveOutlined } from '@ant-design/icons';
 
+import { SaveOutlined } from '@sb-ui/components/Icons';
 import Header from '@sb-ui/components/molecules/Header';
 import KeywordsSelect from '@sb-ui/components/molecules/KeywordsSelect';
 import { Statuses } from '@sb-ui/pages/Teacher/Home/Dashboard/constants';

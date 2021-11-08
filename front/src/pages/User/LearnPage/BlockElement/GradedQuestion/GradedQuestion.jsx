@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
-import { FileOutlined } from '@ant-design/icons';
 
+import { FileOutlined } from '@sb-ui/components/Icons';
 import File from '@sb-ui/pages/User/LearnPage/BlockElement/GradedQuestion/File';
 import { useGradedQuestion } from '@sb-ui/pages/User/LearnPage/BlockElement/GradedQuestion/useGradedQuestion';
 import {

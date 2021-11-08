@@ -9,8 +9,8 @@ import {
 } from 'antd';
 import FlipMove from 'react-flip-move';
 import styled from 'styled-components';
-import { SmallDashOutlined } from '@ant-design/icons';
 
+import { SmallDashOutlined } from '@sb-ui/components/Icons';
 import variables from '@sb-ui/theme/variables';
 
 export const Page = styled.div`

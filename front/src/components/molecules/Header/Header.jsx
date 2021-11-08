@@ -3,8 +3,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
 import { Link, useHistory, useLocation } from 'react-router-dom';
-import { DownOutlined } from '@ant-design/icons';
 
+import { DownOutlined } from '@sb-ui/components/Icons';
 import useMobile from '@sb-ui/hooks/useMobile';
 import {
   getStorageLanguage,

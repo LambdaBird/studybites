@@ -2,8 +2,8 @@ import { Input, Row, Upload } from 'antd';
 import PropTypes from 'prop-types';
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ExclamationCircleOutlined } from '@ant-design/icons';
 
+import { ExclamationCircleOutlined } from '@sb-ui/components/Icons';
 import DefaultLessonImage from '@sb-ui/resources/img/lesson.svg';
 import api from '@sb-ui/utils/api';
 

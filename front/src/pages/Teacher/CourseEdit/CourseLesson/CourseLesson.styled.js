@@ -1,11 +1,11 @@
 import { Badge, Button, Col, Row, Typography } from 'antd';
 import styled from 'styled-components';
+
 import {
   ArrowDownOutlined,
   ArrowUpOutlined,
   CloseOutlined,
-} from '@ant-design/icons';
-
+} from '@sb-ui/components/Icons';
 import variables from '@sb-ui/theme/variables';
 
 const { Text, Title } = Typography;

@@ -1,6 +1,7 @@
 import T from 'prop-types';
 import { useMemo } from 'react';
-import { CloseOutlined, LoadingOutlined } from '@ant-design/icons';
+
+import { CloseOutlined, LoadingOutlined } from '@sb-ui/components/Icons';
 
 import * as S from './File.styled';
 

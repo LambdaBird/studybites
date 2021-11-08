@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { WarningTwoTone as WarningTwoToneAntd } from '@ant-design/icons/lib/icons';
+
+import { WarningTwoToneAntd } from '@sb-ui/components/Icons';
 
 export const AnswerWrapper = styled.div`
   display: flex;

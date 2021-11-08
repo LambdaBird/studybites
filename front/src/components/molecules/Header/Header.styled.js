@@ -1,6 +1,7 @@
 import { Avatar, Menu as MenuAntd, Row, Typography } from 'antd';
 import styled from 'styled-components';
-import { MenuOutlined as MenuOutlinedAntd } from '@ant-design/icons';
+
+import { MenuOutlinedAntd } from '@sb-ui/components/Icons';
 
 const { Text } = Typography;
 

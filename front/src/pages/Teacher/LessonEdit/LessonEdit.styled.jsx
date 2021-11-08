@@ -1,7 +1,7 @@
 import { Badge, Button, Col, Row, Typography } from 'antd';
 import styled from 'styled-components';
-import { SaveOutlined } from '@ant-design/icons';
 
+import { SaveOutlined } from '@sb-ui/components/Icons';
 import { HEADER_HEIGHT } from '@sb-ui/components/molecules/Header/Header.styled';
 import variables from '@sb-ui/theme/variables';
 

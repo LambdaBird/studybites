@@ -1,8 +1,8 @@
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-query';
-import { FilterOutlined } from '@ant-design/icons';
 
+import { FilterOutlined } from '@sb-ui/components/Icons';
 import FilterMobile from '@sb-ui/components/molecules/FilterMobile';
 import KeywordsFilter from '@sb-ui/components/molecules/KeywordsFilter';
 import useMobile from '@sb-ui/hooks/useMobile';

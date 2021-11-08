@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
-import { SearchOutlined } from '@ant-design/icons';
 
 import DebouncedSearch from '@sb-ui/components/atoms/DebouncedSearch';
+import { SearchOutlined } from '@sb-ui/components/Icons';
 
 import { SearchPropTypes } from './types';
 import * as S from './Search.mobile.styled';

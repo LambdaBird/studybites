@@ -4,8 +4,8 @@ import { Helmet } from 'react-helmet';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-query';
 import { useHistory, useParams } from 'react-router-dom';
-import { RedoOutlined, UndoOutlined } from '@ant-design/icons';
 
+import { RedoOutlined, UndoOutlined } from '@sb-ui/components/Icons';
 import Header from '@sb-ui/components/molecules/Header';
 import KeywordsSelect from '@sb-ui/components/molecules/KeywordsSelect';
 import { useLessonStatus } from '@sb-ui/hooks/useLessonStatus';

@@ -1,8 +1,8 @@
 import { Skeleton } from 'antd';
 import { useState } from 'react';
 import { useQuery } from 'react-query';
-import { FilterOutlined, UserOutlined } from '@ant-design/icons';
 
+import { FilterOutlined, UserOutlined } from '@sb-ui/components/Icons';
 import AuthorSelect from '@sb-ui/components/molecules/AuthorSelect';
 import FilterMobile from '@sb-ui/components/molecules/FilterMobile';
 import KeywordsFilter from '@sb-ui/components/molecules/KeywordsFilter';

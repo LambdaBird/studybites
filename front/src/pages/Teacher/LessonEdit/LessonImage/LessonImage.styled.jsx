@@ -1,6 +1,7 @@
 import { Button, Col as AntdCol } from 'antd';
 import styled from 'styled-components';
-import { UploadOutlined } from '@ant-design/icons';
+
+import { UploadOutlined } from '@sb-ui/components/Icons';
 
 export const Image = styled.img`
   object-fit: cover;

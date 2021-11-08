@@ -2,8 +2,8 @@ import { Dropdown, Menu } from 'antd';
 import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Redirect, Route, useHistory } from 'react-router-dom';
-import { RightOutlined } from '@ant-design/icons';
 
+import { RightOutlinedAntd } from '@sb-ui/components/Icons';
 import {
   getLanguageValueByKey,
   LANGUAGES_LIST,
@@ -52,7 +52,7 @@ const AuthRoute = ({ children: Component, isPublic, ...rest }) => {
             <Dropdown overlay={menu} trigger={['click']}>
               <S.DropdownWrapper>
                 <span>{getLanguageValueByKey(languageKey)}</span>
-                <S.TranslateIcon /> <RightOutlined />
+                <S.TranslateIcon /> <RightOutlinedAntd />
               </S.DropdownWrapper>
             </Dropdown>
           </S.LogoLink>
