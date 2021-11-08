@@ -1,49 +1,9 @@
 /* eslint-disable no-console */
 import knex from 'knex';
-import * as Minio from 'minio';
 import { hashPassword } from './utils/salt';
-
-const s3Policy = {
-  Statement: [
-    {
-      Action: ['s3:GetBucketLocation'],
-      Effect: 'Allow',
-      Principal: {
-        AWS: ['*'],
-      },
-      Resource: [`arn:aws:s3:::${process.env.S3_BUCKET}`],
-    },
-    {
-      Action: ['s3:GetObject'],
-      Effect: 'Allow',
-      Principal: {
-        AWS: ['*'],
-      },
-      Resource: [`arn:aws:s3:::${process.env.S3_BUCKET}/*`],
-    },
-  ],
-  Version: '2012-10-17',
-};
-
-const minio = new Minio.Client({
-  endPoint: process.env.S3_HOST,
-  port: +process.env.S3_PORT,
-  useSSL: false,
-  accessKey: process.env.S3_ACCESS_KEY,
-  secretKey: process.env.S3_SECRET_KEY,
-});
 
 (async () => {
   try {
-    const buckets = await minio.listBuckets();
-    if (!buckets.length) {
-      await minio.makeBucket(process.env.S3_BUCKET);
-    }
-    await minio.setBucketPolicy(
-      process.env.S3_BUCKET,
-      JSON.stringify(s3Policy),
-    );
-
     const db = knex({
       client: 'pg',
       connection: process.env.DATABASE_URL,
