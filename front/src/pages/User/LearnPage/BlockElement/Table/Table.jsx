@@ -10,7 +10,7 @@ import * as S from './Table.styled';
 const getRowsHeaders = (contentTable) => {
   let headers = contentTable?.[0];
   let rows = contentTable?.slice(1);
-  if (rows.length === 0 && headers.length !== 0) {
+  if (rows?.length === 0 && headers?.length !== 0) {
     rows = contentTable;
     headers = [];
   }
