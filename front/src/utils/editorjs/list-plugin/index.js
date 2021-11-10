@@ -130,25 +130,26 @@ export default class List extends PluginBase {
       // detect keydown on the last item to escape List
       this._elements.wrapper.addEventListener(
         'keydown',
-        (event) => {
-          const [ENTER, BACKSPACE] = [13, 8]; // key codes
-
-          switch (event.keyCode) {
-            case ENTER:
-              this.getOutofList(event);
-              break;
-            case BACKSPACE:
-              this.backspace(event);
-              break;
-            default:
-          }
-        },
+        this.handleKeydown.bind(this),
         false,
       );
     }
 
     container.appendChild(this._elements.wrapper);
     return container;
+  }
+
+  handleKeydown(event) {
+    const [ENTER, BACKSPACE] = [13, 8]; // key codes
+    switch (event.keyCode) {
+      case ENTER:
+        this.getOutofList(event);
+        break;
+      case BACKSPACE:
+        this.backspace(event);
+        break;
+      default:
+    }
   }
 
   /**
@@ -292,6 +293,11 @@ export default class List extends PluginBase {
 
     this._elements.wrapper.replaceWith(newTag);
     this._elements.wrapper = newTag;
+    this._elements.wrapper.addEventListener(
+      'keydown',
+      this.handleKeydown.bind(this),
+      false,
+    );
     this._data.style = style;
   }
 
@@ -404,7 +410,6 @@ export default class List extends PluginBase {
    */
   getOutofList(event) {
     const items = this._elements.wrapper.querySelectorAll(`.${this.CSS.item}`);
-
     /**
      * Save the last one.
      */
@@ -426,12 +431,7 @@ export default class List extends PluginBase {
     }
   }
 
-  /**
-   * Handle backspace
-   *
-   * @param {KeyboardEvent} event
-   */
-  backspace(event) {
+  backspace() {
     const items = this._elements.wrapper.querySelectorAll(`.${this.CSS.item}`);
     const firstItem = items[0];
 
@@ -443,7 +443,7 @@ export default class List extends PluginBase {
      * Save the last one.
      */
     if (items.length < 2 && !firstItem.innerHTML.replace('<br>', ' ').trim()) {
-      event.preventDefault();
+      this.api.blocks.delete();
     }
   }
 

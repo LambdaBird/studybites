@@ -103,6 +103,12 @@ export default class ClosedQuestion extends PluginBase {
       false,
     );
 
+    questionInput.addEventListener('keydown', (event) => {
+      if (event.code === 'Backspace') {
+        this.backspaceQuestionPressed(event);
+      }
+    });
+
     container.appendChild(questionInput);
     container.appendChild(answerInput);
     container.appendChild(explanationInput);
@@ -178,6 +184,13 @@ export default class ClosedQuestion extends PluginBase {
       this.renderTags();
     }
     this.elements.answerInput.value = '';
+  }
+
+  backspaceQuestionPressed(event) {
+    event.stopPropagation();
+    if (this.elements.questionInput.innerText.trim().length === 0) {
+      this.api.blocks.delete();
+    }
   }
 
   createTag(text) {

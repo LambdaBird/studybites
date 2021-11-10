@@ -118,6 +118,7 @@ export const prepareBlocksDataForApi = (data, type) => {
 };
 
 const SKIP_BLOCKS = [
+  BLOCKS_TYPE.QUIZ,
   BLOCKS_TYPE.EMBED,
   BLOCKS_TYPE.IMAGE,
   BLOCKS_TYPE.CLOSED_QUESTION,

@@ -6,6 +6,11 @@
 /**
  * Build styles
  */
+import {
+  isBackspaceValid,
+  moveCaretToEnd,
+} from '@sb-ui/utils/editorjs/toolsHelper';
+
 import PluginBase from '../PluginBase';
 
 import { ToolboxIcon } from './resources';
@@ -106,6 +111,7 @@ export default class Warning extends PluginBase {
    */
   render() {
     const container = this._make('div', [this.CSS.baseClass, this.CSS.wrapper]);
+
     const title = this._make('div', [this.CSS.input, this.CSS.title], {
       contentEditable: !this.readOnly,
       innerHTML: this.data.title,
@@ -118,11 +124,35 @@ export default class Warning extends PluginBase {
     title.dataset.placeholder = this.titlePlaceholder;
     message.dataset.placeholder = this.messagePlaceholder;
 
+    title.addEventListener('keydown', this.handleTitleKeydown.bind(this));
+    message.addEventListener('keydown', this.handleMessageKeydown.bind(this));
+
     container.appendChild(this.titleWrapper);
     container.appendChild(title);
     container.appendChild(message);
+    this.titleElement = title;
 
     return container;
+  }
+
+  handleTitleKeydown(event) {
+    if (isBackspaceValid(event, this.titleElement.innerText)) {
+      this.api.blocks.delete();
+    }
+  }
+
+  handleMessageKeydown(event) {
+    // BACKSPACE KEYCODE
+    if (event.keyCode === 8) {
+      const sel = window.getSelection();
+      const range = sel.getRangeAt(0);
+      if (range.startOffset === range.endOffset && range.endOffset === 0) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.titleElement.focus();
+        moveCaretToEnd(this.titleElement);
+      }
+    }
   }
 
   /**

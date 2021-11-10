@@ -2,6 +2,8 @@
 /**
  * Build styles
  */
+import { isBackspaceValid } from '@sb-ui/utils/editorjs/toolsHelper';
+
 import PluginBase from '../PluginBase';
 
 import { ToolboxIcon } from './resources';
@@ -115,6 +117,9 @@ export default class CodeTool extends PluginBase {
         case 'Tab':
           this.tabHandler(event);
           break;
+        case 'Backspace':
+          this.backspaceHandler(event);
+          break;
         default:
       }
     });
@@ -135,6 +140,12 @@ export default class CodeTool extends PluginBase {
     container.appendChild(this.titleWrapper);
     container.appendChild(this.nodes.holder);
     return container;
+  }
+
+  backspaceHandler(event) {
+    if (isBackspaceValid(event, this.nodes.textarea.value)) {
+      this.api.blocks.delete();
+    }
   }
 
   /**

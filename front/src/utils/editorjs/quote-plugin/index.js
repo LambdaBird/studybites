@@ -2,6 +2,11 @@
 /**
  * Build styles
  */
+import {
+  isBackspaceValid,
+  moveCaretToEnd,
+} from '@sb-ui/utils/editorjs/toolsHelper';
+
 import PluginBase from '../PluginBase';
 
 import { CenterIcon, LeftIcon, ToolboxIcon } from './resources';
@@ -206,12 +211,35 @@ export default class Quote extends PluginBase {
     });
 
     quote.dataset.placeholder = this.quotePlaceholder;
-    caption.dataset.placeholder = this.captionPlaceholder;
+
+    quote.addEventListener('keydown', this.handleQuoteKeydown.bind(this));
+    caption.addEventListener('keydown', this.handleCaptionKeydown.bind(this));
+    this.quoteElement = quote;
 
     container.appendChild(quote);
     container.appendChild(caption);
 
     return container;
+  }
+
+  handleQuoteKeydown(event) {
+    if (isBackspaceValid(event, this.quoteElement.innerText)) {
+      this.api.blocks.delete();
+    }
+  }
+
+  handleCaptionKeydown(event) {
+    // BACKSPACE KEYCODE
+    if (event.keyCode === 8) {
+      const sel = window.getSelection();
+      const range = sel.getRangeAt(0);
+      if (range.startOffset === range.endOffset && range.endOffset === 0) {
+        event.preventDefault();
+        event.stopPropagation();
+        this.quoteElement.focus();
+        moveCaretToEnd(this.quoteElement);
+      }
+    }
   }
 
   /**

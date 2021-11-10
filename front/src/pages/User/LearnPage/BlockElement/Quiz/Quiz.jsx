@@ -11,6 +11,7 @@ import {
   SolvedType,
 } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
 import { ChunkWrapper } from '@sb-ui/pages/User/LearnPage/LearnPage.styled';
+import { htmlToReact } from '@sb-ui/pages/User/LearnPage/utils';
 
 import QuizResult from './QuizResult';
 import * as S from './Quiz.styled';
@@ -39,7 +40,7 @@ const Quiz = ({ blockId, revision, answer, content, reply, isSolved }) => {
   return (
     <>
       <ChunkWrapper isBottom={!isSolved}>
-        <S.Question>{question}</S.Question>
+        <S.Question>{htmlToReact(question)}</S.Question>
       </ChunkWrapper>
       {isSolved ? (
         <>

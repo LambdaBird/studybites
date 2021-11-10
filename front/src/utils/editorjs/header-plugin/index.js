@@ -115,6 +115,15 @@ export default class Header extends PluginBase {
     return newData;
   }
 
+  elementKeydown(event) {
+    if (
+      event.code === 'Backspace' &&
+      this._element.innerHTML.trim().length === 0
+    ) {
+      this.api.blocks.delete();
+    }
+  }
+
   /**
    * Return Tool's view
    *
@@ -125,6 +134,7 @@ export default class Header extends PluginBase {
     const container = document.createElement('div');
     container.appendChild(this.titleWrapper);
     container.appendChild(this._element);
+    this._element.addEventListener('keydown', this.elementKeydown.bind(this));
     return container;
   }
 
