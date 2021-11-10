@@ -17,6 +17,9 @@ export const Panel = styled(PanelAntd).attrs({
   .ant-collapse-header {
     pointer-events: ${(props) => (props.$isResult ? 'auto' : 'none')};
   }
+  .ant-collapse-content {
+    pointer-events: all;
+  }
   pointer-events: none;
   padding: 0.5rem 1rem;
 `;

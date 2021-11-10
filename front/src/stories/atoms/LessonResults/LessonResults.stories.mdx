@@ -1,7 +1,10 @@
 import { Meta, Story, Canvas } from '@storybook/addon-docs';
 
 import LessonResults from '@sb-ui/pages/Teacher/LessonStudents/LessonResults';
-import { LearnContextDecorator } from '@sb-ui/stories/decorators';
+import {
+  LearnContextDecorator,
+  QueryContextDecorator,
+} from '@sb-ui/stories/decorators';
 import {
   exampleData,
   allBlocksData,
@@ -14,9 +17,11 @@ import {
   title="atoms/LessonResults"
   decorators={[
     (Story) => (
-      <LearnContextDecorator>
-        <Story />
-      </LearnContextDecorator>
+      <QueryContextDecorator>
+        <LearnContextDecorator>
+          <Story />
+        </LearnContextDecorator>
+      </QueryContextDecorator>
     ),
   ]}
   component={LessonResults}

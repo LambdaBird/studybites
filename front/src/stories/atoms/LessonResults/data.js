@@ -3,6 +3,7 @@ export const exampleData = {
     { action: 'start', createdAt: '2021-09-21T11:12:07.697Z' },
     {
       action: 'response',
+      lessonId: 1,
       block: {
         id: '1',
         revision: '1',

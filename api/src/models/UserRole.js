@@ -103,6 +103,7 @@ class UserRole extends BaseModel {
         .modifyGraph('results', (builder) => {
           builder.where('lesson_id', resourceId);
           builder.withGraphFetched('block');
+          builder.orderBy('created_at');
         });
     }
     return query;

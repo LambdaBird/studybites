@@ -42,4 +42,12 @@ export const Correctness = styled.div`
   flex: 1 0 33%;
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+`;
+
+export const RateWrapper = styled.div`
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  background-color: white;
+  border-radius: 0.5rem;
 `;
