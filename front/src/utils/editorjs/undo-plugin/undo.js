@@ -1,4 +1,18 @@
+import equal from 'fast-deep-equal';
+
+import { BLOCKS_TYPE } from '@sb-ui/pages/User/LearnPage/BlockElement/types';
+import { moveCaret } from '@sb-ui/utils/editorjs/quiz-plugin/utils';
+import { createElementFromHTML } from '@sb-ui/utils/editorjs/utils';
+
+import { isSameElementAsCreated } from './domUtils';
 import Observer from './observer';
+
+const BODY_TAG_NAME = 'BODY';
+const INPUT_TAG_NAME = 'INPUT';
+const CE_TOOLBAR = 'ce-toolbar';
+const CE_TOOLBAR_OPENED = 'ce-toolbar--opened';
+const INPUT_SELECTORS = '.cdx-input, input, div[contenteditable="true"]';
+const DEFAULT_BLOCK = BLOCKS_TYPE.PARAGRAPH;
 
 /**
  * Undo/Redo feature for Editor.js.
@@ -20,7 +34,7 @@ export default class Undo {
    */
   constructor({ editor, onUpdate, maxLength, undoButton, redoButton }) {
     const defaultOptions = {
-      maxLength: 30,
+      maxLength: 50,
       onUpdate() {},
     };
 
@@ -32,6 +46,8 @@ export default class Undo {
     this.onUpdate = onUpdate || defaultOptions.onUpdate;
     this.undoButton = undoButton;
     this.redoButton = redoButton;
+    this.undoStack = [];
+    this.redoStack = [];
 
     const observer = new Observer(
       () => this.registerChange(),
@@ -40,8 +56,7 @@ export default class Undo {
     observer.setMutationObserver();
 
     this.setEventListeners();
-    this.initialItem = null;
-    this.clear();
+    this.onUpdate();
   }
 
   /**
@@ -77,19 +92,8 @@ export default class Undo {
       'blocks' in initialItem ? initialItem.blocks : initialItem;
     const initialIndex = initialData.length - 1;
     const firstElement = { index: initialIndex, state: initialData };
-    this.stack[0] = firstElement;
-    this.initialItem = firstElement;
-  }
-
-  /**
-   * Clears the history stack.
-   */
-  clear() {
-    this.stack = this.initialItem
-      ? [this.initialItem]
-      : [{ index: 0, state: [] }];
-    this.position = 0;
-    this.onUpdate();
+    this.undoStack = [JSON.parse(JSON.stringify(firstElement))];
+    this.toolbar = this.getEditorHolder().querySelector(`.${CE_TOOLBAR}`);
   }
 
   /**
@@ -114,26 +118,35 @@ export default class Undo {
    * @returns {Boolean}
    */
   editorDidUpdate(newData) {
-    const { state } = this.stack[this.position];
-    if (newData.length !== state.length) return true;
-
-    return JSON.stringify(state) !== JSON.stringify(newData);
+    const state = this.undoStack[this.undoStack.length - 1]?.state;
+    return !equal(state, newData);
   }
 
   /**
    * Adds the saved data in the history stack and updates current position.
    */
   save(state) {
-    if (this.position >= this.maxLength) {
-      this.truncate(this.stack, this.maxLength);
-    }
-    this.position = Math.min(this.position, this.stack.length - 1);
-
-    this.stack = this.stack.slice(0, this.position + 1);
-
     const index = this.editor.blocks.getCurrentBlockIndex();
-    this.stack.push({ index, state });
-    this.position += 1;
+    const activeElement = document?.activeElement;
+    this.undoStack.push({
+      index,
+      state,
+      activeElementHTML:
+        activeElement.tagName === BODY_TAG_NAME
+          ? null
+          : activeElement.outerHTML,
+    });
+    if (this.redoStack.length === 0 && this.undoStack.length === 2) {
+      this.undoStack[0].activeElementHTML = activeElement.outerHTML;
+      this.undoStack[0].index = index;
+    }
+
+    if (this.undoStack.length >= this.maxLength) {
+      this.truncate(this.undoStack, this.maxLength);
+    }
+    if (this.redoStack.length >= this.maxLength) {
+      this.truncate(this.redoStack, this.maxLength);
+    }
     this.onUpdate();
   }
 
@@ -141,74 +154,119 @@ export default class Undo {
    * Decreases the current position and renders the data in the editor.
    */
   undo() {
-    if (this.canUndo()) {
-      this.shouldSaveHistory = false;
-      const { index, state } = this.stack[(this.position -= 1)];
-      this.updateBlocks(index, state);
+    if (this.undoStack.length <= 1) {
+      return;
     }
+    const topElement = this.undoStack.pop();
+    if (topElement) {
+      this.redoStack.push(topElement);
+    }
+    this.updateBlocks();
   }
 
   /**
    * Increases the current position and renders the data in the editor.
    */
   redo() {
-    if (this.canRedo()) {
-      this.shouldSaveHistory = false;
-      const { index, state } = this.stack[(this.position += 1)];
-      this.updateBlocks(index, state);
+    const topElement = this.redoStack.pop();
+    if (topElement) {
+      this.undoStack.push(topElement);
+    }
+    this.updateBlocks();
+  }
+
+  getHolderWithCorrectIndex(index) {
+    const countBlocks = this.editor.blocks.getBlocksCount();
+    const correctIndex = index + 1 > countBlocks ? countBlocks - 1 : index;
+    const holderByIndex =
+      this.editor.blocks?.getBlockByIndex(correctIndex)?.holder;
+    const holder =
+      holderByIndex || this.editor.blocks.getBlockByIndex(0)?.holder;
+    return { holder, correctIndex };
+  }
+
+  getRealElement({ holder, activeElementHTML }) {
+    const createdElement = createElementFromHTML(activeElementHTML);
+    const tagName = createdElement.tagName.toLowerCase();
+    const createdElementAttributes = [...createdElement.attributes];
+    const allElements = holder.querySelectorAll(tagName);
+    return (
+      [...allElements].find((element) =>
+        isSameElementAsCreated({ element, createdElementAttributes }),
+      ) ||
+      holder.querySelector(INPUT_SELECTORS) ||
+      this.addAndTakeLastBlockInput()
+    );
+  }
+
+  afterRenderNewBlocks({ index, activeElementHTML }) {
+    if (index < 0) {
+      return;
+    }
+    const { holder, correctIndex } = this.getHolderWithCorrectIndex(index);
+    if (activeElementHTML) {
+      const realElement = this.getRealElement({ holder, activeElementHTML });
+      if (realElement?.isContentEditable) {
+        moveCaret(realElement);
+      } else if (realElement?.tagName === INPUT_TAG_NAME) {
+        realElement?.focus();
+      }
+      realElement?.scrollIntoViewIfNeeded?.(true);
+    } else {
+      this.editor.caret.setToBlock(correctIndex, 'start');
+      holder?.scrollIntoViewIfNeeded?.(true);
     }
   }
 
   /**
    * Renders data in the editor by index with state
    */
-  updateBlocks(index, state) {
-    this.onUpdate();
+  async updateBlocks() {
+    const { index, state, activeElementHTML } =
+      this.undoStack.slice(-1)?.[0] || {};
+
+    if (!state) {
+      return;
+    }
     if (state.length === 0) {
       this.editor.clear();
-    } else {
-      this.editor.blocks.render({ blocks: state }).then(() => {
-        this.editor.caret.setToBlock(index, 'end');
-        this.editor.caret.focus(true);
-      });
+      return;
     }
+
+    this.onUpdate();
+    const savedData = await this.editor.save?.();
+    if (equal(savedData?.blocks, state)) {
+      return;
+    }
+    this.toolbar?.classList?.remove?.(CE_TOOLBAR_OPENED);
+    const newState = state?.map((block) => ({
+      ...block,
+      data: block.data === null ? {} : block.data,
+    }));
+    this.editor.blocks.render({ blocks: newState }).then(() => {
+      this.afterRenderNewBlocks({ index, activeElementHTML });
+    });
   }
 
-  /**
-   * Checks if the history stack can perform an undo action.
-   *
-   * @returns {Boolean}
-   */
-  canUndo() {
-    return this.editor.clear && !this.readOnly && this.position > 0;
+  addAndTakeLastBlockInput() {
+    this.editor.blocks.insert(DEFAULT_BLOCK);
+    const lastBlockIndex = this.editor.blocks.getBlocksCount() - 1;
+    const bl = this.editor.blocks.getBlockByIndex(lastBlockIndex);
+    return bl.holder.querySelector(INPUT_SELECTORS);
   }
 
-  /**
-   * Checks if the history stack can perform a redo action.
-   *
-   * @returns {Boolean}
-   */
-  canRedo() {
-    return this.editor.clear && !this.readOnly && this.position < this.count();
-  }
-
-  /**
-   * Returns the number of changes recorded in the history stack.
-   *
-   * @returns {Number}
-   */
-  count() {
-    return this.stack.length - 1; // -1 because of initial item
+  getEditorHolder() {
+    const { holder } = this.editor.configuration;
+    return typeof holder === 'string'
+      ? document.getElementById(holder)
+      : holder;
   }
 
   /**
    * Sets events listeners to allow keyboard actions support.
    */
   setEventListeners() {
-    const { holder } = this.editor.configuration;
-    const holderElement =
-      typeof holder === 'string' ? document.getElementById(holder) : holder;
-
+    const holderElement = this.getEditorHolder();
     const undoButtonElement =
       typeof this.undoButton === 'string'
         ? document.getElementById(this.undoButton)
@@ -238,7 +296,6 @@ export default class Undo {
         } else {
           handleUndo(e);
         }
-        this.editor.caret.focus();
       }
     };
 

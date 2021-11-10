@@ -16,7 +16,7 @@ export default class Observer {
     this.holder =
       typeof holder === 'string' ? document.getElementById(holder) : holder;
     this.observer = null;
-    this.debounceTimer = 200;
+    this.debounceTimer = 100;
     this.mutationDebouncer = this.debounce(() => {
       registerChange();
     }, this.debounceTimer);
