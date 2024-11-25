@@ -45,7 +45,7 @@ const GradedQuestion = ({ blockId, revision, content, reply, isSolved }) => {
       {isSolved ? (
         <ChunkWrapper>
           {value && <p>{value}</p>}
-          {files.length && (
+          {files.length > 0 && (
             <S.UploadedFileWrapper>
               {files.map(({ location, name }) => (
                 <a key={name} href={location}>

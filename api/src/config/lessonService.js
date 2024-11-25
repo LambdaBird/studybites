@@ -6,4 +6,5 @@ export const lessonServiceErrors = {
 
 export const lessonServiceMessages = {
   LESSON_MSG_SUCCESS_ENROLL: 'messages.success_enroll',
+  LESSON_MSG_SUCCESS_REVIEW: 'messages.success_review',
 };

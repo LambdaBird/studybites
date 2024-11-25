@@ -1,10 +1,12 @@
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+import { QueryClientProvider } from 'react-query';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { action } from '@storybook/addon-actions';
 
 import LearnContext from '@sb-ui/contexts/LearnContext';
 import { getConfig } from '@sb-ui/pages/Teacher/LessonEdit/utils';
+import { queryClient } from '@sb-ui/query';
 import EditorJs from '@sb-ui/utils/editorjs/EditorJsContainer/EditorJsContainer';
 
 const newConfigTool = (configTools, allowedToolbox) => {
@@ -29,6 +31,14 @@ EditorJsDecorator.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   blocks: PropTypes.array,
   allowedToolbox: PropTypes.arrayOf(PropTypes.string),
+};
+
+export const QueryContextDecorator = ({ children }) => (
+  <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+);
+
+QueryContextDecorator.propTypes = {
+  children: PropTypes.node,
 };
 
 export const LearnContextDecorator = ({ children }) => {
